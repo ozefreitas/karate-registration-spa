@@ -4,13 +4,49 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(42, 42, 42, 0.87);
+  background-color: #f5f5f5;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-size: 1.2rem;
+}
+
+select,
+input {
+  border-radius: 0.35rem;
+  -webkit-border-radius: 0.35rem;
+  -moz-border-radius: 0.35rem;
+  -ms-border-radius: 0.35rem;
+  -o-border-radius: 0.35rem;
+  border: 1px solid black;
+  height: 25px;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+}
+
+select option {
+  font-size: larger;
+}
+
+h2 {
+  width: fit-content;
+}
+
+h4 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+li {
+  margin-bottom: 10px;
 }
 
 a {
@@ -22,13 +58,6 @@ a:hover {
   color: #535bf2;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -38,7 +67,7 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  /* font-size: 1em; */
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a;

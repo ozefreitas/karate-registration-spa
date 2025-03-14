@@ -1,7 +1,7 @@
 #root {
-  width: 100%;
   /* max-width: 1280px; */
-  margin: 8px;
+  margin: 8px auto;
+  width: 90%;
 }
 
 .logo {
@@ -30,12 +30,4 @@
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
