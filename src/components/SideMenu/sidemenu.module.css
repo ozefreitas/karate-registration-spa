@@ -1,0 +1,35 @@
+.nav_container {
+    margin-top: 30px;
+    padding-right: 10px;
+    border-right: 1px solid grey;
+    width: fit-content;
+}
+
+.nav_options_button {
+    margin: auto;
+    cursor: pointer;
+}
+
+.options_nav_menu {
+    width: 120px;
+    margin-top: 20px;
+    left: 10%;
+    z-index: 1;
+    display: none;
+}
+
+.options_nav_menu a {
+    font-size: 20px;
+}
+
+.page_selection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.open {
+    display: block;
+}
