@@ -8,6 +8,10 @@
   display: flex;
 }
 
+.main-content {
+  margin-left: 20px;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -28,6 +32,37 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* buttons */
+
+.default-button {
+  font-size: 15px;
+  height: 30px;
+  width: fit-content;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid #e62222;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  color: black;
+  background: white;
+  font-weight: bold;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.default-button:active {
+  transform: scale(0.9);
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  -o-transform: scale(0.9);
+}
+
+.default-button:hover {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);
 }
 
 @media (prefers-reduced-motion: no-preference) {

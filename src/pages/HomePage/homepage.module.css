@@ -1,0 +1,36 @@
+.competition_card_selector {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin-top: 50px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.competition_card {
+  width: 42%;
+  min-height: 100px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid red;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.competition_card button {
+    margin-top: 20px;
+}
+
+.quick_info {
+  font-size: smaller;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}

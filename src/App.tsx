@@ -4,7 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Header from "./components/Header/Header";
 import AthletesPage from "./pages/AthletesPage";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage/HomePage";
 import SideMenu from "./components/SideMenu/SideMenu";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         <SideMenu></SideMenu>
         <div className="main-content">
           <HomePage></HomePage>
-          <AthletesPage></AthletesPage>
+          {/* <AthletesPage></AthletesPage> */}
         </div>
       </div>
     </>
