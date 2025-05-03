@@ -1,24 +1,31 @@
 import { use, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Header from "./components/Header/Header";
-import AthletesPage from "./pages/AthletesPage";
-import HomePage from "./pages/HomePage/HomePage";
+import ButtonAppBar from "./components/Header/Header";
 import SideMenu from "./components/SideMenu/SideMenu";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AthletesPage from "./pages/AthletesPage/AthletesPage";
+import CompetitionsPage from "./pages/CompetitionsPage/CompetitionsPage";
+import HomePage from "./pages/HomePage/HomePage";
 
 function App() {
   const [isLogedIn, setIsLogedIn] = useState(false);
 
   return (
     <>
-      <Header isLogedIn={isLogedIn}></Header>
-      <div className="main-content-wrapper">
+      <BrowserRouter>
+        <ButtonAppBar></ButtonAppBar>
         <SideMenu></SideMenu>
-        <div className="main-content">
-          <HomePage></HomePage>
-          {/* <AthletesPage></AthletesPage> */}
-        </div>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          {/* <Route index element={<Home />} /> */}
+          <Route path="athletes/" element={<AthletesPage />} />
+          <Route path="competitions/" element={<CompetitionsPage />} />
+        </Routes>
+      </BrowserRouter>
+      <div className="main-content">
+        {/* <HomePage></HomePage> */}
+        {/* <AthletesPage></AthletesPage> */}
       </div>
     </>
   );

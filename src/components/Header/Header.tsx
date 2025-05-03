@@ -1,28 +1,29 @@
-import styles from "./header.module.css";
-import skipLogo from "../../assets/skip-logo.png";
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import skipLogo from "./../../assets/skip-logo.png";
 
-interface HeaderProps {
-  isLogedIn: boolean
-}
-
-export default function Header({ isLogedIn }: HeaderProps) {
+export default function ButtonAppBar() {
   return (
-    <div className={styles.main_header_container}>
-      <div className={styles.app_name}>
-        <img src={skipLogo} alt="SKI-P Logo" className={styles.logo} />
-        <a href="">Karate Score App</a>
-      </div>
-      {isLogedIn ? (
-        <div className={styles.dojos_actions}>
-          <button className={styles.login_buttons}>Logout</button>
-          <button className={styles.login_buttons}>Perfil</button>
-        </div>
-      ) : (
-        <div className={styles.dojos_actions}>
-          <button className={styles.login_buttons}>Login</button>
-          <button className={styles.login_buttons}>Criar Conta</button>
-        </div>
-      )}
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar color="transparent" position="static">
+        <Toolbar>
+          <img
+            style={{ width: "100px", margin: "10px" }}
+            src={skipLogo}
+            alt=""
+          />
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            SKI-Portugal - Karate Score App
+          </Typography>
+          {/* <Button color="inherit">Login</Button> */}
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 }
