@@ -11,51 +11,56 @@ import {
 } from "@mui/icons-material";
 
 export const sideMenuConfig = [
-  { name: "athletes", label: "Atletas", icon: <Person />, to: "athletes/" },
+  {
+    name: "athletes",
+    label: "Atletas",
+    icon: <Person sx={{ color: "#e81c24" }} />,
+    to: "athletes/",
+  },
   {
     name: "competitions",
     label: "Competições",
-    icon: <SportsMma />,
-    to: "/competitions/",
+    icon: <SportsMma sx={{ color: "#e81c24" }} />,
+    to: "competitions/",
   },
   {
     name: "rules",
     label: "Regras",
-    icon: <Rule />,
-    to: "/competitions/",
+    icon: <Rule sx={{ color: "#e81c24" }} />,
+    to: "rules/",
   },
   {
     name: "classifications",
     label: "Classificações",
-    icon: <EmojiEvents />,
-    to: "/classifications/",
+    icon: <EmojiEvents sx={{ color: "#e81c24" }} />,
+    to: "classifications/",
   },
   {
     name: "help",
     label: "Ajuda",
-    icon: <HelpCenter />,
-    to: "/help/",
+    icon: <HelpCenter sx={{ color: "#e81c24" }} />,
+    to: "help/",
   },
 ];
 
 export const accountSideMenuConfig = [
-  { name: "profile", label: "Perfil", icon: <AccountBox />, to: "athletes/" },
+  { name: "profile", label: "Perfil", icon: <AccountBox />, to: "profile/" },
   {
     name: "logout",
     label: "Logout",
     icon: <Logout />,
+    to: "",
   },
   {
     name: "feedback",
     label: "Feedback",
     icon: <Feedback />,
-    to: "/feedback/",
+    to: "feedback/",
   },
   {
     name: "contacts",
     label: "Contactos",
     icon: <Phone />,
-    to: "/contacts/",
+    to: "contacts/",
   },
 ];
-

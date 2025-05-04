@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Card, CardHeader, CardContent, Grid } from "@mui/material";
+import AddButton from "../../components/AddButton/AddButton";
 
 export default function AthletesPage() {
   type Athlete = {
@@ -18,12 +20,24 @@ export default function AthletesPage() {
   }, []);
 
   return (
-    <div>
-      <div>
-        {athletes.map((athlete) => (
-          <div>{athlete.first_name}</div>
-        ))}
-      </div>
-    </div>
+    <>
+      <Card sx={{ m: 2, mt: 6 }}>
+        <CardHeader
+          title="Página de Atletas"
+          sx={{
+            "& .MuiCardHeader-title": {
+              fontWeight: "bold",
+            },
+          }}
+        ></CardHeader>
+        <CardContent>
+          Aqui poderá registar e consultar todos os seus Atletas/Alunos. Pode
+          consultar a informação de cada um, editar e remover. <p></p>
+          <strong>Importante</strong>: Estes não servem como inscrição em
+          qualquer prova.
+        </CardContent>
+      </Card>
+      <AddButton label="Adicionar"></AddButton>
+    </>
   );
 }

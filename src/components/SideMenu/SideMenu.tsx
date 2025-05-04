@@ -107,7 +107,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function SideMenu() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const theme = useTheme();
 
@@ -146,7 +146,7 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
-                    onClick={() => navigate("/athletes")}
+                    onClick={() => navigate(options.to)}
                     sx={[
                       {
                         minHeight: 48,
@@ -201,6 +201,7 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
+                    onClick={() => navigate(options.to)}
                     sx={[
                       {
                         minHeight: 48,

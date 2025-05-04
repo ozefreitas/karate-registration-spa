@@ -1,29 +1,177 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./homepage.module.css";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  Grid,
+  CardActions,
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material";
+import AddButton from "../../components/AddButton/AddButton";
+import InfoButton from "../../components/InfoButton/InfoButton";
+import { Person, SportsMma } from "@mui/icons-material";
 
 export default function HomePage() {
   type Competition = {
+    id: string;
     name: string;
     season: string;
     location: string;
     competition_date: string;
   };
 
-  const [competitions, setCompetitions] = useState<Competition[]>([]);
+  type Athlete = {
+    first_name: string;
+    last_name: string;
+    age: string;
+    graduation: string;
+    category: string;
+    match_type: string;
+    gender: string;
+  };
+
+  const [lastCompetition, setLastCompetitions] = useState<Competition>();
+  const [athletes, setAthletes] = useState<Athlete[]>([]);
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/competitions/")
-      .then((response) => setCompetitions(response.data))
+      .get("http://127.0.0.1:8000/competitions/next_comp/")
+      .then((response) => setLastCompetitions(response.data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/athletes/last_five/")
+      .then((response) => setAthletes(response.data))
       .catch((error) => console.error(error));
   }, []);
 
   return (
     <>
-      <h1>Interface de registos</h1>
-      <p>Escolha uma prova para inscrever os seus atletas:</p>
-      <div className={styles.competition_card_selector}>
+      <Card sx={{ m: 2, mt: 6 }}>
+        <CardHeader
+          title={"Bem-vindo à plataforma de registos da SKI-P."}
+          sx={{
+            "& .MuiCardHeader-title": {
+              fontWeight: "bold",
+            },
+          }}
+        ></CardHeader>
+        <CardContent>
+          Este é o ecrã principal desta plataforma. Aqui poderá ver informações
+          relevantes e rápidas, assim como notificações específicas para si.
+        </CardContent>
+      </Card>
+      <Card sx={{ m: 2 }}>
+        <CardHeader
+          title={"Central de notificações"}
+          sx={{
+            "& .MuiCardHeader-title": {
+              fontWeight: "bold",
+            },
+          }}
+        ></CardHeader>
+        <CardContent>
+          Neste espaço aparecerão notificações importante para o seu dojo. Fique
+          atento.
+        </CardContent>
+      </Card>
+      <Grid container size={12}>
+        <Grid size={6}>
+          <Card sx={{ m: 2 }}>
+            <CardHeader
+              title={"Atletas adicionados recentemente"}
+              sx={{
+                "& .MuiCardHeader-title": {
+                  fontWeight: "bold",
+                },
+              }}
+            ></CardHeader>
+            <List>
+              {athletes.map((athlete, index) => (
+                <ListItem key={index} sx={{ m: 0, pb: 0 }}>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <Person></Person>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${athlete.first_name} ${athlete.last_name} ${athlete.match_type} ${athlete.category} ${athlete.gender}`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+            <CardActions sx={{ justifyContent: "space-between" }}>
+              <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
+              <AddButton label="Adicionar"></AddButton>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid size={6}>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title={"Próxima prova"}
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              {lastCompetition ? (
+                <List>
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton sx={{ m: 0, pb: 0 }}>
+                      <ListItemIcon>
+                        <SportsMma></SportsMma>
+                      </ListItemIcon>
+                      <ListItemText primary={lastCompetition?.name} />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              ) : (
+                <Typography>Não há competições.</Typography>
+              )}
+              <CardActions sx={{ justifyContent: "space-between" }}>
+                <InfoButton
+                  label="Ver Prova"
+                  to={`competition/${lastCompetition?.id}`}
+                ></InfoButton>
+                <InfoButton label="Ver Todas" to="competitions/"></InfoButton>
+              </CardActions>
+            </Card>
+          </Grid>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+                title="Últimas Classificações"
+              ></CardHeader>
+              <CardContent></CardContent>
+              <CardActions sx={{ justifyContent: "flex-end" }}>
+                <InfoButton
+                  label="Ver Todas"
+                  to="classifications/"
+                ></InfoButton>
+              </CardActions>
+            </Card>
+          </Grid>
+        </Grid>
+      </Grid>
+      {/* <div className={styles.competition_card_selector}>
         {competitions.map((competition, i) => (
           <div key={i} className={styles.competition_card}>
             {competition.name} {competition.season}
@@ -34,7 +182,7 @@ export default function HomePage() {
             <button className="default-button">Consultar</button>
           </div>
         ))}
-      </div>
+      </div> */}
     </>
   );
 }
