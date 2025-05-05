@@ -16,7 +16,10 @@
     "@mui/material": "^7.0.2",
     "@mui/x-date-pickers": "^8.2.0",
     "axios": "^1.8.3",
+    "lucide": "^0.507.0",
+    "lucide-react": "^0.507.0",
     "material-react-table": "^3.2.1",
+    "phosphor-react": "^1.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

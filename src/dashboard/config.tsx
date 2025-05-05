@@ -3,9 +3,8 @@ import {
   SportsMma,
   EmojiEvents,
   Feedback,
-  AccountBox,
+  Celebration,
   Rule,
-  Logout,
   Phone,
   HelpCenter,
 } from "@mui/icons-material";
@@ -44,13 +43,7 @@ export const sideMenuConfig = [
 ];
 
 export const accountSideMenuConfig = [
-  { name: "profile", label: "Perfil", icon: <AccountBox />, to: "profile/" },
-  {
-    name: "logout",
-    label: "Logout",
-    icon: <Logout />,
-    to: "",
-  },
+  { name: "news", label: "Novidades", icon: <Celebration />, to: "/news/" },
   {
     name: "feedback",
     label: "Feedback",

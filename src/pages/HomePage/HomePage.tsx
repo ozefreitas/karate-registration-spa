@@ -104,7 +104,7 @@ export default function HomePage() {
             },
           }}
         ></CardHeader>
-        <CardContent>
+        <CardContent sx={{ p: 0}}>
           <ul>
             {notifications.map((noti, index) => (
               <li style={{ color: noti.urgency }} key={index}>
