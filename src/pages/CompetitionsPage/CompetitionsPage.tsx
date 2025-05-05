@@ -11,8 +11,10 @@ import InfoButton from "../../components/InfoButton/InfoButton";
 
 export default function CompetitionsPage() {
   type Competition = {
+    id: string;
     name: string;
     location: string;
+    competition_date: string;
   };
 
   const [competitions, setCompetitions] = useState<Competition[]>([]);
@@ -45,22 +47,20 @@ export default function CompetitionsPage() {
         </CardContent>
       </Card>
       <Grid container size={12}>
-        <Grid size={6}>
-          <Card sx={{ m: 2, border: "1px solid red" }}>
-            <CardHeader title="OLA"></CardHeader>
-            <CardActions sx={{ justifyContent: "center" }}>
-              <InfoButton
-                label="Consultar"
-                to={`competition/${competitions[0]}`}
-              ></InfoButton>
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid size={6}>
-          <Card sx={{ m: 2 }}>
-            <CardHeader title="OLA"></CardHeader>
-          </Card>
-        </Grid>
+        {competitions.map((comp, index) => (
+          <Grid key={index} size={6}>
+            <Card sx={{ m: 2, border: "1px solid red" }}>
+              <CardHeader title={comp.name}></CardHeader>
+              <CardContent>{comp.location} {comp.competition_date}</CardContent>
+              <CardActions sx={{ justifyContent: "center" }}>
+                <InfoButton
+                  label="Consultar"
+                  to={`/competition/${comp.id}`}
+                ></InfoButton>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </>
   );

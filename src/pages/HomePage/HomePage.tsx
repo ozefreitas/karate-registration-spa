@@ -18,6 +18,7 @@ import {
 import AddButton from "../../components/AddButton/AddButton";
 import InfoButton from "../../components/InfoButton/InfoButton";
 import { Person, SportsMma } from "@mui/icons-material";
+import { Medal } from "lucide-react";
 
 export default function HomePage() {
   type Competition = {
@@ -38,12 +39,26 @@ export default function HomePage() {
     gender: string;
   };
 
+  type Notification = {
+    notification: string;
+    urgency: string;
+  };
+
+  const [nextCompetition, setNextCompetitions] = useState<Competition>();
   const [lastCompetition, setLastCompetitions] = useState<Competition>();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [athletes, setAthletes] = useState<Athlete[]>([]);
 
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/competitions/next_comp/")
+      .then((response) => setNextCompetitions(response.data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/competitions/last_comp/")
       .then((response) => setLastCompetitions(response.data))
       .catch((error) => console.error(error));
   }, []);
@@ -52,6 +67,13 @@ export default function HomePage() {
     axios
       .get("http://127.0.0.1:8000/athletes/last_five/")
       .then((response) => setAthletes(response.data))
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/dojos/")
+      .then((response) => setNotifications(response.data))
       .catch((error) => console.error(error));
   }, []);
 
@@ -74,6 +96,8 @@ export default function HomePage() {
       <Card sx={{ m: 2 }}>
         <CardHeader
           title={"Central de notificações"}
+          subheader="Neste espaço aparecerão notificações importante para o seu dojo. Fique
+          atento."
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -81,8 +105,13 @@ export default function HomePage() {
           }}
         ></CardHeader>
         <CardContent>
-          Neste espaço aparecerão notificações importante para o seu dojo. Fique
-          atento.
+          <ul>
+            {notifications.map((noti, index) => (
+              <li style={{ color: noti.urgency }} key={index}>
+                {noti.notification}
+              </li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
       <Grid container size={12}>
@@ -127,24 +156,24 @@ export default function HomePage() {
                   },
                 }}
               ></CardHeader>
-              {lastCompetition ? (
+              {nextCompetition ? (
                 <List>
                   <ListItem sx={{ m: 0 }}>
                     <ListItemButton sx={{ m: 0, pb: 0 }}>
                       <ListItemIcon>
                         <SportsMma></SportsMma>
                       </ListItemIcon>
-                      <ListItemText primary={lastCompetition?.name} />
+                      <ListItemText primary={nextCompetition?.name} />
                     </ListItemButton>
                   </ListItem>
                 </List>
               ) : (
-                <Typography>Não há competições.</Typography>
+                <Typography variant="h6">Não há competições.</Typography>
               )}
               <CardActions sx={{ justifyContent: "space-between" }}>
                 <InfoButton
                   label="Ver Prova"
-                  to={`competition/${lastCompetition?.id}`}
+                  to={`competition/${nextCompetition?.id}`}
                 ></InfoButton>
                 <InfoButton label="Ver Todas" to="competitions/"></InfoButton>
               </CardActions>
@@ -156,11 +185,40 @@ export default function HomePage() {
                 sx={{
                   "& .MuiCardHeader-title": {
                     fontWeight: "bold",
+                    mb: 1,
                   },
                 }}
                 title="Últimas Classificações"
+                subheader={`${lastCompetition?.name} ${lastCompetition?.season}`}
               ></CardHeader>
-              <CardContent></CardContent>
+              <CardContent sx={{ pt: 0, pb: 0 }}>
+                <List>
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton sx={{ m: 0, pb: 0 }}>
+                      <ListItemIcon>
+                        <Medal size={22} color="gold" />
+                      </ListItemIcon>
+                      <ListItemText primary="Portugal" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton sx={{ m: 0, pb: 0 }}>
+                      <ListItemIcon>
+                        <Medal size={22} color="silver" />
+                      </ListItemIcon>
+                      <ListItemText primary="Portugal" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton sx={{ m: 0, pb: 0 }}>
+                      <ListItemIcon>
+                        <Medal size={22} color="#cd7f32" />
+                      </ListItemIcon>
+                      <ListItemText primary="Portugal" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </CardContent>
               <CardActions sx={{ justifyContent: "flex-end" }}>
                 <InfoButton
                   label="Ver Todas"
