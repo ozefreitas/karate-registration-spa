@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AthletesPage from "./pages/AthletesPage/AthletesPage";
 import CompetitionsPage from "./pages/CompetitionsPage/CompetitionsPage";
 import HomePage from "./pages/HomePage/HomePage";
+import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
 
 function App() {
   const [isLogedIn, setIsLogedIn] = useState(false);
@@ -21,6 +22,7 @@ function App() {
           {/* <Route index element={<Home />} /> */}
           <Route path="athletes/" element={<AthletesPage />} />
           <Route path="competitions/" element={<CompetitionsPage />} />
+          <Route path="classifications/" element={<ClassificationsPage />} />
         </Routes>
       </BrowserRouter>
       <div className="main-content">
