@@ -14,10 +14,14 @@ import {
   ListItemButton,
   ListItemText,
   ListItemIcon,
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
 } from "@mui/material";
 import AddButton from "../../components/AddButton/AddButton";
 import InfoButton from "../../components/InfoButton/InfoButton";
-import { Person, SportsMma } from "@mui/icons-material";
+import { Person, SportsMma, ExpandMore } from "@mui/icons-material";
 import { Medal } from "lucide-react";
 
 export default function HomePage() {
@@ -44,9 +48,20 @@ export default function HomePage() {
     urgency: string;
   };
 
+  type CategoryClassification = {
+    id: number;
+    full_category: string;
+    first_place: Athlete;
+    second_place: Athlete;
+    third_place: Athlete;
+  };
+
   const [nextCompetition, setNextCompetitions] = useState<Competition>();
   const [lastCompetition, setLastCompetitions] = useState<Competition>();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [classifications, setClassifications] = useState<
+    CategoryClassification[]
+  >([]);
   const [athletes, setAthletes] = useState<Athlete[]>([]);
 
   useEffect(() => {
@@ -77,6 +92,13 @@ export default function HomePage() {
       .catch((error) => console.error(error));
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/classifications/last_comp_quali/")
+      .then((response) => setClassifications(response.data))
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
     <>
       <Card sx={{ m: 2, mt: 6 }}>
@@ -104,7 +126,7 @@ export default function HomePage() {
             },
           }}
         ></CardHeader>
-        <CardContent sx={{ p: 0}}>
+        <CardContent sx={{ p: 0 }}>
           <ul>
             {notifications.map((noti, index) => (
               <li style={{ color: noti.urgency }} key={index}>
@@ -156,7 +178,7 @@ export default function HomePage() {
                   },
                 }}
               ></CardHeader>
-              {nextCompetition ? (
+              {nextCompetition?.name !== "" ? (
                 <List>
                   <ListItem sx={{ m: 0 }}>
                     <ListItemButton sx={{ m: 0, pb: 0 }}>
@@ -168,7 +190,14 @@ export default function HomePage() {
                   </ListItem>
                 </List>
               ) : (
-                <Typography variant="h6">Não há competições.</Typography>
+                <ListItem sx={{ m: 0 }}>
+                  <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                    <ListItemIcon>
+                      <SportsMma></SportsMma>
+                    </ListItemIcon>
+                    <ListItemText primary={"Não há competições"} />
+                  </ListItemButton>
+                </ListItem>
               )}
               <CardActions sx={{ justifyContent: "space-between" }}>
                 <InfoButton
@@ -189,35 +218,46 @@ export default function HomePage() {
                   },
                 }}
                 title="Últimas Classificações"
-                subheader={`${lastCompetition?.name} ${lastCompetition?.season}`}
+                subheader={`Última prova: ${lastCompetition?.name} ${lastCompetition?.season}`}
               ></CardHeader>
               <CardContent sx={{ pt: 0, pb: 0 }}>
-                <List>
-                  <ListItem sx={{ m: 0 }}>
-                    <ListItemButton sx={{ m: 0, pb: 0 }}>
-                      <ListItemIcon>
-                        <Medal size={22} color="gold" />
-                      </ListItemIcon>
-                      <ListItemText primary="Portugal" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem sx={{ m: 0 }}>
-                    <ListItemButton sx={{ m: 0, pb: 0 }}>
-                      <ListItemIcon>
-                        <Medal size={22} color="silver" />
-                      </ListItemIcon>
-                      <ListItemText primary="Portugal" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem sx={{ m: 0 }}>
-                    <ListItemButton sx={{ m: 0, pb: 0 }}>
-                      <ListItemIcon>
-                        <Medal size={22} color="#cd7f32" />
-                      </ListItemIcon>
-                      <ListItemText primary="Portugal" />
-                    </ListItemButton>
-                  </ListItem>
-                </List>
+                {classifications.map((category, index) => (
+                  <Accordion key={index} sx={{ m: 3 }}>
+                    <AccordionSummary
+                      sx={{ pl: 4 }}
+                      expandIcon={<ExpandMore />}
+                    >
+                      <Typography component="span">
+                        {category.full_category}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ p: 1, mb: 1 }}>
+                      <List sx={{ m: 0, p: 0 }}>
+                        <ListItem sx={{ m: 0 }}>
+                          <ListItemButton sx={{ m: 0, pb: 0 }}>
+                            <ListItemText
+                              primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                        <ListItem sx={{ m: 0 }}>
+                          <ListItemButton sx={{ m: 0, pb: 0 }}>
+                            <ListItemText
+                              primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                        <ListItem sx={{ m: 0 }}>
+                          <ListItemButton sx={{ m: 0, pb: 0 }}>
+                            <ListItemText
+                              primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
+                            />
+                          </ListItemButton>
+                        </ListItem>
+                      </List>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
               </CardContent>
               <CardActions sx={{ justifyContent: "flex-end" }}>
                 <InfoButton
