@@ -8,6 +8,8 @@ import AthletesPage from "./pages/AthletesPage/AthletesPage";
 import CompetitionsPage from "./pages/CompetitionsPage/CompetitionsPage";
 import HomePage from "./pages/HomePage/HomePage";
 import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
+import RulesPage from "./pages/RulesPage/RulesPage";
+import HelpPage from "./pages/HelpPage/HelpPage";
 
 function App() {
   const [isLogedIn, setIsLogedIn] = useState(false);
@@ -22,7 +24,9 @@ function App() {
           {/* <Route index element={<Home />} /> */}
           <Route path="athletes/" element={<AthletesPage />} />
           <Route path="competitions/" element={<CompetitionsPage />} />
+          <Route path="rules/" element={<RulesPage />} />
           <Route path="classifications/" element={<ClassificationsPage />} />
+          <Route path="help/" element={<HelpPage />} />
         </Routes>
       </BrowserRouter>
       <div className="main-content">
