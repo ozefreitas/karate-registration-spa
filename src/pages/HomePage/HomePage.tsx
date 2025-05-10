@@ -8,7 +8,7 @@ import {
   Typography,
   Grid,
   CardActions,
-  Box,
+  Tooltip,
   List,
   ListItem,
   ListItemButton,
@@ -22,7 +22,7 @@ import {
 import AddButton from "../../components/AddButton/AddButton";
 import InfoButton from "../../components/InfoButton/InfoButton";
 import { Person, SportsMma, ExpandMore } from "@mui/icons-material";
-import { Medal } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   type Competition = {
@@ -34,6 +34,7 @@ export default function HomePage() {
   };
 
   type Athlete = {
+    id: string;
     first_name: string;
     last_name: string;
     age: string;
@@ -63,6 +64,7 @@ export default function HomePage() {
     CategoryClassification[]
   >([]);
   const [athletes, setAthletes] = useState<Athlete[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -149,21 +151,28 @@ export default function HomePage() {
             ></CardHeader>
             <List>
               {athletes.map((athlete, index) => (
-                <ListItem key={index} sx={{ m: 0, pb: 0 }}>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <Person></Person>
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={`${athlete.first_name} ${athlete.last_name} ${athlete.match_type} ${athlete.category} ${athlete.gender}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
+                <Tooltip key={index} title={"Consultar"}>
+                  <ListItem sx={{ m: 0, pb: 0 }}>
+                    <ListItemButton
+                      onClick={() => navigate(`athletes/${athlete.id}`)}
+                    >
+                      <ListItemIcon>
+                        <Person></Person>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.match_type} ${athlete.category} ${athlete.gender}`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </Tooltip>
               ))}
             </List>
             <CardActions sx={{ justifyContent: "space-between" }}>
               <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
-              <AddButton label="Adicionar"></AddButton>
+              <AddButton
+                label="Adicionar"
+                to="athletes/new_athlete/"
+              ></AddButton>
             </CardActions>
           </Card>
         </Grid>
@@ -180,14 +189,16 @@ export default function HomePage() {
               ></CardHeader>
               {nextCompetition?.name !== "" ? (
                 <List>
-                  <ListItem sx={{ m: 0 }}>
-                    <ListItemButton sx={{ m: 0, pb: 0 }}>
-                      <ListItemIcon>
-                        <SportsMma></SportsMma>
-                      </ListItemIcon>
-                      <ListItemText primary={nextCompetition?.name} />
-                    </ListItemButton>
-                  </ListItem>
+                  <Tooltip title={"Consultar"}>
+                    <ListItem sx={{ m: 0 }}>
+                      <ListItemButton sx={{ m: 0, pb: 0 }}>
+                        <ListItemIcon>
+                          <SportsMma></SportsMma>
+                        </ListItemIcon>
+                        <ListItemText primary={nextCompetition?.name} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Tooltip>
                 </List>
               ) : (
                 <ListItem sx={{ m: 0 }}>
@@ -195,12 +206,13 @@ export default function HomePage() {
                     <ListItemIcon>
                       <SportsMma></SportsMma>
                     </ListItemIcon>
-                    <ListItemText primary={"Não há competições"} />
+                    <ListItemText primary={"Não há competições disponíveis."} />
                   </ListItemButton>
                 </ListItem>
               )}
               <CardActions sx={{ justifyContent: "space-between" }}>
                 <InfoButton
+                  disabled={nextCompetition?.id ? false : true}
                   label="Ver Prova"
                   to={`competition/${nextCompetition?.id}`}
                 ></InfoButton>
@@ -233,27 +245,48 @@ export default function HomePage() {
                     </AccordionSummary>
                     <AccordionDetails sx={{ p: 1, mb: 1 }}>
                       <List sx={{ m: 0, p: 0 }}>
-                        <ListItem sx={{ m: 0 }}>
-                          <ListItemButton sx={{ m: 0, pb: 0 }}>
-                            <ListItemText
-                              primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                        <ListItem sx={{ m: 0 }}>
-                          <ListItemButton sx={{ m: 0, pb: 0 }}>
-                            <ListItemText
-                              primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                        <ListItem sx={{ m: 0 }}>
-                          <ListItemButton sx={{ m: 0, pb: 0 }}>
-                            <ListItemText
-                              primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
-                            />
-                          </ListItemButton>
-                        </ListItem>
+                        <Tooltip title={"Consultar"}>
+                          <ListItem sx={{ m: 0 }}>
+                            <ListItemButton
+                              onClick={() =>
+                                navigate(`athletes/${category.first_place.id}`)
+                              }
+                              sx={{ m: 0, pb: 0 }}
+                            >
+                              <ListItemText
+                                primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        </Tooltip>
+                        <Tooltip title={"Consultar"}>
+                          <ListItem
+                            onClick={() =>
+                              navigate(`athletes/${category.second_place.id}`)
+                            }
+                            sx={{ m: 0 }}
+                          >
+                            <ListItemButton sx={{ m: 0, pb: 0 }}>
+                              <ListItemText
+                                primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        </Tooltip>
+                        <Tooltip title={"Consultar"}>
+                          <ListItem sx={{ m: 0 }}>
+                            <ListItemButton
+                              onClick={() =>
+                                navigate(`athletes/${category.third_place.id}`)
+                              }
+                              sx={{ m: 0, pb: 0 }}
+                            >
+                              <ListItemText
+                                primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        </Tooltip>
                       </List>
                     </AccordionDetails>
                   </Accordion>
