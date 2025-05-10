@@ -50,12 +50,12 @@ export default function ClassificationsPage() {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todas as competições da SKI-Portugal. Mais tarde
-          será também possível ver Estágios e outras provas de interesse.
+          Aqui poderá consultar todas as classificações das provas realizadas
+          pela SKIP.
           <p></p>
-          Consultando cada cartão de prova, pode observar toda a informação
-          relevante sobre essa prova, assim como os passos para inscrever os
-          seus Atletas.
+          Consultando cada prova, poderá abrir as classificações de cada
+          escalão. Lá dentro, os perfis de cada medalhado pode também ser
+          aberto.
         </CardContent>
       </Card>
       <Grid sx={{ m: 2, mt: 4 }}>
