@@ -37,7 +37,7 @@ export default function AthletesPage() {
           qualquer prova.
         </CardContent>
       </Card>
-      <AddButton label="Adicionar"></AddButton>
+      <AddButton label="Adicionar" to="new_athletes/"></AddButton>
     </>
   );
 }

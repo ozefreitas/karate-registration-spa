@@ -54,6 +54,7 @@ export default function CompetitionsPage() {
               <CardContent>{comp.location} {comp.competition_date}</CardContent>
               <CardActions sx={{ justifyContent: "center" }}>
                 <InfoButton
+                  size="large"
                   label="Consultar"
                   to={`/competition/${comp.id}`}
                 ></InfoButton>
