@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
   components: {
@@ -9,7 +9,28 @@ const theme = createTheme({
         },
       },
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          padding: 6,
+          overflow: "hidden",
+          margin: "8px 0",
+          "&:before": {
+            display: "none",
+          },
+          "&:not(:last-of-type)": {
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+          },
+          "&:not(:first-of-type)": {
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
+          },
+        },
+      },
+    },
   },
 });
 
-export default theme
+export default theme;

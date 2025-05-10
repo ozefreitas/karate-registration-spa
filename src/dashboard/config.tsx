@@ -14,31 +14,31 @@ export const sideMenuConfig = [
     name: "athletes",
     label: "Atletas",
     icon: <Person sx={{ color: "#e81c24" }} />,
-    to: "athletes/",
+    to: "/athletes/",
   },
   {
     name: "competitions",
     label: "Competições",
     icon: <SportsMma sx={{ color: "#e81c24" }} />,
-    to: "competitions/",
+    to: "/competitions/",
   },
   {
     name: "rules",
     label: "Regras",
     icon: <Rule sx={{ color: "#e81c24" }} />,
-    to: "rules/",
+    to: "/rules/",
   },
   {
     name: "classifications",
     label: "Classificações",
     icon: <EmojiEvents sx={{ color: "#e81c24" }} />,
-    to: "classifications/",
+    to: "/classifications/",
   },
   {
     name: "help",
     label: "Ajuda",
     icon: <HelpCenter sx={{ color: "#e81c24" }} />,
-    to: "help/",
+    to: "/help/",
   },
 ];
 
@@ -48,12 +48,12 @@ export const accountSideMenuConfig = [
     name: "feedback",
     label: "Feedback",
     icon: <Feedback />,
-    to: "feedback/",
+    to: "/feedback/",
   },
   {
     name: "contacts",
     label: "Contactos",
     icon: <Phone />,
-    to: "contacts/",
+    to: "/contacts/",
   },
 ];

@@ -2,7 +2,7 @@ import axios from "axios";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import styles from "./sidemenu.module.css";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   CssBaseline,
@@ -49,7 +49,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
+  padding: theme.spacing(0, 1.5),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
@@ -108,6 +108,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function SideMenu() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const theme = useTheme();
 
@@ -146,9 +147,16 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
+                    selected={location.pathname === options.to}
                     onClick={() => navigate(options.to)}
                     sx={[
                       {
+                        "&.Mui-selected": {
+                          backgroundColor: "#ffb3b3",
+                        },
+                        ":hover": {
+                          backgroundColor: "#ffb3b3",
+                        },
                         minHeight: 48,
                         px: 2.5,
                       },
@@ -201,6 +209,7 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
+                    selected={location.pathname === options.to}
                     onClick={() => navigate(options.to)}
                     sx={[
                       {
