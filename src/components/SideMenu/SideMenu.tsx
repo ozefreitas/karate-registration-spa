@@ -152,51 +152,30 @@ export default function SideMenu() {
                     sx={[
                       {
                         "&.Mui-selected": {
-                          backgroundColor: "#ffb3b3",
+                          borderRadius: "10px",
                         },
-                        ":hover": {
-                          backgroundColor: "#ffb3b3",
+                        "&:hover": {
+                          borderRadius: "10px",
                         },
                         minHeight: 48,
                         px: 2.5,
                       },
                       isMenuOpen
-                        ? {
-                            justifyContent: "initial",
-                          }
-                        : {
-                            justifyContent: "center",
-                          },
+                        ? { justifyContent: "initial" }
+                        : { justifyContent: "center" },
                     ]}
                   >
                     <ListItemIcon
                       sx={[
-                        {
-                          minWidth: 0,
-                          justifyContent: "center",
-                        },
-                        isMenuOpen
-                          ? {
-                              mr: 3,
-                            }
-                          : {
-                              mr: "auto",
-                            },
+                        { minWidth: 0, justifyContent: "center" },
+                        isMenuOpen ? { mr: 3 } : { mr: "auto" },
                       ]}
                     >
                       {options.icon}
                     </ListItemIcon>
                     <ListItemText
                       primary={options.label}
-                      sx={[
-                        isMenuOpen
-                          ? {
-                              opacity: 1,
-                            }
-                          : {
-                              opacity: 0,
-                            },
-                      ]}
+                      sx={[isMenuOpen ? { opacity: 1 } : { opacity: 0 }]}
                     />
                   </ListItemButton>
                 </Tooltip>
@@ -212,47 +191,23 @@ export default function SideMenu() {
                     selected={location.pathname === options.to}
                     onClick={() => navigate(options.to)}
                     sx={[
-                      {
-                        minHeight: 48,
-                        px: 2.5,
-                      },
+                      { minHeight: 48, px: 2.5 },
                       isMenuOpen
-                        ? {
-                            justifyContent: "initial",
-                          }
-                        : {
-                            justifyContent: "center",
-                          },
+                        ? { justifyContent: "initial" }
+                        : { justifyContent: "center" },
                     ]}
                   >
                     <ListItemIcon
                       sx={[
-                        {
-                          minWidth: 0,
-                          justifyContent: "center",
-                        },
-                        isMenuOpen
-                          ? {
-                              mr: 3,
-                            }
-                          : {
-                              mr: "auto",
-                            },
+                        { minWidth: 0, justifyContent: "center" },
+                        isMenuOpen ? { mr: 3 } : { mr: "auto" },
                       ]}
                     >
                       {options.icon}
                     </ListItemIcon>
                     <ListItemText
                       primary={options.label}
-                      sx={[
-                        isMenuOpen
-                          ? {
-                              opacity: 1,
-                            }
-                          : {
-                              opacity: 0,
-                            },
-                      ]}
+                      sx={[isMenuOpen ? { opacity: 1 } : { opacity: 0 }]}
                     />
                   </ListItemButton>
                 </Tooltip>

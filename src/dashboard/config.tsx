@@ -7,9 +7,16 @@ import {
   Rule,
   Phone,
   HelpCenter,
+  Home,
 } from "@mui/icons-material";
 
 export const sideMenuConfig = [
+  {
+    name: "home",
+    label: "Início",
+    icon: <Home sx={{ color: "#e81c24" }} />,
+    to: "/",
+  },
   {
     name: "athletes",
     label: "Atletas",
