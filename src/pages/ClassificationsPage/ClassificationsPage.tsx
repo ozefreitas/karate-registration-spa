@@ -40,7 +40,7 @@ export default function ClassificationsPage() {
 
   return (
     <>
-      <Card sx={{ ml: 2, mr: 2, mt: 6 }}>
+      <Card sx={{ ml: 2, mr: 2, mt: 0 }}>
         <CardHeader
           title="Página de Classificações"
           sx={{

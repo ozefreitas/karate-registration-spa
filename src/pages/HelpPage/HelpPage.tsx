@@ -3,7 +3,7 @@ import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 export default function HelpPage() {
   return (
     <div>
-      <Card sx={{ m: 2, mt: 6 }}>
+      <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
           title={"Página de Ajuda."}
           sx={{

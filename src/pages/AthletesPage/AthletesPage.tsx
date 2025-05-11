@@ -21,7 +21,7 @@ export default function AthletesPage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 6 }}>
+      <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
           title="Página de Atletas"
           sx={{

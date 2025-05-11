@@ -28,7 +28,7 @@ export default function CompetitionsPage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 6 }}>
+      <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
           title="Página de Competições"
           sx={{
@@ -56,7 +56,7 @@ export default function CompetitionsPage() {
                 <InfoButton
                   size="large"
                   label="Consultar"
-                  to={`/competition/${comp.id}`}
+                  to={`/competitions/${comp.id}`}
                 ></InfoButton>
               </CardActions>
             </Card>

@@ -3,7 +3,7 @@ import { Card, CardHeader, CardContent } from "@mui/material";
 export default function RulesPage() {
   return (
     <div>
-      <Card sx={{ m: 2, mt: 6 }}>
+      <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
           title={"Página de consulta de Regras."}
           sx={{

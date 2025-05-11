@@ -103,7 +103,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 6 }}>
+      <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
           title={"Bem-vindo à plataforma de registos da SKI-P."}
           sx={{
@@ -214,7 +214,7 @@ export default function HomePage() {
                 <InfoButton
                   disabled={nextCompetition?.id ? false : true}
                   label="Ver Prova"
-                  to={`competition/${nextCompetition?.id}`}
+                  to={`competitions/${nextCompetition?.id}`}
                 ></InfoButton>
                 <InfoButton label="Ver Todas" to="competitions/"></InfoButton>
               </CardActions>
@@ -234,7 +234,7 @@ export default function HomePage() {
               ></CardHeader>
               <CardContent sx={{ pt: 0, pb: 0 }}>
                 {classifications.map((category, index) => (
-                  <Accordion key={index} sx={{ m: 3 }}>
+                  <Accordion key={index} sx={{ m: 2 }}>
                     <AccordionSummary
                       sx={{ pl: 4 }}
                       expandIcon={<ExpandMore />}
@@ -245,20 +245,27 @@ export default function HomePage() {
                     </AccordionSummary>
                     <AccordionDetails sx={{ p: 1, mb: 1 }}>
                       <List sx={{ m: 0, p: 0 }}>
-                        <Tooltip title={"Consultar"}>
-                          <ListItem sx={{ m: 0 }}>
+                        <ListItem
+                          sx={{
+                            m: 0,
+                          }}
+                        >
+                          <Tooltip title={"Consultar"}>
                             <ListItemButton
                               onClick={() =>
                                 navigate(`athletes/${category.first_place.id}`)
                               }
-                              sx={{ m: 0, pb: 0 }}
+                              sx={{
+                                m: 0,
+                                pb: 0,
+                              }}
                             >
                               <ListItemText
                                 primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
                               />
                             </ListItemButton>
-                          </ListItem>
-                        </Tooltip>
+                          </Tooltip>
+                        </ListItem>
                         <Tooltip title={"Consultar"}>
                           <ListItem
                             onClick={() =>
@@ -266,7 +273,13 @@ export default function HomePage() {
                             }
                             sx={{ m: 0 }}
                           >
-                            <ListItemButton sx={{ m: 0, pb: 0 }}>
+                            <ListItemButton
+                              sx={{
+                                m: 0,
+                                pb: 0,
+                                pt: 0,
+                              }}
+                            >
                               <ListItemText
                                 primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
                               />
@@ -279,7 +292,11 @@ export default function HomePage() {
                               onClick={() =>
                                 navigate(`athletes/${category.third_place.id}`)
                               }
-                              sx={{ m: 0, pb: 0 }}
+                              sx={{
+                                m: 0,
+                                pb: 0,
+                                pt: 0,
+                              }}
                             >
                               <ListItemText
                                 primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
