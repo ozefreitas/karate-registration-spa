@@ -1,7 +1,14 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
+  typography: {
+    fontFamily:
+      '"Poppins", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+  },
   components: {
+    MuiCardHeader: {
+      styleOverrides: { root: { paddingLeft: 20 } },
+    },
     MuiCard: {
       styleOverrides: {
         root: {
@@ -12,6 +19,10 @@ const theme = createTheme({
     MuiAccordion: {
       styleOverrides: {
         root: {
+          transition: "box-shadow 0.3s ease",
+          "&:hover": {
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // mimic elevation
+          },
           borderRadius: 12,
           padding: 6,
           overflow: "hidden",
@@ -29,6 +40,9 @@ const theme = createTheme({
           },
         },
       },
+    },
+    MuiListItemButton: {
+      styleOverrides: { root: { borderRadius: "10px" } },
     },
   },
 });
