@@ -17,6 +17,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Logout } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { breadcrumbsConvertion } from "../../dashboard/config";
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
@@ -24,11 +25,19 @@ export default function ButtonAppBar() {
 
   const paths = window.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
-  paths.map((p, index) => {
-    breadcrumbs.push({
-      title: `${p}`,
-      link: `${paths.slice(0, index + 1).join("/")}/`,
-    });
+  paths.forEach((p, index) => {
+    const routeTo = p;
+    if (p !== "" && breadcrumbsConvertion[routeTo]) {
+      breadcrumbs.push({
+        title: `${breadcrumbsConvertion[routeTo]}`,
+        link: `${paths.slice(0, index + 1).join("/")}/`,
+      });
+    } else if (breadcrumbsConvertion[routeTo] === undefined) {
+      breadcrumbs.push({
+        title: `${p}`,
+        link: `${paths.slice(0, index + 1).join("/")}/`,
+      });
+    }
   });
 
   useEffect(() => {
@@ -149,7 +158,9 @@ export default function ButtonAppBar() {
               </Link>
             </Box>
           ) : (
-            <Typography key={index}>{b.title}</Typography>
+            <Typography key={index}>
+              {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
+            </Typography>
           )
         )}
       </Breadcrumbs>

@@ -64,3 +64,14 @@ export const accountSideMenuConfig = [
     to: "/contacts/",
   },
 ];
+
+export const breadcrumbsConvertion: Record<string, string> = {
+  "": "Início",
+  athletes: "Atletas",
+  classifications: "Classificações",
+  competitions: "Competições",
+  news: "Novidades",
+  rules: "Regras",
+  contacts: "Contactos",
+  register: "Registar",
+};
