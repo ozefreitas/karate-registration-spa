@@ -9,6 +9,7 @@ import {
   Menu,
   MenuItem,
   IconButton,
+  Breadcrumbs,
 } from "@mui/material";
 import skipLogo from "./../../assets/skip-logo.png";
 import { Link } from "react-router-dom";
@@ -20,6 +21,15 @@ import { useNavigate } from "react-router-dom";
 export default function ButtonAppBar() {
   const navigate = useNavigate();
   const [currentSeason, setCurrentSeason] = useState<string>("");
+
+  const paths = window.location.pathname.split("/").slice(1);
+  const breadcrumbs: { title: string; link: string }[] = [];
+  paths.map((p, index) => {
+    breadcrumbs.push({
+      title: `${p}`,
+      link: `${paths.slice(0, index + 1).join("/")}/`,
+    });
+  });
 
   useEffect(() => {
     axios
@@ -128,6 +138,21 @@ export default function ButtonAppBar() {
           <Logout sx={{ m: 0.5, mr: 1 }} /> Logout
         </MenuItem>
       </Menu>
+      <Breadcrumbs sx={{ p: 3 }}>
+        {breadcrumbs.map((b, index) =>
+          index !== breadcrumbs.length - 1 ? (
+            <Box key={index}>
+              <Link to={b.link}>
+                <Typography color="red">
+                  {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
+                </Typography>
+              </Link>
+            </Box>
+          ) : (
+            <Typography key={index}>{b.title}</Typography>
+          )
+        )}
+      </Breadcrumbs>
     </>
   );
 }
