@@ -68,10 +68,17 @@ export const accountSideMenuConfig = [
 export const breadcrumbsConvertion: Record<string, string> = {
   "": "Início",
   athletes: "Atletas",
+  teams: "Equipas",
   classifications: "Classificações",
   competitions: "Competições",
   news: "Novidades",
+  profile: "Perfil",
   rules: "Regras",
   contacts: "Contactos",
   register: "Registar",
+  register_account: "Criar Conta",
+  new_athlete: "Novo Atleta",
+  new_team: "Nova Equipa",
+  registered_individuals: "Individuais Registados",
+  registered_teams: "Equipas Registadas",
 };

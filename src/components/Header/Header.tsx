@@ -10,18 +10,47 @@ import {
   MenuItem,
   IconButton,
   Breadcrumbs,
+  Button,
 } from "@mui/material";
 import skipLogo from "./../../assets/skip-logo.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Logout } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { breadcrumbsConvertion } from "../../dashboard/config";
+import stringAvatar from "../../dashboard/utils/avatarColor";
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentSeason, setCurrentSeason] = useState<string>("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsAuthenticated(false);
+        setUsername("");
+      }
+
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/me/", {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        });
+        setIsAuthenticated(true);
+        setUsername(response.data.username);
+      } catch (err) {
+        setIsAuthenticated(false);
+        setUsername("");
+      }
+    };
+    checkAuth();
+  }, [location]);
 
   const paths = window.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
@@ -52,9 +81,25 @@ export default function ButtonAppBar() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = async () => {
     setAnchorEl(null);
   };
+
+  const handleLogOut = async () => {
+    setAnchorEl(null);
+    await axios.post(
+      "http://127.0.0.1:8000/logout/",
+      {},
+      {
+        headers: { Authorization: `Token ${localStorage.getItem("token")}` },
+      }
+    );
+    localStorage.removeItem("token");
+    navigate("/");
+    window.location.reload();
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -83,15 +128,28 @@ export default function ButtonAppBar() {
                 Época desportiva: {currentSeason}
               </Typography>
               <IconButton
-                onClick={handleClick}
+                onClick={(event) => {
+                  if (isAuthenticated) {
+                    handleClick(event);
+                  }
+                }}
                 size="small"
                 sx={{ ml: 2 }}
                 aria-controls={open ? "account-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
               >
-                {/* TODO: Mudar de acordo com o User */}
-                <Avatar>OZ</Avatar>
+                {isAuthenticated ? (
+                  <Avatar {...stringAvatar(username)}></Avatar>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={() => navigate("/login/")}
+                  >
+                    Login
+                  </Button>
+                )}
               </IconButton>
             </Stack>
             {/* <Button color="inherit">Login</Button> */}
@@ -135,7 +193,11 @@ export default function ButtonAppBar() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
+        <MenuItem divider sx={{ p: 2 }}>
+          Bem-vindo {username}
+        </MenuItem>
         <MenuItem
+          sx={{ p: 2 }}
           onClick={() => {
             handleClose();
             navigate("/profile");
@@ -143,11 +205,18 @@ export default function ButtonAppBar() {
         >
           <Avatar /> Perfil
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Logout sx={{ m: 0.5, mr: 1 }} /> Logout
+        <MenuItem sx={{ p: 2 }} onClick={handleLogOut}>
+          <Logout sx={{ m: 0, mr: 1 }} /> Logout
         </MenuItem>
       </Menu>
       <Breadcrumbs sx={{ p: 3 }}>
+        {breadcrumbs.length !== 0 ? (
+          <Link to={"/"}>
+            <Typography color="red">Início</Typography>
+          </Link>
+        ) : (
+          ""
+        )}
         {breadcrumbs.map((b, index) =>
           index !== breadcrumbs.length - 1 ? (
             <Box key={index}>
