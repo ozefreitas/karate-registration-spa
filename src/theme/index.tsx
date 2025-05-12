@@ -6,6 +6,24 @@ const theme = createTheme({
       '"Poppins", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused": {
+            color: "red", // Label color when focused
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "red", // Default border color
+          },
+        },
+      },
+    },
     MuiCardHeader: {
       styleOverrides: { root: { paddingLeft: 20 } },
     },
