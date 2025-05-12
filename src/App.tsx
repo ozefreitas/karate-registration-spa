@@ -10,30 +10,36 @@ import HomePage from "./pages/HomePage/HomePage";
 import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
 import RulesPage from "./pages/RulesPage/RulesPage";
 import HelpPage from "./pages/HelpPage/HelpPage";
+import RegisterAccountPage from "./pages/auth/RegisterAccountPage";
+import LoginPage from "./pages/auth/LoginPage";
+import NewAthletePage from "./pages/AthletesPage/NewAthletePage";
+import SingleAthletePage from "./pages/AthletesPage/SingleAthletePage";
+import TeamsPage from "./pages/TeamsPage/TeamsPage";
+import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
+import NewTeamPage from "./pages/TeamsPage/NewTeamPage";
 
 function App() {
-  const [isLogedIn, setIsLogedIn] = useState(false);
-
   return (
-    <>
-      <BrowserRouter>
-        <ButtonAppBar></ButtonAppBar>
-        <SideMenu></SideMenu>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          {/* <Route index element={<Home />} /> */}
-          <Route path="athletes/" element={<AthletesPage />} />
-          <Route path="competitions/" element={<CompetitionsPage />} />
-          <Route path="rules/" element={<RulesPage />} />
-          <Route path="classifications/" element={<ClassificationsPage />} />
-          <Route path="help/" element={<HelpPage />} />
-        </Routes>
-      </BrowserRouter>
-      <div className="main-content">
-        {/* <HomePage></HomePage> */}
-        {/* <AthletesPage></AthletesPage> */}
-      </div>
-    </>
+    <BrowserRouter>
+      <ButtonAppBar></ButtonAppBar>
+      <SideMenu></SideMenu>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        {/* <Route index element={<Home />} /> */}
+        <Route path="register_account/" element={<RegisterAccountPage />} />
+        <Route path="login/" element={<LoginPage />} />
+        <Route path="athletes/" element={<AthletesPage />} />
+        <Route path="athletes/:id/" element={<SingleAthletePage />} />
+        <Route path="athletes/new_athlete/" element={<NewAthletePage />} />
+        <Route path="teams/" element={<TeamsPage />} />
+        <Route path="teams/:id/" element={<SingleTeamPage />} />
+        <Route path="teams/new_team/" element={<NewTeamPage />} />
+        <Route path="competitions/" element={<CompetitionsPage />} />
+        <Route path="rules/" element={<RulesPage />} />
+        <Route path="classifications/" element={<ClassificationsPage />} />
+        <Route path="help/" element={<HelpPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
