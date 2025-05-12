@@ -44,6 +44,14 @@ export default function HomePage() {
     gender: string;
   };
 
+  type Team = {
+    id: string;
+    team_number: number;
+    category: string;
+    match_type: string;
+    gender: string;
+  };
+
   type Notification = {
     notification: string;
     urgency: string;
@@ -64,6 +72,7 @@ export default function HomePage() {
     CategoryClassification[]
   >([]);
   const [athletes, setAthletes] = useState<Athlete[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,30 +80,35 @@ export default function HomePage() {
       .get("http://127.0.0.1:8000/competitions/next_comp/")
       .then((response) => setNextCompetitions(response.data))
       .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/competitions/last_comp/")
       .then((response) => setLastCompetitions(response.data))
       .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://127.0.0.1:8000/athletes/last_five/")
+      .get("http://127.0.0.1:8000/athletes/last_five/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => setAthletes(response.data))
       .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/dojos/")
+      .get("http://127.0.0.1:8000/teams/last_five/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
+      .then((response) => setTeams(response.data))
+      .catch((error) => console.error(error));
+    axios
+      .get("http://127.0.0.1:8000/dojos/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      })
       .then((response) => setNotifications(response.data))
       .catch((error) => console.error(error));
-  }, []);
-
-  useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/classifications/last_comp_quali/")
       .then((response) => setClassifications(response.data))
@@ -130,51 +144,119 @@ export default function HomePage() {
         ></CardHeader>
         <CardContent sx={{ p: 0 }}>
           <ul>
-            {notifications.map((noti, index) => (
-              <li style={{ color: noti.urgency }} key={index}>
-                {noti.notification}
+            {notifications.length > 1 ? (
+              notifications.map((noti, index) => (
+                <li style={{ color: noti.urgency }} key={index}>
+                  {noti.notification}
+                </li>
+              ))
+            ) : (
+              <li style={{ color: "grey" }}>
+                De momento não tem notificações.
               </li>
-            ))}
+            )}
           </ul>
         </CardContent>
       </Card>
       <Grid container size={12}>
         <Grid size={6}>
-          <Card sx={{ m: 2 }}>
-            <CardHeader
-              title={"Atletas adicionados recentemente"}
-              sx={{
-                "& .MuiCardHeader-title": {
-                  fontWeight: "bold",
-                },
-              }}
-            ></CardHeader>
-            <List>
-              {athletes.map((athlete, index) => (
-                <Tooltip key={index} title={"Consultar"}>
-                  <ListItem sx={{ m: 0, pb: 0 }}>
-                    <ListItemButton
-                      onClick={() => navigate(`athletes/${athlete.id}`)}
-                    >
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title={"Atletas adicionados recentemente"}
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              <List>
+                {athletes.length > 1 ? (
+                  athletes.map((athlete, index) => (
+                    <Tooltip key={index} title={"Consultar"}>
+                      <ListItem sx={{ m: 0, pb: 0 }}>
+                        <ListItemButton
+                          onClick={() => navigate(`athletes/${athlete.id}`)}
+                        >
+                          <ListItemIcon>
+                            <Person></Person>
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={`${athlete.first_name} ${athlete.last_name} ${athlete.match_type} ${athlete.category} ${athlete.gender}`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  ))
+                ) : (
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                       <ListItemIcon>
                         <Person></Person>
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.match_type} ${athlete.category} ${athlete.gender}`}
+                        primary={"Não registou nenhum Atleta recentemente."}
                       />
                     </ListItemButton>
                   </ListItem>
-                </Tooltip>
-              ))}
-            </List>
-            <CardActions sx={{ justifyContent: "space-between" }}>
-              <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
-              <AddButton
-                label="Adicionar"
-                to="athletes/new_athlete/"
-              ></AddButton>
-            </CardActions>
-          </Card>
+                )}
+              </List>
+              <CardActions sx={{ justifyContent: "space-between" }}>
+                <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
+                <AddButton
+                  label="Adicionar"
+                  to="athletes/new_athlete/"
+                ></AddButton>
+              </CardActions>
+            </Card>
+          </Grid>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title={"Equipas adicionadas recentemente"}
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              <List>
+                {teams.length >= 1 ? (
+                  teams.map((team, index) => (
+                    <Tooltip key={index} title={"Consultar"}>
+                      <ListItem sx={{ m: 0, pb: 0 }}>
+                        <ListItemButton
+                          onClick={() => navigate(`teams/${team.id}`)}
+                        >
+                          <ListItemIcon>
+                            <Person></Person>
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={`${team.match_type} ${team.category} ${team.gender} Nº ${team.team_number}`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    </Tooltip>
+                  ))
+                ) : (
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                      <ListItemIcon>
+                        <Person></Person>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={"Não registou nenhuma Equipa recentemente."}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                )}
+              </List>
+              <CardActions sx={{ justifyContent: "space-between" }}>
+                <InfoButton label="Ver Todas" to="teams/"></InfoButton>
+                <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
+              </CardActions>
+            </Card>
+          </Grid>
         </Grid>
         <Grid size={6}>
           <Grid size={12}>
