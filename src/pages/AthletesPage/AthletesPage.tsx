@@ -31,13 +31,14 @@ export default function AthletesPage() {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá registar e consultar todos os seus Atletas/Alunos. Pode
-          consultar a informação de cada um, editar e remover. <p></p>
+          Aqui poderá consultar todos os seus Atletas/Alunos, e
+          também Equipas. Pode consultar a informação de cada um, editar e
+          remover. <p></p>
           <strong>Importante</strong>: Estes não servem como inscrição em
           qualquer prova.
         </CardContent>
       </Card>
-      <AddButton label="Adicionar" to="new_athletes/"></AddButton>
+      <AddButton label="Adicionar" to="new_athlete/"></AddButton>
     </>
   );
 }
