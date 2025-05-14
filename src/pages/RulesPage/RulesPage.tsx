@@ -13,8 +13,7 @@ export default function RulesPage() {
           }}
         ></CardHeader>
         <CardContent>
-          Este é o ecrã principal desta plataforma. Aqui poderá ver informações
-          relevantes e rápidas, assim como notificações específicas para si.
+          Aqui poderá fazer download de regras das provas atualmente em vigor.
         </CardContent>
       </Card>
     </div>

@@ -316,7 +316,7 @@ export default function HomePage() {
               ></CardHeader>
               <CardContent sx={{ pt: 0, pb: 0 }}>
                 {classifications.map((category, index) => (
-                  <Accordion key={index} sx={{ m: 2 }}>
+                  <Accordion key={index} sx={{ m: 2, mt: 0 }}>
                     <AccordionSummary
                       sx={{ pl: 4 }}
                       expandIcon={<ExpandMore />}
