@@ -11,6 +11,7 @@ import {
   IconButton,
   Breadcrumbs,
   Button,
+  Grid
 } from "@mui/material";
 import skipLogo from "./../../assets/skip-logo.png";
 import { Link } from "react-router-dom";
@@ -142,13 +143,22 @@ export default function ButtonAppBar() {
                 {isAuthenticated ? (
                   <Avatar {...stringAvatar(username)}></Avatar>
                 ) : (
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    onClick={() => navigate("/login/")}
-                  >
-                    Login
-                  </Button>
+                  <Grid container spacing={2}>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={() => navigate("/login/")}
+                    >
+                      Login
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => navigate("/register_account/")}
+                    >
+                      Criar Conta
+                    </Button>
+                  </Grid>
                 )}
               </IconButton>
             </Stack>
