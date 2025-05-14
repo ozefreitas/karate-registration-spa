@@ -144,7 +144,7 @@ export default function HomePage() {
         ></CardHeader>
         <CardContent sx={{ p: 0 }}>
           <ul>
-            {notifications.length > 1 ? (
+            {notifications.length >= 1 ? (
               notifications.map((noti, index) => (
                 <li style={{ color: noti.urgency }} key={index}>
                   {noti.notification}

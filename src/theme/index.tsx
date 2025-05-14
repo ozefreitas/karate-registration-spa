@@ -6,6 +6,7 @@ const theme = createTheme({
       '"Poppins", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
   },
   components: {
+    MuiPaper: { styleOverrides: { root: { borderRadius: 16 } } },
     MuiInputLabel: {
       styleOverrides: {
         root: {
