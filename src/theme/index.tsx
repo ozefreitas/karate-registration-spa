@@ -45,7 +45,8 @@ const theme = createTheme({
           borderRadius: 12,
           padding: 6,
           overflow: "hidden",
-          margin: "8px 0",
+          margin: 10,
+          marginTop: 0,
           "&:before": {
             display: "none",
           },
