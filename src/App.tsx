@@ -6,6 +6,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AthletesPage from "./pages/AthletesPage/AthletesPage";
 import CompetitionsPage from "./pages/CompetitionsPage/CompetitionsPage";
+import CompetitionCard from "./components/CompetitionCards/CompetitionCard";
 import HomePage from "./pages/HomePage/HomePage";
 import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
 import RulesPage from "./pages/RulesPage/RulesPage";
@@ -17,6 +18,10 @@ import SingleAthletePage from "./pages/AthletesPage/SingleAthletePage";
 import TeamsPage from "./pages/TeamsPage/TeamsPage";
 import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 import NewTeamPage from "./pages/TeamsPage/NewTeamPage";
+import IndividualsPage from "./pages/IndividualsPage/IndividualsPage";
+import RegisterIndividualPage from "./pages/IndividualsPage/RegisterIndividualPage";
+import RegisterTeamPage from "./pages/TeamsPage/RegisterTeamPage";
+import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
 
 function App() {
   return (
@@ -35,6 +40,23 @@ function App() {
         <Route path="teams/:id/" element={<SingleTeamPage />} />
         <Route path="teams/new_team/" element={<NewTeamPage />} />
         <Route path="competitions/" element={<CompetitionsPage />} />
+        <Route path="competitions/:id/" element={<CompetitionCard />} />
+        <Route
+          path="competitions/:id/individuals/"
+          element={<IndividualsPage />}
+        />
+        <Route
+          path="competitions/:id/individuals/register/"
+          element={<RegisterIndividualPage />}
+        />
+        <Route
+          path="competitions/:id/teams/"
+          element={<RegisteredTeamsPage />}
+        />
+        <Route
+          path="competitions/:id/teams/register/"
+          element={<RegisterTeamPage />}
+        />
         <Route path="rules/" element={<RulesPage />} />
         <Route path="classifications/" element={<ClassificationsPage />} />
         <Route path="help/" element={<HelpPage />} />
