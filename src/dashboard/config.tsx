@@ -8,6 +8,7 @@ import {
   Phone,
   HelpCenter,
   Home,
+  Groups,
 } from "@mui/icons-material";
 
 export const sideMenuConfig = [
@@ -22,6 +23,12 @@ export const sideMenuConfig = [
     label: "Atletas",
     icon: <Person sx={{ color: "#e81c24" }} />,
     to: "/athletes/",
+  },
+  {
+    name: "teams",
+    label: "Equipas",
+    icon: <Groups sx={{ color: "#e81c24" }} />,
+    to: "/teams/",
   },
   {
     name: "competitions",
@@ -75,7 +82,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   profile: "Perfil",
   rules: "Regras",
   contacts: "Contactos",
-  register: "Registar",
+  register: "Inscrever",
   register_account: "Criar Conta",
   new_athlete: "Novo Atleta",
   new_team: "Nova Equipa",
