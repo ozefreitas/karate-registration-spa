@@ -146,7 +146,7 @@ export default function ButtonAppBar() {
                   <Grid container spacing={2}>
                     <Button
                       variant="contained"
-                      color="warning"
+                      color="error"
                       onClick={() => navigate("/login/")}
                     >
                       Login

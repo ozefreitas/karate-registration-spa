@@ -3,9 +3,25 @@ import { Grid, TextField, Button } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SnackbarKey, useSnackbar } from "notistack";
+import { Close } from "@mui/icons-material";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const action = (snackbarId: SnackbarKey | undefined) => (
+    <Close
+      color="warning"
+      sx={{ cursor: "pointer" }}
+      onClick={() => {
+        closeSnackbar(snackbarId);
+      }}
+    >
+      Fechar
+    </Close>
+  );
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -30,11 +46,27 @@ export default function LoginPage() {
         password,
       });
       localStorage.setItem("token", response.data.token);
-      alert("Logged in!");
+      enqueueSnackbar("Login com sucesso!", {
+        action,
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
       navigate("/");
     } catch (err) {
       console.error(err);
-      alert("Invalid credentials");
+      enqueueSnackbar("Credenciais inválidas!", {
+        action,
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 3000,
+      });
     }
   };
   return (
