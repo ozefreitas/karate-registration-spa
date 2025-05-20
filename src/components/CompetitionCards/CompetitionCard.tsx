@@ -14,7 +14,7 @@ export default function CompetitionCard() {
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title="Página de Competições"
+          title="Página da Competição"
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",

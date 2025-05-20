@@ -16,6 +16,7 @@ import { SportsMma } from "@mui/icons-material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../../components/InfoButton/InfoButton";
+import { useNavigate } from "react-router-dom";
 
 const fetchNextComp = () => {
   return axios.get("http://127.0.0.1:8000/competitions/next_comp/");
@@ -30,6 +31,7 @@ export default function NextCompHomeComponent() {
     competition_date: string;
   };
 
+  const navigate = useNavigate()
   const { data: nextCompData, isLoading: isNextCompLoading } = useQuery({
     queryKey: ["next-comp"],
     queryFn: fetchNextComp,
@@ -54,7 +56,7 @@ export default function NextCompHomeComponent() {
           <List>
             <Tooltip title={"Consultar"}>
               <ListItem sx={{ m: 0, pb: 0 }}>
-                <ListItemButton>
+                <ListItemButton onClick={() => navigate(`competitions/${nextCompData?.data.id}`)}>
                   <ListItemIcon>
                     <SportsMma></SportsMma>
                   </ListItemIcon>
@@ -73,12 +75,7 @@ export default function NextCompHomeComponent() {
             </ListItemButton>
           </ListItem>
         )}
-        <CardActions sx={{ justifyContent: "space-between" }}>
-          <InfoButton
-            disabled={nextCompData?.data.id ? false : true}
-            label="Ver Prova"
-            to={`competitions/${nextCompData?.data.id}`}
-          ></InfoButton>
+        <CardActions sx={{ justifyContent: "flex-end" }}>
           <InfoButton label="Ver Todas" to="competitions/"></InfoButton>
         </CardActions>
       </Card>
