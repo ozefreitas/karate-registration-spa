@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Card,
@@ -18,8 +18,18 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import AddButton from "../../components/AddButton/AddButton";
 import { useNavigate } from "react-router-dom";
+
+const fetchAthletes = () => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/athletes/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
 
 export default function AthletesPage() {
   type Athlete = {
@@ -31,26 +41,18 @@ export default function AthletesPage() {
     match_type: string;
   };
 
-  const [athletes, setAthletes] = useState<Athlete[]>([]);
   const [athletesPage, setAthletesPage] = useState<number>(1);
   const [athletesPageSize, setAthletesPageSize] = useState<number>(10);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios
-      .get("http://127.0.0.1:8000/athletes/", {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      })
-      .then((response) => setAthletes(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+  const { data: athletesData, isLoading: isAthletesDataLoading } = useQuery({
+    queryKey: ["athletes"],
+    queryFn: fetchAthletes,
+  });
 
   // Memoize `rows` to compute only when `athletes` changes
   const athleteRows = useMemo(() => {
-    return athletes.map((athlete) => ({
+    return athletesData?.data.map((athlete: Athlete) => ({
       id: athlete.id,
       first_name: athlete.first_name,
       last_name: athlete.last_name,
@@ -58,7 +60,7 @@ export default function AthletesPage() {
       gender: athlete.gender,
       match_type: athlete.match_type,
     }));
-  }, [athletes]);
+  }, [athletesData]);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -86,12 +88,6 @@ export default function AthletesPage() {
   const handleAthletesSearch = (e: any) => {
     setAthletesSearchTerm(e.target.value.toLowerCase());
   };
-
-  const filteredAthleteRows = athleteRows.filter(
-    (row) =>
-      row.first_name.toLowerCase().includes(athletesSearchTerm) ||
-      row.category.toLowerCase().includes(athletesSearchTerm)
-  );
 
   return (
     <>
@@ -137,8 +133,8 @@ export default function AthletesPage() {
               </StyledTableRow>
             </TableHead>
             <TableBody>
-              {filteredAthleteRows.length >= 1 ? (
-                filteredAthleteRows.map((row, index) => (
+              {athletesData?.data.length >= 1 ? (
+                athletesData?.data.map((row: Athlete, index: string) => (
                   <Tooltip key={index} title={"Consultar"}>
                     <StyledTableRow
                       hover
