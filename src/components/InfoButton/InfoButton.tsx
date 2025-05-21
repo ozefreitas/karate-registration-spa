@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Visibility } from "@mui/icons-material";
 
 export default function InfoButton(props: {
   label: string;
@@ -17,6 +18,7 @@ export default function InfoButton(props: {
       color="primary"
       disabled={props.disabled}
       onClick={() => navigate(props.to)}
+      startIcon={<Visibility />}
     >
       {props.label}
     </Button>
