@@ -196,6 +196,7 @@ export default function NewAthletePage() {
                 color="warning"
                 variant={"outlined"}
                 label="Escalão"
+                fullWidth
                 select
                 multiline
                 required
@@ -226,6 +227,7 @@ export default function NewAthletePage() {
                 variant={"outlined"}
                 label="Graduação"
                 select
+                fullWidth
                 multiline
                 required
                 maxRows={8}
@@ -300,7 +302,7 @@ export default function NewAthletePage() {
             )}
           />
         </Grid>
-        <Grid size={12}>
+        <Grid container size={12}>
           <Button
             variant="contained"
             size={"large"}
@@ -311,7 +313,31 @@ export default function NewAthletePage() {
               handleSubmit(onSubmit)();
             }}
           >
-            LogIn
+            Submeter e voltar
+          </Button>
+          <Button
+            variant="contained"
+            size={"large"}
+            color={"success"}
+            type={"submit"}
+            sx={{ marginBottom: "20px" }}
+            onClick={() => {
+              handleSubmit(onSubmit)();
+            }}
+          >
+            Submeter e Adicionar outro
+          </Button>
+          <Button
+            variant="contained"
+            size={"large"}
+            color={"success"}
+            type={"submit"}
+            sx={{ marginBottom: "20px" }}
+            onClick={() => {
+              navigate("/athletes/")
+            }}
+          >
+            Voltar
           </Button>
         </Grid>
       </Grid>

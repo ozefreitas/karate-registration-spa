@@ -12,7 +12,6 @@ export default function LoginPage() {
 
   const action = (snackbarId: SnackbarKey | undefined) => (
     <Close
-      color="warning"
       sx={{ cursor: "pointer" }}
       onClick={() => {
         closeSnackbar(snackbarId);
