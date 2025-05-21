@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { Card, CardHeader, CardContent, Grid } from "@mui/material";
-import AddButton from "../../components/AddButton/AddButton";
+import { Card, CardHeader, CardContent, Grid, Button } from "@mui/material";
+import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
+import AthletesModal from "../../components/AthletesModal/AthletesModal";
 
 export default function IndividualsPage() {
   type Individual = {
@@ -17,8 +18,13 @@ export default function IndividualsPage() {
     gender: string;
   };
 
-  const location = useLocation()
+  const location = useLocation();
   const [individuals, setIndividuals] = useState<Individual[]>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -83,8 +89,21 @@ export default function IndividualsPage() {
         ) : null}
       </Grid>
       <Grid>
-        <AddButton label="Adicionar" to="register/"></AddButton>
+        <Button
+          sx={{ m: 1 }}
+          variant="contained"
+          size="large"
+          color="success"
+          onClick={() => setIsModalOpen(true)}
+          startIcon={<Add />}
+        >
+          Selecionar Atletas
+        </Button>
       </Grid>
+      <AthletesModal
+        isModalOpen={isModalOpen}
+        handleModalClose={handleModalClose}
+      ></AthletesModal>
     </>
   );
 }
