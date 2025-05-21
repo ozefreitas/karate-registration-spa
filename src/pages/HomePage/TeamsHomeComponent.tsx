@@ -39,17 +39,22 @@ export default function TeamsHomeComponent() {
 
   const navigate = useNavigate();
 
-  const { data: lastFiveTeamsData, isLoading: isLastFiveTeamsLoading } =
-    useQuery({
-      queryKey: ["last-five-teams"],
-      queryFn: fetchLastFiveTeams,
-    });
+  const {
+    data: lastFiveTeamsData,
+    isLoading: isLastFiveTeamsLoading,
+    error: lastFiveTeamError,
+  } = useQuery({
+    queryKey: ["last-five-teams"],
+    queryFn: fetchLastFiveTeams,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
   return (
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          title={"Atletas adicionados recentemente"}
+          title={"Equipas adicionadas recentemente"}
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -61,6 +66,29 @@ export default function TeamsHomeComponent() {
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
+          ) : lastFiveTeamError ? (
+            axios.isAxiosError(lastFiveTeamError) &&
+            lastFiveTeamError.response?.status === 401 ? (
+              <ListItem sx={{ m: 0 }}>
+                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
+                </ListItemButton>
+              </ListItem>
+            ) : (
+              <ListItem sx={{ m: 0 }}>
+                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Ocorreu um erro ao carregar os atletas."}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )
           ) : lastFiveTeamsData?.data.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>

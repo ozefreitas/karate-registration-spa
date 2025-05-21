@@ -42,11 +42,16 @@ export default function AthletesHomeComponent() {
 
   const navigate = useNavigate();
 
-  const { data: lastFiveAthletesData, isLoading: isLastFiveAthletesLoading } =
-    useQuery({
-      queryKey: ["last-five-athletes"],
-      queryFn: fetchLastFiveAthletes,
-    });
+  const {
+    data: lastFiveAthletesData,
+    isLoading: isLastFiveAthletesLoading,
+    error: lastFiveAthletesError,
+  } = useQuery({
+    queryKey: ["last-five-athletes"],
+    queryFn: fetchLastFiveAthletes,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
   return (
     <Grid size={12}>
@@ -64,6 +69,29 @@ export default function AthletesHomeComponent() {
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
+          ) : lastFiveAthletesError ? (
+            axios.isAxiosError(lastFiveAthletesError) &&
+            lastFiveAthletesError.response?.status === 401 ? (
+              <ListItem sx={{ m: 0 }}>
+                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
+                </ListItemButton>
+              </ListItem>
+            ) : (
+              <ListItem sx={{ m: 0 }}>
+                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                  <ListItemIcon>
+                    <Person />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={"Ocorreu um erro ao carregar os atletas."}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )
           ) : lastFiveAthletesData?.data.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>

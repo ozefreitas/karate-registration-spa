@@ -35,12 +35,16 @@ export default function HomePage() {
 
   const navigate = useNavigate();
 
-  const { data: notificationData, isLoading: isNotificationLoading } = useQuery(
-    {
-      queryKey: ["notifications"],
-      queryFn: fetchNotifications,
-    }
-  );
+  const {
+    data: notificationData,
+    isLoading: isNotificationLoading,
+    error: notificationError,
+  } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: fetchNotifications,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
   return (
     <>
@@ -75,6 +79,17 @@ export default function HomePage() {
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <CircularProgress />
               </Box>
+            ) : notificationError ? (
+              axios.isAxiosError(notificationError) &&
+              notificationError.response?.status === 401 ? (
+                <li style={{ color: "grey" }}>
+                  Sem sessão iniciada. Faça Login.
+                </li>
+              ) : (
+                <li style={{ color: "grey" }}>
+                  Ocorreu um erro ao carregar as suas notificações.
+                </li>
+              )
             ) : notificationData?.data.length !== 0 ? (
               notificationData?.data.map(
                 (noti: Notification, index: string) => (

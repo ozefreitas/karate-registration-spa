@@ -45,9 +45,15 @@ export default function AthletesPage() {
   const [athletesPageSize, setAthletesPageSize] = useState<number>(10);
   const navigate = useNavigate();
 
-  const { data: athletesData, isLoading: isAthletesDataLoading } = useQuery({
+  const {
+    data: athletesData,
+    isLoading: isAthletesDataLoading,
+    error: athletesError,
+  } = useQuery({
     queryKey: ["athletes"],
     queryFn: fetchAthletes,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 
   // Memoize `rows` to compute only when `athletes` changes
