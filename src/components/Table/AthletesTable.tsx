@@ -23,6 +23,7 @@ import {
   Button,
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
+import { useRemoveIndividualData } from "../../hooks/useIndividualsData";
 
 export default function AthletesTable(
   props: Readonly<{
@@ -36,15 +37,8 @@ export default function AthletesTable(
   const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [isToolTipOpen, setIsToolTipOpen] = useState<boolean>(false);
 
-  const handleToolTipClose = () => {
-    setIsToolTipOpen(false);
-  };
-
-  const handleToolTipOpen = () => {
-    setIsToolTipOpen(true);
-  };
+  const removeIndividual = useRemoveIndividualData();
 
   const handleEditModalClose = () => {
     setIsEditModalOpen(false);
@@ -58,7 +52,6 @@ export default function AthletesTable(
 
   const handleRowEdit = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setIsToolTipOpen(false);
     setIsEditModalOpen(true);
   };
 
@@ -68,11 +61,15 @@ export default function AthletesTable(
 
   const handleRowDelete = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setIsToolTipOpen(false);
     setIsDeleteModalOpen(true);
   };
 
-  const handleAthleteDelete = () => {
+  const handleIndividualDelete = (
+    event: React.MouseEvent<HTMLElement>,
+    individualId: string
+  ) => {
+    event.stopPropagation();
+    removeIndividual.mutate(individualId);
     setIsDeleteModalOpen(false);
   };
 
@@ -142,35 +139,37 @@ export default function AthletesTable(
             <TableBody>
               {filteredRows.length >= 1 ? (
                 filteredRows.map((row: any, index: any) => (
-                  <Tooltip
-                    key={index}
-                    open={isToolTipOpen}
-                    onClose={handleToolTipClose}
-                    onOpen={handleToolTipOpen}
-                    title={"Consultar"}
+                  <StyledTableRow
+                    hover
+                    key={row.id}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
                   >
-                    <StyledTableRow
-                      hover
-                      onClick={() => {
-                        navigate(`/teams/${row.id}`);
-                      }}
-                      key={row.id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        cursor: "pointer",
-                      }}
-                    >
-                      {props.columnsHeaders.map((header: any, index: any) => (
-                        <StyledTableCell key={index} component="th" scope="row">
-                          {row[header.key]}
-                        </StyledTableCell>
-                      ))}
-                      {props.actions ? (
-                        <StyledTableCell align="center">
+                    {props.columnsHeaders.map((header: any, index: any) => (
+                      <StyledTableCell key={index} component="th" scope="row">
+                        {row[header.key]}
+                      </StyledTableCell>
+                    ))}
+                    {props.actions ? (
+                      <StyledTableCell align="center">
+                        <Stack
+                          direction={{
+                            xs: "row",
+                          }}
+                          sx={{
+                            gap: 2,
+                            justifyContent: "center",
+                          }}
+                        >
                           <Tooltip arrow title="Consultar">
                             <IconButton
                               onClick={() => {
-                                navigate(`/teams/${row.id}`);
+                                if (props.type === "Equipas") {
+                                  navigate(`/teams/${row.id}`);
+                                } else {
+                                  navigate(`/athletes/${row.id}`);
+                                }
                               }}
                             >
                               <Visibility color="primary"></Visibility>
@@ -185,7 +184,7 @@ export default function AthletesTable(
                               <Edit color="warning"></Edit>
                             </IconButton>
                           </Tooltip>
-                          <Tooltip arrow title="Eliminar">
+                          <Tooltip arrow title="Remover">
                             <IconButton
                               onClick={(e) => {
                                 handleRowDelete(e);
@@ -194,10 +193,52 @@ export default function AthletesTable(
                               <Delete color="error"></Delete>
                             </IconButton>
                           </Tooltip>
-                        </StyledTableCell>
-                      ) : null}
-                    </StyledTableRow>
-                  </Tooltip>
+                        </Stack>
+                        <Dialog
+                          open={isDeleteModalOpen}
+                          onClose={handleDeleteModalClose}
+                        >
+                          <DialogTitle>
+                            <Typography variant="h5">Apagar Atleta</Typography>
+                          </DialogTitle>
+                          <DialogContent>
+                            Tem a certeza que pretende apagar este Atleta? Esta
+                            ação irá eliminar também todas as inscrições desta
+                            Atleta em todas as provas.
+                          </DialogContent>
+                          <DialogActions>
+                            <Stack
+                              direction={{
+                                xs: "row-reverse",
+                                sm: "row",
+                              }}
+                              sx={{
+                                gap: 2,
+                                flexShrink: 0,
+                                alignSelf: { xs: "flex-end", sm: "center" },
+                              }}
+                            >
+                              <Button
+                                size="small"
+                                onClick={(e) =>
+                                  handleIndividualDelete(e, row.id)
+                                }
+                                variant="contained"
+                              >
+                                Confirmar
+                              </Button>
+                              <Button
+                                size="small"
+                                onClick={handleDeleteModalClose}
+                              >
+                                Cancelar
+                              </Button>
+                            </Stack>
+                          </DialogActions>
+                        </Dialog>
+                      </StyledTableCell>
+                    ) : null}
+                  </StyledTableRow>
                 ))
               ) : (
                 <StyledTableRow
@@ -218,39 +259,6 @@ export default function AthletesTable(
         <DialogTitle>Editar Atleta</DialogTitle>
         <DialogContent></DialogContent>
         <DialogActions></DialogActions>
-      </Dialog>
-      <Dialog open={isDeleteModalOpen} onClose={handleDeleteModalClose}>
-        <DialogTitle>
-          <Typography variant="h5">Apagar Atleta</Typography>
-        </DialogTitle>
-        <DialogContent>
-          Tem a certeza que pretende apagar este Atleta? Esta ação irá eliminar
-          também todas as inscrições desta Atleta em todas as provas.
-        </DialogContent>
-        <DialogActions>
-          <Stack
-            direction={{
-              xs: "row-reverse",
-              sm: "row",
-            }}
-            sx={{
-              gap: 2,
-              flexShrink: 0,
-              alignSelf: { xs: "flex-end", sm: "center" },
-            }}
-          >
-            <Button
-              size="small"
-              onClick={handleAthleteDelete}
-              variant="contained"
-            >
-              Confirmar
-            </Button>
-            <Button size="small" onClick={handleDeleteModalClose}>
-              Cancelar
-            </Button>
-          </Stack>
-        </DialogActions>
       </Dialog>
     </>
   );

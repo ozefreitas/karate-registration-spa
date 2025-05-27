@@ -25,7 +25,7 @@ import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAddIndividualData } from "../../hooks/useIndividualsData";
+import { useAddIndividualData, } from "../../hooks/useIndividualsData";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

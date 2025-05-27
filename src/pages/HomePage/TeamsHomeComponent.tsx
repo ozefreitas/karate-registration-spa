@@ -84,7 +84,7 @@ export default function TeamsHomeComponent() {
                     <Person />
                   </ListItemIcon>
                   <ListItemText
-                    primary={"Ocorreu um erro ao carregar os atletas."}
+                    primary={"Ocorreu um erro ao carregar as Equipas."}
                   />
                 </ListItemButton>
               </ListItem>
@@ -118,8 +118,8 @@ export default function TeamsHomeComponent() {
           )}
         </List>
         <CardActions sx={{ justifyContent: "space-between" }}>
-          <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
-          <AddButton label="Adicionar" to="athletes/new_athlete/"></AddButton>
+          <InfoButton label="Ver Todos" to="teams/"></InfoButton>
+          <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
         </CardActions>
       </Card>
     </Grid>
