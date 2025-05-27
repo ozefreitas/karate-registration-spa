@@ -1,10 +1,35 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { Card, CardHeader, CardContent, Grid, Button } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Button,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchIndividuals = () => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/individuals/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    params: {
+      in_competition: location.pathname.split("/")[2],
+    },
+  });
+};
+
+const fetchEventName = (eventId: any) => {
+  return axios.get(`http://127.0.0.1:8000/competitions/${eventId}/`);
+};
 
 export default function IndividualsPage() {
   type Individual = {
@@ -26,23 +51,31 @@ export default function IndividualsPage() {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios
-      .get("http://127.0.0.1:8000/individuals/", {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-        params: {
-          in_competition: location.pathname.split("/")[2],
-        },
-      })
-      .then((response) => setIndividuals(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+  const {
+    data: individualsData,
+    isLoading: isIndividualsLoading,
+    error: individualsError,
+  } = useQuery({
+    queryKey: ["individuals"],
+    queryFn: fetchIndividuals,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
+  const {
+    data: eventData,
+    isLoading: isEventLoading,
+    error: eventError,
+  } = useQuery({
+    queryKey: ["event-name", location.pathname.split("/")[2]],
+    queryFn: () => fetchEventName(location.pathname.split("/")[2]),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: !!location.pathname.split("/")[2],
+  });
 
   const indivRows = useMemo(() => {
-    return individuals?.map((indiv) => ({
+    return individualsData?.data.map((indiv: Individual) => ({
       id: indiv.id,
       first_name: indiv.first_name,
       last_name: indiv.last_name,
@@ -50,7 +83,7 @@ export default function IndividualsPage() {
       gender: indiv.gender,
       match_type: indiv.match_type,
     }));
-  }, [individuals]);
+  }, [individualsData]);
 
   const columnMaping = [
     { key: "first_name", label: "Atleta 1" },
@@ -79,12 +112,17 @@ export default function IndividualsPage() {
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
-        {individuals !== undefined ? (
+        {isIndividualsLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : individualsData?.data !== undefined ? (
           <AthletesTable
             type="Individuais"
             data={indivRows}
             columnsHeaders={columnMaping}
             searchColumns={["first_name", "last_name", "category"]}
+            actions={true}
           ></AthletesTable>
         ) : null}
       </Grid>
@@ -103,6 +141,7 @@ export default function IndividualsPage() {
       <AthletesModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
+        eventName={eventData?.data}
       ></AthletesModal>
     </>
   );
