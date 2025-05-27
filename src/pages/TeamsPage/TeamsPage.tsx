@@ -85,12 +85,15 @@ export default function TeamsPage() {
           qualquer prova.
         </CardContent>
       </Card>
-      <AthletesTable
-        type="Equipas"
-        data={teamRows}
-        columnsHeaders={columnMaping}
-        searchColumns={["athlete1", "athlete2", "athlete3", "category"]}
-      ></AthletesTable>
+      <Grid size={12} sx={{ m: 2 }}>
+        <AthletesTable
+          type="Equipas"
+          data={teamRows}
+          columnsHeaders={columnMaping}
+          searchColumns={["athlete1", "athlete2", "athlete3", "category"]}
+          actions={true}
+        ></AthletesTable>
+      </Grid>
       <Grid>
         {/* This button should get back to the individuals page */}
         <AddButton label="Adicionar" to="new_team/"></AddButton>
