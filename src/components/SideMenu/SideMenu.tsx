@@ -147,7 +147,7 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
-                    selected={location.pathname === options.to}
+                    selected={location.pathname.split("/")[1] === options.name ? true : false}
                     onClick={() => navigate(options.to)}
                     sx={[
                       {

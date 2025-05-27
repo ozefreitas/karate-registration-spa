@@ -13,7 +13,7 @@ import {
 
 export const sideMenuConfig = [
   {
-    name: "home",
+    name: "",
     label: "Início",
     icon: <Home sx={{ color: "#e81c24" }} />,
     to: "/",
