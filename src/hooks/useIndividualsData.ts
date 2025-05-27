@@ -1,6 +1,18 @@
 import axios from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
+
+const fetchIndividuals = () => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/individuals/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    params: {
+      in_competition: location.pathname.split("/")[2],
+    },
+  });
+};
 
 const addIndividual = (data: any) => {
   const token = localStorage.getItem("token");
@@ -20,6 +32,14 @@ const removeIndividual = (individualId: string) => {
   });
 };
 
+export const useFetchIndividualsData = () => {
+  return useQuery({
+    queryKey: ["individuals"],
+    queryFn: fetchIndividuals,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
 
 export const useAddIndividualData = () => {
   const { enqueueSnackbar } = useSnackbar();

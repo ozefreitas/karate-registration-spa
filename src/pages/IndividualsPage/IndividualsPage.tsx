@@ -14,18 +14,7 @@ import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
 import { useQuery } from "@tanstack/react-query";
-
-const fetchIndividuals = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/individuals/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    params: {
-      in_competition: location.pathname.split("/")[2],
-    },
-  });
-};
+import { useFetchIndividualsData } from "../../hooks/useIndividualsData";
 
 const fetchEventName = (eventId: any) => {
   return axios.get(`http://127.0.0.1:8000/competitions/${eventId}/`);
@@ -55,12 +44,7 @@ export default function IndividualsPage() {
     data: individualsData,
     isLoading: isIndividualsLoading,
     error: individualsError,
-  } = useQuery({
-    queryKey: ["individuals"],
-    queryFn: fetchIndividuals,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  } = useFetchIndividualsData();
 
   const {
     data: eventData,

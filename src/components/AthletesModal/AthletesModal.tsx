@@ -22,10 +22,9 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
 import axios from "axios";
 import InputBase from "@mui/material/InputBase";
-import MenuIcon from "@mui/icons-material/Menu";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAddIndividualData, } from "../../hooks/useIndividualsData";
+import { useAddIndividualData } from "../../hooks/useIndividualsData";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -139,6 +138,7 @@ export default function AthletesModal(
       const data = { athlete: athlete, competition: props.eventName.id };
       addIndividual.mutate(data);
     });
+    setChecked([]);
   };
 
   return (
