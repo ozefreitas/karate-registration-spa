@@ -24,6 +24,11 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import { useRemoveIndividualData } from "../../hooks/useIndividualsData";
+import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
+import EditAthleteModal from "../AthletesModal/EditAthleteModal";
+import { useForm } from "react-hook-form";
+import DeleteAthleteModal from "../AthletesModal/DeleteAthleteModal";
+import EditIndividualModal from "../AthletesModal/EditIndividualModal";
 
 export default function AthletesTable(
   props: Readonly<{
@@ -36,41 +41,81 @@ export default function AthletesTable(
 ) {
   const navigate = useNavigate();
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] =
+    useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-  const removeIndividual = useRemoveIndividualData();
+  const fetchSingleAthlete = useFetchSingleAthleteData();
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      graduation: "",
+      category: "",
+      skip_number: null,
+      gender: "",
+      is_student: false,
+      birthDate: "",
+    },
+  });
+
+  const handleEditModalOpen = () => {
+    setIsEditModalOpen(true);
+  };
 
   const handleEditModalClose = () => {
     setIsEditModalOpen(false);
+  };
+
+  const handleEditConfirmModalClose = () => {
+    setIsEditConfirmModalOpen(false);
+  };
+
+  const handleDeleteModalOpen = () => {
+    setIsDeleteModalOpen(true);
   };
 
   const handleDeleteModalClose = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const handleClose = async () => {};
-
-  const handleRowEdit = (event: React.MouseEvent<HTMLElement>) => {
+  const handleRowEditFromIndiv = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setIsEditModalOpen(true);
+    setIsEditConfirmModalOpen(true);
   };
 
-  const handleAthleteEdit = () => {
-    setIsEditModalOpen(false);
+  const handleRowEdit = (
+    event: React.MouseEvent<HTMLElement>,
+    athleteId: string
+  ) => {
+    event.stopPropagation();
+    fetchSingleAthlete.mutate(athleteId, {
+      onSuccess: (data: any) => {
+        const formData = {
+          firstName: data?.data.first_name,
+          lastName: data?.data.last_name,
+          graduation: data?.data.graduation,
+          category: data?.data.category,
+          gender: data?.data.gender,
+          skip_number: data?.data.skip_number,
+          is_student: data?.data.is_student,
+          birthDate: data?.data.birth_date,
+        };
+        reset(formData);
+        setIsEditModalOpen(true);
+      },
+    });
   };
 
   const handleRowDelete = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setIsDeleteModalOpen(true);
-  };
-
-  const handleIndividualDelete = (
-    event: React.MouseEvent<HTMLElement>,
-    individualId: string
-  ) => {
-    event.stopPropagation();
-    removeIndividual.mutate(individualId);
-    setIsDeleteModalOpen(false);
   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -94,12 +139,6 @@ export default function AthletesTable(
     },
   }));
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearchTerm = (e: any) => {
-    setSearchTerm(e.target.value.toLowerCase());
-  };
-
   // TODO: corrigir isto
   const filteredRows = props.data;
   // const filteredRows = props.data.filter((row: any) =>
@@ -110,156 +149,128 @@ export default function AthletesTable(
   // );
 
   return (
-    <>
-      <Grid container sx={{ m: 2 }}>
-        <Grid size={12} sx={{ mt: 2 }}>
-          <Typography variant="h4">{props.type}</Typography>
-        </Grid>
-        <Grid size={3}>
-          <TextField
-            label="Procurar por Nome, Escalão, ..."
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            onChange={handleSearchTerm}
-          />
-        </Grid>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <StyledTableRow>
-                {props.columnsHeaders.map((header: any, index: any) => (
-                  <StyledTableCell key={index}>{header.label}</StyledTableCell>
-                ))}
-                {props.actions ? (
-                  <StyledTableCell align="center">Ações</StyledTableCell>
-                ) : null}
-              </StyledTableRow>
-            </TableHead>
-            <TableBody>
-              {filteredRows.length >= 1 ? (
-                filteredRows.map((row: any, index: any) => (
-                  <StyledTableRow
-                    hover
-                    key={row.id}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    {props.columnsHeaders.map((header: any, index: any) => (
-                      <StyledTableCell key={index} component="th" scope="row">
-                        {row[header.key]}
-                      </StyledTableCell>
-                    ))}
-                    {props.actions ? (
-                      <StyledTableCell align="center">
-                        <Stack
-                          direction={{
-                            xs: "row",
-                          }}
-                          sx={{
-                            gap: 2,
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Tooltip arrow title="Consultar">
-                            <IconButton
-                              onClick={() => {
-                                if (props.type === "Equipas") {
-                                  navigate(`/teams/${row.id}`);
-                                } else {
-                                  navigate(`/athletes/${row.id}`);
-                                }
-                              }}
-                            >
-                              <Visibility color="primary"></Visibility>
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Editar">
-                            <IconButton
-                              onClick={(e) => {
-                                handleRowEdit(e);
-                              }}
-                            >
-                              <Edit color="warning"></Edit>
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Remover">
-                            <IconButton
-                              onClick={(e) => {
-                                handleRowDelete(e);
-                              }}
-                            >
-                              <Delete color="error"></Delete>
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                        <Dialog
-                          open={isDeleteModalOpen}
-                          onClose={handleDeleteModalClose}
-                        >
-                          <DialogTitle>
-                            <Typography variant="h5">Apagar Atleta</Typography>
-                          </DialogTitle>
-                          <DialogContent>
-                            Tem a certeza que pretende apagar este Atleta? Esta
-                            ação irá eliminar também todas as inscrições desta
-                            Atleta em todas as provas.
-                          </DialogContent>
-                          <DialogActions>
-                            <Stack
-                              direction={{
-                                xs: "row-reverse",
-                                sm: "row",
-                              }}
-                              sx={{
-                                gap: 2,
-                                flexShrink: 0,
-                                alignSelf: { xs: "flex-end", sm: "center" },
-                              }}
-                            >
-                              <Button
-                                size="small"
-                                onClick={(e) =>
-                                  handleIndividualDelete(e, row.id)
-                                }
-                                variant="contained"
-                              >
-                                Confirmar
-                              </Button>
-                              <Button
-                                size="small"
-                                onClick={handleDeleteModalClose}
-                              >
-                                Cancelar
-                              </Button>
-                            </Stack>
-                          </DialogActions>
-                        </Dialog>
-                      </StyledTableCell>
-                    ) : null}
-                  </StyledTableRow>
-                ))
-              ) : (
+    <Grid container sx={{ m: 2 }}>
+      <Grid size={12} sx={{ mt: 2 }}>
+        <Typography variant="h4" sx={{ m: 2 }}>
+          {props.type}
+        </Typography>
+      </Grid>
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <StyledTableRow>
+              {props.columnsHeaders.map((header: any, index: any) => (
+                <StyledTableCell key={index}>{header.label}</StyledTableCell>
+              ))}
+              {props.actions ? (
+                <StyledTableCell align="center">Ações</StyledTableCell>
+              ) : null}
+            </StyledTableRow>
+          </TableHead>
+          <TableBody>
+            {filteredRows.length >= 1 ? (
+              filteredRows.map((row: any) => (
                 <StyledTableRow
+                  hover
+                  key={row.id}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
                 >
-                  <StyledTableCell component="th" scope="row">
-                    Não há resultados para essa procura
-                  </StyledTableCell>
+                  {props.columnsHeaders.map((header: any, index: any) => (
+                    <StyledTableCell key={index} component="th" scope="row">
+                      {row[header.key]}
+                    </StyledTableCell>
+                  ))}
+                  {props.actions ? (
+                    <StyledTableCell align="center">
+                      <Stack
+                        direction={{
+                          xs: "row",
+                        }}
+                        sx={{
+                          gap: 2,
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Tooltip arrow title="Consultar">
+                          <IconButton
+                            onClick={() => {
+                              if (props.type === "Equipas") {
+                                navigate(`/teams/${row.id}`);
+                              } else {
+                                navigate(`/athletes/${row.id}`);
+                              }
+                            }}
+                          >
+                            <Visibility color="primary"></Visibility>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip arrow title="Editar">
+                          <IconButton
+                            onClick={(e) => {
+                              if (props.type == "Individuais") {
+                                handleRowEditFromIndiv(e);
+                              } else {
+                                handleRowEdit(e, row.id);
+                              }
+                            }}
+                          >
+                            <Edit color="warning"></Edit>
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip arrow title="Remover">
+                          <IconButton
+                            onClick={(e) => {
+                              handleRowDelete(e);
+                            }}
+                          >
+                            <Delete color="error"></Delete>
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                      <EditAthleteModal
+                        isModalOpen={isEditModalOpen}
+                        handleModalClose={handleEditModalClose}
+                        id={row.athlete_id}
+                        control={control}
+                        errors={errors}
+                        handleSubmit={handleSubmit}
+                      ></EditAthleteModal>
+                      <EditIndividualModal
+                        isModalOpen={isEditConfirmModalOpen}
+                        handleModalClose={handleEditConfirmModalClose}
+                        handleEditModalOpen={handleEditModalOpen}
+                        id={row.athlete_id}
+                        reset={reset}
+                        control={control}
+                        errors={errors}
+                      ></EditIndividualModal>
+                      <DeleteAthleteModal
+                        isModalOpen={isDeleteModalOpen}
+                        handleModalClose={handleDeleteModalClose}
+                        handleModalOpen={handleDeleteModalOpen}
+                        id={row.id}
+                        from={props.type}
+                      ></DeleteAthleteModal>
+                    </StyledTableCell>
+                  ) : null}
                 </StyledTableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Grid>
-      <Dialog open={isEditModalOpen} onClose={handleEditModalClose}>
-        <DialogTitle>Editar Atleta</DialogTitle>
-        <DialogContent></DialogContent>
-        <DialogActions></DialogActions>
-      </Dialog>
-    </>
+              ))
+            ) : (
+              <StyledTableRow
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <StyledTableCell component="th" scope="row">
+                  Não há resultados para essa procura
+                </StyledTableCell>
+              </StyledTableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
   );
 }

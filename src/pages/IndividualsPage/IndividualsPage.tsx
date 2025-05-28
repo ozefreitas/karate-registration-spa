@@ -21,8 +21,18 @@ const fetchEventName = (eventId: any) => {
 };
 
 export default function IndividualsPage() {
+  type Athlete = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    category: string;
+    gender: string;
+    match_type: string;
+  };
+
   type Individual = {
     id: string;
+    athlete: Athlete;
     competition: string;
     dojo: number;
     first_name: string;
@@ -61,21 +71,24 @@ export default function IndividualsPage() {
   const indivRows = useMemo(() => {
     return individualsData?.data.map((indiv: Individual) => ({
       id: indiv.id,
+      athlete_id: indiv.athlete.id,
       first_name: indiv.first_name,
       last_name: indiv.last_name,
       category: indiv.category,
-      gender: indiv.gender,
       match_type: indiv.match_type,
+      gender: indiv.gender,
     }));
   }, [individualsData]);
 
   const columnMaping = [
-    { key: "first_name", label: "Atleta 1" },
-    { key: "last_name", label: "Atleta 2" },
+    { key: "first_name", label: "Primeiro Nome" },
+    { key: "last_name", label: "Último Nome" },
     { key: "match_type", label: "Partida" },
     { key: "category", label: "Escalão" },
     { key: "gender", label: "Género" },
   ];
+
+  console.log(indivRows);
 
   return (
     <>
@@ -110,7 +123,7 @@ export default function IndividualsPage() {
           ></AthletesTable>
         ) : null}
       </Grid>
-      <Grid>
+      <Grid sx={{ m: 4 }}>
         <Button
           sx={{ m: 1 }}
           variant="contained"

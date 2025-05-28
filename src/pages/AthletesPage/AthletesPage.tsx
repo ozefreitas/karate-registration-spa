@@ -6,18 +6,10 @@ import {
   CardHeader,
   CardContent,
   Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  tableCellClasses,
-  TextField,
-  Tooltip,
-  Typography,
+  Box,
+  CircularProgress,
 } from "@mui/material";
+import AthletesTable from "../../components/Table/AthletesTable";
 import { useQuery } from "@tanstack/react-query";
 import AddButton from "../../components/AddButton/AddButton";
 import { useNavigate } from "react-router-dom";
@@ -68,32 +60,19 @@ export default function AthletesPage() {
     }));
   }, [athletesData]);
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "red",
-      fontSize: 18,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 16,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(even)": {
-      backgroundColor: "#DBDBDB",
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      border: 0,
-    },
-  }));
-
   const [athletesSearchTerm, setAthletesSearchTerm] = useState("");
 
   const handleAthletesSearch = (e: any) => {
     setAthletesSearchTerm(e.target.value.toLowerCase());
   };
+
+  const columnMaping = [
+    { key: "first_name", label: "Primeiro Nome" },
+    { key: "last_name", label: "Último Nome" },
+    { key: "match_type", label: "Partida" },
+    { key: "category", label: "Escalão" },
+    { key: "gender", label: "Género" },
+  ];
 
   return (
     <>
@@ -114,71 +93,22 @@ export default function AthletesPage() {
         </CardContent>
       </Card>
       {/* Atletas */}
-      <Grid container sx={{ m: 2 }}>
-        <Grid size={12} sx={{ mt: 2 }}>
-          <Typography variant="h4">Atletas</Typography>
-        </Grid>
-        <Grid size={3}>
-          <TextField
-            label="Procurar por Nome, Escalão, ..."
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            onChange={handleAthletesSearch}
-          />
-        </Grid>
-        <TableContainer component={Paper}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <StyledTableRow>
-                <StyledTableCell>Primeiro Nome</StyledTableCell>
-                <StyledTableCell>Último Nome</StyledTableCell>
-                <StyledTableCell>Partida</StyledTableCell>
-                <StyledTableCell>Categoria</StyledTableCell>
-                <StyledTableCell>Género</StyledTableCell>
-              </StyledTableRow>
-            </TableHead>
-            <TableBody>
-              {athletesData?.data.length >= 1 ? (
-                athletesData?.data.map((row: Athlete, index: string) => (
-                  <Tooltip key={index} title={"Consultar"}>
-                    <StyledTableRow
-                      hover
-                      onClick={() => {
-                        navigate(row.id);
-                      }}
-                      key={row.id}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                        cursor: "pointer",
-                      }}
-                    >
-                      <StyledTableCell component="th" scope="row">
-                        {row.first_name}
-                      </StyledTableCell>
-                      <StyledTableCell>{row.last_name}</StyledTableCell>
-                      <StyledTableCell>{row.match_type}</StyledTableCell>
-                      <StyledTableCell>{row.category}</StyledTableCell>
-                      <StyledTableCell>{row.gender}</StyledTableCell>
-                    </StyledTableRow>
-                  </Tooltip>
-                ))
-              ) : (
-                <StyledTableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <StyledTableCell component="th" scope="row">
-                    Não há resultados para essa procura
-                  </StyledTableCell>
-                </StyledTableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+      <Grid size={12} sx={{ m: 2 }}>
+        {isAthletesDataLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : athletesData?.data !== undefined ? (
+          <AthletesTable
+            type="Atletas"
+            data={athleteRows}
+            columnsHeaders={columnMaping}
+            searchColumns={["first_name", "last_name", "category"]}
+            actions={true}
+          ></AthletesTable>
+        ) : null}
       </Grid>
-      <Grid>
+      <Grid sx={{ m: 4 }}>
         <AddButton label="Adicionar" to="new_athlete/"></AddButton>
       </Grid>
     </>
