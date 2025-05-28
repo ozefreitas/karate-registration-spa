@@ -54,6 +54,7 @@ export default function LoginPage() {
           horizontal: "center",
         },
         autoHideDuration: 3000,
+        preventDuplicate: true
       });
       navigate("/");
     } catch (err) {
@@ -66,6 +67,7 @@ export default function LoginPage() {
           horizontal: "center",
         },
         autoHideDuration: 3000,
+        preventDuplicate: true
       });
     }
   };

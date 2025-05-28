@@ -25,6 +25,7 @@ import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAddIndividualData } from "../../hooks/useIndividualsData";
+import { useSnackbar } from "notistack";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -106,6 +107,7 @@ export default function AthletesModal(
   };
 
   const [checked, setChecked] = React.useState<string[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleToggle = (value: string) => {
     const currentIndex = checked.indexOf(value);
@@ -134,11 +136,24 @@ export default function AthletesModal(
   const addIndividual = useAddIndividualData();
 
   const handleIndividualsSubmit = (athleteList: string[]) => {
-    athleteList.forEach((athlete: string) => {
-      const data = { athlete: athlete, competition: props.eventName.id };
-      addIndividual.mutate(data);
-    });
-    setChecked([]);
+    if (athleteList.length === 0) {
+      enqueueSnackbar("Tem de selecionar pelo menos um atleta.", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true
+      });
+    } else {
+      athleteList.forEach((athlete: string) => {
+        const data = { athlete: athlete, competition: props.eventName.id };
+        addIndividual.mutate(data);
+      });
+      setChecked([]);
+      props.handleModalClose();
+    }
   };
 
   return (
@@ -190,7 +205,6 @@ export default function AthletesModal(
             color="inherit"
             onClick={() => {
               handleIndividualsSubmit(checked);
-              props.handleModalClose();
             }}
             disabled={athletesNotInEventData?.data.length === 0}
           >

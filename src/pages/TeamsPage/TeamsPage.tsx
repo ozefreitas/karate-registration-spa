@@ -94,7 +94,7 @@ export default function TeamsPage() {
           actions={true}
         ></AthletesTable>
       </Grid>
-      <Grid>
+      <Grid sx={{ m: 4 }}>
         {/* This button should get back to the individuals page */}
         <AddButton label="Adicionar" to="new_team/"></AddButton>
       </Grid>

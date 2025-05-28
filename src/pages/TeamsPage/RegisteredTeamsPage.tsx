@@ -23,7 +23,7 @@ export default function RegisteredTeamsPage() {
         </CardContent>
       </Card>
       <Grid container sx={{ m: 2 }}></Grid>
-      <Grid>
+      <Grid sx={{ m: 4 }}>
         <AddButton label="Adicionar" to="register/"></AddButton>
       </Grid>
     </>

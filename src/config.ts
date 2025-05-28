@@ -34,7 +34,7 @@ export const CategoryOptions: { label: string; value: string }[] = [
 ];
 
 export const GenderOptions: { label: string; value: string }[] = [
-  { label: "Masculino", value: "masculino" },
-  { label: "Feminino", value: "feminino" },
-  { label: "Misto", value: "misto" },
+  { label: "Masculino", value: "Masculino" },
+  { label: "Feminino", value: "Feminino" },
+  { label: "Misto", value: "Misto" },
 ];

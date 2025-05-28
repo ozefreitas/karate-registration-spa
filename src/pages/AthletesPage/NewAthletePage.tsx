@@ -106,6 +106,7 @@ export default function NewAthletePage() {
           horizontal: "center",
         },
         autoHideDuration: 3000,
+        preventDuplicate: true
       });
       navigate("/athletes/");
     } catch (err) {
@@ -118,6 +119,7 @@ export default function NewAthletePage() {
           horizontal: "center",
         },
         autoHideDuration: 3000,
+        preventDuplicate: true
       });
     }
   };
