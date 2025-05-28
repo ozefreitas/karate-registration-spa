@@ -14,30 +14,21 @@ const fetchIndividuals = () => {
   });
 };
 
-const addIndividual = (data: any) => {
-  const token = localStorage.getItem("token");
-  return axios.post("http://127.0.0.1:8000/individuals/", data, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
-
-const removeIndividual = (individualId: string) => {
-  const token = localStorage.getItem("token");
-  return axios.delete(`http://127.0.0.1:8000/individuals/${individualId}/`, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
-
 export const useFetchIndividualsData = () => {
   return useQuery({
     queryKey: ["individuals"],
     queryFn: fetchIndividuals,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+  });
+};
+
+const addIndividual = (data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post("http://127.0.0.1:8000/individuals/", data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
   });
 };
 
@@ -55,6 +46,7 @@ export const useAddIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
+        preventDuplicate: true
       });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
@@ -67,7 +59,17 @@ export const useAddIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
+        preventDuplicate: true
       });
+    },
+  });
+};
+
+const removeIndividual = (individualId: string) => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`http://127.0.0.1:8000/individuals/${individualId}/`, {
+    headers: {
+      Authorization: `Token ${token}`,
     },
   });
 };
@@ -86,6 +88,7 @@ export const useRemoveIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
+        preventDuplicate: true
       });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
@@ -98,6 +101,7 @@ export const useRemoveIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
+        preventDuplicate: true
       });
     },
   });
