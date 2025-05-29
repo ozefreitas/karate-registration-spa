@@ -79,6 +79,7 @@ export const useUpdateAthleteData = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
