@@ -18,6 +18,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useRemoveIndividualData } from "../../hooks/useIndividualsData";
 import { useRemoveAthleteData } from "../../hooks/useAthletesData";
+import { useRemoveTeamData } from "../../hooks/useTeamsData";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -39,11 +40,14 @@ export default function DeleteAthleteModal(
 ) {
   const removeIndividual = useRemoveIndividualData();
   const removeAthlete = useRemoveAthleteData();
+  const removeTeam = useRemoveTeamData();
 
   const handleDelete = (event: React.MouseEvent<HTMLElement>, id: string) => {
     event.stopPropagation();
     if (props.from === "Atletas") {
       removeAthlete.mutate(id);
+    } else if (props.from === "Equipas") {
+      removeTeam.mutate(id);
     } else {
       removeIndividual.mutate(id);
     }

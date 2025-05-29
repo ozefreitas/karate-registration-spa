@@ -4,12 +4,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Checkbox,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
-  Divider,
   Typography,
   AppBar,
   Toolbar,
@@ -39,7 +33,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EditAthleteModal(
+export default function EditTeamModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
@@ -49,7 +43,7 @@ export default function EditAthleteModal(
     handleSubmit: any;
   }>
 ) {
-  type Athlete = {
+  type Team = {
     id: string;
     firstName: string;
     lastName: string;
@@ -63,7 +57,7 @@ export default function EditAthleteModal(
 
   const updateAthleteData = useUpdateAthleteData();
 
-  const onSubmit: SubmitHandler<Athlete> = (data) => {
+  const onSubmit: SubmitHandler<Team> = (data) => {
     const formData = {
       first_name: data?.firstName,
       last_name: data?.lastName,
@@ -107,7 +101,7 @@ export default function EditAthleteModal(
             <Close />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Editar Atleta
+            Editar Equipa
             {/* {props.control._fields?.firstName?._f?.value} {props.control._fields?.lastName?._f?.value} */}
           </Typography>
           <Button
@@ -126,46 +120,6 @@ export default function EditAthleteModal(
       </AppBar>
       <DialogContent>
         <Grid container justifyContent={"center"}>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="firstName"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Primeiro Nome"
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.firstName}
-                  helperText={props.errors.firstName?.message}
-                />
-              )}
-            />
-          </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="lastName"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Último Nome"
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.lastName}
-                  helperText={props.errors.lastName?.message}
-                />
-              )}
-            />
-          </Grid>
           <Grid sx={{ m: 2 }} size={8}>
             <Controller
               name="category"
@@ -188,36 +142,6 @@ export default function EditAthleteModal(
                   helperText={props.errors.category?.message}
                 >
                   {CategoryOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="graduation"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Graduação"
-                  select
-                  fullWidth
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.graduation}
-                  helperText={props.errors.graduation?.message}
-                >
-                  {GraduationsOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
                     </MenuItem>

@@ -23,12 +23,12 @@ import {
   Button,
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
-import { useRemoveIndividualData } from "../../hooks/useIndividualsData";
 import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
 import EditAthleteModal from "../AthletesModal/EditAthleteModal";
 import { useForm } from "react-hook-form";
 import DeleteAthleteModal from "../AthletesModal/DeleteAthleteModal";
 import EditIndividualModal from "../AthletesModal/EditIndividualModal";
+import ChooseEditModal from "../TeamModal/ChooseEditModal";
 
 export default function AthletesTable(
   props: Readonly<{
@@ -44,14 +44,18 @@ export default function AthletesTable(
   const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] =
     useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isChooseModalOpen, setIsChooseModalOpen] = useState<boolean>(false);
+  const [isTeamAthleteEditModalOpen, setIsTeamAthleteEditModalOpen] =
+    useState<boolean>(false);
+  const [chosenAthlete, setChosenAthlete] = useState<string>("");
 
   const fetchSingleAthlete = useFetchSingleAthleteData();
 
   const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
+    control: athleteControl,
+    handleSubmit: athleteHandleSubmit,
+    reset: athleteReset,
+    formState: { errors: athleteErrors },
   } = useForm({
     defaultValues: {
       firstName: "",
@@ -85,9 +89,20 @@ export default function AthletesTable(
     setIsDeleteModalOpen(false);
   };
 
-  const handleRowEditFromIndiv = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setIsEditConfirmModalOpen(true);
+  const handleChooseModalOpen = () => {
+    setIsChooseModalOpen(true);
+  };
+
+  const handleChooseModalClose = () => {
+    setIsChooseModalOpen(false);
+  };
+
+  const handleTeamAthleteEditModalOpen = () => {
+    setIsTeamAthleteEditModalOpen(true);
+  };
+
+  const handleTeamAthleteEditModalClose = () => {
+    setIsTeamAthleteEditModalOpen(false);
   };
 
   const handleRowEdit = (
@@ -107,10 +122,20 @@ export default function AthletesTable(
           is_student: data?.data.is_student,
           birthDate: data?.data.birth_date,
         };
-        reset(formData);
+        athleteReset(formData);
         setIsEditModalOpen(true);
       },
     });
+  };
+
+  const handleRowEditFromIndiv = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setIsEditConfirmModalOpen(true);
+  };
+
+  const handleRowEditFromTeam = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setIsChooseModalOpen(true);
   };
 
   const handleRowDelete = (event: React.MouseEvent<HTMLElement>) => {
@@ -211,6 +236,8 @@ export default function AthletesTable(
                             onClick={(e) => {
                               if (props.type == "Individuais") {
                                 handleRowEditFromIndiv(e);
+                              } else if (props.type == "Equipas") {
+                                handleRowEditFromTeam(e);
                               } else {
                                 handleRowEdit(e, row.id);
                               }
@@ -229,23 +256,48 @@ export default function AthletesTable(
                           </IconButton>
                         </Tooltip>
                       </Stack>
-                      <EditAthleteModal
-                        isModalOpen={isEditModalOpen}
-                        handleModalClose={handleEditModalClose}
-                        id={row.athlete_id}
-                        control={control}
-                        errors={errors}
-                        handleSubmit={handleSubmit}
-                      ></EditAthleteModal>
-                      <EditIndividualModal
-                        isModalOpen={isEditConfirmModalOpen}
-                        handleModalClose={handleEditConfirmModalClose}
-                        handleEditModalOpen={handleEditModalOpen}
-                        id={row.athlete_id}
-                        reset={reset}
-                        control={control}
-                        errors={errors}
-                      ></EditIndividualModal>
+                      {props.type !== "Equipas" ? (
+                        <>
+                          <EditAthleteModal
+                            isModalOpen={isEditModalOpen}
+                            handleModalClose={handleEditModalClose}
+                            id={
+                              props.type === "Individuais"
+                                ? row.athlete_id
+                                : row.id
+                            }
+                            control={athleteControl}
+                            errors={athleteErrors}
+                            handleSubmit={athleteHandleSubmit}
+                          ></EditAthleteModal>
+                          <EditIndividualModal
+                            isModalOpen={isEditConfirmModalOpen}
+                            handleModalClose={handleEditConfirmModalClose}
+                            handleEditModalOpen={handleEditModalOpen}
+                            id={row.athlete_id}
+                            reset={athleteReset}
+                            control={athleteControl}
+                            errors={athleteErrors}
+                          ></EditIndividualModal>
+                        </>
+                      ) : null}
+
+                      {props.type === "Equipas" ? (
+                        <ChooseEditModal
+                          isModalOpen={isChooseModalOpen}
+                          handleModalClose={handleChooseModalClose}
+                          isEditModalOpen={isTeamAthleteEditModalOpen}
+                          handleEditModalClose={handleTeamAthleteEditModalClose}
+                          handleEditModalOpen={handleTeamAthleteEditModalOpen}
+                          id={row.id}
+                          chosenAthlete={chosenAthlete}
+                          setChosenAthlete={setChosenAthlete}
+                          reset={athleteReset}
+                          control={athleteControl}
+                          errors={athleteErrors}
+                          handleSubmit={athleteHandleSubmit}
+                        ></ChooseEditModal>
+                      ) : null}
                       <DeleteAthleteModal
                         isModalOpen={isDeleteModalOpen}
                         handleModalClose={handleDeleteModalClose}
