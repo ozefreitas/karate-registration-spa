@@ -43,7 +43,6 @@ export default function IndividualsPage() {
   };
 
   const location = useLocation();
-  const [individuals, setIndividuals] = useState<Individual[]>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleModalClose = () => {

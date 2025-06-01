@@ -13,15 +13,7 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import { useQuery } from "@tanstack/react-query";
 import AddButton from "../../components/AddButton/AddButton";
 import { useNavigate } from "react-router-dom";
-
-const fetchAthletes = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/athletes/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
+import { useFetchAthletesData } from "../../hooks/useAthletesData";
 
 export default function AthletesPage() {
   type Athlete = {
@@ -41,12 +33,7 @@ export default function AthletesPage() {
     data: athletesData,
     isLoading: isAthletesDataLoading,
     error: athletesError,
-  } = useQuery({
-    queryKey: ["athletes"],
-    queryFn: fetchAthletes,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  } = useFetchAthletesData()
 
   // Memoize `rows` to compute only when `athletes` changes
   const athleteRows = useMemo(() => {
@@ -59,12 +46,6 @@ export default function AthletesPage() {
       match_type: athlete.match_type,
     }));
   }, [athletesData]);
-
-  const [athletesSearchTerm, setAthletesSearchTerm] = useState("");
-
-  const handleAthletesSearch = (e: any) => {
-    setAthletesSearchTerm(e.target.value.toLowerCase());
-  };
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },

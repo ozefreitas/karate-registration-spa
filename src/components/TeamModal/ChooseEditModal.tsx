@@ -52,28 +52,34 @@ export default function ChooseEditModal(
   const fetchSingleAthlete = useFetchSingleAthleteData();
 
   const handleEditTeamModalOpen = () => {
-    setIsEditTeamModalOpen(true)
-  }
+    setIsEditTeamModalOpen(true);
+  };
 
-   const handleEditTeamModalClose = () => {
-    setIsEditTeamModalOpen(false)
-  }
+  const handleEditTeamModalClose = () => {
+    setIsEditTeamModalOpen(false);
+  };
 
   const {
     control: teamControl,
     handleSubmit: teamHandleSubmit,
     reset: teamReset,
+    setValue: teamSetValue,
     formState: { errors: teamErrors },
   } = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      graduation: "",
+      athlete1: undefined,
+      athlete2: undefined,
+      athlete3: undefined,
+      athlete4: undefined,
+      athlete5: undefined,
+      athlete1Id: "",
+      athlete2Id: "",
+      athlete3Id: "",
+      athlete4Id: "",
+      athlete5Id: "",
       category: "",
-      skip_number: null,
       gender: "",
-      is_student: false,
-      birthDate: "",
+      teamNumber: "",
     },
   });
 
@@ -84,18 +90,22 @@ export default function ChooseEditModal(
         onSuccess: (data: any) => {
           setIsLoading(false);
           setTeamData(data);
-          // const formData = {
-          //   firstName: data?.data.first_name,
-          //   lastName: data?.data.last_name,
-          //   graduation: data?.data.graduation,
-          //   category: data?.data.category,
-          //   gender: data?.data.gender,
-          //   skip_number: data?.data.skip_number,
-          //   is_student: data?.data.is_student,
-          //   birthDate: data?.data.birth_date,
-          // };
-          // teamReset(formData);
-          handleEditTeamModalOpen();
+          const formData = {
+            athlete1: data?.data.athlete1_full_name,
+            athlete2: data?.data.athlete2_full_name,
+            athlete3: data?.data.athlete3_full_name,
+            // athlete4: data?.data.athlete4,
+            // athlete5: data?.data.athlete5,
+            athlete1Id: data?.data.athlete1.id,
+            athlete2Id: data?.data.athlete2.id,
+            athlete3Id: data?.data.athlete3.id,
+            // athlete4Id: data?.data.athlete4.id,
+            // athlete5Id: data?.data.athlete5.id,
+            category: data?.data.category,
+            gender: data?.data.gender,
+            teamNumber: data?.data.team_number,
+          };
+          teamReset(formData);
         },
       });
     }
@@ -126,7 +136,9 @@ export default function ChooseEditModal(
   const handleTeamEdit = (
     event: React.MouseEvent<HTMLElement>,
     teamId: string
-  ) => {};
+  ) => {
+    handleEditTeamModalOpen();
+  };
 
   return (
     <>
@@ -245,8 +257,10 @@ export default function ChooseEditModal(
       <EditTeamModal
         isModalOpen={isEditTeamModalOpen}
         handleModalClose={handleEditTeamModalClose}
+        handleChoseModalClose={props.handleModalClose}
         id={props.id}
         control={teamControl}
+        setValue={teamSetValue}
         errors={teamErrors}
         handleSubmit={teamHandleSubmit}
       ></EditTeamModal>

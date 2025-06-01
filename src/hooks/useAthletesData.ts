@@ -97,6 +97,52 @@ export const useUpdateAthleteData = () => {
   });
 };
 
+const fetchAthletesNotInEvent = () => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/athletes/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    params: {
+      not_in_competition: location.pathname.split("/")[2],
+    },
+  });
+};
+
+export const useFetchAthletesNotInEvent = () => {
+  return useQuery({
+    queryKey: ["athletes-notin-event"],
+    queryFn: fetchAthletesNotInEvent,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
+
+const fetchAthletesInCategoryGender = (category: string, gender: string) => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/athletes/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+    params: {
+      in_category: category,
+      in_gender: gender,
+    },
+  });
+};
+
+export const useFetchAthletesInCategoryGender = (
+  category: string,
+  gender: string
+) => {
+  return useQuery({
+    queryKey: ["athletes-in-category-gender", category, gender],
+    queryFn: () => fetchAthletesInCategoryGender(category, gender),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
+
 const removeAthelete = (athleteId: string) => {
   const token = localStorage.getItem("token");
   return axios.delete(`http://127.0.0.1:8000/athletes/${athleteId}/`, {

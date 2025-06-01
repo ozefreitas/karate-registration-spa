@@ -1,8 +1,16 @@
 import axios from "axios";
 import { useEffect, useState, useMemo } from "react";
-import { Card, CardHeader, CardContent, Grid } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import AddButton from "../../components/AddButton/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
+import { useFetchTeamsData } from "../../hooks/useTeamsData";
 
 export default function TeamsPage() {
   type Athlete = {
@@ -28,24 +36,17 @@ export default function TeamsPage() {
     match_type: string;
   };
 
-  const [teams, setTeams] = useState<Team[]>([]);
   const [teamsPage, setTeamsPage] = useState<number>(1);
   const [teamsPageSize, setTeamsPageSize] = useState<number>(10);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios
-      .get("http://127.0.0.1:8000/teams/", {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      })
-      .then((response) => setTeams(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+  const {
+    data: teamsData,
+    isLoading: isTeamsLoading,
+    error: teamsError,
+  } = useFetchTeamsData();
 
   const teamRows = useMemo(() => {
-    return teams.map((team) => ({
+    return teamsData?.data.map((team: Team) => ({
       id: team.id,
       team_number: team.team_number,
       athlete1: team.athlete1_full_name,
@@ -55,7 +56,7 @@ export default function TeamsPage() {
       gender: team.gender,
       match_type: team.match_type,
     }));
-  }, [teams]);
+  }, [teamsData]);
 
   const columnMaping = [
     { key: "athlete1", label: "Atleta 1" },
@@ -86,13 +87,19 @@ export default function TeamsPage() {
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
-        <AthletesTable
-          type="Equipas"
-          data={teamRows}
-          columnsHeaders={columnMaping}
-          searchColumns={["athlete1", "athlete2", "athlete3", "category"]}
-          actions={true}
-        ></AthletesTable>
+        {isTeamsLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : teamsData?.data !== undefined ? (
+          <AthletesTable
+            type="Equipas"
+            data={teamRows}
+            columnsHeaders={columnMaping}
+            searchColumns={["athlete1", "athlete2", "athlete3", "category"]}
+            actions={true}
+          ></AthletesTable>
+        ) : null}
       </Grid>
       <Grid sx={{ m: 4 }}>
         {/* This button should get back to the individuals page */}

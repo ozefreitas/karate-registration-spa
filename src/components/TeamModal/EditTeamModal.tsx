@@ -1,8 +1,6 @@
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   Typography,
   AppBar,
@@ -10,19 +8,16 @@ import {
   Button,
   Grid,
   TextField,
-  MenuItem,
+  FormControl,
+  FormControlLabel,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
-import { useUpdateAthleteData } from "../../hooks/useAthletesData";
+import { useUpdateTeamData } from "../../hooks/useTeamsData";
 import { Controller, SubmitHandler } from "react-hook-form";
-import {
-  CategoryOptions,
-  GraduationsOptions,
-  GenderOptions,
-} from "../../config";
+import PickOneAthleteModal from "../AthletesModal/PickOneAthleteModal";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -37,152 +32,239 @@ export default function EditTeamModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
+    handleChoseModalClose: any;
     id: string;
     control: any;
+    setValue: any;
     errors: any;
     handleSubmit: any;
   }>
 ) {
-  type Team = {
-    id: string;
-    firstName: string;
-    lastName: string;
-    category: string;
-    graduation: number;
-    gender: string;
-    skip_number: number;
-    is_student: boolean;
-    birthDate: any;
+  type UpdateTeam = {
+    athlete1Id: string;
+    athlete2Id: string;
+    athlete3Id: string | null;
+    athlete4Id: string | null;
+    athlete5Id: string | null;
   };
 
-  const updateAthleteData = useUpdateAthleteData();
+  const [isPickOneAthleteModalOpen, setIsPickOneAthleteModalOpen] =
+    React.useState<boolean>(false);
+  const [athleteNumber, setAthleteNumber] = React.useState<number | null>(null);
+  const updateTeamData = useUpdateTeamData();
 
-  const onSubmit: SubmitHandler<Team> = (data) => {
+  const handlePickOneAthleteModalOpen = (number: number) => {
+    setAthleteNumber(number);
+    setIsPickOneAthleteModalOpen(true);
+  };
+
+  const handlePickOneAthleteModalClose = () => {
+    setIsPickOneAthleteModalOpen(false);
+  };
+
+  const onSubmit: SubmitHandler<UpdateTeam> = (data) => {
     const formData = {
-      first_name: data?.firstName,
-      last_name: data?.lastName,
-      graduation: data?.graduation,
-      category: data?.category,
-      gender: data?.gender,
-      skip_number: data?.skip_number,
-      is_student: data?.is_student ?? false,
-      birth_date: data?.birthDate ?? null,
+      athlete1: data.athlete1Id,
+      athlete2: data.athlete2Id,
+      athlete3: data.athlete3Id,
+      athlete4: data.athlete4Id,
+      athlete5: data.athlete5Id,
     };
-    updateAthleteData.mutate({ athleteId: props.id, data: formData });
+    updateTeamData.mutate(
+      { teamId: props.id, data: formData },
+      {
+        onSuccess: () => {
+          props.handleChoseModalClose();
+        },
+      }
+    );
   };
 
   return (
-    <Dialog
-      keepMounted
-      open={props.isModalOpen}
-      onClose={props.handleModalClose}
-      maxWidth="md"
-      fullWidth
-      slots={{
-        transition: Transition,
-      }}
-    >
-      <AppBar
-        sx={{
-          position: "relative",
-          width: "99%",
-          margin: "auto",
-          marginTop: "8px",
-          backgroundColor: "#e81c24",
+    <>
+      <Dialog
+        keepMounted
+        open={props.isModalOpen}
+        onClose={props.handleModalClose}
+        maxWidth="md"
+        fullWidth
+        slots={{
+          transition: Transition,
         }}
       >
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={props.handleModalClose}
-            aria-label="close"
-          >
-            <Close />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Editar Equipa
-            {/* {props.control._fields?.firstName?._f?.value} {props.control._fields?.lastName?._f?.value} */}
-          </Typography>
-          <Button
-            autoFocus
-            size="large"
-            color="inherit"
-            onClick={() => {
-              props.handleSubmit(onSubmit)();
-              props.handleModalClose();
-            }}
-            // disabled={athletesNotInEventData?.data.length === 0}
-          >
-            Guardar
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <DialogContent>
-        <Grid container justifyContent={"center"}>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="category"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Escalão"
-                  fullWidth
-                  select
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.category}
-                  helperText={props.errors.category?.message}
-                >
-                  {CategoryOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
+        <AppBar
+          sx={{
+            position: "relative",
+            width: "99%",
+            margin: "auto",
+            marginTop: "8px",
+            backgroundColor: "#e81c24",
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={props.handleModalClose}
+              aria-label="close"
+            >
+              <Close />
+            </IconButton>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Editar Equipa {props.control._formValues.category}{" "}
+              {props.control._formValues.gender}{" "}
+              {props.control._formValues.teamNumber}
+            </Typography>
+            <Button
+              autoFocus
+              size="large"
+              color="inherit"
+              onClick={() => {
+                props.handleSubmit(onSubmit)();
+                props.handleModalClose();
+              }}
+              // disabled={athletesNotInEventData?.data.length === 0}
+            >
+              Guardar
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <DialogContent>
+          <Grid container justifyContent={"center"}>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="athlete1"
+                control={props.control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <>
+                          {/* <Checkbox
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            // handleKataChecked(e);
+                          }}
+                          name="athlete1"
+                        /> */}
+                          <Button
+                            sx={{ ml: 2 }}
+                            size="small"
+                            onClick={() => handlePickOneAthleteModalOpen(1)}
+                            variant="contained"
+                          >
+                            Alterar
+                          </Button>
+                          <TextField
+                            sx={{ ml: 2 }}
+                            disabled
+                            id="athlete1"
+                            {...field}
+                          />
+                        </>
+                      }
+                      label="Atleta 1:"
+                    />
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="athlete2"
+                control={props.control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <>
+                          {/* <Checkbox
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            // handleKataChecked(e);
+                          }}
+                          name="athlete1"
+                        /> */}
+                          <Button
+                            sx={{ ml: 2 }}
+                            size="small"
+                            onClick={() => handlePickOneAthleteModalOpen(2)}
+                            variant="contained"
+                          >
+                            Alterar
+                          </Button>
+                          <TextField
+                            sx={{ ml: 2 }}
+                            disabled
+                            id="athlete2"
+                            {...field}
+                          />
+                        </>
+                      }
+                      label="Atleta 2:"
+                    />
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="athlete3"
+                control={props.control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <>
+                          {/* <Checkbox
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            // handleKataChecked(e);
+                          }}
+                          name="athlete1"
+                        /> */}
+                          <Button
+                            size="small"
+                            sx={{ ml: 2 }}
+                            onClick={() => handlePickOneAthleteModalOpen(3)}
+                            variant="contained"
+                          >
+                            Alterar
+                          </Button>
+                          <TextField
+                            sx={{ ml: 2 }}
+                            disabled
+                            id="athlete3"
+                            {...field}
+                          />
+                        </>
+                      }
+                      label="Atleta 3:"
+                    />
+                  </FormControl>
+                )}
+              />
+            </Grid>
           </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="gender"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Género"
-                  select
-                  fullWidth
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.graduation}
-                  helperText={props.errors.graduation?.message}
-                >
-                  {GenderOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-        </Grid>
-      </DialogContent>
-      {/* <DialogActions></DialogActions> */}
-    </Dialog>
+        </DialogContent>
+        {/* <DialogActions></DialogActions> */}
+      </Dialog>
+      <PickOneAthleteModal
+        isModalOpen={isPickOneAthleteModalOpen}
+        handleModalClose={handlePickOneAthleteModalClose}
+        setValue={props.setValue}
+        control={props.control}
+        number={athleteNumber}
+      ></PickOneAthleteModal>
+    </>
   );
 }
