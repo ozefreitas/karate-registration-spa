@@ -4,15 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 import AddButton from "../AddButton/AddButton";
-import { useFetchEventData } from "../../hooks/useEventData";
+import { useSingleFetchEventData } from "../../hooks/useEventData";
 
 export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
-
   const {
-    data: eventData,
-    isLoading: isEventLoading,
-    error: eventError,
-  } = useFetchEventData();
+    data: singleEventData,
+    isLoading: isSingleEventLoading,
+    error: singleEventError,
+  } = useSingleFetchEventData();
 
   return (
     <>
@@ -33,7 +32,7 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
       </Card>
       <Grid sx={{ m: 4, gap: 5 }}>
         <AddButton label="Consultar Individuais" to="individuals/"></AddButton>
-        {!isEventLoading && eventData?.data?.has_teams ? (
+        {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
           <AddButton label="Consultar Equipas" to="teams/"></AddButton>
         ) : null}
       </Grid>

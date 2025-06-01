@@ -1,30 +1,28 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
   CardContent,
   CardActions,
   Grid,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import InfoButton from "../../components/InfoButton/InfoButton";
+import { useFetchEventsData } from "../../hooks/useEventData";
 
 export default function CompetitionsPage() {
-  type Competition = {
+  type Event = {
     id: string;
     name: string;
     location: string;
     competition_date: string;
   };
 
-  const [competitions, setCompetitions] = useState<Competition[]>([]);
-
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/competitions/")
-      .then((response) => setCompetitions(response.data))
-      .catch((error) => console.error(error));
-  }, []);
+  const {
+    data: eventsData,
+    isLoading: isEventsDataLoading,
+    error: eventsError,
+  } = useFetchEventsData();
 
   return (
     <>
@@ -47,21 +45,29 @@ export default function CompetitionsPage() {
         </CardContent>
       </Card>
       <Grid container size={12}>
-        {competitions.map((comp, index) => (
-          <Grid key={index} size={6}>
-            <Card sx={{ m: 2, border: "1px solid red" }}>
-              <CardHeader title={comp.name}></CardHeader>
-              <CardContent>{comp.location} {comp.competition_date}</CardContent>
-              <CardActions sx={{ justifyContent: "center" }}>
-                <InfoButton
-                  size="large"
-                  label="Consultar"
-                  to={`/competitions/${comp.id}`}
-                ></InfoButton>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+        {isEventsDataLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          eventsData?.data.results.map((comp: Event, index: string) => (
+            <Grid key={index} size={6}>
+              <Card sx={{ m: 2, border: "1px solid red" }}>
+                <CardHeader title={comp.name}></CardHeader>
+                <CardContent>
+                  {comp.location} {comp.competition_date}
+                </CardContent>
+                <CardActions sx={{ justifyContent: "center" }}>
+                  <InfoButton
+                    size="large"
+                    label="Consultar"
+                    to={`/competitions/${comp.id}`}
+                  ></InfoButton>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+        )}
       </Grid>
     </>
   );
