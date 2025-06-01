@@ -36,17 +36,17 @@ export default function TeamsPage() {
     match_type: string;
   };
 
-  const [teamsPage, setTeamsPage] = useState<number>(1);
-  const [teamsPageSize, setTeamsPageSize] = useState<number>(10);
+  const [page, setPage] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const {
     data: teamsData,
     isLoading: isTeamsLoading,
     error: teamsError,
-  } = useFetchTeamsData();
+  } = useFetchTeamsData(page + 1, pageSize);
 
   const teamRows = useMemo(() => {
-    return teamsData?.data.map((team: Team) => ({
+    return teamsData?.data.results.map((team: Team) => ({
       id: team.id,
       team_number: team.team_number,
       athlete1: team.athlete1_full_name,
@@ -98,6 +98,10 @@ export default function TeamsPage() {
             columnsHeaders={columnMaping}
             searchColumns={["athlete1", "athlete2", "athlete3", "category"]}
             actions={true}
+            page={page}
+            setPage={setPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
           ></AthletesTable>
         ) : null}
       </Grid>

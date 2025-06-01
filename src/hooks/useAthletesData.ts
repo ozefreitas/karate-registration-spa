@@ -2,19 +2,23 @@ import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 
-const fetchAthletes = () => {
+const fetchAthletes = (page: number, pageSize: number) => {
   const token = localStorage.getItem("token");
   return axios.get(`http://127.0.0.1:8000/athletes/`, {
     headers: {
       Authorization: `Token ${token}`,
     },
+    params: {
+      page: page,
+      page_size: pageSize,
+    },
   });
 };
 
-export const useFetchAthletesData = () => {
+export const useFetchAthletesData = (page: number, pageSize: number) => {
   return useQuery({
-    queryKey: ["athletes"],
-    queryFn: fetchAthletes,
+    queryKey: ["athletes", page, pageSize],
+    queryFn: () => fetchAthletes(page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

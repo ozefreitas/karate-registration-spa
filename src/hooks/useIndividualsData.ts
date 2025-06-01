@@ -2,7 +2,7 @@ import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 
-const fetchIndividuals = () => {
+const fetchIndividuals = (page: number, pageSize: number) => {
   const token = localStorage.getItem("token");
   return axios.get("http://127.0.0.1:8000/individuals/", {
     headers: {
@@ -10,14 +10,16 @@ const fetchIndividuals = () => {
     },
     params: {
       in_competition: location.pathname.split("/")[2],
+      page: page,
+      page_size: pageSize,
     },
   });
 };
 
-export const useFetchIndividualsData = () => {
+export const useFetchIndividualsData = (page: number, pageSize: number) => {
   return useQuery({
-    queryKey: ["individuals"],
-    queryFn: fetchIndividuals,
+    queryKey: ["individuals", page, pageSize],
+    queryFn: () => fetchIndividuals(page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -46,7 +48,7 @@ export const useAddIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
@@ -59,7 +61,7 @@ export const useAddIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
     },
   });
@@ -88,7 +90,7 @@ export const useRemoveIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
@@ -101,7 +103,7 @@ export const useRemoveIndividualData = () => {
           horizontal: "center",
         },
         autoHideDuration: 5000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
     },
   });

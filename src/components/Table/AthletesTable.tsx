@@ -9,26 +9,112 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableFooter,
+  TablePagination,
   Paper,
   tableCellClasses,
-  TextField,
   Tooltip,
   Typography,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Stack,
-  Button,
+  Box,
 } from "@mui/material";
-import { Edit, Delete, Visibility } from "@mui/icons-material";
+import { useTheme } from "@mui/material/styles";
+import {
+  Edit,
+  Delete,
+  Visibility,
+  FirstPage,
+  LastPage,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+} from "@mui/icons-material";
 import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
 import EditAthleteModal from "../AthletesModal/EditAthleteModal";
 import { useForm } from "react-hook-form";
 import DeleteAthleteModal from "../AthletesModal/DeleteAthleteModal";
 import EditIndividualModal from "../AthletesModal/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
+
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number
+  ) => void;
+}
+
+function TablePaginationActions(props: TablePaginationActionsProps) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === "rtl" ? <LastPage /> : <FirstPage />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === "rtl" ? <FirstPage /> : <LastPage />}
+      </IconButton>
+    </Box>
+  );
+}
 
 export default function AthletesTable(
   props: Readonly<{
@@ -37,6 +123,10 @@ export default function AthletesTable(
     columnsHeaders: any;
     searchColumns: Array<string>;
     actions: boolean;
+    page: number;
+    setPage: any;
+    pageSize: any;
+    setPageSize: any;
   }>
 ) {
   const navigate = useNavigate();
@@ -48,6 +138,20 @@ export default function AthletesTable(
   const [isTeamAthleteEditModalOpen, setIsTeamAthleteEditModalOpen] =
     useState<boolean>(false);
   const [chosenAthlete, setChosenAthlete] = useState<string>("");
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    props.setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    props.setPageSize(parseInt(event.target.value, 10));
+    props.setPage(0);
+  };
 
   const fetchSingleAthlete = useFetchSingleAthleteData();
 
@@ -321,6 +425,28 @@ export default function AthletesTable(
               </StyledTableRow>
             )}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                labelRowsPerPage="Entradas por página:"
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                count={filteredRows.length}
+                rowsPerPage={props.pageSize}
+                page={props.page}
+                slotProps={{
+                  select: {
+                    inputProps: {
+                      "aria-label": "entradas por pagina",
+                    },
+                    native: true,
+                  },
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
     </Grid>

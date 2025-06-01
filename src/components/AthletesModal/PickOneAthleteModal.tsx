@@ -164,7 +164,7 @@ export default function PickOneAthleteModal(
           ) : athleteInCategoryGenderError ? (
             <div>Ocorreu um erro</div>
           ) : athleteInCategoryGenderData?.data.length !== 0 ? (
-            athleteInCategoryGenderData?.data.map(
+            athleteInCategoryGenderData?.data.results.map(
               (athlete: Athlete, index: string) => (
                 <ListItem
                   key={index}

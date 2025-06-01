@@ -44,6 +44,8 @@ export default function IndividualsPage() {
 
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -53,7 +55,7 @@ export default function IndividualsPage() {
     data: individualsData,
     isLoading: isIndividualsLoading,
     error: individualsError,
-  } = useFetchIndividualsData();
+  } = useFetchIndividualsData(page + 1, pageSize);
 
   const {
     data: eventData,
@@ -119,6 +121,10 @@ export default function IndividualsPage() {
             columnsHeaders={columnMaping}
             searchColumns={["first_name", "last_name", "category"]}
             actions={true}
+            page={page}
+            setPage={setPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
           ></AthletesTable>
         ) : null}
       </Grid>
