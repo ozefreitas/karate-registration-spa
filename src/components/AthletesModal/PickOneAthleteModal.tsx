@@ -1,10 +1,7 @@
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
-  Checkbox,
   List,
   ListItem,
   ListItemText,
@@ -13,15 +10,12 @@ import {
   Typography,
   AppBar,
   Toolbar,
-  Button,
   Tooltip,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close, Add } from "@mui/icons-material";
-import axios from "axios";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";

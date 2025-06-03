@@ -3,22 +3,25 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   Typography,
-  AppBar,
-  Toolbar,
   Button,
-  Grid,
-  TextField,
-  MenuItem,
   Stack,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useRemoveIndividualData } from "../../hooks/useIndividualsData";
-import { useRemoveAthleteData } from "../../hooks/useAthletesData";
-import { useRemoveTeamData } from "../../hooks/useTeamsData";
+import {
+  useRemoveIndividualData,
+  useRemoveAllIndividualsData,
+} from "../../hooks/useIndividualsData";
+import {
+  useRemoveAthleteData,
+  useRemoveAllAthletesData,
+} from "../../hooks/useAthletesData";
+import {
+  useRemoveTeamData,
+  useRemoveAllTeamsData,
+} from "../../hooks/useTeamsData";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,22 +37,56 @@ export default function DeleteAthleteModal(
     isModalOpen: boolean;
     handleModalClose: any;
     handleModalOpen: any;
-    id: string;
+    id?: string | Array<string>;
     from: string;
+    setSelected?: any;
   }>
 ) {
   const removeIndividual = useRemoveIndividualData();
+  const removeAllIndividuals = useRemoveAllIndividualsData();
   const removeAthlete = useRemoveAthleteData();
+  const removeAllAthletes = useRemoveAllAthletesData();
   const removeTeam = useRemoveTeamData();
+  const removeAllTeams = useRemoveAllTeamsData();
 
-  const handleDelete = (event: React.MouseEvent<HTMLElement>, id: string) => {
+  const handleDelete = (
+    event: React.MouseEvent<HTMLElement>,
+    id: string | Array<string> | undefined
+  ) => {
     event.stopPropagation();
-    if (props.from === "Atletas") {
-      removeAthlete.mutate(id);
-    } else if (props.from === "Equipas") {
-      removeTeam.mutate(id);
+    if (id !== undefined && typeof id === "string") {
+      if (props.from === "Atletas") {
+        removeAthlete.mutate(id);
+      } else if (props.from === "Equipas") {
+        removeTeam.mutate(id);
+      } else {
+        console.log("OLA");
+        removeIndividual.mutate(id);
+      }
+    } else if (id !== undefined && Array.isArray(id)) {
+      if (props.from === "Atletas") {
+        id.forEach((athleteId) => {
+          removeAthlete.mutate(athleteId);
+        });
+      } else if (props.from === "Equipas") {
+        id.forEach((athleteId) => {
+          removeTeam.mutate(athleteId);
+        });
+      } else {
+        id.forEach((athleteId) => {
+          removeIndividual.mutate(athleteId);
+        });
+      }
+      props.setSelected([]);
     } else {
-      removeIndividual.mutate(id);
+      if (props.from === "Atletas") {
+        removeAllAthletes.mutate();
+      } else if (props.from === "Equipas") {
+        removeAllTeams.mutate();
+      } else {
+        removeAllIndividuals.mutate();
+      }
+      props.setSelected([]);
     }
     props.handleModalClose();
   };
@@ -69,8 +106,12 @@ export default function DeleteAthleteModal(
       </DialogTitle>
       <DialogContent>
         {props.from === "Atletas"
-          ? "Tem a certeza que pretende apagar este Atleta? Esta ação irá eliminar também todas as inscrições desta Atleta em todas as provas."
-          : "Tem a certeza que pretende apagar esta Inscrição?"}
+          ? props.id !== undefined
+            ? "Tem a certeza que pretende apagar este(s) Atleta(s)? Esta ação irá eliminar também todas as inscrições deste(s) Atleta(s) em todas as provas."
+            : "Tem a certeza que pretende apagar todos os seus Atletas? Esta ação irá eliminar também todas as inscrições de todos os Atletas em todas as provas"
+          : props.id !== undefined
+          ? "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
+          : "Tem a certeza que pretende apagar todas as Inscrições?"}
       </DialogContent>
       <DialogActions>
         <Stack

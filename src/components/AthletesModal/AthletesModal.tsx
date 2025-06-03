@@ -14,17 +14,23 @@ import {
   AppBar,
   Toolbar,
   Button,
+  Tooltip,
 } from "@mui/material";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { Close } from "@mui/icons-material";
+import {
+  Close,
+  KeyboardArrowRight,
+  KeyboardArrowLeft,
+} from "@mui/icons-material";
 import axios from "axios";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAddIndividualData } from "../../hooks/useIndividualsData";
+import { useFetchAthletesNotInEvent } from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
 
 const Search = styled("div")(({ theme }) => ({
@@ -78,18 +84,6 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const fetchAthletesNotInEvent = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/athletes/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    params: {
-      not_in_competition: location.pathname.split("/")[2],
-    },
-  });
-};
-
 export default function AthletesModal(
   props: Readonly<{
     isModalOpen: boolean;
@@ -104,6 +98,20 @@ export default function AthletesModal(
     category: string;
     gender: string;
     match_type: string;
+  };
+
+  const [page, setPage] = useState<number>(0);
+
+  const handleBackButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setPage(page - 1);
+  };
+
+  const handleNextButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setPage(page + 1);
   };
 
   const [checked, setChecked] = React.useState<string[]>([]);
@@ -126,12 +134,7 @@ export default function AthletesModal(
     data: athletesNotInEventData,
     isLoading: isAthletesNotInEventLoading,
     error: athletesNotInEventError,
-  } = useQuery({
-    queryKey: ["athletes-notin-event"],
-    queryFn: fetchAthletesNotInEvent,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  } = useFetchAthletesNotInEvent(page + 1, 10);
 
   const addIndividual = useAddIndividualData();
 
@@ -144,7 +147,7 @@ export default function AthletesModal(
           horizontal: "center",
         },
         autoHideDuration: 5000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
     } else {
       athleteList.forEach((athlete: string) => {
@@ -212,14 +215,14 @@ export default function AthletesModal(
           </Button>
         </Toolbar>
       </AppBar>
-      <DialogContent>
+      <DialogContent sx={{ pb: 0 }}>
         <List>
           {isAthletesNotInEventLoading ? (
             <div>Is Loading</div>
           ) : athletesNotInEventError ? (
             <div>Ocorreu um erro</div>
-          ) : athletesNotInEventData?.data.length !== 0 ? (
-            athletesNotInEventData?.data.map(
+          ) : athletesNotInEventData?.data?.results.length !== 0 ? (
+            athletesNotInEventData?.data?.results.map(
               (athlete: Athlete, index: string) => (
                 <ListItem
                   key={index}
@@ -260,7 +263,29 @@ export default function AthletesModal(
           )}
         </List>
       </DialogContent>
-      {/* <DialogActions></DialogActions> */}
+      <DialogActions sx={{ pr: 4, pb: 2 }}>
+        <Tooltip title="Página anterior">
+          <IconButton
+            onClick={handleBackButtonClick}
+            disabled={page === 0}
+            aria-label="previous page"
+          >
+            <KeyboardArrowLeft />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Próxima página">
+          <IconButton
+            onClick={handleNextButtonClick}
+            disabled={
+              page >=
+              Math.ceil(athletesNotInEventData?.data?.results.length / 10) - 1
+            }
+            aria-label="next page"
+          >
+            <KeyboardArrowRight />
+          </IconButton>
+        </Tooltip>
+      </DialogActions>
     </Dialog>
   );
 }

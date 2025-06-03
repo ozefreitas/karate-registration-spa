@@ -18,6 +18,7 @@ import {
   IconButton,
   Stack,
   Box,
+  Checkbox,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -121,19 +122,30 @@ export default function AthletesTable(
     type: string;
     data: any;
     columnsHeaders: any;
-    searchColumns: Array<string>;
     actions: boolean;
+    selection: boolean;
     page: number;
     setPage: any;
     pageSize: any;
     setPageSize: any;
   }>
 ) {
+  type Order = "asc" | "desc";
   const navigate = useNavigate();
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<string>("");
+  const [selected, setSelected] = useState<string[]>([]);
+
+  const handleSelectionDelete = (event: React.MouseEvent<HTMLElement>) => {
+    handleDeleteAllModalOpen();
+  };
+
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] =
     useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] =
+    useState<boolean>(false);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState<boolean>(false);
   const [isTeamAthleteEditModalOpen, setIsTeamAthleteEditModalOpen] =
     useState<boolean>(false);
@@ -193,6 +205,14 @@ export default function AthletesTable(
     setIsDeleteModalOpen(false);
   };
 
+  const handleDeleteAllModalOpen = () => {
+    setIsDeleteAllModalOpen(true);
+  };
+
+  const handleDeleteAllModalClose = () => {
+    setIsDeleteAllModalOpen(false);
+  };
+
   const handleChooseModalOpen = () => {
     setIsChooseModalOpen(true);
   };
@@ -250,7 +270,7 @@ export default function AthletesTable(
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#e81c24",
-      fontSize: 18,
+      fontSize: 19,
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -264,30 +284,71 @@ export default function AthletesTable(
     },
     // hide last border
     "&:last-child td, &:last-child th": {
-      border: 0,
+      // border: 0,
     },
+    cursor: "pointer",
   }));
 
-  // TODO: corrigir isto
-  const filteredRows = props.data;
-  // const filteredRows = props.data.filter((row: any) =>
-  //   props.searchColumns.map((searchColumn) =>
-  //     // console.log(row[searchColumn])
-  //     row[searchColumn].toLowerCase().includes(searchTerm)
-  //   )
-  // );
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = props.data.map((n: any) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleRowClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: string[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
 
   return (
     <Grid container sx={{ m: 2 }}>
-      <Grid size={12} sx={{ mt: 2 }}>
+      {/* <Grid size={12} sx={{ mt: 2 }}>
         <Typography variant="h4" sx={{ m: 2 }}>
           {props.type}
         </Typography>
-      </Grid>
+      </Grid> */}
       <TableContainer component={Paper}>
-        <Table aria-label="simple table">
+        <Table size="small" aria-label="simple table">
           <TableHead>
             <StyledTableRow>
+              {props.selection ? (
+                <StyledTableCell>
+                  <label>
+                    <Checkbox
+                      color="primary"
+                      indeterminate={
+                        selected.length > 0 &&
+                        selected.length < props.data.length
+                      }
+                      checked={
+                        props.data.length > 0 &&
+                        selected.length === props.data.length
+                      }
+                      onChange={handleSelectAllClick}
+                      slotProps={{
+                        input: { "aria-label": "select all athletes" },
+                      }}
+                    />
+                  </label>
+                </StyledTableCell>
+              ) : null}
               {props.columnsHeaders.map((header: any, index: any) => (
                 <StyledTableCell key={index}>{header.label}</StyledTableCell>
               ))}
@@ -297,122 +358,137 @@ export default function AthletesTable(
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {filteredRows.length >= 1 ? (
-              filteredRows.map((row: any) => (
-                <StyledTableRow
-                  hover
-                  key={row.id}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  {props.columnsHeaders.map((header: any, index: any) => (
-                    <StyledTableCell key={index} component="th" scope="row">
-                      {row[header.key]}
-                    </StyledTableCell>
-                  ))}
-                  {props.actions ? (
-                    <StyledTableCell align="center">
-                      <Stack
-                        direction={{
-                          xs: "row",
-                        }}
-                        sx={{
-                          gap: 2,
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Tooltip arrow title="Consultar">
-                          <IconButton
-                            onClick={() => {
-                              if (props.type === "Equipas") {
-                                navigate(`/teams/${row.id}`);
-                              } else {
-                                navigate(`/athletes/${row.id}`);
+            {props.data.length >= 1 ? (
+              props.data.map((row: any) => {
+                const isItemSelected = selected.includes(row.id);
+                return (
+                  <StyledTableRow
+                    hover
+                    selected={isItemSelected}
+                    onClick={(event) => handleRowClick(event, row.id)}
+                    key={row.id}
+                  >
+                    {props.selection ? (
+                      <StyledTableCell>
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          slotProps={{
+                            input: { "aria-label": "select athlete" },
+                          }}
+                        />
+                      </StyledTableCell>
+                    ) : null}
+                    {props.columnsHeaders.map((header: any, index: any) => (
+                      <StyledTableCell key={index} component="th" scope="row">
+                        {row[header.key]}
+                      </StyledTableCell>
+                    ))}
+                    {props.actions ? (
+                      <StyledTableCell align="center">
+                        <Stack
+                          direction={{
+                            xs: "row",
+                          }}
+                          sx={{
+                            gap: 2,
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Tooltip arrow title="Consultar">
+                            <IconButton
+                              onClick={() => {
+                                if (props.type === "Equipas") {
+                                  navigate(`/teams/${row.id}`);
+                                } else {
+                                  navigate(`/athletes/${row.id}`);
+                                }
+                              }}
+                            >
+                              <Visibility color="primary"></Visibility>
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip arrow title="Editar">
+                            <IconButton
+                              onClick={(e) => {
+                                if (props.type == "Individuais") {
+                                  handleRowEditFromIndiv(e);
+                                } else if (props.type == "Equipas") {
+                                  handleRowEditFromTeam(e);
+                                } else {
+                                  handleRowEdit(e, row.id);
+                                }
+                              }}
+                            >
+                              <Edit color="warning"></Edit>
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip arrow title="Remover">
+                            <IconButton
+                              onClick={(e) => {
+                                handleRowDelete(e);
+                              }}
+                            >
+                              <Delete color="error"></Delete>
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                        {props.type !== "Equipas" ? (
+                          <>
+                            <EditAthleteModal
+                              isModalOpen={isEditModalOpen}
+                              handleModalClose={handleEditModalClose}
+                              id={
+                                props.type === "Individuais"
+                                  ? row.athlete_id
+                                  : row.id
                               }
-                            }}
-                          >
-                            <Visibility color="primary"></Visibility>
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip arrow title="Editar">
-                          <IconButton
-                            onClick={(e) => {
-                              if (props.type == "Individuais") {
-                                handleRowEditFromIndiv(e);
-                              } else if (props.type == "Equipas") {
-                                handleRowEditFromTeam(e);
-                              } else {
-                                handleRowEdit(e, row.id);
-                              }
-                            }}
-                          >
-                            <Edit color="warning"></Edit>
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip arrow title="Remover">
-                          <IconButton
-                            onClick={(e) => {
-                              handleRowDelete(e);
-                            }}
-                          >
-                            <Delete color="error"></Delete>
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                      {props.type !== "Equipas" ? (
-                        <>
-                          <EditAthleteModal
-                            isModalOpen={isEditModalOpen}
-                            handleModalClose={handleEditModalClose}
-                            id={
-                              props.type === "Individuais"
-                                ? row.athlete_id
-                                : row.id
+                              control={athleteControl}
+                              errors={athleteErrors}
+                              handleSubmit={athleteHandleSubmit}
+                            ></EditAthleteModal>
+                            <EditIndividualModal
+                              isModalOpen={isEditConfirmModalOpen}
+                              handleModalClose={handleEditConfirmModalClose}
+                              handleEditModalOpen={handleEditModalOpen}
+                              id={row.athlete_id}
+                              reset={athleteReset}
+                              control={athleteControl}
+                              errors={athleteErrors}
+                            ></EditIndividualModal>
+                          </>
+                        ) : null}
+
+                        {props.type === "Equipas" ? (
+                          <ChooseEditModal
+                            isModalOpen={isChooseModalOpen}
+                            handleModalClose={handleChooseModalClose}
+                            isEditModalOpen={isTeamAthleteEditModalOpen}
+                            handleEditModalClose={
+                              handleTeamAthleteEditModalClose
                             }
-                            control={athleteControl}
-                            errors={athleteErrors}
-                            handleSubmit={athleteHandleSubmit}
-                          ></EditAthleteModal>
-                          <EditIndividualModal
-                            isModalOpen={isEditConfirmModalOpen}
-                            handleModalClose={handleEditConfirmModalClose}
-                            handleEditModalOpen={handleEditModalOpen}
-                            id={row.athlete_id}
+                            handleEditModalOpen={handleTeamAthleteEditModalOpen}
+                            id={row.id}
+                            chosenAthlete={chosenAthlete}
+                            setChosenAthlete={setChosenAthlete}
                             reset={athleteReset}
                             control={athleteControl}
                             errors={athleteErrors}
-                          ></EditIndividualModal>
-                        </>
-                      ) : null}
-
-                      {props.type === "Equipas" ? (
-                        <ChooseEditModal
-                          isModalOpen={isChooseModalOpen}
-                          handleModalClose={handleChooseModalClose}
-                          isEditModalOpen={isTeamAthleteEditModalOpen}
-                          handleEditModalClose={handleTeamAthleteEditModalClose}
-                          handleEditModalOpen={handleTeamAthleteEditModalOpen}
+                            handleSubmit={athleteHandleSubmit}
+                          ></ChooseEditModal>
+                        ) : null}
+                        <DeleteAthleteModal
+                          isModalOpen={isDeleteModalOpen}
+                          handleModalClose={handleDeleteModalClose}
+                          handleModalOpen={handleDeleteModalOpen}
                           id={row.id}
-                          chosenAthlete={chosenAthlete}
-                          setChosenAthlete={setChosenAthlete}
-                          reset={athleteReset}
-                          control={athleteControl}
-                          errors={athleteErrors}
-                          handleSubmit={athleteHandleSubmit}
-                        ></ChooseEditModal>
-                      ) : null}
-                      <DeleteAthleteModal
-                        isModalOpen={isDeleteModalOpen}
-                        handleModalClose={handleDeleteModalClose}
-                        handleModalOpen={handleDeleteModalOpen}
-                        id={row.id}
-                        from={props.type}
-                      ></DeleteAthleteModal>
-                    </StyledTableCell>
-                  ) : null}
-                </StyledTableRow>
-              ))
+                          from={props.type}
+                        ></DeleteAthleteModal>
+                      </StyledTableCell>
+                    ) : null}
+                  </StyledTableRow>
+                );
+              })
             ) : (
               <StyledTableRow
                 sx={{
@@ -427,10 +503,24 @@ export default function AthletesTable(
           </TableBody>
           <TableFooter>
             <TableRow>
+              <StyledTableCell>
+                <Tooltip arrow title="Remover Selecionados">
+                  <IconButton
+                    disabled={selected.length === 0}
+                    onClick={(e) => {
+                      handleSelectionDelete(e);
+                    }}
+                  >
+                    <Delete
+                      color={selected.length === 0 ? "disabled" : "error"}
+                    ></Delete>
+                  </IconButton>
+                </Tooltip>
+              </StyledTableCell>
               <TablePagination
-                labelRowsPerPage="Entradas por página:"
+                // labelRowsPerPage="Entradas por página:"
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                count={filteredRows.length}
+                count={props.data.length}
                 rowsPerPage={props.pageSize}
                 page={props.page}
                 slotProps={{
@@ -449,6 +539,16 @@ export default function AthletesTable(
           </TableFooter>
         </Table>
       </TableContainer>
+      {selected.length > 0 ? (
+        <DeleteAthleteModal
+          isModalOpen={isDeleteAllModalOpen}
+          handleModalClose={handleDeleteAllModalClose}
+          handleModalOpen={handleDeleteAllModalOpen}
+          from={props.type}
+          id={props.data.length === selected.length ? undefined : selected}
+          setSelected={setSelected}
+        ></DeleteAthleteModal>
+      ) : null}
     </Grid>
   );
 }
