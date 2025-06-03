@@ -96,8 +96,8 @@ export default function TeamsPage() {
             type="Equipas"
             data={teamRows}
             columnsHeaders={columnMaping}
-            searchColumns={["athlete1", "athlete2", "athlete3", "category"]}
             actions={true}
+            selection={true}
             page={page}
             setPage={setPage}
             pageSize={pageSize}

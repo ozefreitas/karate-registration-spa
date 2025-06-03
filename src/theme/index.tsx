@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ptPT } from "@mui/material/locale";
 
-const theme = createTheme({
+const theme = createTheme(ptPT, {
   typography: {
     fontFamily:
       '"Poppins", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',

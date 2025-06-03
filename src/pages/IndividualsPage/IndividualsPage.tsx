@@ -14,7 +14,7 @@ import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
 import { useQuery } from "@tanstack/react-query";
-import { useFetchIndividualsData } from "../../hooks/useIndividualsData";
+import { useFetchIndividualsData, useRemoveAllIndividualsData } from "../../hooks/useIndividualsData";
 
 const fetchEventName = (eventId: any) => {
   return axios.get(`http://127.0.0.1:8000/competitions/${eventId}/`);
@@ -70,7 +70,7 @@ export default function IndividualsPage() {
   });
 
   const indivRows = useMemo(() => {
-    return individualsData?.data.map((indiv: Individual) => ({
+    return individualsData?.data?.results.map((indiv: Individual) => ({
       id: indiv.id,
       athlete_id: indiv.athlete.id,
       first_name: indiv.first_name,
@@ -114,13 +114,13 @@ export default function IndividualsPage() {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : individualsData?.data !== undefined ? (
+        ) : individualsData?.data?.results !== undefined ? (
           <AthletesTable
             type="Individuais"
             data={indivRows}
             columnsHeaders={columnMaping}
-            searchColumns={["first_name", "last_name", "category"]}
             actions={true}
+            selection={true}
             page={page}
             setPage={setPage}
             pageSize={pageSize}

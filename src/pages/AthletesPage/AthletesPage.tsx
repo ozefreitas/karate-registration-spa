@@ -81,8 +81,8 @@ export default function AthletesPage() {
             type="Atletas"
             data={athleteRows}
             columnsHeaders={columnMaping}
-            searchColumns={["first_name", "last_name", "category"]}
             actions={true}
+            selection={true}
             page={page}
             setPage={setPage}
             pageSize={pageSize}
