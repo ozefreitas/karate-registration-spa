@@ -83,7 +83,49 @@ export const useRemoveIndividualData = () => {
   return useMutation({
     mutationFn: removeIndividual,
     onSuccess: () => {
-      enqueueSnackbar("Atleta removido deste evento com sucesso!", {
+      enqueueSnackbar("Atleta(s) removido(s) deste evento com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["individuals"] });
+      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const removeAllIndividuals = () => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`http://127.0.0.1:8000/individuals/delete_all/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useRemoveAllIndividualsData = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: removeAllIndividuals,
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}!`, {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
