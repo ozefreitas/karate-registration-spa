@@ -38,3 +38,29 @@ export const GenderOptions: { label: string; value: string }[] = [
   { label: "Feminino", value: "Feminino" },
   { label: "Misto", value: "Misto" },
 ];
+
+export const ReasonOptions: { label: string; value: string }[] = [
+  { label: "Prática Desportiva", value: "sports" },
+  { label: "Recomendação Médica", value: "medicine" },
+  { label: "Influência de Pais/Amigos", value: "influence" },
+  { label: "Defesa Pessoal", value: "defence" },
+  { label: "Karate Tradicional", value: "traditional" },
+];
+
+export const WeightOptions = {
+  Juvenil: [
+    { value: "-47", label: "-47Kg" },
+    { value: "+47", label: "+47Kg" },
+  ],
+  Cadete: [
+    { value: "-57", label: "-57Kg" },
+    { value: "+57", label: "+57Kg" },
+  ],
+  Júnior: [
+    { value: "-65", label: "-65Kg" },
+    { value: "+65", label: "+65Kg" },
+  ],
+  Sénior: [{ value: "open", label: "Open" }],
+  "Veterano +35": [{ value: "open", label: "Open" }],
+  "Veterano +50": [{ value: "open", label: "Open" }],
+};
