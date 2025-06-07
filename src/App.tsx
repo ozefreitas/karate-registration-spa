@@ -39,22 +39,22 @@ function App() {
         <Route path="teams/" element={<TeamsPage />} />
         <Route path="teams/:id/" element={<SingleTeamPage />} />
         <Route path="teams/new_team/" element={<NewTeamPage />} />
-        <Route path="competitions/" element={<CompetitionsPage />} />
-        <Route path="competitions/:id/" element={<CompetitionCard />} />
+        <Route path="events/" element={<CompetitionsPage />} />
+        <Route path="events/:id/" element={<CompetitionCard />} />
         <Route
-          path="competitions/:id/individuals/"
+          path="events/:id/individuals/"
           element={<IndividualsPage />}
         />
         <Route
-          path="competitions/:id/individuals/register/"
+          path="events/:id/individuals/register/"
           element={<RegisterIndividualPage />}
         />
         <Route
-          path="competitions/:id/teams/"
+          path="events/:id/teams/"
           element={<RegisteredTeamsPage />}
         />
         <Route
-          path="competitions/:id/teams/register/"
+          path="events/:id/teams/register/"
           element={<RegisterTeamPage />}
         />
         <Route path="rules/" element={<RulesPage />} />

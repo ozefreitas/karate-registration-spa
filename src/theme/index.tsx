@@ -87,10 +87,15 @@ const theme = createTheme(ptPT, {
     MuiFormLabel: {
       styleOverrides: {
         root: {
-          '&.Mui-focused': {
-            color: '#e81c24',
+          "&.Mui-focused": {
+            color: "#e81c24",
           },
         },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: { borderRadius: 12 },
       },
     },
   },

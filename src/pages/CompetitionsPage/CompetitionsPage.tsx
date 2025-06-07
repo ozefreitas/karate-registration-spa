@@ -28,7 +28,7 @@ export default function CompetitionsPage() {
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title="Página de Competições"
+          title="Página de Eventos"
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -36,7 +36,7 @@ export default function CompetitionsPage() {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todas as competições da SKI-Portugal. Mais tarde
+          Aqui poderá consultar todos os Eventos da SKI-Portugal. Mais tarde
           será também possível ver Estágios e outras provas de interesse.
           <p></p>
           Consultando cada cartão de prova, pode observar toda a informação
@@ -61,7 +61,7 @@ export default function CompetitionsPage() {
                   <InfoButton
                     size="large"
                     label="Consultar"
-                    to={`/competitions/${comp.id}`}
+                    to={`/events/${comp.id}`}
                   ></InfoButton>
                 </CardActions>
               </Card>

@@ -221,7 +221,7 @@ export default function HelpPage() {
           <Grid size={12}>
             <Card sx={{ m: 2 }}>
               <CardHeader
-                title={"Competições"}
+                title={"Eventos"}
                 sx={{
                   "& .MuiCardHeader-title": {
                     fontWeight: "bold",
@@ -229,8 +229,8 @@ export default function HelpPage() {
                 }}
               ></CardHeader>
               <CardContent>
-                As competições disponíveis são mostradas através de cartões.
-                Cada competição terá:
+                Os Eventos disponíveis são mostradas através de cartões.
+                Cada Evento terá:
                 <ul>
                   <li>Local;</li>
                   <li>Data de início das inscrições;</li>
@@ -238,8 +238,8 @@ export default function HelpPage() {
                   <li>Data de fim de periodo de retificações;</li>
                   <li>Data de realização;</li>
                 </ul>
-                Lá dentro poderá consultar e inscrever Atletas nessa mesma
-                competição. Apenas poderá inscrever entre a data de início e a
+                Lá dentro poderá consultar e inscrever Atletas nesse mesmo
+                evento. Apenas poderá inscrever entre a data de início e a
                 de fim de inscrições. Até ao fim do periodo de retificações
                 apenas poderá fazer edições.
               </CardContent>

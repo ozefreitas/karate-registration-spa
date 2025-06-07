@@ -31,10 +31,10 @@ export const sideMenuConfig = [
     to: "/teams/",
   },
   {
-    name: "competitions",
-    label: "Competições",
+    name: "events",
+    label: "Eventos",
     icon: <SportsMma sx={{ color: "#e81c24" }} />,
-    to: "/competitions/",
+    to: "/events/",
   },
   {
     name: "rules",
@@ -77,7 +77,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   athletes: "Atletas",
   teams: "Equipas",
   classifications: "Classificações",
-  competitions: "Competições",
+  events: "Eventos",
   news: "Novidades",
   profile: "Perfil",
   rules: "Regras",

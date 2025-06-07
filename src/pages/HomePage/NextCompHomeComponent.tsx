@@ -28,8 +28,12 @@ export default function NextCompHomeComponent() {
     competition_date: string;
   };
 
-  const navigate = useNavigate()
-  const { data: nextCompData, isLoading: isNextCompLoading, error: nextCompError } = useFetchNextEventData()
+  const navigate = useNavigate();
+  const {
+    data: nextCompData,
+    isLoading: isNextCompLoading,
+    error: nextCompError,
+  } = useFetchNextEventData();
 
   return (
     <Grid size={12}>
@@ -50,7 +54,9 @@ export default function NextCompHomeComponent() {
           <List>
             <Tooltip title={"Consultar"}>
               <ListItem sx={{ m: 0, pb: 0 }}>
-                <ListItemButton onClick={() => navigate(`competitions/${nextCompData?.data.id}`)}>
+                <ListItemButton
+                  onClick={() => navigate(`events/${nextCompData?.data.id}`)}
+                >
                   <ListItemIcon>
                     <SportsMma></SportsMma>
                   </ListItemIcon>
@@ -65,12 +71,12 @@ export default function NextCompHomeComponent() {
               <ListItemIcon>
                 <SportsMma></SportsMma>
               </ListItemIcon>
-              <ListItemText primary={"Não há competições disponíveis."} />
+              <ListItemText primary={"Não há Eventos disponíveis."} />
             </ListItemButton>
           </ListItem>
         )}
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <InfoButton label="Ver Todas" to="competitions/"></InfoButton>
+          <InfoButton label="Ver Todas" to="events/"></InfoButton>
         </CardActions>
       </Card>
     </Grid>
