@@ -24,6 +24,48 @@ export const useFetchAthletesData = (page: number, pageSize: number) => {
   });
 };
 
+const createAthlete = (data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(`http://127.0.0.1:8000/athletes/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useCreateAthlete = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createAthlete,
+    onSuccess: () => {
+      enqueueSnackbar("Atleta criado com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
 const fetchSingleAthlete = (athleteId: string | null) => {
   const token = localStorage.getItem("token");
   return axios.get(`http://127.0.0.1:8000/athletes/${athleteId}/`, {
