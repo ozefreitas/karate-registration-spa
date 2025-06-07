@@ -43,27 +43,55 @@ const theme = createTheme(ptPT, {
           "&:hover": {
             boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // mimic elevation
           },
-          borderRadius: 12,
+          borderRadius: 16,
           padding: 6,
           overflow: "hidden",
-          margin: 10,
+          // margin: 10,
           marginTop: 0,
           "&:before": {
             display: "none",
           },
           "&:not(:last-of-type)": {
-            borderTopLeftRadius: 12,
-            borderTopRightRadius: 12,
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
           },
           "&:not(:first-of-type)": {
-            borderBottomLeftRadius: 12,
-            borderBottomRightRadius: 12,
+            borderBottomLeftRadius: 16,
+            borderBottomRightRadius: 16,
           },
         },
       },
     },
     MuiListItemButton: {
       styleOverrides: { root: { borderRadius: "10px" } },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        switchBase: {
+          "&.Mui-checked": {
+            color: "#e81c24", // Thumb color when checked
+          },
+          "&.Mui-checked + .MuiSwitch-track": {
+            backgroundColor: "#e81c24", // Track color when checked
+          },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          fontSize: "0.9rem",
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-focused': {
+            color: '#e81c24',
+          },
+        },
+      },
     },
   },
 });

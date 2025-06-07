@@ -52,7 +52,7 @@ export default function CompetitionsPage() {
         ) : (
           eventsData?.data.results.map((comp: Event, index: string) => (
             <Grid key={index} size={6}>
-              <Card sx={{ m: 2, border: "1px solid red" }}>
+              <Card sx={{ m: 2, border: "1px solid " }}>
                 <CardHeader title={comp.name}></CardHeader>
                 <CardContent>
                   {comp.location} {comp.competition_date}
