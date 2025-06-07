@@ -8,52 +8,43 @@ import {
   TextField,
   FormControl,
   FormLabel,
+  Stack,
   FormHelperText,
   FormControlLabel,
-  Checkbox,
+  Switch,
+  Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { SnackbarKey, useSnackbar } from "notistack";
-import { Close } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   GraduationsOptions,
   GenderOptions,
   CategoryOptions,
+  WeightOptions,
+  ReasonOptions,
 } from "../../config";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import FormCard from "../../dashboard/FormCard";
+import FormAccordion from "../../dashboard/FormAccordion";
+import { useCreateAthlete } from "../../hooks/useAthletesData";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const [isKataChecked, setIsKataChecked] = useState<boolean>(false);
-  const [isKumiteChecked, setIsKumiteChecked] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
-  const handleKataChecked = (event: any) => {
-    setIsKataChecked((prev) => !prev);
-  };
-
-  const handleKumiteChecked = (event: any) => {
-    setIsKumiteChecked((prev) => !prev);
-  };
-
-  const action = (snackbarId: SnackbarKey | undefined) => (
-    <Close
-      color="warning"
-      sx={{ cursor: "pointer" }}
-      onClick={() => {
-        closeSnackbar(snackbarId);
-      }}
-    >
-      Fechar
-    </Close>
-  );
+  const createAthlete = useCreateAthlete();
 
   const {
     control,
     handleSubmit,
-    setValue,
+    setError,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -61,68 +52,83 @@ export default function NewAthletePage() {
       lastName: "",
       graduation: "",
       category: "",
-      skip_number: null,
+      skip_number: "",
       kata: false,
       kumite: false,
       gender: "",
       is_student: false,
-      birthDate: "",
+      birthDate: undefined,
       weight: "",
+      student: false,
+      reason: "",
     },
   });
 
   const onSubmit = async (data: any) => {
-    const firstName = data.firstName;
-    const lastName = data.lastName;
-    const graduation = data.graduation;
-    const category = data.category;
-    const skip_number = data.skip_number;
-    const kata = data.kata;
-    const kumite = data.kumite;
-    const gender = data.gender;
-    const is_student = data.is_student;
-    const birthDate = data.birthDate;
-    const weight = data.weight;
+    const formData = {
+      first_name: data.firstName,
+      last_name: data.lastName,
+      graduation: data.graduation,
+      category: data.category,
+      skip_number: data.skip_number,
+      gender: data.gender,
+      is_student: data.is_student,
+      birth_date: data.birthDate,
+      match_type: "",
+      weight: data.weight,
+    };
 
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/athletes/", {
-        firstName,
-        lastName,
-        graduation,
-        category,
-        skip_number,
-        kata,
-        kumite,
-        gender,
-        is_student,
-        birthDate,
-        weight,
+    if (data.kumite) {
+      formData.match_type = "kumite";
+      createAthlete.mutate(formData, { onSuccess: () => {} });
+    } else if (data.kata) {
+      formData.match_type = "kata";
+      formData.weight = "";
+      createAthlete.mutate(formData, { onSuccess: () => {} });
+    } else {
+      setError("kata", {
+        type: "manual",
+        message: "Selecione pelo menos uma opção.",
       });
-      enqueueSnackbar("Atleta criado com sucesso!", {
-        action,
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-        preventDuplicate: true
-      });
-      navigate("/athletes/");
-    } catch (err) {
-      console.error(err);
-      enqueueSnackbar("Algo correu mal!", {
-        action,
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-        preventDuplicate: true
+      setError("kumite", {
+        type: "manual",
+        message: "Selecione pelo menos uma opção.",
       });
     }
   };
+
+  type WeightCategory = keyof typeof WeightOptions;
+  const [currentCategory, setCurrentCategory] = useState<WeightCategory | null>(
+    null
+  );
+
+  const handleChange = (e: any) => {
+    const value = e.target.value;
+    if (isWeightCategory(value)) {
+      setCurrentCategory(value);
+    } else {
+      setCurrentCategory(null);
+    }
+  };
+
+  const isWeightCategory = (value: string): value is WeightCategory => {
+    return [
+      "Juvenil",
+      "Cadete",
+      "Júnior",
+      "Sénior",
+      "Veterano +35",
+      "Veterano +50",
+    ].includes(value);
+  };
+
+  const kumite = useWatch({
+    control,
+    name: "kumite",
+  });
+
+  const isEnabled = currentCategory !== null && kumite === true;
+
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
@@ -149,162 +155,381 @@ export default function NewAthletePage() {
         </CardContent>
       </Card>
       <Grid container>
-        <Grid sx={{ m: 2 }} size={9}>
-          <Controller
-            name="firstName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Primeiro Nome"
-                fullWidth
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.firstName}
-                helperText={errors.firstName?.message}
-              />
-            )}
-          />
-        </Grid>
-        <Grid sx={{ m: 2 }} size={9}>
-          <Controller
-            name="lastName"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Último Nome"
-                fullWidth
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.lastName}
-                helperText={errors.lastName?.message}
-              />
-            )}
-          />
-        </Grid>
-        <Grid sx={{ m: 2 }} size={9}>
-          <Controller
-            name="category"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Escalão"
-                fullWidth
-                select
-                multiline
-                required
-                maxRows={8}
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.category}
-                helperText={errors.category?.message}
-              >
-                {CategoryOptions.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ m: 2 }} size={9}>
-          <Controller
-            name="graduation"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Graduação"
-                select
-                fullWidth
-                multiline
-                required
-                maxRows={8}
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.graduation}
-                helperText={errors.graduation?.message}
-              >
-                {GraduationsOptions.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ m: 2 }} size={9}>
-          <Controller
-            name="kata"
-            control={control}
-            render={({ field }) => (
-              <FormControl component="fieldset" variant="standard">
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      {...field}
-                      checked={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                        handleKataChecked(e);
-                      }}
-                      name="kata"
-                    />
-                  }
-                  label="Kata"
+        <FormCard title="Dados Pessoais">
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="firstName"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Primeiro Nome"
+                  fullWidth
+                  required
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName?.message}
                 />
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ m: 2 }} size={9}>
-          <Controller
-            name="kumite"
-            control={control}
-            render={({ field }) => (
-              <FormControl component="fieldset" variant="standard">
-                {/* <FormLabel component="legend">
-                  Whether to make this document available for RAG pipelines and
-                  information extraction.
-                </FormLabel> */}
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      {...field}
-                      checked={field.value}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                        handleKumiteChecked(e);
-                      }}
-                      name="kumite"
-                    />
-                  }
-                  label="Kumite"
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Último Nome"
+                  fullWidth
+                  required
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.lastName}
+                  helperText={errors.lastName?.message}
                 />
-                {/* <FormHelperText sx={{ color: "red" }}>
-                  Be careful.
-                </FormHelperText> */}
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid container size={12}>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="graduation"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Graduação"
+                  select
+                  fullWidth
+                  multiline
+                  required
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.graduation}
+                  helperText={errors.graduation?.message}
+                >
+                  {GraduationsOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="skip_number"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Nº ASKIP"
+                  type="text"
+                  slotProps={{
+                    htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
+                  }}
+                  fullWidth
+                  multiline
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.skip_number}
+                  helperText={errors.skip_number?.message}
+                ></TextField>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2, pt: 1 }} size={6}>
+            <Controller
+              name="birthDate"
+              control={control}
+              render={({ field }) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      {...field}
+                      format="YYYY-MM-DD"
+                      label="Data de Nascimento *"
+                      onChange={(date) => {
+                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                      }}
+                      value={field.value ? dayjs(field.value) : null}
+                      slotProps={{
+                        textField: {
+                          // error: !!localErrors?.publication_date,
+                          // helperText:
+                          //   localErrors?.publication_date?.message || "",
+                        },
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Género"
+                  select
+                  fullWidth
+                  multiline
+                  required
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.gender}
+                  helperText={errors.gender?.message}
+                >
+                  {GenderOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+        </FormCard>
+        <FormCard title="Praticante">
+          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+            <Controller
+              name="student"
+              control={control}
+              render={({ field }) => (
+                <FormControl
+                  component="fieldset"
+                  variant="standard"
+                  error={!!errors.kata}
+                >
+                  <FormLabel sx={{ mb: 2 }}>
+                    Se não pretende inscrever em provas, selecione este campo.
+                  </FormLabel>
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            setExpanded((prev) => !prev);
+                          }}
+                          name="student"
+                        />
+                      }
+                      label="É Aluno"
+                      sx={{ justifyContent: "left", marginLeft: 0 }}
+                    />
+                  </Stack>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 3 }} size={6}>
+            <Controller
+              name="reason"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Razão da Prática"
+                  select
+                  fullWidth
+                  multiline
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                >
+                  <MenuItem value="None">Prefere não dizer</MenuItem>
+                  {ReasonOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+        </FormCard>
+        <FormAccordion
+          title="Competições"
+          expanded={expanded}
+          setExpanded={setExpanded}
+        >
+          <Grid sx={{ p: 3 }} container justifyContent="center" size={3}>
+            <Controller
+              name="kata"
+              control={control}
+              render={({ field }) => (
+                <FormControl
+                  component="fieldset"
+                  variant="standard"
+                  error={!!errors.kata}
+                >
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            // handleKataChecked(e);
+                          }}
+                          name="kata"
+                        />
+                      }
+                      label="Kata"
+                      sx={{ justifyContent: "center", marginLeft: 0 }}
+                    />
+                    {!!errors.kata && (
+                      <FormHelperText error sx={{ marginLeft: "14px" }}>
+                        {errors.kata.message}
+                      </FormHelperText>
+                    )}
+                  </Stack>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 3 }} size={9}>
+            <Controller
+              name="kumite"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset" variant="standard">
+                  {/* <FormLabel component="legend">
+                    Whether to make this document available for RAG pipelines
+                    and information extraction.
+                  </FormLabel> */}
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            // handleKumiteChecked(e);
+                          }}
+                          name="kumite"
+                        />
+                      }
+                      label="Kumite"
+                      sx={{ justifyContent: "center", marginLeft: 0 }}
+                    />
+                    {!!errors.kumite && (
+                      <FormHelperText error sx={{ marginLeft: "14px" }}>
+                        {errors.kumite.message}
+                      </FormHelperText>
+                    )}
+                  </Stack>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Escalão"
+                  fullWidth
+                  select
+                  multiline
+                  required
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    handleChange(e);
+                  }}
+                  error={!!errors.category}
+                  helperText={errors.category?.message}
+                >
+                  {CategoryOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="weight"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Peso"
+                  fullWidth
+                  select
+                  multiline
+                  disabled={!isEnabled}
+                  required
+                  maxRows={8}
+                  helperText="Só poderá escolher um peso se selecionar Kumite."
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.weight}
+                >
+                  <MenuItem value="None">-- Não Definido --</MenuItem>
+                  {currentCategory
+                    ? WeightOptions[currentCategory].map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))
+                    : null}
+                </TextField>
+              )}
+            />
+          </Grid>
+        </FormAccordion>
+        <Grid
+          sx={{ m: 5 }}
+          justifyContent="flex-end"
+          spacing={2}
+          container
+          size={12}
+        >
           <Button
             variant="contained"
             size={"large"}
@@ -313,6 +538,7 @@ export default function NewAthletePage() {
             sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
+              navigate("/athletes/");
             }}
           >
             Submeter e voltar
@@ -325,6 +551,8 @@ export default function NewAthletePage() {
             sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
+              reset();
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
             Submeter e Adicionar outro
@@ -336,7 +564,7 @@ export default function NewAthletePage() {
             type={"submit"}
             sx={{ marginBottom: "20px" }}
             onClick={() => {
-              navigate("/athletes/")
+              navigate("/athletes/");
             }}
           >
             Voltar

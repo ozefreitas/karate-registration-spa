@@ -22,6 +22,7 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
             },
+            // pb: 0
           }}
         ></CardHeader>
         <CardContent>
@@ -30,11 +31,84 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
           inscrever os seus Atletas ou Equipas.
         </CardContent>
       </Card>
-      <Grid sx={{ m: 4, gap: 5 }}>
-        <AddButton label="Consultar Individuais" to="individuals/"></AddButton>
-        {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
-          <AddButton label="Consultar Equipas" to="teams/"></AddButton>
-        ) : null}
+      <Grid container sx={{ m: 2 }}>
+        <Grid size={6}>
+          <Card sx={{ m: 2 }}>
+            <CardHeader
+              title="Informação Geral"
+              sx={{
+                "& .MuiCardHeader-title": {
+                  fontWeight: "bold",
+                },
+              }}
+            ></CardHeader>
+            <CardContent>
+              Aqui estarão os campos de informação geral, datas, epoca e
+              localização
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={6}>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title="Ficheiros"
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              <CardContent>
+                Aqui ficheiros que podem ser descarregados, cajo haja
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title="Notas Importantes"
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              <CardContent>{singleEventData?.data?.description}</CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid size={12}>
+          <Card sx={{ m: 2, mt: 0 }}>
+            <CardHeader
+              title="Ações"
+              sx={{
+                "& .MuiCardHeader-title": {
+                  fontWeight: "bold",
+                },
+              }}
+            ></CardHeader>
+            <CardContent>
+              <Grid
+                container
+                direction="row"
+                sx={{
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  gap: 10
+                }}
+              >
+                <AddButton
+                  label="Consultar Individuais"
+                  to="individuals/"
+                ></AddButton>
+                {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
+                  <AddButton label="Consultar Equipas" to="teams/"></AddButton>
+                ) : null}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
     </>
   );
