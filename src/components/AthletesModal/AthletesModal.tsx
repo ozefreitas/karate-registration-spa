@@ -29,7 +29,7 @@ import axios from "axios";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAddIndividualData } from "../../hooks/useIndividualsData";
+import { useAddEventAthlete } from "../../hooks/useEventData";
 import { useFetchAthletesNotInEvent } from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
 
@@ -88,7 +88,7 @@ export default function AthletesModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
-    eventName: any;
+    eventData: any;
   }>
 ) {
   type Athlete = {
@@ -136,7 +136,7 @@ export default function AthletesModal(
     error: athletesNotInEventError,
   } = useFetchAthletesNotInEvent(page + 1, 10);
 
-  const addIndividual = useAddIndividualData();
+  const addEventAthlete = useAddEventAthlete();
 
   const handleIndividualsSubmit = (athleteList: string[]) => {
     if (athleteList.length === 0) {
@@ -151,8 +151,9 @@ export default function AthletesModal(
       });
     } else {
       athleteList.forEach((athlete: string) => {
-        const data = { athlete: athlete, competition: props.eventName.id };
-        addIndividual.mutate(data);
+        const athleteData = {athlete_id: athlete};
+        const data = {eventId: props.eventData.id, data: athleteData}
+        addEventAthlete.mutate(data);
       });
       setChecked([]);
       props.handleModalClose();
@@ -189,7 +190,7 @@ export default function AthletesModal(
             <Close />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Selecionar Atletas para {props.eventName?.name}
+            Selecionar Atletas para {props.eventData?.name}
           </Typography>
           {athletesNotInEventData?.data.length !== 0 ? (
             <Search>

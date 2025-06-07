@@ -10,10 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import {
-  useRemoveIndividualData,
-  useRemoveAllIndividualsData,
-} from "../../hooks/useIndividualsData";
+import { useRemoveEventAthlete } from "../../hooks/useEventData";
 import {
   useRemoveAthleteData,
   useRemoveAllAthletesData,
@@ -22,6 +19,7 @@ import {
   useRemoveTeamData,
   useRemoveAllTeamsData,
 } from "../../hooks/useTeamsData";
+import { useLocation } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -42,12 +40,13 @@ export default function DeleteAthleteModal(
     setSelected?: any;
   }>
 ) {
-  const removeIndividual = useRemoveIndividualData();
-  const removeAllIndividuals = useRemoveAllIndividualsData();
+  const removeEventAthlete = useRemoveEventAthlete();
+  // const removeAllIndividuals = useRemoveAllIndividualsData();
   const removeAthlete = useRemoveAthleteData();
   const removeAllAthletes = useRemoveAllAthletesData();
   const removeTeam = useRemoveTeamData();
   const removeAllTeams = useRemoveAllTeamsData();
+  const location = useLocation();
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
@@ -60,8 +59,12 @@ export default function DeleteAthleteModal(
       } else if (props.from === "Equipas") {
         removeTeam.mutate(id);
       } else {
-        console.log("OLA");
-        removeIndividual.mutate(id);
+        const athleteData = { athlete_id: id };
+        const data = {
+          eventId: location.pathname.split("/")[2],
+          data: athleteData,
+        };
+        removeEventAthlete.mutate(data);
       }
     } else if (id !== undefined && Array.isArray(id)) {
       if (props.from === "Atletas") {
@@ -74,7 +77,12 @@ export default function DeleteAthleteModal(
         });
       } else {
         id.forEach((athleteId) => {
-          removeIndividual.mutate(athleteId);
+          const athleteData = { athlete_id: athleteId };
+          const data = {
+            eventId: location.pathname.split("/")[2],
+            data: athleteData,
+          };
+          removeEventAthlete.mutate(data);
         });
       }
       props.setSelected([]);
@@ -84,7 +92,7 @@ export default function DeleteAthleteModal(
       } else if (props.from === "Equipas") {
         removeAllTeams.mutate();
       } else {
-        removeAllIndividuals.mutate();
+        // removeAllIndividuals.mutate();
       }
       props.setSelected([]);
     }

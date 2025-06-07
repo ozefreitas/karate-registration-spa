@@ -100,8 +100,10 @@ export default function PickOneAthleteModal(
   );
 
   const handleAthletePick = (athleteData: any) => {
+    console.log(athleteData.full_name);
     const athelete = `athlete${props.number}`;
     const atheleteId = `athlete${props.number}Id`;
+    console.log(atheleteId)
     props.setValue(athelete, athleteData.full_name);
     props.setValue(atheleteId, athleteData.id);
   };
@@ -178,7 +180,10 @@ export default function PickOneAthleteModal(
                 >
                   <ListItemButton
                     key={index}
-                    // onClick={() => handleToggle(athlete.id)}
+                    onClick={() => {
+                      handleAthletePick(athlete);
+                      props.handleModalClose();
+                    }}
                   >
                     <ListItemText
                       primary={`${athlete.first_name} ${athlete.last_name}`}

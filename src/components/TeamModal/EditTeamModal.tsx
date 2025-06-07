@@ -12,6 +12,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import * as React from "react";
+import { useState } from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
@@ -40,6 +41,20 @@ export default function EditTeamModal(
     handleSubmit: any;
   }>
 ) {
+
+  const [isPickOneAthleteModalOpen, setIsPickOneAthleteModalOpen] =
+      useState<boolean>(false);
+    const [athleteNumber, setAthleteNumber] = useState<number | null>(null);
+  
+    const handlePickOneAthleteModalOpen = (number: number) => {
+      setAthleteNumber(number);
+      setIsPickOneAthleteModalOpen(true);
+    };
+  
+    const handlePickOneAthleteModalClose = () => {
+      setIsPickOneAthleteModalOpen(false);
+    };
+    
   type UpdateTeam = {
     athlete1Id: string;
     athlete2Id: string;
@@ -48,19 +63,7 @@ export default function EditTeamModal(
     athlete5Id: string | null;
   };
 
-  const [isPickOneAthleteModalOpen, setIsPickOneAthleteModalOpen] =
-    React.useState<boolean>(false);
-  const [athleteNumber, setAthleteNumber] = React.useState<number | null>(null);
   const updateTeamData = useUpdateTeamData();
-
-  const handlePickOneAthleteModalOpen = (number: number) => {
-    setAthleteNumber(number);
-    setIsPickOneAthleteModalOpen(true);
-  };
-
-  const handlePickOneAthleteModalClose = () => {
-    setIsPickOneAthleteModalOpen(false);
-  };
 
   const onSubmit: SubmitHandler<UpdateTeam> = (data) => {
     const formData = {
@@ -74,7 +77,8 @@ export default function EditTeamModal(
       { teamId: props.id, data: formData },
       {
         onSuccess: () => {
-          props.handleChoseModalClose();
+          // props.handleChoseModalClose();
+          // props.handleModalClose();
         },
       }
     );
@@ -84,6 +88,7 @@ export default function EditTeamModal(
     <>
       <Dialog
         keepMounted
+        disableRestoreFocus
         open={props.isModalOpen}
         onClose={props.handleModalClose}
         maxWidth="md"
@@ -119,9 +124,10 @@ export default function EditTeamModal(
               autoFocus
               size="large"
               color="inherit"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 props.handleSubmit(onSubmit)();
-                props.handleModalClose();
+                // props.handleModalClose();
               }}
               // disabled={athletesNotInEventData?.data.length === 0}
             >
@@ -141,19 +147,12 @@ export default function EditTeamModal(
                       labelPlacement="start"
                       control={
                         <>
-                          {/* <Checkbox
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                            // handleKataChecked(e);
-                          }}
-                          name="athlete1"
-                        /> */}
                           <Button
                             sx={{ ml: 2 }}
                             size="small"
-                            onClick={() => handlePickOneAthleteModalOpen(1)}
+                            onClick={() =>
+                              handlePickOneAthleteModalOpen(1)
+                            }
                             variant="contained"
                           >
                             Alterar
@@ -182,19 +181,12 @@ export default function EditTeamModal(
                       labelPlacement="start"
                       control={
                         <>
-                          {/* <Checkbox
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                            // handleKataChecked(e);
-                          }}
-                          name="athlete1"
-                        /> */}
                           <Button
                             sx={{ ml: 2 }}
                             size="small"
-                            onClick={() => handlePickOneAthleteModalOpen(2)}
+                            onClick={() =>
+                              handlePickOneAthleteModalOpen(2)
+                            }
                             variant="contained"
                           >
                             Alterar
@@ -223,19 +215,12 @@ export default function EditTeamModal(
                       labelPlacement="start"
                       control={
                         <>
-                          {/* <Checkbox
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                            // handleKataChecked(e);
-                          }}
-                          name="athlete1"
-                        /> */}
                           <Button
                             size="small"
                             sx={{ ml: 2 }}
-                            onClick={() => handlePickOneAthleteModalOpen(3)}
+                            onClick={() =>
+                              handlePickOneAthleteModalOpen(3)
+                            }
                             variant="contained"
                           >
                             Alterar

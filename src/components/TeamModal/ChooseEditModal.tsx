@@ -44,20 +44,23 @@ export default function ChooseEditModal(
     handleSubmit: any;
   }>
 ) {
+  console.log(props.isModalOpen)
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any>(null);
+
   const [isEditTeamModalOpen, setIsEditTeamModalOpen] =
-    useState<boolean>(false);
+      useState<boolean>(false);
+  
+    const handleEditTeamModalOpen = () => {
+      setIsEditTeamModalOpen(true);
+    };
+  
+    const handleEditTeamModalClose = () => {
+      setIsEditTeamModalOpen(false);
+    };
+
   const fetchSingleTeam = useFetchSingleTeamData();
   const fetchSingleAthlete = useFetchSingleAthleteData();
-
-  const handleEditTeamModalOpen = () => {
-    setIsEditTeamModalOpen(true);
-  };
-
-  const handleEditTeamModalClose = () => {
-    setIsEditTeamModalOpen(false);
-  };
 
   const {
     control: teamControl,
@@ -126,7 +129,7 @@ export default function ChooseEditModal(
           birthDate: data?.data.birth_date,
         };
         props.reset(formData);
-        props.handleModalClose();
+        // props.handleModalClose();
         props.setChosenAthlete(id);
         props.handleEditModalOpen();
       },

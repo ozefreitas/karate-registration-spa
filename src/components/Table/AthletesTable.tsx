@@ -149,6 +149,7 @@ export default function AthletesTable(
   const [isChooseModalOpen, setIsChooseModalOpen] = useState<boolean>(false);
   const [isTeamAthleteEditModalOpen, setIsTeamAthleteEditModalOpen] =
     useState<boolean>(false);
+  const [actionedAthlete, setActionedAthlete] = useState<string>("");
   const [chosenAthlete, setChosenAthlete] = useState<string>("");
 
   const handleChangePage = (
@@ -234,8 +235,10 @@ export default function AthletesTable(
     athleteId: string
   ) => {
     event.stopPropagation();
+    // retrieve info for the row athlete id
     fetchSingleAthlete.mutate(athleteId, {
       onSuccess: (data: any) => {
+        // update the form with that athlete info
         const formData = {
           firstName: data?.data.first_name,
           lastName: data?.data.last_name,
@@ -247,13 +250,18 @@ export default function AthletesTable(
           birthDate: data?.data.birth_date,
         };
         athleteReset(formData);
+        setActionedAthlete(athleteId);
         setIsEditModalOpen(true);
       },
     });
   };
 
-  const handleRowEditFromIndiv = (event: React.MouseEvent<HTMLElement>) => {
+  const handleRowEditFromIndiv = (
+    event: React.MouseEvent<HTMLElement>,
+    id: string
+  ) => {
     event.stopPropagation();
+    setActionedAthlete(id);
     setIsEditConfirmModalOpen(true);
   };
 
@@ -262,8 +270,12 @@ export default function AthletesTable(
     setIsChooseModalOpen(true);
   };
 
-  const handleRowDelete = (event: React.MouseEvent<HTMLElement>) => {
+  const handleRowDelete = (
+    event: React.MouseEvent<HTMLElement>,
+    id: string
+  ) => {
     event.stopPropagation();
+    setActionedAthlete(id);
     setIsDeleteModalOpen(true);
   };
 
@@ -299,6 +311,8 @@ export default function AthletesTable(
   };
 
   const handleRowClick = (event: React.MouseEvent<unknown>, id: string) => {
+    console.log(id);
+    event.stopPropagation();
     const selectedIndex = selected.indexOf(id);
     let newSelected: string[] = [];
 
@@ -319,11 +333,6 @@ export default function AthletesTable(
 
   return (
     <Grid container sx={{ m: 2 }}>
-      {/* <Grid size={12} sx={{ mt: 2 }}>
-        <Typography variant="h4" sx={{ m: 2 }}>
-          {props.type}
-        </Typography>
-      </Grid> */}
       <TableContainer component={Paper}>
         <Table size="small" aria-label="simple table">
           <TableHead>
@@ -412,7 +421,7 @@ export default function AthletesTable(
                             <IconButton
                               onClick={(e) => {
                                 if (props.type == "Individuais") {
-                                  handleRowEditFromIndiv(e);
+                                  handleRowEditFromIndiv(e, row.id);
                                 } else if (props.type == "Equipas") {
                                   handleRowEditFromTeam(e);
                                 } else {
@@ -426,39 +435,13 @@ export default function AthletesTable(
                           <Tooltip arrow title="Remover">
                             <IconButton
                               onClick={(e) => {
-                                handleRowDelete(e);
+                                handleRowDelete(e, row.id);
                               }}
                             >
                               <Delete color="error"></Delete>
                             </IconButton>
                           </Tooltip>
                         </Stack>
-                        {props.type !== "Equipas" ? (
-                          <>
-                            <EditAthleteModal
-                              isModalOpen={isEditModalOpen}
-                              handleModalClose={handleEditModalClose}
-                              id={
-                                props.type === "Individuais"
-                                  ? row.athlete_id
-                                  : row.id
-                              }
-                              control={athleteControl}
-                              errors={athleteErrors}
-                              handleSubmit={athleteHandleSubmit}
-                            ></EditAthleteModal>
-                            <EditIndividualModal
-                              isModalOpen={isEditConfirmModalOpen}
-                              handleModalClose={handleEditConfirmModalClose}
-                              handleEditModalOpen={handleEditModalOpen}
-                              id={row.athlete_id}
-                              reset={athleteReset}
-                              control={athleteControl}
-                              errors={athleteErrors}
-                            ></EditIndividualModal>
-                          </>
-                        ) : null}
-
                         {props.type === "Equipas" ? (
                           <ChooseEditModal
                             isModalOpen={isChooseModalOpen}
@@ -477,13 +460,6 @@ export default function AthletesTable(
                             handleSubmit={athleteHandleSubmit}
                           ></ChooseEditModal>
                         ) : null}
-                        <DeleteAthleteModal
-                          isModalOpen={isDeleteModalOpen}
-                          handleModalClose={handleDeleteModalClose}
-                          handleModalOpen={handleDeleteModalOpen}
-                          id={row.id}
-                          from={props.type}
-                        ></DeleteAthleteModal>
                       </StyledTableCell>
                     ) : null}
                   </StyledTableRow>
@@ -539,6 +515,27 @@ export default function AthletesTable(
           </TableFooter>
         </Table>
       </TableContainer>
+      {props.type !== "Equipas" ? (
+        <>
+          <EditAthleteModal
+            isModalOpen={isEditModalOpen}
+            handleModalClose={handleEditModalClose}
+            id={actionedAthlete}
+            control={athleteControl}
+            errors={athleteErrors}
+            handleSubmit={athleteHandleSubmit}
+          ></EditAthleteModal>
+          <EditIndividualModal
+            isModalOpen={isEditConfirmModalOpen}
+            handleModalClose={handleEditConfirmModalClose}
+            handleEditModalOpen={handleEditModalOpen}
+            id={actionedAthlete}
+            reset={athleteReset}
+            control={athleteControl}
+            errors={athleteErrors}
+          ></EditIndividualModal>
+        </>
+      ) : null}
       {selected.length > 0 ? (
         <DeleteAthleteModal
           isModalOpen={isDeleteAllModalOpen}
@@ -548,7 +545,16 @@ export default function AthletesTable(
           id={props.data.length === selected.length ? undefined : selected}
           setSelected={setSelected}
         ></DeleteAthleteModal>
-      ) : null}
+      ) : (
+        <DeleteAthleteModal
+          isModalOpen={isDeleteModalOpen}
+          handleModalClose={handleDeleteModalClose}
+          handleModalOpen={handleDeleteModalOpen}
+          from={props.type}
+          id={actionedAthlete}
+          setSelected={setSelected}
+        ></DeleteAthleteModal>
+      )}
     </Grid>
   );
 }

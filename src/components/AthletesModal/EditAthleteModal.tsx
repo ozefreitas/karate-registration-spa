@@ -49,6 +49,7 @@ export default function EditAthleteModal(
     handleSubmit: any;
   }>
 ) {
+  console.log(props.id);
   type Athlete = {
     id: string;
     firstName: string;
