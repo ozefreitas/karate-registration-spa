@@ -14,11 +14,7 @@ import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
 import { useQuery } from "@tanstack/react-query";
-import { useFetchIndividualsData, useRemoveAllIndividualsData } from "../../hooks/useIndividualsData";
-
-const fetchEventName = (eventId: any) => {
-  return axios.get(`http://127.0.0.1:8000/competitions/${eventId}/`);
-};
+import { useFetchEventsData } from "../../hooks/useEventData";
 
 export default function IndividualsPage() {
   type Athlete = {
@@ -51,35 +47,7 @@ export default function IndividualsPage() {
     setIsModalOpen(false);
   };
 
-  const {
-    data: individualsData,
-    isLoading: isIndividualsLoading,
-    error: individualsError,
-  } = useFetchIndividualsData(page + 1, pageSize);
-
-  const {
-    data: eventData,
-    isLoading: isEventLoading,
-    error: eventError,
-  } = useQuery({
-    queryKey: ["event-name", location.pathname.split("/")[2]],
-    queryFn: () => fetchEventName(location.pathname.split("/")[2]),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: !!location.pathname.split("/")[2],
-  });
-
-  const indivRows = useMemo(() => {
-    return individualsData?.data?.results.map((indiv: Individual) => ({
-      id: indiv.id,
-      athlete_id: indiv.athlete.id,
-      first_name: indiv.first_name,
-      last_name: indiv.last_name,
-      category: indiv.category,
-      match_type: indiv.match_type,
-      gender: indiv.gender,
-    }));
-  }, [individualsData]);
+  const { data: singleEventData, isLoading: isSingleEventLoading, error: singleEventError } = useFetchEventsData();
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
@@ -88,8 +56,6 @@ export default function IndividualsPage() {
     { key: "category", label: "Escalão" },
     { key: "gender", label: "Género" },
   ];
-
-  console.log(indivRows);
 
   return (
     <>
@@ -110,14 +76,14 @@ export default function IndividualsPage() {
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
-        {isIndividualsLoading ? (
+        {isSingleEventLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : individualsData?.data?.results !== undefined ? (
+        ) : singleEventData?.data?.results !== undefined ? (
           <AthletesTable
             type="Individuais"
-            data={indivRows}
+            data={singleEventData?.data?.results[0].individuals}
             columnsHeaders={columnMaping}
             actions={true}
             selection={true}
@@ -143,7 +109,7 @@ export default function IndividualsPage() {
       <AthletesModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
-        eventName={eventData?.data}
+        eventData={singleEventData?.data?.results[0]}
       ></AthletesModal>
     </>
   );

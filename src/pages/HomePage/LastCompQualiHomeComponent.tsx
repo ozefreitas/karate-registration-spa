@@ -21,14 +21,10 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../../components/InfoButton/InfoButton";
 import { useNavigate } from "react-router-dom";
-
-const fetchLastComp = () => {
-  return axios.get("http://127.0.0.1:8000/competitions/last_comp/");
-};
-
-const fetchLastCompQuali = () => {
-  return axios.get("http://127.0.0.1:8000/classifications/last_comp_quali/");
-};
+import {
+  useFetchLastEvent,
+  useFetchLastCompQuali,
+} from "../../hooks/useEventData";
 
 export default function LastCompQualiHomeComponent() {
   type Competition = {
@@ -60,16 +56,10 @@ export default function LastCompQualiHomeComponent() {
 
   const navigate = useNavigate();
 
-  const { data: lastCompData, isLoading: isLastCompLoading } = useQuery({
-    queryKey: ["last-comp"],
-    queryFn: fetchLastComp,
-  });
+  const { data: lastCompData } = useFetchLastEvent();
 
   const { data: lastCompQualiData, isLoading: isLastCompQualiLoading } =
-    useQuery({
-      queryKey: ["last-comp-quali"],
-      queryFn: fetchLastCompQuali,
-    });
+    useFetchLastCompQuali();
 
   return (
     <Grid size={12}>

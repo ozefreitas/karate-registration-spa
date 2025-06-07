@@ -17,10 +17,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../../components/InfoButton/InfoButton";
 import { useNavigate } from "react-router-dom";
-
-const fetchNextComp = () => {
-  return axios.get("http://127.0.0.1:8000/competitions/next_comp/");
-};
+import { useFetchNextEventData } from "../../hooks/useEventData";
 
 export default function NextCompHomeComponent() {
   type Competition = {
@@ -32,10 +29,7 @@ export default function NextCompHomeComponent() {
   };
 
   const navigate = useNavigate()
-  const { data: nextCompData, isLoading: isNextCompLoading } = useQuery({
-    queryKey: ["next-comp"],
-    queryFn: fetchNextComp,
-  });
+  const { data: nextCompData, isLoading: isNextCompLoading, error: nextCompError } = useFetchNextEventData()
 
   return (
     <Grid size={12}>
