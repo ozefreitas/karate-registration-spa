@@ -120,7 +120,7 @@ export default function ButtonAppBar() {
               alt=""
             />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <Link style={{ color: "white" }} to="">
+              <Link style={{ color: "white" }} to="/">
                 SKI-Portugal - Karate Score App
               </Link>
             </Typography>
@@ -210,7 +210,7 @@ export default function ButtonAppBar() {
           sx={{ p: 2 }}
           onClick={() => {
             handleClose();
-            navigate("/profile");
+            navigate("/profile/");
           }}
         >
           <Avatar /> Perfil

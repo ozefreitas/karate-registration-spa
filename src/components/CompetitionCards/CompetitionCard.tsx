@@ -1,23 +1,79 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "react-router-dom";
-import { Card, CardHeader, CardContent, Grid } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+  Typography,
+  Stack,
+  List,
+  ListItemText,
+  ListItemButton,
+  ListItemIcon,
+  CardActions,
+  Button,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import AddButton from "../AddButton/AddButton";
-import { useSingleFetchEventData } from "../../hooks/useEventData";
+import {
+  useSingleFetchEventData,
+  useRateEvent,
+  useFetchEventRate,
+} from "../../hooks/useEventData";
+import InfoButton from "../InfoButton/InfoButton";
+import GenerateButton from "../GenerateButton/GenerateButton";
+import {
+  Event,
+  LocationPin,
+  EventBusy,
+  LocalPolice,
+  Email,
+  Tty,
+  EditCalendar,
+  ThumbUp,
+  ThumbDown,
+  ThumbsUpDown,
+  Info,
+} from "@mui/icons-material";
+import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
-export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
+export default function CompetitionCard() {
+  const location = useLocation();
   const {
     data: singleEventData,
     isLoading: isSingleEventLoading,
-    error: singleEventError,
-  } = useSingleFetchEventData();
+  } = useSingleFetchEventData(location.pathname.split("/").slice(-2)[0]);
+
+  const { data: eventRateData, isLoading: isEventRateLoading } =
+    useFetchEventRate(location.pathname.split("/").slice(-2)[0]);
+
+  const rateEvent = useRateEvent();
+
+  const [selected, setSelected] = useState<number>(-2);
+
+  const handleClick = (number: number) => {
+    setSelected(number);
+  };
+
+  const handleEventRating = () => {
+    const data = {
+      eventId: location.pathname.split("/")[2],
+      data: { rating_signal: selected },
+    };
+    rateEvent.mutate(data, {
+      onSuccess: () => {
+        setSelected(-2);
+      },
+    });
+  };
 
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title="Página da Competição"
+          title="Página de Evento"
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -32,27 +88,11 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
         </CardContent>
       </Card>
       <Grid container sx={{ m: 2 }}>
-        <Grid size={6}>
-          <Card sx={{ m: 2 }}>
-            <CardHeader
-              title="Informação Geral"
-              sx={{
-                "& .MuiCardHeader-title": {
-                  fontWeight: "bold",
-                },
-              }}
-            ></CardHeader>
-            <CardContent>
-              Aqui estarão os campos de informação geral, datas, epoca e
-              localização
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={6}>
-          <Grid size={12}>
+        <Grid container size={12}>
+          <Grid size={6}>
             <Card sx={{ m: 2 }}>
               <CardHeader
-                title="Ficheiros"
+                title="Informação Geral"
                 sx={{
                   "& .MuiCardHeader-title": {
                     fontWeight: "bold",
@@ -60,22 +100,210 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
                 }}
               ></CardHeader>
               <CardContent>
-                Aqui ficheiros que podem ser descarregados, cajo haja
+                {isSingleEventLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <>
+                    <Stack alignItems="center">
+                      <Typography variant="h4">
+                        {singleEventData?.data.name}
+                      </Typography>
+                    </Stack>
+                    <Stack sx={{ p: 2 }}>
+                      <List>
+                        <CompInfoToolTip
+                          title="Tipo de Evento"
+                          text={
+                            singleEventData?.data.encounter
+                              ? `Encontro/Estágio ${singleEventData?.data.encounter_type}`
+                              : "Competição/Torneio"
+                          }
+                          icon={<Info />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Localização"
+                          text={singleEventData?.data.location}
+                          icon={<LocationPin />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Início de Inscrições"
+                          text={singleEventData?.data.start_registration}
+                          icon={<Event />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Fim de Inscrições"
+                          text={singleEventData?.data.end_registration}
+                          icon={<EventBusy />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Data limite de Retificações"
+                          text={singleEventData?.data.retifications_deadline}
+                          icon={<EditCalendar />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Responsável"
+                          text={singleEventData?.data.custody}
+                          icon={<LocalPolice />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Email"
+                          text={singleEventData?.data.email_contact}
+                          icon={<Email />}
+                        ></CompInfoToolTip>
+                        <CompInfoToolTip
+                          title="Contacto"
+                          text={singleEventData?.data.contact}
+                          icon={<Tty />}
+                        ></CompInfoToolTip>
+                      </List>
+                    </Stack>
+                  </>
+                )}
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={12}>
-            <Card sx={{ m: 2 }}>
-              <CardHeader
-                title="Notas Importantes"
-                sx={{
-                  "& .MuiCardHeader-title": {
-                    fontWeight: "bold",
-                  },
-                }}
-              ></CardHeader>
-              <CardContent>{singleEventData?.data?.description}</CardContent>
-            </Card>
+          <Grid size={6}>
+            <Grid size={12}>
+              <Card sx={{ m: 2 }}>
+                <CardHeader
+                  title="Ficheiros"
+                  sx={{
+                    "& .MuiCardHeader-title": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                ></CardHeader>
+                <CardContent>
+                  <li style={{ color: "grey" }}>
+                    Não existem ficheiros para este Evento.
+                  </li>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid size={12}>
+              <Card sx={{ m: 2 }}>
+                <CardHeader
+                  title="Notas Importantes"
+                  sx={{
+                    "& .MuiCardHeader-title": {
+                      fontWeight: "bold",
+                    },
+                  }}
+                ></CardHeader>
+                <CardContent>
+                  {singleEventData?.data?.description === "" ? (
+                    <li style={{ color: "grey" }}>
+                      Não existem informações adicionais para este Evento.
+                    </li>
+                  ) : (
+                    singleEventData?.data?.description
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid size={12}>
+              <Card sx={{ m: 2 }}>
+                <CardHeader
+                  title="Avaliação"
+                  subheader="Depois da realização da prova, poderá deixar uma avaliação."
+                  sx={{
+                    "& .MuiCardHeader-title": {
+                      fontWeight: "bold",
+                      marginBottom: 1,
+                    },
+                  }}
+                ></CardHeader>
+                <CardContent sx={{ pt: 0, pb: 0 }}>
+                  {isEventRateLoading ? (
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                      <CircularProgress />
+                    </Box>
+                  ) : eventRateData?.data.code === "event_not_ended" ? (
+                    <li style={{ color: "grey" }}>
+                      {eventRateData?.data?.message}
+                    </li>
+                  ) : eventRateData?.data.code === "already_rated" ? (
+                    <li style={{ color: "grey" }}>
+                      {eventRateData?.data?.message}
+                    </li>
+                  ) : (
+                    <Grid justifyContent="center" container spacing={2}>
+                      <ListItemButton
+                        selected={selected === 1}
+                        onClick={() => handleClick(1)}
+                      >
+                        <ListItemIcon>
+                          <ThumbUp
+                            color="success"
+                            fontSize="large"
+                            sx={{ cursor: "pointer" }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText>Muito boa</ListItemText>
+                      </ListItemButton>
+                      <ListItemButton
+                        selected={selected === 2}
+                        onClick={() => handleClick(0)}
+                      >
+                        <ListItemIcon>
+                          <ThumbsUpDown
+                            color="warning"
+                            fontSize="large"
+                            sx={{ cursor: "pointer" }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText>Assim-Assim</ListItemText>
+                      </ListItemButton>
+                      <ListItemButton
+                        selected={selected === 3}
+                        onClick={() => handleClick(-1)}
+                      >
+                        <ListItemIcon>
+                          <ThumbDown
+                            color="error"
+                            fontSize="large"
+                            sx={{ cursor: "pointer" }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText>Muito má</ListItemText>
+                      </ListItemButton>
+                    </Grid>
+                  )}
+                </CardContent>
+                <CardActions sx={{ justifyContent: "flex-end" }}>
+                  <Stack
+                    direction={{
+                      xs: "row-reverse",
+                      sm: "row",
+                    }}
+                    sx={{
+                      p: 1,
+                      gap: 4,
+                      flexShrink: 0,
+                      alignSelf: { xs: "flex-end", sm: "center" },
+                    }}
+                  >
+                    <Button
+                      size="small"
+                      disabled={selected === -2}
+                      onClick={handleEventRating}
+                      variant="contained"
+                    >
+                      Enviar
+                    </Button>
+                    <Button
+                      size="small"
+                      disabled={selected === -2}
+                      onClick={() => setSelected(-2)}
+                    >
+                      Remover seleção
+                    </Button>
+                  </Stack>
+                </CardActions>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
         <Grid size={12}>
@@ -95,7 +323,8 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
                 sx={{
                   justifyContent: "space-evenly",
                   alignItems: "center",
-                  gap: 10
+                  gap: 7,
+                  rowGap: 2,
                 }}
               >
                 <AddButton
@@ -105,6 +334,15 @@ export default function CompetitionCard(props: Readonly<{ eventData: any }>) {
                 {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
+                <InfoButton
+                  label="Consultar Inscrições"
+                  to="all_registry/"
+                ></InfoButton>
+                <InfoButton label="Consultar Sorteios" to="draw/"></InfoButton>
+                <GenerateButton
+                  label="Gerar Sorteio"
+                  to="draw/generate/"
+                ></GenerateButton>
               </Grid>
             </CardContent>
           </Card>

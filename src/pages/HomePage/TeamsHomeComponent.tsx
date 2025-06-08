@@ -104,7 +104,7 @@ export default function TeamsHomeComponent() {
             lastFiveTeamsData?.data.map((team: Team, index: string) => (
               <Tooltip key={index} title={"Consultar"}>
                 <ListItem sx={{ m: 0, pb: 0 }}>
-                  <ListItemButton onClick={() => navigate(`teams/${team.id}`)}>
+                  <ListItemButton onClick={() => navigate(`teams/${team.id}/`)}>
                     <ListItemIcon>
                       <Person></Person>
                     </ListItemIcon>
@@ -118,7 +118,7 @@ export default function TeamsHomeComponent() {
           )}
         </List>
         <CardActions sx={{ justifyContent: "space-between" }}>
-          <InfoButton label="Ver Todos" to="teams/"></InfoButton>
+          <InfoButton label="Ver Todas" to="teams/"></InfoButton>
           <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
         </CardActions>
       </Card>

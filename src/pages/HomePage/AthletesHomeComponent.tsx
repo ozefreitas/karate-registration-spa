@@ -109,7 +109,7 @@ export default function AthletesHomeComponent() {
                 <Tooltip key={index} title={"Consultar"}>
                   <ListItem sx={{ m: 0, pb: 0 }}>
                     <ListItemButton
-                      onClick={() => navigate(`athletes/${athlete.id}`)}
+                      onClick={() => navigate(`athletes/${athlete.id}/`)}
                     >
                       <ListItemIcon>
                         <Person />

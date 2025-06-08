@@ -88,4 +88,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   new_team: "Nova Equipa",
   registered_individuals: "Individuais Registados",
   registered_teams: "Equipas Registadas",
+  draw: "Sorteios",
+  generate: "Gerar",
+  all_registry: "Inscrições",
 };

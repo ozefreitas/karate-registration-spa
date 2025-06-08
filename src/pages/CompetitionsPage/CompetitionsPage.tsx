@@ -7,7 +7,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import InfoButton from "../../components/InfoButton/InfoButton";
+import SettingsButton from "../../components/SettingsButton/SettingsButton";
 import { useFetchEventsData } from "../../hooks/useEventData";
 
 export default function CompetitionsPage() {
@@ -52,17 +52,17 @@ export default function CompetitionsPage() {
         ) : (
           eventsData?.data.results.map((comp: Event, index: string) => (
             <Grid key={index} size={6}>
-              <Card sx={{ m: 2, border: "1px solid " }}>
+              <Card sx={{ m: 2 }}>
                 <CardHeader title={comp.name}></CardHeader>
                 <CardContent>
                   {comp.location} {comp.competition_date}
                 </CardContent>
                 <CardActions sx={{ justifyContent: "center" }}>
-                  <InfoButton
+                  <SettingsButton
                     size="large"
                     label="Consultar"
-                    to={`/events/${comp.id}`}
-                  ></InfoButton>
+                    to={`/events/${comp.id}/`}
+                  ></SettingsButton>
                 </CardActions>
               </Card>
             </Grid>

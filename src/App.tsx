@@ -30,7 +30,6 @@ function App() {
       <SideMenu></SideMenu>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        {/* <Route index element={<Home />} /> */}
         <Route path="register_account/" element={<RegisterAccountPage />} />
         <Route path="login/" element={<LoginPage />} />
         <Route path="athletes/" element={<AthletesPage />} />

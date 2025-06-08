@@ -3,11 +3,14 @@ import { Grid, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { ErrorSharp } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterAccountPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const navigate = useNavigate();
 
   const {
     control,
@@ -32,6 +35,7 @@ export default function RegisterAccountPage() {
         data
       );
       console.log(response);
+      navigate("/login/");
     } catch (error: any) {
       console.log("Error: " + JSON.stringify(error.response.data));
     }

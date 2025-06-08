@@ -408,9 +408,9 @@ export default function AthletesTable(
                             <IconButton
                               onClick={() => {
                                 if (props.type === "Equipas") {
-                                  navigate(`/teams/${row.id}`);
+                                  navigate(`/teams/${row.id}/`);
                                 } else {
-                                  navigate(`/athletes/${row.id}`);
+                                  navigate(`/athletes/${row.id}/`);
                                 }
                               }}
                             >

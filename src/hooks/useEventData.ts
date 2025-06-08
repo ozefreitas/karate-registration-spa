@@ -52,7 +52,7 @@ const fetchLastCompQuali = () => {
 
 export const useFetchLastCompQuali = () => {
   return useQuery({
-    queryKey: ["event-name"],
+    queryKey: ["event-classifications"],
     queryFn: fetchLastCompQuali,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -63,13 +63,10 @@ const fetchSingleEvent = (eventId: any) => {
   return axios.get(`http://127.0.0.1:8000/events/${eventId}/`);
 };
 
-export const useSingleFetchEventData = () => {
+export const useSingleFetchEventData = (location: any) => {
   return useQuery({
-    queryKey: ["event-name", location.pathname.split("/").slice(-1)[0]],
-    queryFn: () => fetchSingleEvent(location.pathname.split("/").slice(-1)[0]),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: !!location.pathname.split("/").slice(-1)[0],
+    queryKey: ["event-name"],
+    queryFn: () => fetchSingleEvent(location),
   });
 };
 
@@ -152,6 +149,70 @@ export const useRemoveEventAthlete = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    },
+    onError: (data: any) => {
+      enqueueSnackbar(`${data.data.error}`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const fetchEventRate = (eventId: any) => {
+  const token = localStorage.getItem("token");
+  return axios.get(
+    `http://127.0.0.1:8000/events/${eventId}/check_event_rate/`,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useFetchEventRate = (location: any) => {
+  return useQuery({
+    queryKey: ["event-rate"],
+    queryFn: () => fetchEventRate(location),
+  });
+};
+
+const rateEvent = (eventId: string, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(
+    `http://127.0.0.1:8000/events/${eventId}/rate_event/`,
+    data,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useRateEvent = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
+      rateEvent(eventId, data),
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["event-rate"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.data.error}`, {

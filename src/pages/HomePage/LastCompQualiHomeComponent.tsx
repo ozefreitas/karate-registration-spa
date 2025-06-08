@@ -61,6 +61,7 @@ export default function LastCompQualiHomeComponent() {
   const { data: lastCompQualiData, isLoading: isLastCompQualiLoading } =
     useFetchLastCompQuali();
 
+  console.log(lastCompQualiData?.data);
   return (
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
@@ -100,7 +101,7 @@ export default function LastCompQualiHomeComponent() {
                         <Tooltip title={"Consultar"}>
                           <ListItemButton
                             onClick={() =>
-                              navigate(`athletes/${category.first_place.id}`)
+                              navigate(`athletes/${category.first_place.id}/`)
                             }
                             sx={{
                               m: 0,
@@ -116,7 +117,7 @@ export default function LastCompQualiHomeComponent() {
                       <Tooltip title={"Consultar"}>
                         <ListItem
                           onClick={() =>
-                            navigate(`athletes/${category.second_place.id}`)
+                            navigate(`athletes/${category.second_place.id}/`)
                           }
                           sx={{ m: 0 }}
                         >
@@ -137,7 +138,7 @@ export default function LastCompQualiHomeComponent() {
                         <ListItem sx={{ m: 0 }}>
                           <ListItemButton
                             onClick={() =>
-                              navigate(`athletes/${category.third_place.id}`)
+                              navigate(`athletes/${category.third_place.id}/`)
                             }
                             sx={{
                               m: 0,

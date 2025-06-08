@@ -55,7 +55,7 @@ export default function NextCompHomeComponent() {
             <Tooltip title={"Consultar"}>
               <ListItem sx={{ m: 0, pb: 0 }}>
                 <ListItemButton
-                  onClick={() => navigate(`events/${nextCompData?.data.id}`)}
+                  onClick={() => navigate(`events/${nextCompData?.data.id}/`)}
                 >
                   <ListItemIcon>
                     <SportsMma></SportsMma>
