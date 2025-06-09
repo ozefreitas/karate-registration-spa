@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -10,22 +9,12 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import AddButton from "../../components/AddButton/AddButton";
-import InfoButton from "../../components/InfoButton/InfoButton";
 import { useNavigate } from "react-router-dom";
 import AthletesHomeComponent from "./AthletesHomeComponent";
 import TeamsHomeComponent from "./TeamsHomeComponent";
 import NextCompHomeComponent from "./NextCompHomeComponent";
 import LastCompQualiHomeComponent from "./LastCompQualiHomeComponent";
-
-const fetchNotifications = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/dojos/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
+import { useFetchNotifications } from "../../hooks/useAuth";
 
 export default function HomePage() {
   type Notification = {
@@ -33,18 +22,11 @@ export default function HomePage() {
     urgency: string;
   };
 
-  const navigate = useNavigate();
-
   const {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: fetchNotifications,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  } = useFetchNotifications()
 
   return (
     <>

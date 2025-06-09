@@ -11,6 +11,7 @@ import {
 import AddButton from "../../components/AddButton/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { useFetchTeamsData } from "../../hooks/useTeamsData";
+import { useFetchMeData } from "../../hooks/useAuth";
 
 export default function TeamsPage() {
   type Athlete = {
@@ -44,6 +45,9 @@ export default function TeamsPage() {
     isLoading: isTeamsLoading,
     error: teamsError,
   } = useFetchTeamsData(page + 1, pageSize);
+
+  const { data: meData } = useFetchMeData();
+  const userRole = meData?.data.role;
 
   const teamRows = useMemo(() => {
     return teamsData?.data.results.map((team: Team) => ({
@@ -105,10 +109,11 @@ export default function TeamsPage() {
           ></AthletesTable>
         ) : null}
       </Grid>
-      <Grid sx={{ m: 4 }}>
-        {/* This button should get back to the individuals page */}
-        <AddButton label="Adicionar" to="new_team/"></AddButton>
-      </Grid>
+      {userRole !== "national_association" ? (
+        <Grid sx={{ m: 4 }}>
+          <AddButton label="Adicionar" to="new_team/"></AddButton>
+        </Grid>
+      ) : null}
     </>
   );
 }

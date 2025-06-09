@@ -11,6 +11,7 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/AddButton/AddButton";
 import { useNavigate } from "react-router-dom";
 import { useFetchAthletesData } from "../../hooks/useAthletesData";
+import { useFetchMeData } from "../../hooks/useAuth";
 
 export default function AthletesPage() {
   type Athlete = {
@@ -31,6 +32,9 @@ export default function AthletesPage() {
     isLoading: isAthletesDataLoading,
     error: athletesError,
   } = useFetchAthletesData(page + 1, pageSize);
+
+  const { data: meData } = useFetchMeData();
+  const userRole = meData?.data.role;
 
   // Memoize `rows` to compute only when `athletes` changes
   const athleteRows = useMemo(() => {
@@ -90,9 +94,11 @@ export default function AthletesPage() {
           ></AthletesTable>
         ) : null}
       </Grid>
-      <Grid sx={{ m: 4 }}>
-        <AddButton label="Adicionar" to="new_athlete/"></AddButton>
-      </Grid>
+      {userRole !== "national_association" ? (
+        <Grid sx={{ m: 4 }}>
+          <AddButton label="Adicionar" to="new_athlete/"></AddButton>
+        </Grid>
+      ) : null}
     </>
   );
 }

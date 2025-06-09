@@ -61,7 +61,6 @@ export default function LastCompQualiHomeComponent() {
   const { data: lastCompQualiData, isLoading: isLastCompQualiLoading } =
     useFetchLastCompQuali();
 
-  console.log(lastCompQualiData?.data);
   return (
     <Grid size={12}>
       <Card sx={{ m: 2 }}>

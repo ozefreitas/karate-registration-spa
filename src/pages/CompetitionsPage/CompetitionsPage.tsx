@@ -4,11 +4,14 @@ import {
   CardContent,
   CardActions,
   Grid,
+  Button,
   Box,
   CircularProgress,
 } from "@mui/material";
 import SettingsButton from "../../components/SettingsButton/SettingsButton";
 import { useFetchEventsData } from "../../hooks/useEventData";
+import { useFetchMeData } from "../../hooks/useAuth";
+import AddButton from "../../components/AddButton/AddButton";
 
 export default function CompetitionsPage() {
   type Event = {
@@ -17,6 +20,9 @@ export default function CompetitionsPage() {
     location: string;
     competition_date: string;
   };
+
+  const { data: meData } = useFetchMeData();
+  const userRole = meData?.data.role;
 
   const {
     data: eventsData,
@@ -68,6 +74,11 @@ export default function CompetitionsPage() {
             </Grid>
           ))
         )}
+        {userRole === "national_association" ? (
+          <Grid sx={{ m: 4 }}>
+            <AddButton label="Adicionar" to="new_event/"></AddButton>
+          </Grid>
+        ) : null}
       </Grid>
     </>
   );
