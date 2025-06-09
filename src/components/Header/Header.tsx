@@ -11,7 +11,7 @@ import {
   IconButton,
   Breadcrumbs,
   Button,
-  Grid
+  Grid,
 } from "@mui/material";
 import skipLogo from "./../../assets/skip-logo.png";
 import { Link } from "react-router-dom";
@@ -21,37 +21,35 @@ import { Logout } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { breadcrumbsConvertion } from "../../dashboard/config";
 import stringAvatar from "../../dashboard/utils/avatarColor";
+import { useFetchMeData } from "../../hooks/useAuth";
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [currentSeason, setCurrentSeason] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
 
+  const { data: meData, refetch } = useFetchMeData();
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("token");
       if (!token) {
         setIsAuthenticated(false);
         setUsername("");
-      }
-
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/me/", {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+      } else {
+        refetch();
         setIsAuthenticated(true);
-        setUsername(response.data.username);
-      } catch (err) {
-        setIsAuthenticated(false);
-        setUsername("");
       }
     };
     checkAuth();
-  }, [location]);
+  }, [token]);
+
+  useEffect(() => {
+    if (meData?.data.username !== undefined) {
+      setUsername(meData?.data.username);
+    }
+  }, [meData]);
 
   const paths = window.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
@@ -125,6 +123,22 @@ export default function ButtonAppBar() {
               </Link>
             </Typography>
             <Stack alignItems="center" direction="row" spacing={2}>
+              {meData?.data.role !== undefined ? (
+                <Button
+                  color="warning"
+                  variant="contained"
+                  disableRipple
+                  disableFocusRipple
+                  disableElevation
+                  size="large"
+                >
+                  {meData?.data.role === "national_association"
+                    ? "ADMIN - SKIP"
+                    : meData?.data.role === "superuser"
+                    ? "SUPER ADMIN"
+                    : "DOJO"}
+                </Button>
+              ) : null}
               <Typography variant="body1">
                 Época desportiva: {currentSeason}
               </Typography>
