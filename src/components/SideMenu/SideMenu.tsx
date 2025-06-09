@@ -1,7 +1,5 @@
-import axios from "axios";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import styles from "./sidemenu.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
@@ -20,7 +18,11 @@ import {
 import MuiDrawer from "@mui/material/Drawer";
 import { ChevronRight, ChevronLeft } from "@mui/icons-material";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import { sideMenuConfig, accountSideMenuConfig } from "../../dashboard/config";
+import {
+  getSideMenuConfig,
+  getAccountSideMenuConfig,
+} from "../../dashboard/config";
+import { useFetchMeData } from "../../hooks/useAuth";
 
 const drawerWidth = 240;
 
@@ -110,11 +112,20 @@ export default function SideMenu() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const theme = useTheme();
 
   const handleDrawerBehavior = () => {
     setIsMenuOpen((prev) => !prev);
   };
+
+  const { data: meData, refetch } = useFetchMeData();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    refetch();
+  }, [token]);
+
+  const sideMenuConfig = getSideMenuConfig(meData?.data.role);
+  const accountSideMenuConfig = getAccountSideMenuConfig(meData?.data.role);
 
   return (
     <Box>
@@ -147,7 +158,11 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
-                    selected={location.pathname.split("/")[1] === options.name ? true : false}
+                    selected={
+                      location.pathname.split("/")[1] === options.name
+                        ? true
+                        : false
+                    }
                     onClick={() => navigate(options.to)}
                     sx={[
                       {

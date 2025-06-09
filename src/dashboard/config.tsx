@@ -9,68 +9,108 @@ import {
   HelpCenter,
   Home,
   Groups,
+  NotificationsActive,
 } from "@mui/icons-material";
 
-export const sideMenuConfig = [
-  {
-    name: "",
-    label: "Início",
-    icon: <Home sx={{ color: "#e81c24" }} />,
-    to: "/",
-  },
-  {
-    name: "athletes",
-    label: "Atletas",
-    icon: <Person sx={{ color: "#e81c24" }} />,
-    to: "/athletes/",
-  },
-  {
-    name: "teams",
-    label: "Equipas",
-    icon: <Groups sx={{ color: "#e81c24" }} />,
-    to: "/teams/",
-  },
-  {
-    name: "events",
-    label: "Eventos",
-    icon: <SportsMma sx={{ color: "#e81c24" }} />,
-    to: "/events/",
-  },
-  {
-    name: "rules",
-    label: "Regras",
-    icon: <Rule sx={{ color: "#e81c24" }} />,
-    to: "/rules/",
-  },
-  {
-    name: "classifications",
-    label: "Classificações",
-    icon: <EmojiEvents sx={{ color: "#e81c24" }} />,
-    to: "/classifications/",
-  },
-  {
-    name: "help",
-    label: "Ajuda",
-    icon: <HelpCenter sx={{ color: "#e81c24" }} />,
-    to: "/help/",
-  },
-];
+export const getSideMenuConfig = (userRole: string) => {
+  const baseMenu = [
+    {
+      name: "",
+      label: "Início",
+      icon: <Home sx={{ color: "#e81c24" }} />,
+      to: "/",
+    },
+    {
+      name: "athletes",
+      label: "Atletas",
+      icon: <Person sx={{ color: "#e81c24" }} />,
+      to: "/athletes/",
+    },
+    {
+      name: "teams",
+      label: "Equipas",
+      icon: <Groups sx={{ color: "#e81c24" }} />,
+      to: "/teams/",
+    },
+    {
+      name: "events",
+      label: "Eventos",
+      icon: <SportsMma sx={{ color: "#e81c24" }} />,
+      to: "/events/",
+    },
+    {
+      name: "notifications",
+      label: "Gestor de Notificações",
+      icon: <NotificationsActive sx={{ color: "#e81c24" }} />,
+      to: "/notifications_manager/",
+    },
+    {
+      name: "rules",
+      label: "Regras",
+      icon: <Rule sx={{ color: "#e81c24" }} />,
+      to: "/rules/",
+    },
+    {
+      name: "classifications",
+      label: "Classificações",
+      icon: <EmojiEvents sx={{ color: "#e81c24" }} />,
+      to: "/classifications/",
+    },
+    {
+      name: "help",
+      label: "Ajuda",
+      icon: <HelpCenter sx={{ color: "#e81c24" }} />,
+      to: "/help/",
+    },
+  ];
 
-export const accountSideMenuConfig = [
-  { name: "news", label: "Novidades", icon: <Celebration />, to: "/news/" },
-  {
-    name: "feedback",
-    label: "Feedback",
-    icon: <Feedback />,
-    to: "/feedback/",
-  },
-  {
-    name: "contacts",
-    label: "Contactos",
-    icon: <Phone />,
-    to: "/contacts/",
-  },
-];
+  // Filter for SKIP (national) account
+  if (userRole === "national_association") {
+    return baseMenu.filter(
+      (item) =>
+        item.name !== "help" &&
+        item.name !== "classifications" &&
+        item.name !== "rules"
+    );
+  } else if (userRole === undefined) {
+    return baseMenu.filter(
+      (item) =>
+        item.name !== "athletes" &&
+        item.name !== "teams" &&
+        item.name !== "events"
+    );
+  } else if (userRole === "dojo") {
+    return baseMenu.filter((item) => item.name !== "notifications");
+  }
+
+  return baseMenu;
+};
+
+export const getAccountSideMenuConfig = (userRole: string) => {
+  const baseMenu = [
+    { name: "news", label: "Novidades", icon: <Celebration />, to: "/news/" },
+    {
+      name: "feedback",
+      label: "Feedback",
+      icon: <Feedback />,
+      to: "/feedback/",
+    },
+    {
+      name: "contacts",
+      label: "Contactos",
+      icon: <Phone />,
+      to: "/contacts/",
+    },
+  ];
+
+  if (userRole === "national_association") {
+    return baseMenu.filter((item) => item.name !== "contacts");
+  } else if (userRole === undefined) {
+    return baseMenu.filter((item) => item.name !== "feedback");
+  }
+
+  return baseMenu;
+};
 
 export const breadcrumbsConvertion: Record<string, string> = {
   "": "Início",
@@ -91,4 +131,6 @@ export const breadcrumbsConvertion: Record<string, string> = {
   draw: "Sorteios",
   generate: "Gerar",
   all_registry: "Inscrições",
+  notifications_manager: "Gestor de Notificações",
+  new_event: "Novo Evento",
 };
