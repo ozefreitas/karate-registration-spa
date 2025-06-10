@@ -20,6 +20,7 @@ const theme = createTheme(ptPT, {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
+          borderRadius: 16,
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderColor: "red", // Default border color
           },

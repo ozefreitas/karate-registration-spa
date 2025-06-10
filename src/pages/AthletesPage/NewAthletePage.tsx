@@ -17,7 +17,6 @@ import {
 import { useEffect, useState } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   GraduationsOptions,
   GenderOptions,
@@ -319,11 +318,7 @@ export default function NewAthletePage() {
               name="student"
               control={control}
               render={({ field }) => (
-                <FormControl
-                  component="fieldset"
-                  variant="standard"
-                  error={!!errors.kata}
-                >
+                <FormControl component="fieldset" variant="standard">
                   <FormLabel sx={{ mb: 2 }}>
                     Se não pretende inscrever em provas, selecione este campo.
                   </FormLabel>
@@ -382,6 +377,7 @@ export default function NewAthletePage() {
           title="Competições"
           expanded={expanded}
           setExpanded={setExpanded}
+          tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
         >
           <Grid sx={{ p: 3 }} container justifyContent="center" size={3}>
             <Controller

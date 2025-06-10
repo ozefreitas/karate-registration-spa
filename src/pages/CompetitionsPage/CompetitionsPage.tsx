@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import SettingsButton from "../../components/SettingsButton/SettingsButton";
 import { useFetchEventsData } from "../../hooks/useEventData";
@@ -52,10 +53,12 @@ export default function CompetitionsPage() {
       </Card>
       <Grid container size={12}>
         {isEventsDataLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <CircularProgress />
-          </Box>
-        ) : (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </Box>
+          </Grid>
+        ) : eventsData?.data.results.length !== 0 ? (
           eventsData?.data.results.map((comp: Event, index: string) => (
             <Grid key={index} size={6}>
               <Card sx={{ m: 2 }}>
@@ -73,6 +76,12 @@ export default function CompetitionsPage() {
               </Card>
             </Grid>
           ))
+        ) : (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <Typography variant="h6" sx={{ color: "gray" }}>
+              Não foram encontrados Eventos.
+            </Typography>
+          </Grid>
         )}
         {userRole === "national_association" ? (
           <Grid sx={{ m: 4 }}>
