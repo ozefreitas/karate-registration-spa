@@ -26,7 +26,7 @@ import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 
 function App() {
   const { data: meData, isLoading: isMeLoading } = useFetchMeData();
-  const userRole = meData?.data.role;
+  const userRole: string = meData?.data.role;
 
   return (
     <BrowserRouter>
@@ -169,7 +169,7 @@ function App() {
           element={
             isMeLoading ? null : (
               <ProtectedRoute
-                element={<CompetitionCard />}
+                element={<CompetitionCard userRole={userRole} />}
                 allowedRoles={[
                   "free_dojo",
                   "subed_dojo",
