@@ -42,7 +42,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<AthletesPage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -54,7 +58,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<SingleAthletePage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -66,7 +74,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<NewAthletePage />}
-                allowedRoles={["dojo"]}
+                allowedRoles={["free_dojo", "subed_dojo"]}
                 userRole={userRole}
               />
             )
@@ -78,7 +86,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<TeamsPage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -90,7 +102,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<SingleTeamPage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -102,7 +118,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<NewTeamPage />}
-                allowedRoles={["dojo"]}
+                allowedRoles={["free_dojo", "subed_dojo"]}
                 userRole={userRole}
               />
             )
@@ -114,7 +130,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<CompetitionsPage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -126,7 +146,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<NewEventPage />}
-                allowedRoles={["national_association"]}
+                allowedRoles={["subed_dojo", "national_association"]}
                 userRole={userRole}
               />
             )
@@ -150,7 +170,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<CompetitionCard />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -162,7 +186,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<IndividualsPage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -174,7 +202,11 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<RegisteredTeamsPage />}
-                allowedRoles={["dojo", "national_association"]}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
                 userRole={userRole}
               />
             )
@@ -186,7 +218,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<RulesPage />}
-                allowedRoles={["dojo"]}
+                allowedRoles={["free_dojo, subed_dojo"]}
                 userRole={userRole}
                 allowUnauthenticated={true}
               />
@@ -199,7 +231,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<ClassificationsPage />}
-                allowedRoles={["dojo"]}
+                allowedRoles={["free_dojo, subed_dojo"]}
                 userRole={userRole}
                 allowUnauthenticated={true}
               />
@@ -212,7 +244,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<HelpPage />}
-                allowedRoles={["dojo"]}
+                allowedRoles={["free_dojo, subed_dojo"]}
                 userRole={userRole}
                 allowUnauthenticated={true}
               />

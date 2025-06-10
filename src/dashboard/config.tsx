@@ -79,7 +79,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "teams" &&
         item.name !== "events"
     );
-  } else if (userRole === "dojo") {
+  } else if (userRole === "free_dojo") {
     return baseMenu.filter((item) => item.name !== "notifications");
   }
 

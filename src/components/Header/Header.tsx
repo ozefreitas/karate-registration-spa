@@ -136,7 +136,9 @@ export default function ButtonAppBar() {
                     ? "ADMIN - SKIP"
                     : meData?.data.role === "superuser"
                     ? "SUPER ADMIN"
-                    : "DOJO"}
+                    : meData?.data.role === "free_dojo"
+                    ? "DOJO - GRÁTIS"
+                    : "DOJO - PREMIUM"}
                 </Button>
               ) : null}
               <Typography variant="body1">
