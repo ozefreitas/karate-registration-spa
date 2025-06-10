@@ -84,7 +84,7 @@ export default function CompetitionsPage() {
           </Grid>
         )}
         {userRole === "national_association" ? (
-          <Grid sx={{ m: 4 }}>
+          <Grid sx={{ m: 4, mt: 2 }} size={12}>
             <AddButton label="Adicionar" to="new_event/"></AddButton>
           </Grid>
         ) : null}

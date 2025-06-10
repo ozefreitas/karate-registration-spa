@@ -36,7 +36,7 @@ export const useCreateEvent = () => {
   return useMutation({
     mutationFn: ({ data }: { data: any }) => createEvent(data),
     onSuccess: (data: any) => {
-      enqueueSnackbar(`${data.data.message}`, {
+      enqueueSnackbar("Evento criado com sucesso!", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -48,7 +48,48 @@ export const useCreateEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar("Um erro ocurreu ao criar este evento. Tente novamente.", {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const removeEvent = (eventId: string) => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`http://127.0.0.1:8000/events/${eventId}/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useRemoveEvent = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: removeEvent,
+    onSuccess: () => {
+      enqueueSnackbar("Evento removido da plataforma com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

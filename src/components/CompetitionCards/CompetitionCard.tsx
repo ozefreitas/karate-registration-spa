@@ -21,6 +21,7 @@ import {
   useFetchEventRate,
 } from "../../hooks/useEventData";
 import InfoButton from "../InfoButton/InfoButton";
+import DeleteButton from "../Buttons/DeleteButton";
 import GenerateButton from "../GenerateButton/GenerateButton";
 import {
   Event,
@@ -38,13 +39,12 @@ import {
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useRemoveEvent } from "../../hooks/useEventData";
 
-export default function CompetitionCard() {
+export default function CompetitionCard(props: { userRole: string }) {
   const location = useLocation();
-  const {
-    data: singleEventData,
-    isLoading: isSingleEventLoading,
-  } = useSingleFetchEventData(location.pathname.split("/").slice(-2)[0]);
+  const { data: singleEventData, isLoading: isSingleEventLoading } =
+    useSingleFetchEventData(location.pathname.split("/").slice(-2)[0]);
 
   const { data: eventRateData, isLoading: isEventRateLoading } =
     useFetchEventRate(location.pathname.split("/").slice(-2)[0]);
@@ -68,6 +68,9 @@ export default function CompetitionCard() {
       },
     });
   };
+
+  console.log(singleEventData);
+  const { mutate } = useRemoveEvent();
 
   return (
     <>
@@ -327,10 +330,19 @@ export default function CompetitionCard() {
                   rowGap: 2,
                 }}
               >
-                <AddButton
-                  label="Consultar Individuais"
-                  to="individuals/"
-                ></AddButton>
+                {props.userRole !== "national_association" ? (
+                  <AddButton
+                    label="Consultar Individuais"
+                    to="individuals/"
+                  ></AddButton>
+                ) : (
+                  <DeleteButton
+                    label="Eliminar Evento"
+                    to="/events/"
+                    id={singleEventData?.data?.id}
+                    mutation={mutate}
+                  ></DeleteButton>
+                )}
                 {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
