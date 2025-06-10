@@ -20,6 +20,47 @@ export const useFetchEventsData = () => {
   });
 };
 
+const createEvent = (data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(`http://127.0.0.1:8000/events/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useCreateEvent = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ data }: { data: any }) => createEvent(data),
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+    onError: (data: any) => {
+      enqueueSnackbar("Um erro ocurreu ao criar este evento. Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
 const fetchNextEvent = () => {
   return axios.get("http://127.0.0.1:8000/events/next_comp/");
 };

@@ -32,12 +32,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
 import FormAccordion from "../../dashboard/FormAccordion";
+import { useCreateEvent } from "../../hooks/useEventData";
 
 export default function NewEventPage() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(false);
   const [createCategories, setCreateCategories] = useState<boolean>(false);
+
+  const createEvent = useCreateEvent();
 
   const {
     control: eventMetadataControl,
@@ -69,26 +72,33 @@ export default function NewEventPage() {
 
   const onSubmit = async (data: any) => {
     const formData = {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      graduation: data.graduation,
-      category: data.category,
-      skip_number: data.skip_number,
-      gender: data.gender,
-      is_student: data.is_student,
-      birth_date: data.birthDate,
-      match_type: "",
-      weight: data.weight,
+      name: data.name,
+      location: data.location,
+      season: data.season,
+      start_registration: data.start_registration,
+      end_registration: data.end_registration,
+      retifications_deadline: data.retifications_deadline,
+      event_date: data.event_date,
+      description: data.description,
+      custody: data.custody,
+      email_contact: data.email_contact,
+      contact: data.contact,
+      has_teams: data.has_teams,
+      encounter: data.encounter,
+      encounter_type: data.encounter_type,
+      has_registrations: data.has_registrations,
+      // change_categories: data.change_categories,
     };
 
-    if (data.kumite) {
-      formData.match_type = "kumite";
-      // createAthlete.mutate(formData, { onSuccess: () => {} });
-    } else if (data.kata) {
-      formData.match_type = "kata";
-      formData.weight = "";
-      // createAthlete.mutate(formData, { onSuccess: () => {} });
-    }
+    createEvent.mutate(
+      { data: formData },
+      {
+        onSuccess: () => {
+          navigate("/events/");
+        },
+      }
+    );
+
     // else {
     //   setError("kata", {
     //     type: "manual",
@@ -773,8 +783,7 @@ export default function NewEventPage() {
               </IconButton>
             </Tooltip>
           </Grid>
-
-          <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+          <Grid sx={{ p: 3, pt: 3, pb: 1 }} container size={6}>
             <Controller
               name="has_teams"
               control={eventMetadataControl}
@@ -835,7 +844,6 @@ export default function NewEventPage() {
             sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
-              navigate("/events/");
             }}
           >
             Submeter
