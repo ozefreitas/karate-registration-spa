@@ -64,3 +64,21 @@ export const WeightOptions = {
   "Veterano +35": [{ value: "open", label: "Open" }],
   "Veterano +50": [{ value: "open", label: "Open" }],
 };
+
+export const EncounterOptions: { label: string; value: string }[] = [
+  { label: "Regional", value: "regional" },
+  { label: "Nacional", value: "nacional" },
+  { label: "Internacional", value: "internacional" },
+  { label: "Instrutores", value: "instrutores" },
+  { label: "Formação", value: "formacao" },
+  { label: "Sessão de Exames", value: "exames" },
+  { label: "Seminário", value: "seminario" },
+];
+
+export const SeasonOptions: { label: string; value: string }[] = [
+  { value: "2425", label: "2024/2025" },
+  { value: "2526", label: "2025/2026" },
+  { value: "2627", label: "2026/2027" },
+  { value: "2728", label: "2027/2028" },
+  { value: "2829", label: "2028/2029" },
+];
