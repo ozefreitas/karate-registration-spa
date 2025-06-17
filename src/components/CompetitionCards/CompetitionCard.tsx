@@ -40,11 +40,15 @@ import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useRemoveEvent } from "../../hooks/useEventData";
+import { Navigate } from "react-router-dom";
 
 export default function CompetitionCard(props: { userRole: string }) {
   const location = useLocation();
-  const { data: singleEventData, isLoading: isSingleEventLoading } =
-    useSingleFetchEventData(location.pathname.split("/").slice(-2)[0]);
+  const {
+    data: singleEventData,
+    isLoading: isSingleEventLoading,
+    error: singleEventError,
+  } = useSingleFetchEventData(location.pathname.split("/").slice(-2)[0]);
 
   const { data: eventRateData, isLoading: isEventRateLoading } =
     useFetchEventRate(location.pathname.split("/").slice(-2)[0]);
@@ -69,8 +73,9 @@ export default function CompetitionCard(props: { userRole: string }) {
     });
   };
 
-  console.log(singleEventData);
   const { mutate } = useRemoveEvent();
+
+  if (singleEventError) return <Navigate to="/not_found/" />;
 
   return (
     <>
@@ -347,6 +352,7 @@ export default function CompetitionCard(props: { userRole: string }) {
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
                 <InfoButton
+                  disabled={props.userRole !== "national_association"}
                   label="Consultar Inscrições"
                   to="all_registry/"
                 ></InfoButton>
