@@ -23,6 +23,9 @@ import { useFetchMeData } from "./hooks/useAuth";
 import ProtectedRoute from "./access/ProtectedRoute";
 import NewEventPage from "./pages/CompetitionsPage/NewEventPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
+import UnAuthorizedPage from "./pages/ErrorPages/UnAuthorizedPage";
+import NotFoundPage from "./pages/ErrorPages/ServerErrorPage";
+import EventAllRegistryPage from "./components/CompetitionCards/EventAllRegistryPage";
 
 function App() {
   const { data: meData, isLoading: isMeLoading } = useFetchMeData();
@@ -181,6 +184,22 @@ function App() {
           }
         />
         <Route
+          path="events/:id/all_registry"
+          element={
+            isMeLoading ? null : (
+              <ProtectedRoute
+                element={<EventAllRegistryPage />}
+                allowedRoles={[
+                  "free_dojo",
+                  "subed_dojo",
+                  "national_association",
+                ]}
+                userRole={userRole}
+              />
+            )
+          }
+        />
+        <Route
           path="events/:id/individuals/"
           element={
             isMeLoading ? null : (
@@ -218,7 +237,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<RulesPage />}
-                allowedRoles={["free_dojo, subed_dojo"]}
+                allowedRoles={["free_dojo", "subed_dojo"]}
                 userRole={userRole}
                 allowUnauthenticated={true}
               />
@@ -231,7 +250,7 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<ClassificationsPage />}
-                allowedRoles={["free_dojo, subed_dojo"]}
+                allowedRoles={["free_dojo", "subed_dojo"]}
                 userRole={userRole}
                 allowUnauthenticated={true}
               />
@@ -244,13 +263,15 @@ function App() {
             isMeLoading ? null : (
               <ProtectedRoute
                 element={<HelpPage />}
-                allowedRoles={["free_dojo, subed_dojo"]}
+                allowedRoles={["free_dojo", "subed_dojo"]}
                 userRole={userRole}
                 allowUnauthenticated={true}
               />
             )
           }
         />
+        <Route path="unauthorized/" element={<UnAuthorizedPage />} />
+        <Route path="not_found/" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
