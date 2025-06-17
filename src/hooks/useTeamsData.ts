@@ -20,7 +20,7 @@ export const useFetchTeamsData = (page: number, pageSize: number) => {
     queryKey: ["teams", page, pageSize],
     queryFn: () => fetchTeams(page, pageSize),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    // refetchOnMount: false,
   });
 };
 

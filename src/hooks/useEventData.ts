@@ -16,7 +16,6 @@ export const useFetchEventsData = () => {
     queryKey: ["events"],
     queryFn: fetchEvents,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
   });
 };
 
@@ -35,7 +34,7 @@ export const useCreateEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ data }: { data: any }) => createEvent(data),
-    onSuccess: (data: any) => {
+    onSuccess: () => {
       enqueueSnackbar("Evento criado com sucesso!", {
         variant: "success",
         anchorOrigin: {
@@ -47,7 +46,7 @@ export const useCreateEvent = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
-    onError: (data: any) => {
+    onError: () => {
       enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
         variant: "error",
         anchorOrigin: {

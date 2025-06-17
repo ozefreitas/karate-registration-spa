@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Add } from "@mui/icons-material";
 
-export default function AddButton(props: { label: string; to: string }) {
+export default function AddButton(props: Readonly<{ label: string; to: string }>) {
   const navigate = useNavigate();
   return (
     <Button

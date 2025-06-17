@@ -26,7 +26,7 @@ export default function HomePage() {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = useFetchNotifications()
+  } = useFetchNotifications();
 
   return (
     <>
@@ -44,7 +44,7 @@ export default function HomePage() {
           relevantes e rápidas, assim como notificações específicas para si.
         </CardContent>
       </Card>
-      <Card sx={{ m: 2 }}>
+      <Card sx={{ m: 2, mb: 0 }}>
         <CardHeader
           title={"Central de notificações"}
           subheader="Neste espaço aparecerão notificações importante para o seu dojo. Fique

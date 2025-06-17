@@ -20,7 +20,7 @@ export const useFetchAthletesData = (page: number, pageSize: number) => {
     queryKey: ["athletes", page, pageSize],
     queryFn: () => fetchAthletes(page, pageSize),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    // refetchOnMount: false,
   });
 };
 

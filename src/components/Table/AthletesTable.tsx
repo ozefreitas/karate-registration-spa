@@ -282,7 +282,7 @@ export default function AthletesTable(
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#e81c24",
-      fontSize: 19,
+      fontSize: 18,
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {

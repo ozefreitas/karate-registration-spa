@@ -30,7 +30,7 @@ const fetchNotifications = () => {
 
 export const useFetchNotifications = () => {
   return useQuery({
-    queryKey: ["notifications"],
+    queryKey: ["home-notifications"],
     queryFn: fetchNotifications,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

@@ -17,7 +17,7 @@ export default function ProtectedRoute({
   }
 
   if (!userRole && allowUnauthenticated) {
-    return element
+    return element;
   }
 
   if (!userRole) {
