@@ -82,3 +82,19 @@ export const SeasonOptions: { label: string; value: string }[] = [
   { value: "2728", label: "2027/2028" },
   { value: "2829", label: "2028/2029" },
 ];
+
+export const MatchTypeOptions: { label: string; value: string }[] = [
+  { value: "kata", label: "Kata" },
+  { value: "kumite", label: "Kumite" },
+  { value: "katakumite", label: "Kata e Kumite" },
+  // { value: "kataequipa", label: "Kata Equipa" },
+  // { value: "kumiteequipa", label: "Kumite Equipa" },
+  // { value: "katakumiteequipa", label: "Kata e Kumite Equipa" },
+];
+
+export const NotificationUrgencyOptions: { label: string; value: string }[] = [
+  { value: "green", label: "Verde" },
+  { value: "yellow", label: "Amarelo" },
+  { value: "orange", label: "Laranja" },
+  { value: "red", label: "Vermelho" },
+];
