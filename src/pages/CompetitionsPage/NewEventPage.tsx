@@ -24,6 +24,8 @@ import {
   EncounterOptions,
   SeasonOptions,
   GraduationsOptions,
+  GenderOptions,
+  MatchTypeOptions,
 } from "../../config";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -96,6 +98,16 @@ export default function NewEventPage() {
         onSuccess: () => {
           navigate("/events/");
         },
+        onError: (data: any) => {
+          setError("name", { message: data.response.data.name[0] });
+          setError("location", { message: data.response.data.location[0] });
+          setError("season", { message: data.response.data.season[0] });
+          setError("event_date", { message: data.response.data.event_date[0] });
+          setError("contact", { message: data.response.data.contact[0] });
+          setError("email_contact", {
+            message: data.response.data.email_contact[0],
+          });
+        },
       }
     );
 
@@ -124,6 +136,8 @@ export default function NewEventPage() {
       max_age: "",
       min_grad: "",
       max_grad: "",
+      gender: "",
+      match_type: "",
     },
   });
 
@@ -402,9 +416,8 @@ export default function NewEventPage() {
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          // error: !!localErrors?.publication_date,
-                          // helperText:
-                          //   localErrors?.publication_date?.message || "",
+                          error: !!errors?.event_date,
+                          helperText: errors?.event_date?.message || "",
                         },
                       }}
                     />
@@ -428,8 +441,8 @@ export default function NewEventPage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
+                  error={!!errors.description}
+                  helperText={errors.description?.message}
                 />
               )}
             />
@@ -448,8 +461,8 @@ export default function NewEventPage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
+                  error={!!errors.custody}
+                  helperText={errors.custody?.message}
                 />
               )}
             />
@@ -468,8 +481,8 @@ export default function NewEventPage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
+                  error={!!errors.email_contact}
+                  helperText={errors.email_contact?.message}
                 />
               )}
             />
@@ -488,8 +501,8 @@ export default function NewEventPage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
+                  error={!!errors.contact}
+                  helperText={errors.contact?.message}
                 />
               )}
             />
@@ -647,7 +660,7 @@ export default function NewEventPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 1, pt: 1, pb: 1 }} container size={3}>
+          <Grid sx={{ p: 1, pt: 1, pb: 1 }} container size={2.5}>
             <Controller
               name="category"
               control={CategoryControl}
@@ -721,7 +734,6 @@ export default function NewEventPage() {
                   select
                   fullWidth
                   multiline
-                  required={createCategories}
                   disabled={!createCategories}
                   maxRows={8}
                   {...field}
@@ -752,6 +764,36 @@ export default function NewEventPage() {
                   select
                   fullWidth
                   multiline
+                  disabled={!createCategories}
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!CategoryControlErrors.max_grad}
+                  helperText={CategoryControlErrors.max_grad?.message}
+                >
+                  {GraduationsOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 1, pt: 1, pb: 1 }} container size={1.5}>
+            <Controller
+              name="gender"
+              control={CategoryControl}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Género"
+                  select
+                  fullWidth
+                  multiline
                   required={createCategories}
                   disabled={!createCategories}
                   maxRows={8}
@@ -759,10 +801,41 @@ export default function NewEventPage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!CategoryControlErrors.min_grad}
-                  helperText={CategoryControlErrors.min_grad?.message}
+                  error={!!CategoryControlErrors.gender}
+                  helperText={CategoryControlErrors.gender?.message}
                 >
-                  {GraduationsOptions.map((item, index) => (
+                  {GenderOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 1, pt: 1, pb: 1 }} container size={1.5}>
+            <Controller
+              name="match_type"
+              control={CategoryControl}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Partida"
+                  select
+                  fullWidth
+                  multiline
+                  required={createCategories}
+                  disabled={!createCategories}
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!CategoryControlErrors.match_type}
+                  helperText={CategoryControlErrors.match_type?.message}
+                >
+                  {MatchTypeOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
                     </MenuItem>
