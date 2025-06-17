@@ -10,6 +10,7 @@ import {
   Home,
   Groups,
   NotificationsActive,
+  DeveloperBoard,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -62,6 +63,12 @@ export const getSideMenuConfig = (userRole: string) => {
       icon: <HelpCenter sx={{ color: "#e81c24" }} />,
       to: "/help/",
     },
+    {
+      name: "display",
+      label: "Quadro Resultados",
+      icon: <DeveloperBoard sx={{ color: "#e81c24" }} />,
+      to: "/results_display/",
+    },
   ];
 
   // Filter for SKIP (national) account
@@ -77,10 +84,13 @@ export const getSideMenuConfig = (userRole: string) => {
       (item) =>
         item.name !== "athletes" &&
         item.name !== "teams" &&
-        item.name !== "events"
+        item.name !== "events" &&
+        item.name !== "display"
     );
-  } else if (userRole === "free_dojo") {
-    return baseMenu.filter((item) => item.name !== "notifications");
+  } else if (userRole === "free_dojo" || userRole === "subed_dojo") {
+    return baseMenu.filter(
+      (item) => item.name !== "notifications" && item.name !== "display"
+    );
   }
 
   return baseMenu;
@@ -133,4 +143,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   all_registry: "Inscrições",
   notifications_manager: "Gestor de Notificações",
   new_event: "Novo Evento",
+  not_found: "Não Encontrado",
+  unauthorized: "Não permitido",
+  results_display: "Monitor Resultados",
 };
