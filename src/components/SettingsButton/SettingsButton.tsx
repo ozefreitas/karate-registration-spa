@@ -5,7 +5,7 @@ import { Settings } from "@mui/icons-material";
 export default function SettingsButton(
   props: Readonly<{
     label: string;
-    to: string;
+    to?: string;
     size: "small" | "medium" | "large";
   }>
 ) {
@@ -14,9 +14,13 @@ export default function SettingsButton(
     <Button
       sx={{ m: 1 }}
       variant="contained"
-      size="medium"
+      size={props.size}
       color="warning"
-      onClick={() => navigate(props.to)}
+      onClick={() => {
+        if (props.to) {
+          navigate(props.to);
+        }
+      }}
       startIcon={<Settings />}
     >
       {props.label}
