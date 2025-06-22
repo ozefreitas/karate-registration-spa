@@ -10,7 +10,10 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useRemoveEventAthlete } from "../../hooks/useEventData";
+import {
+  useRemoveEventAthlete,
+  useRemoveDisciplineAthlete,
+} from "../../hooks/useEventData";
 import {
   useRemoveAthleteData,
   useRemoveAllAthletesData,
@@ -36,12 +39,13 @@ export default function DeleteAthleteModal(
     handleModalClose: any;
     handleModalOpen: any;
     id?: string | Array<string>;
-    from: "Atletas" | "Equipas" | "Individuais";
+    from: "Atletas" | "Equipas" | "Individuais" | "Modalidades";
     setSelected?: any;
+    discipline?: any;
   }>
 ) {
+  const removeDisciplineAthlete = useRemoveDisciplineAthlete();
   const removeEventAthlete = useRemoveEventAthlete();
-  // const removeAllIndividuals = useRemoveAllIndividualsData();
   const removeAthlete = useRemoveAthleteData();
   const removeAllAthletes = useRemoveAllAthletesData();
   const removeTeam = useRemoveTeamData();
@@ -58,13 +62,19 @@ export default function DeleteAthleteModal(
         removeAthlete.mutate(id);
       } else if (props.from === "Equipas") {
         removeTeam.mutate(id);
-      } else {
+      } else if (props.from === "Individuais") {
         const athleteData = { athlete_id: id };
         const data = {
           eventId: location.pathname.split("/")[2],
           data: athleteData,
         };
         removeEventAthlete.mutate(data);
+      } else {
+        const data = {
+          disciplineId: props.discipline,
+          data: { athlete_id: props.id },
+        };
+        removeDisciplineAthlete.mutate(data);
       }
     } else if (id !== undefined && Array.isArray(id)) {
       if (props.from === "Atletas") {
@@ -75,7 +85,7 @@ export default function DeleteAthleteModal(
         id.forEach((athleteId) => {
           removeTeam.mutate(athleteId);
         });
-      } else {
+      } else if (props.from === "Individuais") {
         id.forEach((athleteId) => {
           const athleteData = { athlete_id: athleteId };
           const data = {
@@ -83,6 +93,14 @@ export default function DeleteAthleteModal(
             data: athleteData,
           };
           removeEventAthlete.mutate(data);
+        });
+      } else {
+        id.forEach((athleteId) => {
+          const data = {
+            disciplineId: props.discipline,
+            data: { athlete_id: athleteId },
+          };
+          removeDisciplineAthlete.mutate(data);
         });
       }
       props.setSelected([]);

@@ -119,7 +119,8 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 
 export default function AthletesTable(
   props: Readonly<{
-    type: "Atletas" | "Equipas" | "Individuais";
+    type: "Atletas" | "Equipas" | "Individuais" | "Modalidades";
+    discipline?: string;
     data: any;
     columnsHeaders: any;
     actions: boolean;
@@ -330,7 +331,7 @@ export default function AthletesTable(
   };
 
   return (
-    <Grid container sx={{ m: 2, mt: 4 }}>
+    <Grid container sx={{ m: 2 }}>
       <TableContainer component={Paper}>
         <Table size="small" aria-label="simple table">
           <TableHead>
@@ -540,6 +541,7 @@ export default function AthletesTable(
           from={props.type}
           id={props.data.length === selected.length ? undefined : selected}
           setSelected={setSelected}
+          discipline={props.discipline}
         ></DeleteAthleteModal>
       ) : (
         <DeleteAthleteModal
@@ -549,6 +551,7 @@ export default function AthletesTable(
           from={props.type}
           id={actionedAthlete}
           setSelected={setSelected}
+          discipline={props.discipline}
         ></DeleteAthleteModal>
       )}
     </Grid>

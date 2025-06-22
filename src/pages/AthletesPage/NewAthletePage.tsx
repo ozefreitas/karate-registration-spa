@@ -61,20 +61,26 @@ export default function NewAthletePage() {
   });
 
   const onSubmit = async (data: any) => {
-    const formData = {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      graduation: data.graduation,
-      category: data.category,
-      skip_number: data.skip_number,
-      gender: data.gender,
-      student: data.student,
-      birth_date: data.birthDate,
-      match_type: "",
-      weight: data.weight,
-    };
+    if (
+      ["Juvenil", "Cadete", "Júnior", "Sénior"].includes(data.category) &&
+      data.weight == ""
+    ) {
+      setError("weight", { message: "Tem que selecionar um peso." });
+    } else {
+      const formData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        graduation: data.graduation,
+        category: data.category,
+        skip_number: data.skip_number,
+        gender: data.gender,
+        student: data.student,
+        birth_date: data.birthDate,
+        weight: data.weight,
+      };
 
-    createAthlete.mutate(formData, { onSuccess: () => {} });
+      createAthlete.mutate(formData, { onSuccess: () => {} });
+    }
   };
 
   type WeightCategory = keyof typeof WeightOptions;
@@ -101,11 +107,6 @@ export default function NewAthletePage() {
       "Veterano +50",
     ].includes(value);
   };
-
-  // const kumite = useWatch({
-  //   control,
-  //   name: "kumite",
-  // });
 
   const isEnabled = currentCategory !== null;
 
@@ -415,8 +416,8 @@ export default function NewAthletePage() {
                     field.onChange(e);
                   }}
                   error={!!errors.weight}
+                  helperText={errors.weight?.message}
                 >
-                  <MenuItem value="None">-- Não Definido --</MenuItem>
                   {currentCategory
                     ? WeightOptions[currentCategory].map((item, index) => (
                         <MenuItem key={index} value={item.value}>

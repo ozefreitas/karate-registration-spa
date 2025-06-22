@@ -136,6 +136,7 @@ export default function AthletesModal(
 
   const location = useLocation();
   const [currentAthleteId, setCurrentAthleteId] = useState<string>("");
+  
   const { data: disciplinesData } = useFetchDisciplinesData(
     location.pathname.split("/").slice(-3)[0]
   );

@@ -87,7 +87,7 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
+      <Card sx={{ m: 2, mt: 0, mb: 0 }}>
         <CardHeader
           title="Página de Evento"
           sx={{
@@ -103,7 +103,7 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
           inscrever os seus Atletas ou Equipas.
         </CardContent>
       </Card>
-      <Grid container sx={{ m: 2 }}>
+      <Grid container sx={{ m: 2, mt: 0 }}>
         <Grid container size={12}>
           <Grid size={6}>
             <Card sx={{ m: 2 }}>

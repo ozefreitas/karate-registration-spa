@@ -8,13 +8,17 @@ import {
   Button,
   Box,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
-import { useSingleFetchEventData } from "../../hooks/useEventData";
+import {
+  useSingleFetchEventData,
+  useFetchDisciplinesData,
+} from "../../hooks/useEventData";
 
-export default function IndividualsPage(props: { state: boolean }) {
+export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
   const location = useLocation();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -30,6 +34,12 @@ export default function IndividualsPage(props: { state: boolean }) {
     isLoading: isSingleEventLoading,
     error: singleEventError,
   } = useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
+
+  const { data: disciplinesData } = useFetchDisciplinesData(
+    location.pathname.split("/").slice(-3)[0]
+  );
+
+  console.log(singleEventData?.data);
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
@@ -61,10 +71,30 @@ export default function IndividualsPage(props: { state: boolean }) {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : singleEventData?.data !== undefined ? (
+        ) : disciplinesData?.data.results.length !== 0 ? (
+          disciplinesData?.data.results.map((discipline: any) => (
+            <>
+              <Typography sx={{ m: 3 }} variant="h5">
+                {discipline.name}
+              </Typography>
+              <AthletesTable
+                type="Modalidades"
+                discipline={discipline.id}
+                data={discipline.individuals}
+                columnsHeaders={columnMaping}
+                actions={true}
+                selection={true}
+                page={page}
+                setPage={setPage}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+              ></AthletesTable>
+            </>
+          ))
+        ) : (
           <AthletesTable
             type="Individuais"
-            data={singleEventData?.data?.individuals}
+            data={singleEventData?.data.individuals}
             columnsHeaders={columnMaping}
             actions={true}
             selection={true}
@@ -73,7 +103,7 @@ export default function IndividualsPage(props: { state: boolean }) {
             pageSize={pageSize}
             setPageSize={setPageSize}
           ></AthletesTable>
-        ) : null}
+        )}
       </Grid>
       {singleEventData?.data.is_open ? (
         <Grid sx={{ m: 4 }}>
