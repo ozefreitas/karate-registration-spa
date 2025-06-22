@@ -102,7 +102,7 @@ export const useRemoveEvent = () => {
 };
 
 const fetchNextEvent = () => {
-  return axios.get("http://127.0.0.1:8000/events/next_comp/");
+  return axios.get("http://127.0.0.1:8000/events/next_event/");
 };
 
 export const useFetchNextEventData = () => {
@@ -115,7 +115,7 @@ export const useFetchNextEventData = () => {
 };
 
 const fetchLastEvent = () => {
-  return axios.get("http://127.0.0.1:8000/events/last_comp/");
+  return axios.get("http://127.0.0.1:8000/events/last_event/");
 };
 
 export const useFetchLastEvent = () => {
@@ -141,7 +141,12 @@ export const useFetchLastCompQuali = () => {
 };
 
 const fetchSingleEvent = (eventId: any) => {
-  return axios.get(`http://127.0.0.1:8000/events/${eventId}/`);
+  const token = localStorage.getItem("token");
+  return axios.get(`http://127.0.0.1:8000/events/${eventId}/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
 };
 
 export const useSingleFetchEventData = (location: any) => {
@@ -297,6 +302,65 @@ export const useRateEvent = () => {
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.data.error}`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+// modalities
+const fetchDisciplines = () => {
+  const token = localStorage.getItem("token");
+  return axios.get(`http://127.0.0.1:8000/disciplines/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useFetchDisciplinesData = () => {
+  return useQuery({
+    queryKey: ["disciplines"],
+    queryFn: fetchDisciplines,
+    refetchOnWindowFocus: false,
+  });
+};
+
+const createDiscipline = (data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(`http://127.0.0.1:8000/disciplines/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useCreateDiscipline = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ data }: { data: any }) => createDiscipline(data),
+    onSuccess: () => {
+      enqueueSnackbar("Modalidade(s) adicionada(s) com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

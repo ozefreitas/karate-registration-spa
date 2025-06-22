@@ -36,7 +36,7 @@ export default function DeleteAthleteModal(
     handleModalClose: any;
     handleModalOpen: any;
     id?: string | Array<string>;
-    from: string;
+    from: "Atletas" | "Equipas" | "Individuais";
     setSelected?: any;
   }>
 ) {

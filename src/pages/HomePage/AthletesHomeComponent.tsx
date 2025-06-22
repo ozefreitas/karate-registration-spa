@@ -115,7 +115,7 @@ export default function AthletesHomeComponent() {
                         <Person />
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.match_type} ${athlete.category} ${athlete.gender}`}
+                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.category} ${athlete.gender}`}
                       />
                     </ListItemButton>
                   </ListItem>

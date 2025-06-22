@@ -33,7 +33,7 @@ const theme = createTheme(ptPT, {
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 16, // change this value as needed
+          borderRadius: 16,
         },
       },
     },

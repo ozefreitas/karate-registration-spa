@@ -20,7 +20,6 @@ export default function AthletesPage() {
     last_name: string;
     category: string;
     gender: string;
-    match_type: string;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -44,14 +43,12 @@ export default function AthletesPage() {
       last_name: athlete.last_name,
       category: athlete.category,
       gender: athlete.gender,
-      match_type: athlete.match_type,
     }));
   }, [athletesData]);
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
     { key: "last_name", label: "Último Nome" },
-    { key: "match_type", label: "Partida" },
     { key: "category", label: "Escalão" },
     { key: "gender", label: "Género" },
   ];
