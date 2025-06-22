@@ -15,19 +15,15 @@ export default function FormAccordion(
     children: any;
     expanded: boolean;
     setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-    tooltipMessage?: string
+    tooltipMessage?: string;
   }>
 ) {
   return (
     <Grid sx={{ m: 6, mt: 2, mb: 2 }} size={12}>
-      <Accordion square expanded={!props.expanded}>
+      <Accordion square expanded={props.expanded}>
         <Tooltip
           placement="bottom-start"
-          title={
-            props.expanded
-              ? props.tooltipMessage
-              : ""
-          }
+          title={!props.expanded ? props.tooltipMessage : ""}
         >
           <AccordionSummary expandIcon={<ExpandMore />}>
             <Typography
@@ -39,7 +35,9 @@ export default function FormAccordion(
           </AccordionSummary>
         </Tooltip>
         <AccordionDetails>
-          <Grid alignItems="center" container>{props.children}</Grid>
+          <Grid alignItems="flex-start" container>
+            {props.children}
+          </Grid>
         </AccordionDetails>
       </Accordion>
     </Grid>

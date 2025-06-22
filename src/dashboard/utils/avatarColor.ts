@@ -1,3 +1,5 @@
+import { Height } from "@mui/icons-material";
+
 function stringToColor(string: string) {
   let hash = 0;
   let i;
@@ -18,10 +20,13 @@ function stringToColor(string: string) {
   return color;
 }
 
-export default function stringAvatar(name: string) {
+export default function stringAvatar(name: string, size?: number) {
   return {
     sx: {
       bgcolor: stringToColor(name),
+      width: size,
+      height: size,
+      fontSize: size ? size / 3 : undefined
     },
     children: `${name.slice(0, 3).toUpperCase()}`,
   };
