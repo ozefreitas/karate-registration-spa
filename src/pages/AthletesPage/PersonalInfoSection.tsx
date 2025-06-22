@@ -53,7 +53,7 @@ export default function PersonalInfoSection(
       gender: props.athleteData?.data.gender,
       student: props.athleteData?.data.student,
       birthDate: props.athleteData?.data.birth_date,
-      weight: props.athleteData?.data.weight,
+      weight: props.athleteData?.data.weight ?? "N/A",
     },
   });
 
@@ -185,7 +185,7 @@ export default function PersonalInfoSection(
           ></FormControlLabel>
         </FormControl>
         <FormControl
-          sx={{ pb: 2 }}
+          sx={{ pb: 1 }}
           component="fieldset"
           variant="standard"
           // error={!!errors.has_registrations}
@@ -546,7 +546,11 @@ export default function PersonalInfoSection(
                       input: {
                         readOnly: !isEditMode,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: field.value === "N/A" ? "lightgray" : "inherit",
+                        },
                       },
                     }}
                     required

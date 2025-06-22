@@ -151,7 +151,7 @@ const fetchSingleEvent = (eventId: any) => {
 
 export const useSingleFetchEventData = (location: any) => {
   return useQuery({
-    queryKey: ["event-name"],
+    queryKey: ["single-event"],
     queryFn: () => fetchSingleEvent(location),
   });
 };
@@ -187,6 +187,7 @@ export const useAddEventAthlete = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
@@ -234,6 +235,7 @@ export const useRemoveEventAthlete = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
@@ -315,19 +317,23 @@ export const useRateEvent = () => {
 };
 
 // modalities
-const fetchDisciplines = () => {
+
+const fetchDisciplines = (eventId: string) => {
   const token = localStorage.getItem("token");
   return axios.get(`http://127.0.0.1:8000/disciplines/`, {
     headers: {
       Authorization: `Token ${token}`,
     },
+    params: {
+      event_disciplines: eventId,
+    },
   });
 };
 
-export const useFetchDisciplinesData = () => {
+export const useFetchDisciplinesData = (eventId: string) => {
   return useQuery({
-    queryKey: ["disciplines"],
-    queryFn: fetchDisciplines,
+    queryKey: ["disciplines", eventId],
+    queryFn: () => fetchDisciplines(eventId),
     refetchOnWindowFocus: false,
   });
 };
@@ -361,6 +367,102 @@ export const useCreateDiscipline = () => {
     },
     onError: () => {
       enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const addDisciplineAthlete = (disciplineId: string, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(
+    `http://127.0.0.1:8000/disciplines/${disciplineId}/add_athlete/`,
+    data,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useAddDisciplineAthlete = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      addDisciplineAthlete(disciplineId, data),
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["disciplines"] });
+    },
+    onError: (data: any) => {
+      enqueueSnackbar(`${data.data.error}`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const removeDisciplineAthlete = (disciplineId: string, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(
+    `http://127.0.0.1:8000/disciplines/${disciplineId}/delete_athlete/`,
+    data,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useRemoveDisciplineAthlete = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      removeDisciplineAthlete(disciplineId, data),
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    },
+    onError: (data: any) => {
+      enqueueSnackbar(`${data.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

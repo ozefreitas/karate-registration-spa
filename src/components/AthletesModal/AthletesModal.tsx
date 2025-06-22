@@ -4,7 +4,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Checkbox,
   List,
   ListItem,
   ListItemText,
@@ -15,6 +14,12 @@ import {
   Toolbar,
   Button,
   Tooltip,
+  Grid,
+  Stack,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Switch,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -25,13 +30,17 @@ import {
   KeyboardArrowRight,
   KeyboardArrowLeft,
 } from "@mui/icons-material";
-import axios from "axios";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAddEventAthlete } from "../../hooks/useEventData";
+import {
+  useFetchDisciplinesData,
+  useAddDisciplineAthlete,
+} from "../../hooks/useEventData";
 import { useFetchAthletesNotInEvent } from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
+import { Controller, useForm } from "react-hook-form";
+import { useLocation } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -97,9 +106,9 @@ export default function AthletesModal(
     last_name: string;
     category: string;
     gender: string;
-    match_type: string;
   };
 
+  const { enqueueSnackbar } = useSnackbar();
   const [page, setPage] = useState<number>(0);
 
   const handleBackButtonClick = (
@@ -114,20 +123,58 @@ export default function AthletesModal(
     setPage(page + 1);
   };
 
-  const [checked, setChecked] = React.useState<string[]>([]);
-  const { enqueueSnackbar } = useSnackbar();
+  const [isDisciplineScreenOpen, setIsDisciplineScreenOpen] =
+    useState<boolean>(false);
 
-  const handleToggle = (value: string) => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const handleDisciplineScreenOpen = () => {
+    setIsDisciplineScreenOpen(true);
+  };
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+  const handleDisciplineScreenClose = () => {
+    setIsDisciplineScreenOpen(false);
+  };
 
-    setChecked(newChecked);
+  const location = useLocation();
+  const [currentAthleteId, setCurrentAthleteId] = useState<string>("");
+  const { data: disciplinesData } = useFetchDisciplinesData(
+    location.pathname.split("/").slice(-3)[0]
+  );
+  const addDisciplineAthlete = useAddDisciplineAthlete();
+
+  React.useEffect(() => {
+    const defaultValues: any = {};
+    disciplinesData?.data.results.forEach((discipline: any) => {
+      defaultValues[`${discipline.name}_${discipline.id}`] = false; // or prefill from backend if needed
+    });
+
+    reset(defaultValues);
+  }, [disciplinesData]);
+
+  type FormValues = Record<string, boolean>;
+
+  const {
+    control,
+    handleSubmit,
+    setError,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const onSubmit = (data: any) => {
+    Object.entries(data).forEach(([discipline, value]) => {
+      if (value) {
+        const data = {
+          disciplineId: discipline.split("_")[1],
+          data: { athlete_id: currentAthleteId },
+        };
+        addDisciplineAthlete.mutate(data, {
+          onSuccess: () => {
+            props.handleModalClose();
+            handleDisciplineScreenClose();
+          },
+        });
+      }
+    });
   };
 
   const {
@@ -136,36 +183,34 @@ export default function AthletesModal(
     error: athletesNotInEventError,
   } = useFetchAthletesNotInEvent(page + 1, 10);
 
-  const addEventAthlete = useAddEventAthlete();
-
-  const handleIndividualsSubmit = (athleteList: string[]) => {
-    if (athleteList.length === 0) {
-      enqueueSnackbar("Tem de selecionar pelo menos um atleta.", {
-        variant: "warning",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
-    } else {
-      athleteList.forEach((athlete: string) => {
-        const athleteData = {athlete_id: athlete};
-        const data = {eventId: props.eventData.id, data: athleteData}
-        addEventAthlete.mutate(data);
-      });
-      setChecked([]);
-      props.handleModalClose();
-    }
-  };
+  // const handleIndividualsSubmit = (athleteList: string[]) => {
+  //   if (athleteList.length === 0) {
+  //     enqueueSnackbar("Tem de selecionar pelo menos um atleta.", {
+  //       variant: "warning",
+  //       anchorOrigin: {
+  //         vertical: "top",
+  //         horizontal: "center",
+  //       },
+  //       autoHideDuration: 5000,
+  //       preventDuplicate: true,
+  //     });
+  //   } else {
+  //     athleteList.forEach((athlete: string) => {
+  //       const athleteData = { athlete_id: athlete };
+  //       const data = { eventId: props.eventData.id, data: athleteData };
+  //       addEventAthlete.mutate(data);
+  //     });
+  //     // setChecked([]);
+  //     props.handleModalClose();
+  //   }
+  // };
 
   return (
     <Dialog
-      keepMounted
+      // keepMounted
       open={props.isModalOpen}
       onClose={props.handleModalClose}
-      maxWidth="lg"
+      maxWidth="md"
       fullWidth
       slots={{
         transition: Transition,
@@ -184,7 +229,10 @@ export default function AthletesModal(
           <IconButton
             edge="start"
             color="inherit"
-            onClick={props.handleModalClose}
+            onClick={() => {
+              handleDisciplineScreenClose();
+              props.handleModalClose();
+            }}
             aria-label="close"
           >
             <Close />
@@ -192,7 +240,8 @@ export default function AthletesModal(
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Selecionar Atletas para {props.eventData?.name}
           </Typography>
-          {athletesNotInEventData?.data.length !== 0 ? (
+          {athletesNotInEventData?.data.length !== 0 &&
+          !isDisciplineScreenOpen ? (
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -203,89 +252,163 @@ export default function AthletesModal(
               />
             </Search>
           ) : null}
-          <Button
-            autoFocus
-            size="large"
-            color="inherit"
-            onClick={() => {
-              handleIndividualsSubmit(checked);
-            }}
-            disabled={athletesNotInEventData?.data.length === 0}
-          >
-            Adicionar
-          </Button>
+          {!isDisciplineScreenOpen ? null : (
+            <Button
+              autoFocus
+              size="large"
+              color="inherit"
+              onClick={() => {
+                handleSubmit(onSubmit)();
+              }}
+              disabled={athletesNotInEventData?.data.length === 0}
+            >
+              Adicionar
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <DialogContent sx={{ pb: 0 }}>
-        <List>
-          {isAthletesNotInEventLoading ? (
-            <div>Is Loading</div>
-          ) : athletesNotInEventError ? (
-            <div>Ocorreu um erro</div>
-          ) : athletesNotInEventData?.data?.results.length !== 0 ? (
-            athletesNotInEventData?.data?.results.map(
-              (athlete: Athlete, index: string) => (
-                <ListItem
-                  key={index}
-                  disablePadding
-                  secondaryAction={
-                    <label>
-                      <Checkbox
-                        sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
-                        edge="end"
-                        onChange={() => handleToggle(athlete.id)}
-                        checked={checked.includes(athlete.id)}
-                        slotProps={{
-                          input: {
-                            "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
-                          },
-                        }}
-                      />
-                    </label>
-                  }
+        {isDisciplineScreenOpen ? (
+          <Grid container size={12}>
+            <Grid size={1}>
+              <Tooltip title="Voltar atrás">
+                <IconButton
+                  onClick={() => {
+                    setCurrentAthleteId("");
+                    handleDisciplineScreenClose();
+                  }}
+                  aria-label="back to athlete viwer"
                 >
-                  <ListItemButton
-                    key={index}
-                    onClick={() => handleToggle(athlete.id)}
-                  >
-                    <ListItemText
-                      primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.match_type} ${athlete.category} ${athlete.gender}`}
-                    />
-                  </ListItemButton>
-                  <Divider />
-                </ListItem>
+                  <KeyboardArrowLeft />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid size={11}>
+              <Typography sx={{ m: 1, mb: 3 }}>
+                Estas são as Modalidades disponíveis para este Evento. Selecione
+                as tais em que este Atleta irá participar.
+              </Typography>
+            </Grid>
+            {Object.entries(control._defaultValues).map(
+              ([fieldName, defaultValue]) => (
+                <Grid
+                  key={fieldName}
+                  size={6}
+                  container
+                  justifyContent="center"
+                >
+                  <Controller
+                    name={fieldName}
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl
+                        component="fieldset"
+                        variant="standard"
+                        error={!!errors[fieldName]}
+                      >
+                        <Stack spacing={1}>
+                          <FormControlLabel
+                            labelPlacement="start"
+                            control={
+                              <Switch
+                                {...field}
+                                checked={field.value}
+                                onChange={(e) => {
+                                  field.onChange(e.target.checked);
+                                }}
+                                name={fieldName}
+                              />
+                            }
+                            label={fieldName.split("_")[0]}
+                            sx={{ justifyContent: "center", marginLeft: 0 }}
+                          />
+                          {!!errors[fieldName] && (
+                            <FormHelperText error sx={{ marginLeft: "14px" }}>
+                              {errors[fieldName].message}
+                            </FormHelperText>
+                          )}
+                        </Stack>
+                      </FormControl>
+                    )}
+                  />
+                </Grid>
               )
-            )
-          ) : (
-            <ListItem>
-              <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
-            </ListItem>
-          )}
-        </List>
+            )}
+          </Grid>
+        ) : (
+          <List>
+            {isAthletesNotInEventLoading ? (
+              <div>Is Loading</div>
+            ) : athletesNotInEventError ? (
+              <div>Ocorreu um erro</div>
+            ) : athletesNotInEventData?.data?.results.length !== 0 ? (
+              athletesNotInEventData?.data?.results.map(
+                (athlete: Athlete, index: string) => (
+                  <ListItem
+                    key={index}
+                    disablePadding
+                    secondaryAction={
+                      <Tooltip title="Selecionar Modalidade">
+                        <IconButton
+                          onClick={() => {
+                            setCurrentAthleteId(athlete.id);
+                            handleDisciplineScreenOpen();
+                          }}
+                          aria-label="go to disciplines selection"
+                        >
+                          <KeyboardArrowRight color="success" />
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  >
+                    <ListItemButton
+                      key={index}
+                      // onClick={() => handleToggle(athlete.id)}
+                    >
+                      <ListItemText
+                        primary={`${athlete.first_name} ${athlete.last_name}`}
+                        secondary={`${athlete.category} ${athlete.gender}`}
+                      />
+                    </ListItemButton>
+                    <Divider />
+                  </ListItem>
+                )
+              )
+            ) : (
+              <ListItem>
+                <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
+              </ListItem>
+            )}
+          </List>
+        )}
       </DialogContent>
       <DialogActions sx={{ pr: 4, pb: 2 }}>
-        <Tooltip title="Página anterior">
-          <IconButton
-            onClick={handleBackButtonClick}
-            disabled={page === 0}
-            aria-label="previous page"
-          >
-            <KeyboardArrowLeft />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Próxima página">
-          <IconButton
-            onClick={handleNextButtonClick}
-            disabled={
-              page >=
-              Math.ceil(athletesNotInEventData?.data?.results.length / 10) - 1
-            }
-            aria-label="next page"
-          >
-            <KeyboardArrowRight />
-          </IconButton>
-        </Tooltip>
+        {isDisciplineScreenOpen ? null : (
+          <>
+            <Tooltip title="Página anterior">
+              <IconButton
+                onClick={handleBackButtonClick}
+                disabled={page === 0}
+                aria-label="previous page"
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Próxima página">
+              <IconButton
+                onClick={handleNextButtonClick}
+                disabled={
+                  page >=
+                  Math.ceil(athletesNotInEventData?.data?.results.length / 10) -
+                    1
+                }
+                aria-label="next page"
+              >
+                <KeyboardArrowRight />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
       </DialogActions>
     </Dialog>
   );
