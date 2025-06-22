@@ -35,7 +35,7 @@ import { useCreateAthlete } from "../../hooks/useAthletesData";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(true);
 
   const createAthlete = useCreateAthlete();
 
@@ -52,10 +52,7 @@ export default function NewAthletePage() {
       graduation: "",
       category: "",
       skip_number: "",
-      kata: false,
-      kumite: false,
       gender: "",
-      is_student: false,
       birthDate: undefined,
       weight: "",
       student: false,
@@ -71,29 +68,13 @@ export default function NewAthletePage() {
       category: data.category,
       skip_number: data.skip_number,
       gender: data.gender,
-      is_student: data.is_student,
+      student: data.student,
       birth_date: data.birthDate,
       match_type: "",
       weight: data.weight,
     };
 
-    if (data.kumite) {
-      formData.match_type = "kumite";
-      createAthlete.mutate(formData, { onSuccess: () => {} });
-    } else if (data.kata) {
-      formData.match_type = "kata";
-      formData.weight = "";
-      createAthlete.mutate(formData, { onSuccess: () => {} });
-    } else {
-      setError("kata", {
-        type: "manual",
-        message: "Selecione pelo menos uma opção.",
-      });
-      setError("kumite", {
-        type: "manual",
-        message: "Selecione pelo menos uma opção.",
-      });
-    }
+    createAthlete.mutate(formData, { onSuccess: () => {} });
   };
 
   type WeightCategory = keyof typeof WeightOptions;
@@ -121,12 +102,12 @@ export default function NewAthletePage() {
     ].includes(value);
   };
 
-  const kumite = useWatch({
-    control,
-    name: "kumite",
-  });
+  // const kumite = useWatch({
+  //   control,
+  //   name: "kumite",
+  // });
 
-  const isEnabled = currentCategory !== null && kumite === true;
+  const isEnabled = currentCategory !== null;
 
   return (
     <>
@@ -268,13 +249,16 @@ export default function NewAthletePage() {
                         field.onChange(date ? date.format("YYYY-MM-DD") : "");
                       }}
                       value={field.value ? dayjs(field.value) : null}
+                      enableAccessibleFieldDOMStructure={false}
                       slotProps={{
                         textField: {
+                          fullWidth: true,
                           // error: !!localErrors?.publication_date,
                           // helperText:
                           //   localErrors?.publication_date?.message || "",
                         },
                       }}
+                      slots={{ textField: TextField }}
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -379,80 +363,6 @@ export default function NewAthletePage() {
           setExpanded={setExpanded}
           tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
         >
-          <Grid sx={{ p: 3 }} container justifyContent="center" size={3}>
-            <Controller
-              name="kata"
-              control={control}
-              render={({ field }) => (
-                <FormControl
-                  component="fieldset"
-                  variant="standard"
-                  error={!!errors.kata}
-                >
-                  <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                            // handleKataChecked(e);
-                          }}
-                          name="kata"
-                        />
-                      }
-                      label="Kata"
-                      sx={{ justifyContent: "center", marginLeft: 0 }}
-                    />
-                    {!!errors.kata && (
-                      <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.kata.message}
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 3 }} size={9}>
-            <Controller
-              name="kumite"
-              control={control}
-              render={({ field }) => (
-                <FormControl component="fieldset" variant="standard">
-                  {/* <FormLabel component="legend">
-                    Whether to make this document available for RAG pipelines
-                    and information extraction.
-                  </FormLabel> */}
-                  <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                            // handleKumiteChecked(e);
-                          }}
-                          name="kumite"
-                        />
-                      }
-                      label="Kumite"
-                      sx={{ justifyContent: "center", marginLeft: 0 }}
-                    />
-                    {!!errors.kumite && (
-                      <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.kumite.message}
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
-            />
-          </Grid>
           <Grid sx={{ p: 2 }} size={6}>
             <Controller
               name="category"
@@ -475,6 +385,7 @@ export default function NewAthletePage() {
                   error={!!errors.category}
                   helperText={errors.category?.message}
                 >
+                  <MenuItem value="None"></MenuItem>
                   {CategoryOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -495,11 +406,10 @@ export default function NewAthletePage() {
                   label="Peso"
                   fullWidth
                   select
-                  multiline
                   disabled={!isEnabled}
+                  multiline
                   required
                   maxRows={8}
-                  helperText="Só poderá escolher um peso se selecionar Kumite."
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);

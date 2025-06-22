@@ -75,21 +75,12 @@ const fetchSingleAthlete = (athleteId: string | null) => {
   });
 };
 
-export const useFetchSingleAthleteData = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  return useMutation({
-    mutationFn: fetchSingleAthlete,
-    onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
-    },
+export const useFetchSingleAthleteData = (location: any) => {
+  return useQuery({
+    queryKey: ["single-athlete", location],
+    queryFn: () => fetchSingleAthlete(location),
+    staleTime: 0,
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -125,8 +116,8 @@ export const useUpdateAthleteData = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["single-athlete"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
-      queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: () => {
