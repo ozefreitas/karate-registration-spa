@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Card,
@@ -13,32 +12,11 @@ import {
 import { Add } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
-import { useQuery } from "@tanstack/react-query";
-import { useFetchEventsData } from "../../hooks/useEventData";
+import { useSingleFetchEventData } from "../../hooks/useEventData";
 
-export default function IndividualsPage() {
-  type Athlete = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    category: string;
-    gender: string;
-    match_type: string;
-  };
-
-  type Individual = {
-    id: string;
-    athlete: Athlete;
-    competition: string;
-    dojo: number;
-    first_name: string;
-    last_name: string;
-    category: string;
-    match_type: string;
-    gender: string;
-  };
-
+export default function IndividualsPage(props: { state: boolean }) {
   const location = useLocation();
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
@@ -47,12 +25,15 @@ export default function IndividualsPage() {
     setIsModalOpen(false);
   };
 
-  const { data: singleEventData, isLoading: isSingleEventLoading, error: singleEventError } = useFetchEventsData();
+  const {
+    data: singleEventData,
+    isLoading: isSingleEventLoading,
+    error: singleEventError,
+  } = useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
     { key: "last_name", label: "Último Nome" },
-    { key: "match_type", label: "Partida" },
     { key: "category", label: "Escalão" },
     { key: "gender", label: "Género" },
   ];
@@ -80,10 +61,10 @@ export default function IndividualsPage() {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : singleEventData?.data?.results !== undefined ? (
+        ) : singleEventData?.data !== undefined ? (
           <AthletesTable
             type="Individuais"
-            data={singleEventData?.data?.results[0].individuals}
+            data={singleEventData?.data?.individuals}
             columnsHeaders={columnMaping}
             actions={true}
             selection={true}
@@ -94,22 +75,24 @@ export default function IndividualsPage() {
           ></AthletesTable>
         ) : null}
       </Grid>
-      <Grid sx={{ m: 4 }}>
-        <Button
-          sx={{ m: 1 }}
-          variant="contained"
-          size="large"
-          color="success"
-          onClick={() => setIsModalOpen(true)}
-          startIcon={<Add />}
-        >
-          Selecionar Atletas
-        </Button>
-      </Grid>
+      {singleEventData?.data.is_open ? (
+        <Grid sx={{ m: 4 }}>
+          <Button
+            sx={{ m: 1 }}
+            variant="contained"
+            size="large"
+            color="success"
+            onClick={() => setIsModalOpen(true)}
+            startIcon={<Add />}
+          >
+            Selecionar Atletas
+          </Button>
+        </Grid>
+      ) : null}
       <AthletesModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
-        eventData={singleEventData?.data?.results[0]}
+        eventData={singleEventData?.data}
       ></AthletesModal>
     </>
   );

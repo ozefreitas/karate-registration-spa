@@ -1,25 +1,26 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Card,
   CardHeader,
   CardContent,
   Grid,
-  Button,
   Box,
   CircularProgress,
 } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
-import { useFetchEventsData } from "../../hooks/useEventData";
+import { useSingleFetchEventData } from "../../hooks/useEventData";
+import { useLocation } from "react-router-dom";
 
 export default function EventAllRegistryPage() {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(25);
+  const location = useLocation();
 
   const {
     data: singleEventData,
     isLoading: isSingleEventLoading,
     error: singleEventError,
-  } = useFetchEventsData();
+  } = useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
@@ -50,10 +51,10 @@ export default function EventAllRegistryPage() {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : singleEventData?.data?.results !== undefined ? (
+        ) : singleEventData?.data !== undefined ? (
           <AthletesTable
             type="Individuais"
-            data={singleEventData?.data?.results[0].individuals}
+            data={singleEventData?.data.individuals}
             columnsHeaders={columnMaping}
             actions={false}
             selection={false}
