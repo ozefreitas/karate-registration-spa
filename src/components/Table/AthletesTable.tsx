@@ -119,7 +119,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 
 export default function AthletesTable(
   props: Readonly<{
-    type: string;
+    type: "Atletas" | "Equipas" | "Individuais";
     data: any;
     columnsHeaders: any;
     actions: boolean;
@@ -152,6 +152,9 @@ export default function AthletesTable(
   const [actionedAthlete, setActionedAthlete] = useState<string>("");
   const [chosenAthlete, setChosenAthlete] = useState<string>("");
 
+  const { data: singleAthleteData } =
+    useFetchSingleAthleteData(actionedAthlete);
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
@@ -165,8 +168,6 @@ export default function AthletesTable(
     props.setPageSize(parseInt(event.target.value, 10));
     props.setPage(0);
   };
-
-  const fetchSingleAthlete = useFetchSingleAthleteData();
 
   const {
     control: athleteControl,
@@ -235,25 +236,20 @@ export default function AthletesTable(
     athleteId: string
   ) => {
     event.stopPropagation();
-    // retrieve info for the row athlete id
-    fetchSingleAthlete.mutate(athleteId, {
-      onSuccess: (data: any) => {
-        // update the form with that athlete info
-        const formData = {
-          firstName: data?.data.first_name,
-          lastName: data?.data.last_name,
-          graduation: data?.data.graduation,
-          category: data?.data.category,
-          gender: data?.data.gender,
-          skip_number: data?.data.skip_number,
-          is_student: data?.data.is_student,
-          birthDate: data?.data.birth_date,
-        };
-        athleteReset(formData);
-        setActionedAthlete(athleteId);
-        setIsEditModalOpen(true);
-      },
-    });
+    // update the form with that athlete info
+    const formData = {
+      firstName: singleAthleteData?.data.first_name,
+      lastName: singleAthleteData?.data.last_name,
+      graduation: singleAthleteData?.data.graduation,
+      category: singleAthleteData?.data.category,
+      gender: singleAthleteData?.data.gender,
+      skip_number: singleAthleteData?.data.skip_number,
+      is_student: singleAthleteData?.data.is_student,
+      birthDate: singleAthleteData?.data.birth_date,
+    };
+    athleteReset(formData);
+    setActionedAthlete(athleteId);
+    setIsEditModalOpen(true);
   };
 
   const handleRowEditFromIndiv = (
@@ -280,6 +276,7 @@ export default function AthletesTable(
   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: "#e81c24",
       fontSize: 18,
@@ -291,6 +288,7 @@ export default function AthletesTable(
   }));
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    textAlign: "center",
     "&:nth-of-type(even)": {
       // backgroundColor: "gray",
     },
@@ -332,7 +330,7 @@ export default function AthletesTable(
   };
 
   return (
-    <Grid container sx={{ m: 2 }}>
+    <Grid container sx={{ m: 2, mt: 4 }}>
       <TableContainer component={Paper}>
         <Table size="small" aria-label="simple table">
           <TableHead>
@@ -361,9 +359,7 @@ export default function AthletesTable(
               {props.columnsHeaders.map((header: any, index: any) => (
                 <StyledTableCell key={index}>{header.label}</StyledTableCell>
               ))}
-              {props.actions ? (
-                <StyledTableCell align="center">Ações</StyledTableCell>
-              ) : null}
+              {props.actions ? <StyledTableCell>Ações</StyledTableCell> : null}
             </StyledTableRow>
           </TableHead>
           <TableBody>
