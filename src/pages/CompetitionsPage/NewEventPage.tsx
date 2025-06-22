@@ -14,6 +14,9 @@ import {
   Switch,
   Typography,
   Tooltip,
+  List,
+  ListItem,
+  ListItemButton,
   IconButton,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
@@ -35,21 +38,35 @@ import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
 import FormAccordion from "../../dashboard/FormAccordion";
 import { useCreateEvent } from "../../hooks/useEventData";
+import { useCreateDiscipline } from "../../hooks/useEventData";
 
 export default function NewEventPage() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState<boolean>(false);
-  const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(false);
+  const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(true);
   const [createCategories, setCreateCategories] = useState<boolean>(false);
+  const [discipline, setDiscipline] = useState<string>("");
+  const [disciplines, setDisciplines] = useState<string[]>([]);
+  const [disciplineWarning, setDisciplineWarning] = useState<boolean>(false);
+
+  const handleRemove = (item: string) => {
+    const indexToRemove = disciplines.indexOf(item);
+    const newDisciplines = [...disciplines];
+    if (indexToRemove > -1) {
+      newDisciplines.splice(indexToRemove, 1);
+    }
+    setDisciplines(newDisciplines);
+  };
 
   const createEvent = useCreateEvent();
+  const createDiscipline = useCreateDiscipline();
 
   const {
     control: eventMetadataControl,
     handleSubmit,
     setError,
-    reset,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -63,7 +80,7 @@ export default function NewEventPage() {
       description: "",
       custody: "",
       email_contact: "",
-      contact: "",
+      contact: undefined,
       has_teams: false,
       encounter: false,
       encounter_type: "",
@@ -95,32 +112,65 @@ export default function NewEventPage() {
     createEvent.mutate(
       { data: formData },
       {
-        onSuccess: () => {
+        onSuccess: (data: any) => {
+          disciplines.forEach((discipline) => {
+            const disciplineData = { event: data.data.id, name: discipline };
+            createDiscipline.mutate({ data: disciplineData });
+          });
           navigate("/events/");
         },
         onError: (data: any) => {
-          setError("name", { message: data.response.data.name[0] });
-          setError("location", { message: data.response.data.location[0] });
-          setError("season", { message: data.response.data.season[0] });
-          setError("event_date", { message: data.response.data.event_date[0] });
-          setError("contact", { message: data.response.data.contact[0] });
-          setError("email_contact", {
-            message: data.response.data.email_contact[0],
+          const errorData = data.response?.data || {};
+
+          type Fields =
+            | "name"
+            | "location"
+            | "season"
+            | "event_date"
+            | "contact"
+            | "email_contact"
+            | "start_registration"
+            | "end_registration"
+            | "retifications_deadline";
+
+          const fields: Fields[] = [
+            "name",
+            "location",
+            "season",
+            "event_date",
+            "contact",
+            "email_contact",
+          ];
+
+          fields.forEach((field) => {
+            if (errorData[field]?.[0]) {
+              setError(field, { message: errorData[field][0] });
+            }
           });
+
+          const dateFields: Fields[] = [
+            "start_registration",
+            "end_registration",
+            "retifications_deadline",
+          ];
+
+          if (errorData.non_field_errors?.[0]) {
+            const nonFieldMessage = errorData.non_field_errors[0];
+            dateFields.forEach((field) => {
+              if (formData[field] === undefined) {
+                setError(field, { message: nonFieldMessage });
+              }
+            });
+          }
+
+          if (errorData.id?.[0]) {
+            const sameIdMessage = errorData.id[0];
+            setError("name", { message: sameIdMessage });
+            setError("season", { message: sameIdMessage });
+          }
         },
       }
     );
-
-    // else {
-    //   setError("kata", {
-    //     type: "manual",
-    //     message: "Selecione pelo menos uma opção.",
-    //   });
-    //   setError("kumite", {
-    //     type: "manual",
-    //     message: "Selecione pelo menos uma opção.",
-    //   });
-    // }
   };
 
   const {
@@ -153,6 +203,14 @@ export default function NewEventPage() {
   });
 
   const isEnabled = isEncounter === true;
+
+  const hasTegistrations = getValues("has_registrations");
+
+  useEffect(() => {
+    if (hasTegistrations == true) {
+      setExpanded(true);
+    }
+  }, [hasTegistrations]);
 
   return (
     <>
@@ -196,7 +254,7 @@ export default function NewEventPage() {
                           checked={field.value}
                           onChange={(e) => {
                             field.onChange(e.target.checked);
-                            if (isRulesExpanded) {
+                            if (!isRulesExpanded) {
                               setValue("has_registrations", true);
                             }
                             setIsRulesExpanded((prev) => !prev);
@@ -292,7 +350,7 @@ export default function NewEventPage() {
                           {...field}
                           checked={field.value}
                           onChange={(e) => {
-                            if (isRulesExpanded) {
+                            if (isEncounter == true) {
                               field.onChange(e.target.checked);
                               setExpanded((prev) => !prev);
                             }
@@ -534,9 +592,8 @@ export default function NewEventPage() {
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          // error: !!localErrors?.publication_date,
-                          // helperText:
-                          //   localErrors?.publication_date?.message || "",
+                          error: !!errors?.start_registration,
+                          helperText: errors?.start_registration?.message || "",
                         },
                       }}
                     />
@@ -565,9 +622,8 @@ export default function NewEventPage() {
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          // error: !!localErrors?.publication_date,
-                          // helperText:
-                          //   localErrors?.publication_date?.message || "",
+                          error: !!errors?.end_registration,
+                          helperText: errors?.end_registration?.message || "",
                         },
                       }}
                     />
@@ -596,9 +652,9 @@ export default function NewEventPage() {
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          // error: !!localErrors?.publication_date,
-                          // helperText:
-                          //   localErrors?.publication_date?.message || "",
+                          error: !!errors?.retifications_deadline,
+                          helperText:
+                            errors?.retifications_deadline?.message || "",
                         },
                       }}
                     />
@@ -606,6 +662,75 @@ export default function NewEventPage() {
                 </LocalizationProvider>
               )}
             />
+          </Grid>
+        </FormAccordion>
+        <FormAccordion
+          title="Modalidades"
+          expanded={expanded}
+          setExpanded={setExpanded}
+          tooltipMessage="Apenas poderá abrir esta secção se este Evento não for um encontro."
+        >
+          <Grid
+            sx={{ p: 2, pt: 1 }}
+            container
+            justifyContent="center"
+            size={5}
+          >
+            <TextField
+              color="warning"
+              variant={"outlined"}
+              label="Escalão"
+              fullWidth
+              value={discipline}
+              onChange={(e) => {
+                setDisciplineWarning(false);
+                setDiscipline(e.target.value);
+              }}
+              error={disciplineWarning}
+              helperText={
+                disciplineWarning ? "Este campo é obrigatório." : null
+              }
+            />
+            <FormHelperText
+              variant="filled"
+              sx={{ fontSize: 12, marginTop: "10px" }}
+            >
+              Preencha este campo com as Modalidades previstas para este Evento.
+              <br></br> Depois de adicionar, pode apagar ao carregar na
+              Modalidade que aparecerá emediatamente ao lado.
+            </FormHelperText>
+          </Grid>
+          <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
+            <Tooltip title="Adicionar">
+              <IconButton
+                onClick={() => {
+                  if (discipline !== "") {
+                    setDisciplines((prev) => [...prev, discipline]);
+                    setDiscipline("");
+                  } else {
+                    setDisciplineWarning(true);
+                  }
+                }}
+              >
+                <Add color="success" />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid size={3.5} sx={{ ml: 3 }}>
+            {disciplines.length !== 0 ? (
+              <List dense>
+                {disciplines.map((discipline, index) => (
+                  <ListItem key={index}>
+                    <ListItemButton
+                      onClick={() => handleRemove(discipline)}
+                      sx={{ p: 1 }}
+                    >
+                      {discipline}
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            ) : null}
           </Grid>
         </FormAccordion>
         <FormAccordion

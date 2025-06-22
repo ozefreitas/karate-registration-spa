@@ -21,8 +21,8 @@ import {
   useFetchEventRate,
 } from "../../hooks/useEventData";
 import InfoButton from "../InfoButton/InfoButton";
-import DeleteButton from "../Buttons/DeleteButton";
 import GenerateButton from "../GenerateButton/GenerateButton";
+import SettingsButton from "../SettingsButton/SettingsButton";
 import {
   Event,
   LocationPin,
@@ -35,15 +35,25 @@ import {
   ThumbDown,
   ThumbsUpDown,
   Info,
+  Delete,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useRemoveEvent } from "../../hooks/useEventData";
-import { Navigate } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
+import DeleteEventModal from "../EventsModals/DeleteEventModal";
 
-export default function CompetitionCard(props: { userRole: string }) {
+export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
   const location = useLocation();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+
+  const handleModalClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleModalOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
   const {
     data: singleEventData,
     isLoading: isSingleEventLoading,
@@ -72,8 +82,6 @@ export default function CompetitionCard(props: { userRole: string }) {
       },
     });
   };
-
-  const { mutate } = useRemoveEvent();
 
   if (singleEventError) return <Navigate to="/not_found/" />;
 
@@ -341,12 +349,22 @@ export default function CompetitionCard(props: { userRole: string }) {
                     to="individuals/"
                   ></AddButton>
                 ) : (
-                  <DeleteButton
-                    label="Eliminar Evento"
-                    to="/events/"
-                    id={singleEventData?.data?.id}
-                    mutation={mutate}
-                  ></DeleteButton>
+                  <>
+                    <Button
+                      sx={{ m: 1 }}
+                      variant="contained"
+                      size="large"
+                      color="error"
+                      onClick={handleModalOpen}
+                      startIcon={<Delete />}
+                    >
+                      Eliminar Evento
+                    </Button>
+                    <SettingsButton
+                      size="large"
+                      label="Editar Evento"
+                    ></SettingsButton>
+                  </>
                 )}
                 {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
@@ -366,6 +384,12 @@ export default function CompetitionCard(props: { userRole: string }) {
           </Card>
         </Grid>
       </Grid>
+      <DeleteEventModal
+        isModalOpen={isDeleteModalOpen}
+        handleModalClose={handleModalClose}
+        handleModalOpen={handleModalOpen}
+        id={location.pathname.split("/").slice(-2)[0]}
+      ></DeleteEventModal>
     </>
   );
 }

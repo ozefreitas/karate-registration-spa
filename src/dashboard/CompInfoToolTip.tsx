@@ -8,7 +8,10 @@ export default function CompInfoToolTip(
       <Tooltip placement="top" sx={{ cursor: "pointer" }} title={props.title}>
         <ListItemIcon>{props.icon}</ListItemIcon>
       </Tooltip>
-      <ListItemText primary={props.text} />
+      <ListItemText
+        sx={{ color: props.text ? "black" : "GrayText" }}
+        primary={props.text ? props.text : "Não se aplica"}
+      />
     </ListItem>
   );
 }
