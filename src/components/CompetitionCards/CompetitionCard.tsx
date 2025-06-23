@@ -13,6 +13,7 @@ import {
   Button,
   Box,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import AddButton from "../AddButton/AddButton";
 import {
@@ -343,7 +344,9 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
                   rowGap: 2,
                 }}
               >
-                {props.userRole !== "national_association" ? (
+                {!["national_association", "superuser"].includes(
+                  props.userRole
+                ) ? (
                   <AddButton
                     label="Consultar Individuais"
                     to="individuals/"
@@ -369,11 +372,19 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
                 {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
-                <InfoButton
-                  disabled={props.userRole !== "national_association"}
-                  label="Consultar Inscrições"
-                  to="all_registry/"
-                ></InfoButton>
+                <Tooltip title="Esta funcionalidade ficará disponível em breve">
+                  <span>
+                    <InfoButton
+                      disabled={
+                        !["national_association", "superuser"].includes(
+                          props.userRole
+                        )
+                      }
+                      label="Consultar Inscrições"
+                      to="all_registry/"
+                    ></InfoButton>
+                  </span>
+                </Tooltip>
                 <InfoButton label="Consultar Sorteios" to="draw/"></InfoButton>
                 <GenerateButton
                   label="Gerar Sorteio"

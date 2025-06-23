@@ -549,7 +549,8 @@ export default function PersonalInfoSection(
                         style: {
                           fontSize: 18,
                           marginRight: 10,
-                          color: field.value === "N/A" ? "lightgray" : "inherit",
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
                         },
                       },
                     }}

@@ -39,8 +39,6 @@ export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
     location.pathname.split("/").slice(-3)[0]
   );
 
-  console.log(singleEventData?.data);
-
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
     { key: "last_name", label: "Último Nome" },
@@ -106,7 +104,7 @@ export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
         )}
       </Grid>
       {singleEventData?.data.is_open ? (
-        <Grid sx={{ m: 4 }}>
+        <Grid container justifyContent="flex-end" sx={{ m: 4 }}>
           <Button
             sx={{ m: 1 }}
             variant="contained"

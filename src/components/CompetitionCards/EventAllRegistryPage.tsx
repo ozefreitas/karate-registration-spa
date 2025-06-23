@@ -25,7 +25,6 @@ export default function EventAllRegistryPage() {
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
     { key: "last_name", label: "Último Nome" },
-    { key: "match_type", label: "Partida" },
     { key: "category", label: "Escalão" },
     { key: "gender", label: "Género" },
   ];

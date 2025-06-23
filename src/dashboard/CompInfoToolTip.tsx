@@ -5,7 +5,7 @@ export default function CompInfoToolTip(
 ) {
   return (
     <ListItem sx={{ m: 0, pb: 0 }}>
-      <Tooltip placement="top" sx={{ cursor: "pointer" }} title={props.title}>
+      <Tooltip placement="left" sx={{ cursor: "pointer" }} title={props.title}>
         <ListItemIcon>{props.icon}</ListItemIcon>
       </Tooltip>
       <ListItemText

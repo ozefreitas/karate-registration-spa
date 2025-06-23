@@ -92,7 +92,7 @@ export default function AthletesPage() {
         ) : null}
       </Grid>
       {userRole !== "national_association" ? (
-        <Grid sx={{ m: 4 }}>
+        <Grid sx={{ m: 3, mt: 2 }}>
           <AddButton label="Adicionar" to="new_athlete/"></AddButton>
         </Grid>
       ) : null}
