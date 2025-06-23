@@ -1,3 +1,4 @@
+import { useFetchDisciplinesData } from "./useEventData";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
@@ -75,12 +76,13 @@ const fetchSingleAthlete = (athleteId: string | null) => {
   });
 };
 
-export const useFetchSingleAthleteData = (location: any) => {
+export const useFetchSingleAthleteData = (athleteId: any) => {
   return useQuery({
     queryKey: ["single-athlete", location],
-    queryFn: () => fetchSingleAthlete(location),
+    queryFn: () => fetchSingleAthlete(athleteId),
     staleTime: 0,
     refetchOnWindowFocus: false,
+    enabled: !!athleteId,
   });
 };
 
@@ -141,7 +143,7 @@ const fetchAthletesNotInEvent = (page: number, pageSize: number) => {
       Authorization: `Token ${token}`,
     },
     params: {
-      not_in_competition: location.pathname.split("/")[2],
+      not_in_event: location.pathname.split("/")[2],
       page: page,
       page_size: pageSize,
     },
@@ -265,5 +267,30 @@ export const useRemoveAllAthletesData = () => {
         preventDuplicate: true,
       });
     },
+  });
+};
+
+const fetchDisciplinesnotInAthlete = (athleteId: string, eventId: string) => {
+  const token = localStorage.getItem("token");
+  return axios.get(
+    `http://127.0.0.1:8000/athletes/${athleteId}/unregistered_modalities/${eventId}/`,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useFetchDisciplinesnotInAthleteData = (
+  athleteId: string,
+  eventId: string
+) => {
+  return useQuery({
+    queryKey: ["disciplines-not-in-athlete", athleteId, eventId],
+    queryFn: () => fetchDisciplinesnotInAthlete(athleteId, eventId),
+    refetchOnWindowFocus: false,
+    // refetchOnMount: false,
+    enabled: athleteId !== "",
   });
 };

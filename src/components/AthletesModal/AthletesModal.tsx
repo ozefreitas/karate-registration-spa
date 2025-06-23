@@ -20,6 +20,9 @@ import {
   FormControlLabel,
   FormHelperText,
   Switch,
+  Checkbox,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -36,8 +39,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import {
   useFetchDisciplinesData,
   useAddDisciplineAthlete,
+  useAddEventAthlete,
 } from "../../hooks/useEventData";
-import { useFetchAthletesNotInEvent } from "../../hooks/useAthletesData";
+import {
+  useFetchAthletesNotInEvent,
+  useFetchDisciplinesnotInAthleteData,
+} from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
@@ -108,7 +115,6 @@ export default function AthletesModal(
     gender: string;
   };
 
-  const { enqueueSnackbar } = useSnackbar();
   const [page, setPage] = useState<number>(0);
 
   const handleBackButtonClick = (
@@ -121,6 +127,46 @@ export default function AthletesModal(
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setPage(page + 1);
+  };
+
+  const [checked, setChecked] = React.useState<string[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleToggle = (value: string) => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  const addEventAthlete = useAddEventAthlete();
+
+  const handleIndividualsSubmit = (athleteList: string[]) => {
+    if (athleteList.length === 0) {
+      enqueueSnackbar("Tem de selecionar pelo menos um atleta.", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    } else {
+      athleteList.forEach((athlete: string) => {
+        const athleteData = { athlete_id: athlete };
+        const data = { eventId: props.eventData.id, data: athleteData };
+        addEventAthlete.mutate(data);
+      });
+      setChecked([]);
+      props.handleModalClose();
+    }
   };
 
   const [isDisciplineScreenOpen, setIsDisciplineScreenOpen] =
@@ -136,16 +182,35 @@ export default function AthletesModal(
 
   const location = useLocation();
   const [currentAthleteId, setCurrentAthleteId] = useState<string>("");
-  
+  const [disciplinesFree, setDisciplinesFree] = useState<string[]>([]);
+  const [isMutationDelayActive, setIsMutationDelayActive] =
+    useState<boolean>(false);
+
+  const { data: modalitiesFreeData } = useFetchDisciplinesnotInAthleteData(
+    currentAthleteId,
+    props.eventData?.id
+  );
+
+  React.useEffect(() => {
+    if (!modalitiesFreeData?.data) return;
+
+    const newDisciplines = modalitiesFreeData.data.map(
+      (modalities: any) => `${modalities.name}_${modalities.id}`
+    );
+
+    setDisciplinesFree((prev) => [...prev, ...newDisciplines]);
+  }, [modalitiesFreeData]);
+
   const { data: disciplinesData } = useFetchDisciplinesData(
     location.pathname.split("/").slice(-3)[0]
   );
+
   const addDisciplineAthlete = useAddDisciplineAthlete();
 
   React.useEffect(() => {
     const defaultValues: any = {};
     disciplinesData?.data.results.forEach((discipline: any) => {
-      defaultValues[`${discipline.name}_${discipline.id}`] = false; // or prefill from backend if needed
+      defaultValues[`${discipline.name}_${discipline.id}`] = false;
     });
 
     reset(defaultValues);
@@ -161,56 +226,61 @@ export default function AthletesModal(
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit = (data: any) => {
-    Object.entries(data).forEach(([discipline, value]) => {
-      if (value) {
-        const data = {
+  const onSubmit = async (data: any) => {
+    if (Object.values(data).every((value) => value === false)) {
+      enqueueSnackbar("Tem de selecionar pelo menos uma modalidade.", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    }
+    setIsMutationDelayActive(true);
+    setDisciplinesFree([]);
+
+    const entries = Object.entries(data).filter(([, value]) => value);
+
+    await Promise.all(
+      entries.map(([discipline]) => {
+        const payload = {
           disciplineId: discipline.split("_")[1],
           data: { athlete_id: currentAthleteId },
         };
-        addDisciplineAthlete.mutate(data, {
-          onSuccess: () => {
-            props.handleModalClose();
-            handleDisciplineScreenClose();
-          },
-        });
-      }
-    });
+        return addDisciplineAthlete.mutateAsync(payload);
+      })
+    );
+
+    refetch();
+
+    setTimeout(() => {
+      handleDisciplineScreenClose();
+    }, 1500);
+
+    setIsMutationDelayActive(false);
   };
 
   const {
     data: athletesNotInEventData,
     isLoading: isAthletesNotInEventLoading,
     error: athletesNotInEventError,
+    refetch,
   } = useFetchAthletesNotInEvent(page + 1, 10);
 
-  // const handleIndividualsSubmit = (athleteList: string[]) => {
-  //   if (athleteList.length === 0) {
-  //     enqueueSnackbar("Tem de selecionar pelo menos um atleta.", {
-  //       variant: "warning",
-  //       anchorOrigin: {
-  //         vertical: "top",
-  //         horizontal: "center",
-  //       },
-  //       autoHideDuration: 5000,
-  //       preventDuplicate: true,
-  //     });
-  //   } else {
-  //     athleteList.forEach((athlete: string) => {
-  //       const athleteData = { athlete_id: athlete };
-  //       const data = { eventId: props.eventData.id, data: athleteData };
-  //       addEventAthlete.mutate(data);
-  //     });
-  //     // setChecked([]);
-  //     props.handleModalClose();
-  //   }
-  // };
+  React.useEffect(() => {
+    refetch();
+  }, [location]);
 
   return (
     <Dialog
       // keepMounted
       open={props.isModalOpen}
-      onClose={props.handleModalClose}
+      onClose={() => {
+        setIsDisciplineScreenOpen(false);
+        props.handleModalClose();
+      }}
       maxWidth="md"
       fullWidth
       slots={{
@@ -241,7 +311,7 @@ export default function AthletesModal(
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Selecionar Atletas para {props.eventData?.name}
           </Typography>
-          {athletesNotInEventData?.data.length !== 0 &&
+          {athletesNotInEventData?.data.results.length !== 0 &&
           !isDisciplineScreenOpen ? (
             <Search>
               <SearchIconWrapper>
@@ -259,9 +329,13 @@ export default function AthletesModal(
               size="large"
               color="inherit"
               onClick={() => {
-                handleSubmit(onSubmit)();
+                if (isDisciplineScreenOpen) {
+                  handleSubmit(onSubmit)();
+                } else {
+                  handleIndividualsSubmit(checked);
+                }
               }}
-              disabled={athletesNotInEventData?.data.length === 0}
+              disabled={athletesNotInEventData?.data.results.length === 0}
             >
               Adicionar
             </Button>
@@ -290,50 +364,57 @@ export default function AthletesModal(
                 as tais em que este Atleta irá participar.
               </Typography>
             </Grid>
-            {Object.entries(control._defaultValues).map(
-              ([fieldName, defaultValue]) => (
-                <Grid
-                  key={fieldName}
-                  size={6}
-                  container
-                  justifyContent="center"
-                >
-                  <Controller
-                    name={fieldName}
-                    control={control}
-                    render={({ field }) => (
-                      <FormControl
-                        component="fieldset"
-                        variant="standard"
-                        error={!!errors[fieldName]}
-                      >
-                        <Stack spacing={1}>
-                          <FormControlLabel
-                            labelPlacement="start"
-                            control={
-                              <Switch
-                                {...field}
-                                checked={field.value}
-                                onChange={(e) => {
-                                  field.onChange(e.target.checked);
-                                }}
-                                name={fieldName}
-                              />
-                            }
-                            label={fieldName.split("_")[0]}
-                            sx={{ justifyContent: "center", marginLeft: 0 }}
-                          />
-                          {!!errors[fieldName] && (
-                            <FormHelperText error sx={{ marginLeft: "14px" }}>
-                              {errors[fieldName].message}
-                            </FormHelperText>
-                          )}
-                        </Stack>
-                      </FormControl>
-                    )}
-                  />
-                </Grid>
-              )
+            {disciplinesFree.length !== 0 && !isMutationDelayActive ? (
+              Object.keys(control._defaultValues)
+                .filter((fieldName) => disciplinesFree?.includes(fieldName))
+                .map((fieldName) => (
+                  <Grid
+                    key={fieldName}
+                    size={12}
+                    container
+                    sx={{ p: 1 }}
+                    justifyContent="center"
+                  >
+                    <Controller
+                      name={fieldName}
+                      control={control}
+                      render={({ field }) => (
+                        <FormControl
+                          component="fieldset"
+                          variant="standard"
+                          error={!!errors[fieldName]}
+                        >
+                          <Stack spacing={1}>
+                            <FormControlLabel
+                              labelPlacement="start"
+                              control={
+                                <Switch
+                                  {...field}
+                                  checked={field.value}
+                                  onChange={(e) => {
+                                    field.onChange(e.target.checked);
+                                  }}
+                                  name={fieldName}
+                                />
+                              }
+                              label={fieldName.split("_")[0]}
+                              sx={{ justifyContent: "center", marginLeft: 0 }}
+                            />
+                            {!!errors[fieldName] && (
+                              <FormHelperText error sx={{ marginLeft: "14px" }}>
+                                {errors[fieldName].message}
+                              </FormHelperText>
+                            )}
+                          </Stack>
+                        </FormControl>
+                      )}
+                    />
+                  </Grid>
+                ))
+            ) : (
+              <Grid container justifyContent="center" size={12}>
+                <CircularProgress />
+              </Grid>
             )}
           </Grid>
         ) : (
@@ -349,22 +430,38 @@ export default function AthletesModal(
                     key={index}
                     disablePadding
                     secondaryAction={
-                      <Tooltip title="Selecionar Modalidade">
-                        <IconButton
-                          onClick={() => {
-                            setCurrentAthleteId(athlete.id);
-                            handleDisciplineScreenOpen();
-                          }}
-                          aria-label="go to disciplines selection"
-                        >
-                          <KeyboardArrowRight color="success" />
-                        </IconButton>
-                      </Tooltip>
+                      disciplinesData?.data.results.length !== 0 ? (
+                        <Tooltip title="Selecionar Modalidade">
+                          <IconButton
+                            onClick={() => {
+                              setCurrentAthleteId(athlete.id);
+                              handleDisciplineScreenOpen();
+                            }}
+                            aria-label="go to disciplines selection"
+                          >
+                            <KeyboardArrowRight color="success" />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <label>
+                          <Checkbox
+                            sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                            edge="end"
+                            onChange={() => handleToggle(athlete.id)}
+                            checked={checked.includes(athlete.id)}
+                            slotProps={{
+                              input: {
+                                "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
+                              },
+                            }}
+                          />
+                        </label>
+                      )
                     }
                   >
                     <ListItemButton
                       key={index}
-                      // onClick={() => handleToggle(athlete.id)}
+                      onClick={() => handleToggle(athlete.id)}
                     >
                       <ListItemText
                         primary={`${athlete.first_name} ${athlete.last_name}`}

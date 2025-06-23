@@ -331,229 +331,238 @@ export default function AthletesTable(
   };
 
   return (
-    <Grid container sx={{ m: 2 }}>
-      <TableContainer component={Paper}>
-        <Table size="small" aria-label="simple table">
-          <TableHead>
-            <StyledTableRow>
-              {props.selection ? (
-                <StyledTableCell>
-                  <label>
-                    <Checkbox
-                      color="primary"
-                      indeterminate={
-                        selected.length > 0 &&
-                        selected.length < props.data.length
-                      }
-                      checked={
-                        props.data.length > 0 &&
-                        selected.length === props.data.length
-                      }
-                      onChange={handleSelectAllClick}
-                      slotProps={{
-                        input: { "aria-label": "select all athletes" },
-                      }}
-                    />
-                  </label>
-                </StyledTableCell>
-              ) : null}
-              {props.columnsHeaders.map((header: any, index: any) => (
-                <StyledTableCell key={index}>{header.label}</StyledTableCell>
-              ))}
-              {props.actions ? <StyledTableCell>Ações</StyledTableCell> : null}
-            </StyledTableRow>
-          </TableHead>
-          <TableBody>
-            {props.data.length >= 1 ? (
-              props.data.map((row: any) => {
-                const isItemSelected = selected.includes(row.id);
-                return (
-                  <StyledTableRow
-                    hover
-                    selected={isItemSelected}
-                    onClick={(event) => handleRowClick(event, row.id)}
-                    key={row.id}
-                  >
-                    {props.selection ? (
-                      <StyledTableCell>
+    <>
+      {props.data.length == 0 ? (
+        <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Typography variant="h6" sx={{ color: "gray" }}>
+            Não foram encotrados registos.
+          </Typography>
+        </Grid>
+      ) : (
+        <Grid container sx={{ m: 2 }}>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="simple table">
+              <TableHead>
+                <StyledTableRow>
+                  {props.selection ? (
+                    <StyledTableCell>
+                      <label>
                         <Checkbox
                           color="primary"
-                          checked={isItemSelected}
+                          indeterminate={
+                            selected.length > 0 &&
+                            selected.length < props.data.length
+                          }
+                          checked={
+                            props.data.length > 0 &&
+                            selected.length === props.data.length
+                          }
+                          onChange={handleSelectAllClick}
                           slotProps={{
-                            input: { "aria-label": "select athlete" },
+                            input: { "aria-label": "select all athletes" },
                           }}
                         />
-                      </StyledTableCell>
-                    ) : null}
-                    {props.columnsHeaders.map((header: any, index: any) => (
-                      <StyledTableCell key={index} component="th" scope="row">
-                        {row[header.key]}
-                      </StyledTableCell>
-                    ))}
-                    {props.actions ? (
-                      <StyledTableCell align="center">
-                        <Stack
-                          direction={{
-                            xs: "row",
-                          }}
-                          sx={{
-                            gap: 2,
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Tooltip arrow title="Consultar">
-                            <IconButton
-                              onClick={() => {
-                                if (props.type === "Equipas") {
-                                  navigate(`/teams/${row.id}/`);
-                                } else {
-                                  navigate(`/athletes/${row.id}/`);
-                                }
-                              }}
-                            >
-                              <Visibility color="primary"></Visibility>
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Editar">
-                            <IconButton
-                              onClick={(e) => {
-                                if (props.type == "Individuais") {
-                                  handleRowEditFromIndiv(e, row.id);
-                                } else if (props.type == "Equipas") {
-                                  handleRowEditFromTeam(e);
-                                } else {
-                                  handleRowEdit(e, row.id);
-                                }
-                              }}
-                            >
-                              <Edit color="warning"></Edit>
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip arrow title="Remover">
-                            <IconButton
-                              onClick={(e) => {
-                                handleRowDelete(e, row.id);
-                              }}
-                            >
-                              <Delete color="error"></Delete>
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                        {props.type === "Equipas" ? (
-                          <ChooseEditModal
-                            isModalOpen={isChooseModalOpen}
-                            handleModalClose={handleChooseModalClose}
-                            isEditModalOpen={isTeamAthleteEditModalOpen}
-                            handleEditModalClose={
-                              handleTeamAthleteEditModalClose
-                            }
-                            handleEditModalOpen={handleTeamAthleteEditModalOpen}
-                            id={row.id}
-                            chosenAthlete={chosenAthlete}
-                            setChosenAthlete={setChosenAthlete}
-                            reset={athleteReset}
-                            control={athleteControl}
-                            errors={athleteErrors}
-                            handleSubmit={athleteHandleSubmit}
-                          ></ChooseEditModal>
-                        ) : null}
-                      </StyledTableCell>
-                    ) : null}
-                  </StyledTableRow>
-                );
-              })
-            ) : (
-              <StyledTableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <StyledTableCell component="th" scope="row">
-                  Não há resultados para essa procura
-                </StyledTableCell>
-              </StyledTableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <StyledTableCell>
-                <Tooltip arrow title="Remover Selecionados">
-                  <IconButton
-                    disabled={selected.length === 0}
-                    onClick={(e) => {
-                      handleSelectionDelete(e);
+                      </label>
+                    </StyledTableCell>
+                  ) : null}
+                  {props.columnsHeaders.map((header: any, index: any) => (
+                    <StyledTableCell key={index}>
+                      {header.label}
+                    </StyledTableCell>
+                  ))}
+                  {props.actions ? (
+                    <StyledTableCell>Ações</StyledTableCell>
+                  ) : null}
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {props.data.map((row: any) => {
+                  const isItemSelected = selected.includes(row.id);
+                  return (
+                    <StyledTableRow
+                      hover
+                      selected={isItemSelected}
+                      onClick={(event) => handleRowClick(event, row.id)}
+                      key={row.id}
+                    >
+                      {props.selection ? (
+                        <StyledTableCell>
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            slotProps={{
+                              input: { "aria-label": "select athlete" },
+                            }}
+                          />
+                        </StyledTableCell>
+                      ) : null}
+                      {props.columnsHeaders.map((header: any, index: any) => (
+                        <StyledTableCell key={index} component="th" scope="row">
+                          {row[header.key]}
+                        </StyledTableCell>
+                      ))}
+                      {props.actions ? (
+                        <StyledTableCell align="center">
+                          <Stack
+                            direction={{
+                              xs: "row",
+                            }}
+                            sx={{
+                              gap: 2,
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Tooltip arrow title="Consultar">
+                              <IconButton
+                                onClick={() => {
+                                  if (props.type === "Equipas") {
+                                    navigate(`/teams/${row.id}/`);
+                                  } else {
+                                    navigate(`/athletes/${row.id}/`);
+                                  }
+                                }}
+                              >
+                                <Visibility color="primary"></Visibility>
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip arrow title="Editar">
+                              <IconButton
+                                onClick={(e) => {
+                                  if (props.type == "Individuais") {
+                                    handleRowEditFromIndiv(e, row.id);
+                                  } else if (props.type == "Equipas") {
+                                    handleRowEditFromTeam(e);
+                                  } else {
+                                    handleRowEdit(e, row.id);
+                                  }
+                                }}
+                              >
+                                <Edit color="warning"></Edit>
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip arrow title="Remover">
+                              <IconButton
+                                onClick={(e) => {
+                                  handleRowDelete(e, row.id);
+                                }}
+                              >
+                                <Delete color="error"></Delete>
+                              </IconButton>
+                            </Tooltip>
+                          </Stack>
+                          {props.type === "Equipas" ? (
+                            <ChooseEditModal
+                              isModalOpen={isChooseModalOpen}
+                              handleModalClose={handleChooseModalClose}
+                              isEditModalOpen={isTeamAthleteEditModalOpen}
+                              handleEditModalClose={
+                                handleTeamAthleteEditModalClose
+                              }
+                              handleEditModalOpen={
+                                handleTeamAthleteEditModalOpen
+                              }
+                              id={row.id}
+                              chosenAthlete={chosenAthlete}
+                              setChosenAthlete={setChosenAthlete}
+                              reset={athleteReset}
+                              control={athleteControl}
+                              errors={athleteErrors}
+                              handleSubmit={athleteHandleSubmit}
+                            ></ChooseEditModal>
+                          ) : null}
+                        </StyledTableCell>
+                      ) : null}
+                    </StyledTableRow>
+                  );
+                })}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <StyledTableCell>
+                    <Tooltip arrow title="Remover Selecionados">
+                      <IconButton
+                        disabled={selected.length === 0}
+                        onClick={(e) => {
+                          handleSelectionDelete(e);
+                        }}
+                      >
+                        <Delete
+                          color={selected.length === 0 ? "disabled" : "error"}
+                        ></Delete>
+                      </IconButton>
+                    </Tooltip>
+                  </StyledTableCell>
+                  <TablePagination
+                    // labelRowsPerPage="Entradas por página:"
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "All", value: -1 },
+                    ]}
+                    count={props.data.length}
+                    rowsPerPage={props.pageSize}
+                    page={props.page}
+                    slotProps={{
+                      select: {
+                        inputProps: {
+                          "aria-label": "entradas por pagina",
+                        },
+                        native: true,
+                      },
                     }}
-                  >
-                    <Delete
-                      color={selected.length === 0 ? "disabled" : "error"}
-                    ></Delete>
-                  </IconButton>
-                </Tooltip>
-              </StyledTableCell>
-              <TablePagination
-                // labelRowsPerPage="Entradas por página:"
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                count={props.data.length}
-                rowsPerPage={props.pageSize}
-                page={props.page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      "aria-label": "entradas por pagina",
-                    },
-                    native: true,
-                  },
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-      {props.type !== "Equipas" ? (
-        <>
-          <EditAthleteModal
-            isModalOpen={isEditModalOpen}
-            handleModalClose={handleEditModalClose}
-            id={actionedAthlete}
-            control={athleteControl}
-            errors={athleteErrors}
-            handleSubmit={athleteHandleSubmit}
-          ></EditAthleteModal>
-          <EditIndividualModal
-            isModalOpen={isEditConfirmModalOpen}
-            handleModalClose={handleEditConfirmModalClose}
-            handleEditModalOpen={handleEditModalOpen}
-            id={actionedAthlete}
-            reset={athleteReset}
-            control={athleteControl}
-            errors={athleteErrors}
-          ></EditIndividualModal>
-        </>
-      ) : null}
-      {selected.length > 0 ? (
-        <DeleteAthleteModal
-          isModalOpen={isDeleteAllModalOpen}
-          handleModalClose={handleDeleteAllModalClose}
-          handleModalOpen={handleDeleteAllModalOpen}
-          from={props.type}
-          id={props.data.length === selected.length ? undefined : selected}
-          setSelected={setSelected}
-          discipline={props.discipline}
-        ></DeleteAthleteModal>
-      ) : (
-        <DeleteAthleteModal
-          isModalOpen={isDeleteModalOpen}
-          handleModalClose={handleDeleteModalClose}
-          handleModalOpen={handleDeleteModalOpen}
-          from={props.type}
-          id={actionedAthlete}
-          setSelected={setSelected}
-          discipline={props.discipline}
-        ></DeleteAthleteModal>
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+          {props.type !== "Equipas" ? (
+            <>
+              <EditAthleteModal
+                isModalOpen={isEditModalOpen}
+                handleModalClose={handleEditModalClose}
+                id={actionedAthlete}
+                control={athleteControl}
+                errors={athleteErrors}
+                handleSubmit={athleteHandleSubmit}
+              ></EditAthleteModal>
+              <EditIndividualModal
+                isModalOpen={isEditConfirmModalOpen}
+                handleModalClose={handleEditConfirmModalClose}
+                handleEditModalOpen={handleEditModalOpen}
+                id={actionedAthlete}
+                reset={athleteReset}
+                control={athleteControl}
+                errors={athleteErrors}
+              ></EditIndividualModal>
+            </>
+          ) : null}
+          {selected.length > 0 ? (
+            <DeleteAthleteModal
+              isModalOpen={isDeleteAllModalOpen}
+              handleModalClose={handleDeleteAllModalClose}
+              handleModalOpen={handleDeleteAllModalOpen}
+              from={props.type}
+              id={props.data.length === selected.length ? undefined : selected}
+              setSelected={setSelected}
+              discipline={props.discipline}
+            ></DeleteAthleteModal>
+          ) : (
+            <DeleteAthleteModal
+              isModalOpen={isDeleteModalOpen}
+              handleModalClose={handleDeleteModalClose}
+              handleModalOpen={handleDeleteModalOpen}
+              from={props.type}
+              id={actionedAthlete}
+              setSelected={setSelected}
+              discipline={props.discipline}
+            ></DeleteAthleteModal>
+          )}
+        </Grid>
       )}
-    </Grid>
+    </>
   );
 }
