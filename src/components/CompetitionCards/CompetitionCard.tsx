@@ -15,15 +15,15 @@ import {
   CircularProgress,
   Tooltip,
 } from "@mui/material";
-import AddButton from "../AddButton/AddButton";
+import AddButton from "../Buttons/AddButton";
 import {
   useSingleFetchEventData,
   useRateEvent,
   useFetchEventRate,
 } from "../../hooks/useEventData";
-import InfoButton from "../InfoButton/InfoButton";
-import GenerateButton from "../GenerateButton/GenerateButton";
-import SettingsButton from "../SettingsButton/SettingsButton";
+import InfoButton from "../Buttons/InfoButton";
+import GenerateButton from "../Buttons/GenerateButton";
+import SettingsButton from "../Buttons/SettingsButton";
 import {
   Event,
   LocationPin,
@@ -347,10 +347,33 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
                 {!["national_association", "superuser"].includes(
                   props.userRole
                 ) ? (
-                  <AddButton
-                    label="Consultar Individuais"
-                    to="individuals/"
-                  ></AddButton>
+                  props.userRole === "subed_dojo" ? (
+                    <Tooltip
+                      disableHoverListener={!singleEventData?.data.has_ended}
+                      title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
+                    >
+                      <span>
+                        <AddButton
+                          label="Consultar Inscrições"
+                          to="individuals/"
+                          disabled={singleEventData?.data.has_ended}
+                        ></AddButton>
+                      </span>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip
+                      disableHoverListener={props.userRole === "subed_dojo"}
+                      title="Comece uma subscrição para ter acesso a esta funcionalidade"
+                    >
+                      <span>
+                        <AddButton
+                          label="Adicionar/Consultar Inscrições"
+                          to="individuals/"
+                          disabled={props.userRole === "free_dojo"}
+                        ></AddButton>
+                      </span>
+                    </Tooltip>
+                  )
                 ) : (
                   <>
                     <Button
@@ -372,7 +395,13 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
                 {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
-                <Tooltip title="Esta funcionalidade ficará disponível em breve">
+                <Tooltip
+                  disableHoverListener={[
+                    "national_association",
+                    "superuser",
+                  ].includes(props.userRole)}
+                  title="Esta funcionalidade ficará disponível em breve"
+                >
                   <span>
                     <InfoButton
                       disabled={
@@ -380,16 +409,20 @@ export default function CompetitionCard(props: Readonly<{ userRole: string }>) {
                           props.userRole
                         )
                       }
-                      label="Consultar Inscrições"
+                      label="Inscrições completas"
                       to="all_registry/"
                     ></InfoButton>
                   </span>
                 </Tooltip>
                 <InfoButton label="Consultar Sorteios" to="draw/"></InfoButton>
-                <GenerateButton
-                  label="Gerar Sorteio"
-                  to="draw/generate/"
-                ></GenerateButton>
+                {["national_association", "superuser"].includes(
+                  props.userRole
+                ) ? (
+                  <GenerateButton
+                    label="Gerar Sorteio"
+                    to="draw/generate/"
+                  ></GenerateButton>
+                ) : null}
               </Grid>
             </CardContent>
           </Card>
