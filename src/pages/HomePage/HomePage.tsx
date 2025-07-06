@@ -10,13 +10,13 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import AthletesHomeComponent from "./AthletesHomeComponent";
-import TeamsHomeComponent from "./TeamsHomeComponent";
-import NextCompHomeComponent from "./NextCompHomeComponent";
-import LastCompQualiHomeComponent from "./LastCompQualiHomeComponent";
+import AthletesHomeComponent from "../../components/home-cards/AthletesHomeComponent";
+import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
+import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
+import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import { useFetchNotifications } from "../../hooks/useAuth";
 
-export default function HomePage() {
+export default function HomePage(props: Readonly<{ userRole: string }>) {
   type Notification = {
     notification: string;
     urgency: string;
@@ -90,26 +90,16 @@ export default function HomePage() {
       </Card>
       <Grid container size={12}>
         <Grid size={6}>
-          <AthletesHomeComponent></AthletesHomeComponent>
-          <TeamsHomeComponent></TeamsHomeComponent>
+          <AthletesHomeComponent
+            userRole={props.userRole}
+          ></AthletesHomeComponent>
+          <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
         </Grid>
         <Grid size={6}>
           <NextCompHomeComponent></NextCompHomeComponent>
-          <LastCompQualiHomeComponent></LastCompQualiHomeComponent>
+          <LastCompQualiHomeComponent userRole={props.userRole}></LastCompQualiHomeComponent>
         </Grid>
       </Grid>
-      {/* <div className={styles.competition_card_selector}>
-        {competitions.map((competition, i) => (
-          <div key={i} className={styles.competition_card}>
-            {competition.name} {competition.season}
-            <p className={styles.quick_info}>
-              <span>{competition.competition_date}</span>
-              <span>{competition.location}</span>
-            </p>
-            <button className="default-button">Consultar</button>
-          </div>
-        ))}
-      </div> */}
     </>
   );
 }
