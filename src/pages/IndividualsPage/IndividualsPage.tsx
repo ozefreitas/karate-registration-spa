@@ -18,7 +18,9 @@ import {
   useFetchDisciplinesData,
 } from "../../hooks/useEventData";
 
-export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
+export default function IndividualsPage(
+  props: Readonly<{ state?: boolean; userRole: string }>
+) {
   const location = useLocation();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -38,6 +40,12 @@ export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
   const { data: disciplinesData } = useFetchDisciplinesData(
     location.pathname.split("/").slice(-3)[0]
   );
+
+  const state = singleEventData?.data.is_open
+    ? "Inscrições abertas"
+    : singleEventData?.data.is_retification
+    ? "Período de retificações"
+    : "Inscrições fechadas";
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
@@ -61,9 +69,29 @@ export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
           Aqui poderá consultar todos os Atletas que estão inscritos para a
           prova que selecionou (ver abaixo). Alterar informações de um Atleta
           irá modificar o próprio Atleta, e não apenas a própria inscrição (são
-          a mesma coisa).
+          a mesma coisa). <br /> Tal como presente nas regras, no período de
+          retificações apenas pode eliminar inscrições, e quando as inscrições
+          estiverem fechadas não podem ser efetuadas operações, apenas ser
+          visualizadas as isncrições.
         </CardContent>
       </Card>
+      <Grid container sx={{ m: 2 }}>
+        <Grid size={3}>
+          <Card>
+            <CardContent
+              sx={{
+                p: 2,
+                "&:last-child": {
+                  paddingBottom: 2,
+                },
+              }}
+            >
+              <Typography sx={{fontWeight: "bold"}}>Estado: {state}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
       <Grid size={12} sx={{ m: 2 }}>
         {isSingleEventLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -82,10 +110,12 @@ export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
                 columnsHeaders={columnMaping}
                 actions={true}
                 selection={true}
+                editable={!singleEventData?.data.is_closed}
                 page={page}
                 setPage={setPage}
                 pageSize={pageSize}
                 setPageSize={setPageSize}
+                userRole={props.userRole}
               ></AthletesTable>
             </>
           ))
@@ -100,6 +130,7 @@ export default function IndividualsPage(props: Readonly<{ state: boolean }>) {
             setPage={setPage}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            userRole={props.userRole}
           ></AthletesTable>
         )}
       </Grid>
