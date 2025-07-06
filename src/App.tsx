@@ -52,7 +52,7 @@ function App() {
             path="/"
             element={
               userRole == "national_association" ? (
-                <AdminHomePage />
+                <AdminHomePage userRole={userRole} />
               ) : (
                 <HomePage userRole={userRole} />
               )
