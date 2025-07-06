@@ -1,8 +1,8 @@
 import { useForm, Controller } from "react-hook-form";
-import { Grid, TextField, Button } from "@mui/material";
+import { Grid, TextField, Button, MenuItem } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
-import { ErrorSharp } from "@mui/icons-material";
+import { useFetchAvailableClubs } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterAccountPage() {
@@ -40,6 +40,8 @@ export default function RegisterAccountPage() {
       console.log("Error: " + JSON.stringify(error.response.data));
     }
   };
+
+  const { data: availableClubsData } = useFetchAvailableClubs();
 
   return (
     <Grid container>
@@ -89,13 +91,23 @@ export default function RegisterAccountPage() {
               variant={"outlined"}
               label="Nome de Utilizador"
               fullWidth
+              select
               {...field}
               onChange={(e) => {
                 field.onChange(e);
               }}
               error={!!errors.username}
               helperText={errors.username?.message}
-            />
+            >
+              <MenuItem value="">-- Selecionar --</MenuItem>
+              {availableClubsData?.data.results
+                .filter((club: any) => club.is_registered === false)
+                .map((club: any, index: string) => (
+                  <MenuItem key={index} value={club.id}>
+                    {club.dojo}
+                  </MenuItem>
+                ))}
+            </TextField>
           )}
         />
       </Grid>
