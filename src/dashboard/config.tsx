@@ -11,6 +11,7 @@ import {
   Groups,
   NotificationsActive,
   DeveloperBoard,
+  AdminPanelSettings,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -69,6 +70,12 @@ export const getSideMenuConfig = (userRole: string) => {
       icon: <DeveloperBoard sx={{ color: "#e81c24" }} />,
       to: "/results_display/",
     },
+    {
+      name: "settings",
+      label: "Definições",
+      icon: <AdminPanelSettings sx={{ color: "#e81c24" }} />,
+      to: "/settings/",
+    },
   ];
 
   // Filter for SKIP (national) account
@@ -79,17 +86,21 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "classifications" &&
         item.name !== "rules"
     );
-  } else if (userRole === undefined) {
+  } else if (userRole === undefined || userRole === "free_dojo") {
     return baseMenu.filter(
       (item) =>
         item.name !== "athletes" &&
         item.name !== "teams" &&
-        item.name !== "events" &&
-        item.name !== "display"
+        item.name !== "display" &&
+        item.name !== "settings" &&
+        item.name !== "notifications"
     );
-  } else if (userRole === "free_dojo" || userRole === "subed_dojo") {
+  } else if (userRole === "subed_dojo") {
     return baseMenu.filter(
-      (item) => item.name !== "notifications" && item.name !== "display"
+      (item) =>
+        item.name !== "notifications" &&
+        item.name !== "display" &&
+        item.name !== "settings"
     );
   }
 
@@ -146,4 +157,5 @@ export const breadcrumbsConvertion: Record<string, string> = {
   not_found: "Não Encontrado",
   unauthorized: "Não permitido",
   results_display: "Monitor Resultados",
+  settings: "Definições",
 };
