@@ -6,12 +6,18 @@ import {
   Grid,
   Box,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
-import { useSingleFetchEventData } from "../../hooks/useEventData";
+import {
+  useSingleFetchEventData,
+  useFetchDisciplinesData,
+} from "../../hooks/useEventData";
 import { useLocation } from "react-router-dom";
 
-export default function EventAllRegistryPage() {
+export default function EventAllRegistryPage(
+  props: Readonly<{ userRole: string }>
+) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(25);
   const location = useLocation();
@@ -21,6 +27,10 @@ export default function EventAllRegistryPage() {
     isLoading: isSingleEventLoading,
     error: singleEventError,
   } = useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
+
+  const { data: disciplinesData } = useFetchDisciplinesData(
+    location.pathname.split("/").slice(-3)[0]
+  );
 
   const columnMaping = [
     { key: "first_name", label: "Primeiro Nome" },
@@ -50,7 +60,28 @@ export default function EventAllRegistryPage() {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : singleEventData?.data !== undefined ? (
+        ) : disciplinesData?.data.results.length !== 0 ? (
+          disciplinesData?.data.results.map((discipline: any) => (
+            <>
+              <Typography sx={{ m: 3 }} variant="h5">
+                {discipline.name}
+              </Typography>
+              <AthletesTable
+                type="Modalidades"
+                discipline={discipline.id}
+                data={discipline.individuals}
+                columnsHeaders={columnMaping}
+                actions={false}
+                selection={false}
+                page={page}
+                setPage={setPage}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                userRole={props.userRole}
+              ></AthletesTable>
+            </>
+          ))
+        ) : (
           <AthletesTable
             type="Individuais"
             data={singleEventData?.data.individuals}
@@ -61,8 +92,9 @@ export default function EventAllRegistryPage() {
             setPage={setPage}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            userRole={props.userRole}
           ></AthletesTable>
-        ) : null}
+        )}
       </Grid>
     </>
   );
