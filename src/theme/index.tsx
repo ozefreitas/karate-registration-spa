@@ -28,7 +28,7 @@ const theme = createTheme(ptPT, {
       },
     },
     MuiCardHeader: {
-      styleOverrides: { root: { paddingLeft: 20 } },
+      styleOverrides: { root: { paddingLeft: 20, paddingTop: 25 } },
     },
     MuiCard: {
       styleOverrides: {
@@ -97,6 +97,23 @@ const theme = createTheme(ptPT, {
     MuiButton: {
       styleOverrides: {
         root: { borderRadius: 12 },
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          "&.MuiTabs-fullWidth": {
+            "& .MuiTab-root": {
+              color: "red",
+            },
+            "& .Mui-selected": {
+              color: "red",
+            },
+            "& .MuiTabs-indicator": {
+              backgroundColor: "red",
+            },
+          },
+        },
       },
     },
   },

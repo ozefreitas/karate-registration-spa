@@ -4,6 +4,17 @@
   background-color: #f3f3f3;
 }
 
+.display-mode #root {
+  margin: 0;
+  background-color: black; /* or whatever you want */
+  max-width: 100%;
+  display: block;
+}
+
+.display-mode {
+  margin: 0;
+}
+
 .main-content-wrapper {
   display: flex;
 }
