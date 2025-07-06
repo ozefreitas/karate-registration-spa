@@ -1,11 +1,9 @@
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { styled, Theme, CSSObject } from "@mui/material/styles";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   CssBaseline,
-  Toolbar,
-  Typography,
   IconButton,
   ListItem,
   List,
@@ -17,12 +15,11 @@ import {
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import { ChevronRight, ChevronLeft } from "@mui/icons-material";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import {
   getSideMenuConfig,
   getAccountSideMenuConfig,
 } from "../../dashboard/config";
-import { useFetchMeData } from "../../hooks/useAuth";
+import { AxiosResponse } from "axios";
 
 const drawerWidth = 240;
 
@@ -56,33 +53,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(["width", "margin"], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-  ],
-}));
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
@@ -108,7 +78,9 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-export default function SideMenu() {
+export default function SideMenu(
+  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
+) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -117,40 +89,12 @@ export default function SideMenu() {
     setIsMenuOpen((prev) => !prev);
   };
 
-  const { data: meData, refetch } = useFetchMeData();
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    refetch();
-  }, [token]);
-
-  const sideMenuConfig = getSideMenuConfig(meData?.data.role);
-  const accountSideMenuConfig = getAccountSideMenuConfig(meData?.data.role);
+  const sideMenuConfig = getSideMenuConfig(props.me?.data.role);
+  const accountSideMenuConfig = getAccountSideMenuConfig(props.me?.data.role);
 
   return (
     <Box>
       <CssBaseline>
-        {/* <AppBar>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={[
-                {
-                  marginRight: 5,
-                },
-                isMenuOpen && { display: "none" },
-              ]}
-            >
-              <Menu />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              Mini variant drawer
-            </Typography>
-          </Toolbar>
-        </AppBar> */}
         <Drawer variant="permanent" open={isMenuOpen}>
           <Divider />
           <List>
@@ -158,11 +102,7 @@ export default function SideMenu() {
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
                   <ListItemButton
-                    selected={
-                      location.pathname.split("/")[1] === options.name
-                        ? true
-                        : false
-                    }
+                    selected={location.pathname.split("/")[1] === options.name}
                     onClick={() => navigate(options.to)}
                     sx={[
                       {

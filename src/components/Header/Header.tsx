@@ -14,22 +14,21 @@ import {
   Grid,
 } from "@mui/material";
 import skipLogo from "./../../assets/skip-logo.png";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { Logout } from "@mui/icons-material";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { breadcrumbsConvertion } from "../../dashboard/config";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { useFetchMeData } from "../../hooks/useAuth";
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar(
+  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
+) {
   const navigate = useNavigate();
   const [currentSeason, setCurrentSeason] = useState<string>("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
 
-  const { data: meData, refetch } = useFetchMeData();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -38,7 +37,6 @@ export default function ButtonAppBar() {
         setIsAuthenticated(false);
         setUsername("");
       } else {
-        refetch();
         setIsAuthenticated(true);
       }
     };
@@ -46,10 +44,10 @@ export default function ButtonAppBar() {
   }, [token]);
 
   useEffect(() => {
-    if (meData?.data.username !== undefined) {
-      setUsername(meData?.data.username);
+    if (props.me?.data.username !== undefined) {
+      setUsername(props.me?.data.username);
     }
-  }, [meData]);
+  }, [props.me]);
 
   const paths = window.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
@@ -123,7 +121,7 @@ export default function ButtonAppBar() {
               </Link>
             </Typography>
             <Stack alignItems="center" direction="row" spacing={2}>
-              {meData?.data.role !== undefined ? (
+              {props.me?.data.role !== undefined ? (
                 <Button
                   color="warning"
                   variant="contained"
@@ -132,11 +130,11 @@ export default function ButtonAppBar() {
                   disableElevation
                   size="large"
                 >
-                  {meData?.data.role === "national_association"
+                  {props.me?.data.role === "national_association"
                     ? "ADMIN - SKIP"
-                    : meData?.data.role === "superuser"
+                    : props.me?.data.role === "superuser"
                     ? "SUPER ADMIN"
-                    : meData?.data.role === "free_dojo"
+                    : props.me?.data.role === "free_dojo"
                     ? "DOJO - GRÁTIS"
                     : "DOJO - PREMIUM"}
                 </Button>
