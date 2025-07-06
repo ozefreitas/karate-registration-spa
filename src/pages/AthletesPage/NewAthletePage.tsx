@@ -32,11 +32,13 @@ import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
 import FormAccordion from "../../dashboard/FormAccordion";
 import { useCreateAthlete } from "../../hooks/useAthletesData";
+import { useFetchDojoUsersData } from "../../hooks/useNotificationData";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState<boolean>(true);
 
+  const { data: dojoUserData } = useFetchDojoUsersData();
   const createAthlete = useCreateAthlete();
 
   const {
@@ -44,21 +46,26 @@ export default function NewAthletePage() {
     handleSubmit,
     setError,
     reset,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      first_name: "",
+      last_name: "",
       graduation: "",
       category: "",
-      skip_number: "",
       gender: "",
-      birthDate: undefined,
+      force_skip: false,
+      skip_number: "",
+      birth_date: undefined,
       weight: "",
       student: false,
       reason: "",
+      dojo: "",
     },
   });
+
+  const is_force_skip = getValues("force_skip");
 
   const onSubmit = async (data: any) => {
     if (
@@ -66,21 +73,65 @@ export default function NewAthletePage() {
       data.weight == ""
     ) {
       setError("weight", { message: "Tem que selecionar um peso." });
-    } else {
-      const formData = {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        graduation: data.graduation,
-        category: data.category,
-        skip_number: data.skip_number,
-        gender: data.gender,
-        student: data.student,
-        birth_date: data.birthDate,
-        weight: data.weight,
-      };
-
-      createAthlete.mutate(formData, { onSuccess: () => {} });
     }
+    const formData = {
+      first_name: data.first_name,
+      last_name: data.last_name,
+      graduation: data.graduation,
+      category: data.category,
+      skip_number: data.skip_number,
+      gender: data.gender,
+      student: data.student,
+      birth_date: data.birth_date,
+      weight: data.weight,
+      dojo: data.dojo,
+    };
+
+    if (!data.is_force_skip) {
+      formData.skip_number = "";
+    }
+
+    createAthlete.mutate(formData, {
+      onSuccess: () => {
+        reset();
+        setExpanded(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
+      onError: (data: any) => {
+        if (data.response?.data.incompatible_athlete) {
+          setError("student", {
+            message: data.response?.data.incompatible_athlete[0],
+          });
+        }
+
+        const errorData = data.response?.data || {};
+
+        type Fields =
+          | "first_name"
+          | "last_name"
+          | "graduation"
+          | "birth_date"
+          | "category"
+          | "gender"
+          | "dojo";
+
+        const fields: Fields[] = [
+          "first_name",
+          "last_name",
+          "graduation",
+          "birth_date",
+          "category",
+          "gender",
+          "dojo",
+        ];
+
+        fields.forEach((field) => {
+          if (errorData[field]?.[0]) {
+            setError(field, { message: errorData[field][0] });
+          }
+        });
+      },
+    });
   };
 
   type WeightCategory = keyof typeof WeightOptions;
@@ -139,7 +190,7 @@ export default function NewAthletePage() {
         <FormCard title="Dados Pessoais">
           <Grid sx={{ p: 2 }} size={6}>
             <Controller
-              name="firstName"
+              name="first_name"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -152,15 +203,15 @@ export default function NewAthletePage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.firstName}
-                  helperText={errors.firstName?.message}
+                  error={!!errors.first_name}
+                  helperText={errors.first_name?.message}
                 />
               )}
             />
           </Grid>
           <Grid sx={{ p: 2 }} size={6}>
             <Controller
-              name="lastName"
+              name="last_name"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -173,8 +224,8 @@ export default function NewAthletePage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.lastName}
-                  helperText={errors.lastName?.message}
+                  error={!!errors.last_name}
+                  helperText={errors.last_name?.message}
                 />
               )}
             />
@@ -209,35 +260,9 @@ export default function NewAthletePage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
-            <Controller
-              name="skip_number"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Nº ASKIP"
-                  type="text"
-                  slotProps={{
-                    htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
-                  }}
-                  fullWidth
-                  multiline
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.skip_number}
-                  helperText={errors.skip_number?.message}
-                ></TextField>
-              )}
-            />
-          </Grid>
           <Grid sx={{ p: 2, pt: 1 }} size={6}>
             <Controller
-              name="birthDate"
+              name="birth_date"
               control={control}
               render={({ field }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -254,9 +279,8 @@ export default function NewAthletePage() {
                       slotProps={{
                         textField: {
                           fullWidth: true,
-                          // error: !!localErrors?.publication_date,
-                          // helperText:
-                          //   localErrors?.publication_date?.message || "",
+                          error: !!errors?.birth_date,
+                          helperText: errors?.birth_date?.message || "",
                         },
                       }}
                       slots={{ textField: TextField }}
@@ -296,6 +320,70 @@ export default function NewAthletePage() {
               )}
             />
           </Grid>
+          <Grid size={6}></Grid>
+          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+            <Controller
+              name="force_skip"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset" variant="standard">
+                  <FormLabel sx={{ mb: 2 }}>
+                    Se, por alguma razão, pretende forçar um Nº SKI-P.
+                  </FormLabel>
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                            setExpanded((prev) => !prev);
+                          }}
+                          name="student"
+                        />
+                      }
+                      label="Forçar Nº SKI-P"
+                      sx={{ justifyContent: "left", marginLeft: 0 }}
+                    />
+                    {!!errors.student && (
+                      <FormHelperText error sx={{ marginLeft: "14px" }}>
+                        {errors.student?.message}
+                      </FormHelperText>
+                    )}
+                  </Stack>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2, pt: 3 }} size={6}>
+            <Controller
+              name="skip_number"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Nº ASKIP"
+                  type="text"
+                  slotProps={{
+                    htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
+                  }}
+                  fullWidth
+                  disabled={!is_force_skip}
+                  multiline
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.skip_number}
+                  helperText={errors.skip_number?.message}
+                ></TextField>
+              )}
+            />
+          </Grid>
         </FormCard>
         <FormCard title="Praticante">
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>
@@ -324,6 +412,11 @@ export default function NewAthletePage() {
                       label="É Aluno"
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
+                    {!!errors.student && (
+                      <FormHelperText error sx={{ marginLeft: "14px" }}>
+                        {errors.student?.message}
+                      </FormHelperText>
+                    )}
                   </Stack>
                 </FormControl>
               )}
@@ -361,7 +454,6 @@ export default function NewAthletePage() {
         <FormAccordion
           title="Competições"
           expanded={expanded}
-          setExpanded={setExpanded}
           tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
         >
           <Grid sx={{ p: 2 }} size={6}>
@@ -386,7 +478,7 @@ export default function NewAthletePage() {
                   error={!!errors.category}
                   helperText={errors.category?.message}
                 >
-                  <MenuItem value="None"></MenuItem>
+                  <MenuItem value="">-- Selecionar --</MenuItem>
                   {CategoryOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -418,6 +510,7 @@ export default function NewAthletePage() {
                   error={!!errors.weight}
                   helperText={errors.weight?.message}
                 >
+                  <MenuItem value="">-- Selecionar --</MenuItem>
                   {currentCategory
                     ? WeightOptions[currentCategory].map((item, index) => (
                         <MenuItem key={index} value={item.value}>
@@ -430,9 +523,43 @@ export default function NewAthletePage() {
             />
           </Grid>
         </FormAccordion>
+        <FormCard title="Associar Dojo/Associação">
+          <Grid size={12} sx={{ p: 2 }}>
+            <Controller
+              name="dojo"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Dojo"
+                  fullWidth
+                  select
+                  multiline
+                  required
+                  maxRows={8}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.dojo}
+                  helperText={errors.dojo?.message}
+                >
+                  <MenuItem value="0">-- Selecionar --</MenuItem>
+                  {dojoUserData?.data.map((item: any, index: string) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.username}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+        </FormCard>
         <Grid
-          sx={{ m: 5 }}
+          sx={{ m: 3, mr: 4 }}
           justifyContent="flex-end"
+          alignItems="center"
           spacing={2}
           container
           size={12}
@@ -442,9 +569,9 @@ export default function NewAthletePage() {
             size={"large"}
             color={"success"}
             type={"submit"}
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
+              // change this to only when post request is successful
               navigate("/athletes/");
             }}
           >
@@ -455,21 +582,15 @@ export default function NewAthletePage() {
             size={"large"}
             color={"success"}
             type={"submit"}
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
-              reset();
-              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
             Submeter e Adicionar outro
           </Button>
           <Button
-            variant="contained"
-            size={"large"}
-            color={"success"}
-            type={"submit"}
-            sx={{ marginBottom: "20px" }}
+            variant="outlined"
+            size="medium"
             onClick={() => {
               navigate("/athletes/");
             }}
