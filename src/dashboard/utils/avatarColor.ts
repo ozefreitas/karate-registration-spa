@@ -1,6 +1,4 @@
-import { Height } from "@mui/icons-material";
-
-function stringToColor(string: string) {
+export function stringToColor(string: string) {
   let hash = 0;
   let i;
 
@@ -15,8 +13,7 @@ function stringToColor(string: string) {
     const value = (hash >> (i * 8)) & 0xff;
     color += `00${value.toString(16)}`.slice(-2);
   }
-  /* eslint-enable no-bitwise */
-
+  
   return color;
 }
 
