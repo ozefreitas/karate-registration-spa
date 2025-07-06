@@ -17,24 +17,16 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import InfoButton from "../../components/InfoButton/InfoButton";
+import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import {
   useFetchLastEvent,
   useFetchLastCompQuali,
 } from "../../hooks/useEventData";
 
-export default function LastCompQualiHomeComponent() {
-  type Competition = {
-    id: string;
-    name: string;
-    season: string;
-    location: string;
-    competition_date: string;
-  };
-
+export default function LastCompQualiHomeComponent(
+  props: Readonly<{ userRole: string }>
+) {
   type Athlete = {
     id: string;
     first_name: string;
@@ -56,10 +48,10 @@ export default function LastCompQualiHomeComponent() {
 
   const navigate = useNavigate();
 
-  const { data: lastCompData } = useFetchLastEvent();
+  const { data: lastCompData } = useFetchLastEvent(props.userRole);
 
   const { data: lastCompQualiData, isLoading: isLastCompQualiLoading } =
-    useFetchLastCompQuali();
+    useFetchLastCompQuali(props.userRole);
 
   return (
     <Grid size={12}>
@@ -163,9 +155,22 @@ export default function LastCompQualiHomeComponent() {
               </ListItemButton>
             </ListItem>
           )}
+          {props.userRole === "free_dojo" ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemText
+                  primary={
+                    "Comece uma subscrição para ter acesso a esta funcionalidade."
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          ) : null}
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <InfoButton label="Ver Todas" to="classifications/"></InfoButton>
+          {props.userRole !== "free_dojo" ? (
+            <InfoButton label="Ver Todas" to="classifications/"></InfoButton>
+          ) : null}
         </CardActions>
       </Card>
     </Grid>

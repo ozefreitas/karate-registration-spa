@@ -12,11 +12,11 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { Person } from "@mui/icons-material";
+import { Groups } from "@mui/icons-material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import InfoButton from "../../components/InfoButton/InfoButton";
-import AddButton from "../../components/AddButton/AddButton";
+import InfoButton from "../Buttons/InfoButton";
+import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 
 const fetchLastFiveTeams = () => {
@@ -28,7 +28,9 @@ const fetchLastFiveTeams = () => {
   });
 };
 
-export default function TeamsHomeComponent() {
+export default function TeamsHomeComponent(
+  props: Readonly<{ userRole: string }>
+) {
   type Team = {
     id: string;
     team_number: number;
@@ -48,6 +50,7 @@ export default function TeamsHomeComponent() {
     queryFn: fetchLastFiveTeams,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: props.userRole === "subed_dojo",
   });
 
   return (
@@ -72,7 +75,7 @@ export default function TeamsHomeComponent() {
               <ListItem sx={{ m: 0 }}>
                 <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                   <ListItemIcon>
-                    <Person />
+                    <Groups />
                   </ListItemIcon>
                   <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
                 </ListItemButton>
@@ -81,7 +84,7 @@ export default function TeamsHomeComponent() {
               <ListItem sx={{ m: 0 }}>
                 <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                   <ListItemIcon>
-                    <Person />
+                    <Groups />
                   </ListItemIcon>
                   <ListItemText
                     primary={"Ocorreu um erro ao carregar as Equipas."}
@@ -93,7 +96,7 @@ export default function TeamsHomeComponent() {
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemIcon>
-                  <Person />
+                  <Groups />
                 </ListItemIcon>
                 <ListItemText
                   primary={"Não registou nenhuma Equipa recentemente."}
@@ -106,7 +109,7 @@ export default function TeamsHomeComponent() {
                 <ListItem sx={{ m: 0, pb: 0 }}>
                   <ListItemButton onClick={() => navigate(`teams/${team.id}/`)}>
                     <ListItemIcon>
-                      <Person></Person>
+                      <Groups />
                     </ListItemIcon>
                     <ListItemText
                       primary={`${team.match_type} ${team.category} ${team.gender} Nº ${team.team_number}`}
@@ -116,10 +119,25 @@ export default function TeamsHomeComponent() {
               </Tooltip>
             ))
           )}
+          {props.userRole === "free_dojo" ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemText
+                  primary={
+                    "Comece uma subscrição para ter acesso a esta funcionalidade."
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          ) : null}
         </List>
         <CardActions sx={{ justifyContent: "space-between" }}>
-          <InfoButton label="Ver Todas" to="teams/"></InfoButton>
-          <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
+          {props.userRole !== "free_dojo" ? (
+            <>
+              <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
+              <InfoButton label="Ver Todas" to="teams/"></InfoButton>
+            </>
+          ) : null}
         </CardActions>
       </Card>
     </Grid>

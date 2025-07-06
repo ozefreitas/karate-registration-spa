@@ -15,8 +15,8 @@ import {
 import { Person } from "@mui/icons-material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import InfoButton from "../../components/InfoButton/InfoButton";
-import AddButton from "../../components/AddButton/AddButton";
+import InfoButton from "../Buttons/InfoButton";
+import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 
 const fetchLastFiveAthletes = () => {
@@ -28,7 +28,9 @@ const fetchLastFiveAthletes = () => {
   });
 };
 
-export default function AthletesHomeComponent() {
+export default function AthletesHomeComponent(
+  props: Readonly<{ userRole: string }>
+) {
   type Athlete = {
     id: string;
     first_name: string;
@@ -51,6 +53,7 @@ export default function AthletesHomeComponent() {
     queryFn: fetchLastFiveAthletes,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: props.userRole === "subed_dojo",
   });
 
   return (
@@ -123,11 +126,22 @@ export default function AthletesHomeComponent() {
               )
             )
           )}
+          {props.userRole === "free_dojo" ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemText
+                  primary={
+                    "Comece uma subscrição para ter acesso a esta funcionalidade."
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          ) : null}
         </List>
-        <CardActions sx={{ justifyContent: "space-between" }}>
+        {props.userRole !== "free_dojo" ? (
           <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
-          <AddButton label="Adicionar" to="athletes/new_athlete/"></AddButton>
-        </CardActions>
+        ) : null}
+        <CardActions sx={{ justifyContent: "flex-end" }}></CardActions>
       </Card>
     </Grid>
   );

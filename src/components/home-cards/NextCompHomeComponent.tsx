@@ -15,7 +15,7 @@ import {
 import { SportsMma } from "@mui/icons-material";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import InfoButton from "../../components/InfoButton/InfoButton";
+import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import { useFetchNextEventData } from "../../hooks/useEventData";
 
