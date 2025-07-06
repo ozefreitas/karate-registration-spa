@@ -78,7 +78,7 @@ const fetchSingleAthlete = (athleteId: string | null) => {
 
 export const useFetchSingleAthleteData = (athleteId: any) => {
   return useQuery({
-    queryKey: ["single-athlete", location],
+    queryKey: ["single-athlete", athleteId],
     queryFn: () => fetchSingleAthlete(athleteId),
     staleTime: 0,
     refetchOnWindowFocus: false,

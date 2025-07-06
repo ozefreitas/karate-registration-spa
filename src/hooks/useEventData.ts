@@ -118,12 +118,15 @@ const fetchLastEvent = () => {
   return axios.get("http://127.0.0.1:8000/events/last_event/");
 };
 
-export const useFetchLastEvent = () => {
+export const useFetchLastEvent = (userRole: string) => {
   return useQuery({
     queryKey: ["last-event"],
     queryFn: fetchLastEvent,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: ["subed_dojo", "national_association", "superuser"].includes(
+      userRole
+    ),
   });
 };
 
@@ -131,12 +134,15 @@ const fetchLastCompQuali = () => {
   return axios.get("http://127.0.0.1:8000/classifications/last_comp_quali/");
 };
 
-export const useFetchLastCompQuali = () => {
+export const useFetchLastCompQuali = (userRole: string) => {
   return useQuery({
     queryKey: ["event-classifications"],
     queryFn: fetchLastCompQuali,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: ["subed_dojo", "national_association", "superuser"].includes(
+      userRole
+    ),
   });
 };
 

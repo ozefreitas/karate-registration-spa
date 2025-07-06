@@ -2,23 +2,48 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
-const fetchDojoUsers = () => {
+const fetchDojoUsers = (username?: string) => {
   const token = localStorage.getItem("token");
-  return axios.get(`http://127.0.0.1:8000/users/`, {
+  let url = `http://127.0.0.1:8000/users/`;
+
+  if (username) {
+    url += `?username=${encodeURIComponent(username)}`;
+  }
+
+  return axios.get(url, {
     headers: {
       Authorization: `Token ${token}`,
     },
   });
 };
 
-export const useFetchDojoUsersData = () => {
+export const useFetchDojoUsersData = (username?: string) => {
   return useQuery({
     queryKey: ["dojo-users"],
-    queryFn: fetchDojoUsers,
+    queryFn: () => fetchDojoUsers(username),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
 };
+
+const fetchDojoAthletes = () => {
+  const token = localStorage.getItem("token");
+  return axios.get(`http://127.0.0.1:8000/users/athletes/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useFetchDojoAthletesData = () => {
+  return useQuery({
+    queryKey: ["dojo-athletes"],
+    queryFn: fetchDojoAthletes,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
+
 
 const fetchNotifications = (dojoId: string) => {
   const token = localStorage.getItem("token");
