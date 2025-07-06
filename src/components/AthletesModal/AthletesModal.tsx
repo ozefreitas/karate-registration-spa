@@ -257,7 +257,7 @@ export default function AthletesModal(
 
     setTimeout(() => {
       handleDisciplineScreenClose();
-    }, 1500);
+    }, 1000);
 
     setIsMutationDelayActive(false);
   };

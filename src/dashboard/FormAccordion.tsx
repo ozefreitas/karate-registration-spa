@@ -3,7 +3,6 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  AccordionActions,
   Typography,
   Tooltip,
 } from "@mui/material";
@@ -14,7 +13,6 @@ export default function FormAccordion(
     title: string;
     children: any;
     expanded: boolean;
-    setExpanded: React.Dispatch<React.SetStateAction<boolean>>;
     tooltipMessage?: string;
   }>
 ) {

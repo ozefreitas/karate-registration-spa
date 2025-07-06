@@ -25,8 +25,6 @@ import { useForm, Controller } from "react-hook-form";
 import { NotificationUrgencyOptions } from "../../config";
 import {
   Add,
-  NotificationAdd,
-  NotificationAddRounded,
   NotificationsActive,
 } from "@mui/icons-material";
 import NotificationActionModal from "./NotificationActionModal";

@@ -38,10 +38,6 @@ export default function ChooseEditModal(
     id: string;
     chosenAthlete: string;
     setChosenAthlete: any;
-    reset: any;
-    control: any;
-    errors: any;
-    handleSubmit: any;
   }>
 ) {
   console.log(props.isModalOpen)
@@ -60,7 +56,7 @@ export default function ChooseEditModal(
     };
 
   const fetchSingleTeam = useFetchSingleTeamData();
-  const fetchSingleAthlete = useFetchSingleAthleteData();
+  const fetchSingleAthlete = useFetchSingleAthleteData(props.id);
 
   const {
     control: teamControl,
@@ -253,9 +249,6 @@ export default function ChooseEditModal(
         isModalOpen={props.isEditModalOpen}
         handleModalClose={props.handleEditModalClose}
         id={props.chosenAthlete}
-        control={props.control}
-        errors={props.errors}
-        handleSubmit={props.handleSubmit}
       ></EditAthleteModal>
       <EditTeamModal
         isModalOpen={isEditTeamModalOpen}

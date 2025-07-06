@@ -569,7 +569,6 @@ export default function NewEventPage() {
         <FormAccordion
           title="Datas"
           expanded={expanded}
-          setExpanded={setExpanded}
           tooltipMessage="Apenas poderá abrir esta secção, se tiver permitido a este Evento ter inscrições."
         >
           <Grid sx={{ p: 2, pt: 1 }} container justifyContent="center" size={4}>
@@ -667,7 +666,6 @@ export default function NewEventPage() {
         <FormAccordion
           title="Modalidades"
           expanded={expanded}
-          setExpanded={setExpanded}
           tooltipMessage="Apenas poderá abrir esta secção se este Evento não for um encontro."
         >
           <Grid
@@ -736,7 +734,6 @@ export default function NewEventPage() {
         <FormAccordion
           title="Definição de Regras"
           expanded={isRulesExpanded}
-          setExpanded={setIsRulesExpanded}
         >
           <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={12}>
             <Controller

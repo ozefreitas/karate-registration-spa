@@ -8,12 +8,12 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import AddButton from "../../components/AddButton/AddButton";
+import AddButton from "../../components/Buttons/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { useFetchTeamsData } from "../../hooks/useTeamsData";
 import { useFetchMeData } from "../../hooks/useAuth";
 
-export default function TeamsPage() {
+export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   type Athlete = {
     id: string;
     first_name: string;
@@ -106,6 +106,7 @@ export default function TeamsPage() {
             setPage={setPage}
             pageSize={pageSize}
             setPageSize={setPageSize}
+            userRole={props.userRole}
           ></AthletesTable>
         ) : null}
       </Grid>

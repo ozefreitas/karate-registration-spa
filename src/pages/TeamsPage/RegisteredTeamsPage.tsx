@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
-import AddButton from "../../components/AddButton/AddButton";
+import AddButton from "../../components/Buttons/AddButton";
 
 export default function RegisteredTeamsPage() {
   return (

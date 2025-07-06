@@ -1,12 +1,7 @@
 import {
   Grid,
-  Stack,
   Typography,
   Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemButton,
   Card,
   CardHeader,
   CardContent,
@@ -15,7 +10,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import PersonalInfoSection from "./PersonalInfoSection";
-import RegisterAccountPage from "../auth/RegisterAccountPage";
 import ResultsHistorySection from "./ResultsHistorySection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
@@ -81,7 +75,10 @@ export default function SingleAthletePage() {
                   size={12}
                   sx={{ m: 3, mb: 1 }}
                 >
-                  <Typography sx={{ fontWeight: "bold" }} variant="h5">
+                  <Typography
+                    sx={{ fontWeight: "bold", textAlign: "center" }}
+                    variant="h5"
+                  >
                     {singleAthleteData?.data.full_name}
                   </Typography>
                 </Grid>
