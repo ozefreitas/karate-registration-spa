@@ -54,6 +54,7 @@ export default function PersonalInfoSection(
       student: props.athleteData?.data.student,
       birthDate: props.athleteData?.data.birth_date,
       weight: props.athleteData?.data.weight ?? "N/A",
+      quotes: props.athleteData?.data.quotes ? "Regularizado" : "Por pagar",
     },
   });
 
@@ -137,7 +138,7 @@ export default function PersonalInfoSection(
           </Button>
         )}
       </Grid>
-      <Grid container>
+      <Grid container >
         <FormControl
           sx={{ pb: 2 }}
           component="fieldset"
@@ -560,6 +561,47 @@ export default function PersonalInfoSection(
                       field.onChange(e);
                     }}
                     error={!!errors.weight}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        <FormControl
+          sx={{ pb: 2, justifyContent: "center" }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Estado quotas:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="quotes"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.quotes}
                   />
                 )}
               />
