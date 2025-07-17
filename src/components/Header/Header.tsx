@@ -29,9 +29,8 @@ export default function ButtonAppBar(
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const checkAuth = async () => {
       if (!token) {
         setIsAuthenticated(false);
@@ -41,9 +40,6 @@ export default function ButtonAppBar(
       }
     };
     checkAuth();
-  }, [token]);
-
-  useEffect(() => {
     if (props.me?.data.username !== undefined) {
       setUsername(props.me?.data.username);
     }

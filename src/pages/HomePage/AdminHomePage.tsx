@@ -28,7 +28,7 @@ export default function AdminHomePage(props: Readonly<{userRole: string}>) {
       </Card>
       <Grid container size={12}>
         <Grid size={6}>
-          <NextCompHomeComponent></NextCompHomeComponent>
+          <NextCompHomeComponent userRole={props.userRole}></NextCompHomeComponent>
           <DojoStats></DojoStats>
         </Grid>
         <Grid size={6}>

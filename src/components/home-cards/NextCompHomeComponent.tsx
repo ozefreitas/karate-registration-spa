@@ -18,8 +18,9 @@ import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import { useFetchNextEventData } from "../../hooks/useEventData";
+import AddButton from "../Buttons/AddButton";
 
-export default function NextCompHomeComponent() {
+export default function NextCompHomeComponent(props: { userRole: string }) {
   type Competition = {
     id: string;
     name: string;
@@ -75,7 +76,17 @@ export default function NextCompHomeComponent() {
             </ListItemButton>
           </ListItem>
         )}
-        <CardActions sx={{ justifyContent: "flex-end" }}>
+        <CardActions
+          sx={{
+            justifyContent:
+              props.userRole === "national_association"
+                ? "space-between"
+                : "flex-end",
+          }}
+        >
+          {props.userRole === "national_association" ? (
+            <AddButton label="Adicionar" to="events/new_event/"></AddButton>
+          ) : null}
           <InfoButton label="Ver Todas" to="events/"></InfoButton>
         </CardActions>
       </Card>
