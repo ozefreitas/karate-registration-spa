@@ -22,6 +22,16 @@ export const GraduationsOptions: { label: string; value: number }[] = [
   { label: "6º Dan", value: 1 },
 ];
 
+export const getGraduationFromValue = (gradValue: number) => {
+  let gradLabel = "";
+  GraduationsOptions.forEach((label) => {
+    if (gradValue === label.value) {
+      gradLabel = label.label;
+    }
+  });
+  return gradLabel;
+};
+
 export const CategoryOptions: { label: string; value: string }[] = [
   { label: "Infantil", value: "Infantil" },
   { label: "Iniciado", value: "Iniciado" },
