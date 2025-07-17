@@ -1,11 +1,10 @@
-import { useState } from "react";
 import "./App.css";
-import MainAppLayout  from "./layouts/MainAppLayout";
+import MainAppLayout from "./layouts/MainAppLayout";
 import { DisplayPanelLayout } from "./layouts/DisplayPanelLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AthletesPage from "./pages/AthletesPage/AthletesPage";
-import CompetitionsPage from "./pages/CompetitionsPage/CompetitionsPage";
-import CompetitionCard from "./components/CompetitionCards/CompetitionCard";
+import EventsPage from "./pages/EventsPage/EventsPage";
+import EventCard from "./components/EventCards/EventCard";
 import HomePage from "./pages/HomePage/HomePage";
 import AdminHomePage from "./pages/HomePage/AdminHomePage";
 import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
@@ -22,14 +21,18 @@ import IndividualsPage from "./pages/IndividualsPage/IndividualsPage";
 import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
 import { useFetchMeData } from "./hooks/useAuth";
 import ProtectedRoute from "./access/ProtectedRoute";
-import NewEventPage from "./pages/CompetitionsPage/NewEventPage";
+import NewEventPage from "./pages/EventsPage/NewEventPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 import UnAuthorizedPage from "./pages/ErrorPages/UnAuthorizedPage";
 import NotFoundPage from "./pages/ErrorPages/ServerErrorPage";
-import EventAllRegistryPage from "./components/CompetitionCards/EventAllRegistryPage";
+import EventAllRegistryPage from "./components/EventCards/EventAllRegistryPage";
 import MainSettingsPage from "./pages/SettingsPage/MainSettingsPage";
 import ResultsMainPage from "./pages/ResultsMonitorPage/ResultsMainPage";
 import DisplayPage from "./pages/ResultsMonitorPage/DisplayPage";
+import DrawPage from "./pages/DrawPage/DrawPage";
+import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
+import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
+import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
 import { useEffect } from "react";
 
 function App() {
@@ -102,7 +105,7 @@ function App() {
               isMeLoading ? null : (
                 <ProtectedRoute
                   element={<TeamsPage userRole={userRole} />}
-                  allowedRoles={["subed_dojo", "national_association"]}
+                  allowedRoles={["subed_dojo"]}
                   userRole={userRole}
                 />
               )
@@ -137,7 +140,7 @@ function App() {
             element={
               isMeLoading ? null : (
                 <ProtectedRoute
-                  element={<CompetitionsPage />}
+                  element={<EventsPage userRole={userRole} />}
                   allowedRoles={[
                     "free_dojo",
                     "subed_dojo",
@@ -153,7 +156,31 @@ function App() {
             element={
               isMeLoading ? null : (
                 <ProtectedRoute
-                  element={<NewEventPage />}
+                  element={<NewEventPage userRole={userRole} />}
+                  allowedRoles={["national_association"]}
+                  userRole={userRole}
+                />
+              )
+            }
+          />
+          <Route
+            path="categories/"
+            element={
+              isMeLoading ? null : (
+                <ProtectedRoute
+                  element={<CategoriesPage userRole={userRole} />}
+                  allowedRoles={["national_association"]}
+                  userRole={userRole}
+                />
+              )
+            }
+          />
+          <Route
+            path="categories/new_category/"
+            element={
+              isMeLoading ? null : (
+                <ProtectedRoute
+                  element={<NewCategoryPage />}
                   allowedRoles={["national_association"]}
                   userRole={userRole}
                 />
@@ -177,7 +204,7 @@ function App() {
             element={
               isMeLoading ? null : (
                 <ProtectedRoute
-                  element={<CompetitionCard userRole={userRole} />}
+                  element={<EventCard userRole={userRole} />}
                   allowedRoles={[
                     "free_dojo",
                     "subed_dojo",
@@ -195,6 +222,30 @@ function App() {
                 <ProtectedRoute
                   element={<EventAllRegistryPage userRole={userRole} />}
                   allowedRoles={["subed_dojo", "national_association"]}
+                  userRole={userRole}
+                />
+              )
+            }
+          />
+          <Route
+            path="events/:id/draw/"
+            element={
+              isMeLoading ? null : (
+                <ProtectedRoute
+                  element={<DrawPage />}
+                  allowedRoles={["national_association"]}
+                  userRole={userRole}
+                />
+              )
+            }
+          />
+          <Route
+            path="events/:id/draw/generate/"
+            element={
+              isMeLoading ? null : (
+                <ProtectedRoute
+                  element={<GenerateDrawPage />}
+                  allowedRoles={["national_association"]}
                   userRole={userRole}
                 />
               )
