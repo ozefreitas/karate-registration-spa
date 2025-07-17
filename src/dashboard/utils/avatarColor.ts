@@ -25,6 +25,6 @@ export default function stringAvatar(name: string, size?: number) {
       height: size,
       fontSize: size ? size / 3 : undefined
     },
-    children: `${name.slice(0, 3).toUpperCase()}`,
+    children: `${name.replace(/\s+/g, "").slice(0, 3).toUpperCase()}`,
   };
 }
