@@ -12,6 +12,7 @@ import {
   NotificationsActive,
   DeveloperBoard,
   AdminPanelSettings,
+  Category,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -39,6 +40,12 @@ export const getSideMenuConfig = (userRole: string) => {
       label: "Eventos",
       icon: <SportsMma sx={{ color: "#e81c24" }} />,
       to: "/events/",
+    },
+    {
+      name: "categories",
+      label: "Escalões",
+      icon: <Category sx={{ color: "#e81c24" }} />,
+      to: "/categories/",
     },
     {
       name: "notifications",
@@ -84,7 +91,8 @@ export const getSideMenuConfig = (userRole: string) => {
       (item) =>
         item.name !== "help" &&
         item.name !== "classifications" &&
-        item.name !== "rules"
+        item.name !== "rules" &&
+        item.name !== "teams"
     );
   } else if (userRole === undefined || userRole === "free_dojo") {
     return baseMenu.filter(
@@ -93,14 +101,16 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "teams" &&
         item.name !== "display" &&
         item.name !== "settings" &&
-        item.name !== "notifications"
+        item.name !== "notifications" &&
+        item.name !== "categories"
     );
   } else if (userRole === "subed_dojo") {
     return baseMenu.filter(
       (item) =>
         item.name !== "notifications" &&
         item.name !== "display" &&
-        item.name !== "settings"
+        item.name !== "settings" &&
+        item.name !== "categories"
     );
   }
 
@@ -158,4 +168,6 @@ export const breadcrumbsConvertion: Record<string, string> = {
   unauthorized: "Não permitido",
   results_display: "Monitor Resultados",
   settings: "Definições",
+  categories: "Categorias",
+  new_category: "Nova Categoria",
 };
