@@ -17,13 +17,17 @@ import {
   Grid,
   TextField,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
-import { useUpdateAthleteData } from "../../hooks/useAthletesData";
-import { Controller, SubmitHandler } from "react-hook-form";
+import {
+  useUpdateAthleteData,
+  useFetchSingleAthleteData,
+} from "../../hooks/useAthletesData";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import {
   CategoryOptions,
   GraduationsOptions,
@@ -44,14 +48,9 @@ export default function EditAthleteModal(
     isModalOpen: boolean;
     handleModalClose: any;
     id: string;
-    control: any;
-    errors: any;
-    handleSubmit: any;
   }>
 ) {
-  console.log(props.id);
   type Athlete = {
-    id: string;
     firstName: string;
     lastName: string;
     category: string;
@@ -62,9 +61,44 @@ export default function EditAthleteModal(
     birthDate: any;
   };
 
+  const { data: singleAthleteData, isLoading: isSingleAthleteLoading } =
+    useFetchSingleAthleteData(props.id);
+
+  const {
+    control: athleteControl,
+    handleSubmit: athleteHandleSubmit,
+    reset: athleteReset,
+    formState: { errors: athleteErrors },
+  } = useForm({
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      graduation: "",
+      category: "",
+      skip_number: null,
+      gender: "",
+      is_student: false,
+      birthDate: "",
+    },
+  });
+
+  React.useEffect(() => {
+    // update the form with that athlete info
+    const formData = {
+      firstName: singleAthleteData?.data.first_name,
+      lastName: singleAthleteData?.data.last_name,
+      graduation: singleAthleteData?.data.graduation ?? "",
+      category: singleAthleteData?.data.category ?? "",
+      gender: singleAthleteData?.data.gender ?? "",
+      is_student: singleAthleteData?.data.is_student,
+      birthDate: singleAthleteData?.data.birth_date,
+    };
+    athleteReset(formData);
+  }, [singleAthleteData]);
+
   const updateAthleteData = useUpdateAthleteData();
 
-  const onSubmit: SubmitHandler<Athlete> = (data) => {
+  const onSubmit = (data: any) => {
     const formData = {
       first_name: data?.firstName,
       last_name: data?.lastName,
@@ -116,7 +150,7 @@ export default function EditAthleteModal(
             size="large"
             color="inherit"
             onClick={() => {
-              props.handleSubmit(onSubmit)();
+              athleteHandleSubmit(onSubmit)();
               props.handleModalClose();
             }}
             // disabled={athletesNotInEventData?.data.length === 0}
@@ -126,138 +160,144 @@ export default function EditAthleteModal(
         </Toolbar>
       </AppBar>
       <DialogContent>
-        <Grid container justifyContent={"center"}>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="firstName"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Primeiro Nome"
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.firstName}
-                  helperText={props.errors.firstName?.message}
-                />
-              )}
-            />
+        {isSingleAthleteLoading ? (
+          <Grid container justifyContent="center" size={12}>
+            <CircularProgress />
           </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="lastName"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Último Nome"
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.lastName}
-                  helperText={props.errors.lastName?.message}
-                />
-              )}
-            />
+        ) : (
+          <Grid container justifyContent={"center"}>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="firstName"
+                control={athleteControl}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Primeiro Nome"
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!athleteErrors.firstName}
+                    helperText={athleteErrors.firstName?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="lastName"
+                control={athleteControl}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Último Nome"
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!athleteErrors.lastName}
+                    helperText={athleteErrors.lastName?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="category"
+                control={athleteControl}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Escalão"
+                    fullWidth
+                    select
+                    multiline
+                    required
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!athleteErrors.category}
+                    helperText={athleteErrors.category?.message}
+                  >
+                    {CategoryOptions.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="graduation"
+                control={athleteControl}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Graduação"
+                    select
+                    fullWidth
+                    multiline
+                    required
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!athleteErrors.graduation}
+                    helperText={athleteErrors.graduation?.message}
+                  >
+                    {GraduationsOptions.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={8}>
+              <Controller
+                name="gender"
+                control={athleteControl}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Género"
+                    select
+                    fullWidth
+                    multiline
+                    required
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!athleteErrors.graduation}
+                    helperText={athleteErrors.graduation?.message}
+                  >
+                    {GenderOptions.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
           </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="category"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Escalão"
-                  fullWidth
-                  select
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.category}
-                  helperText={props.errors.category?.message}
-                >
-                  {CategoryOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="graduation"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Graduação"
-                  select
-                  fullWidth
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.graduation}
-                  helperText={props.errors.graduation?.message}
-                >
-                  {GraduationsOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ m: 2 }} size={8}>
-            <Controller
-              name="gender"
-              control={props.control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Género"
-                  select
-                  fullWidth
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!props.errors.graduation}
-                  helperText={props.errors.graduation?.message}
-                >
-                  {GenderOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-        </Grid>
+        )}
       </DialogContent>
       {/* <DialogActions></DialogActions> */}
     </Dialog>
