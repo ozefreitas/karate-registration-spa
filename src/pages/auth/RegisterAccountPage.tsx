@@ -15,7 +15,6 @@ export default function RegisterAccountPage() {
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -103,7 +102,7 @@ export default function RegisterAccountPage() {
               {availableClubsData?.data.results
                 .filter((club: any) => club.is_registered === false)
                 .map((club: any, index: string) => (
-                  <MenuItem key={index} value={club.id}>
+                  <MenuItem key={index} value={club.dojo}>
                     {club.dojo}
                   </MenuItem>
                 ))}

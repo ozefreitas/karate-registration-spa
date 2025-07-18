@@ -9,7 +9,7 @@ export default function UnAuthorizedPage() {
         <Typography variant="h3">Acesso negado</Typography>
       </Grid>
       <Grid container justifyContent="center" sx={{ m: 2 }}>
-        <Button variant="contained" onClick={() => navigate("/")}>
+        <Button variant="contained" onClick={() => navigate(-1)}>
           Voltar
         </Button>
       </Grid>

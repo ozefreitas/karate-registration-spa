@@ -58,7 +58,8 @@ export default function DeleteEventModal(
       </DialogTitle>
       <DialogContent>
         Tem a certeza que pretende apagar este Evento? Esta ação irá eliminar
-        também todas as inscrições efetuadas até à data.
+        também todas as inscrições efetuadas até à data, assim como eventuais
+        modalidades associadas e respetivas inscrições.
       </DialogContent>
       <DialogActions>
         <Stack

@@ -14,6 +14,7 @@ export default function FormAccordion(
     children: any;
     expanded: boolean;
     tooltipMessage?: string;
+    size?: "split" | "fullWidth";
   }>
 ) {
   return (

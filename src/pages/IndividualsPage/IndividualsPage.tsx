@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import {
   Card,
@@ -86,7 +86,9 @@ export default function IndividualsPage(
                 },
               }}
             >
-              <Typography sx={{fontWeight: "bold"}}>Estado: {state}</Typography>
+              <Typography sx={{ fontWeight: "bold" }}>
+                Estado: {state}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>

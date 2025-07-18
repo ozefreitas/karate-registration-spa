@@ -39,7 +39,7 @@ export default function DeleteAthleteModal(
     handleModalClose: any;
     handleModalOpen: any;
     id?: string | Array<string>;
-    from: "Atletas" | "Equipas" | "Individuais" | "Modalidades";
+    from: "Atletas" | "Equipas" | "Individuais" | "Modalidades" | "Categorias";
     setSelected?: any;
     discipline?: any;
   }>

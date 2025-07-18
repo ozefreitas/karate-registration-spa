@@ -118,7 +118,7 @@ export default function AthletesHomeComponent(
                         <Person />
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.category} ${athlete.gender}`}
+                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.gender}`}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -138,10 +138,12 @@ export default function AthletesHomeComponent(
             </ListItem>
           ) : null}
         </List>
-        {props.userRole !== "free_dojo" ? (
-          <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
-        ) : null}
-        <CardActions sx={{ justifyContent: "flex-end" }}></CardActions>
+
+        <CardActions sx={{ justifyContent: "flex-end" }}>
+          {props.userRole !== "free_dojo" ? (
+            <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
+          ) : null}
+        </CardActions>
       </Card>
     </Grid>
   );
