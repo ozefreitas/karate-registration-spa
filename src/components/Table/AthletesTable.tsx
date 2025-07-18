@@ -117,7 +117,7 @@ function TablePaginationActions(props: Readonly<TablePaginationActionsProps>) {
 
 export default function AthletesTable(
   props: Readonly<{
-    type: "Atletas" | "Equipas" | "Individuais" | "Modalidades";
+    type: "Atletas" | "Equipas" | "Individuais" | "Modalidades" | "Categorias";
     discipline?: string;
     data: any;
     columnsHeaders: any;
@@ -304,7 +304,7 @@ export default function AthletesTable(
 
   return (
     <>
-      {props.data.length == 0 ? (
+      {props.data.length === 0 ? (
         <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
           <Typography variant="h6" sx={{ color: "gray" }}>
             Não foram encontrados registos.
@@ -418,7 +418,10 @@ export default function AthletesTable(
                                 </IconButton>
                               </Tooltip>
                             ) : null}
-                            {props.editable ? (
+                            {props.editable &&
+                            (props.userRole === "national_association" ||
+                              props.type === "Modalidades" ||
+                              props.type === "Individuais") ? (
                               <Tooltip arrow title="Remover">
                                 <IconButton
                                   onClick={(e) => {
@@ -469,7 +472,9 @@ export default function AthletesTable(
                         </IconButton>
                       </Tooltip>
                     </StyledTableCell>
-                  ) : null}
+                  ) : (
+                    <StyledTableCell></StyledTableCell>
+                  )}
                   <TablePagination
                     // labelRowsPerPage="Entradas por página:"
                     rowsPerPageOptions={[
