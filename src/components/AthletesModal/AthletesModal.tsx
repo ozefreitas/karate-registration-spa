@@ -23,6 +23,7 @@ import {
   Checkbox,
   Box,
   CircularProgress,
+  ListItemIcon,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -32,6 +33,7 @@ import {
   Close,
   KeyboardArrowRight,
   KeyboardArrowLeft,
+  Person,
 } from "@mui/icons-material";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
@@ -108,11 +110,13 @@ export default function AthletesModal(
   }>
 ) {
   type Athlete = {
+    age: any;
     id: string;
     first_name: string;
     last_name: string;
     category: string;
     gender: string;
+    weight: number;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -177,10 +181,12 @@ export default function AthletesModal(
   };
 
   const handleDisciplineScreenClose = () => {
+    setCurrentAthleteId("");
     setIsDisciplineScreenOpen(false);
   };
 
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [currentAthleteId, setCurrentAthleteId] = useState<string>("");
   const [disciplinesFree, setDisciplinesFree] = useState<string[]>([]);
   const [isMutationDelayActive, setIsMutationDelayActive] =
@@ -198,7 +204,7 @@ export default function AthletesModal(
       (modalities: any) => `${modalities.name}_${modalities.id}`
     );
 
-    setDisciplinesFree((prev) => [...prev, ...newDisciplines]);
+    setDisciplinesFree(newDisciplines);
   }, [modalitiesFreeData]);
 
   const { data: disciplinesData } = useFetchDisciplinesData(
@@ -243,7 +249,7 @@ export default function AthletesModal(
 
     const entries = Object.entries(data).filter(([, value]) => value);
 
-    await Promise.all(
+    const results = await Promise.allSettled(
       entries.map(([discipline]) => {
         const payload = {
           disciplineId: discipline.split("_")[1],
@@ -253,11 +259,17 @@ export default function AthletesModal(
       })
     );
 
-    refetch();
+    const hasError = results.some((r) => r.status === "rejected");
 
-    setTimeout(() => {
+    if (!hasError) {
+      await refetch();
+      setTimeout(() => {
+        handleDisciplineScreenClose();
+      }, 1000);
+    } else {
       handleDisciplineScreenClose();
-    }, 1000);
+      reset();
+    }
 
     setIsMutationDelayActive(false);
   };
@@ -272,6 +284,26 @@ export default function AthletesModal(
   React.useEffect(() => {
     refetch();
   }, [location]);
+
+  const filteredAthletes = React.useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (!query) return athletesNotInEventData?.data.results ?? [];
+
+    return athletesNotInEventData?.data.results.filter((athlete: any) => {
+      const fullName =
+        `${athlete.first_name} ${athlete.last_name}`.toLowerCase();
+      return (
+        athlete.first_name.toLowerCase().includes(query) ||
+        athlete.last_name.toLowerCase().includes(query) ||
+        fullName.includes(query)
+      );
+    });
+  }, [searchQuery, athletesNotInEventData]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <Dialog
@@ -320,6 +352,8 @@ export default function AthletesModal(
               <StyledInputBase
                 placeholder="Procurar"
                 inputProps={{ "aria-label": "procurar" }}
+                value={searchQuery}
+                onChange={handleInputChange}
               />
             </Search>
           ) : null}
@@ -416,62 +450,77 @@ export default function AthletesModal(
                 <CircularProgress />
               </Grid>
             )}
+            <FormHelperText sx={{ pt: 1 }}>
+              O escalão será calculado automaticamente de acordo com os Escalões
+              disponíveis para cada uma destas Modalidades. <br /> Também a graduação e
+              pesos (quando obrigatórios) serão verificados.
+            </FormHelperText>
           </Grid>
         ) : (
           <List>
             {isAthletesNotInEventLoading ? (
-              <div>Is Loading</div>
+              <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              </Grid>
             ) : athletesNotInEventError ? (
               <div>Ocorreu um erro</div>
-            ) : athletesNotInEventData?.data?.results.length !== 0 ? (
-              athletesNotInEventData?.data?.results.map(
-                (athlete: Athlete, index: string) => (
-                  <ListItem
+            ) : filteredAthletes.length !== 0 ? (
+              filteredAthletes.map((athlete: Athlete, index: string) => (
+                <ListItem
+                  key={index}
+                  disablePadding
+                  secondaryAction={
+                    disciplinesData?.data.results.length !== 0 ? (
+                      <Tooltip title="Selecionar Modalidade">
+                        <IconButton
+                          onClick={() => {
+                            setCurrentAthleteId(athlete.id);
+                            handleDisciplineScreenOpen();
+                          }}
+                          aria-label="go to disciplines selection"
+                        >
+                          <KeyboardArrowRight color="success" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <label>
+                        <Checkbox
+                          sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                          edge="end"
+                          onChange={() => handleToggle(athlete.id)}
+                          checked={checked.includes(athlete.id)}
+                          slotProps={{
+                            input: {
+                              "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
+                            },
+                          }}
+                        />
+                      </label>
+                    )
+                  }
+                >
+                  <ListItemButton
                     key={index}
-                    disablePadding
-                    secondaryAction={
-                      disciplinesData?.data.results.length !== 0 ? (
-                        <Tooltip title="Selecionar Modalidade">
-                          <IconButton
-                            onClick={() => {
-                              setCurrentAthleteId(athlete.id);
-                              handleDisciplineScreenOpen();
-                            }}
-                            aria-label="go to disciplines selection"
-                          >
-                            <KeyboardArrowRight color="success" />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        <label>
-                          <Checkbox
-                            sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
-                            edge="end"
-                            onChange={() => handleToggle(athlete.id)}
-                            checked={checked.includes(athlete.id)}
-                            slotProps={{
-                              input: {
-                                "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
-                              },
-                            }}
-                          />
-                        </label>
-                      )
-                    }
+                    onClick={() => handleToggle(athlete.id)}
                   >
-                    <ListItemButton
-                      key={index}
-                      onClick={() => handleToggle(athlete.id)}
-                    >
-                      <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name}`}
-                        secondary={`${athlete.category} ${athlete.gender}`}
-                      />
-                    </ListItemButton>
-                    <Divider />
-                  </ListItem>
-                )
-              )
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${athlete.first_name} ${athlete.last_name}`}
+                      secondary={`${athlete.gender} / Idade no primeiro dia do ano: ${athlete.age} / Peso: ${athlete.weight ?? "N/A"}`}
+                    />
+                  </ListItemButton>
+                  <Divider />
+                </ListItem>
+              ))
             ) : (
               <ListItem>
                 <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
