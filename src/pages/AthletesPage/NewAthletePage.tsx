@@ -14,7 +14,7 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -68,12 +68,7 @@ export default function NewAthletePage() {
   const is_force_skip = getValues("force_skip");
 
   const onSubmit = async (data: any) => {
-    if (
-      ["Juvenil", "Cadete", "Júnior", "Sénior"].includes(data.category) &&
-      data.weight == ""
-    ) {
-      setError("weight", { message: "Tem que selecionar um peso." });
-    }
+
     const formData = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -88,7 +83,7 @@ export default function NewAthletePage() {
     };
 
     if (!data.is_force_skip) {
-      formData.skip_number = "";
+      formData.skip_number = 0;
     }
 
     createAthlete.mutate(formData, {
@@ -111,7 +106,6 @@ export default function NewAthletePage() {
           | "last_name"
           | "graduation"
           | "birth_date"
-          | "category"
           | "gender"
           | "dojo";
 
@@ -120,7 +114,6 @@ export default function NewAthletePage() {
           "last_name",
           "graduation",
           "birth_date",
-          "category",
           "gender",
           "dojo",
         ];
@@ -133,33 +126,6 @@ export default function NewAthletePage() {
       },
     });
   };
-
-  type WeightCategory = keyof typeof WeightOptions;
-  const [currentCategory, setCurrentCategory] = useState<WeightCategory | null>(
-    null
-  );
-
-  const handleChange = (e: any) => {
-    const value = e.target.value;
-    if (isWeightCategory(value)) {
-      setCurrentCategory(value);
-    } else {
-      setCurrentCategory(null);
-    }
-  };
-
-  const isWeightCategory = (value: string): value is WeightCategory => {
-    return [
-      "Juvenil",
-      "Cadete",
-      "Júnior",
-      "Sénior",
-      "Veterano +35",
-      "Veterano +50",
-    ].includes(value);
-  };
-
-  const isEnabled = currentCategory !== null;
 
   return (
     <>
@@ -458,50 +424,18 @@ export default function NewAthletePage() {
         >
           <Grid sx={{ p: 2 }} size={6}>
             <Controller
-              name="category"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Escalão"
-                  fullWidth
-                  select
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    handleChange(e);
-                  }}
-                  error={!!errors.category}
-                  helperText={errors.category?.message}
-                >
-                  <MenuItem value="">-- Selecionar --</MenuItem>
-                  {CategoryOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
-            <Controller
               name="weight"
               control={control}
               render={({ field }) => (
                 <TextField
                   color="warning"
                   variant={"outlined"}
+                  type="text"
                   label="Peso"
-                  fullWidth
-                  select
-                  disabled={!isEnabled}
+                  
                   multiline
                   required
+                  slotProps={{input:{ inputProps: { min: 0, max: 100 } }}}
                   maxRows={8}
                   {...field}
                   onChange={(e) => {
@@ -510,14 +444,6 @@ export default function NewAthletePage() {
                   error={!!errors.weight}
                   helperText={errors.weight?.message}
                 >
-                  <MenuItem value="">-- Selecionar --</MenuItem>
-                  {currentCategory
-                    ? WeightOptions[currentCategory].map((item, index) => (
-                        <MenuItem key={index} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ))
-                    : null}
                 </TextField>
               )}
             />
