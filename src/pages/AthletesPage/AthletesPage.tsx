@@ -23,9 +23,9 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
     id: string;
     first_name: string;
     last_name: string;
-    category: string;
     gender: string;
     dojo: Dojo;
+    age: string;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -43,19 +43,28 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
       id: athlete.id,
       first_name: athlete.first_name,
       last_name: athlete.last_name,
-      category: athlete.category,
       gender: athlete.gender,
       username: athlete.dojo.username,
+      age: athlete.age,
     }));
   }, [athletesData]);
 
-  const columnMaping = [
-    { key: "first_name", label: "Primeiro Nome" },
-    { key: "last_name", label: "Último Nome" },
-    { key: "category", label: "Escalão" },
-    { key: "gender", label: "Género" },
-    { key: "username", label: "Dojo" },
-  ];
+  const getColumnMaping = () => {
+    const columnMapping = [
+      { key: "first_name", label: "Primeiro Nome" },
+      { key: "last_name", label: "Último Nome" },
+      // { key: "category", label: "Escalão" },
+      { key: "gender", label: "Género" },
+    ];
+    if (props.userRole === "naitonal_association") {
+      columnMapping.push({ key: "username", label: "Dojo" });
+    } else {
+      columnMapping.push({ key: "age", label: "Idade" });
+    }
+    return columnMapping;
+  };
+  
+  const columnMaping = getColumnMaping();
 
   return (
     <>
