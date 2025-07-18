@@ -2,19 +2,23 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
-const fetchEvents = () => {
+const fetchEvents = (page: number, pageSize: number) => {
   const token = localStorage.getItem("token");
   return axios.get(`http://127.0.0.1:8000/events/`, {
     headers: {
       Authorization: `Token ${token}`,
     },
+    params: {
+      page: page,
+      page_size: pageSize,
+    },
   });
 };
 
-export const useFetchEventsData = () => {
+export const useFetchEventsData = (page: number, pageSize: number) => {
   return useQuery({
-    queryKey: ["events"],
-    queryFn: fetchEvents,
+    queryKey: ["events", page, pageSize],
+    queryFn: () => fetchEvents(page, pageSize),
     refetchOnWindowFocus: false,
   });
 };
@@ -420,7 +424,8 @@ export const useAddDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      console.log(data)
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -467,6 +472,162 @@ export const useRemoveDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    },
+    onError: (data: any) => {
+      enqueueSnackbar(`${data.data.error}`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+// categories
+
+const fetchCategories = () => {
+  const token = localStorage.getItem("token");
+  return axios.get(`http://127.0.0.1:8000/categories/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useFetchCategories = () => {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    refetchOnWindowFocus: false,
+  });
+};
+
+const createCategory = (data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(`http://127.0.0.1:8000/categories/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useCreateCategory = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ data }: { data: any }) => createCategory(data),
+    onSuccess: () => {
+      enqueueSnackbar("Escalão criado com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const addDisciplineCategory = (disciplineId: string, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(
+    `http://127.0.0.1:8000/disciplines/${disciplineId}/add_category/`,
+    data,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useAddDisciplineCategory = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      addDisciplineCategory(disciplineId, data),
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["disciplines"] });
+    },
+    onError: (data: any) => {
+      enqueueSnackbar(`${data.data.error}`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const removeDisciplineCategory = (disciplineId: string, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.post(
+    `http://127.0.0.1:8000/disciplines/${disciplineId}/delete_category/`,
+    data,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    }
+  );
+};
+
+export const useRemoveDisciplineCategory = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      removeDisciplineCategory(disciplineId, data),
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.data.error}`, {
