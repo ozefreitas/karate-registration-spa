@@ -34,6 +34,7 @@ import EditAthleteModal from "../AthletesModal/EditAthleteModal";
 import DeleteAthleteModal from "../AthletesModal/DeleteAthleteModal";
 import EditIndividualModal from "../AthletesModal/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
+import CategoryInfoModal from "../Categories/CategoryInfoModal";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -117,18 +118,28 @@ function TablePaginationActions(props: Readonly<TablePaginationActionsProps>) {
 
 export default function AthletesTable(
   props: Readonly<{
-    type: "Atletas" | "Equipas" | "Individuais" | "Modalidades" | "Categorias";
+    type:
+      | "Atletas"
+      | "Equipas"
+      | "Individuais"
+      | "Modalidades"
+      | "Categorias"
+      | "CategoriasReadOnly";
     discipline?: string;
     data: any;
     columnsHeaders: any;
     actions: boolean;
     selection: boolean;
     editable?: boolean;
+    deletable?: boolean;
     page: number;
     setPage: any;
     pageSize: any;
     setPageSize: any;
     userRole: string;
+    selectedDisciplineForCategory?: any;
+    disciplineCategories?: any;
+    setDisciplineCategories?: any;
   }>
 ) {
   type Order = "asc" | "desc";
@@ -152,6 +163,8 @@ export default function AthletesTable(
     useState<boolean>(false);
   const [actionedAthlete, setActionedAthlete] = useState<string>("");
   const [chosenAthlete, setChosenAthlete] = useState<string>("");
+  const [isCategoryInfoModalOpen, setIsCategoryInfoModalOpen] =
+    useState<boolean>(false);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -211,6 +224,15 @@ export default function AthletesTable(
     setIsTeamAthleteEditModalOpen(false);
   };
 
+  const handleCategoryInfoModalOpen = (event: any) => {
+    event.stopPropagation();
+    setIsCategoryInfoModalOpen(true);
+  };
+
+  const handleCategoryInfoModalClose = () => {
+    setIsCategoryInfoModalOpen(false);
+  };
+
   const handleRowEdit = (
     event: React.MouseEvent<HTMLElement>,
     athleteId: string
@@ -239,8 +261,31 @@ export default function AthletesTable(
     id: string
   ) => {
     event.stopPropagation();
-    setActionedAthlete(id);
+    setActionedAthlete(id.toString());
     setIsDeleteModalOpen(true);
+  };
+
+  const handleCategoryRemove = (
+    event: React.MouseEvent<HTMLElement>,
+    id: string
+  ) => {
+    console.log(props.disciplineCategories);
+    event.stopPropagation();
+    props.setDisciplineCategories((prev: any[]) => {
+      const existingDisicpline = prev.findIndex(
+        (item) => item.discipline === props.selectedDisciplineForCategory
+      );
+
+      const categories = prev[existingDisicpline].categories;
+      const updatedCategories = categories.filter((cat: any) => cat !== id);
+
+      const updatedDiscipline = [...prev];
+      updatedDiscipline[existingDisicpline] = {
+        ...updatedDiscipline[existingDisicpline],
+        categories: updatedCategories,
+      };
+      return updatedDiscipline;
+    });
   };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -316,7 +361,7 @@ export default function AthletesTable(
             <Table size="small" aria-label="simple table">
               <TableHead>
                 <StyledTableRow>
-                  {props.selection && props.editable ? (
+                  {props.selection ? (
                     <StyledTableCell>
                       <label>
                         <Checkbox
@@ -361,7 +406,7 @@ export default function AthletesTable(
                       }}
                       key={row.id}
                     >
-                      {props.selection && props.editable ? (
+                      {props.selection ? (
                         <StyledTableCell>
                           <Checkbox
                             color="primary"
@@ -390,9 +435,15 @@ export default function AthletesTable(
                           >
                             <Tooltip arrow title="Consultar">
                               <IconButton
-                                onClick={() => {
+                                onClick={(e) => {
                                   if (props.type === "Equipas") {
                                     navigate(`/teams/${row.id}/`);
+                                  } else if (
+                                    props.type === "Categorias" ||
+                                    props.type === "CategoriasReadOnly"
+                                  ) {
+                                    setActionedAthlete(row.id.toString());
+                                    handleCategoryInfoModalOpen(e);
                                   } else {
                                     navigate(`/athletes/${row.id}/`);
                                   }
@@ -401,7 +452,8 @@ export default function AthletesTable(
                                 <Visibility color="primary"></Visibility>
                               </IconButton>
                             </Tooltip>
-                            {props.userRole === "national_association" ? (
+                            {props.userRole === "national_association" &&
+                            props.editable ? (
                               <Tooltip arrow title="Editar">
                                 <IconButton
                                   onClick={(e) => {
@@ -418,14 +470,19 @@ export default function AthletesTable(
                                 </IconButton>
                               </Tooltip>
                             ) : null}
-                            {props.editable &&
+                            {props.deletable &&
                             (props.userRole === "national_association" ||
                               props.type === "Modalidades" ||
                               props.type === "Individuais") ? (
                               <Tooltip arrow title="Remover">
                                 <IconButton
                                   onClick={(e) => {
-                                    handleRowDelete(e, row.id);
+                                    if (
+                                      props.selectedDisciplineForCategory !==
+                                      undefined
+                                    ) {
+                                      handleCategoryRemove(e, row.id);
+                                    } else handleRowDelete(e, row.id);
                                   }}
                                 >
                                   <Delete color="error"></Delete>
@@ -457,7 +514,7 @@ export default function AthletesTable(
               </TableBody>
               <TableFooter>
                 <TableRow>
-                  {props.selection && props.editable ? (
+                  {props.selection ? (
                     <StyledTableCell>
                       <Tooltip arrow title="Remover Selecionados">
                         <IconButton
@@ -540,6 +597,11 @@ export default function AthletesTable(
           )}
         </Grid>
       )}
+      <CategoryInfoModal
+        isModalOpen={isCategoryInfoModalOpen}
+        handleModalClose={handleCategoryInfoModalClose}
+        categoryId={actionedAthlete}
+      ></CategoryInfoModal>
     </>
   );
 }
