@@ -22,7 +22,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { Add, SportsMartialArts } from "@mui/icons-material";
+import { Add, Delete, SportsMartialArts } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -69,12 +69,23 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   };
 
   const handleRemove = (item: string) => {
+    console.log(item);
+    console.log(disciplineCategories);
     const indexToRemove = disciplines.indexOf(item);
+    const indexToRemove2 = disciplineCategories.findIndex(
+      (obj: any) => obj.discipline === item
+    );
+    console.log(indexToRemove2);
     const newDisciplines = [...disciplines];
+    const newDisciplineCategories = [...disciplineCategories];
     if (indexToRemove > -1) {
       newDisciplines.splice(indexToRemove, 1);
     }
+    if (indexToRemove2 > -1) {
+      newDisciplineCategories.splice(indexToRemove2, 1);
+    }
     setDisciplines(newDisciplines);
+    setDisciplineCategories(newDisciplineCategories);
   };
 
   const createEvent = useCreateEvent();
@@ -84,6 +95,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const addDisciplineCategory = useAddDisciplineCategory();
 
   type Category = {
+    id: string;
     name: string;
     gender: string;
     has_age: string;
@@ -93,14 +105,20 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
 
   // Memoize `rows` to compute only when `athletes` changes
   const categoryRows = useMemo(() => {
-    return categoriesData?.data.results.map((category: Category) => ({
-      name: category.name,
-      gender: category.gender,
-      has_age: category.has_age,
-      has_grad: category.has_grad,
-      has_weight: category.has_weight,
-    }));
-  }, [categoriesData]);
+    const currentIds = disciplineCategories.find(
+      (item: any) => item.discipline === selectedDisciplineForCategory
+    );
+    return categoriesData?.data.results
+      .filter((category: any) => currentIds?.categories.includes(category.id))
+      .map((category: Category) => ({
+        id: category.id,
+        name: category.name,
+        gender: category.gender,
+        has_age: category.has_age,
+        has_grad: category.has_grad,
+        has_weight: category.has_weight,
+      }));
+  }, [categoriesData, selectedDisciplineForCategory, disciplineCategories]);
 
   const {
     control: eventMetadataControl,
@@ -108,7 +126,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     setError,
     setValue,
     getValues,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -204,25 +221,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           }
         },
       }
-      // {
-      //   onSuccess: (data: any) => {
-      //     disciplines.forEach((discipline) => {
-      //       const disciplineData = { event: data.data.id, name: discipline };
-      //       createDiscipline.mutate(
-      //         { data: disciplineData },
-      //         {
-      //           onSuccess: (data: any) => {
-      //             disciplineCategories.forEach((categories) => {
-      //               const disciplineCategoryData = {};
-      //               // addDisciplineCategory.mutate()
-      //             });
-      //           },
-      //         }
-      //       );
-      //     });
-      //
-      //   },
-      // }
     );
     const eventId = eventResponse.data.id;
     const disciplineResponses = await Promise.all(
@@ -824,15 +822,15 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               <List dense>
                 {disciplines.map((discipline, index) => (
                   <ListItem key={index}>
-                    <ListItemButton
-                      onClick={() => handleRemove(discipline)}
-                      sx={{ p: 1, pl: 3 }}
-                    >
+                    <ListItemButton sx={{ p: 1, pl: 3 }}>
                       <ListItemIcon>
                         <SportsMartialArts />
                       </ListItemIcon>
                       {discipline}
                     </ListItemButton>
+                    <IconButton onClick={() => handleRemove(discipline)}>
+                      <Delete color="error" />
+                    </IconButton>
                   </ListItem>
                 ))}
               </List>
@@ -872,35 +870,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </List>
             ) : (
               <ListItem>
-                <ListItemButton sx={{ p: 1, color: "gray" }}>
+                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
                   As Modalidades que adicionar no campo de cima aparecerão aqui.
                   Adicione Modalidades para poder adicionar Escalões às mesmas.
                 </ListItemButton>
               </ListItem>
             )}
-          </Grid>
-          <Grid size={9}>
-            {isCategoriesLoading ? (
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
-              </Box>
-            ) : categoriesData?.data !== undefined ? (
-              <AthletesTable
-                type="Categorias"
-                data={categoryRows}
-                columnsHeaders={columnMaping}
-                actions={false}
-                selection
-                editable
-                page={page}
-                setPage={setPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
-                userRole={props.userRole}
-              ></AthletesTable>
-            ) : null}
-          </Grid>
-          <Grid sx={{ m: 2, mt: 1 }} container size={12}>
             <Button
               sx={{ m: 1 }}
               variant="contained"
@@ -913,6 +888,40 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               Adicionar
             </Button>
           </Grid>
+          <Grid size={9}>
+            {isCategoriesLoading ? (
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </Box>
+            ) : selectedDisciplineForCategory !== "" ? (
+              <AthletesTable
+                type="CategoriasReadOnly"
+                data={categoryRows}
+                columnsHeaders={columnMaping}
+                actions
+                selection={false}
+                deletable
+                page={page}
+                setPage={setPage}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                userRole={props.userRole}
+                selectedDisciplineForCategory={selectedDisciplineForCategory}
+                disciplineCategories={disciplineCategories}
+                setDisciplineCategories={setDisciplineCategories}
+              ></AthletesTable>
+            ) : (
+              <Grid container size={12} justifyContent="center">
+                <Grid sx={{ mt: 5 }} size={6}>
+                  <Typography variant="h6" sx={{ color: "gray" }}>
+                    Selecione uma Modalidade no campo ao lado para visualizar as
+                    categorias já adicionadas.
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+          <Grid sx={{ m: 2, mt: 1 }} container size={12}></Grid>
         </FormAccordion>
         <Grid
           sx={{ m: 5 }}
