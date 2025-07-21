@@ -28,6 +28,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   // Memoize `rows` to compute only when `athletes` changes
   const categoryRows = useMemo(() => {
     return categoriesData?.data.results.map((category: Category) => ({
+      id: category.id,
       name: category.name,
       gender: category.gender,
       has_age: category.has_age,
@@ -71,10 +72,9 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             type="Categorias"
             data={categoryRows}
             columnsHeaders={columnMaping}
-            // for now is not actionable
-            actions={false}
+            actions
             selection
-            editable
+            deletable
             page={page}
             setPage={setPage}
             pageSize={pageSize}

@@ -48,7 +48,7 @@ export const getSideMenuConfig = (userRole: string) => {
       to: "/categories/",
     },
     {
-      name: "notifications",
+      name: "notifications_manager",
       label: "Gestor de Notificações",
       icon: <NotificationsActive sx={{ color: "#e81c24" }} />,
       to: "/notifications_manager/",
@@ -72,7 +72,7 @@ export const getSideMenuConfig = (userRole: string) => {
       to: "/help/",
     },
     {
-      name: "display",
+      name: "results_display",
       label: "Quadro Resultados",
       icon: <DeveloperBoard sx={{ color: "#e81c24" }} />,
       to: "/results_display/",

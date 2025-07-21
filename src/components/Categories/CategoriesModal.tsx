@@ -15,11 +15,6 @@ import {
   Button,
   Tooltip,
   Grid,
-  Stack,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  Switch,
   Checkbox,
   Box,
   CircularProgress,
@@ -267,7 +262,7 @@ export default function CategoriesModal(
                 secondaryAction={
                   <label>
                     <Checkbox
-                      sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                      // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                       edge="end"
                       onChange={() => handleToggle(category.id)}
                       checked={checked.includes(category.id)}
@@ -289,13 +284,13 @@ export default function CategoriesModal(
                   </ListItemIcon>
                   <ListItemText
                     primary={`${category.name} ${category.gender}`}
-                    secondary={`Idade Min.:${category.min_age} / Idade Máx.: ${
-                      category.max_age
-                    } / Grad Min.: ${getGraduationFromValue(
-                      Number(category.min_grad)
-                    )} / Grad Máx.: ${getGraduationFromValue(
-                      Number(category.max_grad)
-                    )}`}
+                    secondary={`Idade Min.:${
+                      category.min_age ?? "N/A"
+                    } / Idade Máx.: ${category.max_age ?? "N/A"} / Grad Min.: ${
+                      getGraduationFromValue(Number(category.min_grad)) ?? "N/A"
+                    } / Grad Máx.: ${
+                      getGraduationFromValue(Number(category.max_grad)) ?? "N/A"
+                    }`}
                   />
                 </ListItemButton>
                 <Divider />

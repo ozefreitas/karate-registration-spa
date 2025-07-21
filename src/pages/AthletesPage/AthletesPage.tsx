@@ -98,6 +98,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
             actions
             selection
             editable
+            deletable
             page={page}
             setPage={setPage}
             pageSize={pageSize}

@@ -23,7 +23,7 @@ export const GraduationsOptions: { label: string; value: number }[] = [
 ];
 
 export const getGraduationFromValue = (gradValue: number) => {
-  let gradLabel = "";
+  let gradLabel = undefined;
   GraduationsOptions.forEach((label) => {
     if (gradValue === label.value) {
       gradLabel = label.label;

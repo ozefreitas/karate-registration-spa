@@ -6,6 +6,7 @@ export default function SettingsButton(
   props: Readonly<{
     label: string;
     to?: string;
+    handleOpen?: any;
     size: "small" | "medium" | "large";
   }>
 ) {
@@ -19,6 +20,9 @@ export default function SettingsButton(
       onClick={() => {
         if (props.to) {
           navigate(props.to);
+        }
+        if (props.handleOpen) {
+          props.handleOpen()
         }
       }}
       startIcon={<Settings />}

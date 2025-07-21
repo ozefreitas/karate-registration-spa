@@ -179,6 +179,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           sx={{ m: 3, mt: 1 }}
           container
           justifyContent={props.userRole === "national_association" ? "space-between" : "flex-end"}
+          alignItems="center"
           size={12}
         >
           {props.userRole === "national_association" ? (
@@ -191,7 +192,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                 disabled={page === 0}
                 aria-label="previous page"
               >
-                <KeyboardArrowLeft />
+                <KeyboardArrowLeft fontSize="large"/>
               </IconButton>
             </Tooltip>
             <Tooltip title="Próxima página">
@@ -202,7 +203,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                 }
                 aria-label="next page"
               >
-                <KeyboardArrowRight />
+                <KeyboardArrowRight fontSize="large"/>
               </IconButton>
             </Tooltip>
           </div>
