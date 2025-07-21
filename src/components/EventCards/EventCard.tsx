@@ -14,6 +14,7 @@ import {
   Box,
   CircularProgress,
   Tooltip,
+  TextField,
 } from "@mui/material";
 import AddButton from "../Buttons/AddButton";
 import {
@@ -37,22 +38,35 @@ import {
   ThumbsUpDown,
   Info,
   Delete,
-  Today
+  Today,
+  Edit,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, Navigate } from "react-router-dom";
+import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
+import { usePatchEventData } from "../../hooks/useEventData";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const location = useLocation();
+  const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
-  const handleModalClose = () => {
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleEditModalOpen = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const handleModalOpen = () => {
+  const handleDeleteModalOpen = () => {
     setIsDeleteModalOpen(true);
   };
 
@@ -66,6 +80,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
     useFetchEventRate(location.pathname.split("/").slice(-2)[0]);
 
   const rateEvent = useRateEvent();
+
+  const patchEvent = usePatchEventData();
 
   const [selected, setSelected] = useState<number>(-2);
 
@@ -83,6 +99,25 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         setSelected(-2);
       },
     });
+  };
+
+  const [description, setDescription] = useState<string>("");
+
+  useEffect(() => {
+    setDescription(singleEventData?.data.description);
+  }, [singleEventData]);
+
+  const handleDescriptionSubmit = (description: string) => {
+    const data = { description: description };
+    const event = location.pathname.split("/").slice(-2)[0];
+    patchEvent.mutate(
+      { eventId: event, data: data },
+      {
+        onSettled: () => {
+          setIsDescriptionEdit(false);
+        },
+      }
+    );
   };
 
   if (singleEventError) return <Navigate to="/not_found/" />;
@@ -187,7 +222,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               </CardContent>
             </Card>
           </Grid>
-          <Grid container size={6}>
+          <Grid size={6}>
             <Grid size={12}>
               <Card sx={{ m: 2 }}>
                 <CardHeader
@@ -209,21 +244,63 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               <Card sx={{ m: 2 }}>
                 <CardHeader
                   title="Notas Importantes"
+                  subheader={
+                    props.userRole === "national_association" ? (
+                      <Button
+                        sx={{ m: 2, ml: 0 }}
+                        variant="contained"
+                        size="small"
+                        color="warning"
+                        onClick={() => setIsDescriptionEdit((prev) => !prev)}
+                        startIcon={<Edit />}
+                      >
+                        Editar
+                      </Button>
+                    ) : null
+                  }
                   sx={{
                     "& .MuiCardHeader-title": {
                       fontWeight: "bold",
                     },
                   }}
                 ></CardHeader>
-                <CardContent>
-                  {singleEventData?.data?.description === "" ? (
+                <CardContent sx={{ pt: 0 }}>
+                  {isDescriptionEdit ? (
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Descrição"
+                      fullWidth
+                      required
+                      multiline
+                      value={description}
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
+                    />
+                  ) : singleEventData?.data?.description === "" ? (
                     <li style={{ color: "grey" }}>
                       Não existem informações adicionais para este Evento.
                     </li>
                   ) : (
-                    singleEventData?.data?.description
+                    <Typography paddingLeft={1}>
+                      {singleEventData?.data?.description}
+                    </Typography>
                   )}
                 </CardContent>
+                {isDescriptionEdit ? (
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}
+                  >
+                    <Button
+                      size="small"
+                      onClick={() => handleDescriptionSubmit(description)}
+                      variant="contained"
+                    >
+                      Enviar
+                    </Button>
+                  </CardActions>
+                ) : null}
               </Card>
             </Grid>
             <Grid size={12}>
@@ -387,7 +464,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       variant="contained"
                       size="large"
                       color="error"
-                      onClick={handleModalOpen}
+                      onClick={handleDeleteModalOpen}
                       startIcon={<Delete />}
                     >
                       Eliminar Evento
@@ -395,6 +472,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     <SettingsButton
                       size="large"
                       label="Editar Evento"
+                      handleOpen={handleEditModalOpen}
                     ></SettingsButton>
                   </>
                 )}
@@ -436,10 +514,15 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       </Grid>
       <DeleteEventModal
         isModalOpen={isDeleteModalOpen}
-        handleModalClose={handleModalClose}
-        handleModalOpen={handleModalOpen}
+        handleModalClose={handleDeleteModalClose}
+        handleModalOpen={handleDeleteModalOpen}
         id={location.pathname.split("/").slice(-2)[0]}
       ></DeleteEventModal>
+      <EditEventModal
+        handleClose={handleEditModalClose}
+        isOpen={isEditModalOpen}
+        singleEventData={singleEventData?.data}
+      ></EditEventModal>
     </>
   );
 }
