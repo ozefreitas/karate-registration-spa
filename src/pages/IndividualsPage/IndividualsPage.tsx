@@ -110,8 +110,9 @@ export default function IndividualsPage(
                 discipline={discipline.id}
                 data={discipline.individuals}
                 columnsHeaders={columnMaping}
-                actions={true}
-                selection={true}
+                actions
+                selection
+                deletable
                 editable={!singleEventData?.data.is_closed}
                 page={page}
                 setPage={setPage}
@@ -126,8 +127,9 @@ export default function IndividualsPage(
             type="Individuais"
             data={singleEventData?.data.individuals}
             columnsHeaders={columnMaping}
-            actions={true}
-            selection={true}
+            actions
+            selection
+            deletable
             page={page}
             setPage={setPage}
             pageSize={pageSize}

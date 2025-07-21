@@ -100,8 +100,9 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
             type="Equipas"
             data={teamRows}
             columnsHeaders={columnMaping}
-            actions={true}
-            selection={true}
+            actions
+            deletable
+            selection
             page={page}
             setPage={setPage}
             pageSize={pageSize}
