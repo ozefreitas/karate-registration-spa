@@ -13,6 +13,8 @@ import { TransitionProps } from "@mui/material/transitions";
 import {
   useRemoveEventAthlete,
   useRemoveDisciplineAthlete,
+  useRemoveCategory,
+  useRemoveAllCategoriesData,
 } from "../../hooks/useEventData";
 import {
   useRemoveAthleteData,
@@ -39,7 +41,7 @@ export default function DeleteAthleteModal(
     handleModalClose: any;
     handleModalOpen: any;
     id?: string | Array<string>;
-    from: "Atletas" | "Equipas" | "Individuais" | "Modalidades" | "Categorias";
+    from: "Atletas" | "Equipas" | "Individuais" | "Modalidades" | "Categorias" | "CategoriasReadOnly";
     setSelected?: any;
     discipline?: any;
   }>
@@ -50,6 +52,8 @@ export default function DeleteAthleteModal(
   const removeAllAthletes = useRemoveAllAthletesData();
   const removeTeam = useRemoveTeamData();
   const removeAllTeams = useRemoveAllTeamsData();
+  const removeCategory = useRemoveCategory();
+  const removeAllCategories = useRemoveAllCategoriesData();
   const location = useLocation();
 
   const handleDelete = (
@@ -69,6 +73,8 @@ export default function DeleteAthleteModal(
           data: athleteData,
         };
         removeEventAthlete.mutate(data);
+      } else if (props.from === "Categorias") {
+        removeCategory.mutate(id);
       } else {
         const data = {
           disciplineId: props.discipline,
@@ -94,6 +100,10 @@ export default function DeleteAthleteModal(
           };
           removeEventAthlete.mutate(data);
         });
+      } else if (props.from === "Categorias") {
+        id.forEach((categoryId) => {
+          removeCategory.mutate(categoryId);
+        });
       } else {
         id.forEach((athleteId) => {
           const data = {
@@ -109,6 +119,8 @@ export default function DeleteAthleteModal(
         removeAllAthletes.mutate();
       } else if (props.from === "Equipas") {
         removeAllTeams.mutate();
+      } else if (props.from === "Categorias") {
+        removeAllCategories.mutate();
       } else {
         // removeAllIndividuals.mutate();
       }
@@ -135,6 +147,10 @@ export default function DeleteAthleteModal(
           ? props.id !== undefined
             ? "Tem a certeza que pretende apagar este(s) Atleta(s)? Esta ação irá eliminar também todas as inscrições deste(s) Atleta(s) em todas as provas."
             : "Tem a certeza que pretende apagar todos os seus Atletas? Esta ação irá eliminar também todas as inscrições de todos os Atletas em todas as provas"
+          : props.from === "Categorias"
+          ? props.id !== undefined
+            ? "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
+            : "Tem a certeza que pretende apagar todos os Escalões?"
           : props.id !== undefined
           ? "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
           : "Tem a certeza que pretende apagar todas as Inscrições?"}
