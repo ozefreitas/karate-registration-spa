@@ -64,6 +64,106 @@ export const useCreateEvent = () => {
   });
 };
 
+const updateEvent = (eventId: string | null, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.put(`http://127.0.0.1:8000/events/${eventId}/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useUpdateEventData = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      eventId,
+      data,
+    }: {
+      eventId: string | null;
+      data: any;
+    }) => updateEvent(eventId, data),
+    onSuccess: () => {
+      enqueueSnackbar("Evento atualizado com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["last-event"] });
+      queryClient.invalidateQueries({ queryKey: ["next-event"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const patchEvent = (eventId: string | null, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.patch(`http://127.0.0.1:8000/events/${eventId}/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const usePatchEventData = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      eventId,
+      data,
+    }: {
+      eventId: string | null;
+      data: any;
+    }) => patchEvent(eventId, data),
+    onSuccess: () => {
+      enqueueSnackbar("Evento atualizado com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["last-event"] });
+      queryClient.invalidateQueries({ queryKey: ["next-event"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
 const removeEvent = (eventId: string) => {
   const token = localStorage.getItem("token");
   return axios.delete(`http://127.0.0.1:8000/events/${eventId}/`, {
@@ -506,6 +606,24 @@ export const useFetchCategories = () => {
   });
 };
 
+const fetchSingleCategory = (categoryId: string) => {
+  const token = localStorage.getItem("token");
+  return axios.get(`http://127.0.0.1:8000/categories/${categoryId}/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useFetchSingleCategory = (categoryId: string) => {
+  return useQuery({
+    queryKey: ["single-category"],
+    queryFn: () => fetchSingleCategory(categoryId),
+    refetchOnWindowFocus: false,
+    enabled: !!categoryId
+  });
+};
+
 const createCategory = (data: any) => {
   const token = localStorage.getItem("token");
   return axios.post(`http://127.0.0.1:8000/categories/`, data, {
@@ -631,6 +749,88 @@ export const useRemoveDisciplineCategory = () => {
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.data.error}`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const removeCategory = (categoryId: string) => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`http://127.0.0.1:8000/categories/${categoryId}/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useRemoveCategory = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: removeCategory,
+    onSuccess: () => {
+      enqueueSnackbar("Escalão removido da plataforma com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+const removeAllCategories = () => {
+  const token = localStorage.getItem("token");
+  return axios.delete(`http://127.0.0.1:8000/categories/delete_all/`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useRemoveAllCategoriesData = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: removeAllCategories,
+    onSuccess: (data: any) => {
+      enqueueSnackbar(`${data.data.message}!`, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
