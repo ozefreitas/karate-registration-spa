@@ -1,32 +1,35 @@
 import { JSX } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "./GlobalAuthProvider";
 
 export default function ProtectedRoute({
   element,
   allowedRoles,
-  userRole,
   allowUnauthenticated,
 }: Readonly<{
   element: JSX.Element;
   allowedRoles: string[];
-  userRole: string | undefined;
   allowUnauthenticated?: boolean;
 }>) {
-  if (userRole === "superuser") {
+  const { user, isAuthLoading } = useAuth();
+
+  if (!isAuthLoading) {
+    if (user?.data.role === "superuser") {
+      return element;
+    }
+
+    if (!user?.data.role && allowUnauthenticated) {
+      return element;
+    }
+
+    if (!user?.data.role) {
+      return <Navigate to="/login/" />;
+    }
+
+    if (!allowedRoles.includes(user?.data.role)) {
+      return <Navigate to="/unauthorized/" />;
+    }
+
     return element;
   }
-
-  if (!userRole && allowUnauthenticated) {
-    return element;
-  }
-
-  if (!userRole) {
-    return <Navigate to="/login/" />;
-  }
-
-  if (!allowedRoles.includes(userRole)) {
-    return <Navigate to="/unauthorized/" />;
-  }
-
-  return element;
 }
