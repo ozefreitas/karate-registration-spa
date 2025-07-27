@@ -913,7 +913,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             ) : (
               <Grid container size={12} justifyContent="center">
                 <Grid sx={{ mt: 5 }} size={6}>
-                  <Typography variant="h6" sx={{ color: "gray" }}>
+                  <Typography sx={{ color: "gray" }}>
                     Selecione uma Modalidade no campo ao lado para visualizar as
                     categorias já adicionadas.
                   </Typography>

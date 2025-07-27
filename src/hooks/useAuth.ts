@@ -15,8 +15,8 @@ export const useFetchMeData = () => {
   return useQuery({
     queryKey: ["me"],
     queryFn: fetchMe,
-    // refetchOnWindowFocus: false,
-    // refetchOnMount: false,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
   });
 };
 

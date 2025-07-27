@@ -269,7 +269,6 @@ export default function AthletesTable(
     event: React.MouseEvent<HTMLElement>,
     id: string
   ) => {
-    console.log(props.disciplineCategories);
     event.stopPropagation();
     props.setDisciplineCategories((prev: any[]) => {
       const existingDisicpline = prev.findIndex(
@@ -436,6 +435,7 @@ export default function AthletesTable(
                             <Tooltip arrow title="Consultar">
                               <IconButton
                                 onClick={(e) => {
+                                  e.stopPropagation();
                                   if (props.type === "Equipas") {
                                     navigate(`/teams/${row.id}/`);
                                   } else if (

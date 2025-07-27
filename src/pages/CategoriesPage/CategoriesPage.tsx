@@ -59,7 +59,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
         <CardContent>
           Aqui poderá registar ver todos os Escalões que tem registado na
           plataforma. Pode adicionar novos e eliminar. Deve criar Escalões
-          duplicados para diferentes Modalidades.
+          duplicados para diferentes Modalidades. <br />
+          Se desejar alterar algum Escalão, deverá apagar e criar um de novo.
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
