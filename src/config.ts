@@ -94,11 +94,11 @@ export const SeasonOptions: { label: string; value: string }[] = [
 ];
 
 export const MatchTypeOptions: { label: string; value: string }[] = [
-  { value: "kata", label: "Kata" },
-  { value: "kumite", label: "Kumite" },
-  { value: "katakumite", label: "Kata e Kumite" },
-  // { value: "kataequipa", label: "Kata Equipa" },
-  // { value: "kumiteequipa", label: "Kumite Equipa" },
+  { value: "kata_elim", label: "Kata Individual" },
+  { value: "kumite_indiv", label: "Kumite Individual" },
+  { value: "kata_final", label: "Final Kata Individual" },
+  { value: "kata_team", label: "Kata Equipa" },
+  { value: "kumite_team", label: "Kumite Equipa" },
   // { value: "katakumiteequipa", label: "Kata e Kumite Equipa" },
 ];
 
@@ -107,4 +107,13 @@ export const NotificationUrgencyOptions: { label: string; value: string }[] = [
   { value: "yellow", label: "Amarelo" },
   { value: "orange", label: "Laranja" },
   { value: "red", label: "Vermelho" },
+];
+
+export const KataOptions: { label: string; value: string }[] = [
+  { value: "heianshodan", label: "Heian Shodan" },
+  { value: "heiannidan", label: "Heian Nidan" },
+  { value: "heiansandan", label: "Heian Sandan" },
+  { value: "heianyondan", label: "Heian Yondan" },
+  { value: "heiangodan", label: "Heian Godan" },
+  { value: "tikishodan", label: "Tiki Shodan" },
 ];
