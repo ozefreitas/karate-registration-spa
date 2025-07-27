@@ -20,30 +20,15 @@ import { Logout } from "@mui/icons-material";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { breadcrumbsConvertion } from "../../dashboard/config";
 import stringAvatar from "../../dashboard/utils/avatarColor";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
 export default function ButtonAppBar(
   props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
 ) {
   const navigate = useNavigate();
   const [currentSeason, setCurrentSeason] = useState<string>("");
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const checkAuth = async () => {
-      if (!token) {
-        setIsAuthenticated(false);
-        setUsername("");
-      } else {
-        setIsAuthenticated(true);
-      }
-    };
-    checkAuth();
-    if (props.me?.data.username !== undefined) {
-      setUsername(props.me?.data.username);
-    }
-  }, [props.me]);
+  const { user, isAuthenticated } = useAuth();
 
   const paths = window.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
@@ -92,6 +77,10 @@ export default function ButtonAppBar(
     navigate("/");
     window.location.reload();
   };
+
+  const shouldRender = breadcrumbs.some(
+    (item) => item.title === "Não permitido" && item.link === "unauthorized/"
+  );
 
   return (
     <>
@@ -151,7 +140,7 @@ export default function ButtonAppBar(
                 aria-expanded={open ? "true" : undefined}
               >
                 {isAuthenticated ? (
-                  <Avatar {...stringAvatar(username)}></Avatar>
+                  <Avatar {...stringAvatar(user?.data.username)}></Avatar>
                 ) : (
                   <Grid container spacing={2}>
                     <Button
@@ -214,9 +203,10 @@ export default function ButtonAppBar(
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem divider sx={{ p: 2 }}>
-          Bem-vindo {username}
+          Bem-vindo {user?.data.username}
         </MenuItem>
         <MenuItem
+          disabled
           sx={{ p: 2 }}
           onClick={() => {
             handleClose();
@@ -229,30 +219,32 @@ export default function ButtonAppBar(
           <Logout sx={{ m: 0, mr: 1 }} /> Logout
         </MenuItem>
       </Menu>
-      <Breadcrumbs sx={{ p: 3 }}>
-        {breadcrumbs.length !== 0 ? (
-          <Link to={"/"}>
-            <Typography color="red">Início</Typography>
-          </Link>
-        ) : (
-          ""
-        )}
-        {breadcrumbs.map((b, index) =>
-          index !== breadcrumbs.length - 1 ? (
-            <Box key={index}>
-              <Link to={b.link}>
-                <Typography color="red">
-                  {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
-                </Typography>
-              </Link>
-            </Box>
+      {!shouldRender && (
+        <Breadcrumbs sx={{ p: 3 }}>
+          {breadcrumbs.length !== 0 ? (
+            <Link to={"/"}>
+              <Typography color="red">Início</Typography>
+            </Link>
           ) : (
-            <Typography key={index}>
-              {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
-            </Typography>
-          )
-        )}
-      </Breadcrumbs>
+            ""
+          )}
+          {breadcrumbs.map((b, index) =>
+            index !== breadcrumbs.length - 1 ? (
+              <Box key={index}>
+                <Link to={b.link}>
+                  <Typography color="red">
+                    {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
+                  </Typography>
+                </Link>
+              </Box>
+            ) : (
+              <Typography key={index}>
+                {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
+              </Typography>
+            )
+          )}
+        </Breadcrumbs>
+      )}
     </>
   );
 }

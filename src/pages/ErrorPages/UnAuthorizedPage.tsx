@@ -5,11 +5,11 @@ export default function UnAuthorizedPage() {
   const navigate = useNavigate();
   return (
     <>
-      <Grid container size={10} justifyContent="center">
+      <Grid sx={{ mt: 10 }} container size={10} justifyContent="center">
         <Typography variant="h3">Acesso negado</Typography>
       </Grid>
       <Grid container justifyContent="center" sx={{ m: 2 }}>
-        <Button variant="contained" onClick={() => navigate(-1)}>
+        <Button variant="contained" size="large" onClick={() => navigate("/")}>
           Voltar
         </Button>
       </Grid>
