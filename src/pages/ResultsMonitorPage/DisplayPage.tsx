@@ -1,3 +1,8 @@
 export default function DisplayPage() {
-    return <div>Ola</div>
+
+  return (
+    <>
+      Ola
+    </>
+  );
 }

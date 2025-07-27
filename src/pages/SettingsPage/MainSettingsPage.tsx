@@ -26,9 +26,7 @@ export default function MainSettingsPage() {
   const [value, setValue] = useState("one");
   const [clickedUsername, setClickedUsername] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string>("");
-
-  console.log(selectedUserId);
-
+  
   const { data: availableClubsData } = useFetchAvailableClubs();
   const createClub = useCreateClub();
   const removeClub = useRemoveClub();
