@@ -3,13 +3,10 @@ import {
   Card,
   CardHeader,
   CardContent,
-  Typography,
   Grid,
   Box,
   CircularProgress,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import AthletesHomeComponent from "../../components/home-cards/AthletesHomeComponent";
 import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
@@ -96,7 +93,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
         </Grid>
         <Grid size={6}>
-          <NextCompHomeComponent></NextCompHomeComponent>
+          <NextCompHomeComponent userRole={props.userRole}></NextCompHomeComponent>
           <LastCompQualiHomeComponent userRole={props.userRole}></LastCompQualiHomeComponent>
         </Grid>
       </Grid>
