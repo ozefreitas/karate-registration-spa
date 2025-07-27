@@ -99,16 +99,16 @@ export const getSideMenuConfig = (userRole: string) => {
       (item) =>
         item.name !== "athletes" &&
         item.name !== "teams" &&
-        item.name !== "display" &&
+        item.name !== "results_display" &&
         item.name !== "settings" &&
-        item.name !== "notifications" &&
+        item.name !== "notifications_manager" &&
         item.name !== "categories"
     );
   } else if (userRole === "subed_dojo") {
     return baseMenu.filter(
       (item) =>
-        item.name !== "notifications" &&
-        item.name !== "display" &&
+        item.name !== "notifications_manager" &&
+        item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "categories"
     );
