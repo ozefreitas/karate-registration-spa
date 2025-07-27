@@ -33,24 +33,34 @@ import DrawPage from "./pages/DrawPage/DrawPage";
 import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
 import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
+import KataElim from "./pages/DisplayPanelPages/KataElim";
+import KataFinal from "./pages/DisplayPanelPages/KataFinal";
+import KataTeam from "./pages/DisplayPanelPages/KataTeam";
+import KumiteIndiv from "./pages/DisplayPanelPages/KumiteIndiv";
+import KumiteTeam from "./pages/DisplayPanelPages/KumiteTeam";
 import { useEffect } from "react";
+import { useAuth } from "./access/GlobalAuthProvider";
 
 function App() {
-  const { data: meData, isLoading: isMeLoading } = useFetchMeData();
-  const userRole: string = meData?.data.role;
+  const { user, isAuthLoading } = useAuth();
+  const userRole = user?.data.role;
 
   useEffect(() => {
-    if (location.pathname === "/display_panel/") {
+    if (location.pathname.split("/").includes("display_panel")) {
       document.body.classList.add("display-mode");
     } else {
       document.body.classList.remove("display-mode");
     }
   }, [location]);
 
+  if (isAuthLoading) {
+    return <div></div>;
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<MainAppLayout me={meData} />}>
+        <Route element={<MainAppLayout me={user} />}>
           <Route
             path="/"
             element={
@@ -66,11 +76,10 @@ function App() {
           <Route
             path="athletes/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<AthletesPage userRole={userRole} />}
                   allowedRoles={["subed_dojo", "national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -78,11 +87,10 @@ function App() {
           <Route
             path="athletes/:id/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<SingleAthletePage />}
                   allowedRoles={["subed_dojo", "national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -90,11 +98,10 @@ function App() {
           <Route
             path="athletes/new_athlete/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewAthletePage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -102,11 +109,10 @@ function App() {
           <Route
             path="teams/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<TeamsPage userRole={userRole} />}
                   allowedRoles={["subed_dojo"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -114,11 +120,10 @@ function App() {
           <Route
             path="teams/:id/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<SingleTeamPage />}
                   allowedRoles={["subed_dojo", "national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -126,11 +131,10 @@ function App() {
           <Route
             path="teams/new_team/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewTeamPage />}
                   allowedRoles={["subed_dojo"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -138,7 +142,7 @@ function App() {
           <Route
             path="events/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<EventsPage userRole={userRole} />}
                   allowedRoles={[
@@ -146,7 +150,6 @@ function App() {
                     "subed_dojo",
                     "national_association",
                   ]}
-                  userRole={userRole}
                 />
               )
             }
@@ -154,11 +157,10 @@ function App() {
           <Route
             path="events/new_event/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewEventPage userRole={userRole} />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -166,11 +168,10 @@ function App() {
           <Route
             path="categories/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<CategoriesPage userRole={userRole} />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -178,11 +179,10 @@ function App() {
           <Route
             path="categories/new_category/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewCategoryPage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -190,11 +190,10 @@ function App() {
           <Route
             path="notifications_manager/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NotificationsPage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -202,7 +201,7 @@ function App() {
           <Route
             path="events/:id/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<EventCard userRole={userRole} />}
                   allowedRoles={[
@@ -210,7 +209,6 @@ function App() {
                     "subed_dojo",
                     "national_association",
                   ]}
-                  userRole={userRole}
                 />
               )
             }
@@ -218,11 +216,10 @@ function App() {
           <Route
             path="events/:id/all_registry"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<EventAllRegistryPage userRole={userRole} />}
                   allowedRoles={["subed_dojo", "national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -230,11 +227,10 @@ function App() {
           <Route
             path="events/:id/draw/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<DrawPage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -242,11 +238,10 @@ function App() {
           <Route
             path="events/:id/draw/generate/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<GenerateDrawPage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -254,7 +249,7 @@ function App() {
           <Route
             path="events/:id/individuals/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<IndividualsPage userRole={userRole} />}
                   allowedRoles={[
@@ -262,7 +257,6 @@ function App() {
                     "subed_dojo",
                     "national_association",
                   ]}
-                  userRole={userRole}
                 />
               )
             }
@@ -270,7 +264,7 @@ function App() {
           <Route
             path="events/:id/teams/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<RegisteredTeamsPage />}
                   allowedRoles={[
@@ -278,7 +272,6 @@ function App() {
                     "subed_dojo",
                     "national_association",
                   ]}
-                  userRole={userRole}
                 />
               )
             }
@@ -286,11 +279,10 @@ function App() {
           <Route
             path="rules/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<RulesPage />}
                   allowedRoles={["free_dojo", "subed_dojo"]}
-                  userRole={userRole}
                   allowUnauthenticated
                 />
               )
@@ -299,11 +291,10 @@ function App() {
           <Route
             path="classifications/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<ClassificationsPage />}
                   allowedRoles={["free_dojo", "subed_dojo"]}
-                  userRole={userRole}
                   allowUnauthenticated
                 />
               )
@@ -312,11 +303,10 @@ function App() {
           <Route
             path="help/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<HelpPage />}
                   allowedRoles={["free_dojo", "subed_dojo"]}
-                  userRole={userRole}
                   allowUnauthenticated
                 />
               )
@@ -325,11 +315,10 @@ function App() {
           <Route
             path="results_display/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<ResultsMainPage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -337,11 +326,10 @@ function App() {
           <Route
             path="settings/"
             element={
-              isMeLoading ? null : (
+              isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<MainSettingsPage />}
                   allowedRoles={["national_association"]}
-                  userRole={userRole}
                 />
               )
             }
@@ -351,6 +339,11 @@ function App() {
         </Route>
         <Route element={<DisplayPanelLayout />}>
           <Route path="/display_panel/" element={<DisplayPage />} />
+          <Route path="display_panel/kata_elim/" element={<KataElim />} />
+          <Route path="display_panel/kata_final/" element={<KataFinal />} />
+          <Route path="display_panel/kata_team/" element={<KataTeam />} />
+          <Route path="display_panel/kumite_indiv/" element={<KumiteIndiv />} />
+          <Route path="display_panel/kumite_team/" element={<KumiteTeam />} />
         </Route>
       </Routes>
     </BrowserRouter>
