@@ -253,7 +253,7 @@ export default function AthletesModal(
       entries.map(([discipline]) => {
         const payload = {
           disciplineId: discipline.split("_")[1],
-          data: { athlete_id: currentAthleteId },
+          data: { athlete_id: currentAthleteId, event_id: props.eventData.id },
         };
         return addDisciplineAthlete.mutateAsync(payload);
       })
@@ -452,8 +452,8 @@ export default function AthletesModal(
             )}
             <FormHelperText sx={{ pt: 1 }}>
               O escalão será calculado automaticamente de acordo com os Escalões
-              disponíveis para cada uma destas Modalidades. <br /> Também a graduação e
-              pesos (quando obrigatórios) serão verificados.
+              disponíveis para cada uma destas Modalidades. <br /> Também a
+              graduação e pesos (quando obrigatórios) serão verificados.
             </FormHelperText>
           </Grid>
         ) : (
@@ -515,7 +515,11 @@ export default function AthletesModal(
                     </ListItemIcon>
                     <ListItemText
                       primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.gender} / Idade no primeiro dia do ano: ${athlete.age} / Peso: ${athlete.weight ?? "N/A"}`}
+                      secondary={`${
+                        athlete.gender
+                      } / Idade no primeiro dia do ano: ${
+                        athlete.age
+                      } / Peso: ${athlete.weight ?? "N/A"}`}
                     />
                   </ListItemButton>
                   <Divider />
