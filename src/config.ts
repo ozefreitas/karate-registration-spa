@@ -64,23 +64,23 @@ export const ReasonOptions: { label: string; value: string }[] = [
   { label: "Karate Tradicional", value: "traditional" },
 ];
 
-export const WeightOptions = {
-  Juvenil: [
-    { value: "-47", label: "-47Kg" },
-    { value: "+47", label: "+47Kg" },
-  ],
-  Cadete: [
-    { value: "-57", label: "-57Kg" },
-    { value: "+57", label: "+57Kg" },
-  ],
-  Júnior: [
-    { value: "-65", label: "-65Kg" },
-    { value: "+65", label: "+65Kg" },
-  ],
-  Sénior: [{ value: "open", label: "Open" }],
-  "Veterano +35": [{ value: "open", label: "Open" }],
-  "Veterano +50": [{ value: "open", label: "Open" }],
-};
+// export const WeightOptions = {
+//   Juvenil: [
+//     { value: "-47", label: "-47Kg" },
+//     { value: "+47", label: "+47Kg" },
+//   ],
+//   Cadete: [
+//     { value: "-57", label: "-57Kg" },
+//     { value: "+57", label: "+57Kg" },
+//   ],
+//   Júnior: [
+//     { value: "-65", label: "-65Kg" },
+//     { value: "+65", label: "+65Kg" },
+//   ],
+//   Sénior: [{ value: "open", label: "Open" }],
+//   "Veterano +35": [{ value: "open", label: "Open" }],
+//   "Veterano +50": [{ value: "open", label: "Open" }],
+// };
 
 export const EncounterOptions: { label: string; value: string }[] = [
   { label: "Regional", value: "regional" },
@@ -114,6 +114,11 @@ export const NotificationUrgencyOptions: { label: string; value: string }[] = [
   { value: "yellow", label: "Amarelo" },
   { value: "orange", label: "Laranja" },
   { value: "red", label: "Vermelho" },
+];
+
+export const QuotesOptions: { label: string; value: string }[] = [
+  { value: "overdue", label: "Em falta" },
+  { value: "regular", label: "Regular" },
 ];
 
 export const KataOptions: { label: string; value: string }[] = [
