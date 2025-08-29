@@ -29,7 +29,7 @@ export const GlobalAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<AxiosResponse<any, any> | undefined>(undefined);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true)
-  const { data: meData, isLoading: isMeLoading } = useFetchMeData();
+  const { data: meData, isLoading: isMeLoading, error: meError } = useFetchMeData();
 
   useEffect(() => {
     if (!isMeLoading) {
@@ -41,6 +41,10 @@ export const GlobalAuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(undefined);
         setIsAuthenticated(false);
         setIsAuthLoading(true)
+      }
+
+      if (meError) {
+        setIsAuthLoading(false)
       }
     }
   }, [meData, isMeLoading]);
