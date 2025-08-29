@@ -50,7 +50,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title="Página de criação de Escalões"
+          title="Página de Escalões"
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",

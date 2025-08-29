@@ -1,11 +1,11 @@
 import { Button, Grid } from "@mui/material";
-import { Send, Delete } from "@mui/icons-material";
+import { Send, Delete, NavigateNext } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 
 export default function CommonActions() {
   return (
     <FormCard title="Ações Comuns">
-      <Grid size={12} container>
+      <Grid size={12} container justifyContent="space-evenly">
         <Button
           sx={{ m: 1 }}
           variant="contained"
@@ -29,6 +29,18 @@ export default function CommonActions() {
           startIcon={<Delete />}
         >
           Limpar Tudo
+        </Button>
+        <Button
+          sx={{ m: 1 }}
+          variant="contained"
+          size="large"
+          color="primary"
+          //   onClick={() => {
+          //     sendPlayer2Name();
+          //   }}
+          startIcon={<NavigateNext />}
+        >
+          Próxima Partida
         </Button>
       </Grid>
     </FormCard>
