@@ -33,10 +33,7 @@ import {
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAddDisciplineCategory } from "../../hooks/useEventData";
 import { useFetchCategories } from "../../hooks/useEventData";
-import { useSnackbar } from "notistack";
-import { Controller, useForm } from "react-hook-form";
 import { getGraduationFromValue } from "../../config";
 
 const Search = styled("div")(({ theme }) => ({
@@ -95,9 +92,11 @@ export default function CategoriesModal(
     isModalOpen: boolean;
     handleModalClose: any;
     disciplineData: any;
+    disciplineCategories: any;
     setDisciplineCategories: any;
   }>
 ) {
+  console.log(props.disciplineCategories);
   type Category = {
     id: string;
     name: string;
@@ -109,6 +108,8 @@ export default function CategoriesModal(
     min_grad: number;
     max_grad: number;
     has_weight: string;
+    min_weight: string;
+    max_weight: string;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -119,8 +120,6 @@ export default function CategoriesModal(
     isLoading: isCategoriesLoading,
     error: categoriesError,
   } = useFetchCategories();
-
-  const addDisciplineCategory = useAddDisciplineCategory();
 
   const handleBackButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -255,47 +254,63 @@ export default function CategoriesModal(
           ) : categoriesError ? (
             <div>Ocorreu um erro</div>
           ) : categoryAthletes.length !== 0 ? (
-            categoryAthletes.map((category: Category, index: string) => (
-              <ListItem
-                key={index}
-                disablePadding
-                secondaryAction={
-                  <label>
-                    <Checkbox
-                      // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
-                      edge="end"
-                      onChange={() => handleToggle(category.id)}
-                      checked={checked.includes(category.id)}
-                      slotProps={{
-                        input: {
-                          "aria-labelledby": `checkbox-list-secondary-label-${category.name}`,
-                        },
-                      }}
-                    />
-                  </label>
+            categoryAthletes
+              .filter((category: Category) => {
+                if (props.disciplineCategories.length === 0) {
+                  return category;
+                } else {
+                  props.disciplineCategories[props.disciplineData].includes(
+                    category.id
+                  );
                 }
-              >
-                <ListItemButton
+              })
+              .map((category: Category, index: string) => (
+                <ListItem
                   key={index}
-                  onClick={() => handleToggle(category.id)}
+                  disablePadding
+                  secondaryAction={
+                    <label>
+                      <Checkbox
+                        // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                        edge="end"
+                        onChange={() => handleToggle(category.id)}
+                        checked={checked.includes(category.id)}
+                        slotProps={{
+                          input: {
+                            "aria-labelledby": `checkbox-list-secondary-label-${category.name}`,
+                          },
+                        }}
+                      />
+                    </label>
+                  }
                 >
-                  <ListItemIcon>
-                    <Category />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`${category.name} ${category.gender}`}
-                    secondary={`Idade Min.:${
-                      category.min_age ?? "N/A"
-                    } / Idade Máx.: ${category.max_age ?? "N/A"} / Grad Min.: ${
-                      getGraduationFromValue(Number(category.min_grad)) ?? "N/A"
-                    } / Grad Máx.: ${
-                      getGraduationFromValue(Number(category.max_grad)) ?? "N/A"
-                    }`}
-                  />
-                </ListItemButton>
-                <Divider />
-              </ListItem>
-            ))
+                  <ListItemButton
+                    key={index}
+                    onClick={() => handleToggle(category.id)}
+                  >
+                    <ListItemIcon>
+                      <Category />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${category.name} ${category.gender}`}
+                      secondary={
+                        <>
+                          Idade Min.: {category.min_age ?? "N/A"} / Idade Máx.:{" "}
+                          {category.max_age ?? "N/A"} <br /> Grad Min.:{" "}
+                          {getGraduationFromValue(Number(category.min_grad)) ??
+                            "N/A"}{" "}
+                          / Grad Máx.:{" "}
+                          {getGraduationFromValue(Number(category.max_grad)) ??
+                            "N/A"}
+                          <br /> Peso Min.: {category.min_weight ?? "N/A"} /
+                          Peso Máx.: {category.max_weight ?? "N/A"}
+                        </>
+                      }
+                    />
+                  </ListItemButton>
+                  <Divider />
+                </ListItem>
+              ))
           ) : (
             <ListItem>
               <ListItemText primary="Não tem Categorias que ainda não estejam associadas a esta Modalidade."></ListItemText>

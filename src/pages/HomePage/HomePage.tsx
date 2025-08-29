@@ -44,7 +44,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
       <Card sx={{ m: 2, mb: 0 }}>
         <CardHeader
           title={"Central de notificações"}
-          subheader="Neste espaço aparecerão notificações importante para o seu dojo. Fique
+          subheader="Neste espaço aparecerão notificações importantes para o seu dojo. Fique
           atento."
           sx={{
             "& .MuiCardHeader-title": {

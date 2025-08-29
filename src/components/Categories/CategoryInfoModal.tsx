@@ -159,7 +159,7 @@ export default function CategoryInfoModal(
                 color="warning"
                 variant="standard"
                 label=""
-                value={singleCategoryData?.data.min_age}
+                value={singleCategoryData?.data.min_age ?? "N/A"}
                 slotProps={{
                   input: {
                     readOnly: true,
@@ -190,7 +190,7 @@ export default function CategoryInfoModal(
                 color="warning"
                 variant="standard"
                 label=""
-                value={singleCategoryData?.data.max_age}
+                value={singleCategoryData?.data.max_age ?? "N/A"}
                 slotProps={{
                   input: {
                     readOnly: true,
@@ -217,7 +217,7 @@ export default function CategoryInfoModal(
             }
             control={
               <TextField
-                sx={{ width: "100px" }}
+                sx={{ width: "150px" }}
                 color="warning"
                 variant="standard"
                 label=""
@@ -252,7 +252,7 @@ export default function CategoryInfoModal(
             }
             control={
               <TextField
-                sx={{ width: "100px" }}
+                sx={{ width: "150px" }}
                 color="warning"
                 variant="standard"
                 label=""

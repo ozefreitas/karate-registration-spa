@@ -75,7 +75,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     const indexToRemove2 = disciplineCategories.findIndex(
       (obj: any) => obj.discipline === item
     );
-    console.log(indexToRemove2);
     const newDisciplines = [...disciplines];
     const newDisciplineCategories = [...disciplineCategories];
     if (indexToRemove > -1) {
@@ -897,6 +896,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               <AthletesTable
                 type="CategoriasReadOnly"
                 data={categoryRows}
+                count={categoryRows.length}
                 columnsHeaders={columnMaping}
                 actions
                 selection={false}
@@ -913,10 +913,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             ) : (
               <Grid container size={12} justifyContent="center">
                 <Grid sx={{ mt: 5 }} size={6}>
-                  <Typography sx={{ color: "gray" }}>
-                    Selecione uma Modalidade no campo ao lado para visualizar as
-                    categorias já adicionadas.
-                  </Typography>
+                  <ListItem>
+                    <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+                      Selecione uma Modalidade no campo ao lado para visualizar
+                      as categorias já adicionadas.
+                    </ListItemButton>
+                  </ListItem>
                 </Grid>
               </Grid>
             )}
@@ -924,7 +926,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           <Grid sx={{ m: 2, mt: 1 }} container size={12}></Grid>
         </FormAccordion>
         <Grid
-          sx={{ m: 5 }}
+          sx={{ m: 6, mb: 0 }}
           justifyContent="flex-end"
           spacing={2}
           container
@@ -958,6 +960,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           handleModalClose={handleCategoriesModalClose}
           isModalOpen={isCategoriesModalOpen}
           disciplineData={selectedDisciplineForCategory}
+          disciplineCategories={disciplineCategories}
           setDisciplineCategories={setDisciplineCategories}
         ></CategoriesModal>
       </Grid>

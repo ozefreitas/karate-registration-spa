@@ -63,7 +63,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
     }
     return columnMapping;
   };
-  
+
   const columnMaping = getColumnMaping();
 
   return (
@@ -94,6 +94,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
           <AthletesTable
             type="Atletas"
             data={athleteRows}
+            count={athletesData?.data.count}
             columnsHeaders={columnMaping}
             actions
             selection
@@ -107,7 +108,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
           ></AthletesTable>
         ) : null}
       </Grid>
-      {props.userRole === "national_association" ? (
+      {props.userRole === "main_admin" ? (
         <Grid sx={{ m: 3, mt: 2 }}>
           <AddButton label="Adicionar" to="new_athlete/"></AddButton>
         </Grid>

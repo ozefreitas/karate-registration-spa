@@ -127,6 +127,7 @@ export default function AthletesTable(
       | "CategoriasReadOnly";
     discipline?: string;
     data: any;
+    count: number;
     columnsHeaders: any;
     actions: boolean;
     selection: boolean;
@@ -452,7 +453,7 @@ export default function AthletesTable(
                                 <Visibility color="primary"></Visibility>
                               </IconButton>
                             </Tooltip>
-                            {props.userRole === "national_association" &&
+                            {props.userRole === "main_admin" &&
                             props.editable ? (
                               <Tooltip arrow title="Editar">
                                 <IconButton
@@ -471,7 +472,7 @@ export default function AthletesTable(
                               </Tooltip>
                             ) : null}
                             {props.deletable &&
-                            (props.userRole === "national_association" ||
+                            (props.userRole === "main_admin" ||
                               props.type === "Modalidades" ||
                               props.type === "Individuais") ? (
                               <Tooltip arrow title="Remover">
@@ -540,7 +541,7 @@ export default function AthletesTable(
                       25,
                       { label: "All", value: -1 },
                     ]}
-                    count={props.data.length}
+                    count={props.count}
                     rowsPerPage={props.pageSize}
                     page={props.page}
                     slotProps={{
