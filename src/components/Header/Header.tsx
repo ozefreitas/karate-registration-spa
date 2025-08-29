@@ -30,10 +30,20 @@ export default function ButtonAppBar(
 
   const { user, isAuthenticated } = useAuth();
 
+  let shouldStop = false;
   const paths = window.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
   paths.forEach((p, index) => {
     const routeTo = p;
+    if (shouldStop) return;
+    if (p == "signup") {
+      breadcrumbs.push({
+        title: `${breadcrumbsConvertion[routeTo]}`,
+        link: `${paths.slice(0, index + 1).join("/")}/`,
+      });
+      shouldStop = true;
+      return;
+    }
     if (p !== "" && breadcrumbsConvertion[routeTo]) {
       breadcrumbs.push({
         title: `${breadcrumbsConvertion[routeTo]}`,
@@ -115,7 +125,7 @@ export default function ButtonAppBar(
                   disableElevation
                   size="large"
                 >
-                  {props.me?.data.role === "national_association"
+                  {props.me?.data.role === "main_admin"
                     ? "ADMIN - SKIP"
                     : props.me?.data.role === "superuser"
                     ? "SUPER ADMIN"
@@ -153,9 +163,9 @@ export default function ButtonAppBar(
                     <Button
                       variant="contained"
                       color="secondary"
-                      onClick={() => navigate("/register_account/")}
+                      onClick={() => navigate("/request_account/")}
                     >
-                      Criar Conta
+                      Pedir Conta
                     </Button>
                   </Grid>
                 )}

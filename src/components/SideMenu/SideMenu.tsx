@@ -21,7 +21,7 @@ import {
 } from "../../dashboard/config";
 import { AxiosResponse } from "axios";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
