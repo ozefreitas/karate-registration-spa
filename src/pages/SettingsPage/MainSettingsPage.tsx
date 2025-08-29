@@ -25,7 +25,6 @@ import { Delete, Add, ContentCopy } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import {
   useFetchAvailableClubs,
-  useRemoveClub,
   useCreateClub,
   useFetchRequestingAccounts,
   useCreateSignUpToken,
@@ -33,6 +32,7 @@ import {
   useRemoveRequestAcount,
 } from "../../hooks/useAuth";
 import { useFetchDojoUsersData } from "../../hooks/useNotificationData";
+import DeleteDojoModal from "../../components/Admin/DeleteDojoModal";
 
 export default function MainSettingsPage() {
   const [value, setValue] = useState("one");
@@ -40,10 +40,10 @@ export default function MainSettingsPage() {
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [selectedRequestId, setSelectedRequestId] = useState<string>("");
   const [createdToken, setCreatedToken] = useState<string>("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 
   const { data: availableClubsData } = useFetchAvailableClubs();
   const createClub = useCreateClub();
-  const removeClub = useRemoveClub();
 
   const { data: dojoUserData, refetch } =
     useFetchDojoUsersData(clickedUsername);
@@ -94,8 +94,12 @@ export default function MainSettingsPage() {
     setSelectedRequestId(event.target.value);
   };
 
-  const handleClubDelete = () => {
-    removeClub.mutate({ clubId: selectedUserId });
+  const handleModalOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsDeleteModalOpen(true);
   };
 
   const handleTokenCreation = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -209,7 +213,7 @@ export default function MainSettingsPage() {
                     variant="contained"
                     size="large"
                     color="error"
-                    onClick={handleClubDelete}
+                    onClick={handleModalOpen}
                     disabled={selectedUserId === ""}
                     startIcon={<Delete />}
                   >
@@ -484,6 +488,12 @@ export default function MainSettingsPage() {
           )}
         </CardContent>
       </Card>
+      <DeleteDojoModal
+        handleModalClose={handleModalClose}
+        isModalOpen={isDeleteModalOpen}
+        id={selectedUserId}
+        setSelectedUserId={setSelectedUserId}
+      ></DeleteDojoModal>
     </>
   );
 }

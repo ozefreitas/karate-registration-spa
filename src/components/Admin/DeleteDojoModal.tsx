@@ -10,8 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useRemoveEvent } from "../../hooks/useEventData";
-import { useNavigate } from "react-router-dom";
+import { useRemoveClub } from "../../hooks/useAuth";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -22,25 +21,27 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function DeleteEventModal(
+export default function DeleteDojoModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
-    id?: string | Array<string>;
+    id?: string;
+    setSelectedUserId: any;
   }>
 ) {
-  const navigate = useNavigate();
-  const { mutate } = useRemoveEvent();
+  const removeClub = useRemoveClub();
 
-  const handleDelete = (
-    event: React.MouseEvent<HTMLElement>,
-    id: string | Array<string> | undefined
-  ) => {
-    event.stopPropagation();
-    if (id !== undefined && typeof id === "string") {
-      mutate(id);
-      props.handleModalClose();
-      navigate("/events/");
+  const handleDelete = () => {
+    if (props.id) {
+      removeClub.mutate(
+        { clubId: props.id },
+        {
+          onSuccess: () => {
+            props.handleModalClose();
+            props.setSelectedUserId("");
+          },
+        }
+      );
     }
   };
 
@@ -56,10 +57,9 @@ export default function DeleteEventModal(
         <Typography variant="h5">Apagar Evento</Typography>
       </DialogTitle>
       <DialogContent>
-        Tem a certeza que pretende apagar este Evento? Esta ação irá eliminar
-        também todas as inscrições efetuadas até à data, assim como eventuais
-        modalidades associadas e respetivas inscrições em cada. NÃO PODERA
-        VOLTAR ATRÁS!
+        Tem a certeza que pretende apagar esta conta? Esta ação irá eliminar
+        todos os seus atletas, inscrições dos mesmos em eventos e informações
+        guardada do próprio dojo. NÃO PODERA VOLTAR ATRÁS!
       </DialogContent>
       <DialogActions>
         <Stack
@@ -74,11 +74,7 @@ export default function DeleteEventModal(
             alignSelf: { xs: "flex-end", sm: "center" },
           }}
         >
-          <Button
-            size="small"
-            onClick={(e) => handleDelete(e, props.id)}
-            variant="contained"
-          >
+          <Button size="small" onClick={handleDelete} variant="contained">
             Confirmar
           </Button>
           <Button size="small" onClick={props.handleModalClose}>
