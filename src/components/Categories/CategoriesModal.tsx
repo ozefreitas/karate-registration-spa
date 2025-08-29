@@ -259,9 +259,15 @@ export default function CategoriesModal(
                 if (props.disciplineCategories.length === 0) {
                   return category;
                 } else {
-                  props.disciplineCategories[props.disciplineData].includes(
-                    category.id
+                  const found = props.disciplineCategories.find(
+                    (item: any) => item.discipline === props.disciplineData
                   );
+                  const addedCategories = found ? found.categories : [];
+                  // something goes wrong, just return all
+                  if (addedCategories.length === 0) return true;
+
+                  // only return the ones not already in that disciplines
+                  return !addedCategories.includes(category.id);
                 }
               })
               .map((category: Category, index: string) => (
