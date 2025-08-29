@@ -47,6 +47,13 @@ export const GenderOptions: { label: string; value: string }[] = [
   { label: "Masculino", value: "Masculino" },
   { label: "Feminino", value: "Feminino" },
   { label: "Misto", value: "Misto" },
+  { label: "Ambos", value: "Ambos" },
+];
+
+export const TierOptions: { label: string; value: string }[] = [
+  { label: "Base", value: "base" },
+  { label: "Pro", value: "pro" },
+  { label: "Elite", value: "elite" },
 ];
 
 export const ReasonOptions: { label: string; value: string }[] = [
@@ -95,9 +102,9 @@ export const SeasonOptions: { label: string; value: string }[] = [
 
 export const MatchTypeOptions: { label: string; value: string }[] = [
   { value: "kata_elim", label: "Kata Individual" },
-  { value: "kumite_indiv", label: "Kumite Individual" },
   { value: "kata_final", label: "Final Kata Individual" },
   { value: "kata_team", label: "Kata Equipa" },
+  { value: "kumite_indiv", label: "Kumite Individual" },
   { value: "kumite_team", label: "Kumite Equipa" },
   // { value: "katakumiteequipa", label: "Kata e Kumite Equipa" },
 ];

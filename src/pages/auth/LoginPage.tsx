@@ -1,13 +1,27 @@
 import axios from "axios";
-import { Grid, TextField, Button } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Button,
+  IconButton,
+  InputAdornment,
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  FormLabel,
+} from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { Close } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const action = (snackbarId: SnackbarKey | undefined) => (
@@ -54,8 +68,9 @@ export default function LoginPage() {
           horizontal: "center",
         },
         autoHideDuration: 3000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -67,67 +82,134 @@ export default function LoginPage() {
           horizontal: "center",
         },
         autoHideDuration: 3000,
-        preventDuplicate: true
+        preventDuplicate: true,
       });
     }
   };
   return (
-    <Grid container>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="username"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Nome de Utilizador"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
+    <Grid container sx={{ m: 40, mt: 0, mb: 0 }}>
+      <Card sx={{ width: "100%" }}>
+        <CardContent sx={{ display: "flex", p: 0 }}>
+          <Grid container size={12} justifyContent="center" sx={{ p: 3 }}>
+            <Typography sx={{ fontWeight: "bold", mt: 3 }} variant="h4">
+              Login
+            </Typography>
+            <Grid sx={{ m: 2, mt: 5 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Username
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="username"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Password
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    type={showPassword ? "text" : "password"}
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={handleClickShowPassword}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>
+              <Button
+                variant="contained"
+                size={"large"}
+                color={"success"}
+                type={"submit"}
+                onClick={() => {
+                  handleSubmit(onSubmit)();
+                }}
+              >
+                LogIn
+              </Button>
+            </Grid>
+          </Grid>
+          {/* <Grid size={1}>
+            <Grid
+              sx={{
+                width: "100%",
+                height: "50%",
+                backgroundColor: "lightgray",
               }}
-              error={!!errors.username}
-              helperText={errors.username?.message}
-            />
-          )}
-        />
-      </Grid>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Password"
-              type="password"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
+            >
+              Login
+            </Grid>
+            <Grid
+              sx={{
+                width: "100%",
+                height: "50%",
+                backgroundColor: "red",
               }}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-            />
-          )}
-        />
-      </Grid>
-      <Grid size={12}>
-        <Button
-          variant="contained"
-          size={"large"}
-          color={"success"}
-          type={"submit"}
-          sx={{ marginBottom: "20px" }}
-          onClick={() => {
-            handleSubmit(onSubmit)();
-          }}
-        >
-          LogIn
-        </Button>
-      </Grid>
+              container
+              justifyContent="center"
+              alignContent="center"
+            >
+              <Typography
+                sx={{
+                  writingMode: "vertical-lr",
+                  direction: "ltr",
+                  textOrientation: "mixed",
+                }}
+                variant="h6"
+              >
+                Pedir Conta
+              </Typography>
+            </Grid>
+          </Grid> */}
+        </CardContent>
+      </Card>
     </Grid>
   );
 }

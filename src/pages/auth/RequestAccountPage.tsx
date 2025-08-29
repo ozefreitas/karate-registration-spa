@@ -4,8 +4,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useFetchAvailableClubs } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useCreateRequestAcount } from "../../hooks/useAuth";
 
-export default function RegisterAccountPage() {
+export default function RequestAccountPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -20,24 +21,23 @@ export default function RegisterAccountPage() {
     defaultValues: {
       first_name: "",
       last_name: "",
-      password: "",
       email: "",
+      id_number: "",
       username: "",
     },
   });
 
-  const onSubmit = async (data: any) => {
-    // async request which may result error
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/register_user/",
-        data
-      );
-      console.log(response);
-      navigate("/login/");
-    } catch (error: any) {
-      console.log("Error: " + JSON.stringify(error.response.data));
-    }
+  const createRequest = useCreateRequestAcount();
+
+  const onSubmit = (data: any) => {
+    createRequest.mutate(
+      { data: data },
+      {
+        onSuccess: () => {
+          navigate("/");
+        },
+      }
+    );
   };
 
   const { data: availableClubsData } = useFetchAvailableClubs();
@@ -51,6 +51,7 @@ export default function RegisterAccountPage() {
           render={({ field }) => (
             <TextField
               color="warning"
+              required
               variant={"outlined"}
               label="Primeiro Nome"
               fullWidth
@@ -70,8 +71,29 @@ export default function RegisterAccountPage() {
           control={control}
           render={({ field }) => (
             <TextField
+              color="warning"
+              required
               variant={"outlined"}
               label="Último Nome"
+              fullWidth
+              {...field}
+              onChange={(e) => {
+                field.onChange(e);
+              }}
+            />
+          )}
+        />
+      </Grid>
+      <Grid sx={{ m: 2 }} size={9}>
+        <Controller
+          name="id_number"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              color="warning"
+              required
+              variant={"outlined"}
+              label="Nº Identificação"
               fullWidth
               {...field}
               onChange={(e) => {
@@ -87,8 +109,10 @@ export default function RegisterAccountPage() {
           control={control}
           render={({ field }) => (
             <TextField
+              color="warning"
+              required
               variant={"outlined"}
-              label="Nome de Utilizador"
+              label="Nome de Utilizador escolhido"
               fullWidth
               select
               {...field}
@@ -116,26 +140,10 @@ export default function RegisterAccountPage() {
           control={control}
           render={({ field }) => (
             <TextField
+              color="warning"
+              required
               variant={"outlined"}
               label="Email"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-              }}
-            />
-          )}
-        />
-      </Grid>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              variant={"outlined"}
-              label="Password"
-              type="password"
               fullWidth
               {...field}
               onChange={(e) => {
@@ -156,7 +164,7 @@ export default function RegisterAccountPage() {
             handleSubmit(onSubmit)();
           }}
         >
-          Criar Conta
+          Submeter
         </Button>
       </Grid>
     </Grid>
