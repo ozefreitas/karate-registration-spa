@@ -65,33 +65,30 @@ export default function TeamsHomeComponent(
           }}
         ></CardHeader>
         <List>
-          {isLastFiveTeamsLoading ? (
+          {props.userRole === undefined ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemIcon>
+                  <Groups />
+                </ListItemIcon>
+                <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
+              </ListItemButton>
+            </ListItem>
+          ) : isLastFiveTeamsLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
           ) : lastFiveTeamError ? (
-            axios.isAxiosError(lastFiveTeamError) &&
-            lastFiveTeamError.response?.status === 401 ? (
-              <ListItem sx={{ m: 0 }}>
-                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                  <ListItemIcon>
-                    <Groups />
-                  </ListItemIcon>
-                  <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
-                </ListItemButton>
-              </ListItem>
-            ) : (
-              <ListItem sx={{ m: 0 }}>
-                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                  <ListItemIcon>
-                    <Groups />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={"Ocorreu um erro ao carregar as Equipas."}
-                  />
-                </ListItemButton>
-              </ListItem>
-            )
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemIcon>
+                  <Groups />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Ocorreu um erro ao carregar as Equipas."}
+                />
+              </ListItemButton>
+            </ListItem>
           ) : lastFiveTeamsData?.data.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>

@@ -153,6 +153,7 @@ function App() {
                 <ProtectedRoute
                   element={<EventsPage userRole={userRole} />}
                   allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
+                  allowUnauthenticated
                 />
               )
             }

@@ -68,33 +68,30 @@ export default function AthletesHomeComponent(
           }}
         ></CardHeader>
         <List>
-          {isLastFiveAthletesLoading ? (
+          {props.userRole === undefined ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
+              </ListItemButton>
+            </ListItem>
+          ) : isLastFiveAthletesLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
           ) : lastFiveAthletesError ? (
-            axios.isAxiosError(lastFiveAthletesError) &&
-            lastFiveAthletesError.response?.status === 401 ? (
-              <ListItem sx={{ m: 0 }}>
-                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                  <ListItemIcon>
-                    <Person />
-                  </ListItemIcon>
-                  <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
-                </ListItemButton>
-              </ListItem>
-            ) : (
-              <ListItem sx={{ m: 0 }}>
-                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                  <ListItemIcon>
-                    <Person />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={"Ocorreu um erro ao carregar os atletas."}
-                  />
-                </ListItemButton>
-              </ListItem>
-            )
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemIcon>
+                  <Person />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Ocorreu um erro ao carregar os atletas."}
+                />
+              </ListItemButton>
+            </ListItem>
           ) : lastFiveAthletesData?.data.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
