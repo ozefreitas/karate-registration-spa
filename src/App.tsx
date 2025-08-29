@@ -1,7 +1,7 @@
 import "./App.css";
 import MainAppLayout from "./layouts/MainAppLayout";
 import { DisplayPanelLayout } from "./layouts/DisplayPanelLayout";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import AthletesPage from "./pages/AthletesPage/AthletesPage";
 import EventsPage from "./pages/EventsPage/EventsPage";
 import EventCard from "./components/EventCards/EventCard";
@@ -10,7 +10,7 @@ import AdminHomePage from "./pages/HomePage/AdminHomePage";
 import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
 import RulesPage from "./pages/RulesPage/RulesPage";
 import HelpPage from "./pages/HelpPage/HelpPage";
-import RegisterAccountPage from "./pages/auth/RegisterAccountPage";
+import RequestAccountPage from "./pages/auth/RequestAccountPage";
 import LoginPage from "./pages/auth/LoginPage";
 import NewAthletePage from "./pages/AthletesPage/NewAthletePage";
 import SingleAthletePage from "./pages/AthletesPage/SingleAthletePage";
@@ -19,7 +19,6 @@ import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 import NewTeamPage from "./pages/TeamsPage/NewTeamPage";
 import IndividualsPage from "./pages/IndividualsPage/IndividualsPage";
 import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
-import { useFetchMeData } from "./hooks/useAuth";
 import ProtectedRoute from "./access/ProtectedRoute";
 import NewEventPage from "./pages/EventsPage/NewEventPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
@@ -35,9 +34,9 @@ import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
 import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
 import KataElim from "./pages/DisplayPanelPages/KataElim";
 import KataFinal from "./pages/DisplayPanelPages/KataFinal";
-import KataTeam from "./pages/DisplayPanelPages/KataTeam";
 import KumiteIndiv from "./pages/DisplayPanelPages/KumiteIndiv";
 import KumiteTeam from "./pages/DisplayPanelPages/KumiteTeam";
+import SignUpWithTokenPage from "./pages/auth/SignUpWithTokenPage";
 import { useEffect } from "react";
 import { useAuth } from "./access/GlobalAuthProvider";
 
@@ -57,6 +56,13 @@ function App() {
     return <div></div>;
   }
 
+  const SignupWrapper = () => {
+    const { token } = useParams();
+    if (token) {
+      return <SignUpWithTokenPage token={token} />;
+    } else return <NotFoundPage />;
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -64,14 +70,15 @@ function App() {
           <Route
             path="/"
             element={
-              userRole == "national_association" ? (
+              userRole == "main_admin" ? (
                 <AdminHomePage userRole={userRole} />
               ) : (
                 <HomePage userRole={userRole} />
               )
             }
           />
-          <Route path="register_account/" element={<RegisterAccountPage />} />
+          <Route path="signup/:token/" element={<SignupWrapper />} />
+          <Route path="request_account/" element={<RequestAccountPage />} />
           <Route path="login/" element={<LoginPage />} />
           <Route
             path="athletes/"
@@ -79,7 +86,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<AthletesPage userRole={userRole} />}
-                  allowedRoles={["subed_dojo", "national_association"]}
+                  allowedRoles={["subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -90,7 +97,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<SingleAthletePage />}
-                  allowedRoles={["subed_dojo", "national_association"]}
+                  allowedRoles={["subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -101,7 +108,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewAthletePage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -123,7 +130,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<SingleTeamPage />}
-                  allowedRoles={["subed_dojo", "national_association"]}
+                  allowedRoles={["subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -145,11 +152,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<EventsPage userRole={userRole} />}
-                  allowedRoles={[
-                    "free_dojo",
-                    "subed_dojo",
-                    "national_association",
-                  ]}
+                  allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -160,7 +163,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewEventPage userRole={userRole} />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -171,7 +174,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<CategoriesPage userRole={userRole} />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -182,7 +185,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NewCategoryPage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -193,7 +196,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<NotificationsPage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -204,11 +207,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<EventCard userRole={userRole} />}
-                  allowedRoles={[
-                    "free_dojo",
-                    "subed_dojo",
-                    "national_association",
-                  ]}
+                  allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -219,7 +218,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<EventAllRegistryPage userRole={userRole} />}
-                  allowedRoles={["subed_dojo", "national_association"]}
+                  allowedRoles={["subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -230,7 +229,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<DrawPage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -241,7 +240,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<GenerateDrawPage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -252,11 +251,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<IndividualsPage userRole={userRole} />}
-                  allowedRoles={[
-                    "free_dojo",
-                    "subed_dojo",
-                    "national_association",
-                  ]}
+                  allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -267,11 +262,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<RegisteredTeamsPage />}
-                  allowedRoles={[
-                    "free_dojo",
-                    "subed_dojo",
-                    "national_association",
-                  ]}
+                  allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
                 />
               )
             }
@@ -318,7 +309,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<ResultsMainPage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -329,7 +320,7 @@ function App() {
               isAuthLoading ? null : (
                 <ProtectedRoute
                   element={<MainSettingsPage />}
-                  allowedRoles={["national_association"]}
+                  allowedRoles={["main_admin"]}
                 />
               )
             }
@@ -339,9 +330,18 @@ function App() {
         </Route>
         <Route element={<DisplayPanelLayout />}>
           <Route path="/display_panel/" element={<DisplayPage />} />
-          <Route path="display_panel/kata_elim/" element={<KataElim />} />
-          <Route path="display_panel/kata_final/" element={<KataFinal />} />
-          <Route path="display_panel/kata_team/" element={<KataTeam />} />
+          <Route
+            path="display_panel/kata_elim/"
+            element={<KataElim match="Kata" />}
+          />
+          <Route
+            path="display_panel/kata_final/"
+            element={<KataFinal matchType="final" />}
+          />
+          <Route
+            path="display_panel/kata_team/"
+            element={<KataFinal matchType="team" />}
+          />
           <Route path="display_panel/kumite_indiv/" element={<KumiteIndiv />} />
           <Route path="display_panel/kumite_team/" element={<KumiteTeam />} />
         </Route>

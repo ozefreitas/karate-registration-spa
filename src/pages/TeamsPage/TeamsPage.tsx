@@ -111,7 +111,7 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
           ></AthletesTable>
         ) : null}
       </Grid>
-      {userRole !== "national_association" ? (
+      {userRole !== "main_admin" ? (
         <Grid sx={{ m: 3, mt: 2 }}>
           <AddButton label="Adicionar" to="new_team/"></AddButton>
         </Grid>

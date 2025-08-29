@@ -86,7 +86,7 @@ export const getSideMenuConfig = (userRole: string) => {
   ];
 
   // Filter for SKIP (national) account
-  if (userRole === "national_association") {
+  if (userRole === "main_admin") {
     return baseMenu.filter(
       (item) =>
         item.name !== "help" &&
@@ -134,7 +134,7 @@ export const getAccountSideMenuConfig = (userRole: string) => {
     },
   ];
 
-  if (userRole === "national_association") {
+  if (userRole === "main_admin") {
     return baseMenu.filter((item) => item.name !== "contacts");
   } else if (userRole === undefined) {
     return baseMenu.filter((item) => item.name !== "feedback");
@@ -154,7 +154,8 @@ export const breadcrumbsConvertion: Record<string, string> = {
   rules: "Regras",
   contacts: "Contactos",
   register: "Inscrever",
-  register_account: "Criar Conta",
+  request_account: "Pedir Conta",
+  signup: "Criar Conta",
   new_athlete: "Novo Atleta",
   new_team: "Nova Equipa",
   individuals: "Individuais Registados",

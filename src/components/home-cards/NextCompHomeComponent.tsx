@@ -79,12 +79,10 @@ export default function NextCompHomeComponent(props: { userRole: string }) {
         <CardActions
           sx={{
             justifyContent:
-              props.userRole === "national_association"
-                ? "space-between"
-                : "flex-end",
+              props.userRole === "main_admin" ? "space-between" : "flex-end",
           }}
         >
-          {props.userRole === "national_association" ? (
+          {props.userRole === "main_admin" ? (
             <AddButton label="Adicionar" to="events/new_event/"></AddButton>
           ) : null}
           <InfoButton label="Ver Todas" to="events/"></InfoButton>
