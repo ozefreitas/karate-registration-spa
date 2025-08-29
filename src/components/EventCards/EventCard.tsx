@@ -140,10 +140,10 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
           inscrever os seus Atletas ou Equipas.
         </CardContent>
       </Card>
-      <Grid container sx={{ m: 2, mt: 0 }}>
-        <Grid container size={12}>
+      <Grid container sx={{ mt: 0 }}>
+        <Grid container size={12} sx={{ m: 2 }}>
           <Grid size={6}>
-            <Card sx={{ m: 2 }}>
+            <Card sx={{ mr: 2, height: "100%" }}>
               <CardHeader
                 title="Informação Geral"
                 sx={{
@@ -152,7 +152,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   },
                 }}
               ></CardHeader>
-              <CardContent>
+              <CardContent sx={{ pb: 0 }}>
                 {isSingleEventLoading ? (
                   <Box sx={{ display: "flex", justifyContent: "center" }}>
                     <CircularProgress />
@@ -222,9 +222,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={6}>
+          <Grid size={6} container>
             <Grid size={12}>
-              <Card sx={{ m: 2 }}>
+              <Card>
                 <CardHeader
                   title="Ficheiros"
                   sx={{
@@ -241,11 +241,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               </Card>
             </Grid>
             <Grid size={12}>
-              <Card sx={{ m: 2 }}>
+              <Card sx={{ mt: 2, mb: 2 }}>
                 <CardHeader
                   title="Notas Importantes"
                   subheader={
-                    props.userRole === "national_association" ? (
+                    props.userRole === "main_admin" ? (
                       <Button
                         sx={{ m: 2, ml: 0 }}
                         variant="contained"
@@ -304,7 +304,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               </Card>
             </Grid>
             <Grid size={12}>
-              <Card sx={{ m: 2 }}>
+              <Card>
                 <CardHeader
                   title="Avaliação"
                   subheader="Depois da realização da prova, poderá deixar uma avaliação."
@@ -344,7 +344,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <ListItemText>Muito boa</ListItemText>
                       </ListItemButton>
                       <ListItemButton
-                        selected={selected === 2}
+                        selected={selected === 0}
                         onClick={() => handleClick(0)}
                       >
                         <ListItemIcon>
@@ -357,7 +357,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <ListItemText>Assim-Assim</ListItemText>
                       </ListItemButton>
                       <ListItemButton
-                        selected={selected === 3}
+                        selected={selected === -1}
                         onClick={() => handleClick(-1)}
                       >
                         <ListItemIcon>
@@ -427,9 +427,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   rowGap: 2,
                 }}
               >
-                {!["national_association", "superuser"].includes(
-                  props.userRole
-                ) ? (
+                {!["main_admin", "superuser"].includes(props.userRole) ? (
                   props.userRole === "subed_dojo" ? (
                     <Tooltip
                       disableHoverListener={!singleEventData?.data.has_ended}
@@ -480,18 +478,15 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
                 <Tooltip
-                  disableHoverListener={[
-                    "national_association",
-                    "superuser",
-                  ].includes(props.userRole)}
+                  disableHoverListener={["main_admin", "superuser"].includes(
+                    props.userRole
+                  )}
                   title="Esta funcionalidade ficará disponível em breve"
                 >
                   <span>
                     <InfoButton
                       disabled={
-                        !["national_association", "superuser"].includes(
-                          props.userRole
-                        )
+                        !["main_admin", "superuser"].includes(props.userRole)
                       }
                       label="Inscrições completas"
                       to="all_registry/"
@@ -499,9 +494,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   </span>
                 </Tooltip>
                 <InfoButton label="Consultar Sorteios" to="draw/"></InfoButton>
-                {["national_association", "superuser"].includes(
-                  props.userRole
-                ) ? (
+                {["main_admin", "superuser"].includes(props.userRole) ? (
                   <GenerateButton
                     label="Gerar Sorteio"
                     to="draw/generate/"

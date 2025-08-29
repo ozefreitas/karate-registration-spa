@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { Close } from "@mui/icons-material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -161,6 +161,13 @@ export default function LoginPage() {
                   />
                 )}
               />
+            </Grid>
+            <Grid size={12} sx={{ m: 2, mt: 0 }}>
+              <Typography>
+                <Link to={"/login/password_recover/"}>
+                  Equeceu-se da password?
+                </Link>
+              </Typography>
             </Grid>
             <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>
               <Button

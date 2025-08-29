@@ -112,7 +112,7 @@ export default function ButtonAppBar(
             />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link style={{ color: "white" }} to="/">
-                SKI-Portugal - Karate Score App
+                Karate Score App - SKI-Portugal
               </Link>
             </Typography>
             <Stack alignItems="center" direction="row" spacing={2}>
