@@ -4,15 +4,24 @@ import { useSnackbar } from "notistack";
 
 const fetchEvents = (page: number, pageSize: number) => {
   const token = localStorage.getItem("token");
-  return axios.get(`http://127.0.0.1:8000/events/`, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-    params: {
-      page: page,
-      page_size: pageSize,
-    },
-  });
+  if (token !== null) {
+    return axios.get(`http://127.0.0.1:8000/events/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      params: {
+        page: page,
+        page_size: pageSize,
+      },
+    });
+  } else {
+    return axios.get(`http://127.0.0.1:8000/events/`, {
+      params: {
+        page: page,
+        page_size: pageSize,
+      },
+    });
+  }
 };
 
 export const useFetchEventsData = (page: number, pageSize: number) => {
