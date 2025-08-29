@@ -15,7 +15,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
   const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useFetchCategories();
+    useFetchCategories(page + 1, pageSize);
+
   type Category = {
     id: string;
     name: string;
@@ -72,6 +73,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
           <AthletesTable
             type="Categorias"
             data={categoryRows}
+            count={categoriesData?.data.count}
             columnsHeaders={columnMaping}
             actions
             selection
@@ -83,7 +85,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             userRole={props.userRole}
           ></AthletesTable>
         ) : null}
-        {props.userRole === "national_association" ? (
+        {props.userRole === "main_admin" ? (
           <Grid sx={{ m: 3, mt: 1 }} size={12}>
             <AddButton label="Adicionar" to="new_category/"></AddButton>
           </Grid>

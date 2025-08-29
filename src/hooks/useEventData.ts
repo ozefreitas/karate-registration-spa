@@ -78,13 +78,8 @@ export const useUpdateEventData = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      eventId,
-      data,
-    }: {
-      eventId: string | null;
-      data: any;
-    }) => updateEvent(eventId, data),
+    mutationFn: ({ eventId, data }: { eventId: string | null; data: any }) =>
+      updateEvent(eventId, data),
     onSuccess: () => {
       enqueueSnackbar("Evento atualizado com sucesso!", {
         variant: "success",
@@ -128,13 +123,8 @@ export const usePatchEventData = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      eventId,
-      data,
-    }: {
-      eventId: string | null;
-      data: any;
-    }) => patchEvent(eventId, data),
+    mutationFn: ({ eventId, data }: { eventId: string | null; data: any }) =>
+      patchEvent(eventId, data),
     onSuccess: () => {
       enqueueSnackbar("Evento atualizado com sucesso!", {
         variant: "success",
@@ -228,9 +218,7 @@ export const useFetchLastEvent = (userRole: string) => {
     queryFn: fetchLastEvent,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: ["subed_dojo", "national_association", "superuser"].includes(
-      userRole
-    ),
+    enabled: ["subed_dojo", "main_admin", "superuser"].includes(userRole),
   });
 };
 
@@ -244,9 +232,7 @@ export const useFetchLastCompQuali = (userRole: string) => {
     queryFn: fetchLastCompQuali,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: ["subed_dojo", "national_association", "superuser"].includes(
-      userRole
-    ),
+    enabled: ["subed_dojo", "main_admin", "superuser"].includes(userRole),
   });
 };
 
@@ -524,7 +510,7 @@ export const useAddDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      console.log(data)
+      console.log(data);
       enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
@@ -589,19 +575,25 @@ export const useRemoveDisciplineAthlete = () => {
 
 // categories
 
-const fetchCategories = () => {
+const fetchCategories = (page?: number, pageSize?: number) => {
   const token = localStorage.getItem("token");
+  const params: any = {};
+  if (page !== undefined && pageSize !== undefined) {
+    params.page = page;
+    params.page_size = pageSize;
+  }
   return axios.get(`http://127.0.0.1:8000/categories/`, {
     headers: {
       Authorization: `Token ${token}`,
     },
+    params,
   });
 };
 
-export const useFetchCategories = () => {
+export const useFetchCategories = (page?: number, pageSize?: number) => {
   return useQuery({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
+    queryKey: ["categories", page, pageSize],
+    queryFn: () => fetchCategories(page, pageSize),
     refetchOnWindowFocus: false,
   });
 };
@@ -617,10 +609,10 @@ const fetchSingleCategory = (categoryId: string) => {
 
 export const useFetchSingleCategory = (categoryId: string) => {
   return useQuery({
-    queryKey: ["single-category"],
+    queryKey: ["single-category", categoryId],
     queryFn: () => fetchSingleCategory(categoryId),
     refetchOnWindowFocus: false,
-    enabled: !!categoryId
+    enabled: !!categoryId,
   });
 };
 

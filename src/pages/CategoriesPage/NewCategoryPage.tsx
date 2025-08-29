@@ -40,8 +40,8 @@ export default function NewCategoryPage() {
       name: "",
       gender: "",
       has_age: true,
-      min_age: undefined,
-      max_age: undefined,
+      min_age: "",
+      max_age: "",
       has_gard: true,
       min_grad: "",
       max_grad: "",
@@ -63,7 +63,6 @@ export default function NewCategoryPage() {
   const createCategory = useCreateCategory();
 
   const onSubmit = (data: any) => {
-
     const formData = {
       name: data.name,
       gender: data.gender,
@@ -75,7 +74,31 @@ export default function NewCategoryPage() {
       max_weight: data.max_weight,
     };
 
-    if (!data.weight_type) {
+    if (data.gender === "Ambos") {
+      const formData1 = {
+        ...formData,
+        gender: "Masculino",
+      };
+      const formData2 = {
+        ...formData,
+        gender: "Feminino",
+      };
+
+      createCategory.mutate({ data: formData1 });
+
+      createCategory.mutate(
+        { data: formData2 },
+        {
+          onSuccess: () => {
+            reset();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          },
+          onError: () => {
+            // reset();
+          },
+        }
+      );
+    } else if (data.has_weight && !data.weight_type) {
       const formData1 = {
         ...formData,
         min_weight: data.max_weight,
@@ -93,7 +116,8 @@ export default function NewCategoryPage() {
         { data: formData2 },
         {
           onSuccess: () => {
-            navigate("/categories/");
+            reset();
+            window.scrollTo({ top: 0, behavior: "smooth" });
           },
           onError: () => {
             // reset();
@@ -105,7 +129,8 @@ export default function NewCategoryPage() {
         { data: formData },
         {
           onSuccess: () => {
-            navigate("/categories/");
+            reset();
+            window.scrollTo({ top: 0, behavior: "smooth" });
           },
           onError: () => {
             // reset();
@@ -600,9 +625,24 @@ export default function NewCategoryPage() {
             sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
+              setValue("min_age", "");
+              setValue("max_age", "");
             }}
           >
-            Submeter
+            Submeter e Adicionar Outra
+          </Button>
+          <Button
+            variant="contained"
+            size={"large"}
+            color={"success"}
+            type={"submit"}
+            sx={{ marginBottom: "20px" }}
+            onClick={() => {
+              handleSubmit(onSubmit)();
+              navigate("/categories/");
+            }}
+          >
+            Submeter e Voltar
           </Button>
           <Button
             variant="outlined"

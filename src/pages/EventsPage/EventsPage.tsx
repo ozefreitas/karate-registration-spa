@@ -178,11 +178,13 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         <Grid
           sx={{ m: 3, mt: 1 }}
           container
-          justifyContent={props.userRole === "national_association" ? "space-between" : "flex-end"}
+          justifyContent={
+            props.userRole === "main_admin" ? "space-between" : "flex-end"
+          }
           alignItems="center"
           size={12}
         >
-          {props.userRole === "national_association" ? (
+          {props.userRole === "main_admin" ? (
             <AddButton label="Adicionar" to="new_event/"></AddButton>
           ) : null}
           <div>
@@ -192,7 +194,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                 disabled={page === 0}
                 aria-label="previous page"
               >
-                <KeyboardArrowLeft fontSize="large"/>
+                <KeyboardArrowLeft fontSize="large" />
               </IconButton>
             </Tooltip>
             <Tooltip title="Próxima página">
@@ -203,7 +205,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                 }
                 aria-label="next page"
               >
-                <KeyboardArrowRight fontSize="large"/>
+                <KeyboardArrowRight fontSize="large" />
               </IconButton>
             </Tooltip>
           </div>
