@@ -86,6 +86,15 @@ export const useFetchSingleAthleteData = (athleteId: any) => {
   });
 };
 
+export const fetchLastFiveAthletes = () => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/athletes/last_five/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
 const updateAthlete = (athleteId: string | null, data: any) => {
   const token = localStorage.getItem("token");
   return axios.put(`http://127.0.0.1:8000/athletes/${athleteId}/`, data, {

@@ -13,20 +13,10 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../Buttons/InfoButton";
-import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
-
-const fetchLastFiveAthletes = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/athletes/last_five/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
+import { fetchLastFiveAthletes } from "../../hooks/useAthletesData";
 
 export default function AthletesHomeComponent(
   props: Readonly<{ userRole: string }>
