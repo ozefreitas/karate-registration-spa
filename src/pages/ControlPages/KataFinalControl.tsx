@@ -1,11 +1,13 @@
 import { Controller, useForm } from "react-hook-form";
 import FormCard from "../../dashboard/FormCard";
-import { Card, Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useEffect, useState, useRef } from "react";
+import { useSnackbar, closeSnackbar } from "notistack";
 
 export default function KataFinalControl() {
   const socketRef = useRef<WebSocket | null>(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     socketRef.current = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
@@ -21,6 +23,7 @@ export default function KataFinalControl() {
     watch,
     setError,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -50,12 +53,20 @@ export default function KataFinalControl() {
     const { points1, points2, points3, points4, points5 } = data;
     const values = { points1, points2, points3, points4, points5 };
 
-    const entries = Object.entries(values).filter(
-      ([_, v]) => typeof v === "number"
-    );
+    const entries = Object.entries(values)
+      .map(([key, value]) => [key, Number(value)] as [string, number])
+      .filter(([_, v]) => !isNaN(v));
 
     if (entries.length < 5) {
-      console.warn("Some values are missing:", values);
+      enqueueSnackbar("Insira valores em todas as caixas!", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
     } else if (
       socketRef.current &&
       socketRef.current.readyState === WebSocket.OPEN
@@ -74,10 +85,16 @@ export default function KataFinalControl() {
       );
 
       const sum = middleEntries.reduce((acc, [_, val]) => acc + val, 0);
+      const formattedSum = (sum / 10).toFixed(1);
 
       socketRef.current.send(
         JSON.stringify({
-          ponctuation: sum,
+          points1: (points1 / 10).toFixed(1),
+          points2: (points2 / 10).toFixed(1),
+          points3: (points3 / 10).toFixed(1),
+          points4: (points4 / 10).toFixed(1),
+          points5: (points5 / 10).toFixed(1),
+          ponctuation: formattedSum,
           min_index: minEntry[0],
           max_index: maxEntry[0],
         })
@@ -87,7 +104,7 @@ export default function KataFinalControl() {
 
   return (
     <div>
-      <FormCard title="Controles de Kata Individual">
+      <FormCard title="Controles de Final Kata Individual">
         <Grid sx={{ p: 2 }} size={10}>
           <Controller
             name="player1Name"
@@ -140,7 +157,7 @@ export default function KataFinalControl() {
                   label="Pontuação 1"
                   type="number"
                   fullWidth
-                  {...field}
+                  value={field.value ?? ""}
                   onChange={(e) => {
                     field.onChange(e);
                     clearErrors();
@@ -162,7 +179,7 @@ export default function KataFinalControl() {
                   type="number"
                   label="Pontuação 2"
                   fullWidth
-                  {...field}
+                  value={field.value ?? ""}
                   onChange={(e) => {
                     field.onChange(e);
                     clearErrors();
@@ -184,7 +201,7 @@ export default function KataFinalControl() {
                   label="Pontuação 3"
                   type="number"
                   fullWidth
-                  {...field}
+                  value={field.value ?? ""}
                   onChange={(e) => {
                     field.onChange(e);
                     clearErrors();
@@ -206,7 +223,7 @@ export default function KataFinalControl() {
                   label="Pontuação 4"
                   type="number"
                   fullWidth
-                  {...field}
+                  value={field.value ?? ""}
                   onChange={(e) => {
                     field.onChange(e);
                     clearErrors();
@@ -228,7 +245,7 @@ export default function KataFinalControl() {
                   variant={"outlined"}
                   label="Pontuação 5"
                   fullWidth
-                  {...field}
+                  value={field.value ?? ""}
                   onChange={(e) => {
                     field.onChange(e);
                     clearErrors();
@@ -240,9 +257,9 @@ export default function KataFinalControl() {
             />
           </Grid>
           <Grid
-            size={3}
+            size={4}
             container
-            justifyContent={"center"}
+            justifyContent="space-around"
             alignContent="center"
           >
             <Button
@@ -255,7 +272,17 @@ export default function KataFinalControl() {
               }}
               startIcon={<Add />}
             >
-              Calcular e Enviar
+              Calcular
+            </Button>
+            <Button
+              sx={{ m: 1 }}
+              variant="contained"
+              size="large"
+              color="warning"
+              onClick={() => reset()}
+              startIcon={<Add />}
+            >
+              Reiniciar Valores
             </Button>
           </Grid>
         </Grid>

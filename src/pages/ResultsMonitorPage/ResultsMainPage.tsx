@@ -6,7 +6,7 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import { OpenInNew, CloseFullscreen, Close } from "@mui/icons-material";
+import { OpenInNew, CloseFullscreen, Add, TtySharp } from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
 import FormAccordion from "../../dashboard/FormAccordion";
@@ -17,46 +17,14 @@ export default function ResultsMainPage() {
   const [isDisplayOpen, setIsDisplayOpen] = useState<boolean>(false);
   const [currentScreen, setCurrentScreen] = useState<string>("");
   const displayWindowRef = useRef<Window | null>(null);
-
-  const openDisplay = () => {
-    const isTatami = watch("tatami");
-    if (isTatami !== "") {
-      if (!displayWindowRef.current || displayWindowRef.current.closed) {
-        displayWindowRef.current = window.open(
-          "/display_panel/",
-          "_blank",
-          "width=1000,height=800"
-        );
-        setIsDisplayOpen(true);
-      } else {
-        displayWindowRef.current.focus();
-      }
-    } else {
-      setError("tatami", { message: "Este campo é obrigatório" });
-    }
-  };
-
-  const closeDisplay = () => {
-    displayWindowRef.current?.close();
-    setCurrentScreen("");
-  };
-
-  const navigateDisplay = (matchId: string) => {
-    if (displayWindowRef.current && !displayWindowRef.current?.closed) {
-      displayWindowRef.current.location.href = `/display_panel/${matchId}/`;
-    }
-  };
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (displayWindowRef.current) {
-        setIsDisplayOpen(!displayWindowRef.current.closed);
-      } else {
-        setIsDisplayOpen(false);
-      }
-    }, 1000);
+    socketRef.current = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
 
-    return () => clearInterval(interval);
+    return () => {
+      socketRef.current?.close();
+    };
   }, []);
 
   const {
@@ -73,6 +41,55 @@ export default function ResultsMainPage() {
       player2Designation: "",
     },
   });
+
+  const openDisplay = () => {
+    if (!displayWindowRef.current || displayWindowRef.current.closed) {
+      displayWindowRef.current = window.open(
+        "/display_panel/",
+        "_blank",
+        "width=1000,height=800"
+      );
+      setIsDisplayOpen(true);
+    } else {
+      displayWindowRef.current.focus();
+    }
+  };
+
+  const closeDisplay = () => {
+    displayWindowRef.current?.close();
+    setCurrentScreen("");
+  };
+
+  const navigateDisplay = (matchId: string) => {
+    if (displayWindowRef.current && !displayWindowRef.current?.closed) {
+      displayWindowRef.current.location.href = `/display_panel/${matchId}/`;
+    }
+  };
+
+  const tatami = watch("tatami");
+
+  const sendTatami = () => {
+    if (tatami === "" || Number(tatami) > 3 || Number(tatami) <= 0) {
+      setError("tatami", { message: "Este campo é obrigatório" });
+    } else if (
+      socketRef.current &&
+      socketRef.current.readyState === WebSocket.OPEN
+    ) {
+      socketRef.current.send(JSON.stringify({ tatami: tatami }));
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (displayWindowRef.current) {
+        setIsDisplayOpen(!displayWindowRef.current.closed);
+      } else {
+        setIsDisplayOpen(false);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div>
@@ -92,30 +109,6 @@ export default function ResultsMainPage() {
         </CardContent>
       </Card>
       <FormAccordion expanded title="Configurações de Monitor">
-        <Grid sx={{ p: 2 }} size={3}>
-          <Controller
-            name="tatami"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Tatami"
-                type="number"
-                required
-                disabled={isDisplayOpen}
-                fullWidth
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                  clearErrors();
-                }}
-                error={!!errors.tatami}
-                helperText={errors.tatami?.message}
-              />
-            )}
-          />
-        </Grid>
         <Grid sx={{ p: 2 }} size={3}>
           <Controller
             name="restTime"
@@ -199,6 +192,52 @@ export default function ResultsMainPage() {
           >
             {isDisplayOpen ? "Fechar Monitor" : "Inicializar Monitor"}
           </Button>
+        </Grid>
+        <Grid container sx={{ mt: 3 }} size={12} alignContent="center">
+          <Grid sx={{ p: 2 }} size={3}>
+            <Controller
+              name="tatami"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Tatami"
+                  type="number"
+                  required={isDisplayOpen}
+                  disabled={!isDisplayOpen}
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    clearErrors();
+                  }}
+                  error={!!errors.tatami}
+                  helperText={errors.tatami?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid
+            size={2}
+            container
+            justifyContent={"center"}
+            alignContent="center"
+          >
+            <Button
+              sx={{ m: 1 }}
+              variant="contained"
+              size="large"
+              color="success"
+              disabled={!isDisplayOpen}
+              onClick={() => {
+                sendTatami();
+              }}
+              startIcon={<Add />}
+            >
+              Enviar
+            </Button>
+          </Grid>
         </Grid>
         <Grid size={12} container alignContent="center">
           <Grid size={2}>
