@@ -21,7 +21,6 @@ import {
   GraduationsOptions,
   GenderOptions,
   CategoryOptions,
-  WeightOptions,
   ReasonOptions,
 } from "../../config";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -58,7 +57,7 @@ export default function NewAthletePage() {
       force_skip: false,
       skip_number: "",
       birth_date: undefined,
-      weight: "",
+      // weight: "",
       student: false,
       reason: "",
       dojo: "",
@@ -68,7 +67,6 @@ export default function NewAthletePage() {
   const is_force_skip = getValues("force_skip");
 
   const onSubmit = async (data: any) => {
-
     const formData = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -78,7 +76,7 @@ export default function NewAthletePage() {
       gender: data.gender,
       student: data.student,
       birth_date: data.birth_date,
-      weight: data.weight,
+      // weight: data.weight,
       dojo: data.dojo,
     };
 
@@ -96,6 +94,10 @@ export default function NewAthletePage() {
         if (data.response?.data.incompatible_athlete) {
           setError("student", {
             message: data.response?.data.incompatible_athlete[0],
+          });
+        } else if (data.response?.data.impossible_gender) {
+          setError("gender", {
+            message: data.response?.data.impossible_gender[0],
           });
         }
 
@@ -140,7 +142,8 @@ export default function NewAthletePage() {
         ></CardHeader>
         <CardContent>
           Aqui poderá registar cada Atleta/Aluno. Todos têm um conjunto de
-          informação que é obrigatória.<p></p>
+          informação que é obrigatória. Criar um atleta sem número SKIP irá
+          incrementar ao maior número que encontrar na base de dados.<p></p>
           <strong>Importante</strong>: A regras em vigor ditam que a idade
           considerada para determinação de escalão é a idade que uma atleta tem
           no primeiro dia do último ano da presente época. <br /> Por exemplo:
@@ -277,7 +280,9 @@ export default function NewAthletePage() {
                   error={!!errors.gender}
                   helperText={errors.gender?.message}
                 >
-                  {GenderOptions.map((item, index) => (
+                  {GenderOptions.filter((item) =>
+                    ["Masculino", "Feminino"].includes(item.value)
+                  ).map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
                     </MenuItem>
@@ -417,7 +422,7 @@ export default function NewAthletePage() {
             />
           </Grid>
         </FormCard>
-        <FormAccordion
+        {/* <FormAccordion
           title="Competições"
           expanded={expanded}
           tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
@@ -432,10 +437,9 @@ export default function NewAthletePage() {
                   variant={"outlined"}
                   type="text"
                   label="Peso"
-                  
                   multiline
                   required
-                  slotProps={{input:{ inputProps: { min: 0, max: 100 } }}}
+                  slotProps={{ input: { inputProps: { min: 0, max: 100 } } }}
                   maxRows={8}
                   {...field}
                   onChange={(e) => {
@@ -443,12 +447,11 @@ export default function NewAthletePage() {
                   }}
                   error={!!errors.weight}
                   helperText={errors.weight?.message}
-                >
-                </TextField>
+                ></TextField>
               )}
             />
           </Grid>
-        </FormAccordion>
+        </FormAccordion> */}
         <FormCard title="Associar Dojo/Associação">
           <Grid size={12} sx={{ p: 2 }}>
             <Controller
