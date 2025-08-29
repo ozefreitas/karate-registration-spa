@@ -508,7 +508,6 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       <DeleteEventModal
         isModalOpen={isDeleteModalOpen}
         handleModalClose={handleDeleteModalClose}
-        handleModalOpen={handleDeleteModalOpen}
         id={location.pathname.split("/").slice(-2)[0]}
       ></DeleteEventModal>
       <EditEventModal
