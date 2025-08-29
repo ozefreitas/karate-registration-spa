@@ -1,8 +1,6 @@
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   Slide,
   AppBar,
   Toolbar,
@@ -10,13 +8,12 @@ import {
   Typography,
   Button,
   Grid,
-  CircularProgress,
   TextField,
   MenuItem,
 } from "@mui/material";
-import { useUpdateEventData } from "../../hooks/useEventData";
+import { usePatchEventData } from "../../hooks/useEventData";
 import { useForm, Controller } from "react-hook-form";
-import React from "react";
+import React, { useEffect } from "react";
 import { TransitionProps } from "notistack";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -37,8 +34,7 @@ const Transition = React.forwardRef(function Transition(
 export default function EditEventModal(
   props: Readonly<{ isOpen: boolean; handleClose: any; singleEventData: any }>
 ) {
-  console.log(props.singleEventData);
-  const updateEvent = useUpdateEventData();
+  const patchEvent = usePatchEventData();
 
   const {
     control,
@@ -54,16 +50,34 @@ export default function EditEventModal(
       end_registration: undefined,
       retifications_deadline: undefined,
       event_date: undefined,
-      // description will be edited in the event card page itself
-      description: props.singleEventData?.description,
+      description: "", // description will be edited in the main event page
       custody: "",
       email_contact: "",
-      contact: undefined,
+      contact: "",
     },
   });
 
+  useEffect(() => {
+    if (props.singleEventData) {
+      reset({
+        name: props.singleEventData.name || "",
+        location: props.singleEventData.location || "",
+        season: props.singleEventData.season || "",
+        start_registration: props.singleEventData.start_registration,
+        end_registration: props.singleEventData.end_registration,
+        retifications_deadline: props.singleEventData.retifications_deadline,
+        event_date: props.singleEventData.event_date,
+        description: props.singleEventData.description || "",
+        custody: props.singleEventData.custody || "",
+        email_contact: props.singleEventData.email_contact || "",
+        contact: props.singleEventData.contact,
+      });
+    }
+  }, [props.singleEventData, reset]);
+
   const onSubmit = (data: any) => {
-    console.log(data);
+    const formData = { eventId: props.singleEventData.id, data: data };
+    patchEvent.mutate(formData);
   };
 
   return (

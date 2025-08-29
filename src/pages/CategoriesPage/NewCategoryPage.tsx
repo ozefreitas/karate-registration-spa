@@ -68,8 +68,8 @@ export default function NewCategoryPage() {
       gender: data.gender,
       min_age: Number(data.min_age),
       max_age: Number(data.max_age),
-      min_grad: data.min_grad,
-      max_grad: data.max_grad,
+      min_grad: data.min_grad === "" ? undefined : data.min_grad,
+      max_grad: data.max_grad === "" ? undefined : data.max_grad,
       min_weight: data.min_weight,
       max_weight: data.max_weight,
     };
