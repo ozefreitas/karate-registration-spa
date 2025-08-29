@@ -106,6 +106,7 @@ export default function IndividualsPage(
                 {discipline.name}
               </Typography>
               <AthletesTable
+                count={discipline.individuals.length}
                 type="Modalidades"
                 discipline={discipline.id}
                 data={discipline.individuals}
@@ -126,6 +127,7 @@ export default function IndividualsPage(
           <AthletesTable
             type="Individuais"
             data={singleEventData?.data.individuals}
+            count={singleEventData?.data.individuals.length}
             columnsHeaders={columnMaping}
             actions
             selection

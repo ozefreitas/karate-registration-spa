@@ -24,7 +24,7 @@ import {
   useRemoveTeamData,
   useRemoveAllTeamsData,
 } from "../../hooks/useTeamsData";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,7 +41,13 @@ export default function DeleteAthleteModal(
     handleModalClose: any;
     handleModalOpen: any;
     id?: string | Array<string>;
-    from: "Atletas" | "Equipas" | "Individuais" | "Modalidades" | "Categorias" | "CategoriasReadOnly";
+    from:
+      | "Atletas"
+      | "Equipas"
+      | "Individuais"
+      | "Modalidades"
+      | "Categorias"
+      | "CategoriasReadOnly";
     setSelected?: any;
     discipline?: any;
   }>
@@ -55,6 +61,7 @@ export default function DeleteAthleteModal(
   const removeCategory = useRemoveCategory();
   const removeAllCategories = useRemoveAllCategoriesData();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
@@ -63,9 +70,17 @@ export default function DeleteAthleteModal(
     event.stopPropagation();
     if (id !== undefined && typeof id === "string") {
       if (props.from === "Atletas") {
-        removeAthlete.mutate(id);
+        removeAthlete.mutate(id, {
+          onSuccess: () => {
+            navigate("/athletes/");
+          },
+        });
       } else if (props.from === "Equipas") {
-        removeTeam.mutate(id);
+        removeTeam.mutate(id, {
+          onSuccess: () => {
+            navigate("/teams/");
+          },
+        });
       } else if (props.from === "Individuais") {
         const athleteData = { athlete_id: id };
         const data = {
