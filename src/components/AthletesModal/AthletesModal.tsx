@@ -517,7 +517,7 @@ export default function AthletesModal(
                       primary={`${athlete.first_name} ${athlete.last_name}`}
                       secondary={`${
                         athlete.gender
-                      } / Idade no primeiro dia do ano: ${
+                      } / Idade calculada: ${
                         athlete.age
                       } / Peso: ${athlete.weight ?? "N/A"}`}
                     />

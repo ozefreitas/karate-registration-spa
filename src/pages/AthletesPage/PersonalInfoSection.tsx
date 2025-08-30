@@ -310,7 +310,7 @@ export default function PersonalInfoSection(
             labelPlacement="start"
             label={
               <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Idade:
+                Idade (real):
               </Typography>
             }
             control={
