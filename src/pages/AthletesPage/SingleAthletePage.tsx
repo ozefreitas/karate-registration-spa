@@ -124,6 +124,7 @@ export default function SingleAthletePage() {
                   <Button
                     variant={currentScreen === 2 ? "contained" : "text"}
                     fullWidth
+                    disabled
                     sx={{
                       backgroundColor:
                         currentScreen === 2 ? "#e81c24" : "white",
@@ -142,6 +143,7 @@ export default function SingleAthletePage() {
                   <Button
                     variant={currentScreen === 3 ? "contained" : "text"}
                     fullWidth
+                    disabled
                     sx={{
                       backgroundColor:
                         currentScreen === 3 ? "#e81c24" : "white",

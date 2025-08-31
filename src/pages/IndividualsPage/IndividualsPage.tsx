@@ -18,9 +18,7 @@ import {
   useFetchDisciplinesData,
 } from "../../hooks/useEventData";
 
-export default function IndividualsPage(
-  props: Readonly<{ state?: boolean; userRole: string }>
-) {
+export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const location = useLocation();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -31,11 +29,8 @@ export default function IndividualsPage(
     setIsModalOpen(false);
   };
 
-  const {
-    data: singleEventData,
-    isLoading: isSingleEventLoading,
-    error: singleEventError,
-  } = useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
+  const { data: singleEventData, isLoading: isSingleEventLoading } =
+    useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
 
   const { data: disciplinesData } = useFetchDisciplinesData(
     location.pathname.split("/").slice(-3)[0]
@@ -86,7 +81,16 @@ export default function IndividualsPage(
                 },
               }}
             >
-              <Typography sx={{ fontWeight: "bold" }}>
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  color: singleEventData?.data.is_open
+                    ? "green"
+                    : singleEventData?.data.is_retification
+                    ? "yellow"
+                    : "red",
+                }}
+              >
                 Estado: {state}
               </Typography>
             </CardContent>
@@ -100,8 +104,8 @@ export default function IndividualsPage(
             <CircularProgress />
           </Box>
         ) : disciplinesData?.data.results.length !== 0 ? (
-          disciplinesData?.data.results.map((discipline: any) => (
-            <>
+          disciplinesData?.data.results.map((discipline: any, index: any) => (
+            <span key={index}>
               <Typography sx={{ m: 3 }} variant="h5">
                 {discipline.name}
               </Typography>
@@ -121,7 +125,7 @@ export default function IndividualsPage(
                 setPageSize={setPageSize}
                 userRole={props.userRole}
               ></AthletesTable>
-            </>
+            </span>
           ))
         ) : (
           <AthletesTable

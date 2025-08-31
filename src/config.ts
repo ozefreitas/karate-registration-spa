@@ -93,11 +93,11 @@ export const EncounterOptions: { label: string; value: string }[] = [
 ];
 
 export const SeasonOptions: { label: string; value: string }[] = [
-  { value: "2425", label: "2024/2025" },
-  { value: "2526", label: "2025/2026" },
-  { value: "2627", label: "2026/2027" },
-  { value: "2728", label: "2027/2028" },
-  { value: "2829", label: "2028/2029" },
+  { value: "2024/2025", label: "2024/2025" },
+  { value: "2025/2026", label: "2025/2026" },
+  { value: "2026/2027", label: "2026/2027" },
+  { value: "2027/2028", label: "2027/2028" },
+  { value: "2028/2029", label: "2028/2029" },
 ];
 
 export const MatchTypeOptions: { label: string; value: string }[] = [
