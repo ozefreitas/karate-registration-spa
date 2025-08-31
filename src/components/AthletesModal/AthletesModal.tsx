@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -49,7 +48,7 @@ import {
 } from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -119,6 +118,8 @@ export default function AthletesModal(
     weight: number;
   };
 
+  const navigate = useNavigate();
+
   const [page, setPage] = useState<number>(0);
 
   const handleBackButtonClick = (
@@ -175,6 +176,8 @@ export default function AthletesModal(
 
   const [isDisciplineScreenOpen, setIsDisciplineScreenOpen] =
     useState<boolean>(false);
+  const [isWeightInputScreenOpen, setIsWeightInputScreenOpen] =
+    useState<boolean>(false);
 
   const handleDisciplineScreenOpen = () => {
     setIsDisciplineScreenOpen(true);
@@ -183,6 +186,14 @@ export default function AthletesModal(
   const handleDisciplineScreenClose = () => {
     setCurrentAthleteId("");
     setIsDisciplineScreenOpen(false);
+  };
+
+  const handleWeightInputScreenOpen = () => {
+    setIsWeightInputScreenOpen(true);
+  };
+
+  const handleWeightInputScreenClose = () => {
+    setIsWeightInputScreenOpen(false);
   };
 
   const location = useLocation();
@@ -214,6 +225,7 @@ export default function AthletesModal(
   const addDisciplineAthlete = useAddDisciplineAthlete();
 
   React.useEffect(() => {
+    console.log("OLAAAAAAaa");
     const defaultValues: any = {};
     disciplinesData?.data.results.forEach((discipline: any) => {
       defaultValues[`${discipline.name}_${discipline.id}`] = false;
@@ -233,6 +245,7 @@ export default function AthletesModal(
   } = useForm<FormValues>();
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     if (Object.values(data).every((value) => value === false)) {
       enqueueSnackbar("Tem de selecionar pelo menos uma modalidade.", {
         variant: "warning",
@@ -243,9 +256,9 @@ export default function AthletesModal(
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
+      return;
     }
     setIsMutationDelayActive(true);
-    setDisciplinesFree([]);
 
     const entries = Object.entries(data).filter(([, value]) => value);
 
@@ -260,15 +273,23 @@ export default function AthletesModal(
     );
 
     const hasError = results.some((r) => r.status === "rejected");
+    const hasWarning = results.some((r: any) => r.value.data.status == "info");
 
-    if (!hasError) {
-      await refetch();
-      setTimeout(() => {
-        handleDisciplineScreenClose();
-      }, 1000);
+    if (hasWarning) {
+      setIsDisciplineScreenOpen(false);
+      setIsWeightInputScreenOpen(true);
+      setIsMutationDelayActive(false);
     } else {
-      handleDisciplineScreenClose();
-      reset();
+      if (!hasError) {
+        setDisciplinesFree([]);
+        await refetch();
+        setTimeout(() => {
+          handleDisciplineScreenClose();
+        }, 1000);
+      } else {
+        handleDisciplineScreenClose();
+        reset();
+      }
     }
 
     setIsMutationDelayActive(false);
@@ -344,7 +365,8 @@ export default function AthletesModal(
             Selecionar Atletas para {props.eventData?.name}
           </Typography>
           {athletesNotInEventData?.data.results.length !== 0 &&
-          !isDisciplineScreenOpen ? (
+          !isDisciplineScreenOpen &&
+          !isWeightInputScreenOpen ? (
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -357,13 +379,13 @@ export default function AthletesModal(
               />
             </Search>
           ) : null}
-          {!isDisciplineScreenOpen ? null : (
+          {isDisciplineScreenOpen || isWeightInputScreenOpen ? (
             <Button
               autoFocus
               size="large"
               color="inherit"
               onClick={() => {
-                if (isDisciplineScreenOpen) {
+                if (isDisciplineScreenOpen || isWeightInputScreenOpen) {
                   handleSubmit(onSubmit)();
                 } else {
                   handleIndividualsSubmit(checked);
@@ -373,7 +395,7 @@ export default function AthletesModal(
             >
               Adicionar
             </Button>
-          )}
+          ) : null}
         </Toolbar>
       </AppBar>
       <DialogContent sx={{ pb: 0 }}>
@@ -456,7 +478,7 @@ export default function AthletesModal(
               graduação e pesos (quando obrigatórios) serão verificados.
             </FormHelperText>
           </Grid>
-        ) : (
+        ) : !isWeightInputScreenOpen ? (
           <List>
             {isAthletesNotInEventLoading ? (
               <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
@@ -515,9 +537,7 @@ export default function AthletesModal(
                     </ListItemIcon>
                     <ListItemText
                       primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${
-                        athlete.gender
-                      } / Idade calculada: ${
+                      secondary={`${athlete.gender} / Idade calculada: ${
                         athlete.age
                       } / Peso: ${athlete.weight ?? "N/A"}`}
                     />
@@ -531,10 +551,43 @@ export default function AthletesModal(
               </ListItem>
             )}
           </List>
+        ) : (
+          <Grid container size={12}>
+            <Grid size={1}>
+              <Tooltip title="Voltar atrás">
+                <IconButton
+                  onClick={() => {
+                    handleWeightInputScreenClose();
+                    handleDisciplineScreenOpen();
+                  }}
+                  aria-label="back to disciplines viwer"
+                >
+                  <KeyboardArrowLeft />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid size={11}>
+              <Typography sx={{ m: 1, mb: 3 }}>
+                O escalão disponível na Modalidade encontrada requer um peso, e
+                este Atleta não tem um peso associado. <br /> Dirija-se à pagina
+                e insira o peso deste Atleta clicando neste botão.
+              </Typography>
+            </Grid>
+            <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  navigate(`/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`);
+                }}
+              >
+                Ir para Atleta
+              </Button>
+            </Grid>
+          </Grid>
         )}
       </DialogContent>
       <DialogActions sx={{ pr: 4, pb: 2 }}>
-        {isDisciplineScreenOpen ? null : (
+        {isDisciplineScreenOpen || isWeightInputScreenOpen ? null : (
           <>
             <Tooltip title="Página anterior">
               <IconButton

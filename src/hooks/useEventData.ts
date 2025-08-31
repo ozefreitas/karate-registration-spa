@@ -505,6 +505,17 @@ export const useAddDisciplineAthlete = () => {
     mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
       addDisciplineAthlete(disciplineId, data),
     onSuccess: (data: any) => {
+      if (data.data.status === "info") {
+        enqueueSnackbar(`${data.data.message}`, {
+          variant: "warning",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      }
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
         anchorOrigin: {
@@ -519,7 +530,6 @@ export const useAddDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      console.log(data);
       enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
