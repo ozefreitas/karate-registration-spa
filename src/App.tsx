@@ -68,7 +68,7 @@ function App() {
   return (
     <SnackbarProvider>
       <BrowserRouter>
-        <SnackbarCloser />
+        {/* <SnackbarCloser /> */}
         <Routes>
           <Route element={<MainAppLayout me={user} />}>
             <Route
