@@ -66,7 +66,7 @@ export default function NewAthletePage() {
 
   const is_force_skip = getValues("force_skip");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
     const formData = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -86,9 +86,13 @@ export default function NewAthletePage() {
 
     createAthlete.mutate(formData, {
       onSuccess: () => {
-        reset();
-        setExpanded(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (mode === "redirect") {
+          navigate("/athletes/");
+        } else {
+          reset();
+          setExpanded(true);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
       },
       onError: (data: any) => {
         if (data.response?.data.incompatible_athlete) {
@@ -498,11 +502,7 @@ export default function NewAthletePage() {
             size={"large"}
             color={"success"}
             type={"submit"}
-            onClick={() => {
-              handleSubmit(onSubmit)();
-              // change this to only when post request is successful
-              navigate("/athletes/");
-            }}
+            onClick={handleSubmit((data) => onSubmit(data, "redirect"))}
           >
             Submeter e voltar
           </Button>
@@ -511,9 +511,7 @@ export default function NewAthletePage() {
             size={"large"}
             color={"success"}
             type={"submit"}
-            onClick={() => {
-              handleSubmit(onSubmit)();
-            }}
+            onClick={handleSubmit((data) => onSubmit(data, "scroll"))}
           >
             Submeter e Adicionar outro
           </Button>
