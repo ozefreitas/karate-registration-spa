@@ -428,34 +428,39 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 }}
               >
                 {!["main_admin", "superuser"].includes(props.userRole) ? (
-                  props.userRole === "subed_dojo" ? (
-                    <Tooltip
-                      disableHoverListener={!singleEventData?.data.has_ended}
-                      title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
-                    >
-                      <span>
-                        <AddButton
-                          label="Consultar Inscrições"
-                          to="individuals/"
-                          disabled={singleEventData?.data.has_ended}
-                        ></AddButton>
-                      </span>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip
-                      disableHoverListener={props.userRole === "subed_dojo"}
-                      title="Comece uma subscrição para ter acesso a esta funcionalidade"
-                    >
-                      <span>
-                        <AddButton
-                          label="Adicionar/Consultar Inscrições"
-                          to="individuals/"
-                          disabled={props.userRole === "free_dojo"}
-                        ></AddButton>
-                      </span>
-                    </Tooltip>
-                  )
+                  <AddButton
+                    label="Adicionar/Consultar Inscrições"
+                    to="individuals/"
+                    disabled={singleEventData?.data.has_ended}
+                  ></AddButton>
                 ) : (
+                  // props.userRole === "subed_dojo" ? (
+                  //   <Tooltip
+                  //     disableHoverListener={!singleEventData?.data.has_ended}
+                  //     title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
+                  //   >
+                  //     <span>
+                  //       <AddButton
+                  //         label="Adicionar/Consultar Inscrições"
+                  //         to="individuals/"
+                  //         disabled={singleEventData?.data.has_ended}
+                  //       ></AddButton>
+                  //     </span>
+                  //   </Tooltip>
+                  // ) : (
+                  //   <Tooltip
+                  //     disableHoverListener={props.userRole === "subed_dojo"}
+                  //     title="Comece uma subscrição para ter acesso a esta funcionalidade"
+                  //   >
+                  //     <span>
+                  //       <AddButton
+                  //         label="Adicionar/Consultar Inscrições"
+                  //         to="individuals/"
+                  //         disabled={props.userRole === "free_dojo"}
+                  //       ></AddButton>
+                  //     </span>
+                  //   </Tooltip>
+                  // )
                   <>
                     <Button
                       sx={{ m: 1 }}

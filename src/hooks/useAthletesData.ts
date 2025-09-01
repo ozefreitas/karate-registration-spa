@@ -145,6 +145,56 @@ export const useUpdateAthleteData = () => {
   });
 };
 
+const patchAthlete = (athleteId: string | null, data: any) => {
+  const token = localStorage.getItem("token");
+  return axios.patch(`http://127.0.0.1:8000/athletes/${athleteId}/`, data, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const usePatchAthleteData = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      athleteId,
+      data,
+    }: {
+      athleteId: string | null;
+      data: any;
+    }) => patchAthlete(athleteId, data),
+    onSuccess: () => {
+      enqueueSnackbar("Atleta atualizado com sucesso!", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["single-athlete"] });
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
+      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
 const fetchAthletesNotInEvent = (page: number, pageSize: number) => {
   const token = localStorage.getItem("token");
   return axios.get("http://127.0.0.1:8000/athletes/", {

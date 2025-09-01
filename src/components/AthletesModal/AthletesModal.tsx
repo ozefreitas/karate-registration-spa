@@ -23,6 +23,7 @@ import {
   Box,
   CircularProgress,
   ListItemIcon,
+  TextField,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -45,10 +46,12 @@ import {
 import {
   useFetchAthletesNotInEvent,
   useFetchDisciplinesnotInAthleteData,
+  usePatchAthleteData,
 } from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -119,6 +122,8 @@ export default function AthletesModal(
   };
 
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const userRole = user?.data.role;
 
   const [page, setPage] = useState<number>(0);
 
@@ -178,6 +183,7 @@ export default function AthletesModal(
     useState<boolean>(false);
   const [isWeightInputScreenOpen, setIsWeightInputScreenOpen] =
     useState<boolean>(false);
+  const [freeDojoWeight, setFreeDojoWeight] = useState<string>("");
 
   const handleDisciplineScreenOpen = () => {
     setIsDisciplineScreenOpen(true);
@@ -222,10 +228,8 @@ export default function AthletesModal(
     location.pathname.split("/").slice(-3)[0]
   );
 
-  const addDisciplineAthlete = useAddDisciplineAthlete();
-
   React.useEffect(() => {
-    console.log("OLAAAAAAaa");
+    console.log(disciplinesData);
     const defaultValues: any = {};
     disciplinesData?.data.results.forEach((discipline: any) => {
       defaultValues[`${discipline.name}_${discipline.id}`] = false;
@@ -244,9 +248,14 @@ export default function AthletesModal(
     formState: { errors },
   } = useForm<FormValues>();
 
+  const addDisciplineAthlete = useAddDisciplineAthlete();
+  const patchAthlete = usePatchAthleteData();
+
   const onSubmit = async (data: any) => {
-    console.log(data);
-    if (Object.values(data).every((value) => value === false)) {
+    if (
+      Object.values(data).every((value) => value === false) &&
+      !isWeightInputScreenOpen
+    ) {
       enqueueSnackbar("Tem de selecionar pelo menos uma modalidade.", {
         variant: "warning",
         anchorOrigin: {
@@ -260,39 +269,65 @@ export default function AthletesModal(
     }
     setIsMutationDelayActive(true);
 
-    const entries = Object.entries(data).filter(([, value]) => value);
-
-    const results = await Promise.allSettled(
-      entries.map(([discipline]) => {
+    try {
+      if (isWeightInputScreenOpen) {
         const payload = {
-          disciplineId: discipline.split("_")[1],
-          data: { athlete_id: currentAthleteId, event_id: props.eventData.id },
+          athleteId: currentAthleteId,
+          data: { weight: freeDojoWeight },
         };
-        return addDisciplineAthlete.mutateAsync(payload);
-      })
-    );
-
-    const hasError = results.some((r) => r.status === "rejected");
-    const hasWarning = results.some((r: any) => r.value.data.status == "info");
-
-    if (hasWarning) {
-      setIsDisciplineScreenOpen(false);
-      setIsWeightInputScreenOpen(true);
-      setIsMutationDelayActive(false);
-    } else {
-      if (!hasError) {
-        setDisciplinesFree([]);
-        await refetch();
-        setTimeout(() => {
-          handleDisciplineScreenClose();
-        }, 1000);
-      } else {
-        handleDisciplineScreenClose();
-        reset();
+        const updateWeight = await patchAthlete.mutateAsync(payload);
       }
-    }
 
-    setIsMutationDelayActive(false);
+      const entries = Object.entries(data).filter(([, value]) => value);
+
+      const results = await Promise.allSettled(
+        entries.map(([discipline]) => {
+          const payload = {
+            disciplineId: discipline.split("_")[1],
+            data: {
+              athlete_id: currentAthleteId,
+              event_id: props.eventData.id,
+            },
+          };
+          return addDisciplineAthlete.mutateAsync(payload);
+        })
+      );
+
+      const hasError = results.some((r) => r.status === "rejected");
+      const hasWarning = results.some(
+        (r: any) => r.value.data.status == "info"
+      );
+
+      if (hasWarning) {
+        setIsDisciplineScreenOpen(false);
+        setIsWeightInputScreenOpen(true);
+        setIsMutationDelayActive(false);
+      } else {
+        if (!hasError) {
+          setDisciplinesFree([]);
+          await refetch();
+          setTimeout(() => {
+            handleDisciplineScreenClose();
+            setIsWeightInputScreenOpen(false);
+          }, 1000);
+        } else {
+          handleDisciplineScreenClose();
+          reset();
+        }
+      }
+
+      setIsMutationDelayActive(false);
+    } catch {
+      enqueueSnackbar("Um erro ocurreu! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    }
   };
 
   const {
@@ -317,7 +352,8 @@ export default function AthletesModal(
       return (
         athlete.first_name.toLowerCase().includes(query) ||
         athlete.last_name.toLowerCase().includes(query) ||
-        fullName.includes(query)
+        fullName.includes(query) ||
+        athlete.skip_number === Number(query)
       );
     });
   }, [searchQuery, athletesNotInEventData]);
@@ -494,57 +530,63 @@ export default function AthletesModal(
             ) : athletesNotInEventError ? (
               <div>Ocorreu um erro</div>
             ) : filteredAthletes.length !== 0 ? (
-              filteredAthletes.map((athlete: Athlete, index: string) => (
-                <ListItem
-                  key={index}
-                  disablePadding
-                  secondaryAction={
-                    disciplinesData?.data.results.length !== 0 ? (
-                      <Tooltip title="Selecionar Modalidade">
-                        <IconButton
-                          onClick={() => {
-                            setCurrentAthleteId(athlete.id);
-                            handleDisciplineScreenOpen();
-                          }}
-                          aria-label="go to disciplines selection"
-                        >
-                          <KeyboardArrowRight color="success" />
-                        </IconButton>
-                      </Tooltip>
-                    ) : (
-                      <label>
-                        <Checkbox
-                          sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
-                          edge="end"
-                          onChange={() => handleToggle(athlete.id)}
-                          checked={checked.includes(athlete.id)}
-                          slotProps={{
-                            input: {
-                              "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
-                            },
-                          }}
-                        />
-                      </label>
-                    )
-                  }
-                >
-                  <ListItemButton
-                    key={index}
-                    onClick={() => handleToggle(athlete.id)}
-                  >
-                    <ListItemIcon>
-                      <Person />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.gender} / Idade calculada: ${
-                        athlete.age
-                      } / Peso: ${athlete.weight ?? "N/A"}`}
-                    />
-                  </ListItemButton>
-                  <Divider />
+              userRole === "free_dojo" && searchQuery === "" ? (
+                <ListItem>
+                  <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº SKIP ou nome do Atleta, ou inicie uma subscrição."></ListItemText>
                 </ListItem>
-              ))
+              ) : (
+                filteredAthletes.map((athlete: Athlete, index: string) => (
+                  <ListItem
+                    key={index}
+                    disablePadding
+                    secondaryAction={
+                      disciplinesData?.data.results.length !== 0 ? (
+                        <Tooltip title="Selecionar Modalidade">
+                          <IconButton
+                            onClick={() => {
+                              setCurrentAthleteId(athlete.id);
+                              handleDisciplineScreenOpen();
+                            }}
+                            aria-label="go to disciplines selection"
+                          >
+                            <KeyboardArrowRight color="success" />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <label>
+                          <Checkbox
+                            sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                            edge="end"
+                            onChange={() => handleToggle(athlete.id)}
+                            checked={checked.includes(athlete.id)}
+                            slotProps={{
+                              input: {
+                                "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
+                              },
+                            }}
+                          />
+                        </label>
+                      )
+                    }
+                  >
+                    <ListItemButton
+                      key={index}
+                      onClick={() => handleToggle(athlete.id)}
+                    >
+                      <ListItemIcon>
+                        <Person />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={`${athlete.first_name} ${athlete.last_name}`}
+                        secondary={`${athlete.gender} / Idade calculada: ${
+                          athlete.age
+                        } / Peso: ${athlete.weight ?? "N/A"}`}
+                      />
+                    </ListItemButton>
+                    <Divider />
+                  </ListItem>
+                ))
+              )
             ) : (
               <ListItem>
                 <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
@@ -569,19 +611,36 @@ export default function AthletesModal(
             <Grid size={11}>
               <Typography sx={{ m: 1, mb: 3 }}>
                 O escalão disponível na Modalidade encontrada requer um peso, e
-                este Atleta não tem um peso associado. <br /> Dirija-se à pagina
-                e insira o peso deste Atleta clicando neste botão.
+                este Atleta não tem um peso associado. <br />
+                {userRole === "free_dojo"
+                  ? "Insira o peso do Atleta no campo seguinte para prosseguir."
+                  : "Dirija-se à pagina e insira o peso deste Atleta clicando neste botão."}
               </Typography>
             </Grid>
             <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
-              <Button
-                variant="contained"
-                onClick={() => {
-                  navigate(`/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`);
-                }}
-              >
-                Ir para Atleta
-              </Button>
+              {userRole === "free_dojo" ? (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Peso"
+                  required
+                  value={freeDojoWeight}
+                  onChange={(e) => {
+                    setFreeDojoWeight(e.target.value);
+                  }}
+                />
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    navigate(
+                      `/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
+                    );
+                  }}
+                >
+                  Ir para Atleta
+                </Button>
+              )}
             </Grid>
           </Grid>
         )}
