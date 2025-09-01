@@ -440,6 +440,7 @@ export const useFetchDisciplinesData = (eventId: string) => {
     queryKey: ["disciplines", eventId],
     queryFn: () => fetchDisciplines(eventId),
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };
 
@@ -515,19 +516,20 @@ export const useAddDisciplineAthlete = () => {
           autoHideDuration: 5000,
           preventDuplicate: true,
         });
+      } else {
+        enqueueSnackbar(`${data.data.message}`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+        queryClient.invalidateQueries({ queryKey: ["events"] });
+        queryClient.invalidateQueries({ queryKey: ["single-event"] });
+        queryClient.invalidateQueries({ queryKey: ["disciplines"] });
       }
-      enqueueSnackbar(`${data.data.message}`, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-      queryClient.invalidateQueries({ queryKey: ["single-event"] });
-      queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {
