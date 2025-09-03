@@ -118,7 +118,7 @@ export default function AthletesModal(
     last_name: string;
     category: string;
     gender: string;
-    weight: number;
+    weight: string;
   };
 
   const navigate = useNavigate();
@@ -195,7 +195,9 @@ export default function AthletesModal(
   };
 
   const handleWeightInputScreenOpen = () => {
+    setIsDisciplineScreenOpen(false);
     setIsWeightInputScreenOpen(true);
+    setIsMutationDelayActive(false);
   };
 
   const handleWeightInputScreenClose = () => {
@@ -266,16 +268,29 @@ export default function AthletesModal(
         preventDuplicate: true,
       });
       return;
+      // free dojos must go thought this screen to confirm athlete weight and change it if needed, since they don't have access to the profile pages
+    } else if (!isWeightInputScreenOpen && userRole === "free_dojo") {
+      const target = filteredAthletes.filter(
+        (athlete: any) => athlete.id === currentAthleteId
+      );
+      setFreeDojoWeight(target[0].weight ?? "");
+      handleWeightInputScreenOpen();
+      return;
     }
     setIsMutationDelayActive(true);
 
     try {
       if (isWeightInputScreenOpen) {
-        const payload = {
-          athleteId: currentAthleteId,
-          data: { weight: freeDojoWeight },
-        };
-        const updateWeight = await patchAthlete.mutateAsync(payload);
+        const target = filteredAthletes.filter(
+          (athlete: any) => athlete.id === currentAthleteId
+        );
+        if (target[0].weight !== freeDojoWeight) {
+          const payload = {
+            athleteId: currentAthleteId,
+            data: { weight: freeDojoWeight },
+          };
+          await patchAthlete.mutateAsync(payload);
+        }
       }
 
       const entries = Object.entries(data).filter(([, value]) => value);
@@ -299,9 +314,7 @@ export default function AthletesModal(
       );
 
       if (hasWarning) {
-        setIsDisciplineScreenOpen(false);
-        setIsWeightInputScreenOpen(true);
-        setIsMutationDelayActive(false);
+        handleWeightInputScreenOpen();
       } else {
         if (!hasError) {
           setDisciplinesFree([]);
@@ -415,7 +428,8 @@ export default function AthletesModal(
               />
             </Search>
           ) : null}
-          {isDisciplineScreenOpen || isWeightInputScreenOpen ? (
+          {isDisciplineScreenOpen ||
+          (isWeightInputScreenOpen && userRole !== "free_dojo") ? (
             <Button
               autoFocus
               size="large"
@@ -619,16 +633,30 @@ export default function AthletesModal(
             </Grid>
             <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
               {userRole === "free_dojo" ? (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Peso"
-                  required
-                  value={freeDojoWeight}
-                  onChange={(e) => {
-                    setFreeDojoWeight(e.target.value);
-                  }}
-                />
+                <Grid
+                  container
+                  justifyContent="space-evenly"
+                  alignItems="center"
+                  size={12}
+                >
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Peso"
+                    required
+                    value={freeDojoWeight}
+                    onChange={(e) => {
+                      setFreeDojoWeight(e.target.value);
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => handleSubmit(onSubmit)()}
+                  >
+                    Prosseguir
+                  </Button>
+                </Grid>
               ) : (
                 <Button
                   variant="contained"
