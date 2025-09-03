@@ -67,7 +67,12 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           a mesma coisa). <br /> Tal como presente nas regras, no período de
           retificações apenas pode eliminar inscrições, e quando as inscrições
           estiverem fechadas não podem ser efetuadas operações, apenas ser
-          visualizadas as isncrições.
+          visualizadas as isncrições. <br />
+          Ao clicar em "Selecionar Atleta", apenas irão aparecer Alunos que
+          estejam marcados como "Competidores". Se algum Atleta não constar na
+          lista, por favor verifique na página de perfil desse Atleta se o campo
+          "É Competidor" está selecionado. Caso não possua uma subscrição,
+          contacte um administrador de imediato.
         </CardContent>
       </Card>
       <Grid container sx={{ m: 2 }}>

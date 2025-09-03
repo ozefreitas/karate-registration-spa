@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   MenuItem,
+  Switch,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -81,7 +82,7 @@ export default function PersonalInfoSection(
       graduation: props.athleteData?.data.graduation,
       skip_number: props.athleteData?.data.skip_number,
       gender: props.athleteData?.data.gender,
-      student: props.athleteData?.data.student,
+      competitor: props.athleteData?.data.competitor,
       birthDate: props.athleteData?.data.birth_date,
       weight: props.athleteData?.data.weight ?? "N/A",
       quotes: props.athleteData?.data.quotes ? "Regularizado" : "Por pagar",
@@ -95,10 +96,11 @@ export default function PersonalInfoSection(
       graduation: data.graduation,
       skip_number: data.skip_number,
       gender: data.gender,
-      student: data.student,
+      competitor: data.competitor,
       birth_date: data.birthDate,
-      weight: data.weight === "N/A" ? null : data.weight,
+      weight: data.weight === "N/A" || data.weight === "" ? null : data.weight,
     };
+    console.log(formData);
     const updateData = {
       athleteId: props.athleteData?.data.id,
       data: formData,
@@ -643,6 +645,40 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
+        <Controller
+          name="competitor"
+          control={control}
+          render={({ field }) => (
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    É competidor:
+                  </Typography>
+                }
+                control={
+                  <Switch
+                    disabled={!isEditMode}
+                    sx={{ ml: 2 }}
+                    {...field}
+                    checked={field.value}
+                    color="warning"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+          )}
+        />
       </Grid>
       <DeleteAthleteModal
         from="Atletas"

@@ -46,6 +46,7 @@ export default function NewAthletePage() {
     setError,
     reset,
     getValues,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -58,7 +59,7 @@ export default function NewAthletePage() {
       skip_number: "",
       birth_date: undefined,
       // weight: "",
-      student: false,
+      competitor: false,
       reason: "",
       dojo: "",
     },
@@ -74,7 +75,7 @@ export default function NewAthletePage() {
       category: data.category,
       skip_number: data.skip_number,
       gender: data.gender,
-      student: data.student,
+      competitor: data.competitor,
       birth_date: data.birth_date,
       // weight: data.weight,
       dojo: data.dojo,
@@ -96,7 +97,7 @@ export default function NewAthletePage() {
       },
       onError: (data: any) => {
         if (data.response?.data.incompatible_athlete) {
-          setError("student", {
+          setError("competitor", {
             message: data.response?.data.incompatible_athlete[0],
           });
         } else if (data.response?.data.impossible_gender) {
@@ -316,15 +317,15 @@ export default function NewAthletePage() {
                             field.onChange(e.target.checked);
                             setExpanded((prev) => !prev);
                           }}
-                          name="student"
+                          name="force_skip"
                         />
                       }
                       label="Forçar Nº SKI-P"
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
-                    {!!errors.student && (
+                    {!!errors.competitor && (
                       <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.student?.message}
+                        {errors.competitor?.message}
                       </FormHelperText>
                     )}
                   </Stack>
@@ -363,12 +364,12 @@ export default function NewAthletePage() {
         <FormCard title="Praticante">
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>
             <Controller
-              name="student"
+              name="competitor"
               control={control}
               render={({ field }) => (
                 <FormControl component="fieldset" variant="standard">
                   <FormLabel sx={{ mb: 2 }}>
-                    Se não pretende inscrever em provas, selecione este campo.
+                    Se pretende inscrever em provas, selecione este campo.
                   </FormLabel>
                   <Stack spacing={1}>
                     <FormControlLabel
@@ -381,15 +382,15 @@ export default function NewAthletePage() {
                             field.onChange(e.target.checked);
                             setExpanded((prev) => !prev);
                           }}
-                          name="student"
+                          name="competitor"
                         />
                       }
-                      label="É Aluno"
+                      label="É Competidor"
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
-                    {!!errors.student && (
+                    {!!errors.competitor && (
                       <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.student?.message}
+                        {errors.competitor?.message}
                       </FormHelperText>
                     )}
                   </Stack>
@@ -409,6 +410,7 @@ export default function NewAthletePage() {
                   select
                   fullWidth
                   multiline
+                  disabled={watch("competitor") === true}
                   maxRows={8}
                   {...field}
                   onChange={(e) => {
