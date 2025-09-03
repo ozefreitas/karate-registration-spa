@@ -20,24 +20,6 @@ export const useFetchMeData = () => {
   });
 };
 
-const fetchNotifications = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/dojo_notifications/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
-
-export const useFetchNotifications = () => {
-  return useQuery({
-    queryKey: ["home-notifications"],
-    queryFn: fetchNotifications,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
-};
-
 const fetchAvailableClubs = () => {
   return axios.get("http://127.0.0.1:8000/dojos/", {});
 };

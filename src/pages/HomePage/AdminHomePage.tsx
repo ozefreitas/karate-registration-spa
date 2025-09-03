@@ -10,7 +10,7 @@ import {
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import DojoStats from "../../components/home-cards/DojoStats";
-import { useFetchNotifications } from "../../hooks/useAuth";
+import { useFetchHomeDojoNotifications } from "../../hooks/useNotificationData";
 
 export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
   type Notification = {
@@ -22,7 +22,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = useFetchNotifications();
+  } = useFetchHomeDojoNotifications();
 
   return (
     <>

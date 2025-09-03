@@ -2,6 +2,25 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
+const fetchHomeDojNotifications = () => {
+  const token = localStorage.getItem("token");
+  return axios.get("http://127.0.0.1:8000/dojo_notifications/", {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  });
+};
+
+export const useFetchHomeDojoNotifications = () => {
+  return useQuery({
+    queryKey: ["home-notifications"],
+    queryFn: fetchHomeDojNotifications,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
+  });
+};
+
 const fetchDojoUsers = (username?: string) => {
   const token = localStorage.getItem("token");
   let url = `http://127.0.0.1:8000/users/`;
@@ -137,6 +156,7 @@ export const useRemoveNotification = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      queryClient.invalidateQueries({ queryKey: ["home-notifications"] });
     },
     onError: () => {
       enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
