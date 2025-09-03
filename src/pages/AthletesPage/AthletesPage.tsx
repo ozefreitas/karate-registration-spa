@@ -56,7 +56,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
       // { key: "category", label: "Escalão" },
       { key: "gender", label: "Género" },
     ];
-    if (props.userRole === "naitonal_association") {
+    if (props.userRole === "main_admin") {
       columnMapping.push({ key: "username", label: "Dojo" });
     } else {
       columnMapping.push({ key: "age", label: "Idade" });
