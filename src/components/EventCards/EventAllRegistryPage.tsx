@@ -37,6 +37,7 @@ export default function EventAllRegistryPage(
     { key: "last_name", label: "Último Nome" },
     { key: "category", label: "Escalão" },
     { key: "gender", label: "Género" },
+    { key: "dojo", label: "Dojo" },
   ];
 
   return (
@@ -67,6 +68,7 @@ export default function EventAllRegistryPage(
                 {discipline.name}
               </Typography>
               <AthletesTable
+                count={discipline.individuals.length}
                 type="Modalidades"
                 discipline={discipline.id}
                 data={discipline.individuals}
@@ -83,6 +85,7 @@ export default function EventAllRegistryPage(
           ))
         ) : (
           <AthletesTable
+            count={singleEventData?.data.individuals.lenght}
             type="Individuais"
             data={singleEventData?.data.individuals}
             columnsHeaders={columnMaping}
