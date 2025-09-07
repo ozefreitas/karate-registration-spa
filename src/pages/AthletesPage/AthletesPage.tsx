@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/Buttons/AddButton";
-import { useNavigate } from "react-router-dom";
 import { useFetchAthletesData } from "../../hooks/useAthletesData";
 
 export default function AthletesPage(props: Readonly<{ userRole: string }>) {

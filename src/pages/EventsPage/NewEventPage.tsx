@@ -69,8 +69,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   };
 
   const handleRemove = (item: string) => {
-    console.log(item);
-    console.log(disciplineCategories);
     const indexToRemove = disciplines.indexOf(item);
     const indexToRemove2 = disciplineCategories.findIndex(
       (obj: any) => obj.discipline === item

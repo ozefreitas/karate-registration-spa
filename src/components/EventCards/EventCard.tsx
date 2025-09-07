@@ -500,10 +500,19 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 </Tooltip>
                 <InfoButton label="Consultar Sorteios" to="draw/"></InfoButton>
                 {["main_admin", "superuser"].includes(props.userRole) ? (
-                  <GenerateButton
-                    label="Gerar Sorteio"
-                    to="draw/generate/"
-                  ></GenerateButton>
+                  <>
+                    <SettingsButton
+                      size="large"
+                      label="Consultar Categorias"
+                      to={`/events/${
+                        location.pathname.split("/")[2]
+                      }/categories/`}
+                    ></SettingsButton>
+                    <GenerateButton
+                      label="Gerar Sorteio"
+                      to="draw/generate/"
+                    ></GenerateButton>
+                  </>
                 ) : null}
               </Grid>
             </CardContent>

@@ -41,6 +41,7 @@ import { useEffect } from "react";
 import { useAuth } from "./access/GlobalAuthProvider";
 import { SnackbarProvider } from "notistack";
 import SnackbarCloser from "./dashboard/SnackBarCloser";
+import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -169,6 +170,17 @@ function App() {
                   <ProtectedRoute
                     element={<NewEventPage userRole={userRole} />}
                     allowedRoles={["main_admin"]}
+                  />
+                )
+              }
+            />
+            <Route
+              path="events/:id/categories/"
+              element={
+                isAuthLoading ? null : (
+                  <ProtectedRoute
+                    element={<EventCategoriesPage userRole={userRole} />}
+                    allowedRoles={["main_admin", "subed_dojo"]}
                   />
                 )
               }
