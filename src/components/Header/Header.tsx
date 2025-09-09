@@ -112,7 +112,7 @@ export default function ButtonAppBar(
             />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link style={{ color: "white" }} to="/">
-                Karate Score App - SKI-Portugal
+                Karate Score App - {import.meta.env.VITE_DISPLAY_ADMIN_NAME}
               </Link>
             </Typography>
             <Stack alignItems="center" direction="row" spacing={2}>
@@ -125,8 +125,9 @@ export default function ButtonAppBar(
                   disableElevation
                   size="large"
                 >
-                  {props.me?.data.role === "main_admin"
-                    ? "ADMIN - SKIP"
+                  {props.me?.data.role === "main_admin" ||
+                  props.me?.data.role === "single_admin"
+                    ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
                     : props.me?.data.role === "superuser"
                     ? "SUPER ADMIN"
                     : props.me?.data.role === "free_dojo"
@@ -160,13 +161,15 @@ export default function ButtonAppBar(
                     >
                       Login
                     </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => navigate("/request_account/")}
-                    >
-                      Pedir Conta
-                    </Button>
+                    {props.me?.data.role !== "single_admin" ? (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => navigate("/request_account/")}
+                      >
+                        Pedir Conta
+                      </Button>
+                    ) : null}
                   </Grid>
                 )}
               </IconButton>
