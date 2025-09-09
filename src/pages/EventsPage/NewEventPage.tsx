@@ -269,9 +269,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const columnMaping = [
     { key: "name", label: "Nome" },
     { key: "gender", label: "Género" },
-    { key: "has_age", label: "Idade" },
-    { key: "has_grad", label: "Rank" },
-    { key: "has_weight", label: "Peso" },
+    { key: "has_age", label: "Limite Idades" },
+    { key: "has_grad", label: "Limite Ranks" },
+    { key: "has_weight", label: "Limite Pesos" },
   ];
 
   return (

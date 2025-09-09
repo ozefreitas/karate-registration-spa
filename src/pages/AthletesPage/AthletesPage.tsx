@@ -77,13 +77,15 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os seus Atletas/Alunos, e também Equipas.
-          Pode consultar a informação de cada um, editar e remover. <p></p>
+          Aqui poderá consultar todos os seus Atletas/Alunos. Pode consultar a
+          informação de cada um, editar e remover. <p></p>
           <strong>Importante</strong>: Estes não servem como inscrição em
-          qualquer prova.
+          qualquer prova. A idade aqui apresentada não é a utilizada como
+          referência para as inscrições. Em vez disso, a idade é calculada para
+          cada prova de acordo com as regras em vigor e da época desportiva
+          corrente.
         </CardContent>
       </Card>
-      {/* Atletas */}
       <Grid size={12} sx={{ m: 2 }}>
         {isAthletesDataLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>

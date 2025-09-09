@@ -24,8 +24,8 @@ export default function DojoStats() {
       >
         {isVisible && (
           <Paper elevation={1} sx={{ pl: 2, pr: 2 }}>
-            <p className="label">{`${payload[0].payload.username} : ${payload[0].value}`}</p>
-            <p className="desc">Anything you want can be displayed here.</p>
+            <p>{`${payload[0].payload.username} : ${payload[0].value}`}</p>
+            {/* <p>Anything you want can be displayed here.</p> */}
           </Paper>
         )}
       </div>

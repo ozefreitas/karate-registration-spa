@@ -59,7 +59,7 @@ export default function DeleteDojoModal(
       <DialogContent>
         Tem a certeza que pretende apagar esta conta? Esta ação irá eliminar
         todos os seus atletas, inscrições dos mesmos em eventos e informações
-        guardada do próprio dojo. NÃO PODERA VOLTAR ATRÁS!
+        guardada do próprio dojo. <p></p> NÃO PODERA VOLTAR ATRÁS!
       </DialogContent>
       <DialogActions>
         <Stack

@@ -105,7 +105,7 @@ export default function AthletesHomeComponent(
                         <Person />
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name} ${athlete.gender}`}
+                        primary={`${athlete.first_name} ${athlete.last_name} / ${athlete.gender} / ${athlete.age} anos`}
                       />
                     </ListItemButton>
                   </ListItem>

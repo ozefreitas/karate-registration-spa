@@ -96,7 +96,6 @@ export default function CategoriesModal(
     setDisciplineCategories: any;
   }>
 ) {
-  console.log(props.disciplineCategories);
   type Category = {
     id: string;
     name: string;
