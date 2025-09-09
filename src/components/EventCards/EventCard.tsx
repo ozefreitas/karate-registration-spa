@@ -83,7 +83,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
 
   const patchEvent = usePatchEventData();
 
-  const [selected, setSelected] = useState<number>(-2);
+  const [selected, setSelected] = useState<number>(-1);
 
   const handleClick = (number: number) => {
     setSelected(number);
@@ -96,7 +96,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
     };
     rateEvent.mutate(data, {
       onSuccess: () => {
-        setSelected(-2);
+        setSelected(-1);
       },
     });
   };
@@ -233,7 +233,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     },
                   }}
                 ></CardHeader>
-                <CardContent>
+                <CardContent sx={{ ml: 2 }}>
                   <li style={{ color: "grey" }}>
                     Não existem ficheiros para este Evento.
                   </li>
@@ -264,7 +264,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     },
                   }}
                 ></CardHeader>
-                <CardContent sx={{ pt: 0 }}>
+                <CardContent sx={{ pt: 0, ml: 2 }}>
                   {isDescriptionEdit ? (
                     <TextField
                       color="warning"
@@ -307,7 +307,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               <Card>
                 <CardHeader
                   title="Avaliação"
-                  subheader="Depois da realização da prova, poderá deixar uma avaliação."
+                  subheader={
+                    props.userRole !== "main_admin"
+                      ? "Depois da realização da prova, poderá deixar uma avaliação"
+                      : "Depois da realização da prova, os Dojos podem avaliar o Evento."
+                  }
                   sx={{
                     "& .MuiCardHeader-title": {
                       fontWeight: "bold",
@@ -315,8 +319,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     },
                   }}
                 ></CardHeader>
-                <CardContent sx={{ pt: 0, pb: 0 }}>
-                  {isEventRateLoading ? (
+                <CardContent sx={{ pt: 0, pb: 0, ml: 2 }}>
+                  {props.userRole === "main_admin" ? (
+                    <Typography>
+                      Nota geral do Evento: {singleEventData?.data.rating}
+                    </Typography>
+                  ) : isEventRateLoading ? (
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                       <CircularProgress />
                     </Box>
@@ -331,8 +339,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   ) : (
                     <Grid justifyContent="center" container spacing={2}>
                       <ListItemButton
-                        selected={selected === 1}
-                        onClick={() => handleClick(1)}
+                        selected={selected === 5}
+                        onClick={() => handleClick(5)}
                       >
                         <ListItemIcon>
                           <ThumbUp
@@ -344,8 +352,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <ListItemText>Muito boa</ListItemText>
                       </ListItemButton>
                       <ListItemButton
-                        selected={selected === 0}
-                        onClick={() => handleClick(0)}
+                        selected={selected === 2}
+                        onClick={() => handleClick(2)}
                       >
                         <ListItemIcon>
                           <ThumbsUpDown
@@ -357,8 +365,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <ListItemText>Assim-Assim</ListItemText>
                       </ListItemButton>
                       <ListItemButton
-                        selected={selected === -1}
-                        onClick={() => handleClick(-1)}
+                        selected={selected === 0}
+                        onClick={() => handleClick(0)}
                       >
                         <ListItemIcon>
                           <ThumbDown
@@ -372,36 +380,38 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     </Grid>
                   )}
                 </CardContent>
-                <CardActions sx={{ justifyContent: "flex-end" }}>
-                  <Stack
-                    direction={{
-                      xs: "row-reverse",
-                      sm: "row",
-                    }}
-                    sx={{
-                      p: 1,
-                      gap: 4,
-                      flexShrink: 0,
-                      alignSelf: { xs: "flex-end", sm: "center" },
-                    }}
-                  >
-                    <Button
-                      size="small"
-                      disabled={selected === -2}
-                      onClick={handleEventRating}
-                      variant="contained"
+                {props.userRole !== "main_admin" ? (
+                  <CardActions sx={{ justifyContent: "flex-end" }}>
+                    <Stack
+                      direction={{
+                        xs: "row-reverse",
+                        sm: "row",
+                      }}
+                      sx={{
+                        p: 1,
+                        gap: 4,
+                        flexShrink: 0,
+                        alignSelf: { xs: "flex-end", sm: "center" },
+                      }}
                     >
-                      Enviar
-                    </Button>
-                    <Button
-                      size="small"
-                      disabled={selected === -2}
-                      onClick={() => setSelected(-2)}
-                    >
-                      Remover seleção
-                    </Button>
-                  </Stack>
-                </CardActions>
+                      <Button
+                        size="small"
+                        disabled={selected === -1}
+                        onClick={handleEventRating}
+                        variant="contained"
+                      >
+                        Enviar
+                      </Button>
+                      <Button
+                        size="small"
+                        disabled={selected === -1}
+                        onClick={() => setSelected(-1)}
+                      >
+                        Remover seleção
+                      </Button>
+                    </Stack>
+                  </CardActions>
+                ) : null}
               </Card>
             </Grid>
           </Grid>
@@ -482,25 +492,31 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                   <AddButton label="Consultar Equipas" to="teams/"></AddButton>
                 ) : null}
-                <Tooltip
-                  disableHoverListener={["main_admin", "superuser"].includes(
-                    props.userRole
-                  )}
-                  title="Esta funcionalidade ficará disponível em breve"
-                >
-                  <span>
-                    <InfoButton
-                      disabled={
-                        !["main_admin", "superuser"].includes(props.userRole)
-                      }
-                      label="Inscrições completas"
-                      to="all_registry/"
-                    ></InfoButton>
-                  </span>
-                </Tooltip>
-                <InfoButton label="Consultar Sorteios" to="draw/"></InfoButton>
-                {["main_admin", "superuser"].includes(props.userRole) ? (
+                {singleEventData?.data.has_registrations ? (
                   <>
+                    <Tooltip
+                      disableHoverListener={[
+                        "main_admin",
+                        "superuser",
+                      ].includes(props.userRole)}
+                      title="Esta funcionalidade ficará disponível em breve"
+                    >
+                      <span>
+                        <InfoButton
+                          disabled={
+                            !["main_admin", "superuser"].includes(
+                              props.userRole
+                            )
+                          }
+                          label="Inscrições completas"
+                          to="all_registry/"
+                        ></InfoButton>
+                      </span>
+                    </Tooltip>
+                    <InfoButton
+                      label="Consultar Sorteios"
+                      to="draw/"
+                    ></InfoButton>
                     <SettingsButton
                       size="large"
                       label="Consultar Categorias"
@@ -508,11 +524,14 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         location.pathname.split("/")[2]
                       }/categories/`}
                     ></SettingsButton>
-                    <GenerateButton
-                      label="Gerar Sorteio"
-                      to="draw/generate/"
-                    ></GenerateButton>
                   </>
+                ) : null}
+                {["main_admin", "superuser"].includes(props.userRole) &&
+                singleEventData?.data.has_registrations ? (
+                  <GenerateButton
+                    label="Gerar Sorteio"
+                    to="draw/generate/"
+                  ></GenerateButton>
                 ) : null}
               </Grid>
             </CardContent>
