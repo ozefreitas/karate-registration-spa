@@ -14,6 +14,7 @@ import { Add } from "@mui/icons-material";
 import { useFetchDisciplinesData } from "../../hooks/useEventData";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
+import { Link } from "react-router-dom";
 
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>
@@ -22,12 +23,10 @@ export default function EventCategoriesPage(
     id: string;
     name: string;
     gender: string;
-    max_age: string;
     min_age: string;
-    max_grad: string;
-    min_grad: string;
-    max_weight: string;
-    min_weight: string;
+    has_age: string;
+    has_grad: string;
+    has_weight: string;
   };
 
   type Discipline = {
@@ -36,8 +35,6 @@ export default function EventCategoriesPage(
     categories: Category[];
   };
 
-  const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(10);
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
     useState<boolean>(false);
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
@@ -63,6 +60,10 @@ export default function EventCategoriesPage(
         id: category.id,
         name: category.name,
         gender: category.gender,
+        sort_age: category.min_age,
+        has_age: category.has_age,
+        has_grad: category.has_grad,
+        has_weight: category.has_weight,
       }))
     );
   }, [disciplinesData]);
@@ -71,19 +72,20 @@ export default function EventCategoriesPage(
     const columnMapping = [
       { key: "name", label: "Nome" },
       { key: "gender", label: "Género" },
+      { key: "has_age", label: "Limite Idades" },
+      { key: "has_grad", label: "Limite Ranks" },
+      { key: "has_weight", label: "Limite Pesos" },
     ];
     return columnMapping;
   };
 
   const columnMaping = getColumnMaping();
 
-  console.log(categoriesRows);
-
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title="Página de Categorias por Evento"
+          title="Página de Escalões por Evento"
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -91,10 +93,17 @@ export default function EventCategoriesPage(
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os seus Atletas/Alunos, e também Equipas.
-          Pode consultar a informação de cada um, editar e remover. <p></p>
-          <strong>Importante</strong>: Estes não servem como inscrição em
-          qualquer prova.
+          {["main_admin", "superuser"].includes(props.userRole) ? (
+            <>
+              Aqui poderá consultar todos os Escalões que escolheu para este
+              Evento. Pode também adicionar novos ou remover. Se pretender
+              editar algum específico, deve dirigir-se à{" "}
+              <Link to={"/categories/"}>página de Escalões</Link>, remover o
+              Escalão que deseja editar e adicionar um novo.
+            </>
+          ) : (
+            "Aqui poderá consultar todos os Escalões disponíveis para este Evento. Caso depare com algum problema ou incorcordância com as regras, por favor contacte."
+          )}
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
@@ -110,21 +119,18 @@ export default function EventCategoriesPage(
                   {discipline.name}
                 </Typography>
                 <AthletesTable
-                  type="Categorias"
+                  type="EventCategories"
                   data={categoriesRows[index]}
                   count={categoriesRows[index].length}
                   columnsHeaders={columnMaping}
                   actions
                   selection
                   deletable
-                  page={page}
-                  setPage={setPage}
-                  pageSize={pageSize}
-                  setPageSize={setPageSize}
                   userRole={props.userRole}
+                  discipline={discipline.id}
                 ></AthletesTable>
-                <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
-                  <Tooltip title="Adicionar">
+                {["main_admin", "superuser"].includes(props.userRole) ? (
+                  <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
                     <Button
                       sx={{ m: 1 }}
                       variant="contained"
@@ -138,8 +144,8 @@ export default function EventCategoriesPage(
                     >
                       Adicionar
                     </Button>
-                  </Tooltip>
-                </Grid>
+                  </Grid>
+                ) : null}
               </span>
             )
           )

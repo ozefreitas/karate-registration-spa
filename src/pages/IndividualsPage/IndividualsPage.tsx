@@ -10,23 +10,36 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, Visibility } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
 import {
   useSingleFetchEventData,
   useFetchDisciplinesData,
 } from "../../hooks/useEventData";
+import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const location = useLocation();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
+    useState<boolean>(false);
+  const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCategoriesListModalClose = () => {
+    setIsCategoriesListModalOpen(false);
+  };
+
+  const handleCategoriesListModalOpen = (disciplineName: string) => {
+    setCurrentDiscipline(disciplineName);
+    setIsCategoriesListModalOpen(true);
   };
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
@@ -76,7 +89,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         </CardContent>
       </Card>
       <Grid container sx={{ m: 2 }}>
-        <Grid size={3}>
+        <Grid>
           <Card>
             <CardContent
               sx={{
@@ -86,18 +99,27 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 },
               }}
             >
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  color: singleEventData?.data.is_open
-                    ? "green"
-                    : singleEventData?.data.is_retification
-                    ? "yellow"
-                    : "red",
-                }}
-              >
-                Estado: {state}
-              </Typography>
+              {!isSingleEventLoading ? (
+                <Typography
+                  variant="h6"
+                  sx={{
+                    pl: 2,
+                    pr: 2,
+                    fontWeight: "bold",
+                    color: singleEventData?.data.is_open
+                      ? "green"
+                      : singleEventData?.data.is_retification
+                      ? "#ffc40c"
+                      : "red",
+                  }}
+                >
+                  Estado: {state}
+                </Typography>
+              ) : (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              )}
             </CardContent>
           </Card>
         </Grid>
@@ -111,9 +133,26 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         ) : disciplinesData?.data.results.length !== 0 ? (
           disciplinesData?.data.results.map((discipline: any, index: any) => (
             <span key={index}>
-              <Typography sx={{ m: 3 }} variant="h5">
-                {discipline.name}
-              </Typography>
+              <Grid
+                size={12}
+                sx={{ pr: 3 }}
+                container
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Typography sx={{ m: 3 }} variant="h5">
+                  {discipline.name}
+                </Typography>
+                <Button
+                  startIcon={<Visibility />}
+                  variant="contained"
+                  onClick={() => {
+                    handleCategoriesListModalOpen(discipline.name);
+                  }}
+                >
+                  Escalões
+                </Button>
+              </Grid>
               <AthletesTable
                 count={discipline.individuals.length}
                 type="Modalidades"
@@ -124,10 +163,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 selection
                 deletable
                 editable={!singleEventData?.data.is_closed}
-                page={page}
-                setPage={setPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
                 userRole={props.userRole}
               ></AthletesTable>
             </span>
@@ -141,10 +176,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             actions
             selection
             deletable
-            page={page}
-            setPage={setPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
             userRole={props.userRole}
           ></AthletesTable>
         )}
@@ -168,6 +199,16 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         handleModalClose={handleModalClose}
         eventData={singleEventData?.data}
       ></AthletesModal>
+      {currentDiscipline !== "" ? (
+        <CategoriesReadOnlyModal
+          currentDisicpline={currentDiscipline}
+          disciplineData={disciplinesData?.data.results.filter(
+            (disicpline: any) => disicpline.name === currentDiscipline
+          )}
+          handleModalClose={handleCategoriesListModalClose}
+          isModalOpen={isCategoriesListModalOpen}
+        ></CategoriesReadOnlyModal>
+      ) : null}
     </>
   );
 }

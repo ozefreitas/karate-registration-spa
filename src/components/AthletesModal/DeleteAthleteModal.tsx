@@ -15,6 +15,7 @@ import {
   useRemoveDisciplineAthlete,
   useRemoveCategory,
   useRemoveAllCategoriesData,
+  useRemoveDisciplineCategory,
 } from "../../hooks/useEventData";
 import {
   useRemoveAthleteData,
@@ -25,6 +26,7 @@ import {
   useRemoveAllTeamsData,
 } from "../../hooks/useTeamsData";
 import { useLocation, useNavigate } from "react-router-dom";
+import { PropaneSharp } from "@mui/icons-material";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -47,7 +49,8 @@ export default function DeleteAthleteModal(
       | "Individuais"
       | "Modalidades"
       | "Categorias"
-      | "CategoriasReadOnly";
+      | "CategoriasReadOnly"
+      | "EventCategories";
     setSelected?: any;
     discipline?: any;
   }>
@@ -60,6 +63,7 @@ export default function DeleteAthleteModal(
   const removeAllTeams = useRemoveAllTeamsData();
   const removeCategory = useRemoveCategory();
   const removeAllCategories = useRemoveAllCategoriesData();
+  const removeDisciplineCategory = useRemoveDisciplineCategory();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -90,6 +94,14 @@ export default function DeleteAthleteModal(
         removeEventAthlete.mutate(data);
       } else if (props.from === "Categorias") {
         removeCategory.mutate(id);
+      } else if (props.from === "EventCategories") {
+        const data = {
+          category_id: props.id,
+        };
+        removeDisciplineCategory.mutate({
+          disciplineId: props.discipline,
+          data: data,
+        });
       } else {
         const data = {
           disciplineId: props.discipline,
@@ -166,6 +178,10 @@ export default function DeleteAthleteModal(
           ? props.id !== undefined
             ? "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
             : "Tem a certeza que pretende apagar todos os Escalões?"
+          : props.from === "EventCategories"
+          ? props.id !== undefined
+            ? "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
+            : "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
           : props.id !== undefined
           ? "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
           : "Tem a certeza que pretende apagar todas as Inscrições?"}
