@@ -33,7 +33,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
     type: string;
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     data: notificationData,
@@ -45,9 +45,11 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
 
   const handleFollowingAction = (noti_type: string) => {
     if (noti_type === "create_athlete") {
-      navigate("/athletes/")
+      navigate("/athletes/");
+    } else if (noti_type === "rate_event") {
+      navigate("/events/");
     }
-  }
+  };
 
   return (
     <>
@@ -99,9 +101,15 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
                 </ListItemButton>
               </ListItem>
             ) : (
-              <li style={{ color: "grey" }}>
-                Ocorreu um erro ao carregar as suas notificações.
-              </li>
+              <ListItem disablePadding sx={{ m: 0 }}>
+                <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                  <ListItemText
+                    primary={
+                      "Ocorreu um erro ao carregar as suas notificações."
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
             )
           ) : notificationData?.data.length !== 0 ? (
             <List sx={{ p: 5, pt: 2 }}>
@@ -127,11 +135,17 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
                         </Tooltip>
                         <Tooltip title="Prosseguir ação" placement="left">
                           <IconButton
-                            onClick={() => {handleFollowingAction(noti.type)}}
+                            onClick={() => {
+                              handleFollowingAction(noti.type);
+                            }}
                             aria-label="notification action"
                             disabled={noti.type === "none"}
                           >
-                            <KeyboardArrowRight color={noti.type === "none" ? "disabled" : "success"} />
+                            <KeyboardArrowRight
+                              color={
+                                noti.type === "none" ? "disabled" : "success"
+                              }
+                            />
                           </IconButton>
                         </Tooltip>
                       </>
