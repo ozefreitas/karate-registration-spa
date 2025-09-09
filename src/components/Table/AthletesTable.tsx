@@ -124,7 +124,8 @@ export default function AthletesTable(
       | "Individuais"
       | "Modalidades"
       | "Categorias"
-      | "CategoriasReadOnly";
+      | "CategoriasReadOnly"
+      | "EventCategories";
     discipline?: string;
     data: any;
     count: number;
@@ -133,10 +134,10 @@ export default function AthletesTable(
     selection: boolean;
     editable?: boolean;
     deletable?: boolean;
-    page: number;
-    setPage: any;
-    pageSize: any;
-    setPageSize: any;
+    page?: number;
+    setPage?: any;
+    pageSize?: any;
+    setPageSize?: any;
     userRole: string;
     selectedDisciplineForCategory?: any;
     disciplineCategories?: any;
@@ -145,6 +146,8 @@ export default function AthletesTable(
 ) {
   type Order = "asc" | "desc";
   const navigate = useNavigate();
+  const [internalPage, setInternalPage] = useState<number>(0);
+  const [internalPageSize, setInternalPageSize] = useState<number>(10);
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
@@ -171,14 +174,24 @@ export default function AthletesTable(
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    props.setPage(newPage);
+    if (props.setPage) {
+      props.setPage(newPage);
+    } else {
+      setInternalPage(newPage);
+    }
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    props.setPageSize(parseInt(event.target.value, 10));
-    props.setPage(0);
+    const newSize = parseInt(event.target.value, 10);
+    if (props.setPage && props.setPageSize) {
+      props.setPageSize(newSize);
+      props.setPage(0);
+    } else {
+      setInternalPageSize(newSize);
+      setInternalPage(0);
+    }
   };
 
   const handleEditModalOpen = () => {
@@ -542,8 +555,10 @@ export default function AthletesTable(
                       { label: "All", value: -1 },
                     ]}
                     count={props.count}
-                    rowsPerPage={props.pageSize}
-                    page={props.page}
+                    rowsPerPage={
+                      props.pageSize ? props.pageSize : internalPageSize
+                    }
+                    page={props.page ? props.page : internalPage}
                     slotProps={{
                       select: {
                         inputProps: {
