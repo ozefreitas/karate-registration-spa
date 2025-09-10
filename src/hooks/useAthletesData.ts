@@ -195,26 +195,35 @@ export const usePatchAthleteData = () => {
   });
 };
 
-const fetchAthletesNotInEvent = (page: number, pageSize: number) => {
+const fetchAthletesNotInEvent = (
+  eventId: string,
+  page: number,
+  pageSize: number
+) => {
   const token = localStorage.getItem("token");
   return axios.get("http://127.0.0.1:8000/athletes/", {
     headers: {
       Authorization: `Token ${token}`,
     },
     params: {
-      not_in_event: location.pathname.split("/")[2],
+      not_in_event: eventId,
       page: page,
       page_size: pageSize,
     },
   });
 };
 
-export const useFetchAthletesNotInEvent = (page: number, pageSize: number) => {
+export const useFetchAthletesNotInEvent = (
+  eventId: string,
+  page: number,
+  pageSize: number
+) => {
   return useQuery({
     queryKey: ["athletes-notin-event", page, pageSize],
-    queryFn: () => fetchAthletesNotInEvent(page, pageSize),
+    queryFn: () => fetchAthletesNotInEvent(eventId, page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: !!eventId,
   });
 };
 

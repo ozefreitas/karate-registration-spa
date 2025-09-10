@@ -245,7 +245,7 @@ export const useFetchLastCompQuali = (userRole: string) => {
   });
 };
 
-const fetchSingleEvent = (eventId: any) => {
+const fetchSingleEvent = (eventId: string) => {
   const token = localStorage.getItem("token");
   return axios.get(`http://127.0.0.1:8000/events/${eventId}/`, {
     headers: {
@@ -254,10 +254,10 @@ const fetchSingleEvent = (eventId: any) => {
   });
 };
 
-export const useSingleFetchEventData = (location: any) => {
+export const useSingleFetchEventData = (eventId: string) => {
   return useQuery({
-    queryKey: ["single-event"],
-    queryFn: () => fetchSingleEvent(location),
+    queryKey: ["single-event", eventId],
+    queryFn: () => fetchSingleEvent(eventId),
   });
 };
 

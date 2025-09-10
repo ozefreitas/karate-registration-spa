@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -20,14 +20,11 @@ import {
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
-  const location = useLocation();
-
+  const { id: eventId } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
-  const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(10);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -43,11 +40,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   };
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
-    useSingleFetchEventData(location.pathname.split("/").slice(-3)[0]);
+    useSingleFetchEventData(eventId!);
 
-  const { data: disciplinesData } = useFetchDisciplinesData(
-    location.pathname.split("/").slice(-3)[0]
-  );
+  const { data: disciplinesData } = useFetchDisciplinesData(eventId!);
 
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
@@ -55,18 +50,25 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     ? "Período de retificações"
     : "Inscrições fechadas";
 
-  const columnMaping = [
-    { key: "first_name", label: "Primeiro Nome" },
-    { key: "last_name", label: "Último Nome" },
-    { key: "category", label: "Escalão" },
-    { key: "gender", label: "Género" },
-  ];
+  const getColumnMaping = () => {
+    const columnMapping = [
+      { key: "first_name", label: "Primeiro Nome" },
+      { key: "last_name", label: "Último Nome" },
+      { key: "gender", label: "Género" },
+    ];
+    if (disciplinesData?.data.results.length !== 0) {
+      columnMapping.push({ key: "category", label: "Escalão" });
+    }
+    return columnMapping;
+  };
+
+  const columnMaping = getColumnMaping();
 
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title="Página de inscritos em Individual"
+          title={`Página de inscritos em ${singleEventData?.data.name}`}
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -75,7 +77,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         ></CardHeader>
         <CardContent>
           Aqui poderá consultar todos os Atletas que estão inscritos para a
-          prova que selecionou (ver abaixo). Alterar informações de um Atleta
+          prova que selecionou (ver acima). Alterar informações de um Atleta
           irá modificar o próprio Atleta, e não apenas a própria inscrição (são
           a mesma coisa). <br /> Tal como presente nas regras, no período de
           retificações apenas pode eliminar inscrições, e quando as inscrições

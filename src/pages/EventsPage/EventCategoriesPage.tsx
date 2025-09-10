@@ -14,7 +14,7 @@ import { Add } from "@mui/icons-material";
 import { useFetchDisciplinesData } from "../../hooks/useEventData";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>
@@ -35,6 +35,7 @@ export default function EventCategoriesPage(
     categories: Category[];
   };
 
+  const { id: eventId } = useParams<{ id: string }>();
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
     useState<boolean>(false);
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
@@ -49,7 +50,7 @@ export default function EventCategoriesPage(
   };
 
   const { data: disciplinesData, isLoading: isDisciplinesDataLoading } =
-    useFetchDisciplinesData(location.pathname.split("/")[2]);
+    useFetchDisciplinesData(eventId!);
 
   useEffect(() => {}, [disciplinesData]);
 

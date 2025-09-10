@@ -50,7 +50,7 @@ import {
 } from "../../hooks/useAthletesData";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 
 const Search = styled("div")(({ theme }) => ({
@@ -122,6 +122,7 @@ export default function AthletesModal(
   };
 
   const navigate = useNavigate();
+  const { id: eventId } = useParams<{ id: string }>();
   const { user } = useAuth();
   const userRole = user?.data.role;
 
@@ -226,12 +227,9 @@ export default function AthletesModal(
     setDisciplinesFree(newDisciplines);
   }, [modalitiesFreeData]);
 
-  const { data: disciplinesData } = useFetchDisciplinesData(
-    location.pathname.split("/").slice(-3)[0]
-  );
+  const { data: disciplinesData } = useFetchDisciplinesData(eventId!);
 
   React.useEffect(() => {
-    console.log(disciplinesData);
     const defaultValues: any = {};
     disciplinesData?.data.results.forEach((discipline: any) => {
       defaultValues[`${discipline.name}_${discipline.id}`] = false;
@@ -348,7 +346,7 @@ export default function AthletesModal(
     isLoading: isAthletesNotInEventLoading,
     error: athletesNotInEventError,
     refetch,
-  } = useFetchAthletesNotInEvent(page + 1, 10);
+  } = useFetchAthletesNotInEvent(eventId!, page + 1, 10);
 
   React.useEffect(() => {
     refetch();
@@ -429,6 +427,7 @@ export default function AthletesModal(
             </Search>
           ) : null}
           {isDisciplineScreenOpen ||
+          disciplinesData?.data.results.length === 0 ||
           (isWeightInputScreenOpen && userRole !== "free_dojo") ? (
             <Button
               autoFocus

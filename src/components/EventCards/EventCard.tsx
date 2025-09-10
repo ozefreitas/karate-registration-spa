@@ -43,13 +43,14 @@ import {
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useEffect, useState } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { useLocation, Navigate, useParams } from "react-router-dom";
 import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
 import { usePatchEventData } from "../../hooks/useEventData";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const location = useLocation();
+  const { id: eventId } = useParams<{ id: string }>();
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -74,10 +75,10 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
     data: singleEventData,
     isLoading: isSingleEventLoading,
     error: singleEventError,
-  } = useSingleFetchEventData(location.pathname.split("/").slice(-2)[0]);
+  } = useSingleFetchEventData(eventId!);
 
   const { data: eventRateData, isLoading: isEventRateLoading } =
-    useFetchEventRate(location.pathname.split("/").slice(-2)[0]);
+    useFetchEventRate(eventId);
 
   const rateEvent = useRateEvent();
 
@@ -91,7 +92,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
 
   const handleEventRating = () => {
     const data = {
-      eventId: location.pathname.split("/")[2],
+      eventId: eventId!,
       data: { rating_signal: selected },
     };
     rateEvent.mutate(data, {
@@ -109,7 +110,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
 
   const handleDescriptionSubmit = (description: string) => {
     const data = { description: description };
-    const event = location.pathname.split("/").slice(-2)[0];
+    const event = eventId!;
     patchEvent.mutate(
       { eventId: event, data: data },
       {
@@ -441,7 +442,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   <AddButton
                     label="Adicionar/Consultar Inscrições"
                     to="individuals/"
-                    disabled={singleEventData?.data.has_ended}
+                    disabled={
+                      isSingleEventLoading || singleEventData?.data.has_ended
+                    }
                   ></AddButton>
                 ) : (
                   // props.userRole === "subed_dojo" ? (
@@ -517,14 +520,14 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       label="Consultar Sorteios"
                       to="draw/"
                     ></InfoButton>
-                    <SettingsButton
-                      size="large"
-                      label="Consultar Categorias"
-                      to={`/events/${
-                        location.pathname.split("/")[2]
-                      }/categories/`}
-                    ></SettingsButton>
                   </>
+                ) : null}
+                {singleEventData?.data.has_categories ? (
+                  <SettingsButton
+                    size="large"
+                    label="Consultar Categorias"
+                    to={`/events/${eventId!}/categories/`}
+                  ></SettingsButton>
                 ) : null}
                 {["main_admin", "superuser"].includes(props.userRole) &&
                 singleEventData?.data.has_registrations ? (
@@ -541,7 +544,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       <DeleteEventModal
         isModalOpen={isDeleteModalOpen}
         handleModalClose={handleDeleteModalClose}
-        id={location.pathname.split("/").slice(-2)[0]}
+        id={eventId}
       ></DeleteEventModal>
       <EditEventModal
         handleClose={handleEditModalClose}

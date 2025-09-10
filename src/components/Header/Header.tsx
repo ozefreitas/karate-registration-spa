@@ -17,7 +17,7 @@ import skipLogo from "./../../assets/skip-logo.png";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { Logout } from "@mui/icons-material";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { breadcrumbsConvertion } from "../../dashboard/config";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { useAuth } from "../../access/GlobalAuthProvider";

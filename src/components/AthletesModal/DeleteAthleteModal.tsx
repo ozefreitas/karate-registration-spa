@@ -25,8 +25,7 @@ import {
   useRemoveTeamData,
   useRemoveAllTeamsData,
 } from "../../hooks/useTeamsData";
-import { useLocation, useNavigate } from "react-router-dom";
-import { PropaneSharp } from "@mui/icons-material";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -66,6 +65,7 @@ export default function DeleteAthleteModal(
   const removeDisciplineCategory = useRemoveDisciplineCategory();
   const location = useLocation();
   const navigate = useNavigate();
+  const { eventId } = useParams<{ eventId: string }>();
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
@@ -88,7 +88,7 @@ export default function DeleteAthleteModal(
       } else if (props.from === "Individuais") {
         const athleteData = { athlete_id: id };
         const data = {
-          eventId: location.pathname.split("/")[2],
+          eventId: eventId!,
           data: athleteData,
         };
         removeEventAthlete.mutate(data);
@@ -122,7 +122,7 @@ export default function DeleteAthleteModal(
         id.forEach((athleteId) => {
           const athleteData = { athlete_id: athleteId };
           const data = {
-            eventId: location.pathname.split("/")[2],
+            eventId: eventId!,
             data: athleteData,
           };
           removeEventAthlete.mutate(data);
