@@ -5,10 +5,12 @@ import { useAuth } from "./GlobalAuthProvider";
 export default function ProtectedRoute({
   element,
   allowedRoles,
+  allowedTiers,
   allowUnauthenticated,
 }: Readonly<{
   element: JSX.Element;
   allowedRoles: string[];
+  allowedTiers?: string[];
   allowUnauthenticated?: boolean;
 }>) {
   const { user, isAuthLoading } = useAuth();
