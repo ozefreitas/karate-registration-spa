@@ -23,7 +23,8 @@ import ProtectedRoute from "./access/ProtectedRoute";
 import NewEventPage from "./pages/EventsPage/NewEventPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 import UnAuthorizedPage from "./pages/ErrorPages/UnAuthorizedPage";
-import NotFoundPage from "./pages/ErrorPages/ServerErrorPage";
+import ServerErrorPage from "./pages/ErrorPages/ServerErrorPage";
+import NotFoundPage from "./pages/ErrorPages/NotFoundPage";
 import EventAllRegistryPage from "./components/EventCards/EventAllRegistryPage";
 import MainSettingsPage from "./pages/SettingsPage/MainSettingsPage";
 import ResultsMainPage from "./pages/ResultsMonitorPage/ResultsMainPage";
@@ -235,7 +236,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<EventAllRegistryPage userRole={userRole} />}
-                    allowedRoles={["subed_dojo", "main_admin"]}
+                    allowedRoles={["main_admin"]} // not allow dojos for now
                   />
                 )
               }
