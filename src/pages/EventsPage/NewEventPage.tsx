@@ -162,6 +162,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       encounter: data.encounter,
       encounter_type: data.encounter_type,
       has_registrations: data.has_registrations,
+      has_categories: data.has_categories
     };
 
     const eventResponse = await createEvent.mutateAsync(

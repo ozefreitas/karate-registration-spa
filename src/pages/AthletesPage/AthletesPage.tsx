@@ -6,6 +6,8 @@ import {
   Grid,
   Box,
   CircularProgress,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/Buttons/AddButton";
@@ -52,7 +54,6 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
     const columnMapping = [
       { key: "first_name", label: "Primeiro Nome" },
       { key: "last_name", label: "Último Nome" },
-      // { key: "category", label: "Escalão" },
       { key: "gender", label: "Género" },
     ];
     if (props.userRole === "main_admin") {
@@ -77,13 +78,23 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os seus Atletas/Alunos. Pode consultar a
-          informação de cada um, editar e remover. <p></p>
-          <strong>Importante</strong>: Estes não servem como inscrição em
-          qualquer prova. A idade aqui apresentada não é a utilizada como
-          referência para as inscrições. Em vez disso, a idade é calculada para
-          cada prova de acordo com as regras em vigor e da época desportiva
-          corrente.
+          {props.userRole !== "main_admin" ? (
+            <>
+              Aqui poderá consultar todos os seus Atletas/Alunos e consultar a
+              informação detalhada de cada um (caso possua uma subscrição).
+              <p></p>
+              <strong>Importante</strong>: Estes não servem como inscrição em
+              qualquer prova. A idade aqui apresentada não é a utilizada como
+              referência para as inscrições. Em vez disso, a idade é calculada
+              para cada prova de acordo com as regras em vigor e da época
+              desportiva corrente."
+            </>
+          ) : (
+            <>
+              Aqui poderá consultar todos os Atletas/Alunos tutelados por si.
+              Pode consultar a informação de cada um, editar e remover.
+            </>
+          )}
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
@@ -91,6 +102,12 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
+        ) : athletesError ? (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <ListItem>
+              <ListItemText primary="Um erro ocorreu ao encontrar os seus Atletas, tente mais tarde ou contacte um administrador."></ListItemText>
+            </ListItem>
+          </Grid>
         ) : athletesData?.data !== undefined ? (
           <AthletesTable
             type="Atletas"

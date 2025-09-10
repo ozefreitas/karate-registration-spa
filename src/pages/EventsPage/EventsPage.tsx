@@ -10,6 +10,8 @@ import {
   List,
   Tooltip,
   IconButton,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import { useFetchEventsData } from "../../hooks/useEventData";
@@ -21,6 +23,7 @@ import {
   HowToReg,
   KeyboardArrowLeft,
   KeyboardArrowRight,
+  AccessTime,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useState } from "react";
@@ -31,7 +34,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     name: string;
     location: string;
     event_date: string;
+    has_registrations: boolean;
     number_registrations: number;
+    is_open: boolean;
+    is_retification: boolean;
+    is_closed: boolean;
+    has_ended: boolean;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -81,6 +89,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               <CircularProgress />
             </Box>
           </Grid>
+        ) : eventsError ? (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <ListItem>
+              <ListItemText primary="Um erro ocorreu ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
+            </ListItem>
+          </Grid>
         ) : eventsData?.data.results.length !== 0 ? (
           <Grid size={12}>
             <Card sx={{ m: 2, mt: 0 }}>
@@ -108,7 +122,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               }}
                             >
                               <Avatar
-                                {...stringAvatar(comp.name, 100)}
+                                {...stringAvatar(comp.name, 120)}
                               ></Avatar>
                             </Card>
                           </Grid>
@@ -132,17 +146,32 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                     ></CompInfoToolTip>
                                   </Grid>
                                   <Grid size={5}>
-                                    <CompInfoToolTip
-                                      title="Número de Inscritos"
-                                      text={comp.number_registrations.toString()}
-                                      icon={<HowToReg />}
-                                    ></CompInfoToolTip>
+                                    {comp.has_registrations ? (
+                                      <CompInfoToolTip
+                                        title="Número de Inscritos"
+                                        text={comp.number_registrations.toString()}
+                                        icon={<HowToReg />}
+                                      ></CompInfoToolTip>
+                                    ) : null}
                                   </Grid>
                                 </Grid>
                                 <CompInfoToolTip
                                   title="Localização"
                                   text={comp.location}
                                   icon={<LocationPin />}
+                                ></CompInfoToolTip>
+                                <CompInfoToolTip
+                                  title="Estado"
+                                  text={
+                                    comp.has_ended
+                                      ? "Realizado"
+                                      : comp.is_open || comp.is_retification
+                                      ? "Inscrições em Progresso"
+                                      : comp.is_closed
+                                      ? "Inscrições Encerradas"
+                                      : "Por Iniciar"
+                                  }
+                                  icon={<AccessTime />}
                                 ></CompInfoToolTip>
                               </List>
                             </Grid>
