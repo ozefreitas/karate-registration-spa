@@ -27,32 +27,25 @@ export default function EditIndividualModal(
     handleModalClose: any;
     handleEditModalOpen: any;
     id: string;
-    reset: any;
-    control: any;
-    errors: any;
   }>
 ) {
-  const fetchSingleAthlete = useFetchSingleAthleteData();
+  const { data: fetchSingleAthlete } = useFetchSingleAthleteData(props.id);
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    fetchSingleAthlete.mutate(props.id, {
-      onSuccess: (data: any) => {
-        const formData = {
-          firstName: data?.data.first_name,
-          lastName: data?.data.last_name,
-          graduation: data?.data.graduation,
-          category: data?.data.category,
-          gender: data?.data.gender,
-          skip_number: data?.data.skip_number,
-          is_student: data?.data.is_student,
-          birthDate: data?.data.birth_date,
-        };
-        props.reset(formData);
-        props.handleModalClose();
-        props.handleEditModalOpen();
-      },
-    });
+    const formData = {
+      firstName: fetchSingleAthlete?.data.first_name,
+      lastName: fetchSingleAthlete?.data.last_name,
+      graduation: fetchSingleAthlete?.data.graduation,
+      category: fetchSingleAthlete?.data.category,
+      gender: fetchSingleAthlete?.data.gender,
+      skip_number: fetchSingleAthlete?.data.skip_number,
+      is_student: fetchSingleAthlete?.data.is_student,
+      birthDate: fetchSingleAthlete?.data.birth_date,
+    };
+    props.reset(formData);
+    props.handleModalClose();
+    props.handleEditModalOpen();
   };
 
   return (
