@@ -56,7 +56,10 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       { key: "last_name", label: "Último Nome" },
       { key: "gender", label: "Género" },
     ];
-    if (disciplinesData?.data.results.length !== 0) {
+    if (
+      disciplinesData?.data.results.length !== 0 &&
+      singleEventData?.data.has_categories
+    ) {
       columnMapping.push({ key: "category", label: "Escalão" });
     }
     return columnMapping;
@@ -77,9 +80,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         ></CardHeader>
         <CardContent>
           Aqui poderá consultar todos os Atletas que estão inscritos para a
-          prova que selecionou (ver acima). Alterar informações de um Atleta
-          irá modificar o próprio Atleta, e não apenas a própria inscrição (são
-          a mesma coisa). <br /> Tal como presente nas regras, no período de
+          prova que selecionou (ver acima). Alterar informações de um Atleta irá
+          modificar o próprio Atleta, e não apenas a própria inscrição (são a
+          mesma coisa). <br /> Tal como presente nas regras, no período de
           retificações apenas pode eliminar inscrições, e quando as inscrições
           estiverem fechadas não podem ser efetuadas operações, apenas ser
           visualizadas as isncrições. <br />
@@ -145,15 +148,17 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 <Typography sx={{ m: 3 }} variant="h5">
                   {discipline.name}
                 </Typography>
-                <Button
-                  startIcon={<Visibility />}
-                  variant="contained"
-                  onClick={() => {
-                    handleCategoriesListModalOpen(discipline.name);
-                  }}
-                >
-                  Escalões
-                </Button>
+                {singleEventData?.data.has_categories ? (
+                  <Button
+                    startIcon={<Visibility />}
+                    variant="contained"
+                    onClick={() => {
+                      handleCategoriesListModalOpen(discipline.name);
+                    }}
+                  >
+                    Escalões
+                  </Button>
+                ) : null}
               </Grid>
               <AthletesTable
                 count={discipline.individuals.length}

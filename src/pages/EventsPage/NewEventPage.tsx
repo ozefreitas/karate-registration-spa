@@ -162,7 +162,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       encounter: data.encounter,
       encounter_type: data.encounter_type,
       has_registrations: data.has_registrations,
-      has_categories: data.has_categories
+      has_categories: data.has_categories,
     };
 
     const eventResponse = await createEvent.mutateAsync(
@@ -768,6 +768,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               )}
             />
           </Grid>
+          <FormHelperText sx={{ p: 1, pb: 0 }}>
+            No caso de não pretender período de retificações, ajuste a "Data
+            limite retificações" para o mesmo dia do "Fim Inscrições".
+          </FormHelperText>
         </FormAccordion>
         <FormAccordion
           title="Modalidades"
