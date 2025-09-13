@@ -43,7 +43,7 @@ export default function SignUpWithTokenPage(
   const onSubmit = async (data: any) => {
     // async request which may result error
     try {
-      await axios.post("http://127.0.0.1:8000/register_user/", data);
+      await axios.post("http://127.0.0.1:8000/sign_up/register_user/", data);
       navigate("/login/");
     } catch (error: any) {
       console.log("Error: " + JSON.stringify(error.response.data));
