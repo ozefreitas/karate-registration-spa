@@ -243,8 +243,8 @@ export default function AthletesModal(
   const {
     control,
     handleSubmit,
-    setError,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -338,6 +338,7 @@ export default function AthletesModal(
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
+      setIsMutationDelayActive(false);
     }
   };
 
@@ -466,7 +467,8 @@ export default function AthletesModal(
             <Grid size={11}>
               <Typography sx={{ m: 1, mb: 3 }}>
                 Estas são as Modalidades disponíveis para este Evento. Selecione
-                as tais em que este Atleta irá participar.
+                {props.eventData.has_categories ? "as tais" : "a tal"} em que
+                este Atleta irá participar.
               </Typography>
             </Grid>
             {disciplinesFree.length !== 0 && !isMutationDelayActive ? (
@@ -497,7 +499,21 @@ export default function AthletesModal(
                                   {...field}
                                   checked={field.value}
                                   onChange={(e) => {
-                                    field.onChange(e.target.checked);
+                                    if (e.target.checked) {
+                                      // turn all OFF, then only this one ON
+                                      Object.keys(
+                                        control._defaultValues
+                                      ).forEach((name) => {
+                                        // all defaultValues are set to False if the currernt field is not the one being clicked one
+                                        setValue(name, name === fieldName, {
+                                          shouldValidate: true,
+                                          shouldDirty: true,
+                                        });
+                                      });
+                                    } else {
+                                      // allow turning everything off if you want
+                                      field.onChange(false);
+                                    }
                                   }}
                                   name={fieldName}
                                 />
@@ -521,11 +537,21 @@ export default function AthletesModal(
                 <CircularProgress />
               </Grid>
             )}
-            <FormHelperText sx={{ pt: 1 }}>
-              O escalão será calculado automaticamente de acordo com os Escalões
-              disponíveis para cada uma destas Modalidades. <br /> Também a
-              graduação e pesos (quando obrigatórios) serão verificados.
-            </FormHelperText>
+            {props.eventData.has_categories ? (
+              <FormHelperText sx={{ pt: 1 }}>
+                O escalão será calculado automaticamente de acordo com os
+                Escalões disponíveis para cada uma destas Modalidades. <br />
+                Também a graduação e pesos (quando obrigatórios) serão
+                verificados.
+              </FormHelperText>
+            ) : (
+              <FormHelperText sx={{ pt: 1 }}>
+                Apenas poderá selecionar uma Modalidade para cada Aluno. Quando
+                inscrito, este Aluno não voltará a aparecer na lista de seleção,
+                para isso terá de o eliminar da Modalidade corrente, e inscrever
+                de novo na correta.
+              </FormHelperText>
+            )}
           </Grid>
         ) : !isWeightInputScreenOpen ? (
           <List>
