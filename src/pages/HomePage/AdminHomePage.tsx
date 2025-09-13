@@ -40,7 +40,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     } else if (noti_type === "rate_event") {
       navigate("/events/");
     } else if (noti_type === "request") {
-      navigate("/settings/")
+      navigate("/settings/");
     }
   };
 
@@ -71,16 +71,13 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
               <CircularProgress />
             </Box>
           ) : notificationError ? (
-            axios.isAxiosError(notificationError) &&
-            notificationError.response?.status === 401 ? (
-              <li style={{ color: "grey" }}>
-                Sem sessão iniciada. Faça Login.
-              </li>
-            ) : (
-              <li style={{ color: "grey" }}>
-                Ocorreu um erro ao carregar as suas notificações.
-              </li>
-            )
+            <ListItem disablePadding sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0, pl: 5 }}>
+                <ListItemText
+                  primary={"Ocorreu um erro ao carregar as suas notificações."}
+                />
+              </ListItemButton>
+            </ListItem>
           ) : notificationData?.data.length !== 0 ? (
             <List sx={{ p: 5, pt: 2 }}>
               {notificationData?.data.map(

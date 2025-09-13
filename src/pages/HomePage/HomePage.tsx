@@ -86,9 +86,15 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           ) : notificationError ? (
             axios.isAxiosError(notificationError) &&
             notificationError.response?.status === 401 ? (
-              <li style={{ color: "grey" }}>
-                Sem sessão iniciada. Faça Login.
-              </li>
+              <ListItem disablePadding sx={{ m: 0 }}>
+                <ListItemButton disabled sx={{ m: 0, pb: 0, pl: 5 }}>
+                  <ListItemText
+                    primary={
+                      "Sem sessão iniciada. Faça Login."
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
             ) : axios.isAxiosError(notificationError) &&
               notificationError.response?.status === 403 ? (
               <ListItem disablePadding sx={{ m: 0 }}>
