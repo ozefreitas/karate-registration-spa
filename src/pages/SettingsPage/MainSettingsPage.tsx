@@ -33,6 +33,7 @@ import {
 } from "../../hooks/useAuth";
 import { useFetchDojoUsersData } from "../../hooks/useNotificationData";
 import DeleteDojoModal from "../../components/Admin/DeleteDojoModal";
+import AddClubModal from "../../components/Admin/AddClubModal";
 
 export default function MainSettingsPage() {
   const [value, setValue] = useState("one");
@@ -41,6 +42,7 @@ export default function MainSettingsPage() {
   const [selectedRequestId, setSelectedRequestId] = useState<string>("");
   const [createdToken, setCreatedToken] = useState<string>("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
 
   const { data: availableClubsData } = useFetchAvailableClubs();
   const createClub = useCreateClub();
@@ -94,11 +96,19 @@ export default function MainSettingsPage() {
     setSelectedRequestId(event.target.value);
   };
 
-  const handleModalOpen = () => {
+  const handleDeleteModalOpen = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleModalClose = () => {
+  const handleAddClubModalOpen = () => {
+    setIsAddClubModalOpen(true);
+  };
+
+  const handleAddClubModalClose = () => {
+    setIsAddClubModalOpen(false);
+  };
+
+  const handleDeleteModalClose = () => {
     setIsDeleteModalOpen(true);
   };
 
@@ -178,7 +188,7 @@ export default function MainSettingsPage() {
           {value === "one" ? (
             <>
               <Typography variant="h5" sx={{ pl: 4, mt: 3 }}>
-                Adicionar/remover contas
+                Adicionar/remover Clubes
               </Typography>
               <Grid
                 sx={{ m: 4, mb: 0, mt: 1 }}
@@ -213,7 +223,7 @@ export default function MainSettingsPage() {
                     variant="contained"
                     size="large"
                     color="error"
-                    onClick={handleModalOpen}
+                    onClick={handleDeleteModalOpen}
                     disabled={selectedUserId === ""}
                     startIcon={<Delete />}
                   >
@@ -225,9 +235,7 @@ export default function MainSettingsPage() {
                     color={"success"}
                     type={"submit"}
                     startIcon={<Add></Add>}
-                    onClick={() => {
-                      // handleSubmit(onSubmit)();
-                    }}
+                    onClick={handleAddClubModalOpen}
                   >
                     Adicionar Clube
                   </Button>
@@ -489,11 +497,15 @@ export default function MainSettingsPage() {
         </CardContent>
       </Card>
       <DeleteDojoModal
-        handleModalClose={handleModalClose}
+        handleModalClose={handleDeleteModalClose}
         isModalOpen={isDeleteModalOpen}
         id={selectedUserId}
         setSelectedUserId={setSelectedUserId}
       ></DeleteDojoModal>
+      <AddClubModal
+        handleClose={handleAddClubModalClose}
+        isOpen={isAddClubModalOpen}
+      ></AddClubModal>
     </>
   );
 }

@@ -58,7 +58,7 @@ export const useCreateClub = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
     },
     onError: () => {
       enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
@@ -116,7 +116,7 @@ export const useRemoveClub = () => {
 };
 
 const fetchTokenUsername = (token: string) => {
-  return axios.get(`http://127.0.0.1:8000/get_token_username/?token=${token}`);
+  return axios.get(`http://127.0.0.1:8000/sign_up/get_token_username/?token=${token}`);
 };
 
 export const useFetchTokenUsername = (token: string) => {
@@ -132,7 +132,7 @@ export const useFetchTokenUsername = (token: string) => {
 const fetchToken = (username: string) => {
   const token = localStorage.getItem("token");
   return axios.get(
-    `http://127.0.0.1:8000/get_token_by_username/?username=${username}`,
+    `http://127.0.0.1:8000/sign_up/get_token_by_username/?username=${username}`,
     {
       headers: {
         Authorization: `Token ${token}`,
@@ -148,6 +148,7 @@ export const useFetchToken = (username: string) => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,
+    enabled: !!username
   });
 };
 
@@ -251,7 +252,7 @@ export const useRemoveRequestAcount = () => {
 
 const createSignUpToken = (data: any) => {
   const token = localStorage.getItem("token");
-  return axios.post(`http://127.0.0.1:8000/generate_token/`, data, {
+  return axios.post(`http://127.0.0.1:8000/sign_up/generate_token/`, data, {
     headers: {
       Authorization: `Token ${token}`,
     },
