@@ -6,16 +6,42 @@ import {
   Grid,
   Box,
   CircularProgress,
+  Tooltip,
+  ListItem,
+  List,
+  ListItemButton,
+  IconButton,
+  ListItemText,
 } from "@mui/material";
+import { Delete, KeyboardArrowRight } from "@mui/icons-material";
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import DojoStats from "../../components/home-cards/DojoStats";
-import { useFetchHomeDojoNotifications } from "../../hooks/useNotificationData";
+import {
+  useFetchHomeDojoNotifications,
+  useRemoveNotification,
+} from "../../hooks/useNotificationData";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
   type Notification = {
+    id: string;
     notification: string;
     urgency: string;
+    can_remove: boolean;
+    type: string;
+  };
+
+  const navigate = useNavigate();
+
+  const handleFollowingAction = (noti_type: string) => {
+    if (noti_type === "create_athlete") {
+      navigate("/athletes/");
+    } else if (noti_type === "rate_event") {
+      navigate("/events/");
+    } else if (noti_type === "request") {
+      navigate("/settings/")
+    }
   };
 
   const {
@@ -23,6 +49,8 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     isLoading: isNotificationLoading,
     error: notificationError,
   } = useFetchHomeDojoNotifications();
+
+  const removeNotification = useRemoveNotification();
 
   return (
     <>
@@ -38,36 +66,85 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent sx={{ p: 0 }}>
-          <ul>
-            {isNotificationLoading ? (
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
-              </Box>
-            ) : notificationError ? (
-              axios.isAxiosError(notificationError) &&
-              notificationError.response?.status === 401 ? (
-                <li style={{ color: "grey" }}>
-                  Sem sessão iniciada. Faça Login.
-                </li>
-              ) : (
-                <li style={{ color: "grey" }}>
-                  Ocorreu um erro ao carregar as suas notificações.
-                </li>
-              )
-            ) : notificationData?.data.length !== 0 ? (
-              notificationData?.data.map(
-                (noti: Notification, index: string) => (
-                  <li style={{ color: noti.urgency }} key={index}>
-                    {noti.notification}
-                  </li>
-                )
-              )
+          {isNotificationLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </Box>
+          ) : notificationError ? (
+            axios.isAxiosError(notificationError) &&
+            notificationError.response?.status === 401 ? (
+              <li style={{ color: "grey" }}>
+                Sem sessão iniciada. Faça Login.
+              </li>
             ) : (
               <li style={{ color: "grey" }}>
-                De momento não tem notificações.
+                Ocorreu um erro ao carregar as suas notificações.
               </li>
-            )}
-          </ul>
+            )
+          ) : notificationData?.data.length !== 0 ? (
+            <List sx={{ p: 5, pt: 2 }}>
+              {notificationData?.data.map(
+                (noti: Notification, index: string) => (
+                  <ListItem
+                    key={index}
+                    disablePadding
+                    secondaryAction={
+                      <>
+                        <Tooltip title="Remover Notificação" placement="right">
+                          <IconButton
+                            disabled={!noti.can_remove}
+                            onClick={() => {
+                              removeNotification.mutate(noti.id);
+                            }}
+                            aria-label="delete notification"
+                          >
+                            <Delete
+                              color={noti.can_remove ? "error" : "disabled"}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Prosseguir ação" placement="left">
+                          <IconButton
+                            onClick={() => {
+                              handleFollowingAction(noti.type);
+                            }}
+                            aria-label="notification action"
+                            disabled={noti.type === "none"}
+                          >
+                            <KeyboardArrowRight
+                              color={
+                                noti.type === "none" ? "disabled" : "success"
+                              }
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    }
+                  >
+                    <ListItemButton
+                      disabled
+                      sx={{
+                        m: 0,
+                        p: 1,
+                        pl: 2,
+                        borderLeft: `6px solid ${noti.urgency}`,
+                        borderRight: `6px solid ${noti.urgency}`,
+                        borderTop: `3px solid ${noti.urgency}`,
+                        borderBottom: `3px solid ${noti.urgency}`,
+                      }}
+                    >
+                      <ListItemText
+                        sx={{ color: "black", pr: 5 }}
+                        primary={noti.notification}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                )
+              )}
+            </List>
+          ) : (
+            <li style={{ color: "grey" }}>De momento não tem notificações.</li>
+          )}
         </CardContent>
       </Card>
       <Grid container size={12}>
