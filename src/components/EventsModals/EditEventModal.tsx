@@ -11,7 +11,6 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
-import { usePatchEventData } from "../../hooks/useEventData";
 import { useForm, Controller } from "react-hook-form";
 import React, { useEffect } from "react";
 import { TransitionProps } from "notistack";
@@ -21,6 +20,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { Close } from "@mui/icons-material";
 import { SeasonOptions } from "../../config";
+import { eventsHooks } from "../../hooks";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,7 +34,7 @@ const Transition = React.forwardRef(function Transition(
 export default function EditEventModal(
   props: Readonly<{ isOpen: boolean; handleClose: any; singleEventData: any }>
 ) {
-  const patchEvent = usePatchEventData();
+  const patchEvent = eventsHooks.usePatchEventData();
 
   const {
     control,

@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useRemoveEvent } from "../../hooks/useEventData";
+import { eventsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
@@ -30,7 +30,7 @@ export default function DeleteEventModal(
   }>
 ) {
   const navigate = useNavigate();
-  const { mutate } = useRemoveEvent();
+  const { mutate } = eventsHooks.useRemoveEvent();
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,

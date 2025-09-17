@@ -13,28 +13,21 @@ import {
   Button,
   ListItemIcon,
 } from "@mui/material";
-import {
-  useFetchDojoUsersData,
-  useFetchNotificationsData,
-  useCreateNotification,
-  useRemoveNotification,
-} from "../../hooks/useNotificationData";
+import { notificationsHooks, adminHooks } from "../../hooks";
 import FormCard from "../../dashboard/FormCard";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { NotificationUrgencyOptions } from "../../config";
-import {
-  Add,
-  NotificationsActive,
-} from "@mui/icons-material";
+import { Add, NotificationsActive } from "@mui/icons-material";
 import NotificationActionModal from "./NotificationActionModal";
 
 export default function NotificationsPage() {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
-  const { data: dojoUserData } = useFetchDojoUsersData();
-  const { data: notificationData } = useFetchNotificationsData(selectedUserId);
-  const createNotification = useCreateNotification();
-  const removeNotification = useRemoveNotification();
+  const { data: dojoUserData } = adminHooks.useFetchClubUsersData();
+  const { data: notificationData } =
+    notificationsHooks.useFetchNotificationsData(selectedUserId);
+  const createNotification = notificationsHooks.useCreateNotification();
+  const removeNotification = notificationsHooks.useRemoveNotification();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedNotificationId, setSelectedNotificationId] =
     useState<string>("");
@@ -42,7 +35,7 @@ export default function NotificationsPage() {
   const {
     control,
     handleSubmit,
-    setError,
+
     reset,
     formState: { errors },
   } = useForm({

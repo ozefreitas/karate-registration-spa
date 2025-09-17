@@ -10,6 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
+import { clubsHoks } from "../../hooks";
 import { useRemoveClub } from "../../hooks/useAuth";
 
 const Transition = React.forwardRef(function Transition(
@@ -29,19 +30,16 @@ export default function DeleteDojoModal(
     setSelectedUserId: any;
   }>
 ) {
-  const removeClub = useRemoveClub();
+  const removeClub = clubsHoks.useRemoveClub();
 
   const handleDelete = () => {
     if (props.id) {
-      removeClub.mutate(
-        { clubId: props.id },
-        {
-          onSuccess: () => {
-            props.handleModalClose();
-            props.setSelectedUserId("");
-          },
-        }
-      );
+      removeClub.mutate(props.id, {
+        onSuccess: () => {
+          props.handleModalClose();
+          props.setSelectedUserId("");
+        },
+      });
     }
   };
 

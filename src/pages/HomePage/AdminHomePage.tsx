@@ -17,10 +17,7 @@ import { Delete, KeyboardArrowRight } from "@mui/icons-material";
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import DojoStats from "../../components/home-cards/DojoStats";
-import {
-  useFetchHomeDojoNotifications,
-  useRemoveNotification,
-} from "../../hooks/useNotificationData";
+import { notificationsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
@@ -48,9 +45,9 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = useFetchHomeDojoNotifications();
+  } = notificationsHooks.useFetchHomeDojoNotifications();
 
-  const removeNotification = useRemoveNotification();
+  const removeNotification = notificationsHooks.useRemoveNotification();
 
   return (
     <>

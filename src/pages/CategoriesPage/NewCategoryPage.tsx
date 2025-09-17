@@ -20,7 +20,7 @@ import { GenderOptions, GraduationsOptions } from "../../config";
 import FormAccordion from "../../dashboard/FormAccordion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCreateCategory } from "../../hooks/useEventData";
+import { categoriesHooks } from "../../hooks";
 
 export default function NewCategoryPage() {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ export default function NewCategoryPage() {
     setValue("max_weight", undefined);
   }, [weight_type]);
 
-  const createCategory = useCreateCategory();
+  const createCategory = categoriesHooks.useCreateCategory();
 
   const onSubmit = (data: any) => {
     const formData = {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Card,
   CardHeader,
@@ -13,10 +13,7 @@ import {
 import { Add, Visibility } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
-import {
-  useSingleFetchEventData,
-  useFetchDisciplinesData,
-} from "../../hooks/useEventData";
+import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
@@ -40,9 +37,11 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   };
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
-    useSingleFetchEventData(eventId!);
+    eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData } = useFetchDisciplinesData(eventId!);
+  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
+    eventId!
+  );
 
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"

@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   Grid,
   TextField,
@@ -6,22 +5,19 @@ import {
   IconButton,
   InputAdornment,
   Card,
-  CardHeader,
   CardContent,
   Typography,
   FormLabel,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { Close } from "@mui/icons-material";
+import { authHooks } from "../../hooks";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const action = (snackbarId: SnackbarKey | undefined) => (
@@ -42,7 +38,6 @@ export default function LoginPage() {
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -51,40 +46,10 @@ export default function LoginPage() {
     },
   });
 
+  const loginUser = authHooks.useLogInUser();
+
   const onSubmit = async (data: { username: string; password: string }) => {
-    const username = data.username;
-    const password = data.password;
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/login/", {
-        username,
-        password,
-      });
-      localStorage.setItem("token", response.data.token);
-      enqueueSnackbar("Login com sucesso!", {
-        action,
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-        preventDuplicate: true,
-      });
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-      enqueueSnackbar("Credenciais inválidas!", {
-        action,
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-        preventDuplicate: true,
-      });
-    }
+    await loginUser.mutateAsync(data);
   };
   return (
     <Grid container sx={{ m: 40, mt: 0, mb: 0 }}>

@@ -21,6 +21,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { breadcrumbsConvertion } from "../../dashboard/config";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { useAuth } from "../../access/GlobalAuthProvider";
+import { adminHooks } from "../../hooks";
+import { authHooks } from "../../hooks";
 
 export default function ButtonAppBar(
   props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
@@ -57,13 +59,15 @@ export default function ButtonAppBar(
     }
   });
 
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8000/current_season/")
-      .then((response) => setCurrentSeason(response.data.season))
-      .catch((error) => console.error(error));
-  }, []);
+  const { data } = adminHooks.useFetchCurrentSeason();
 
+  useEffect(() => {
+    if (data?.data?.season) {
+      setCurrentSeason(data.data.season);
+    }
+  }, [data]);
+
+  const logOutUser = authHooks.useLogOutUser();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -76,16 +80,7 @@ export default function ButtonAppBar(
 
   const handleLogOut = async () => {
     setAnchorEl(null);
-    await axios.post(
-      "http://127.0.0.1:8000/logout/",
-      {},
-      {
-        headers: { Authorization: `Token ${localStorage.getItem("token")}` },
-      }
-    );
-    localStorage.removeItem("token");
-    navigate("/");
-    window.location.reload();
+    await logOutUser.mutateAsync();
   };
 
   const shouldRender = breadcrumbs.some(

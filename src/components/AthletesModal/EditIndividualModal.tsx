@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
+import { membersHooks } from "../../hooks";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,7 +29,9 @@ export default function EditIndividualModal(
     id: string;
   }>
 ) {
-  const { data: fetchSingleAthlete } = useFetchSingleAthleteData(props.id);
+  const { data: fetchSingleAthlete } = membersHooks.useFetchSingleMemberData(
+    props.id
+  );
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -43,7 +45,7 @@ export default function EditIndividualModal(
       is_student: fetchSingleAthlete?.data.is_student,
       birthDate: fetchSingleAthlete?.data.birth_date,
     };
-    props.reset(formData);
+    // props.reset(formData);
     props.handleModalClose();
     props.handleEditModalOpen();
   };

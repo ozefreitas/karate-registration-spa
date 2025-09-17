@@ -12,16 +12,15 @@ import {
 import PersonalInfoSection from "./PersonalInfoSection";
 import ResultsHistorySection from "./ResultsHistorySection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
-import { useLocation, useParams } from "react-router-dom";
+import { membersHooks } from "../../hooks";
+import { useParams } from "react-router-dom";
 import { useState } from "react";
 import RegistryHistorySection from "./RegistryHistorySection";
 
 export default function SingleAthletePage() {
-  const location = useLocation();
-  const { id: athleteId } = useParams<{ id: string }>();
+  const { id: memberId } = useParams<{ id: string }>();
   const { data: singleAthleteData, isLoading: isSingleAthleteLoading } =
-    useFetchSingleAthleteData(athleteId);
+    membersHooks.useFetchSingleMemberData(memberId);
 
   const [currentScreen, setCurrentScreen] = useState<number>(1);
 

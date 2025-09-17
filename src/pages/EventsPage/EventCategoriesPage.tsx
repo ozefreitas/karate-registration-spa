@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useFetchDisciplinesData } from "../../hooks/useEventData";
+import { disciplinesHooks } from "../../hooks";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
 import { Link, useParams } from "react-router-dom";
@@ -50,7 +50,7 @@ export default function EventCategoriesPage(
   };
 
   const { data: disciplinesData, isLoading: isDisciplinesDataLoading } =
-    useFetchDisciplinesData(eventId!);
+    disciplinesHooks.useFetchDisciplinesData(eventId!);
 
   useEffect(() => {}, [disciplinesData]);
 

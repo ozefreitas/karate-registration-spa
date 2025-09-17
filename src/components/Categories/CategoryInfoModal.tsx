@@ -11,13 +11,11 @@ import {
   FormControlLabel,
   TextField,
 } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
-import { useFetchSingleCategory } from "../../hooks/useEventData";
+import { categoriesHooks } from "../../hooks";
 import { getGraduationFromValue } from "../../config";
 
 const Transition = React.forwardRef(function Transition(
@@ -36,9 +34,8 @@ export default function CategoryInfoModal(
     categoryId: any;
   }>
 ) {
-  const { data: singleCategoryData, refetch } = useFetchSingleCategory(
-    props.categoryId
-  );
+  const { data: singleCategoryData, refetch } =
+    categoriesHooks.useFetchSingleCategory(props.categoryId);
 
   React.useEffect(() => {
     refetch();

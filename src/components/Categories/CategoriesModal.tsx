@@ -33,7 +33,7 @@ import {
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useFetchCategories } from "../../hooks/useEventData";
+import { categoriesHooks } from "../../hooks";
 import { getGraduationFromValue } from "../../config";
 
 const Search = styled("div")(({ theme }) => ({
@@ -118,7 +118,7 @@ export default function CategoriesModal(
     data: categoriesData,
     isLoading: isCategoriesLoading,
     error: categoriesError,
-  } = useFetchCategories();
+  } = categoriesHooks.useFetchCategoriesData();
 
   const handleBackButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>

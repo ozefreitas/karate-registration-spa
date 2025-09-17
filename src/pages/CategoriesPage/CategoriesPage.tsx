@@ -6,7 +6,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { useFetchCategories } from "../../hooks/useEventData";
+import { categoriesHooks } from "../../hooks";
 import AddButton from "../../components/Buttons/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { useMemo, useState } from "react";
@@ -15,7 +15,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
   const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useFetchCategories(page + 1, pageSize);
+    categoriesHooks.useFetchCategoriesData(page + 1, pageSize);
 
   type Category = {
     id: string;

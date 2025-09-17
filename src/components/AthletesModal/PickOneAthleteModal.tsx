@@ -19,7 +19,7 @@ import { Close, Add } from "@mui/icons-material";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useFetchAthletesInCategoryGender } from "../../hooks/useAthletesData";
+import { membersHooks } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -94,7 +94,7 @@ export default function PickOneAthleteModal(
     data: athleteInCategoryGenderData,
     isLoading: isAthleteInCategoryGenderLoading,
     error: athleteInCategoryGenderError,
-  } = useFetchAthletesInCategoryGender(
+  } = membersHooks.useFetchAthletesInCategoryGender(
     props.control._formValues.category,
     props.control._formValues.gender
   );
@@ -103,7 +103,7 @@ export default function PickOneAthleteModal(
     console.log(athleteData.full_name);
     const athelete = `athlete${props.number}`;
     const atheleteId = `athlete${props.number}Id`;
-    console.log(atheleteId)
+    console.log(atheleteId);
     props.setValue(athelete, athleteData.full_name);
     props.setValue(atheleteId, athleteData.id);
   };

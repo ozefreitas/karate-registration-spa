@@ -11,16 +11,11 @@ import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import {
-  useRemoveEventAthlete,
-  useRemoveDisciplineAthlete,
-  useRemoveCategory,
-  useRemoveAllCategoriesData,
-  useRemoveDisciplineCategory,
-} from "../../hooks/useEventData";
-import {
-  useRemoveAthleteData,
-  useRemoveAllAthletesData,
-} from "../../hooks/useAthletesData";
+  eventsHooks,
+  membersHooks,
+  disciplinesHooks,
+  categoriesHooks,
+} from "../../hooks";
 import {
   useRemoveTeamData,
   useRemoveAllTeamsData,
@@ -54,15 +49,16 @@ export default function DeleteAthleteModal(
     discipline?: any;
   }>
 ) {
-  const removeDisciplineAthlete = useRemoveDisciplineAthlete();
-  const removeEventAthlete = useRemoveEventAthlete();
-  const removeAthlete = useRemoveAthleteData();
-  const removeAllAthletes = useRemoveAllAthletesData();
+  const removeDisciplineAthlete = disciplinesHooks.useDeleteDisciplineAthlete();
+  const removeEventAthlete = eventsHooks.useRemoveEventAthlete();
+  const removeAthlete = membersHooks.useDeleteAthleteData();
+  const removeAllAthletes = membersHooks.useDeleteAllAthleteData();
   const removeTeam = useRemoveTeamData();
   const removeAllTeams = useRemoveAllTeamsData();
-  const removeCategory = useRemoveCategory();
-  const removeAllCategories = useRemoveAllCategoriesData();
-  const removeDisciplineCategory = useRemoveDisciplineCategory();
+  const removeCategory = categoriesHooks.useDeleteCategory();
+  const removeAllCategories = categoriesHooks.useDeleteAllCategoriesData();
+  const removeDisciplineCategory =
+    disciplinesHooks.useRemoveDisciplineCategory();
   const location = useLocation();
   const navigate = useNavigate();
   const { eventId } = useParams<{ eventId: string }>();

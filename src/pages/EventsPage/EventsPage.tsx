@@ -14,7 +14,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import SettingsButton from "../../components/Buttons/SettingsButton";
-import { useFetchEventsData } from "../../hooks/useEventData";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import {
@@ -27,6 +26,7 @@ import {
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useState } from "react";
+import { eventsHooks } from "../../hooks";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
@@ -60,7 +60,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     data: eventsData,
     isLoading: isEventsDataLoading,
     error: eventsError,
-  } = useFetchEventsData(page + 1, 5);
+  } = eventsHooks.useFetchEventsData(page + 1, 5);
 
   return (
     <>
@@ -74,7 +74,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os Eventos da SKI-Portugal. Mais tarde
+          Aqui poderá consultar todos os Eventos dispníveis no momento. Mais tarde
           será também possível ver Estágios e outras provas de interesse.
           <p></p>
           Consultando cada cartão de prova, pode observar toda a informação

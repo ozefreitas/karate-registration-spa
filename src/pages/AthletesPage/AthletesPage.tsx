@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/Buttons/AddButton";
-import { useFetchAthletesData } from "../../hooks/useAthletesData";
+import { membersHooks } from "../../hooks";
 
 export default function AthletesPage(props: Readonly<{ userRole: string }>) {
   type Dojo = {
@@ -36,7 +36,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
     data: athletesData,
     isLoading: isAthletesDataLoading,
     error: athletesError,
-  } = useFetchAthletesData(page + 1, pageSize);
+  } = membersHooks.useFetchMembersData(page + 1, pageSize);
 
   // Memoize `rows` to compute only when `athletes` changes
   const athleteRows = useMemo(() => {

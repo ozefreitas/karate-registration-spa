@@ -38,16 +38,7 @@ import {
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  useFetchDisciplinesData,
-  useAddDisciplineAthlete,
-  useAddEventAthlete,
-} from "../../hooks/useEventData";
-import {
-  useFetchAthletesNotInEvent,
-  useFetchDisciplinesnotInAthleteData,
-  usePatchAthleteData,
-} from "../../hooks/useAthletesData";
+import { eventsHooks, membersHooks, disciplinesHooks } from "../../hooks";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -156,7 +147,7 @@ export default function AthletesModal(
     setChecked(newChecked);
   };
 
-  const addEventAthlete = useAddEventAthlete();
+  const addEventAthlete = eventsHooks.useAddEventAthlete();
 
   const handleIndividualsSubmit = (athleteList: string[]) => {
     if (athleteList.length === 0) {
@@ -212,10 +203,11 @@ export default function AthletesModal(
   const [isMutationDelayActive, setIsMutationDelayActive] =
     useState<boolean>(false);
 
-  const { data: modalitiesFreeData } = useFetchDisciplinesnotInAthleteData(
-    currentAthleteId,
-    props.eventData?.id
-  );
+  const { data: modalitiesFreeData } =
+    membersHooks.useFetchDisciplinesnotInAthleteData(
+      currentAthleteId,
+      props.eventData?.id
+    );
 
   React.useEffect(() => {
     if (!modalitiesFreeData?.data) return;
@@ -227,7 +219,9 @@ export default function AthletesModal(
     setDisciplinesFree(newDisciplines);
   }, [modalitiesFreeData]);
 
-  const { data: disciplinesData } = useFetchDisciplinesData(eventId!);
+  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
+    eventId!
+  );
 
   React.useEffect(() => {
     const defaultValues: any = {};
@@ -248,8 +242,8 @@ export default function AthletesModal(
     formState: { errors },
   } = useForm<FormValues>();
 
-  const addDisciplineAthlete = useAddDisciplineAthlete();
-  const patchAthlete = usePatchAthleteData();
+  const addDisciplineAthlete = disciplinesHooks.useAddDisciplineAthlete();
+  const patchAthlete = membersHooks.usePatchMemberData();
 
   const onSubmit = async (data: any) => {
     if (
@@ -267,7 +261,11 @@ export default function AthletesModal(
       });
       return;
       // free dojos must go thought this screen to confirm athlete weight and change it if needed, since they don't have access to the profile pages
-    } else if (!isWeightInputScreenOpen && userRole === "free_dojo") {
+    } else if (
+      !isWeightInputScreenOpen &&
+      userRole === "free_dojo" &&
+      props.eventData.has_categories
+    ) {
       const target = filteredAthletes.filter(
         (athlete: any) => athlete.id === currentAthleteId
       );
@@ -284,7 +282,7 @@ export default function AthletesModal(
         );
         if (target[0].weight !== freeDojoWeight) {
           const payload = {
-            athleteId: currentAthleteId,
+            memberId: currentAthleteId,
             data: { weight: freeDojoWeight },
           };
           await patchAthlete.mutateAsync(payload);
@@ -298,7 +296,7 @@ export default function AthletesModal(
           const payload = {
             disciplineId: discipline.split("_")[1],
             data: {
-              athlete_id: currentAthleteId,
+              member_id: currentAthleteId,
               event_id: props.eventData.id,
             },
           };
@@ -347,7 +345,7 @@ export default function AthletesModal(
     isLoading: isAthletesNotInEventLoading,
     error: athletesNotInEventError,
     refetch,
-  } = useFetchAthletesNotInEvent(eventId!, page + 1, 10);
+  } = membersHooks.useFetchAthletesNotInEvent(eventId!, page + 1, 10);
 
   React.useEffect(() => {
     refetch();

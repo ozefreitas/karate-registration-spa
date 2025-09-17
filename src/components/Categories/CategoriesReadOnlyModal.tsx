@@ -33,7 +33,6 @@ import {
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { useFetchCategories } from "../../hooks/useEventData";
 import { getGraduationFromValue } from "../../config";
 
 const Search = styled("div")(({ theme }) => ({

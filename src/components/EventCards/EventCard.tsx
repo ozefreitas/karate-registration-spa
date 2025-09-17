@@ -15,13 +15,10 @@ import {
   CircularProgress,
   Tooltip,
   TextField,
+  ListItem,
 } from "@mui/material";
 import AddButton from "../Buttons/AddButton";
-import {
-  useSingleFetchEventData,
-  useRateEvent,
-  useFetchEventRate,
-} from "../../hooks/useEventData";
+import { eventsHooks } from "../../hooks";
 import InfoButton from "../Buttons/InfoButton";
 import GenerateButton from "../Buttons/GenerateButton";
 import SettingsButton from "../Buttons/SettingsButton";
@@ -43,13 +40,11 @@ import {
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useEffect, useState } from "react";
-import { useLocation, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
-import { usePatchEventData } from "../../hooks/useEventData";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
-  const location = useLocation();
   const { id: eventId } = useParams<{ id: string }>();
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -75,14 +70,17 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
     data: singleEventData,
     isLoading: isSingleEventLoading,
     error: singleEventError,
-  } = useSingleFetchEventData(eventId!);
+  } = eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: eventRateData, isLoading: isEventRateLoading } =
-    useFetchEventRate(eventId);
+  const {
+    data: eventRateData,
+    isLoading: isEventRateLoading,
+    error: eventRateError,
+  } = eventsHooks.useFetchEventRate(eventId!);
 
-  const rateEvent = useRateEvent();
+  const rateEvent = eventsHooks.useRateEvent();
 
-  const patchEvent = usePatchEventData();
+  const patchEvent = eventsHooks.usePatchEventData();
 
   const [selected, setSelected] = useState<number>(-1);
 
@@ -329,6 +327,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                       <CircularProgress />
                     </Box>
+                  ) : eventRateError ? (
+                    <ListItem disablePadding sx={{ m: 0 }}>
+                      <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                        <ListItemText primary={"Um error ocorreu."} />
+                      </ListItemButton>
+                    </ListItem>
                   ) : eventRateData?.data.code === "event_not_ended" ? (
                     <li style={{ color: "grey" }}>
                       {eventRateData?.data?.message}
@@ -418,127 +422,132 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
           </Grid>
         </Grid>
         <Grid size={12}>
-          <Card sx={{ m: 2, mt: 0 }}>
-            <CardHeader
-              title="Ações"
-              sx={{
-                "& .MuiCardHeader-title": {
-                  fontWeight: "bold",
-                },
-              }}
-            ></CardHeader>
-            <CardContent>
-              <Grid
-                container
-                direction="row"
+          {props.userRole !== undefined ? (
+            <Card sx={{ m: 2, mt: 0 }}>
+              <CardHeader
+                title="Ações"
                 sx={{
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  gap: 7,
-                  rowGap: 2,
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
                 }}
-              >
-                {!["main_admin", "superuser"].includes(props.userRole) ? (
-                  <AddButton
-                    label="Adicionar/Consultar Inscrições"
-                    to="individuals/"
-                    disabled={
-                      isSingleEventLoading || singleEventData?.data.has_ended
-                    }
-                  ></AddButton>
-                ) : (
-                  // props.userRole === "subed_dojo" ? (
-                  //   <Tooltip
-                  //     disableHoverListener={!singleEventData?.data.has_ended}
-                  //     title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
-                  //   >
-                  //     <span>
-                  //       <AddButton
-                  //         label="Adicionar/Consultar Inscrições"
-                  //         to="individuals/"
-                  //         disabled={singleEventData?.data.has_ended}
-                  //       ></AddButton>
-                  //     </span>
-                  //   </Tooltip>
-                  // ) : (
-                  //   <Tooltip
-                  //     disableHoverListener={props.userRole === "subed_dojo"}
-                  //     title="Comece uma subscrição para ter acesso a esta funcionalidade"
-                  //   >
-                  //     <span>
-                  //       <AddButton
-                  //         label="Adicionar/Consultar Inscrições"
-                  //         to="individuals/"
-                  //         disabled={props.userRole === "free_dojo"}
-                  //       ></AddButton>
-                  //     </span>
-                  //   </Tooltip>
-                  // )
-                  <>
-                    <Button
-                      sx={{ m: 1 }}
-                      variant="contained"
-                      size="large"
-                      color="error"
-                      onClick={handleDeleteModalOpen}
-                      startIcon={<Delete />}
-                    >
-                      Eliminar Evento
-                    </Button>
+              ></CardHeader>
+              <CardContent>
+                <Grid
+                  container
+                  direction="row"
+                  sx={{
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                    gap: 7,
+                    rowGap: 2,
+                  }}
+                >
+                  {!["main_admin", "superuser"].includes(props.userRole) ? (
+                    <AddButton
+                      label="Adicionar/Consultar Inscrições"
+                      to="individuals/"
+                      disabled={
+                        isSingleEventLoading || singleEventData?.data.has_ended
+                      }
+                    ></AddButton>
+                  ) : (
+                    // props.userRole === "subed_dojo" ? (
+                    //   <Tooltip
+                    //     disableHoverListener={!singleEventData?.data.has_ended}
+                    //     title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
+                    //   >
+                    //     <span>
+                    //       <AddButton
+                    //         label="Adicionar/Consultar Inscrições"
+                    //         to="individuals/"
+                    //         disabled={singleEventData?.data.has_ended}
+                    //       ></AddButton>
+                    //     </span>
+                    //   </Tooltip>
+                    // ) : (
+                    //   <Tooltip
+                    //     disableHoverListener={props.userRole === "subed_dojo"}
+                    //     title="Comece uma subscrição para ter acesso a esta funcionalidade"
+                    //   >
+                    //     <span>
+                    //       <AddButton
+                    //         label="Adicionar/Consultar Inscrições"
+                    //         to="individuals/"
+                    //         disabled={props.userRole === "free_dojo"}
+                    //       ></AddButton>
+                    //     </span>
+                    //   </Tooltip>
+                    // )
+                    <>
+                      <Button
+                        sx={{ m: 1 }}
+                        variant="contained"
+                        size="large"
+                        color="error"
+                        onClick={handleDeleteModalOpen}
+                        startIcon={<Delete />}
+                      >
+                        Eliminar Evento
+                      </Button>
+                      <SettingsButton
+                        size="large"
+                        label="Editar Evento"
+                        handleOpen={handleEditModalOpen}
+                      ></SettingsButton>
+                    </>
+                  )}
+                  {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
+                    <AddButton
+                      label="Consultar Equipas"
+                      to="teams/"
+                    ></AddButton>
+                  ) : null}
+                  {singleEventData?.data.has_registrations ? (
+                    <>
+                      <Tooltip
+                        disableHoverListener={[
+                          "main_admin",
+                          "superuser",
+                        ].includes(props.userRole)}
+                        title="Esta funcionalidade ficará disponível em breve"
+                      >
+                        <span>
+                          <InfoButton
+                            disabled={
+                              !["main_admin", "superuser"].includes(
+                                props.userRole
+                              )
+                            }
+                            label="Inscrições completas"
+                            to="all_registry/"
+                          ></InfoButton>
+                        </span>
+                      </Tooltip>
+                      <InfoButton
+                        label="Consultar Sorteios"
+                        to="draw/"
+                      ></InfoButton>
+                    </>
+                  ) : null}
+                  {singleEventData?.data.has_categories ? (
                     <SettingsButton
                       size="large"
-                      label="Editar Evento"
-                      handleOpen={handleEditModalOpen}
+                      label="Consultar Categorias"
+                      to={`/events/${eventId!}/categories/`}
                     ></SettingsButton>
-                  </>
-                )}
-                {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
-                  <AddButton label="Consultar Equipas" to="teams/"></AddButton>
-                ) : null}
-                {singleEventData?.data.has_registrations ? (
-                  <>
-                    <Tooltip
-                      disableHoverListener={[
-                        "main_admin",
-                        "superuser",
-                      ].includes(props.userRole)}
-                      title="Esta funcionalidade ficará disponível em breve"
-                    >
-                      <span>
-                        <InfoButton
-                          disabled={
-                            !["main_admin", "superuser"].includes(
-                              props.userRole
-                            )
-                          }
-                          label="Inscrições completas"
-                          to="all_registry/"
-                        ></InfoButton>
-                      </span>
-                    </Tooltip>
-                    <InfoButton
-                      label="Consultar Sorteios"
-                      to="draw/"
-                    ></InfoButton>
-                  </>
-                ) : null}
-                {singleEventData?.data.has_categories ? (
-                  <SettingsButton
-                    size="large"
-                    label="Consultar Categorias"
-                    to={`/events/${eventId!}/categories/`}
-                  ></SettingsButton>
-                ) : null}
-                {["main_admin", "superuser"].includes(props.userRole) &&
-                singleEventData?.data.has_registrations ? (
-                  <GenerateButton
-                    label="Gerar Sorteio"
-                    to="draw/generate/"
-                  ></GenerateButton>
-                ) : null}
-              </Grid>
-            </CardContent>
-          </Card>
+                  ) : null}
+                  {["main_admin", "superuser"].includes(props.userRole) &&
+                  singleEventData?.data.has_registrations ? (
+                    <GenerateButton
+                      label="Gerar Sorteio"
+                      to="draw/generate/"
+                    ></GenerateButton>
+                  ) : null}
+                </Grid>
+              </CardContent>
+            </Card>
+          ) : null}
         </Grid>
       </Grid>
       <DeleteEventModal

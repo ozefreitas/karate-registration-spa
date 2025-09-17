@@ -12,33 +12,25 @@ import {
   FormHelperText,
   FormControlLabel,
   Switch,
-  Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import {
-  GraduationsOptions,
-  GenderOptions,
-  CategoryOptions,
-  ReasonOptions,
-} from "../../config";
+import { GraduationsOptions, GenderOptions, ReasonOptions } from "../../config";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
-import FormAccordion from "../../dashboard/FormAccordion";
-import { useCreateAthlete } from "../../hooks/useAthletesData";
-import { useFetchDojoUsersData } from "../../hooks/useNotificationData";
+import { membersHooks, adminHooks } from "../../hooks";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState<boolean>(true);
 
-  const { data: dojoUserData } = useFetchDojoUsersData();
-  const createAthlete = useCreateAthlete();
+  const { data: dojoUserData } = adminHooks.useFetchClubUsersData();
+  const createAthlete = membersHooks.useCreateMember();
 
   const {
     control,

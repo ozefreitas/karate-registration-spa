@@ -17,10 +17,7 @@ import AthletesHomeComponent from "../../components/home-cards/AthletesHomeCompo
 import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
-import {
-  useFetchHomeDojoNotifications,
-  useRemoveNotification,
-} from "../../hooks/useNotificationData";
+import { notificationsHooks } from "../../hooks";
 import { Delete, KeyboardArrowRight } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -39,9 +36,9 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = useFetchHomeDojoNotifications();
+  } = notificationsHooks.useFetchHomeDojoNotifications();
 
-  const removeNotification = useRemoveNotification();
+  const removeNotification = notificationsHooks.useRemoveNotification();
 
   const handleFollowingAction = (noti_type: string) => {
     if (noti_type === "create_athlete") {
@@ -65,6 +62,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
         <CardContent>
           Este é o ecrã principal desta plataforma. Aqui poderá ver informações
           relevantes e rápidas, assim como notificações específicas para si.
+          Dúvidas devem remeter para a página de <a href="/help/">Ajuda</a>.
         </CardContent>
       </Card>
       <Card sx={{ m: 2, mb: 0 }}>
@@ -88,11 +86,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
             notificationError.response?.status === 401 ? (
               <ListItem disablePadding sx={{ m: 0 }}>
                 <ListItemButton disabled sx={{ m: 0, pb: 0, pl: 5 }}>
-                  <ListItemText
-                    primary={
-                      "Sem sessão iniciada. Faça Login."
-                    }
-                  />
+                  <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
                 </ListItemButton>
               </ListItem>
             ) : axios.isAxiosError(notificationError) &&

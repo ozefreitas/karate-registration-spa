@@ -1,15 +1,7 @@
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
-  Checkbox,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
-  Divider,
   Typography,
   AppBar,
   Toolbar,
@@ -27,12 +19,8 @@ import {
   useUpdateAthleteData,
   useFetchSingleAthleteData,
 } from "../../hooks/useAthletesData";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import {
-  CategoryOptions,
-  GraduationsOptions,
-  GenderOptions,
-} from "../../config";
+import { Controller, useForm } from "react-hook-form";
+import { GraduationsOptions, GenderOptions } from "../../config";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -203,36 +191,6 @@ export default function EditAthleteModal(
                     error={!!athleteErrors.lastName}
                     helperText={athleteErrors.lastName?.message}
                   />
-                )}
-              />
-            </Grid>
-            <Grid sx={{ m: 2 }} size={8}>
-              <Controller
-                name="category"
-                control={athleteControl}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={"outlined"}
-                    label="Escalão"
-                    fullWidth
-                    select
-                    multiline
-                    required
-                    maxRows={8}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!athleteErrors.category}
-                    helperText={athleteErrors.category?.message}
-                  >
-                    {CategoryOptions.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
                 )}
               />
             </Grid>

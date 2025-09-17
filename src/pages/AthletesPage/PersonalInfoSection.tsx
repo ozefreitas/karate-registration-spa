@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import DeleteAthleteModal from "../../components/AthletesModal/DeleteAthleteModal";
 import { Delete, Edit, Update, Clear } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
-import { useUpdateAthleteData } from "../../hooks/useAthletesData";
+import { membersHooks } from "../../hooks";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -64,7 +64,7 @@ export default function PersonalInfoSection(
     setIsWeightRedirectionModalOpen(false);
   };
 
-  const updateAthlete = useUpdateAthleteData();
+  const updateAthlete = membersHooks.useUpdateMemberData();
 
   const {
     control,
@@ -102,7 +102,7 @@ export default function PersonalInfoSection(
     };
     console.log(formData);
     const updateData = {
-      athleteId: props.athleteData?.data.id,
+      memberId: props.athleteData?.data.id,
       data: formData,
     };
     updateAthlete.mutate(updateData, {

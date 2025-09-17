@@ -34,12 +34,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
 import FormAccordion from "../../dashboard/FormAccordion";
-import {
-  useCreateEvent,
-  useCreateDiscipline,
-  useFetchCategories,
-  useAddDisciplineCategory,
-} from "../../hooks/useEventData";
+import { useAddDisciplineCategory } from "../../hooks/useEventData";
+import { eventsHooks, disciplinesHooks, categoriesHooks } from "../../hooks";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
 
@@ -85,11 +81,11 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     setDisciplineCategories(newDisciplineCategories);
   };
 
-  const createEvent = useCreateEvent();
-  const createDiscipline = useCreateDiscipline();
+  const createEvent = eventsHooks.useCreateEvent();
+  const createDiscipline = disciplinesHooks.useCreateDiscipline();
   const { data: categoriesData, isLoading: isCategoriesLoading } =
-    useFetchCategories();
-  const addDisciplineCategory = useAddDisciplineCategory();
+    categoriesHooks.useFetchCategoriesData();
+  const addDisciplineCategory = disciplinesHooks.useAddDisciplineCategory();
 
   type Category = {
     id: string;

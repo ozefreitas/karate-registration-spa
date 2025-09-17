@@ -1,16 +1,18 @@
 import { useForm, Controller } from "react-hook-form";
-import { Grid, TextField, Button, MenuItem } from "@mui/material";
-import { useState } from "react";
-import axios from "axios";
-import { useFetchAvailableClubs } from "../../hooks/useAuth";
+import {
+  Grid,
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  FormLabel,
+  MenuItem,
+} from "@mui/material";
+import { clubsHoks, authHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
-import { useCreateRequestAcount } from "../../hooks/useAuth";
 
 export default function RequestAccountPage() {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const navigate = useNavigate();
 
   const {
@@ -27,146 +29,210 @@ export default function RequestAccountPage() {
     },
   });
 
-  const createRequest = useCreateRequestAcount();
+  const createRequest = authHooks.useCreateRequestAcount();
 
   const onSubmit = (data: any) => {
-    createRequest.mutate(
-      { data: data },
-      {
-        onSuccess: () => {
-          navigate("/");
-        },
-      }
-    );
+    createRequest.mutate(data, {
+      onSuccess: () => {
+        navigate("/");
+      },
+    });
   };
 
-  const { data: availableClubsData } = useFetchAvailableClubs();
+  const { data: availableClubsData } = clubsHoks.useFetchAvailableClubs();
 
   return (
-    <Grid container>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="first_name"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              required
-              variant={"outlined"}
-              label="Primeiro Nome"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
+    <Grid container sx={{ m: 40, mt: 0, mb: 0 }}>
+      <Card sx={{ width: "100%", p: 0 }}>
+        <CardContent sx={{ display: "flex" }}>
+          <Grid
+            container
+            size={12}
+            justifyContent="center"
+            sx={{ p: 3, pb: 0 }}
+          >
+            <Typography sx={{ fontWeight: "bold" }} variant="h4">
+              Pedido de conta sob{" "}
+              {import.meta.env.VITE_DISPLAY_ADMIN_NAME ?? ""}
+            </Typography>
+            <Grid sx={{ m: 2, mt: 5 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Primeiro Nome
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="first_name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.first_name}
+                    helperText={errors.first_name?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2, mt: 0 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Último Nome
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="last_name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.last_name}
+                    helperText={errors.last_name?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2, mt: 0 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Email
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2, mt: 0 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Identificação
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="id_number"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.id_number}
+                    helperText={errors.id_number?.message}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid sx={{ m: 2, mt: 0 }} size={12}>
+              <FormLabel>
+                <Typography variant="h6" sx={{ p: 1 }}>
+                  Username
+                </Typography>
+              </FormLabel>
+              <Controller
+                name="username"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    select
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.username}
+                    helperText={errors.username?.message}
+                  >
+                    <MenuItem value="">-- Selecionar --</MenuItem>
+                    {availableClubsData?.data.results
+                      .filter((club: any) => club.is_registered === false)
+                      .map((club: any, index: string) => (
+                        <MenuItem key={index} value={club.dojo}>
+                          {club.dojo}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>
+              <Button
+                variant="contained"
+                size={"large"}
+                color={"success"}
+                type={"submit"}
+                onClick={() => {
+                  handleSubmit(onSubmit)();
+                }}
+              >
+                Submeter
+              </Button>
+            </Grid>
+          </Grid>
+          {/* <Grid size={1}>
+            <Grid
+              sx={{
+                width: "100%",
+                height: "50%",
+                backgroundColor: "lightgray",
               }}
-              error={!!errors.first_name}
-              helperText={errors.first_name?.message}
-            />
-          )}
-        />
-      </Grid>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="last_name"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              required
-              variant={"outlined"}
-              label="Último Nome"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-              }}
-            />
-          )}
-        />
-      </Grid>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="id_number"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              required
-              variant={"outlined"}
-              label="Nº Identificação"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-              }}
-            />
-          )}
-        />
-      </Grid>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="username"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              required
-              variant={"outlined"}
-              label="Nome de Utilizador escolhido"
-              fullWidth
-              select
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-              }}
-              error={!!errors.username}
-              helperText={errors.username?.message}
             >
-              <MenuItem value="">-- Selecionar --</MenuItem>
-              {availableClubsData?.data.results
-                .filter((club: any) => club.is_registered === false)
-                .map((club: any, index: string) => (
-                  <MenuItem key={index} value={club.dojo}>
-                    {club.dojo}
-                  </MenuItem>
-                ))}
-            </TextField>
-          )}
-        />
-      </Grid>
-      <Grid sx={{ m: 2 }} size={9}>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              required
-              variant={"outlined"}
-              label="Email"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
+              Login
+            </Grid>
+            <Grid
+              sx={{
+                width: "100%",
+                height: "50%",
+                backgroundColor: "red",
               }}
-            />
-          )}
-        />
-      </Grid>
-      <Grid size={12}>
-        <Button
-          variant="contained"
-          size={"large"}
-          color={"success"}
-          type={"submit"}
-          sx={{ marginBottom: "20px" }}
-          onClick={() => {
-            handleSubmit(onSubmit)();
-          }}
-        >
-          Submeter
-        </Button>
-      </Grid>
+              container
+              justifyContent="center"
+              alignContent="center"
+            >
+              <Typography
+                sx={{
+                  writingMode: "vertical-lr",
+                  direction: "ltr",
+                  textOrientation: "mixed",
+                }}
+                variant="h6"
+              >
+                Pedir Conta
+              </Typography>
+            </Grid>
+          </Grid> */}
+        </CardContent>
+      </Card>
     </Grid>
   );
 }
