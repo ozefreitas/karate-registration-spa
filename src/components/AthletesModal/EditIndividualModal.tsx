@@ -41,7 +41,7 @@ export default function EditIndividualModal(
       graduation: fetchSingleAthlete?.data.graduation,
       category: fetchSingleAthlete?.data.category,
       gender: fetchSingleAthlete?.data.gender,
-      skip_number: fetchSingleAthlete?.data.skip_number,
+      id_number: fetchSingleAthlete?.data.id_number,
       is_student: fetchSingleAthlete?.data.is_student,
       birthDate: fetchSingleAthlete?.data.birth_date,
     };

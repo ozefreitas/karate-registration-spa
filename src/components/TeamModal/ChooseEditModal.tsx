@@ -120,7 +120,7 @@ export default function ChooseEditModal(
           graduation: data?.data.graduation,
           category: data?.data.category,
           gender: data?.data.gender,
-          skip_number: data?.data.skip_number,
+          id_number: data?.data.id_number,
           is_student: data?.data.is_student,
           birthDate: data?.data.birth_date,
         };

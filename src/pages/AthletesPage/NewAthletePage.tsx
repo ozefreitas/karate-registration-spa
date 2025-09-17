@@ -48,7 +48,7 @@ export default function NewAthletePage() {
       category: "",
       gender: "",
       force_skip: false,
-      skip_number: "",
+      id_number: "",
       birth_date: undefined,
       // weight: "",
       competitor: false,
@@ -65,7 +65,7 @@ export default function NewAthletePage() {
       last_name: data.last_name,
       graduation: data.graduation,
       category: data.category,
-      skip_number: data.skip_number,
+      id_number: data.id_number,
       gender: data.gender,
       competitor: data.competitor,
       birth_date: data.birth_date,
@@ -74,7 +74,7 @@ export default function NewAthletePage() {
     };
 
     if (!data.is_force_skip) {
-      formData.skip_number = 0;
+      formData.id_number = 0;
     }
 
     createAthlete.mutate(formData, {
@@ -327,7 +327,7 @@ export default function NewAthletePage() {
           </Grid>
           <Grid sx={{ p: 2, pt: 3 }} size={6}>
             <Controller
-              name="skip_number"
+              name="id_number"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -346,8 +346,8 @@ export default function NewAthletePage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.skip_number}
-                  helperText={errors.skip_number?.message}
+                  error={!!errors.id_number}
+                  helperText={errors.id_number?.message}
                 ></TextField>
               )}
             />

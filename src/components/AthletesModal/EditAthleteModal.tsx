@@ -44,7 +44,7 @@ export default function EditAthleteModal(
     category: string;
     graduation: number;
     gender: string;
-    skip_number: number;
+    id_number: number;
     is_student: boolean;
     birthDate: any;
   };
@@ -63,7 +63,7 @@ export default function EditAthleteModal(
       lastName: "",
       graduation: "",
       category: "",
-      skip_number: null,
+      id_number: null,
       gender: "",
       is_student: false,
       birthDate: "",
@@ -93,7 +93,7 @@ export default function EditAthleteModal(
       graduation: data?.graduation,
       category: data?.category,
       gender: data?.gender,
-      skip_number: data?.skip_number,
+      id_number: data?.id_number,
       is_student: data?.is_student ?? false,
       birth_date: data?.birthDate ?? null,
     };

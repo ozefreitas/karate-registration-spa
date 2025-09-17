@@ -363,7 +363,7 @@ export default function AthletesModal(
         athlete.first_name.toLowerCase().includes(query) ||
         athlete.last_name.toLowerCase().includes(query) ||
         fullName.includes(query) ||
-        athlete.skip_number === Number(query)
+        athlete.id_number === Number(query)
       );
     });
   }, [searchQuery, athletesNotInEventData]);

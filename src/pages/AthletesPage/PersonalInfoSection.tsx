@@ -80,7 +80,7 @@ export default function PersonalInfoSection(
       lastName: props.athleteData?.data.last_name,
       age: props.athleteData?.data.age,
       graduation: props.athleteData?.data.graduation,
-      skip_number: props.athleteData?.data.skip_number,
+      id_number: props.athleteData?.data.id_number,
       gender: props.athleteData?.data.gender,
       competitor: props.athleteData?.data.competitor,
       birthDate: props.athleteData?.data.birth_date,
@@ -94,7 +94,7 @@ export default function PersonalInfoSection(
       first_name: data.firstName,
       last_name: data.lastName,
       graduation: data.graduation,
-      skip_number: data.skip_number,
+      id_number: data.id_number,
       gender: data.gender,
       competitor: data.competitor,
       birth_date: data.birthDate,
@@ -418,7 +418,7 @@ export default function PersonalInfoSection(
             }
             control={
               <Controller
-                name="skip_number"
+                name="id_number"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -440,7 +440,7 @@ export default function PersonalInfoSection(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!errors.skip_number}
+                    error={!!errors.id_number}
                   />
                 )}
               />
