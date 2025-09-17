@@ -7,8 +7,8 @@ export const useAddDisciplineAthlete = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
-      addDisciplineAthlete(eventId, data),
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      addDisciplineAthlete(disciplineId, data),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
@@ -42,8 +42,8 @@ export const useDeleteDisciplineAthlete = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
-      removeDisciplineAthlete(eventId, data),
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      removeDisciplineAthlete(disciplineId, data),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",

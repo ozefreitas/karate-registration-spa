@@ -1,15 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createMember } from "../../api";
+import { LogoutUser } from "../../api";
+import { useNavigate } from "react-router-dom";
 
-export const useCreateMember = () => {
+export const useLogOutUser = () => {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createMember,
+    mutationFn: LogoutUser,
     onSuccess: () => {
-      enqueueSnackbar("Atleta criado com sucesso!", {
+      enqueueSnackbar("Saiu da sua conta!", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -18,17 +19,18 @@ export const useCreateMember = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      localStorage.removeItem("token");
+      navigate("/");
+      window.location.reload();
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Um erro ocorreu. Tente mais tarde.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
           horizontal: "center",
         },
-        autoHideDuration: 5000,
+        autoHideDuration: 3000,
         preventDuplicate: true,
       });
     },

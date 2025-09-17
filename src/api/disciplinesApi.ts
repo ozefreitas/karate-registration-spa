@@ -14,12 +14,12 @@ export const createDiscipline = (data: any) => {
 
 // discipline members operations
 
-export const addDisciplineAthlete = (eventId: string, data: any) => {
-  return authClient.post(`/disciplines/${eventId}/add_athlete/`, data);
+export const addDisciplineAthlete = (disciplineId: string, data: any) => {
+  return authClient.post(`/disciplines/${disciplineId}/add_athlete/`, data);
 };
 
-export const removeDisciplineAthlete = (eventId: string, data: any) => {
-  return authClient.post(`/disciplines/${eventId}/delete_athlete/`, data);
+export const removeDisciplineAthlete = (disciplineId: string, data: any) => {
+  return authClient.post(`/disciplines/${disciplineId}/delete_athlete/`, data);
 };
 
 // discipline categories operations

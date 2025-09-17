@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { updateMember, patchMember } from "../../api";
 
-export const useUpdateAthleteData = () => {
+export const useUpdateMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -38,7 +38,7 @@ export const useUpdateAthleteData = () => {
   });
 };
 
-export const usePatchAthleteData = () => {
+export const usePatchMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();

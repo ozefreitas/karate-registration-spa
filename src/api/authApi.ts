@@ -4,8 +4,20 @@ export const fetchMe = () => {
   return authClient.get("/me/");
 };
 
+export const loginUser = (data: any) => {
+  return apiClient.post("/login/", data);
+};
+
+export const LogoutUser = () => {
+  return authClient.post("/logout/", {});
+};
+
 export const fetchTokenUsername = (token: string) => {
   return apiClient.get(`/sign_up/get_token_username/?token=${token}`);
+};
+
+export const signUpWithToken = (data: any) => {
+  return apiClient.post("/sign_up/register_user/", data);
 };
 
 export const createSignUpToken = (data: any) => {
@@ -17,11 +29,11 @@ export const fetchToken = (username: string) => {
 };
 
 export const fetchRequestingAcounts = () => {
-  return authClient.get(`/request_acount`);
+  return authClient.get(`/request_acount/`);
 };
 
 export const createRequestAcount = (data: any) => {
-  return apiClient.post("/request_acount", data);
+  return apiClient.post("/request_acount/", data);
 };
 
 export const deleteRequestAcount = (requestAcountId: string) => {

@@ -3,4 +3,6 @@ export * as categoriesHooks from "./categories";
 export * as disciplinesHooks from "./disciplines";
 export * as authHooks from "./auth";
 export * as adminHooks from "./admin";
+export * as notificationsHooks from "./notifications"
 export * as membersHooks from "./members";
+export * as clubsHoks from "./clubs"

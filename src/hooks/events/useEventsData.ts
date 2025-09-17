@@ -10,7 +10,7 @@ export const useFetchEventsData = (page: number, pageSize: number) => {
   });
 };
 
-export const useSingleFetchEventData = (eventId: string) => {
+export const useFetchSingleEventData = (eventId: string) => {
   return useQuery({
     queryKey: ["single-event", eventId],
     queryFn: () => fetchSingleEvent(eventId),

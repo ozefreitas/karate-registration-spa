@@ -1,28 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-
-const fetchEvents = (page: number, pageSize: number) => {
-  const token = localStorage.getItem("token");
-  if (token !== null) {
-    return axios.get(`http://127.0.0.1:8000/events/`, {
-      headers: {
-        Authorization: `Token ${token}`,
-      },
-      params: {
-        page: page,
-        page_size: pageSize,
-      },
-    });
-  } else {
-    return axios.get(`http://127.0.0.1:8000/events/`, {
-      params: {
-        page: page,
-        page_size: pageSize,
-      },
-    });
-  }
-};
+import { fetchEvents } from "../api/eventsApi";
 
 export const useFetchEventsData = (page: number, pageSize: number) => {
   return useQuery({
@@ -227,7 +206,9 @@ export const useFetchLastEvent = (userRole: string) => {
     queryFn: fetchLastEvent,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: ["subed_dojo", "main_admin", "superuser"].includes(userRole),
+    enabled: ["subed_dojo", "main_admin", "single_admin", "superuser"].includes(
+      userRole
+    ),
   });
 };
 
@@ -247,11 +228,15 @@ export const useFetchLastCompQuali = (userRole: string) => {
 
 const fetchSingleEvent = (eventId: string) => {
   const token = localStorage.getItem("token");
-  return axios.get(`http://127.0.0.1:8000/events/${eventId}/`, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
+  if (token !== null) {
+    return axios.get(`http://127.0.0.1:8000/events/${eventId}/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+  } else {
+    return axios.get(`http://127.0.0.1:8000/events/${eventId}/`);
+  }
 };
 
 export const useSingleFetchEventData = (eventId: string) => {
@@ -369,10 +354,12 @@ const fetchEventRate = (eventId: any) => {
   );
 };
 
-export const useFetchEventRate = (location: any) => {
+export const useFetchEventRate = (eventId: any) => {
   return useQuery({
-    queryKey: ["event-rate"],
-    queryFn: () => fetchEventRate(location),
+    queryKey: ["event-rate", eventId],
+    queryFn: () => fetchEventRate(eventId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };
 
@@ -421,7 +408,7 @@ export const useRateEvent = () => {
   });
 };
 
-// modalities
+// disciplines
 
 const fetchDisciplines = (eventId: string) => {
   const token = localStorage.getItem("token");

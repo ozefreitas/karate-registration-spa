@@ -1,15 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createMember } from "../../api";
+import { loginUser } from "../../api";
+import { useNavigate } from "react-router-dom";
 
-export const useCreateMember = () => {
+export const useLogInUser = () => {
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createMember,
-    onSuccess: () => {
-      enqueueSnackbar("Atleta criado com sucesso!", {
+    mutationFn: loginUser,
+    onSuccess: (data: any) => {
+      localStorage.setItem("token", data.data.token);
+      enqueueSnackbar("Login com sucesso!", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -18,17 +21,17 @@ export const useCreateMember = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+      navigate("/");
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Credenciais inválidas!", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
           horizontal: "center",
         },
-        autoHideDuration: 5000,
+        autoHideDuration: 3000,
         preventDuplicate: true,
       });
     },

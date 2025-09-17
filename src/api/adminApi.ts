@@ -1,4 +1,4 @@
-import { authClient } from "./apiClient";
+import { apiClient, authClient } from "./apiClient";
 
 export const fetchClubUsers = (username?: string) => {
   let url = `http://127.0.0.1:8000/users/`;
@@ -10,4 +10,8 @@ export const fetchClubUsers = (username?: string) => {
 
 export const fetchClubAthletes = () => {
   return authClient.get("/users/athletes/");
+};
+
+export const fetchCurrentSeason = () => {
+  return apiClient.get("/current_season/");
 };

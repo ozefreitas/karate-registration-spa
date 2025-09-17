@@ -10,7 +10,7 @@ export const fetchCategories = (page?: number, pageSize?: number) => {
 };
 
 export const fetchSingleCategory = (categoryId: string) => {
-  return authClient.get(`/categories/${categoryId}`);
+  return authClient.get(`/categories/${categoryId}/`);
 };
 
 export const createCategory = (data: any) => {
@@ -18,7 +18,7 @@ export const createCategory = (data: any) => {
 };
 
 export const deleteCategory = (categoryId: string) => {
-  return authClient.delete(`/categories/${categoryId}`);
+  return authClient.delete(`/categories/${categoryId}/`);
 };
 
 export const deleteAllCategories = () => {

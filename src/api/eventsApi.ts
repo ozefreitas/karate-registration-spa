@@ -29,15 +29,15 @@ export const createEvent = (data: any) => {
 };
 
 export const updateEvent = (eventId: string, data: any) => {
-  return authClient.put(`/events/${eventId}`, data);
+  return authClient.put(`/events/${eventId}/`, data);
 };
 
 export const patchEvent = (eventId: string, data: any) => {
-  return authClient.patch(`/events/${eventId}`, data);
+  return authClient.patch(`/events/${eventId}/`, data);
 };
 
 export const deleteEvent = (eventId: string) => {
-  return authClient.delete(`/events/${eventId}`);
+  return authClient.delete(`/events/${eventId}/`);
 };
 
 // event rating endpoints

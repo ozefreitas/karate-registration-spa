@@ -9,7 +9,7 @@ export const useCreateRequestAcount = () => {
   return useMutation({
     mutationFn: createRequestAcount,
     onSuccess: () => {
-      enqueueSnackbar("Pedido de conta enviado! Será contactado em breve", {
+      enqueueSnackbar("Pedido de conta enviado! Será contactado em breve.", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",

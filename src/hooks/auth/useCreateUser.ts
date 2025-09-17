@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createMember } from "../../api";
+import { signUpWithToken } from "../../api";
 
-export const useCreateMember = () => {
+export const useSignUpWithToken = () => {
   const { enqueueSnackbar } = useSnackbar();
 
-  const queryClient = useQueryClient();
+//   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createMember,
+    mutationFn: signUpWithToken,
     onSuccess: () => {
-      enqueueSnackbar("Atleta criado com sucesso!", {
+      enqueueSnackbar("Conta criada com sucesso!", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -18,8 +18,7 @@ export const useCreateMember = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+    //   queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
     },
     onError: () => {
       enqueueSnackbar("Um erro ocorreu! Tente novamente.", {

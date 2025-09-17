@@ -21,7 +21,7 @@ export const useFetchMeData = () => {
 };
 
 const fetchAvailableClubs = () => {
-  return axios.get("http://127.0.0.1:8000/dojos/", {});
+  return axios.get("http://127.0.0.1:8000/dojos/");
 };
 
 export const useFetchAvailableClubs = () => {
@@ -116,7 +116,9 @@ export const useRemoveClub = () => {
 };
 
 const fetchTokenUsername = (token: string) => {
-  return axios.get(`http://127.0.0.1:8000/sign_up/get_token_username/?token=${token}`);
+  return axios.get(
+    `http://127.0.0.1:8000/sign_up/get_token_username/?token=${token}`
+  );
 };
 
 export const useFetchTokenUsername = (token: string) => {
@@ -143,12 +145,12 @@ const fetchToken = (username: string) => {
 
 export const useFetchToken = (username: string) => {
   return useQuery({
-    queryKey: ["token_username", username],
+    queryKey: ["token", username],
     queryFn: () => fetchToken(username),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,
-    enabled: !!username
+    enabled: !!username,
   });
 };
 

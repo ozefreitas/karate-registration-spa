@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchCategories, fetchSingleCategory } from "../../api";
 
-export const useFetchCategoriesData = (page: number, pageSize: number) => {
+export const useFetchCategoriesData = (page?: number, pageSize?: number) => {
   return useQuery({
     queryKey: ["categories", page, pageSize],
     queryFn: () => fetchCategories(page, pageSize),
