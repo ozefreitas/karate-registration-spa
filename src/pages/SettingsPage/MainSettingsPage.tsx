@@ -7,9 +7,6 @@ import {
   Tabs,
   Tab,
   Grid,
-  List,
-  ListItem,
-  ListItemButton,
   TextField,
   MenuItem,
   Button,
@@ -23,15 +20,7 @@ import {
 } from "@mui/material";
 import { Delete, Add, ContentCopy } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
-import {
-  useFetchAvailableClubs,
-  useCreateClub,
-  useFetchRequestingAccounts,
-  useCreateSignUpToken,
-  useFetchToken,
-  useRemoveRequestAcount,
-} from "../../hooks/useAuth";
-import { useFetchDojoUsersData } from "../../hooks/useNotificationData";
+import { authHooks, clubsHoks, adminHooks } from "../../hooks";
 import DeleteDojoModal from "../../components/Admin/DeleteDojoModal";
 import AddClubModal from "../../components/Admin/AddClubModal";
 
@@ -44,16 +33,16 @@ export default function MainSettingsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
 
-  const { data: availableClubsData } = useFetchAvailableClubs();
-  const createClub = useCreateClub();
+  const { data: availableClubsData } = clubsHoks.useFetchAvailableClubs();
+  const createClub = clubsHoks.useCreateClub();
 
   const { data: dojoUserData, refetch } =
-    useFetchDojoUsersData(clickedUsername);
+    adminHooks.useFetchClubUsersData(clickedUsername);
 
-  const { data: requestAccountData } = useFetchRequestingAccounts();
+  const { data: requestAccountData } = authHooks.useFetchRequestingAccounts();
 
-  const createSignUpToken = useCreateSignUpToken();
-  const rejectAcount = useRemoveRequestAcount();
+  const createSignUpToken = authHooks.useCreateSignUpToken();
+  const rejectAcount = authHooks.useRemoveRequestAcount();
 
   const acountDetails = useMemo(() => {
     return requestAccountData?.data.results
@@ -74,13 +63,17 @@ export default function MainSettingsPage() {
     }
   }, [clickedUsername]);
 
-  const { data: isTokenAvailable } = useFetchToken(acountDetails?.username);
+  const { data: isTokenAvailable } = authHooks.useFetchToken(
+    acountDetails?.username
+  );
 
-  console.log(isTokenAvailable);
+  console.log(isTokenAvailable?.data.error);
 
   useEffect(() => {
-    if (isTokenAvailable !== undefined) {
-      setCreatedToken(isTokenAvailable.data.token);
+    if (isTokenAvailable?.data.error !== undefined) {
+      setCreatedToken("");
+    } else {
+      setCreatedToken(isTokenAvailable?.data.token);
     }
   }, [isTokenAvailable]);
 
@@ -114,14 +107,11 @@ export default function MainSettingsPage() {
 
   const handleTokenCreation = (event: React.MouseEvent<HTMLButtonElement>) => {
     const data = { username: acountDetails.username, alive_time: 3 };
-    createSignUpToken.mutate(
-      { data: data },
-      {
-        onSuccess: (data: any) => {
-          setCreatedToken(data.data.token);
-        },
-      }
-    );
+    createSignUpToken.mutate(data, {
+      onSuccess: (data: any) => {
+        setCreatedToken(data.data.token);
+      },
+    });
   };
 
   const handleAcountRejection = (
@@ -353,7 +343,7 @@ export default function MainSettingsPage() {
                             }
                             control={
                               <TextField
-                                sx={{ width: "100px" }}
+                                sx={{ width: "150px" }}
                                 color="warning"
                                 variant="standard"
                                 label=""
