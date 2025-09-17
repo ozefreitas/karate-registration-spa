@@ -42,8 +42,8 @@ export default function HelpPage() {
               ></CardHeader>
               <CardContent>
                 Quando não tiver nenhuma sessão iniciada, irão aparecer no canto
-                superior esquerdo dois botões: Login e Criar Conta. Use Login
-                para entrar na sua conta e Criar Conta caso ainda não possua
+                superior esquerdo dois botões: Login e Pedir Conta. Use Login
+                para entrar na sua conta e Pedir Conta caso ainda não possua
                 uma. <br />
                 Quando cria uma conta, terá de escolher um nome de utilizador
                 pré-definido, este nome irá remeter para o nome do dojo e
@@ -68,9 +68,9 @@ export default function HelpPage() {
                 realizar, ou seja, serão a partir destes que terão de selecionar
                 para cada prova. Atletas por si só (na página de Atletas) NÂO
                 SERVEM COMO INSCRIÇÃO EM QUALQUER PROVA!<p></p>
-                <Accordion>
+                <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Formlário de registo de Atleta
+                    Formulário de registo de Atleta
                   </AccordionSummary>
                   <AccordionDetails>
                     Este formulário contém um número de campos necessários para
@@ -82,7 +82,7 @@ export default function HelpPage() {
                     inscrições em provas.
                   </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
                     Página de todos Atletas
                   </AccordionSummary>
@@ -93,7 +93,7 @@ export default function HelpPage() {
                     levar para o formulário.
                   </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
                     Perfil do Atleta
                   </AccordionSummary>
@@ -121,9 +121,9 @@ export default function HelpPage() {
                 realizar, ou seja, serão a partir destes que terão de selecionar
                 para cada prova. Equipas por si só (na página de Equipas) NÂO
                 SERVEM COMO INSCRIÇÃO EM QUALQUER PROVA!<p></p>
-                <Accordion>
+                <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Formlário de registo de Equipa
+                    Formulário de registo de Equipa
                   </AccordionSummary>
                   <AccordionDetails>
                     Este formulário contém um número de campos necessários para
@@ -132,7 +132,7 @@ export default function HelpPage() {
                     própria <Link to={"/teams/new_team/"}>página</Link>.
                   </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
                     Página de todas Equipas
                   </AccordionSummary>
@@ -143,7 +143,7 @@ export default function HelpPage() {
                     levar para o formulário.
                   </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
                     Perfil da Equipa
                   </AccordionSummary>
@@ -159,8 +159,92 @@ export default function HelpPage() {
               </CardContent>
             </Card>
           </Grid>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title={"Classificações"}
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              <CardContent>
+                No final de cada competição será disponibilizado o quadro de
+                classificações nesta página. Apenas os lugares de pódio podem
+                ser consultados (para não ter uma lista internminável), contudo
+                será disponibilizado um documento .PDF com os resultados
+                completos.
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
         <Grid size={6}>
+          <Grid size={12}>
+            <Card sx={{ m: 2 }}>
+              <CardHeader
+                title={"Subscrição"}
+                sx={{
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+              ></CardHeader>
+              <CardContent>
+                A <i>Karate Score App</i> funciona com um sistema de subscrição,
+                ou seja, para ter acesso a todas as funcionalidades, terá de
+                pagar uma mensalidade. Apenas funções básicas de inscrições em
+                eventos estão disponíveis em contas <i>free</i>, e com
+                limitações ainda assim. <p></p>
+                Para mais informações sobre as possiblidades de pagamento, assim
+                como das funcionalidades desbloquaedas com os mesmos, deve
+                enviar um email para jpsfreitas12@gmail.com, com o assunto
+                "Regimes de subscrição" seguido do seu nome de utilizador.{" "}
+                <p></p>
+                <strong>Detalhes</strong>: <br />
+                Qualquer pessoa à qual o seu adminitrador conceder acesso poderá
+                ter uma conta na <i>Karate Score App</i>. Todas as contas
+                começam na modalidade <i>free</i>. Utilizadores <i>free</i> não
+                terão acesso a qualquer informação detalhada sobre os seus
+                atletas, nem mesmo à prórpia listagem dos mesmos. Em baixo fica
+                um resumo das funcionalidades de cada tipo de conta:
+                <ul>
+                  <li>
+                    Conta <i>free</i>: Sem qualquer tipo de acesso a
+                    funcionalidades básicas. Única funcionalidade ativa será a
+                    de poder inscrever membros do seu Clube em provas
+                    determinadas pelo seu administrador. Para isso terá de saber
+                    o número identificativo ou nome do membro.
+                  </li>
+                  <li>
+                    Conta <i>subed</i> base: Primeiro regime de subscrição.
+                    Acesso a listagem completa dos membros do seu clube, APENAS
+                    daqueles registados na base de dados do seu administrador.
+                    Ainda impossível registar novos membros. Acesso a informação
+                    detalhada de cada membro. Acesso a notificações limitado.
+                  </li>
+                  <li>
+                    Conta <i>subed</i> pro: Regime de subscrição intermédio.
+                    Acesso a listagem completa dos membros do seu clube, APENAS
+                    daqueles registados na base de dados do seu administrador.
+                    Ainda impossível registar novos membros. Acesso a informação
+                    detalhada de cada membro. Acesso total a notificações
+                    personalizadas.
+                  </li>
+                  <li>
+                    Conta <i>subed</i> elite (<strong>em breve</strong>): Regime
+                    de subscrição avançado. Poderá agora registar membros do seu
+                    clube na plataforma, os quais apenas você poderá ver e
+                    aceder às suas informações. Poderá fazer pedidos diretos ao
+                    seu administrador de forma a adicionar um novo membro do seu
+                    clube na base de dados central, efetivando assim esse
+                    registo com um número de identificação único e posterior
+                    inscrição em eventos.
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </Grid>
           <Grid size={12}>
             <Card sx={{ m: 2 }}>
               <CardHeader
@@ -193,7 +277,7 @@ export default function HelpPage() {
                   <li>
                     <span style={{ color: "red" }}>Vermelha</span> - Merece
                     completa atenção e deve ser resolvida o mais rápido
-                    possível. Deve contactar a SKI-Portugal;
+                    possível. Deve contactar o seu administrador.
                   </li>
                 </ul>
               </CardContent>
@@ -229,8 +313,8 @@ export default function HelpPage() {
                 }}
               ></CardHeader>
               <CardContent>
-                Os Eventos disponíveis são mostradas através de cartões.
-                Cada Evento terá:
+                Os Eventos disponíveis são mostradas através de cartões. Cada
+                Evento terá:
                 <ul>
                   <li>Local;</li>
                   <li>Data de início das inscrições;</li>
@@ -239,28 +323,9 @@ export default function HelpPage() {
                   <li>Data de realização;</li>
                 </ul>
                 Lá dentro poderá consultar e inscrever Atletas nesse mesmo
-                evento. Apenas poderá inscrever entre a data de início e a
-                de fim de inscrições. Até ao fim do periodo de retificações
-                apenas poderá fazer edições.
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={12}>
-            <Card sx={{ m: 2 }}>
-              <CardHeader
-                title={"Classificações"}
-                sx={{
-                  "& .MuiCardHeader-title": {
-                    fontWeight: "bold",
-                  },
-                }}
-              ></CardHeader>
-              <CardContent>
-                No final de cada competição será disponibilizado o quadro de
-                classificações nesta página. Apenas os lugares de pódio podem
-                ser consultados (para não ter uma lista internminável), contudo
-                será disponibilizado um documento .PDF com os resultados
-                completos.
+                evento. Apenas poderá inscrever entre a data de início e a de
+                fim de inscrições. Até ao fim do periodo de retificações apenas
+                poderá fazer edições.
               </CardContent>
             </Card>
           </Grid>
