@@ -32,17 +32,6 @@ export const getGraduationFromValue = (gradValue: number) => {
   return gradLabel;
 };
 
-export const CategoryOptions: { label: string; value: string }[] = [
-  { label: "Infantil", value: "Infantil" },
-  { label: "Iniciado", value: "Iniciado" },
-  { label: "Juvenil", value: "Juvenil" },
-  { label: "Cadete", value: "Cadete" },
-  { label: "Júnior", value: "Júnior" },
-  { label: "Sénior", value: "Sénior" },
-  { label: "Veterano +35", value: "Veterano +35" },
-  { label: "Veterano +50", value: "Veterano +50" },
-];
-
 export const GenderOptions: { label: string; value: string }[] = [
   { label: "Masculino", value: "Masculino" },
   { label: "Feminino", value: "Feminino" },

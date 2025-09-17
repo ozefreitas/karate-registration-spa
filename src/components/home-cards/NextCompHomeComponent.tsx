@@ -13,22 +13,14 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { SportsMma } from "@mui/icons-material";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import { useFetchNextEventData } from "../../hooks/useEventData";
 import AddButton from "../Buttons/AddButton";
 
-export default function NextCompHomeComponent(props: { userRole: string }) {
-  type Competition = {
-    id: string;
-    name: string;
-    season: string;
-    location: string;
-    competition_date: string;
-  };
-
+export default function NextCompHomeComponent(
+  props: Readonly<{ userRole: string }>
+) {
   const navigate = useNavigate();
   const {
     data: nextCompData,
@@ -51,6 +43,14 @@ export default function NextCompHomeComponent(props: { userRole: string }) {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
+        ) : nextCompError ? (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+              <ListItemText
+                primary={"Um erro ocorreu a procurar o próximo Evento."}
+              />
+            </ListItemButton>
+          </ListItem>
         ) : nextCompData?.data.length !== 0 ? (
           <List>
             <Tooltip title={"Consultar"}>

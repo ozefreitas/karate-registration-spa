@@ -76,7 +76,7 @@ function App() {
             <Route
               path="/"
               element={
-                userRole == "main_admin" ? (
+                ["main_admin", "single_admin"].includes(userRole) ? (
                   <AdminHomePage userRole={userRole} />
                 ) : (
                   <HomePage userRole={userRole} />
@@ -92,7 +92,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<AthletesPage userRole={userRole} />}
-                    allowedRoles={["subed_dojo", "main_admin"]}
+                    allowedRoles={["subed_dojo", "main_admin", "single_admin"]}
                   />
                 )
               }
@@ -103,7 +103,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<SingleAthletePage />}
-                    allowedRoles={["subed_dojo", "main_admin"]}
+                    allowedRoles={["subed_dojo", "main_admin", "single_admin"]}
                   />
                 )
               }
@@ -114,7 +114,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<NewAthletePage />}
-                    allowedRoles={["main_admin"]}
+                    allowedRoles={["main_admin", "single_admin"]}
                   />
                 )
               }

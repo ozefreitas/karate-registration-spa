@@ -149,6 +149,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   teams: "Equipas",
   classifications: "Classificações",
   events: "Eventos",
+  help: "Ajuda",
   news: "Novidades",
   profile: "Perfil",
   rules: "Regras",
