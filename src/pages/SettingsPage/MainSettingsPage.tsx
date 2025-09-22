@@ -23,13 +23,18 @@ import { useEffect, useState, useMemo } from "react";
 import { authHooks, clubsHoks, adminHooks } from "../../hooks";
 import DeleteDojoModal from "../../components/Admin/DeleteDojoModal";
 import AddClubModal from "../../components/Admin/AddClubModal";
+import { useSnackbar } from "notistack";
 
 export default function MainSettingsPage() {
+  const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState("one");
   const [clickedUsername, setClickedUsername] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [selectedRequestId, setSelectedRequestId] = useState<string>("");
+  const [selectedPasswordRequestId, setSelectedPasswordRequestId] =
+    useState<string>("");
   const [createdToken, setCreatedToken] = useState<string>("");
+  const [createdPasswordURL, setCreatedPasswordURL] = useState<string>("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
 
@@ -38,6 +43,11 @@ export default function MainSettingsPage() {
 
   const { data: dojoUserData, refetch } =
     adminHooks.useFetchClubUsersData(clickedUsername);
+
+  const { data: requestingPasswordsData } =
+    adminHooks.useFetchPasswordResetRequests();
+
+  const generatePasswordResetURL = adminHooks.useCreatePasswordRecoveryURL();
 
   const { data: requestAccountData } = authHooks.useFetchRequestingAccounts();
 
@@ -57,6 +67,16 @@ export default function MainSettingsPage() {
       }))[0];
   }, [requestAccountData, selectedRequestId]);
 
+  const passwordRequestedDetails = useMemo(() => {
+    return requestingPasswordsData?.data
+      .filter((acount: any) => acount.id === selectedPasswordRequestId)
+      .map((acount: any) => ({
+        id: acount.dojo_user.id,
+        email: acount.dojo_user.email,
+        username: acount.dojo_user.username,
+      }))[0];
+  }, [requestingPasswordsData, selectedPasswordRequestId]);
+
   useEffect(() => {
     if (clickedUsername !== "") {
       refetch();
@@ -66,8 +86,6 @@ export default function MainSettingsPage() {
   const { data: isTokenAvailable } = authHooks.useFetchToken(
     acountDetails?.username
   );
-
-  console.log(isTokenAvailable?.data.error);
 
   useEffect(() => {
     if (isTokenAvailable?.data.error !== undefined) {
@@ -87,6 +105,12 @@ export default function MainSettingsPage() {
 
   const handleAcountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRequestId(event.target.value);
+  };
+
+  const handlePasswordRequestAcountChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSelectedPasswordRequestId(event.target.value);
   };
 
   const handleDeleteModalOpen = () => {
@@ -112,6 +136,19 @@ export default function MainSettingsPage() {
         setCreatedToken(data.data.token);
       },
     });
+  };
+
+  const handlePasswordURLCreation = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    generatePasswordResetURL.mutate(
+      { username: passwordRequestedDetails.id },
+      {
+        onSuccess: (data: any) => {
+          setCreatedPasswordURL(data.data.url);
+        },
+      }
+    );
   };
 
   const handleAcountRejection = (
@@ -177,8 +214,8 @@ export default function MainSettingsPage() {
           </Box>
           {value === "one" ? (
             <>
-              <Typography variant="h5" sx={{ pl: 4, mt: 3 }}>
-                Adicionar/remover Clubes
+              <Typography variant="h5" sx={{ pl: 4, mt: 3, mb: 2 }}>
+                Adicionar/Remover Clubes
               </Typography>
               <Grid
                 sx={{ m: 4, mb: 0, mt: 1 }}
@@ -231,7 +268,7 @@ export default function MainSettingsPage() {
                   </Button>
                 </Grid>
               </Grid>
-              <Typography variant="h5" sx={{ pl: 4, mt: 5 }}>
+              <Typography variant="h5" sx={{ pl: 4, mt: 5, mb: 2 }}>
                 Pedidos de Conta
               </Typography>
               <Grid container justifyContent="center">
@@ -471,6 +508,192 @@ export default function MainSettingsPage() {
                                 <ContentCopy></ContentCopy>
                               </Button>
                             </Tooltip>
+                          </Grid>
+                        </CardContent>
+                      ) : null}
+                    </Card>
+                  ) : null}
+                </Grid>
+              </Grid>
+              <Typography variant="h5" sx={{ pl: 4, mt: 5, mb: 2 }}>
+                Pedidos de Recuperação de Password
+              </Typography>
+              <Grid container justifyContent="center">
+                <Grid size={6} sx={{ p: 2 }}>
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Conta a Inspecionar"
+                    select
+                    fullWidth
+                    multiline
+                    maxRows={8}
+                    value={selectedPasswordRequestId}
+                    onChange={handlePasswordRequestAcountChange}
+                  >
+                    <MenuItem value="">-- Selecionar --</MenuItem>
+                    {requestingPasswordsData?.data.map(
+                      (item: any, index: string) => (
+                        <MenuItem key={index} value={item.id}>
+                          {item.dojo_user.username}
+                        </MenuItem>
+                      )
+                    )}
+                  </TextField>
+
+                  {passwordRequestedDetails !== undefined ? (
+                    <Card sx={{ m: 2 }}>
+                      <CardContent>
+                        <FormControl
+                          sx={{ pb: 2, justifyContent: "center" }}
+                          component="fieldset"
+                          variant="standard"
+                        >
+                          <FormControlLabel
+                            sx={{ mr: 2 }}
+                            labelPlacement="start"
+                            label={
+                              <Typography
+                                sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                              >
+                                Username:
+                              </Typography>
+                            }
+                            control={
+                              <TextField
+                                sx={{ width: "200px" }}
+                                color="warning"
+                                variant="standard"
+                                label=""
+                                value={passwordRequestedDetails.username}
+                                slotProps={{
+                                  input: {
+                                    readOnly: true,
+                                    disableUnderline: true,
+                                    style: { fontSize: 18, marginRight: 10 },
+                                  },
+                                }}
+                              />
+                            }
+                          ></FormControlLabel>
+                        </FormControl>
+                        <FormControl
+                          sx={{ pb: 2, justifyContent: "center" }}
+                          component="fieldset"
+                          variant="standard"
+                        >
+                          <FormControlLabel
+                            sx={{ mr: 2 }}
+                            labelPlacement="start"
+                            label={
+                              <Typography
+                                sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                              >
+                                Email:
+                              </Typography>
+                            }
+                            control={
+                              <TextField
+                                sx={{ width: "300px" }}
+                                color="warning"
+                                variant="standard"
+                                label=""
+                                value={passwordRequestedDetails.email}
+                                slotProps={{
+                                  input: {
+                                    readOnly: true,
+                                    disableUnderline: true,
+                                    style: { fontSize: 18, marginRight: 10 },
+                                  },
+                                }}
+                              />
+                            }
+                          ></FormControlLabel>
+                        </FormControl>
+                      </CardContent>
+                      <CardActions
+                        sx={{
+                          justifyContent: "flex-end",
+                          alignContent: "center",
+                        }}
+                      >
+                        <Stack
+                          direction={{
+                            xs: "row-reverse",
+                            sm: "row",
+                          }}
+                          sx={{
+                            p: 2,
+                            gap: 4,
+                            flexShrink: 0,
+                            alignSelf: { xs: "flex-end", sm: "center" },
+                          }}
+                        >
+                          <Button
+                            size="small"
+                            onClick={(e) => handlePasswordURLCreation(e)}
+                            variant="contained"
+                            disabled={createdPasswordURL !== ""}
+                          >
+                            Criar Link
+                          </Button>
+                        </Stack>
+                      </CardActions>
+                      {createdPasswordURL !== "" ? (
+                        <CardContent>
+                          <Grid container>
+                            <FormLabel sx={{ mb: 2 }}>
+                              Copie este link e envie para o email fornecido
+                              pelo pedinte desta conta. Apenas a pessoa com
+                              acesso a este link será capaz de repor a sua
+                              prórpia palavra-passe.
+                            </FormLabel>
+                            <Grid size={10} sx={{ p: 2, pb: 0 }}>
+                              <TextField
+                                color="warning"
+                                variant={"outlined"}
+                                label="Link de Criação de Conta"
+                                maxRows={8}
+                                fullWidth
+                                value={createdPasswordURL}
+                                slotProps={{
+                                  input: {
+                                    readOnly: true,
+                                    disableUnderline: true,
+                                    style: { fontSize: 18, marginRight: 10 },
+                                  },
+                                }}
+                              />
+                              <FormHelperText sx={{ p: 1, pt: 0 }}>
+                                Atenção: Este token é de uso único e irá ser
+                                desativado quando a conta for reposta a
+                                palavra-passe por parte do utilizador ou
+                                passados 3 dias da sua criação.
+                              </FormHelperText>
+                            </Grid>
+                            <Grid container alignItems="center">
+                              <Tooltip title="Copiar para áera de transferência">
+                                <Button
+                                  onClick={() => {
+                                    copyToClipboard(createdPasswordURL);
+                                    enqueueSnackbar(
+                                      "Copiado para área de transferência!",
+                                      {
+                                        variant: "success",
+                                        anchorOrigin: {
+                                          vertical: "top",
+                                          horizontal: "center",
+                                        },
+                                        autoHideDuration: 3000,
+                                        preventDuplicate: true,
+                                      }
+                                    );
+                                  }}
+                                >
+                                  <ContentCopy></ContentCopy>
+                                </Button>
+                              </Tooltip>
+                            </Grid>
                           </Grid>
                         </CardContent>
                       ) : null}

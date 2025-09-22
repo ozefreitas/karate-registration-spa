@@ -38,6 +38,7 @@ import KataFinal from "./pages/DisplayPanelPages/KataFinal";
 import KumiteIndiv from "./pages/DisplayPanelPages/KumiteIndiv";
 import KumiteTeam from "./pages/DisplayPanelPages/KumiteTeam";
 import SignUpWithTokenPage from "./pages/auth/SignUpWithTokenPage";
+import PasswordResetPage from "./pages/auth/PasswordResetPage";
 import { useEffect } from "react";
 import { useAuth } from "./access/GlobalAuthProvider";
 import { SnackbarProvider } from "notistack";
@@ -344,6 +345,7 @@ function App() {
                 )
               }
             />
+            <Route path="reset/:uidb64/:token" element={<PasswordResetPage />} />
             <Route path="unauthorized/" element={<UnAuthorizedPage />} />
             <Route path="not_found/" element={<NotFoundPage />} />
           </Route>

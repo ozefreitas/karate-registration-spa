@@ -37,7 +37,27 @@ export const createRequestAcount = (data: any) => {
 };
 
 export const deleteRequestAcount = (requestAcountId: string) => {
-  return authClient.delete(
-    `http://127.0.0.1:8000/request_acount/${requestAcountId}/`
-  );
+  return authClient.delete(`/request_acount/${requestAcountId}/`);
+};
+
+// Reset Password
+
+export const fetchPasswordRequests = () => {
+  return authClient.get("/password_recovery/list_requests/");
+};
+
+export const createResetPasswordRequest = (data: any) => {
+  return apiClient.post("/password_recovery/request/", data);
+};
+
+export const createResetPasswordURL = (data: any) => {
+  return authClient.post("/password_recovery/generate_url/", data);
+};
+
+export const passwordConfirmation = (
+  uidb64: string,
+  token: string,
+  data: any
+) => {
+  return apiClient.post(`/password_recovery/confirm/${uidb64}/${token}/`, data);
 };

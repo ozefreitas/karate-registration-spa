@@ -172,5 +172,5 @@ export const breadcrumbsConvertion: Record<string, string> = {
   settings: "Definições",
   categories: "Categorias",
   new_category: "Nova Categoria",
-  password_recover: "Recuperar Password",
+  resets: "Recuperar Password",
 };

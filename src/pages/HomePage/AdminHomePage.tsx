@@ -36,7 +36,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
       navigate("/athletes/");
     } else if (noti_type === "rate_event") {
       navigate("/events/");
-    } else if (noti_type === "request") {
+    } else if (noti_type === "request" || noti_type === "reset") {
       navigate("/settings/");
     }
   };
@@ -137,7 +137,13 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
               )}
             </List>
           ) : (
-            <li style={{ color: "grey" }}>De momento não tem notificações.</li>
+            <ListItem disablePadding sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0, pl: 5 }}>
+                <ListItemText
+                  primary={"De momento não tem notificações."}
+                />
+              </ListItemButton>
+            </ListItem>
           )}
         </CardContent>
       </Card>

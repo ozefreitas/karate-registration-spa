@@ -3,6 +3,7 @@ import {
   fetchClubUsers,
   fetchClubAthletes,
   fetchCurrentSeason,
+  fetchPasswordRequests,
 } from "../../api";
 
 export const useFetchClubUsersData = (username?: string) => {
@@ -27,6 +28,15 @@ export const useFetchCurrentSeason = () => {
   return useQuery({
     queryKey: ["current-season"],
     queryFn: fetchCurrentSeason,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
+
+export const useFetchPasswordResetRequests = () => {
+  return useQuery({
+    queryKey: ["password-requests"],
+    queryFn: fetchPasswordRequests,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

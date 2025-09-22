@@ -11,14 +11,16 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { Close } from "@mui/icons-material";
 import { authHooks } from "../../hooks";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import ConfirmPasswordResetModal from "../../components/Admin/ConfirmPasswordResetModal";
+import { useAuth } from "../../access/GlobalAuthProvider";
+import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { closeSnackbar } = useSnackbar();
 
   const action = (snackbarId: SnackbarKey | undefined) => (
     <Close
@@ -31,9 +33,22 @@ export default function LoginPage() {
     </Close>
   );
 
-  const [showPassword, setShowPassword] = useState(false);
+  const { user } = useAuth();
+  if (user !== undefined) {
+    return <Navigate to={"/"}></Navigate>;
+  }
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
 
   const {
     control,
@@ -52,7 +67,7 @@ export default function LoginPage() {
     await loginUser.mutateAsync(data);
   };
   return (
-    <Grid container sx={{ m: 40, mt: 0, mb: 0 }}>
+    <Grid container sx={{ m: 30, mt: 0, mb: 0 }}>
       <Card sx={{ width: "100%" }}>
         <CardContent sx={{ display: "flex", p: 0 }}>
           <Grid container size={12} justifyContent="center" sx={{ p: 3 }}>
@@ -127,11 +142,18 @@ export default function LoginPage() {
                 )}
               />
             </Grid>
-            <Grid size={12} sx={{ m: 2, mt: 0 }}>
-              <Typography>
-                <Link to={"/login/password_recover/"}>
-                  Equeceu-se da password?
-                </Link>
+            <Grid size={12} sx={{ ml: 3, mt: 0 }}>
+              <Typography
+                onClick={handleModalOpen}
+                sx={{
+                  color: "red",
+                  cursor: "pointer",
+                  "&:hover": {
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                Equeceu-se da password?
               </Typography>
             </Grid>
             <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>
@@ -148,40 +170,12 @@ export default function LoginPage() {
               </Button>
             </Grid>
           </Grid>
-          {/* <Grid size={1}>
-            <Grid
-              sx={{
-                width: "100%",
-                height: "50%",
-                backgroundColor: "lightgray",
-              }}
-            >
-              Login
-            </Grid>
-            <Grid
-              sx={{
-                width: "100%",
-                height: "50%",
-                backgroundColor: "red",
-              }}
-              container
-              justifyContent="center"
-              alignContent="center"
-            >
-              <Typography
-                sx={{
-                  writingMode: "vertical-lr",
-                  direction: "ltr",
-                  textOrientation: "mixed",
-                }}
-                variant="h6"
-              >
-                Pedir Conta
-              </Typography>
-            </Grid>
-          </Grid> */}
         </CardContent>
       </Card>
+      <ConfirmPasswordResetModal
+        handleClose={handleModalClose}
+        isOpen={isModalOpen}
+      ></ConfirmPasswordResetModal>
     </Grid>
   );
 }

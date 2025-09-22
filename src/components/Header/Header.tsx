@@ -38,7 +38,7 @@ export default function ButtonAppBar(
   paths.forEach((p, index) => {
     const routeTo = p;
     if (shouldStop) return;
-    if (p == "signup") {
+    if (p == "signup" || p == "reset") {
       breadcrumbs.push({
         title: `${breadcrumbsConvertion[routeTo]}`,
         link: `${paths.slice(0, index + 1).join("/")}/`,
@@ -228,7 +228,7 @@ export default function ButtonAppBar(
         </MenuItem>
       </Menu>
       {!shouldRender && (
-        <Breadcrumbs sx={{ p: 3 }}>
+        <Breadcrumbs sx={{ p: 3, pb: 1 }}>
           {breadcrumbs.length !== 0 ? (
             <Link to={"/"}>
               <Typography color="red">Início</Typography>
