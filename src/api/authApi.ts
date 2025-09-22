@@ -8,7 +8,7 @@ export const loginUser = (data: any) => {
   return apiClient.post("/login/", data);
 };
 
-export const LogoutUser = () => {
+export const logoutUser = () => {
   return authClient.post("/logout/", {});
 };
 

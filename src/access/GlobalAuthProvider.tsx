@@ -6,7 +6,6 @@ import {
   ReactNode,
 } from "react";
 import { authHooks } from "../hooks";
-import { useFetchMeData } from "../hooks/useAuth";
 import { AxiosResponse } from "axios";
 
 interface AuthContextType {

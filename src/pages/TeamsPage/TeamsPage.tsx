@@ -11,7 +11,7 @@ import {
 import AddButton from "../../components/Buttons/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { useFetchTeamsData } from "../../hooks/useTeamsData";
-import { useFetchMeData } from "../../hooks/useAuth";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
 export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   type Athlete = {
@@ -46,8 +46,8 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
     error: teamsError,
   } = useFetchTeamsData(page + 1, pageSize);
 
-  const { data: meData } = useFetchMeData();
-  const userRole = meData?.data.role;
+  const { user } = useAuth();
+  const userRole = user?.data.role;
 
   const teamRows = useMemo(() => {
     return teamsData?.data.results.map((team: Team) => ({
@@ -97,6 +97,7 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
           </Box>
         ) : teamsData?.data !== undefined ? (
           <AthletesTable
+            count={teamsData?.data.length}
             type="Equipas"
             data={teamRows}
             columnsHeaders={columnMaping}

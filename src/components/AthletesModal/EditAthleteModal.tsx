@@ -15,11 +15,8 @@ import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
-import {
-  useUpdateAthleteData,
-  useFetchSingleAthleteData,
-} from "../../hooks/useAthletesData";
 import { Controller, useForm } from "react-hook-form";
+import { membersHooks } from "../../hooks";
 import { GraduationsOptions, GenderOptions } from "../../config";
 
 const Transition = React.forwardRef(function Transition(
@@ -50,7 +47,7 @@ export default function EditAthleteModal(
   };
 
   const { data: singleAthleteData, isLoading: isSingleAthleteLoading } =
-    useFetchSingleAthleteData(props.id);
+    membersHooks.useFetchSingleMemberData(props.id);
 
   const {
     control: athleteControl,
@@ -84,7 +81,7 @@ export default function EditAthleteModal(
     athleteReset(formData);
   }, [singleAthleteData]);
 
-  const updateAthleteData = useUpdateAthleteData();
+  const updateAthleteData = membersHooks.useUpdateMemberData();
 
   const onSubmit = (data: any) => {
     const formData = {
@@ -97,7 +94,7 @@ export default function EditAthleteModal(
       is_student: data?.is_student ?? false,
       birth_date: data?.birthDate ?? null,
     };
-    updateAthleteData.mutate({ athleteId: props.id, data: formData });
+    updateAthleteData.mutate({ memberId: props.id, data: formData });
   };
 
   return (

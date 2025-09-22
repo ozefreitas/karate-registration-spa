@@ -9,10 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
-import {
-  useSingleFetchEventData,
-  useFetchDisciplinesData,
-} from "../../hooks/useEventData";
+import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
 
 export default function EventAllRegistryPage(
@@ -26,9 +23,11 @@ export default function EventAllRegistryPage(
     data: singleEventData,
     isLoading: isSingleEventLoading,
     error: singleEventError,
-  } = useSingleFetchEventData(eventId!);
+  } = eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData } = useFetchDisciplinesData(eventId!);
+  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
+    eventId!
+  );
 
   const getColumnMaping = () => {
     const columnMapping = [
@@ -57,8 +56,8 @@ export default function EventAllRegistryPage(
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os Atletas/Alunos que estão inscritos para a
-          prova que selecionou (ver acima).
+          Aqui poderá consultar todos os Atletas/Alunos que estão inscritos para
+          a prova que selecionou (ver acima).
         </CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>

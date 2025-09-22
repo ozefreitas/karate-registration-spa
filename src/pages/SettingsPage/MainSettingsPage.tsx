@@ -161,6 +161,8 @@ export default function MainSettingsPage() {
     });
   };
 
+  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5173";
+
   function copyToClipboard(text: string) {
     navigator.clipboard
       .writeText(text)
@@ -482,7 +484,7 @@ export default function MainSettingsPage() {
                                 label="Link de Criação de Conta"
                                 maxRows={8}
                                 fullWidth
-                                value={`http://localhost:5173/signup/${createdToken}`}
+                                value={`${baseURL}/signup/${createdToken}/`}
                                 slotProps={{
                                   input: {
                                     readOnly: true,
@@ -501,7 +503,7 @@ export default function MainSettingsPage() {
                               <Button
                                 onClick={() =>
                                   copyToClipboard(
-                                    `http://localhost:5173/signup/${createdToken}`
+                                    `${baseURL}/signup/${createdToken}/`
                                   )
                                 }
                               >

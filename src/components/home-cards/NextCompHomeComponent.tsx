@@ -15,7 +15,7 @@ import {
 import { SportsMma } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
-import { useFetchNextEventData } from "../../hooks/useEventData";
+import { eventsHooks } from "../../hooks";
 import AddButton from "../Buttons/AddButton";
 
 export default function NextCompHomeComponent(
@@ -26,7 +26,7 @@ export default function NextCompHomeComponent(
     data: nextCompData,
     isLoading: isNextCompLoading,
     error: nextCompError,
-  } = useFetchNextEventData();
+  } = eventsHooks.useFetchNextEventData();
 
   return (
     <Grid size={12}>
@@ -54,7 +54,7 @@ export default function NextCompHomeComponent(
         ) : nextCompData?.data.length !== 0 ? (
           <List>
             <Tooltip title={"Consultar"}>
-              <ListItem sx={{ m: 0, pb: 0 }}>
+              <ListItem sx={{ m: 0 }}>
                 <ListItemButton
                   onClick={() => navigate(`events/${nextCompData?.data.id}/`)}
                 >
@@ -68,7 +68,7 @@ export default function NextCompHomeComponent(
           </List>
         ) : (
           <ListItem sx={{ m: 0 }}>
-            <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+            <ListItemButton disabled sx={{ m: 0 }}>
               <ListItemIcon>
                 <SportsMma></SportsMma>
               </ListItemIcon>

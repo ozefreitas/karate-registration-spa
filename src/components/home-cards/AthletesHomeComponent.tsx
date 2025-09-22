@@ -16,7 +16,7 @@ import { Person } from "@mui/icons-material";
 import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
-import { fetchLastFiveAthletes } from "../../hooks/useAthletesData";
+import { membersHooks } from "../../hooks";
 
 export default function AthletesHomeComponent(
   props: Readonly<{ userRole: string }>
@@ -38,13 +38,7 @@ export default function AthletesHomeComponent(
     data: lastFiveAthletesData,
     isLoading: isLastFiveAthletesLoading,
     error: lastFiveAthletesError,
-  } = useQuery({
-    queryKey: ["last-five-athletes"],
-    queryFn: fetchLastFiveAthletes,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: props.userRole === "subed_dojo",
-  });
+  } = membersHooks.useFetchLastFiveMembers();
 
   return (
     <Grid size={12}>
@@ -60,7 +54,7 @@ export default function AthletesHomeComponent(
         <List>
           {props.userRole === undefined ? (
             <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+              <ListItemButton disabled sx={{ m: 0 }}>
                 <ListItemIcon>
                   <Person />
                 </ListItemIcon>
@@ -73,7 +67,7 @@ export default function AthletesHomeComponent(
             </Box>
           ) : lastFiveAthletesError ? (
             <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+              <ListItemButton disabled sx={{ m: 0 }}>
                 <ListItemIcon>
                   <Person />
                 </ListItemIcon>
@@ -84,7 +78,7 @@ export default function AthletesHomeComponent(
             </ListItem>
           ) : lastFiveAthletesData?.data.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+              <ListItemButton disabled sx={{ m: 0 }}>
                 <ListItemIcon>
                   <Person />
                 </ListItemIcon>

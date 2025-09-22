@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { LogoutUser } from "../../api";
+import { logoutUser } from "../../api";
 import { useNavigate } from "react-router-dom";
 
 export const useLogOutUser = () => {
@@ -8,7 +8,7 @@ export const useLogOutUser = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: LogoutUser,
+    mutationFn: logoutUser,
     onSuccess: () => {
       enqueueSnackbar("Saiu da sua conta!", {
         variant: "success",

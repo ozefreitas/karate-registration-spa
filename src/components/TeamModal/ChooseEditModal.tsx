@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useFetchSingleTeamData } from "../../hooks/useTeamsData";
-import { useFetchSingleAthleteData } from "../../hooks/useAthletesData";
+import { membersHooks } from "../../hooks";
 import EditAthleteModal from "../AthletesModal/EditAthleteModal";
 import { useForm } from "react-hook-form";
 import EditTeamModal from "./EditTeamModal";
@@ -56,7 +56,7 @@ export default function ChooseEditModal(
     };
 
   const fetchSingleTeam = useFetchSingleTeamData();
-  const fetchSingleAthlete = useFetchSingleAthleteData(props.id);
+  const {data: singleAthleteData, refetch: refetchSingleAthleteData} = membersHooks.useFetchSingleMemberData(props.id);
 
   const {
     control: teamControl,
