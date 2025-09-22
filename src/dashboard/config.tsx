@@ -170,7 +170,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   unauthorized: "Não permitido",
   results_display: "Monitor Resultados",
   settings: "Definições",
-  categories: "Categorias",
-  new_category: "Nova Categoria",
+  categories: "Escalões",
+  new_category: "Novo Escalão",
   resets: "Recuperar Password",
 };

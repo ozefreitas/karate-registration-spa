@@ -34,7 +34,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
 import FormAccordion from "../../dashboard/FormAccordion";
-import { useAddDisciplineCategory } from "../../hooks/useEventData";
 import { eventsHooks, disciplinesHooks, categoriesHooks } from "../../hooks";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
@@ -446,8 +445,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 >
                   <FormLabel sx={{ mb: 1 }}>
                     Selecione este campo se o Evento <strong>PERMITE</strong> a
-                    atribuição de Categorias para as inscrições. Para cada
-                    evento (geralmente competições), as categorias terão de ser
+                    atribuição de Escalões para as inscrições. Para cada evento
+                    (geralmente competições), os Escalões terão de ser
                     selecionadas para posteriormente se poder inscrever Atletas.
                   </FormLabel>
                   <Stack spacing={1}>
@@ -469,7 +468,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                           name="has_registrations"
                         />
                       }
-                      label="Tem categorias"
+                      label="Tem Escalões"
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
                   </Stack>
@@ -844,7 +843,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         <FormAccordion
           title="Escalões"
           expanded={isCategoriesExpanded}
-          tooltipMessage='Apenas poderá abrir esta secção se selecionar "Categorias".'
+          tooltipMessage='Apenas poderá abrir esta secção se selecionar "Escalões".'
         >
           <Grid size={3}>
             {disciplines.length !== 0 ? (
@@ -915,7 +914,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   <ListItem>
                     <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
                       Selecione uma Modalidade no campo ao lado para visualizar
-                      as categorias já adicionadas.
+                      os Escalões já adicionadas.
                     </ListItemButton>
                   </ListItem>
                 </Grid>

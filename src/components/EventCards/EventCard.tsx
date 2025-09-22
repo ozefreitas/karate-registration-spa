@@ -553,7 +553,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   {singleEventData?.data.has_categories ? (
                     <SettingsButton
                       size="large"
-                      label="Consultar Categorias"
+                      label="Consultar Escalões"
                       to={`/events/${eventId!}/categories/`}
                     ></SettingsButton>
                   ) : null}

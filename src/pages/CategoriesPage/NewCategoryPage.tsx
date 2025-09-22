@@ -226,7 +226,7 @@ export default function NewCategoryPage() {
                     error={!!errors.has_age}
                   >
                     <FormLabel sx={{ mb: 1 }}>
-                      Selecione este campo se esta categoria tiver limites de
+                      Selecione este campo se este Escalão tiver limites de
                       idades
                     </FormLabel>
                     <Stack spacing={1}>
@@ -276,7 +276,7 @@ export default function NewCategoryPage() {
                     error={!!errors.has_age}
                   >
                     <FormLabel sx={{ mb: 1 }}>
-                      Selecione este campo se esta categoria tiver limites de
+                      Selecione este campo se este Escalão tiver limites de
                       graduações
                     </FormLabel>
                     <Stack spacing={1}>
@@ -326,7 +326,7 @@ export default function NewCategoryPage() {
                     error={!!errors.has_age}
                   >
                     <FormLabel sx={{ mb: 1 }}>
-                      Selecione este campo se esta categoria tiver limites de
+                      Selecione este campo se este Escalão tiver limites de
                       pesos
                     </FormLabel>
                     <Stack spacing={1}>

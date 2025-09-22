@@ -171,7 +171,7 @@ export default function CategoriesReadOnlyModal(
             <Close />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Categorias para {props.currentDisicpline}
+            Escalões para {props.currentDisicpline}
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -217,7 +217,7 @@ export default function CategoriesReadOnlyModal(
             ))
           ) : (
             <ListItem>
-              <ListItemText primary="Não tem Categorias que ainda não estejam associadas a esta Modalidade."></ListItemText>
+              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
             </ListItem>
           )}
         </List>
