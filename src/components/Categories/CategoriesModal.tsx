@@ -29,12 +29,14 @@ import {
   KeyboardArrowRight,
   KeyboardArrowLeft,
   Category,
+  Add,
 } from "@mui/icons-material";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { categoriesHooks } from "../../hooks";
 import { getGraduationFromValue } from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -111,6 +113,7 @@ export default function CategoriesModal(
     max_weight: string;
   };
 
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
   const [checked, setChecked] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -216,7 +219,7 @@ export default function CategoriesModal(
             <Close />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Selecionar Categorias para {props.disciplineData}
+            Selecionar Escalões para {props.disciplineData}
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -252,6 +255,21 @@ export default function CategoriesModal(
             </Grid>
           ) : categoriesError ? (
             <div>Ocorreu um erro</div>
+          ) : categoriesData?.data.results.length === 0 ? (
+            <>
+              <ListItem>
+                <ListItemText primary="Não tem Escalões adiconados na plataforma. Adicione um novo Escalão para o poder associar a esta Modalidade."></ListItemText>
+              </ListItem>
+              <Button
+                sx={{ m: 1 }}
+                variant="contained"
+                color="success"
+                onClick={() => navigate("/categories/new_category")}
+                startIcon={<Add />}
+              >
+                Adicionar Escalão
+              </Button>
+            </>
           ) : categoryAthletes.length !== 0 ? (
             categoryAthletes
               .filter((category: Category) => {
@@ -318,7 +336,7 @@ export default function CategoriesModal(
               ))
           ) : (
             <ListItem>
-              <ListItemText primary="Não tem Categorias que ainda não estejam associadas a esta Modalidade."></ListItemText>
+              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
             </ListItem>
           )}
         </List>
