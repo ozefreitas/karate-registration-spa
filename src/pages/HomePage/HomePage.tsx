@@ -172,7 +172,13 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
               )}
             </List>
           ) : (
-            <li style={{ color: "grey" }}>De momento não tem notificações.</li>
+            <ListItem disablePadding sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0, pl: 5 }}>
+                <ListItemText
+                  primary={"De momento não tem notificações."}
+                />
+              </ListItemButton>
+            </ListItem>
           )}
         </CardContent>
       </Card>

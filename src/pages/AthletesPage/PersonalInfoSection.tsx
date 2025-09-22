@@ -413,7 +413,7 @@ export default function PersonalInfoSection(
             labelPlacement="start"
             label={
               <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Número SKI-P:
+                Número {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}:
               </Typography>
             }
             control={

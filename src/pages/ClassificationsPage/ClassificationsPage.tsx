@@ -50,8 +50,7 @@ export default function ClassificationsPage() {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todas as classificações das provas realizadas
-          pela SKIP.
+          Aqui poderá consultar todas as classificações dos eventos (competições) realizadas até à data.
           <p></p>
           Consultando cada prova, poderá abrir as classificações de cada
           escalão. Lá dentro, os perfis de cada medalhado pode também ser

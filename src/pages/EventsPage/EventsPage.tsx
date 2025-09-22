@@ -74,15 +74,26 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os Eventos dispníveis no momento. Mais tarde
-          será também possível ver Estágios e outras provas de interesse.
+          {props.userRole !== "free_dojo" ? (
+            <>
+              Aqui poderá consultar todos os Eventos disponíveis no momento.
+              Mais tarde será também possível ver Estágios e outras provas de
+              interesse.
+            </>
+          ) : (
+            <>
+              Aqui poderá consultar todos os Eventos que se encontram abertos a
+              receber inscrições, ou que se irão realizar dentro dos próximos 7
+              dias.
+            </>
+          )}
           <p></p>
-          Consultando cada cartão de prova, pode observar toda a informação
-          relevante sobre essa prova, assim como os passos para inscrever os
+          Consultando cada cartão de Evento, pode observar toda a informação
+          relevante sobre esse Evento, assim como os passos para inscrever os
           seus Atletas.
         </CardContent>
       </Card>
-      <Grid container size={12}>
+      <Grid container size={12} sx={{ m: 2 }}>
         {isEventsDataLoading ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <Box sx={{ display: "flex", justifyContent: "center" }}>

@@ -5,9 +5,10 @@ import { useSnackbar } from "notistack";
 export const useFetchEventRate = (eventId: string) => {
   return useQuery({
     queryKey: ["events", eventId],
-    queryFn: fetchEventRate,
+    queryFn: () => fetchEventRate(eventId),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    retry: false,
   });
 };
 

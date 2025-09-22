@@ -42,7 +42,7 @@ export const deleteEvent = (eventId: string) => {
 
 // event rating endpoints
 
-export const fetchEventRate = (eventId: any) => {
+export const fetchEventRate = (eventId: string) => {
   return authClient.get(`/events/${eventId}/check_event_rate/`);
 };
 
@@ -58,4 +58,12 @@ export const addEventAthlete = (eventId: string, data: any) => {
 
 export const deleteEventAthlete = (eventId: string, data: any) => {
   return authClient.post(`/events/${eventId}/delete_athlete/`, data);
+};
+
+// file downloads
+
+export const fetchEventRegistrationFile = (eventId: string) => {
+  return authClient.get(`/events/${eventId}/export_athletes_excel/`, {
+    responseType: "blob",
+  });
 };

@@ -47,7 +47,7 @@ export default function NewAthletePage() {
       graduation: "",
       category: "",
       gender: "",
-      force_skip: false,
+      force_ident: false,
       id_number: "",
       birth_date: undefined,
       // weight: "",
@@ -57,7 +57,7 @@ export default function NewAthletePage() {
     },
   });
 
-  const is_force_skip = getValues("force_skip");
+  const is_force_ident = getValues("force_ident");
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
     const formData = {
@@ -73,7 +73,7 @@ export default function NewAthletePage() {
       dojo: data.dojo,
     };
 
-    if (!data.is_force_skip) {
+    if (!data.is_force_ident) {
       formData.id_number = 0;
     }
 
@@ -291,7 +291,7 @@ export default function NewAthletePage() {
           <Grid size={6}></Grid>
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>
             <Controller
-              name="force_skip"
+              name="force_ident"
               control={control}
               render={({ field }) => (
                 <FormControl component="fieldset" variant="standard">
@@ -309,7 +309,7 @@ export default function NewAthletePage() {
                             field.onChange(e.target.checked);
                             setExpanded((prev) => !prev);
                           }}
-                          name="force_skip"
+                          name="force_ident"
                         />
                       }
                       label="Forçar Nº SKI-P"
@@ -333,13 +333,13 @@ export default function NewAthletePage() {
                 <TextField
                   color="warning"
                   variant={"outlined"}
-                  label="Nº ASKIP"
+                  label={`Nº ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`}
                   type="text"
                   slotProps={{
                     htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
                   }}
                   fullWidth
-                  disabled={!is_force_skip}
+                  disabled={!is_force_ident}
                   multiline
                   maxRows={8}
                   {...field}

@@ -1,7 +1,7 @@
 import { apiClient, authClient } from "./apiClient";
 
 export const fetchClubUsers = (username?: string) => {
-  let url = `http://127.0.0.1:8000/users/`;
+  let url = "/users/";
   if (username) {
     url += `?username=${encodeURIComponent(username)}`;
   }

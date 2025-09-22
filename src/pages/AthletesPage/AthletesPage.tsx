@@ -87,7 +87,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
               qualquer prova. A idade aqui apresentada não é a utilizada como
               referência para as inscrições. Em vez disso, a idade é calculada
               para cada prova de acordo com as regras em vigor e da época
-              desportiva corrente."
+              desportiva corrente.
             </>
           ) : (
             <>

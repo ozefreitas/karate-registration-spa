@@ -569,7 +569,7 @@ export default function AthletesModal(
             ) : filteredAthletes.length !== 0 ? (
               userRole === "free_dojo" && searchQuery === "" ? (
                 <ListItem>
-                  <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº SKIP ou nome do Atleta, ou inicie uma subscrição."></ListItemText>
+                  <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Mmebro, ou inicie uma subscrição."></ListItemText>
                 </ListItem>
               ) : (
                 filteredAthletes.map((athlete: Athlete, index: string) => (
