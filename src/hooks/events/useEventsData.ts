@@ -1,6 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchEvents, fetchSingleEvent, fetchNextEvent, fetchLastEvent } from "../../api/";
-
+import {
+  fetchEvents,
+  fetchSingleEvent,
+  fetchNextEvent,
+  fetchLastEvent,
+  fetchEventRegistrationFile,
+} from "../../api/";
 
 export const useFetchEventsData = (page: number, pageSize: number) => {
   return useQuery({
@@ -32,6 +37,19 @@ export const useFetchLastEvent = (userRole: string) => {
     queryFn: fetchLastEvent,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: ["subed_dojo", "main_admin", "single_admin", "superuser"].includes(userRole),
+    enabled: ["subed_dojo", "main_admin", "single_admin", "superuser"].includes(
+      userRole
+    ),
+  });
+};
+
+export const useFetchEventRegistrationFile = (eventId: string) => {
+  return useQuery({
+    queryKey: ["registration-file", eventId],
+    queryFn: async () => await fetchEventRegistrationFile(eventId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
+    enabled: false,
   });
 };

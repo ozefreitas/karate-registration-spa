@@ -36,6 +36,7 @@ import {
   Info,
   Delete,
   Today,
+  FileDownload,
   Edit,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
@@ -117,6 +118,23 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         },
       }
     );
+  };
+
+  const { refetch: refetchRegistrationsFile } =
+    eventsHooks.useFetchEventRegistrationFile(eventId!);
+
+  const handleDownloadRegistrationsFile = async () => {
+    const { data } = await refetchRegistrationsFile();
+    if (data) {
+      const url = window.URL.createObjectURL(data.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `lista_inscritos_evento_${eventId}_.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    }
   };
 
   if (singleEventError) return <Navigate to="/not_found/" />;
@@ -302,8 +320,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 ) : null}
               </Card>
             </Grid>
-            <Grid size={12}>
-              <Card>
+            <Grid size={12} container>
+              <Card sx={{ width: "100%" }}>
                 <CardHeader
                   title="Avaliação"
                   subheader={
@@ -448,7 +466,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       label="Adicionar/Consultar Inscrições"
                       to="individuals/"
                       disabled={
-                        isSingleEventLoading || singleEventData?.data.has_ended
+                        isSingleEventLoading ||
+                        singleEventData?.data.has_ended ||
+                        !singleEventData?.data.has_registrations
                       }
                     ></AddButton>
                   ) : (
@@ -539,10 +559,21 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   ) : null}
                   {["main_admin", "superuser"].includes(props.userRole) &&
                   singleEventData?.data.has_registrations ? (
-                    <GenerateButton
-                      label="Gerar Sorteio"
-                      to="draw/generate/"
-                    ></GenerateButton>
+                    <>
+                      <GenerateButton
+                        label="Gerar Sorteio"
+                        to="draw/generate/"
+                      ></GenerateButton>
+                      <Button
+                        sx={{ m: 1 }}
+                        variant="contained"
+                        color="success"
+                        onClick={handleDownloadRegistrationsFile}
+                        startIcon={<FileDownload />}
+                      >
+                        Descarregar Inscrições
+                      </Button>
+                    </>
                   ) : null}
                 </Grid>
               </CardContent>
