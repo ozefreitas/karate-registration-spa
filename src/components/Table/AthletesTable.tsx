@@ -364,7 +364,7 @@ export default function AthletesTable(
     <>
       {props.data.length === 0 ? (
         <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
-          <Typography variant="h6" sx={{ color: "gray" }}>
+          <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
             Não foram encontrados registos.
           </Typography>
         </Grid>

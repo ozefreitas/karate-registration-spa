@@ -7,3 +7,4 @@ export * from "./notificationsApi";
 export * from "./adminApi";
 export * from "./clubsApi"
 export * from "./authApi"
+export * from "./classificationsApi"

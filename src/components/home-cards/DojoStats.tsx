@@ -1,4 +1,3 @@
-import React, { PureComponent } from "react";
 import {
   PieChart,
   Pie,
@@ -8,12 +7,21 @@ import {
   Cell,
 } from "recharts";
 import { stringToColor } from "../../dashboard/utils/avatarColor";
-import { Grid, Card, CardHeader, CardContent, Paper } from "@mui/material";
-
-import { useFetchDojoAthletesData } from "../../hooks/useNotificationData";
+import {
+  Grid,
+  Card,
+  CardHeader,
+  Paper,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import { adminHooks } from "../../hooks";
+import { Person } from "@mui/icons-material";
 
 export default function DojoStats() {
-  const { data: dojoAthletesData } = useFetchDojoAthletesData();
+  const { data: dojoAthletesData } = adminHooks.useFetchClubAthletesData();
 
   const CustomTooltip = ({ active, payload }: any) => {
     const isVisible = active && payload && payload.length;

@@ -19,10 +19,8 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
-import {
-  useFetchLastEvent,
-  useFetchLastCompQuali,
-} from "../../hooks/useEventData";
+import { eventsHooks } from "../../hooks";
+import { classificationsHooks } from "../../hooks";
 
 export default function LastCompQualiHomeComponent(
   props: Readonly<{ userRole: string }>
@@ -48,10 +46,10 @@ export default function LastCompQualiHomeComponent(
 
   const navigate = useNavigate();
 
-  const { data: lastCompData } = useFetchLastEvent(props.userRole);
+  const { data: lastCompData } = eventsHooks.useFetchLastEvent(props.userRole);
 
   const { data: lastCompQualiData, isLoading: isLastCompQualiLoading } =
-    useFetchLastCompQuali(props.userRole);
+    classificationsHooks.useFetchLastEventClassifications(props.userRole);
 
   return (
     <Grid size={12}>
