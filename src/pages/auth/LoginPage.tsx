@@ -10,7 +10,7 @@ import {
   FormLabel,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SnackbarKey, useSnackbar } from "notistack";
 import { Close } from "@mui/icons-material";
 import { authHooks } from "../../hooks";
@@ -66,6 +66,21 @@ export default function LoginPage() {
   const onSubmit = async (data: { username: string; password: string }) => {
     await loginUser.mutateAsync(data);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("login_button")?.click();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <Grid container sx={{ m: 30, mt: 0, mb: 0 }}>
       <Card sx={{ width: "100%" }}>
@@ -158,6 +173,7 @@ export default function LoginPage() {
             </Grid>
             <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>
               <Button
+                id="login_button"
                 variant="contained"
                 size={"large"}
                 color={"success"}

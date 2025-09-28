@@ -20,6 +20,7 @@ export const useLogOutUser = () => {
         preventDuplicate: true,
       });
       localStorage.removeItem("token");
+      localStorage.removeItem("dismissedAnnouncementId");
       navigate("/");
       window.location.reload();
     },
