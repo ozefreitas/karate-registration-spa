@@ -1,4 +1,5 @@
-import ButtonAppBar from "../components/Header/Header";
+import Header from "../components/Header/Header";
+import Announcement from "../components/Announcement/Announcement";
 import SideMenu from "../components/SideMenu/SideMenu";
 import { Outlet } from "react-router-dom";
 import { AxiosResponse } from "axios";
@@ -9,7 +10,8 @@ export default function MainAppLayout(
 ) {
   return (
     <>
-      <ButtonAppBar me={props.me}></ButtonAppBar>
+      <Announcement></Announcement>
+      <Header me={props.me}></Header>
       <SideMenu me={props.me}></SideMenu>
       <main>
         <Container maxWidth="xl" sx={{ mt: 0, mb: 4 }}>

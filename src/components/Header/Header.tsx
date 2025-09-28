@@ -24,7 +24,7 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks } from "../../hooks";
 import { authHooks } from "../../hooks";
 
-export default function ButtonAppBar(
+export default function Header(
   props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
 ) {
   const navigate = useNavigate();

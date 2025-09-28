@@ -67,3 +67,10 @@ export const fetchEventRegistrationFile = (eventId: string) => {
     responseType: "blob",
   });
 };
+
+// annoucements
+
+export const fetchActiveAnnouncement = () => {
+  return authClient.get(`/active_announcement/`, {
+  });
+};

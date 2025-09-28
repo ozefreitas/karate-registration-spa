@@ -44,6 +44,8 @@ import { useAuth } from "./access/GlobalAuthProvider";
 import { SnackbarProvider } from "notistack";
 import SnackbarCloser from "./dashboard/SnackBarCloser";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
+import { Grid } from "@mui/material";
+import Announcement from "./components/Announcement/Announcement";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
