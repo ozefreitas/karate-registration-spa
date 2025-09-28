@@ -1,4 +1,3 @@
-import { useFetchTokenUsername } from "../../hooks/useAuth";
 import {
   Grid,
   TextField,
@@ -98,7 +97,7 @@ export default function SignUpWithTokenPage(
           seu username, deve contactar um administrador.
         </CardContent>
       </Card>
-      <Grid container sx={{ m: 2, mt: 0, mb: 0 }}>
+      <Grid container sx={{ m: 4, mt: 0, mb: 0 }}>
         <Card sx={{ width: "100%", p: 0 }}>
           <CardContent sx={{ display: "flex" }}>
             <Grid

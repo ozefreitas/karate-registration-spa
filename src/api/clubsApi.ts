@@ -1,13 +1,13 @@
 import { apiClient, authClient } from "./apiClient";
 
 export const fetchAvailableClubs = () => {
-  return apiClient.get("/dojos/");
+  return apiClient.get("/clubs/");
 };
 
 export const createClub = (data: any) => {
-  return authClient.post("/dojos/", data);
+  return authClient.post("/clubs/", data);
 };
 
 export const deleteClub = (clubId: string) => {
-  return authClient.delete(`/dojos/${clubId}/`);
+  return authClient.delete(`/clubs/${clubId}/`);
 };

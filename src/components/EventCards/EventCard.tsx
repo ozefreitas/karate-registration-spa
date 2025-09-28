@@ -327,7 +327,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   subheader={
                     props.userRole !== "main_admin"
                       ? "Depois da realização da prova, poderá deixar uma avaliação"
-                      : "Depois da realização da prova, os Dojos podem avaliar o Evento."
+                      : "Depois da realização da prova, os Clubes poderão avaliar o Evento."
                   }
                   sx={{
                     "& .MuiCardHeader-title": {
@@ -472,7 +472,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }
                     ></AddButton>
                   ) : (
-                    // props.userRole === "subed_dojo" ? (
+                    // props.userRole === "subed_club" ? (
                     //   <Tooltip
                     //     disableHoverListener={!singleEventData?.data.has_ended}
                     //     title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
@@ -487,14 +487,14 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     //   </Tooltip>
                     // ) : (
                     //   <Tooltip
-                    //     disableHoverListener={props.userRole === "subed_dojo"}
+                    //     disableHoverListener={props.userRole === "subed_club"}
                     //     title="Comece uma subscrição para ter acesso a esta funcionalidade"
                     //   >
                     //     <span>
                     //       <AddButton
                     //         label="Adicionar/Consultar Inscrições"
                     //         to="individuals/"
-                    //         disabled={props.userRole === "free_dojo"}
+                    //         disabled={props.userRole === "free_club"}
                     //       ></AddButton>
                     //     </span>
                     //   </Tooltip>

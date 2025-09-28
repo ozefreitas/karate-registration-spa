@@ -36,7 +36,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = notificationsHooks.useFetchHomeDojoNotifications();
+  } = notificationsHooks.useFetchHomeClubNotifications();
 
   const removeNotification = notificationsHooks.useRemoveNotification();
 
@@ -68,7 +68,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
       <Card sx={{ m: 2, mb: 0 }}>
         <CardHeader
           title={"Central de notificações"}
-          subheader="Neste espaço aparecerão notificações importantes para o seu dojo. Fique
+          subheader="Neste espaço aparecerão notificações importantes para o seu Clube. Fique
           atento."
           sx={{
             "& .MuiCardHeader-title": {

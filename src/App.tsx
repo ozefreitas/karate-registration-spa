@@ -93,7 +93,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<AthletesPage userRole={userRole} />}
-                    allowedRoles={["subed_dojo", "main_admin", "single_admin"]}
+                    allowedRoles={["subed_club", "main_admin", "single_admin"]}
                   />
                 )
               }
@@ -104,7 +104,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<SingleAthletePage />}
-                    allowedRoles={["subed_dojo", "main_admin", "single_admin"]}
+                    allowedRoles={["subed_club", "main_admin", "single_admin"]}
                   />
                 )
               }
@@ -126,7 +126,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<TeamsPage userRole={userRole} />}
-                    allowedRoles={["subed_dojo"]}
+                    allowedRoles={["subed_club"]}
                   />
                 )
               }
@@ -137,7 +137,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<SingleTeamPage />}
-                    allowedRoles={["subed_dojo", "main_admin"]}
+                    allowedRoles={["subed_club", "main_admin"]}
                   />
                 )
               }
@@ -148,7 +148,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<NewTeamPage />}
-                    allowedRoles={["subed_dojo"]}
+                    allowedRoles={["subed_club"]}
                   />
                 )
               }
@@ -159,7 +159,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<EventsPage userRole={userRole} />}
-                    allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
                     allowUnauthenticated
                   />
                 )
@@ -182,7 +182,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<EventCategoriesPage userRole={userRole} />}
-                    allowedRoles={["main_admin", "subed_dojo"]}
+                    allowedRoles={["main_admin", "subed_club"]}
                   />
                 )
               }
@@ -226,7 +226,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<EventCard userRole={userRole} />}
-                    allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
                     allowUnauthenticated
                   />
                 )
@@ -271,7 +271,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<IndividualsPage userRole={userRole} />}
-                    allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
                   />
                 )
               }
@@ -282,7 +282,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<RegisteredTeamsPage />}
-                    allowedRoles={["free_dojo", "subed_dojo", "main_admin"]}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
                   />
                 )
               }
@@ -293,7 +293,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<RulesPage />}
-                    allowedRoles={["free_dojo", "subed_dojo"]}
+                    allowedRoles={["free_club", "subed_club"]}
                     allowUnauthenticated
                   />
                 )
@@ -305,7 +305,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<ClassificationsPage />}
-                    allowedRoles={["free_dojo", "subed_dojo"]}
+                    allowedRoles={["free_club", "subed_club"]}
                     allowUnauthenticated
                   />
                 )
@@ -317,7 +317,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<HelpPage />}
-                    allowedRoles={["free_dojo", "subed_dojo"]}
+                    allowedRoles={["free_club", "subed_club"]}
                     allowUnauthenticated
                   />
                 )
@@ -345,7 +345,10 @@ function App() {
                 )
               }
             />
-            <Route path="reset/:uidb64/:token" element={<PasswordResetPage />} />
+            <Route
+              path="reset/:uidb64/:token"
+              element={<PasswordResetPage />}
+            />
             <Route path="unauthorized/" element={<UnAuthorizedPage />} />
             <Route path="not_found/" element={<NotFoundPage />} />
           </Route>

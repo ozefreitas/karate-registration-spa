@@ -20,8 +20,8 @@ import {
 import { adminHooks } from "../../hooks";
 import { Person } from "@mui/icons-material";
 
-export default function DojoStats() {
-  const { data: dojoAthletesData } = adminHooks.useFetchClubAthletesData();
+export default function ClubStats() {
+  const { data: ClubAthletesData } = adminHooks.useFetchClubAthletesData();
 
   const CustomTooltip = ({ active, payload }: any) => {
     const isVisible = active && payload && payload.length;
@@ -43,7 +43,7 @@ export default function DojoStats() {
   return (
     <Card sx={{ m: 2 }}>
       <CardHeader
-        title={"Atletas por Dojo"}
+        title={"Atletas por Clube"}
         sx={{
           "& .MuiCardHeader-title": {
             fontWeight: "bold",
@@ -57,14 +57,14 @@ export default function DojoStats() {
             {/* <Legend layout="vertical" align="right" verticalAlign="middle" /> */}
             <Pie
               dataKey="athlete_count"
-              data={dojoAthletesData?.data}
+              data={ClubAthletesData?.data}
               cx="50%"
               cy="50%"
               outerRadius={120}
               // fill="#8884d8"
               label
             >
-              {dojoAthletesData?.data.map((entry: any, index: string) => (
+              {ClubAthletesData?.data.map((entry: any, index: string) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={stringToColor(entry.username)}

@@ -23,7 +23,7 @@ import NotificationActionModal from "./NotificationActionModal";
 
 export default function NotificationsPage() {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
-  const { data: dojoUserData } = adminHooks.useFetchClubUsersData();
+  const { data: clubUserData } = adminHooks.useFetchClubUsersData();
   const { data: notificationData } =
     notificationsHooks.useFetchNotificationsData(selectedUserId);
   const createNotification = notificationsHooks.useCreateNotification();
@@ -42,7 +42,7 @@ export default function NotificationsPage() {
     defaultValues: {
       notification: "",
       urgency: "",
-      dojo: "0",
+      club: "0",
     },
   });
 
@@ -100,7 +100,7 @@ export default function NotificationsPage() {
             onChange={handleChange}
           >
             <MenuItem value="0">-- Selecionar --</MenuItem>
-            {dojoUserData?.data.map((item: any, index: string) => (
+            {clubUserData?.data.map((item: any, index: string) => (
               <MenuItem key={index} value={item.id}>
                 {item.username}
               </MenuItem>
@@ -147,7 +147,7 @@ export default function NotificationsPage() {
       <FormCard title="Criar Notificação">
         <Grid sx={{ p: 2 }} size={6}>
           <Controller
-            name="dojo"
+            name="club"
             control={control}
             render={({ field }) => (
               <TextField
@@ -164,11 +164,11 @@ export default function NotificationsPage() {
                 onChange={(e) => {
                   field.onChange(e);
                 }}
-                error={!!errors.dojo}
-                helperText={errors.dojo?.message}
+                error={!!errors.club}
+                helperText={errors.club?.message}
               >
                 <MenuItem value="0">-- Selecionar --</MenuItem>
-                {dojoUserData?.data.map((item: any, index: string) => (
+                {clubUserData?.data.map((item: any, index: string) => (
                   <MenuItem key={index} value={item.id}>
                     {item.username}
                   </MenuItem>

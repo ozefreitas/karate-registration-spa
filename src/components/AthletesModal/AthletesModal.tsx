@@ -175,7 +175,7 @@ export default function AthletesModal(
     useState<boolean>(false);
   const [isWeightInputScreenOpen, setIsWeightInputScreenOpen] =
     useState<boolean>(false);
-  const [freeDojoWeight, setFreeDojoWeight] = useState<string>("");
+  const [freeClubWeight, setFreeClubWeight] = useState<string>("");
 
   const handleDisciplineScreenOpen = () => {
     setIsDisciplineScreenOpen(true);
@@ -263,13 +263,13 @@ export default function AthletesModal(
       // free dojos must go thought this screen to confirm athlete weight and change it if needed, since they don't have access to the profile pages
     } else if (
       !isWeightInputScreenOpen &&
-      userRole === "free_dojo" &&
+      userRole === "free_club" &&
       props.eventData.has_categories
     ) {
       const target = filteredAthletes.filter(
         (athlete: any) => athlete.id === currentAthleteId
       );
-      setFreeDojoWeight(target[0].weight ?? "");
+      setFreeClubWeight(target[0].weight ?? "");
       handleWeightInputScreenOpen();
       return;
     }
@@ -280,10 +280,10 @@ export default function AthletesModal(
         const target = filteredAthletes.filter(
           (athlete: any) => athlete.id === currentAthleteId
         );
-        if (target[0].weight !== freeDojoWeight) {
+        if (target[0].weight !== freeClubWeight) {
           const payload = {
             memberId: currentAthleteId,
-            data: { weight: freeDojoWeight },
+            data: { weight: freeClubWeight },
           };
           await patchAthlete.mutateAsync(payload);
         }
@@ -427,7 +427,7 @@ export default function AthletesModal(
           ) : null}
           {isDisciplineScreenOpen ||
           disciplinesData?.data.results.length === 0 ||
-          (isWeightInputScreenOpen && userRole !== "free_dojo") ? (
+          (isWeightInputScreenOpen && userRole !== "free_club") ? (
             <Button
               autoFocus
               size="large"
@@ -567,7 +567,7 @@ export default function AthletesModal(
             ) : athletesNotInEventError ? (
               <div>Ocorreu um erro</div>
             ) : filteredAthletes.length !== 0 ? (
-              userRole === "free_dojo" && searchQuery === "" ? (
+              userRole === "free_club" && searchQuery === "" ? (
                 <ListItem>
                   <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Mmebro, ou inicie uma subscrição."></ListItemText>
                 </ListItem>
@@ -649,13 +649,13 @@ export default function AthletesModal(
               <Typography sx={{ m: 1, mb: 3 }}>
                 O escalão disponível na Modalidade encontrada requer um peso, e
                 este Atleta não tem um peso associado. <br />
-                {userRole === "free_dojo"
+                {userRole === "free_club"
                   ? "Insira o peso do Atleta no campo seguinte para prosseguir."
                   : "Dirija-se à pagina e insira o peso deste Atleta clicando neste botão."}
               </Typography>
             </Grid>
             <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
-              {userRole === "free_dojo" ? (
+              {userRole === "free_club" ? (
                 <Grid
                   container
                   justifyContent="space-evenly"
@@ -667,9 +667,9 @@ export default function AthletesModal(
                     variant={"outlined"}
                     label="Peso"
                     required
-                    value={freeDojoWeight}
+                    value={freeClubWeight}
                     onChange={(e) => {
-                      setFreeDojoWeight(e.target.value);
+                      setFreeClubWeight(e.target.value);
                     }}
                   />
                   <Button

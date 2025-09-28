@@ -138,3 +138,10 @@ export const KataOptions: { label: string; value: string }[] = [
   { value: "wankan", label: "Wankan" },
   { value: "unsi", label: "Unsu" },
 ];
+
+export const NotificationColorOptions: { label: string; value: string }[] = [
+  { value: "green", label: "green" },
+  { value: "yellow", label: "green" },
+  { value: "orange", label: "green" },
+  { value: "red", label: "green" },
+];

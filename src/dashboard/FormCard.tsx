@@ -3,11 +3,10 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions,
 } from "@mui/material";
 
 export default function FormCard(
-  props: Readonly<{ title: string; children: any }>
+  props: Readonly<{ title: string; subheader?: string; children: any }>
 ) {
   return (
     <Grid sx={{ m: 6, mt: 2, mb: 2 }} size={12}>
@@ -20,8 +19,9 @@ export default function FormCard(
       >
         <CardHeader
           title={props.title}
+          subheader={props.subheader}
           sx={{
-            borderBottom: "2px solid white",
+            borderBottom: "1px solid lightgrey",
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
               fontSize: 18,

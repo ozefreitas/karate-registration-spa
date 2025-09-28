@@ -37,7 +37,7 @@ export const useFetchLastEvent = (userRole: string) => {
     queryFn: fetchLastEvent,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: ["subed_dojo", "main_admin", "single_admin", "superuser"].includes(
+    enabled: ["subed_club", "main_admin", "single_admin", "superuser"].includes(
       userRole
     ),
   });

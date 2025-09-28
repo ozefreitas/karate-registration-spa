@@ -538,7 +538,9 @@ export default function PersonalInfoSection(
                     }}
                     error={!!errors.gender}
                   >
-                    {GenderOptions.map((item, index) => (
+                    {GenderOptions.filter((item) =>
+                      ["masculino", "feminino"].includes(item.value)
+                    ).map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>

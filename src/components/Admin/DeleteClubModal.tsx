@@ -11,7 +11,6 @@ import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { clubsHoks } from "../../hooks";
-import { useRemoveClub } from "../../hooks/useAuth";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -22,7 +21,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function DeleteDojoModal(
+export default function DeleteClubModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
@@ -57,7 +56,7 @@ export default function DeleteDojoModal(
       <DialogContent>
         Tem a certeza que pretende apagar esta conta? Esta ação irá eliminar
         todos os seus atletas, inscrições dos mesmos em eventos e informações
-        guardada do próprio dojo. <p></p> NÃO PODERA VOLTAR ATRÁS!
+        guardada do próprio Clube. <p></p> NÃO PODERA VOLTAR ATRÁS!
       </DialogContent>
       <DialogActions>
         <Stack

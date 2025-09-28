@@ -50,7 +50,7 @@ export default function TeamsHomeComponent(
     queryFn: fetchLastFiveTeams,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: props.userRole === "subed_dojo",
+    enabled: props.userRole === "subed_club",
   });
 
   return (
@@ -116,7 +116,7 @@ export default function TeamsHomeComponent(
               </Tooltip>
             ))
           )}
-          {props.userRole === "free_dojo" ? (
+          {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemText
@@ -129,7 +129,7 @@ export default function TeamsHomeComponent(
           ) : null}
         </List>
         <CardActions sx={{ justifyContent: "space-between" }}>
-          {props.userRole !== "free_dojo" ? (
+          {props.userRole !== "free_club" ? (
             <>
               <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
               <InfoButton label="Ver Todas" to="teams/"></InfoButton>

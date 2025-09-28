@@ -2,7 +2,7 @@ import { apiClient, authClient } from "./apiClient";
 
 export const fetchMembers = (page: number, pageSize: number) => {
   return authClient.get("/athletes/", {
-    params: { page: page, pageSize: pageSize },
+    params: { page: page, page_size: pageSize },
   });
 };
 
@@ -20,7 +20,7 @@ export const fetchMembersNotInEvent = (
   pageSize: number
 ) => {
   return authClient.get("/athletes/", {
-    params: { not_in_event: eventId, page: page, pageSize: pageSize },
+    params: { not_in_event: eventId, page: page, page_size: pageSize },
   });
 };
 

@@ -242,7 +242,9 @@ export default function EditAthleteModal(
                     error={!!athleteErrors.graduation}
                     helperText={athleteErrors.graduation?.message}
                   >
-                    {GenderOptions.map((item, index) => (
+                    {GenderOptions.filter((item) =>
+                      ["Masculino", "Feminino"].includes(item.label)
+                    ).map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>

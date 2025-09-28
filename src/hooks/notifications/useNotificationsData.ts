@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchCurrentDojoNotifications, fetchNotifications } from "../../api";
+import { fetchCurrentClubNotifications, fetchNotifications } from "../../api";
 
-export const useFetchHomeDojoNotifications = () => {
+export const useFetchHomeClubNotifications = () => {
   return useQuery({
     queryKey: ["club-notifications"],
-    queryFn: fetchCurrentDojoNotifications,
+    queryFn: fetchCurrentClubNotifications,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,

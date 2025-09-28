@@ -107,7 +107,7 @@ export default function AthletesHomeComponent(
               )
             )
           )}
-          {props.userRole === "free_dojo" ? (
+          {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemText
@@ -121,7 +121,7 @@ export default function AthletesHomeComponent(
         </List>
 
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          {props.userRole !== "free_dojo" ? (
+          {props.userRole !== "free_club" ? (
             <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
           ) : null}
         </CardActions>

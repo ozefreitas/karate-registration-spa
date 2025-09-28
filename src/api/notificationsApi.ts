@@ -1,19 +1,19 @@
 import { authClient } from "./apiClient";
 
-export const fetchCurrentDojoNotifications = () => {
-  return authClient.get("/dojo_notifications/");
+export const fetchCurrentClubNotifications = () => {
+  return authClient.get("/club_notifications/");
 };
 
 export const fetchNotifications = (clubId: string) => {
   return authClient.get("/notifications/", {
-    params: { dojo_notification: clubId },
+    params: { club_notification: clubId },
   });
 };
 
 export const createNotification = (data: any) => {
-    return authClient.post("/notifications/", data)
-}
+  return authClient.post("/notifications/", data);
+};
 
 export const deleteNotification = (notificationId: string) => {
-    return authClient.delete(`/notifications/${notificationId}/`)
-}
+  return authClient.delete(`/notifications/${notificationId}/`);
+};

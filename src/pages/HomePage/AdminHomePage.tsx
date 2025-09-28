@@ -16,7 +16,7 @@ import {
 import { Delete, KeyboardArrowRight } from "@mui/icons-material";
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
-import DojoStats from "../../components/home-cards/DojoStats";
+import ClubStats from "../../components/home-cards/ClubStats";
 import { notificationsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
@@ -45,7 +45,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
-  } = notificationsHooks.useFetchHomeDojoNotifications();
+  } = notificationsHooks.useFetchHomeClubNotifications();
 
   const removeNotification = notificationsHooks.useRemoveNotification();
 
@@ -54,7 +54,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
       <Card sx={{ m: 2, mb: 0 }}>
         <CardHeader
           title={"Central de notificações"}
-          subheader="Neste espaço aparecerão notificações importantes acerca dos seus dojos. Fique
+          subheader="Neste espaço aparecerão notificações importantes acerca dos seus Clubes. Fique
           atento."
           sx={{
             "& .MuiCardHeader-title": {
@@ -152,7 +152,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
           <NextCompHomeComponent
             userRole={props.userRole}
           ></NextCompHomeComponent>
-          <DojoStats></DojoStats>
+          <ClubStats></ClubStats>
         </Grid>
         <Grid size={6}>
           <LastCompQualiHomeComponent

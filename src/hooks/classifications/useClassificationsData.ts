@@ -10,7 +10,7 @@ export const useFetchLastEventClassifications = (userRole: string) => {
     queryFn: () => fetchLastEventClassification(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: userRole !== "free_dojo",
+    enabled: userRole !== "free_club",
   });
 };
 

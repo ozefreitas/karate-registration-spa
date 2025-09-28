@@ -14,7 +14,7 @@ import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
 
 export default function AthletesPage(props: Readonly<{ userRole: string }>) {
-  type Dojo = {
+  type Club = {
     id: string;
     username: string;
     role: string;
@@ -25,7 +25,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
     first_name: string;
     last_name: string;
     gender: string;
-    dojo: Dojo;
+    club: Club;
     age: string;
   };
 
@@ -45,7 +45,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
       first_name: athlete.first_name,
       last_name: athlete.last_name,
       gender: athlete.gender,
-      username: athlete.dojo.username,
+      username: athlete.club.username,
       age: athlete.age,
     }));
   }, [athletesData]);
@@ -57,7 +57,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
       { key: "gender", label: "Género" },
     ];
     if (props.userRole === "main_admin") {
-      columnMapping.push({ key: "username", label: "Dojo" });
+      columnMapping.push({ key: "username", label: "Clube" });
     } else {
       columnMapping.push({ key: "age", label: "Idade" });
     }

@@ -34,7 +34,7 @@ export default function EventAllRegistryPage(
       { key: "first_name", label: "Primeiro Nome" },
       { key: "last_name", label: "Último Nome" },
       { key: "gender", label: "Género" },
-      { key: "dojo", label: "Dojo" },
+      { key: "club", label: "Clube" },
     ];
     if (disciplinesData?.data.results.length !== 0) {
       columnMapping.push({ key: "category", label: "Escalão" });

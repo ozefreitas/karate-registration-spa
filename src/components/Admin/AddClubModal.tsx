@@ -42,7 +42,7 @@ export default function AddClubModal(
   });
 
   const onSubmit = (data: any) => {
-    const formData = { dojo: data.name };
+    const formData = { club: data.name };
     createClub.mutate(formData);
   };
 

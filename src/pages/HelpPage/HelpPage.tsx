@@ -46,7 +46,7 @@ export default function HelpPage() {
                 para entrar na sua conta e Pedir Conta caso ainda não possua
                 uma. <br />
                 Quando cria uma conta, terá de escolher um nome de utilizador
-                pré-definido, este nome irá remeter para o nome do dojo e
+                pré-definido, este nome irá remeter para o nome do Clube e
                 utilizado nas provas.
                 <br />O Login deverá sempre ser efetuado com este exato
                 username!

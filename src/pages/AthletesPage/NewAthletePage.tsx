@@ -27,9 +27,8 @@ import { membersHooks, adminHooks } from "../../hooks";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState<boolean>(true);
 
-  const { data: dojoUserData } = adminHooks.useFetchClubUsersData();
+  const { data: clubUserData } = adminHooks.useFetchClubUsersData();
   const createAthlete = membersHooks.useCreateMember();
 
   const {
@@ -53,11 +52,12 @@ export default function NewAthletePage() {
       // weight: "",
       competitor: false,
       reason: "",
-      dojo: "",
+      club: "",
     },
   });
 
-  const is_force_ident = getValues("force_ident");
+  const is_force_ident = watch("force_ident");
+  console.log(is_force_ident);
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
     const formData = {
@@ -70,7 +70,7 @@ export default function NewAthletePage() {
       competitor: data.competitor,
       birth_date: data.birth_date,
       // weight: data.weight,
-      dojo: data.dojo,
+      club: data.club,
     };
 
     if (!data.is_force_ident) {
@@ -83,7 +83,6 @@ export default function NewAthletePage() {
           navigate("/athletes/");
         } else {
           reset();
-          setExpanded(true);
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
       },
@@ -106,7 +105,7 @@ export default function NewAthletePage() {
           | "graduation"
           | "birth_date"
           | "gender"
-          | "dojo";
+          | "club";
 
         const fields: Fields[] = [
           "first_name",
@@ -114,7 +113,7 @@ export default function NewAthletePage() {
           "graduation",
           "birth_date",
           "gender",
-          "dojo",
+          "club",
         ];
 
         fields.forEach((field) => {
@@ -296,7 +295,8 @@ export default function NewAthletePage() {
               render={({ field }) => (
                 <FormControl component="fieldset" variant="standard">
                   <FormLabel sx={{ mb: 2 }}>
-                    Se, por alguma razão, pretende forçar um Nº SKI-P.
+                    Se, por alguma razão, pretende forçar um Nº{" "}
+                    {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}.
                   </FormLabel>
                   <Stack spacing={1}>
                     <FormControlLabel
@@ -307,12 +307,13 @@ export default function NewAthletePage() {
                           checked={field.value}
                           onChange={(e) => {
                             field.onChange(e.target.checked);
-                            setExpanded((prev) => !prev);
                           }}
                           name="force_ident"
                         />
                       }
-                      label="Forçar Nº SKI-P"
+                      label={`Forçar Nº ${
+                        import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
+                      }`}
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
                     {!!errors.competitor && (
@@ -372,7 +373,6 @@ export default function NewAthletePage() {
                           checked={field.value}
                           onChange={(e) => {
                             field.onChange(e.target.checked);
-                            setExpanded((prev) => !prev);
                           }}
                           name="competitor"
                         />
@@ -450,16 +450,19 @@ export default function NewAthletePage() {
             />
           </Grid>
         </FormAccordion> */}
-        <FormCard title="Associar Dojo/Associação">
+        <FormCard
+          title="Associar Clube/Associação"
+          subheader="Aqui aparecerão todos os Clubes disponíveis na plataforma, quer já tenham criado uma conta ou não."
+        >
           <Grid size={12} sx={{ p: 2 }}>
             <Controller
-              name="dojo"
+              name="club"
               control={control}
               render={({ field }) => (
                 <TextField
                   color="warning"
                   variant={"outlined"}
-                  label="Dojo"
+                  label="Clube"
                   fullWidth
                   select
                   multiline
@@ -469,11 +472,11 @@ export default function NewAthletePage() {
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.dojo}
-                  helperText={errors.dojo?.message}
+                  error={!!errors.club}
+                  helperText={errors.club?.message}
                 >
                   <MenuItem value="0">-- Selecionar --</MenuItem>
-                  {dojoUserData?.data.map((item: any, index: string) => (
+                  {clubUserData?.data.map((item: any, index: string) => (
                     <MenuItem key={index} value={item.id}>
                       {item.username}
                     </MenuItem>

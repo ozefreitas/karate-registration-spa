@@ -94,7 +94,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "rules" &&
         item.name !== "teams"
     );
-  } else if (userRole === undefined || userRole === "free_dojo") {
+  } else if (userRole === undefined || userRole === "free_club") {
     return baseMenu.filter(
       (item) =>
         item.name !== "athletes" &&
@@ -104,7 +104,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "notifications_manager" &&
         item.name !== "categories"
     );
-  } else if (userRole === "subed_dojo") {
+  } else if (userRole === "subed_club") {
     return baseMenu.filter(
       (item) =>
         item.name !== "notifications_manager" &&

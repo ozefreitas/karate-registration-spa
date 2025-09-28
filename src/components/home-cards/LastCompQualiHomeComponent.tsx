@@ -153,7 +153,7 @@ export default function LastCompQualiHomeComponent(
               </ListItemButton>
             </ListItem>
           )}
-          {props.userRole === "free_dojo" ? (
+          {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemText
@@ -166,7 +166,7 @@ export default function LastCompQualiHomeComponent(
           ) : null}
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          {props.userRole !== "free_dojo" ? (
+          {props.userRole !== "free_club" ? (
             <InfoButton label="Ver Todas" to="classifications/"></InfoButton>
           ) : null}
         </CardActions>

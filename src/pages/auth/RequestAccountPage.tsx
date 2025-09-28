@@ -177,8 +177,8 @@ export default function RequestAccountPage() {
                     {availableClubsData?.data.results
                       .filter((club: any) => club.is_registered === false)
                       .map((club: any, index: string) => (
-                        <MenuItem key={index} value={club.dojo}>
-                          {club.dojo}
+                        <MenuItem key={index} value={club.namec}>
+                          {club.name}
                         </MenuItem>
                       ))}
                   </TextField>

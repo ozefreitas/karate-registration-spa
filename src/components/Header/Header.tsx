@@ -125,9 +125,9 @@ export default function ButtonAppBar(
                     ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
                     : props.me?.data.role === "superuser"
                     ? "SUPER ADMIN"
-                    : props.me?.data.role === "free_dojo"
-                    ? "DOJO - GRÁTIS"
-                    : "DOJO - PREMIUM"}
+                    : props.me?.data.role === "free_club"
+                    ? "CLUBE - GRÁTIS"
+                    : "CLUBE - PREMIUM"}
                 </Button>
               ) : null}
               <Typography variant="body1">

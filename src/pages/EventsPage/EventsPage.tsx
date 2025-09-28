@@ -74,7 +74,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent>
-          {props.userRole !== "free_dojo" ? (
+          {props.userRole !== "free_club" ? (
             <>
               Aqui poderá consultar todos os Eventos disponíveis no momento.
               Mais tarde será também possível ver Estágios e outras provas de

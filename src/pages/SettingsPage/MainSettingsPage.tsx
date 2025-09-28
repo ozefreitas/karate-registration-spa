@@ -21,7 +21,7 @@ import {
 import { Delete, Add, ContentCopy } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import { authHooks, clubsHoks, adminHooks } from "../../hooks";
-import DeleteDojoModal from "../../components/Admin/DeleteDojoModal";
+import DeleteClubModal from "../../components/Admin/DeleteClubModal";
 import AddClubModal from "../../components/Admin/AddClubModal";
 import { useSnackbar } from "notistack";
 
@@ -39,9 +39,8 @@ export default function MainSettingsPage() {
   const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
 
   const { data: availableClubsData } = clubsHoks.useFetchAvailableClubs();
-  const createClub = clubsHoks.useCreateClub();
 
-  const { data: dojoUserData, refetch } =
+  const { data: UserData, refetch } =
     adminHooks.useFetchClubUsersData(clickedUsername);
 
   const { data: requestingPasswordsData } =
@@ -71,9 +70,9 @@ export default function MainSettingsPage() {
     return requestingPasswordsData?.data
       .filter((acount: any) => acount.id === selectedPasswordRequestId)
       .map((acount: any) => ({
-        id: acount.dojo_user.id,
-        email: acount.dojo_user.email,
-        username: acount.dojo_user.username,
+        id: acount.club_user.id,
+        email: acount.club_user.email,
+        username: acount.club_user.username,
       }))[0];
   }, [requestingPasswordsData, selectedPasswordRequestId]);
 
@@ -99,7 +98,7 @@ export default function MainSettingsPage() {
     setValue(newValue);
   };
 
-  const handleDojoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleClubChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedUserId(event.target.value);
   };
 
@@ -235,13 +234,13 @@ export default function MainSettingsPage() {
                     multiline
                     maxRows={8}
                     value={selectedUserId}
-                    onChange={handleDojoChange}
+                    onChange={handleClubChange}
                   >
                     <MenuItem value="">-- Selecionar --</MenuItem>
                     {availableClubsData?.data.results.map(
                       (item: any, index: string) => (
                         <MenuItem key={index} value={item.id}>
-                          {item.dojo}
+                          {item.club}
                         </MenuItem>
                       )
                     )}
@@ -537,7 +536,7 @@ export default function MainSettingsPage() {
                     {requestingPasswordsData?.data.map(
                       (item: any, index: string) => (
                         <MenuItem key={index} value={item.id}>
-                          {item.dojo_user.username}
+                          {item.club_user.username}
                         </MenuItem>
                       )
                     )}
@@ -711,12 +710,12 @@ export default function MainSettingsPage() {
           )}
         </CardContent>
       </Card>
-      <DeleteDojoModal
+      <DeleteClubModal
         handleModalClose={handleDeleteModalClose}
         isModalOpen={isDeleteModalOpen}
         id={selectedUserId}
         setSelectedUserId={setSelectedUserId}
-      ></DeleteDojoModal>
+      ></DeleteClubModal>
       <AddClubModal
         handleClose={handleAddClubModalClose}
         isOpen={isAddClubModalOpen}
