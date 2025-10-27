@@ -1,4 +1,4 @@
-import { apiClient, authClient } from "./apiClient";
+import { authClient } from "./apiClient";
 
 export const fetchMembers = (page: number, pageSize: number) => {
   return authClient.get("/athletes/", {

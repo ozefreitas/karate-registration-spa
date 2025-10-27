@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { membersHooks } from "../../hooks";
+// import { membersHooks } from "../../hooks";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,22 +29,22 @@ export default function EditIndividualModal(
     id: string;
   }>
 ) {
-  const { data: fetchSingleAthlete } = membersHooks.useFetchSingleMemberData(
-    props.id
-  );
+  // const { data: fetchSingleAthlete } = membersHooks.useFetchSingleMemberData(
+  //   props.id
+  // );
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    const formData = {
-      firstName: fetchSingleAthlete?.data.first_name,
-      lastName: fetchSingleAthlete?.data.last_name,
-      graduation: fetchSingleAthlete?.data.graduation,
-      category: fetchSingleAthlete?.data.category,
-      gender: fetchSingleAthlete?.data.gender,
-      id_number: fetchSingleAthlete?.data.id_number,
-      is_student: fetchSingleAthlete?.data.is_student,
-      birthDate: fetchSingleAthlete?.data.birth_date,
-    };
+    // const formData = {
+    //   firstName: fetchSingleAthlete?.data.first_name,
+    //   lastName: fetchSingleAthlete?.data.last_name,
+    //   graduation: fetchSingleAthlete?.data.graduation,
+    //   category: fetchSingleAthlete?.data.category,
+    //   gender: fetchSingleAthlete?.data.gender,
+    //   id_number: fetchSingleAthlete?.data.id_number,
+    //   is_student: fetchSingleAthlete?.data.is_student,
+    //   birthDate: fetchSingleAthlete?.data.birth_date,
+    // };
     // props.reset(formData);
     props.handleModalClose();
     props.handleEditModalOpen();

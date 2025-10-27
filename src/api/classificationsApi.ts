@@ -1,4 +1,4 @@
-import { apiClient, authClient } from "./apiClient";
+import { apiClient } from "./apiClient";
 
 export const fetchLastEventClassification = () => {
   return apiClient.get("/classifications/last_comp_quali/");

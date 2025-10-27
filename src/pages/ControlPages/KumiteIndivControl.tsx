@@ -7,9 +7,8 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import { Add, Remove, PlayArrow, Pause, Stop } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import { useEffect, useState, useRef } from "react";
-import { useSnackbar, closeSnackbar } from "notistack";
 import Time from "../../components/DisplayScreenComponents/´Time";
 
 export default function KumiteIndivControl() {
@@ -26,14 +25,12 @@ export default function KumiteIndivControl() {
     shiroJogai: 0,
   });
   const socketRef = useRef<WebSocket | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
 
   const {
     control,
     watch,
     setError,
     clearErrors,
-    handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {

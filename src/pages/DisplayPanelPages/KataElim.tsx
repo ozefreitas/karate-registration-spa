@@ -2,11 +2,14 @@ import { Grid, Typography } from "@mui/material";
 import Comp1Score from "../../components/DisplayScreenComponents/Scores/Comp1Score";
 import Comp2Score from "../../components/DisplayScreenComponents/Scores/Comp2Score";
 import MatchTypeInfo from "../../components/DisplayScreenComponents/MatchTypeInfo";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 export default function CompetitorCard(props: Readonly<{ match: string }>) {
   const [akaScore, setAkaScore] = useState<number | undefined>(undefined);
   const [winner, setWinner] = useState({ aka: false, shiro: false });
+
+  console.log(winner, setAkaScore, props.match);
+
   const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
 

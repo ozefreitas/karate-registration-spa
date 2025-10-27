@@ -13,7 +13,6 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { GraduationsOptions, GenderOptions, ReasonOptions } from "../../config";
@@ -36,7 +35,6 @@ export default function NewAthletePage() {
     handleSubmit,
     setError,
     reset,
-    getValues,
     watch,
     formState: { errors },
   } = useForm({

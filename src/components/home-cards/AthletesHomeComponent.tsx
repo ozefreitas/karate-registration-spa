@@ -13,7 +13,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
-import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";

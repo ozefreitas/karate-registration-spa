@@ -7,7 +7,6 @@ import {
   CardContent,
   FormLabel,
   Typography,
-  MenuItem,
   InputAdornment,
   IconButton,
 } from "@mui/material";
@@ -36,7 +35,6 @@ export default function SignUpWithTokenPage(
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {

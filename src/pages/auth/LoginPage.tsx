@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { SnackbarKey, useSnackbar } from "notistack";
-import { Close } from "@mui/icons-material";
 import { authHooks } from "../../hooks";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ConfirmPasswordResetModal from "../../components/Admin/ConfirmPasswordResetModal";
@@ -20,18 +18,17 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const { closeSnackbar } = useSnackbar();
 
-  const action = (snackbarId: SnackbarKey | undefined) => (
-    <Close
-      sx={{ cursor: "pointer" }}
-      onClick={() => {
-        closeSnackbar(snackbarId);
-      }}
-    >
-      Fechar
-    </Close>
-  );
+  // const action = (snackbarId: SnackbarKey | undefined) => (
+  //   <Close
+  //     sx={{ cursor: "pointer" }}
+  //     onClick={() => {
+  //       closeSnackbar(snackbarId);
+  //     }}
+  //   >
+  //     Fechar
+  //   </Close>
+  // );
 
   const { user } = useAuth();
   if (user !== undefined) {

@@ -1,7 +1,6 @@
 import {
   PieChart,
   Pie,
-  Legend,
   Tooltip,
   ResponsiveContainer,
   Cell,
@@ -12,13 +11,12 @@ import {
   Card,
   CardHeader,
   Paper,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  // ListItem,
+  // ListItemButton,
+  // ListItemIcon,
+  // ListItemText,
 } from "@mui/material";
 import { adminHooks } from "../../hooks";
-import { Person } from "@mui/icons-material";
 
 export default function ClubStats() {
   const { data: ClubAthletesData } = adminHooks.useFetchClubAthletesData();

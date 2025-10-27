@@ -60,7 +60,7 @@ export default function WeightConfirmModal(
         >
           <Button
             size="small"
-            onClick={(e) => navigate(`/events/${props.id}/individuals/`)}
+            onClick={() => navigate(`/events/${props.id}/individuals/`)}
             variant="contained"
           >
             Confirmar

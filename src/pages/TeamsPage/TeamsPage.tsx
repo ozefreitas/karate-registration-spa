@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Card,
   CardHeader,
@@ -40,11 +39,10 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
 
-  const {
-    data: teamsData,
-    isLoading: isTeamsLoading,
-    error: teamsError,
-  } = useFetchTeamsData(page + 1, pageSize);
+  const { data: teamsData, isLoading: isTeamsLoading } = useFetchTeamsData(
+    page + 1,
+    pageSize
+  );
 
   const { user } = useAuth();
   const userRole = user?.data.role;

@@ -6,7 +6,7 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-import { OpenInNew, CloseFullscreen, Add, TtySharp } from "@mui/icons-material";
+import { OpenInNew, CloseFullscreen, Add } from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
 import FormAccordion from "../../dashboard/FormAccordion";

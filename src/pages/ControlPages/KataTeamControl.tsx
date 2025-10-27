@@ -2,8 +2,8 @@ import { Controller, useForm } from "react-hook-form";
 import FormCard from "../../dashboard/FormCard";
 import { Grid, Button, TextField } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useEffect, useState, useRef } from "react";
-import { useSnackbar, closeSnackbar } from "notistack";
+import { useEffect, useRef } from "react";
+import { useSnackbar } from "notistack";
 
 export default function KataTeamControl() {
   const socketRef = useRef<WebSocket | null>(null);

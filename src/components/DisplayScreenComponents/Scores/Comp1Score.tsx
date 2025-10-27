@@ -1,5 +1,5 @@
 import styles from "./comp1score.module.css";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Comp1Score(
   props: Readonly<{ id: string; winner: any }>

@@ -1,16 +1,4 @@
-import {
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemButton,
-  Card,
-  CardHeader,
-  CardContent,
-} from "@mui/material";
+import { Card, CardHeader, CardContent } from "@mui/material";
 
 export default function SingleTeamPage() {
   return (
@@ -29,7 +17,6 @@ export default function SingleTeamPage() {
           como editar ou remover esta mesma Equipa.
         </CardContent>
       </Card>
-      
     </>
   );
 }

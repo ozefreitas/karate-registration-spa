@@ -44,15 +44,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
 
   const [page, setPage] = useState<number>(0);
 
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleBackButtonClick = () => {
     setPage(page - 1);
   };
 
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleNextButtonClick = () => {
     setPage(page + 1);
   };
 

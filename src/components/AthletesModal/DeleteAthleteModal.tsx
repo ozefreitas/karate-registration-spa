@@ -20,7 +20,7 @@ import {
   useRemoveTeamData,
   useRemoveAllTeamsData,
 } from "../../hooks/useTeamsData";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -59,7 +59,6 @@ export default function DeleteAthleteModal(
   const removeAllCategories = categoriesHooks.useDeleteAllCategoriesData();
   const removeDisciplineCategory =
     disciplinesHooks.useRemoveDisciplineCategory();
-  const location = useLocation();
   const navigate = useNavigate();
   const { eventId } = useParams<{ eventId: string }>();
 

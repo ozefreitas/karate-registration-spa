@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useFetchSingleTeamData } from "../../hooks/useTeamsData";
-import { membersHooks } from "../../hooks";
+// import { membersHooks } from "../../hooks";
 import EditAthleteModal from "../AthletesModal/EditAthleteModal";
 import { useForm } from "react-hook-form";
 import EditTeamModal from "./EditTeamModal";
@@ -40,23 +40,23 @@ export default function ChooseEditModal(
     setChosenAthlete: any;
   }>
 ) {
-  console.log(props.isModalOpen)
+  console.log(props.isModalOpen);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any>(null);
 
   const [isEditTeamModalOpen, setIsEditTeamModalOpen] =
-      useState<boolean>(false);
-  
-    const handleEditTeamModalOpen = () => {
-      setIsEditTeamModalOpen(true);
-    };
-  
-    const handleEditTeamModalClose = () => {
-      setIsEditTeamModalOpen(false);
-    };
+    useState<boolean>(false);
+
+  const handleEditTeamModalOpen = () => {
+    setIsEditTeamModalOpen(true);
+  };
+
+  const handleEditTeamModalClose = () => {
+    setIsEditTeamModalOpen(false);
+  };
 
   const fetchSingleTeam = useFetchSingleTeamData();
-  const {data: singleAthleteData, refetch: refetchSingleAthleteData} = membersHooks.useFetchSingleMemberData(props.id);
+  // const {data: singleAthleteData, refetch: refetchSingleAthleteData} = membersHooks.useFetchSingleMemberData(props.id);
 
   const {
     control: teamControl,
@@ -111,31 +111,33 @@ export default function ChooseEditModal(
   }, [props.id]);
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>, id: string) => {
+    console.log(id);
     event.stopPropagation();
-    fetchSingleAthlete.mutate(id, {
-      onSuccess: (data: any) => {
-        const formData = {
-          firstName: data?.data.first_name,
-          lastName: data?.data.last_name,
-          graduation: data?.data.graduation,
-          category: data?.data.category,
-          gender: data?.data.gender,
-          id_number: data?.data.id_number,
-          is_student: data?.data.is_student,
-          birthDate: data?.data.birth_date,
-        };
-        props.reset(formData);
-        // props.handleModalClose();
-        props.setChosenAthlete(id);
-        props.handleEditModalOpen();
-      },
-    });
+    // fetchSingleAthlete.mutate(id, {
+    //   onSuccess: (data: any) => {
+    //     const formData = {
+    //       firstName: data?.data.first_name,
+    //       lastName: data?.data.last_name,
+    //       graduation: data?.data.graduation,
+    //       category: data?.data.category,
+    //       gender: data?.data.gender,
+    //       id_number: data?.data.id_number,
+    //       is_student: data?.data.is_student,
+    //       birthDate: data?.data.birth_date,
+    //     };
+    //     props.reset(formData);
+    //     // props.handleModalClose();
+    //     props.setChosenAthlete(id);
+    //     props.handleEditModalOpen();
+    //   },
+    // });
   };
 
   const handleTeamEdit = (
     event: React.MouseEvent<HTMLElement>,
     teamId: string
   ) => {
+    console.log(event, teamId);
     handleEditTeamModalOpen();
   };
 

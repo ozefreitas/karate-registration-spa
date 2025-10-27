@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { Add } from "@mui/icons-material";
-import CommonActions from "../../components/DisplayScreenComponents/CommonActions";
 import FormCard from "../../dashboard/FormCard";
 
 export default function KataElimControl() {
@@ -55,7 +54,6 @@ export default function KataElimControl() {
     watch,
     setError,
     clearErrors,
-    handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {

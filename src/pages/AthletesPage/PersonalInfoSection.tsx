@@ -69,7 +69,6 @@ export default function PersonalInfoSection(
   const {
     control,
     handleSubmit,
-    setError,
     reset,
     watch,
     setValue,

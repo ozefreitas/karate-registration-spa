@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -12,12 +11,7 @@ import {
   Typography,
   AppBar,
   Toolbar,
-  Button,
   Tooltip,
-  Grid,
-  Checkbox,
-  Box,
-  CircularProgress,
   ListItemIcon,
 } from "@mui/material";
 import { useState } from "react";
@@ -113,15 +107,11 @@ export default function CategoriesReadOnlyModal(
   const [page, setPage] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleBackButtonClick = () => {
     setPage(page - 1);
   };
 
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleNextButtonClick = () => {
     setPage(page + 1);
   };
 

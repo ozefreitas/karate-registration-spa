@@ -14,7 +14,7 @@ import {
   Grid,
 } from "@mui/material";
 import skipLogo from "./../../assets/skip-logo.png";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { Logout } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";

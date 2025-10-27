@@ -30,7 +30,6 @@ export default function NewCategoryPage() {
   const {
     control,
     handleSubmit,
-    setError,
     setValue,
     reset,
     watch,

@@ -23,7 +23,7 @@ import ProtectedRoute from "./access/ProtectedRoute";
 import NewEventPage from "./pages/EventsPage/NewEventPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 import UnAuthorizedPage from "./pages/ErrorPages/UnAuthorizedPage";
-import ServerErrorPage from "./pages/ErrorPages/ServerErrorPage";
+// import ServerErrorPage from "./pages/ErrorPages/ServerErrorPage";
 import NotFoundPage from "./pages/ErrorPages/NotFoundPage";
 import EventAllRegistryPage from "./components/EventCards/EventAllRegistryPage";
 import MainSettingsPage from "./pages/SettingsPage/MainSettingsPage";
@@ -42,10 +42,8 @@ import PasswordResetPage from "./pages/auth/PasswordResetPage";
 import { useEffect } from "react";
 import { useAuth } from "./access/GlobalAuthProvider";
 import { SnackbarProvider } from "notistack";
-import SnackbarCloser from "./dashboard/SnackBarCloser";
+// import SnackbarCloser from "./dashboard/SnackBarCloser";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
-import { Grid } from "@mui/material";
-import Announcement from "./components/Announcement/Announcement";
 
 function App() {
   const { user, isAuthLoading } = useAuth();

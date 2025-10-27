@@ -8,7 +8,6 @@ import {
   CircularProgress,
   Typography,
   Button,
-  Tooltip,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { disciplinesHooks } from "../../hooks";

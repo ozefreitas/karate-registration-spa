@@ -12,7 +12,6 @@ import {
   FormHelperText,
   FormControlLabel,
   Switch,
-  Typography,
   Tooltip,
   List,
   ListItem,
@@ -160,61 +159,58 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       has_categories: data.has_categories,
     };
 
-    const eventResponse = await createEvent.mutateAsync(
-      { data: formData },
-      {
-        onError: (data: any) => {
-          const errorData = data.response?.data || {};
+    const eventResponse = await createEvent.mutateAsync(formData, {
+      onError: (data: any) => {
+        const errorData = data.response?.data || {};
 
-          type Fields =
-            | "name"
-            | "location"
-            | "season"
-            | "event_date"
-            | "contact"
-            | "email_contact"
-            | "start_registration"
-            | "end_registration"
-            | "retifications_deadline";
+        type Fields =
+          | "name"
+          | "location"
+          | "season"
+          | "event_date"
+          | "contact"
+          | "email_contact"
+          | "start_registration"
+          | "end_registration"
+          | "retifications_deadline";
 
-          const fields: Fields[] = [
-            "name",
-            "location",
-            "season",
-            "event_date",
-            "contact",
-            "email_contact",
-          ];
+        const fields: Fields[] = [
+          "name",
+          "location",
+          "season",
+          "event_date",
+          "contact",
+          "email_contact",
+        ];
 
-          fields.forEach((field) => {
-            if (errorData[field]?.[0]) {
-              setError(field, { message: errorData[field][0] });
+        fields.forEach((field) => {
+          if (errorData[field]?.[0]) {
+            setError(field, { message: errorData[field][0] });
+          }
+        });
+
+        const dateFields: Fields[] = [
+          "start_registration",
+          "end_registration",
+          "retifications_deadline",
+        ];
+
+        if (errorData.non_field_errors?.[0]) {
+          const nonFieldMessage = errorData.non_field_errors[0];
+          dateFields.forEach((field) => {
+            if (formData[field] === undefined) {
+              setError(field, { message: nonFieldMessage });
             }
           });
+        }
 
-          const dateFields: Fields[] = [
-            "start_registration",
-            "end_registration",
-            "retifications_deadline",
-          ];
-
-          if (errorData.non_field_errors?.[0]) {
-            const nonFieldMessage = errorData.non_field_errors[0];
-            dateFields.forEach((field) => {
-              if (formData[field] === undefined) {
-                setError(field, { message: nonFieldMessage });
-              }
-            });
-          }
-
-          if (errorData.id?.[0]) {
-            const sameIdMessage = errorData.id[0];
-            setError("name", { message: sameIdMessage });
-            setError("season", { message: sameIdMessage });
-          }
-        },
-      }
-    );
+        if (errorData.id?.[0]) {
+          const sameIdMessage = errorData.id[0];
+          setError("name", { message: sameIdMessage });
+          setError("season", { message: sameIdMessage });
+        }
+      },
+    });
     const eventId = eventResponse.data.id;
     const disciplineResponses = await Promise.all(
       disciplines.map((discipline) =>

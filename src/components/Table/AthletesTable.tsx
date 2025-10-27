@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
@@ -144,15 +144,15 @@ export default function AthletesTable(
     setDisciplineCategories?: any;
   }>
 ) {
-  type Order = "asc" | "desc";
+  // type Order = "asc" | "desc";
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
   const [internalPageSize, setInternalPageSize] = useState<number>(10);
-  const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<string>("");
+  // const [order, setOrder] = useState<Order>("asc");
+  // const [orderBy, setOrderBy] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
 
-  const handleSelectionDelete = (event: React.MouseEvent<HTMLElement>) => {
+  const handleSelectionDelete = () => {
     handleDeleteAllModalOpen();
   };
 
@@ -174,6 +174,7 @@ export default function AthletesTable(
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
+    console.log(event)
     if (props.setPage) {
       props.setPage(newPage);
     } else {
@@ -220,10 +221,6 @@ export default function AthletesTable(
 
   const handleDeleteAllModalClose = () => {
     setIsDeleteAllModalOpen(false);
-  };
-
-  const handleChooseModalOpen = () => {
-    setIsChooseModalOpen(true);
   };
 
   const handleChooseModalClose = () => {
@@ -313,7 +310,7 @@ export default function AthletesTable(
     },
   }));
 
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  const StyledTableRow = styled(TableRow)(({}) => ({
     textAlign: "center",
     height: 50,
     "&:nth-of-type(even)": {
@@ -533,8 +530,8 @@ export default function AthletesTable(
                       <Tooltip arrow title="Remover Selecionados">
                         <IconButton
                           disabled={selected.length === 0}
-                          onClick={(e) => {
-                            handleSelectionDelete(e);
+                          onClick={() => {
+                            handleSelectionDelete();
                           }}
                         >
                           <Delete

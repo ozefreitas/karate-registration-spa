@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Grid, Typography, Box } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import MatchTypeInfo from "../../components/DisplayScreenComponents/MatchTypeInfo";
 import FoulGrid from "../../components/DisplayScreenComponents/FoulGrid";
 
@@ -27,6 +27,8 @@ export default function KumiteIndiv() {
   const [isRunning, setIsRunning] = useState<boolean | null>(null);
   const [timeLow, setTimeLow] = useState<boolean>(false);
   const [ended, setEnded] = useState<boolean>(false);
+
+  console.log(ended);
 
   useEffect(() => {
     const socket = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
@@ -277,7 +279,7 @@ export default function KumiteIndiv() {
           container
           justifyContent="center"
         >
-          <Typography variant="h1" sx={{fontSize: 135}}>
+          <Typography variant="h1" sx={{ fontSize: 135 }}>
             {minutes}:{formatTime(seconds)}
           </Typography>
           <Typography

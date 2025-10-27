@@ -29,6 +29,7 @@ export default function MainSettingsPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState("one");
   const [clickedUsername, setClickedUsername] = useState<string>("");
+  console.log(setClickedUsername)
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [selectedRequestId, setSelectedRequestId] = useState<string>("");
   const [selectedPasswordRequestId, setSelectedPasswordRequestId] =
@@ -40,8 +41,7 @@ export default function MainSettingsPage() {
 
   const { data: availableClubsData } = clubsHoks.useFetchAvailableClubs();
 
-  const { data: UserData, refetch } =
-    adminHooks.useFetchClubUsersData(clickedUsername);
+  const { refetch } = adminHooks.useFetchClubUsersData(clickedUsername);
 
   const { data: requestingPasswordsData } =
     adminHooks.useFetchPasswordResetRequests();
@@ -95,6 +95,7 @@ export default function MainSettingsPage() {
   }, [isTokenAvailable]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    event.preventDefault();
     setValue(newValue);
   };
 
@@ -128,7 +129,7 @@ export default function MainSettingsPage() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleTokenCreation = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleTokenCreation = () => {
     const data = { username: acountDetails.username, alive_time: 3 };
     createSignUpToken.mutate(data, {
       onSuccess: (data: any) => {
@@ -137,9 +138,7 @@ export default function MainSettingsPage() {
     });
   };
 
-  const handlePasswordURLCreation = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handlePasswordURLCreation = () => {
     generatePasswordResetURL.mutate(
       { username: passwordRequestedDetails.id },
       {
@@ -150,9 +149,7 @@ export default function MainSettingsPage() {
     );
   };
 
-  const handleAcountRejection = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleAcountRejection = () => {
     rejectAcount.mutate(acountDetails.id, {
       onSuccess: () => {
         setSelectedRequestId("");
@@ -451,7 +448,7 @@ export default function MainSettingsPage() {
                         >
                           <Button
                             size="small"
-                            onClick={(e) => handleTokenCreation(e)}
+                            onClick={() => handleTokenCreation()}
                             variant="contained"
                             disabled={createdToken !== ""}
                           >
@@ -460,8 +457,8 @@ export default function MainSettingsPage() {
                           <Button
                             size="small"
                             disabled={createdToken !== ""}
-                            onClick={(e) => {
-                              handleAcountRejection(e);
+                            onClick={() => {
+                              handleAcountRejection();
                             }}
                           >
                             Rejeitar
@@ -632,7 +629,7 @@ export default function MainSettingsPage() {
                         >
                           <Button
                             size="small"
-                            onClick={(e) => handlePasswordURLCreation(e)}
+                            onClick={() => handlePasswordURLCreation()}
                             variant="contained"
                             disabled={createdPasswordURL !== ""}
                           >

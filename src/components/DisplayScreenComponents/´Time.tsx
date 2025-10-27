@@ -21,6 +21,8 @@ export default function Time(
   const [timeLow, setTimeLow] = useState<boolean>(false);
   const [ended, setEnded] = useState<boolean>(false);
 
+  console.log(ended);
+
   useEffect(() => {
     socketRef.current = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
 

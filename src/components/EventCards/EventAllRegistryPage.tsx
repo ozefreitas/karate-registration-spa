@@ -22,7 +22,7 @@ export default function EventAllRegistryPage(
   const {
     data: singleEventData,
     isLoading: isSingleEventLoading,
-    error: singleEventError,
+    // error: singleEventError,
   } = eventsHooks.useFetchSingleEventData(eventId!);
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(

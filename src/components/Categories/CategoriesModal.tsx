@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   List,
   ListItem,
@@ -121,16 +120,14 @@ export default function CategoriesModal(
     data: categoriesData,
     isLoading: isCategoriesLoading,
     error: categoriesError,
-  } = categoriesHooks.useFetchCategoriesData();
+  } = categoriesHooks.useFetchCategoriesData(1, 100);
 
   const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setPage(page - 1);
   };
 
   const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setPage(page + 1);
   };

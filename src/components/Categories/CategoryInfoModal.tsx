@@ -1,8 +1,6 @@
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogTitle,
   IconButton,
   Typography,
   AppBar,

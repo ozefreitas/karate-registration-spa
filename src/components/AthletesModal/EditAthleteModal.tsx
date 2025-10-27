@@ -35,17 +35,6 @@ export default function EditAthleteModal(
     id: string;
   }>
 ) {
-  type Athlete = {
-    firstName: string;
-    lastName: string;
-    category: string;
-    graduation: number;
-    gender: string;
-    id_number: number;
-    is_student: boolean;
-    birthDate: any;
-  };
-
   const { data: singleAthleteData, isLoading: isSingleAthleteLoading } =
     membersHooks.useFetchSingleMemberData(props.id);
 

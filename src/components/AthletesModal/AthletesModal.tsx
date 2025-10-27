@@ -120,13 +120,11 @@ export default function AthletesModal(
   const [page, setPage] = useState<number>(0);
 
   const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setPage(page - 1);
   };
 
   const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setPage(page + 1);
   };

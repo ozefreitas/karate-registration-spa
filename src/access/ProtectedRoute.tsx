@@ -5,7 +5,6 @@ import { useAuth } from "./GlobalAuthProvider";
 export default function ProtectedRoute({
   element,
   allowedRoles,
-  allowedTiers,
   allowUnauthenticated,
 }: Readonly<{
   element: JSX.Element;
