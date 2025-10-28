@@ -14,7 +14,8 @@ export default function CompetitorCard(props: Readonly<{ match: string }>) {
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
 
   useEffect(() => {
-    const socket = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
+    const baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
+    const socket = new WebSocket(`ws://${baseURL}/ws/match/123/`);
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);

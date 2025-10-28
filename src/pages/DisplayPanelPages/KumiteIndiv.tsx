@@ -31,7 +31,8 @@ export default function KumiteIndiv() {
   console.log(ended);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
+    const baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
+    const socket = new WebSocket(`ws://${baseURL}/ws/match/123/`);
 
     const handleFoulUpdate = (
       type: "add_foul" | "remove_foul",

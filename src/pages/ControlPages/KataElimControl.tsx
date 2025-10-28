@@ -9,7 +9,8 @@ export default function KataElimControl() {
   const [points, setPoints] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    socketRef.current = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
+    const baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
+    socketRef.current = new WebSocket(`ws://${baseURL}/ws/match/123/`);
 
     return () => {
       socketRef.current?.close();
