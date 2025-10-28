@@ -11,7 +11,12 @@ export default function KataFinalControl() {
 
   useEffect(() => {
     const baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
-    socketRef.current = new WebSocket(`ws://${baseURL}/ws/match/123/`);
+
+    // Detect the correct protocol
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+
+    // Construct the full WebSocket URL
+    socketRef.current = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);
 
     return () => {
       socketRef.current?.close();
