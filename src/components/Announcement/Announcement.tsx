@@ -15,12 +15,11 @@ export default function Announcement() {
   };
 
   useEffect(() => {
-    if (data !== undefined) {
-      const dismissedId = localStorage.getItem("dismissedAnnouncementId");
-      if (data?.data.id.toString() === dismissedId) {
-        setIsAnnouncementOpen(false);
-      } else setIsAnnouncementOpen(true);
-    }
+    const id = data?.data?.id;
+    if (id == null) return; // handles undefined or null gracefully
+
+    const dismissedId = localStorage.getItem("dismissedAnnouncementId");
+    setIsAnnouncementOpen(id.toString() !== dismissedId);
   }, [data]);
 
   if (!isAnnouncementOpen) return null;
