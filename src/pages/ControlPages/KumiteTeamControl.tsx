@@ -42,7 +42,10 @@ export default function KumiteTeamControl() {
   });
 
   useEffect(() => {
-    const baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
+    let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
+
+    // Remove protocol prefix (http:// or https://)
+    baseURL = baseURL.replace(/^https?:\/\//, "");
 
     // Detect the correct protocol
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
