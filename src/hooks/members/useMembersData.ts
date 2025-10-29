@@ -42,7 +42,7 @@ export const useFetchAthletesNotInEvent = (
   pageSize: number
 ) => {
   return useQuery({
-    queryKey: ["athletes-notin-event", page, pageSize],
+    queryKey: ["athletes-notin-event", eventId, page, pageSize],
     queryFn: () => fetchMembersNotInEvent(eventId, page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,

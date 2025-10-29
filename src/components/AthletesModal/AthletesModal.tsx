@@ -171,6 +171,7 @@ export default function AthletesModal(
     useState<boolean>(false);
   const [isWeightInputScreenOpen, setIsWeightInputScreenOpen] =
     useState<boolean>(false);
+  const [doesNotHaveWeight, setDoesNotHaveWeight] = useState<boolean>(false);
   const [freeClubWeight, setFreeClubWeight] = useState<string>("");
 
   const handleDisciplineScreenOpen = () => {
@@ -265,6 +266,8 @@ export default function AthletesModal(
       const target = filteredAthletes.filter(
         (athlete: any) => athlete.id === currentAthleteId
       );
+      const hasWeight = target[0].weight !== null;
+      setDoesNotHaveWeight(!hasWeight);
       setFreeClubWeight(target[0].weight ?? "");
       handleWeightInputScreenOpen();
       return;
@@ -314,7 +317,7 @@ export default function AthletesModal(
           setTimeout(() => {
             handleDisciplineScreenClose();
             setIsWeightInputScreenOpen(false);
-          }, 1000);
+          }, 500);
         } else {
           handleDisciplineScreenClose();
           reset();
@@ -626,6 +629,17 @@ export default function AthletesModal(
               </ListItem>
             )}
           </List>
+        ) : isMutationDelayActive ? (
+          <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          </Grid>
         ) : (
           <Grid container size={12}>
             <Grid size={1}>
@@ -643,10 +657,17 @@ export default function AthletesModal(
             </Grid>
             <Grid size={11}>
               <Typography sx={{ m: 1, mb: 3 }}>
-                O escalão disponível na Modalidade encontrada requer um peso, e
-                este Atleta não tem um peso associado. <br />
+                O escalão disponível na Modalidade encontrada requer um peso,{" "}
                 {userRole === "free_club"
-                  ? "Insira o peso do Atleta no campo seguinte para prosseguir."
+                  ? doesNotHaveWeight
+                    ? "e este Atleta não tem um peso associado."
+                    : "e este Atleta já tem um peso associado."
+                  : null}
+                <br />
+                {userRole === "free_club"
+                  ? doesNotHaveWeight
+                    ? "Insira o peso do Atleta no campo seguinte para prosseguir."
+                    : "Confirme o peso do Atleta para prosseguir."
                   : "Dirija-se à pagina e insira o peso deste Atleta clicando neste botão."}
               </Typography>
             </Grid>

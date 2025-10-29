@@ -129,12 +129,12 @@ export default function TeamsHomeComponent(
           ) : null}
         </List>
         <CardActions sx={{ justifyContent: "space-between" }}>
-          {props.userRole !== "free_club" ? (
+          {props.userRole === "free_club" ? null : (
             <>
               <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
               <InfoButton label="Ver Todas" to="teams/"></InfoButton>
             </>
-          ) : null}
+          )}
         </CardActions>
       </Card>
     </Grid>

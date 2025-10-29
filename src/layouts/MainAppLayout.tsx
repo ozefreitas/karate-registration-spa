@@ -10,7 +10,9 @@ export default function MainAppLayout(
 ) {
   return (
     <>
-      <Announcement></Announcement>
+      {props.me?.data.role !== "main_admin" && (
+        <Announcement></Announcement>
+      )}
       <Header me={props.me}></Header>
       <SideMenu me={props.me}></SideMenu>
       <main>

@@ -57,6 +57,7 @@ export const useDeleteDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
+      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.data.error}`, {
