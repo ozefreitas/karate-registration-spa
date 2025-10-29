@@ -88,7 +88,6 @@ export default function CategoriesReadOnlyModal(
     currentDisicpline: string;
   }>
 ) {
-  console.log(props.disciplineData);
   type Category = {
     id: string;
     name: string;

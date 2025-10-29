@@ -55,7 +55,6 @@ export default function NewAthletePage() {
   });
 
   const is_force_ident = watch("force_ident");
-  console.log(is_force_ident);
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
     const formData = {
@@ -71,7 +70,7 @@ export default function NewAthletePage() {
       club: data.club,
     };
 
-    if (!data.is_force_ident) {
+    if (data.is_force_ident === false) {
       formData.id_number = 0;
     }
 

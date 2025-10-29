@@ -19,7 +19,7 @@ export const useRemoveNotification = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
-      queryClient.invalidateQueries({ queryKey: ["home-notifications"] });
+      queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
     },
     onError: () => {
       enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
