@@ -81,7 +81,7 @@ export default function DeleteAthleteModal(
           },
         });
       } else if (props.from === "Individuais") {
-        const athleteData = { athlete_id: id };
+        const athleteData = { member_id: id };
         const data = {
           eventId: eventId!,
           data: athleteData,
@@ -100,7 +100,7 @@ export default function DeleteAthleteModal(
       } else {
         const data = {
           disciplineId: props.discipline,
-          data: { athlete_id: props.id },
+          data: { member_id: props.id },
         };
         removeDisciplineAthlete.mutate(data);
       }
@@ -115,7 +115,7 @@ export default function DeleteAthleteModal(
         });
       } else if (props.from === "Individuais") {
         id.forEach((athleteId) => {
-          const athleteData = { athlete_id: athleteId };
+          const athleteData = { member_id: athleteId };
           const data = {
             eventId: eventId!,
             data: athleteData,
@@ -130,7 +130,7 @@ export default function DeleteAthleteModal(
         id.forEach((athleteId) => {
           const data = {
             disciplineId: props.discipline,
-            data: { athlete_id: athleteId },
+            data: { member_id: athleteId },
           };
           removeDisciplineAthlete.mutate(data);
         });

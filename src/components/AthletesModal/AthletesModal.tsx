@@ -119,13 +119,11 @@ export default function AthletesModal(
 
   const [page, setPage] = useState<number>(0);
 
-  const handleBackButtonClick = (
-  ) => {
+  const handleBackButtonClick = () => {
     setPage(page - 1);
   };
 
-  const handleNextButtonClick = (
-  ) => {
+  const handleNextButtonClick = () => {
     setPage(page + 1);
   };
 
@@ -160,7 +158,7 @@ export default function AthletesModal(
       });
     } else {
       athleteList.forEach((athlete: string) => {
-        const athleteData = { athlete_id: athlete };
+        const athleteData = { member_id: athlete };
         const data = { eventId: props.eventData.id, data: athleteData };
         addEventAthlete.mutate(data);
       });
@@ -241,7 +239,7 @@ export default function AthletesModal(
   } = useForm<FormValues>();
 
   const addDisciplineAthlete = disciplinesHooks.useAddDisciplineAthlete();
-  const patchAthlete = membersHooks.usePatchMemberData();
+  const patchMember = membersHooks.usePatchMemberData();
 
   const onSubmit = async (data: any) => {
     if (
@@ -283,7 +281,7 @@ export default function AthletesModal(
             memberId: currentAthleteId,
             data: { weight: freeClubWeight },
           };
-          await patchAthlete.mutateAsync(payload);
+          await patchMember.mutateAsync(payload);
         }
       }
 
