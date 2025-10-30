@@ -42,6 +42,7 @@ import PasswordResetPage from "./pages/auth/PasswordResetPage";
 import { useEffect } from "react";
 import { useAuth } from "./access/GlobalAuthProvider";
 import { SnackbarProvider } from "notistack";
+import WIPPage from "./pages/ErrorPages/WIPPage";
 // import SnackbarCloser from "./dashboard/SnackBarCloser";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
 
@@ -341,6 +342,30 @@ function App() {
                   <ProtectedRoute
                     element={<MainSettingsPage />}
                     allowedRoles={["main_admin"]}
+                  />
+                )
+              }
+            />
+            <Route
+              path="news/"
+              element={
+                isAuthLoading ? null : (
+                  <ProtectedRoute
+                    element={<WIPPage />}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
+                    allowUnauthenticated
+                  />
+                )
+              }
+            />
+            <Route
+              path="contacts/"
+              element={
+                isAuthLoading ? null : (
+                  <ProtectedRoute
+                    element={<WIPPage />}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
+                    allowUnauthenticated
                   />
                 )
               }

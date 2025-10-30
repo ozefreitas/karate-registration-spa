@@ -70,7 +70,7 @@ export default function NewAthletePage() {
       club: data.club,
     };
 
-    if (data.is_force_ident === false) {
+    if (data.force_ident === false) {
       formData.id_number = 0;
     }
 

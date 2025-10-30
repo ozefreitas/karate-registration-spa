@@ -107,7 +107,7 @@ export default function Header(
             />
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link style={{ color: "white" }} to="/">
-                Karate Score App - {import.meta.env.VITE_DISPLAY_ADMIN_NAME}
+                Martial Arts Score - {import.meta.env.VITE_DISPLAY_ADMIN_NAME}
               </Link>
             </Typography>
             <Stack alignItems="center" direction="row" spacing={2}>

@@ -3,6 +3,7 @@ import {
   CardHeader,
   CardContent,
   Grid,
+  Typography,
   Accordion,
   AccordionDetails,
   AccordionSummary,
@@ -70,7 +71,12 @@ export default function HelpPage() {
                 SERVEM COMO INSCRIÇÃO EM QUALQUER PROVA!<p></p>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Formulário de registo de Atleta
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: "bold" }}
+                      component="span"
+                    >
+                      Formulário de registo de Atleta
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     Este formulário contém um número de campos necessários para
@@ -84,7 +90,12 @@ export default function HelpPage() {
                 </Accordion>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Página de todos Atletas
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: "bold" }}
+                      component="span"
+                    >
+                      Página de todos os Atletas
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     Ná página de Atletas poderá consultar uma tabela simples com
@@ -95,7 +106,12 @@ export default function HelpPage() {
                 </Accordion>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Perfil do Atleta
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: "bold" }}
+                      component="span"
+                    >
+                      Perfil do Atleta
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     Cada Atleta terá uma página de perfil. Aqui poderá consultar
@@ -123,7 +139,12 @@ export default function HelpPage() {
                 SERVEM COMO INSCRIÇÃO EM QUALQUER PROVA!<p></p>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Formulário de registo de Equipa
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: "bold" }}
+                      component="span"
+                    >
+                      Formulário de registo de Equipa
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     Este formulário contém um número de campos necessários para
@@ -134,7 +155,12 @@ export default function HelpPage() {
                 </Accordion>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Página de todas Equipas
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: "bold" }}
+                      component="span"
+                    >
+                      Página de todas as Equipas
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     Ná página de Equipas poderá consultar uma tabela simples com
@@ -145,7 +171,12 @@ export default function HelpPage() {
                 </Accordion>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
-                    Perfil da Equipa
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: "bold" }}
+                      component="span"
+                    >
+                      Perfil da Equipa
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     Cada Equipa terá uma página de perfil. Aqui poderá consultar
@@ -172,9 +203,8 @@ export default function HelpPage() {
               <CardContent>
                 No final de cada competição será disponibilizado o quadro de
                 classificações nesta página. Apenas os lugares de pódio podem
-                ser consultados (para não ter uma lista internminável), contudo
-                será disponibilizado um documento .PDF com os resultados
-                completos.
+                ser consultados, contudo será disponibilizado um documento .PDF
+                com os resultados completos.
               </CardContent>
             </Card>
           </Grid>
@@ -194,8 +224,8 @@ export default function HelpPage() {
                 A <i>Karate Score App</i> funciona com um sistema de subscrição,
                 ou seja, para ter acesso a todas as funcionalidades, terá de
                 pagar uma mensalidade. Apenas funções básicas de inscrições em
-                eventos estão disponíveis em contas <i>free</i>, e com
-                limitações ainda assim. <p></p>
+                eventos estão disponíveis em contas <i>free</i>, e estas com
+                limitações. <p></p>
                 Para mais informações sobre as possiblidades de pagamento, assim
                 como das funcionalidades desbloquaedas com os mesmos, deve
                 enviar um email para jpsfreitas12@gmail.com, com o assunto
@@ -206,7 +236,7 @@ export default function HelpPage() {
                 ter uma conta na <i>Karate Score App</i>. Todas as contas
                 começam na modalidade <i>free</i>. Utilizadores <i>free</i> não
                 terão acesso a qualquer informação detalhada sobre os seus
-                atletas, nem mesmo à prórpia listagem dos mesmos. Em baixo fica
+                atletas, nem mesmo à própria listagem dos mesmos. Em baixo fica
                 um resumo das funcionalidades de cada tipo de conta:
                 <ul>
                   <li>
@@ -261,7 +291,7 @@ export default function HelpPage() {
                 notificações ou classificações. <br />
                 As Notificações têm 5 niveis de importância:
                 <ul>
-                  <li>Normal - Apneas informativa;</li>
+                  <li>Normal - Apenas informativa;</li>
                   <li>
                     <span style={{ color: "green" }}>Verde</span> - Sem
                     importância nem necessidade de ser resolvida em breve;
@@ -294,8 +324,8 @@ export default function HelpPage() {
                 }}
               ></CardHeader>
               <CardContent>
-                As inscrições deverão ser feitas para cada prova,
-                independentemente. Pode inscrever Atletas e Equipas (para as
+                As inscrições deverão ser feitas para cada prova, de forma
+                independente. Pode inscrever Atletas e Equipas (para as
                 competições que o permitirem) a partir do cartão de cada prova.
                 As inscrições funcionam a partir da seleção de Atletas
                 previamente registados na página Atletas.

@@ -26,6 +26,7 @@ import AddClubModal from "../../components/Admin/AddClubModal";
 import { useSnackbar } from "notistack";
 
 export default function MainSettingsPage() {
+  const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
   const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState("one");
   const [clickedUsername, setClickedUsername] = useState<string>("");
@@ -143,7 +144,7 @@ export default function MainSettingsPage() {
       { username: passwordRequestedDetails.id },
       {
         onSuccess: (data: any) => {
-          setCreatedPasswordURL(data.data.url);
+          setCreatedPasswordURL(`${baseURL}${data.data.url}`);
         },
       }
     );
@@ -156,8 +157,6 @@ export default function MainSettingsPage() {
       },
     });
   };
-
-  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5173";
 
   function copyToClipboard(text: string) {
     navigator.clipboard

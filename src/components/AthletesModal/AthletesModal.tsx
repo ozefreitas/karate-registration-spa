@@ -729,9 +729,8 @@ export default function AthletesModal(
               <IconButton
                 onClick={handleNextButtonClick}
                 disabled={
-                  page >=
-                  Math.ceil(athletesNotInEventData?.data?.results.length / 10) -
-                    1
+                  !athletesNotInEventData?.data?.count ||
+                  athletesNotInEventData.data.count <= 10
                 }
                 aria-label="next page"
               >
