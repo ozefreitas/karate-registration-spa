@@ -11,7 +11,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import DeleteAthleteModal from "../../components/AthletesModal/DeleteAthleteModal";
-import { Delete, Edit, Update, Clear, ArrowDropDownIcon } from "@mui/icons-material";
+import { Delete, Edit, Update, Clear, ArrowDropDown } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -468,7 +468,7 @@ export default function PersonalInfoSection(
                     color="warning"
                     select
                     SelectProps={{
-                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null,
+                      IconComponent: isEditMode ? ArrowDropDown : () => null,
                       readOnly: !isEditMode,
                     }}
                     variant={
@@ -523,7 +523,7 @@ export default function PersonalInfoSection(
                     color="warning"
                     select
                     SelectProps={{
-                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null,
+                      IconComponent: isEditMode ? ArrowDropDown : () => null,
                       readOnly: !isEditMode,
                     }}
                     variant={
