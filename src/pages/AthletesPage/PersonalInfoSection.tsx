@@ -468,7 +468,7 @@ export default function PersonalInfoSection(
                     color="warning"
                     select
                     SelectProps={{
-                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null
+                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null,
                       readOnly: !isEditMode,
                     }}
                     variant={
@@ -523,7 +523,7 @@ export default function PersonalInfoSection(
                     color="warning"
                     select
                     SelectProps={{
-                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null
+                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null,
                       readOnly: !isEditMode,
                     }}
                     variant={
