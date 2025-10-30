@@ -11,7 +11,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import DeleteAthleteModal from "../../components/AthletesModal/DeleteAthleteModal";
-import { Delete, Edit, Update, Clear } from "@mui/icons-material";
+import { Delete, Edit, Update, Clear, ArrowDropDownIcon } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -467,6 +467,10 @@ export default function PersonalInfoSection(
                   <TextField
                     color="warning"
                     select
+                    SelectProps={{
+                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null
+                      readOnly: !isEditMode,
+                    }}
                     variant={
                       isPrivileged && isEditMode ? "outlined" : "standard"
                     }
@@ -518,6 +522,10 @@ export default function PersonalInfoSection(
                   <TextField
                     color="warning"
                     select
+                    SelectProps={{
+                      IconComponent: isEditMode ? ArrowDropDownIcon : () => null
+                      readOnly: !isEditMode,
+                    }}
                     variant={
                       isPrivileged && isEditMode ? "outlined" : "standard"
                     }
@@ -538,7 +546,7 @@ export default function PersonalInfoSection(
                     error={!!errors.gender}
                   >
                     {GenderOptions.filter((item) =>
-                      ["masculino", "feminino"].includes(item.value)
+                      ["Masculino", "Feminino"].includes(item.value)
                     ).map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
