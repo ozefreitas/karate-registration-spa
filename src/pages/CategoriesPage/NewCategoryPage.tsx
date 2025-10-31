@@ -139,6 +139,20 @@ export default function NewCategoryPage() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("add_another_cat_button")?.click();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
@@ -617,6 +631,7 @@ export default function NewCategoryPage() {
           size={12}
         >
           <Button
+            id="add_another_cat_button"
             variant="contained"
             size={"large"}
             color={"success"}

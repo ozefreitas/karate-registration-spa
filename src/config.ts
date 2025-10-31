@@ -106,7 +106,7 @@ export const NotificationUrgencyOptions: { label: string; value: string }[] = [
 ];
 
 export const QuotesOptions: { label: string; value: string }[] = [
-  { value: "overdue", label: "Em falta" },
+  { value: "overdue", label: "Em dívida" },
   { value: "regular", label: "Regular" },
 ];
 

@@ -266,6 +266,20 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     { key: "has_weight", label: "Limite Pesos" },
   ];
 
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("add_event_button")?.click();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
@@ -798,11 +812,11 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             <Tooltip title="Adicionar">
               <IconButton
                 onClick={() => {
-                  if (discipline !== "") {
+                  if (discipline === "") {
+                    setDisciplineWarning(true);
+                  } else {
                     setDisciplines((prev) => [...prev, discipline]);
                     setDiscipline("");
-                  } else {
-                    setDisciplineWarning(true);
                   }
                 }}
               >
@@ -811,7 +825,13 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             </Tooltip>
           </Grid>
           <Grid size={5} sx={{ ml: 3, mt: 1 }}>
-            {disciplines.length !== 0 ? (
+            {disciplines.length === 0 ? (
+              <ListItem>
+                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+                  Não tem modalidades para adicionar a este Evento.
+                </ListItemButton>
+              </ListItem>
+            ) : (
               <List dense>
                 {disciplines.map((discipline, index) => (
                   <ListItem key={index}>
@@ -827,12 +847,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   </ListItem>
                 ))}
               </List>
-            ) : (
-              <ListItem>
-                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
-                  Não tem modalidades para adicionar a este Evento.
-                </ListItemButton>
-              </ListItem>
             )}
           </Grid>
         </FormAccordion>
@@ -842,7 +856,14 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           tooltipMessage='Apenas poderá abrir esta secção se selecionar "Escalões".'
         >
           <Grid size={3}>
-            {disciplines.length !== 0 ? (
+            {disciplines.length === 0 ? (
+              <ListItem>
+                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+                  As Modalidades que adicionar no campo de cima aparecerão aqui.
+                  Adicione Modalidades para poder adicionar Escalões às mesmas.
+                </ListItemButton>
+              </ListItem>
+            ) : (
               <List dense>
                 {disciplines.map((discipline, index) => (
                   <ListItem key={index}>
@@ -861,13 +882,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   </ListItem>
                 ))}
               </List>
-            ) : (
-              <ListItem>
-                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
-                  As Modalidades que adicionar no campo de cima aparecerão aqui.
-                  Adicione Modalidades para poder adicionar Escalões às mesmas.
-                </ListItemButton>
-              </ListItem>
             )}
             <Button
               sx={{ m: 1 }}
@@ -886,7 +900,18 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <CircularProgress />
               </Box>
-            ) : selectedDisciplineForCategory !== "" ? (
+            ) : selectedDisciplineForCategory === "" ? (
+              <Grid container size={12} justifyContent="center">
+                <Grid sx={{ mt: 5 }} size={6}>
+                  <ListItem>
+                    <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+                      Selecione uma Modalidade no campo ao lado para visualizar
+                      os Escalões já adicionadas.
+                    </ListItemButton>
+                  </ListItem>
+                </Grid>
+              </Grid>
+            ) : (
               <AthletesTable
                 type="CategoriasReadOnly"
                 data={categoryRows}
@@ -904,17 +929,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 disciplineCategories={disciplineCategories}
                 setDisciplineCategories={setDisciplineCategories}
               ></AthletesTable>
-            ) : (
-              <Grid container size={12} justifyContent="center">
-                <Grid sx={{ mt: 5 }} size={6}>
-                  <ListItem>
-                    <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
-                      Selecione uma Modalidade no campo ao lado para visualizar
-                      os Escalões já adicionadas.
-                    </ListItemButton>
-                  </ListItem>
-                </Grid>
-              </Grid>
             )}
           </Grid>
           <Grid sx={{ m: 2, mt: 1 }} container size={12}></Grid>
@@ -927,6 +941,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           size={12}
         >
           <Button
+            id="add_event_button"
             variant="contained"
             size={"large"}
             color={"success"}

@@ -8,6 +8,9 @@ import {
   FormControl,
   FormControlLabel,
   TextField,
+  Box,
+  CircularProgress,
+  Grid,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
@@ -32,8 +35,11 @@ export default function CategoryInfoModal(
     categoryId: any;
   }>
 ) {
-  const { data: singleCategoryData, refetch } =
-    categoriesHooks.useFetchSingleCategory(props.categoryId);
+  const {
+    data: singleCategoryData,
+    refetch,
+    isLoading: isSingleCategoryDataLoading,
+  } = categoriesHooks.useFetchSingleCategory(props.categoryId);
 
   React.useEffect(() => {
     refetch();
@@ -73,262 +79,277 @@ export default function CategoryInfoModal(
         </Toolbar>
       </AppBar>
       <DialogContent sx={{ pb: 0 }}>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Nome:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "200px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={singleCategoryData?.data.name}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Género:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "200px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={singleCategoryData?.data.gender}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Idade Mínima:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "100px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={singleCategoryData?.data.min_age ?? "N/A"}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Idade Máxima:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "100px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={singleCategoryData?.data.max_age ?? "N/A"}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Graduação Mínima:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "150px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={
-                  getGraduationFromValue(
-                    Number(singleCategoryData?.data.min_grad)
-                  ) ?? "N/A"
+        {isSingleCategoryDataLoading ? (
+          <Grid
+            height={100}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress />
+          </Grid>
+        ) : (
+          <Grid>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Nome:
+                  </Typography>
                 }
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Graduação Máxima:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "150px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={
-                  getGraduationFromValue(
-                    Number(singleCategoryData?.data.max_grad)
-                  ) ?? "N/A"
+                control={
+                  <TextField
+                    sx={{ width: "200px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.name}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
                 }
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Peso Mínimo:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "100px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={singleCategoryData?.data.min_weight ?? "N/A"}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Peso Máximo:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "100px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={singleCategoryData?.data.max_weight ?? "N/A"}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Género:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "200px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.gender}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Idade Mínima:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "100px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.min_age ?? "N/A"}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Idade Máxima:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "100px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.max_age ?? "N/A"}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Graduação Mínima:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "150px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={
+                      getGraduationFromValue(
+                        Number(singleCategoryData?.data.min_grad)
+                      ) ?? "N/A"
+                    }
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Graduação Máxima:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "150px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={
+                      getGraduationFromValue(
+                        Number(singleCategoryData?.data.max_grad)
+                      ) ?? "N/A"
+                    }
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Peso Mínimo:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "100px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.min_weight ?? "N/A"}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Peso Máximo:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "100px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.max_weight ?? "N/A"}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: { fontSize: 18, marginRight: 10 },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+          </Grid>
+        )}
       </DialogContent>
     </Dialog>
   );

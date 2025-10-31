@@ -31,9 +31,7 @@ export default function LoginPage() {
   // );
 
   const { user } = useAuth();
-  if (user !== undefined) {
-    return <Navigate to={"/"}></Navigate>;
-  }
+  
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -77,6 +75,10 @@ export default function LoginPage() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  if (user !== undefined) {
+    return <Navigate to={"/"}></Navigate>;
+  }
 
   return (
     <Grid container sx={{ m: 30, mt: 0, mb: 0 }}>

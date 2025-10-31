@@ -11,8 +11,14 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import DeleteAthleteModal from "../../components/AthletesModal/DeleteAthleteModal";
-import { Delete, Edit, Update, Clear, ArrowDropDown } from "@mui/icons-material";
-import { GenderOptions, GraduationsOptions } from "../../config";
+import {
+  Delete,
+  Edit,
+  Update,
+  Clear,
+  ArrowDropDown,
+} from "@mui/icons-material";
+import { GenderOptions, GraduationsOptions, QuotesOptions } from "../../config";
 import { membersHooks } from "../../hooks";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -84,11 +90,12 @@ export default function PersonalInfoSection(
       competitor: props.athleteData?.data.competitor,
       birthDate: props.athleteData?.data.birth_date,
       weight: props.athleteData?.data.weight ?? "N/A",
-      quotes: props.athleteData?.data.quotes ? "Regularizado" : "Por pagar",
+      quotes: props.athleteData?.data.quotes ? "regular" : "overdue",
     },
   });
 
   const onSubmit = (data: any) => {
+    console.log(data);
     const formData = {
       first_name: data.firstName,
       last_name: data.lastName,
@@ -97,6 +104,7 @@ export default function PersonalInfoSection(
       gender: data.gender,
       competitor: data.competitor,
       birth_date: data.birthDate,
+      quotes: data.quotes,
       weight: data.weight === "N/A" || data.weight === "" ? null : data.weight,
     };
     console.log(formData);
@@ -467,10 +475,6 @@ export default function PersonalInfoSection(
                   <TextField
                     color="warning"
                     select
-                    SelectProps={{
-                      IconComponent: isEditMode ? ArrowDropDown : () => null,
-                      readOnly: !isEditMode,
-                    }}
                     variant={
                       isPrivileged && isEditMode ? "outlined" : "standard"
                     }
@@ -481,6 +485,10 @@ export default function PersonalInfoSection(
                         readOnly: !isEditMode,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
+                      },
+                      select: {
+                        IconComponent: isEditMode ? ArrowDropDown : () => null,
+                        readOnly: !isEditMode,
                       },
                     }}
                     required
@@ -522,10 +530,6 @@ export default function PersonalInfoSection(
                   <TextField
                     color="warning"
                     select
-                    SelectProps={{
-                      IconComponent: isEditMode ? ArrowDropDown : () => null,
-                      readOnly: !isEditMode,
-                    }}
                     variant={
                       isPrivileged && isEditMode ? "outlined" : "standard"
                     }
@@ -536,6 +540,10 @@ export default function PersonalInfoSection(
                         readOnly: !isEditMode,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
+                      },
+                      select: {
+                        IconComponent: isEditMode ? ArrowDropDown : () => null,
+                        readOnly: !isEditMode,
                       },
                     }}
                     required
@@ -633,14 +641,21 @@ export default function PersonalInfoSection(
                 render={({ field }) => (
                   <TextField
                     color="warning"
-                    variant="standard"
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
                     label=""
                     fullWidth
+                    select
                     slotProps={{
                       input: {
                         readOnly: true,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
+                      },
+                      select: {
+                        IconComponent: isEditMode ? ArrowDropDown : () => null,
+                        readOnly: !isEditMode,
                       },
                     }}
                     {...field}
@@ -648,7 +663,13 @@ export default function PersonalInfoSection(
                       field.onChange(e);
                     }}
                     error={!!errors.quotes}
-                  />
+                  >
+                    {QuotesOptions.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 )}
               />
             }

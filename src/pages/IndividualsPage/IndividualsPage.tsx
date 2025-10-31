@@ -79,13 +79,11 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         ></CardHeader>
         <CardContent>
           Aqui poderá consultar todos os Atletas que estão inscritos para a
-          prova que selecionou (ver acima). Alterar informações de um Atleta irá
-          modificar o próprio Atleta, e não apenas a própria inscrição (são a
-          mesma coisa). <br /> Tal como presente nas regras, no período de
-          retificações apenas pode eliminar inscrições, e quando as inscrições
-          estiverem fechadas não podem ser efetuadas operações, apenas ser
-          visualizadas as isncrições. <br />
-          Ao clicar em "Selecionar Atleta", apenas irão aparecer Alunos que
+          prova que selecionou (ver acima). <br /> Tal como presente nas regras,
+          no período de retificações apenas pode eliminar inscrições, e quando
+          as inscrições estiverem fechadas não podem ser efetuadas operações,
+          apenas ser visualizadas as inscrições. <br />
+          Ao clicar em "Selecionar Atleta", apenas irão aparecer aqueles que
           estejam marcados como "Competidores". Se algum Atleta não constar na
           lista, por favor verifique na página de perfil desse Atleta se o campo
           "É Competidor" está selecionado. Caso não possua uma subscrição,
@@ -103,7 +101,11 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 },
               }}
             >
-              {!isSingleEventLoading ? (
+              {isSingleEventLoading ? (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
                 <Typography
                   variant="h6"
                   sx={{
@@ -119,10 +121,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 >
                   Estado: {state}
                 </Typography>
-              ) : (
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <CircularProgress />
-                </Box>
               )}
             </CardContent>
           </Card>
@@ -134,7 +132,18 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : disciplinesData?.data.results.length !== 0 ? (
+        ) : disciplinesData?.data.results.length === 0 ? (
+          <AthletesTable
+            type="Individuais"
+            data={singleEventData?.data.individuals}
+            count={singleEventData?.data.individuals.length}
+            columnsHeaders={columnMaping}
+            actions
+            selection
+            deletable
+            userRole={props.userRole}
+          ></AthletesTable>
+        ) : (
           disciplinesData?.data.results.map((discipline: any, index: any) => (
             <span key={index}>
               <Grid
@@ -173,17 +182,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
               ></AthletesTable>
             </span>
           ))
-        ) : (
-          <AthletesTable
-            type="Individuais"
-            data={singleEventData?.data.individuals}
-            count={singleEventData?.data.individuals.length}
-            columnsHeaders={columnMaping}
-            actions
-            selection
-            deletable
-            userRole={props.userRole}
-          ></AthletesTable>
         )}
       </Grid>
       {singleEventData?.data.is_open ? (
@@ -205,7 +203,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         handleModalClose={handleModalClose}
         eventData={singleEventData?.data}
       ></AthletesModal>
-      {currentDiscipline !== "" ? (
+      {currentDiscipline === "" ? null : (
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}
           disciplineData={disciplinesData?.data.results.filter(
@@ -214,7 +212,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           handleModalClose={handleCategoriesListModalClose}
           isModalOpen={isCategoriesListModalOpen}
         ></CategoriesReadOnlyModal>
-      ) : null}
+      )}
     </>
   );
 }

@@ -13,6 +13,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { GraduationsOptions, GenderOptions, ReasonOptions } from "../../config";
@@ -121,6 +122,20 @@ export default function NewAthletePage() {
       },
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("add_another_button")?.click();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -501,6 +516,7 @@ export default function NewAthletePage() {
             Submeter e voltar
           </Button>
           <Button
+            id="add_another_button"
             variant="contained"
             size={"large"}
             color={"success"}

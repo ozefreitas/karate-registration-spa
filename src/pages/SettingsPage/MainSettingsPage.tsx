@@ -30,7 +30,7 @@ export default function MainSettingsPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState("one");
   const [clickedUsername, setClickedUsername] = useState<string>("");
-  console.log(setClickedUsername)
+  console.log(setClickedUsername);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [selectedRequestId, setSelectedRequestId] = useState<string>("");
   const [selectedPasswordRequestId, setSelectedPasswordRequestId] =
@@ -169,6 +169,7 @@ export default function MainSettingsPage() {
       });
   }
 
+  console.log(acountDetails);
   return (
     <>
       <Card sx={{ m: 2, mt: 0 }}>
@@ -414,12 +415,23 @@ export default function MainSettingsPage() {
                                 color="warning"
                                 variant="standard"
                                 label=""
-                                value={acountDetails.email}
+                                value={
+                                  acountDetails.email === ""
+                                    ? "N/A"
+                                    : acountDetails.email
+                                }
                                 slotProps={{
                                   input: {
                                     readOnly: true,
                                     disableUnderline: true,
-                                    style: { fontSize: 18, marginRight: 10 },
+                                    style: {
+                                      fontSize: 18,
+                                      marginRight: 10,
+                                      color:
+                                        acountDetails.email === ""
+                                          ? "red"
+                                          : undefined,
+                                    },
                                   },
                                 }}
                               />
@@ -595,12 +607,23 @@ export default function MainSettingsPage() {
                                 color="warning"
                                 variant="standard"
                                 label=""
-                                value={passwordRequestedDetails.email}
+                                value={
+                                  passwordRequestedDetails.email === ""
+                                    ? "N/A"
+                                    : passwordRequestedDetails.email
+                                }
                                 slotProps={{
                                   input: {
                                     readOnly: true,
                                     disableUnderline: true,
-                                    style: { fontSize: 18, marginRight: 10 },
+                                    style: {
+                                      fontSize: 18,
+                                      marginRight: 10,
+                                      color:
+                                        passwordRequestedDetails.email === ""
+                                          ? "red"
+                                          : undefined,
+                                    },
                                   },
                                 }}
                               />

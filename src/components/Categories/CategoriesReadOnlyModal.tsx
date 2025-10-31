@@ -103,7 +103,7 @@ export default function CategoriesReadOnlyModal(
     max_weight: string;
   };
 
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleBackButtonClick = () => {
@@ -118,7 +118,7 @@ export default function CategoriesReadOnlyModal(
     setSearchQuery(event.target.value);
   };
 
-  const disicplinesSearched = React.useMemo(() => {
+  const disciplinesSearched = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
     if (!query) return props.disciplineData[0].categories ?? [];
@@ -130,6 +130,16 @@ export default function CategoriesReadOnlyModal(
       );
     });
   }, [searchQuery, props.disciplineData]);
+
+  const itemsPerPage = 10;
+
+  const paginatedDisciplines = React.useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return disciplinesSearched.slice(start, end);
+  }, [disciplinesSearched, page]);
+
+  console.log(paginatedDisciplines);
 
   return (
     <Dialog
@@ -177,8 +187,12 @@ export default function CategoriesReadOnlyModal(
       </AppBar>
       <DialogContent sx={{ pb: 0 }}>
         <List>
-          {disicplinesSearched.length !== 0 ? (
-            disicplinesSearched.map((category: Category, index: string) => (
+          {paginatedDisciplines.length === 0 ? (
+            <ListItem>
+              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
+            </ListItem>
+          ) : (
+            paginatedDisciplines.map((category: Category, index: string) => (
               <ListItem key={index} disablePadding>
                 <ListItemButton key={index}>
                   <ListItemIcon>
@@ -204,10 +218,6 @@ export default function CategoriesReadOnlyModal(
                 <Divider />
               </ListItem>
             ))
-          ) : (
-            <ListItem>
-              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
-            </ListItem>
           )}
         </List>
       </DialogContent>
@@ -216,7 +226,7 @@ export default function CategoriesReadOnlyModal(
           <Tooltip title="Página anterior">
             <IconButton
               onClick={handleBackButtonClick}
-              disabled={page === 0}
+              disabled={page === 1}
               aria-label="previous page"
             >
               <KeyboardArrowLeft />
@@ -225,7 +235,10 @@ export default function CategoriesReadOnlyModal(
           <Tooltip title="Próxima página">
             <IconButton
               onClick={handleNextButtonClick}
-              disabled={page >= Math.ceil(props.disciplineData.length / 10) - 1}
+              disabled={
+                props.disciplineData === undefined ||
+                page * itemsPerPage >= props.disciplineData.length
+              }
               aria-label="next page"
             >
               <KeyboardArrowRight />

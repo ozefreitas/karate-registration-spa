@@ -113,7 +113,7 @@ export default function CategoriesModal(
   };
 
   const navigate = useNavigate();
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [checked, setChecked] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const {
@@ -122,13 +122,11 @@ export default function CategoriesModal(
     error: categoriesError,
   } = categoriesHooks.useFetchCategoriesData(1, 100);
 
-  const handleBackButtonClick = (
-  ) => {
+  const handleBackButtonClick = () => {
     setPage(page - 1);
   };
 
-  const handleNextButtonClick = (
-  ) => {
+  const handleNextButtonClick = () => {
     setPage(page + 1);
   };
 
@@ -158,6 +156,14 @@ export default function CategoriesModal(
       return category.name.toLowerCase().includes(query);
     });
   }, [searchQuery, categoriesData]);
+
+  const itemsPerPage = 10;
+
+  const paginatedCategories = React.useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return categoryAthletes.slice(start, end);
+  }, [categoryAthletes, page]);
 
   const handleSubmit = () => {
     const data = { discipline: props.disciplineData, categories: checked };
@@ -267,8 +273,12 @@ export default function CategoriesModal(
                 Adicionar Escalão
               </Button>
             </>
-          ) : categoryAthletes.length !== 0 ? (
-            categoryAthletes
+          ) : paginatedCategories.length === 0 ? (
+            <ListItem>
+              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
+            </ListItem>
+          ) : (
+            paginatedCategories
               .filter((category: Category) => {
                 if (props.disciplineCategories.length === 0) {
                   return category;
@@ -331,10 +341,6 @@ export default function CategoriesModal(
                   <Divider />
                 </ListItem>
               ))
-          ) : (
-            <ListItem>
-              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
-            </ListItem>
           )}
         </List>
       </DialogContent>
@@ -343,7 +349,7 @@ export default function CategoriesModal(
           <Tooltip title="Página anterior">
             <IconButton
               onClick={handleBackButtonClick}
-              disabled={page === 0}
+              disabled={page === 1}
               aria-label="previous page"
             >
               <KeyboardArrowLeft />
@@ -353,7 +359,7 @@ export default function CategoriesModal(
             <IconButton
               onClick={handleNextButtonClick}
               disabled={
-                page >= Math.ceil(categoriesData?.data?.results.length / 10) - 1
+                !categoriesData?.data.count || page * itemsPerPage >= categoriesData.data.count
               }
               aria-label="next page"
             >
