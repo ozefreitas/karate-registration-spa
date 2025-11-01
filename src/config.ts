@@ -1,3 +1,7 @@
+import bannerLigaSoshinkai from "./assets/liga_soshinkai_banner.jpg";
+import bannerTorneioSMA from "./assets/torneio_sma_banner.jpg";
+import bannerRegulamentoGeral from "./assets/regulamento_geral_banner.jpg";
+
 export const GraduationsOptions: { label: string; value: number }[] = [
   { label: "9º Kyu", value: 15 },
   { label: "8º Kyu Kari", value: 14.5 },
@@ -144,4 +148,30 @@ export const NotificationColorOptions: { label: string; value: string }[] = [
   { value: "yellow", label: "green" },
   { value: "orange", label: "green" },
   { value: "red", label: "green" },
+];
+
+export const RulesOptions: {
+  image: string;
+  file: string;
+  rename: string;
+  disabled: boolean;
+}[] = [
+  {
+    image: bannerLigaSoshinkai,
+    file: "/files/liga_soshinkai_rules.pdf",
+    rename: "Regras_Liga_Shoshinkai",
+    disabled: false,
+  },
+  {
+    image: bannerTorneioSMA,
+    file: "/files/torneio_sma_rules.pdf",
+    rename: "Regras_Torneio_SMA",
+    disabled: true,
+  },
+  {
+    image: bannerRegulamentoGeral,
+    file: "/files/geral_rules.pdf",
+    rename: "Regras_Gerais",
+    disabled: true,
+  },
 ];

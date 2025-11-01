@@ -126,7 +126,8 @@ function App() {
               element={
                 isAuthLoading ? null : (
                   <ProtectedRoute
-                    element={<TeamsPage userRole={userRole} />}
+                    element={<WIPPage></WIPPage>}
+                    // element={<TeamsPage userRole={userRole} />}
                     allowedRoles={["subed_club"]}
                   />
                 )
@@ -137,7 +138,8 @@ function App() {
               element={
                 isAuthLoading ? null : (
                   <ProtectedRoute
-                    element={<SingleTeamPage />}
+                    element={<WIPPage></WIPPage>}
+                    // element={<SingleTeamPage />}
                     allowedRoles={["subed_club", "main_admin"]}
                   />
                 )
@@ -148,7 +150,8 @@ function App() {
               element={
                 isAuthLoading ? null : (
                   <ProtectedRoute
-                    element={<NewTeamPage />}
+                    element={<WIPPage></WIPPage>}
+                    // element={<NewTeamPage />}
                     allowedRoles={["subed_club"]}
                   />
                 )
@@ -348,6 +351,18 @@ function App() {
             />
             <Route
               path="news/"
+              element={
+                isAuthLoading ? null : (
+                  <ProtectedRoute
+                    element={<WIPPage />}
+                    allowedRoles={["free_club", "subed_club", "main_admin"]}
+                    allowUnauthenticated
+                  />
+                )
+              }
+            />
+            <Route
+              path="feedback/"
               element={
                 isAuthLoading ? null : (
                   <ProtectedRoute

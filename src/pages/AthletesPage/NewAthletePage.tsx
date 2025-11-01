@@ -13,7 +13,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { GraduationsOptions, GenderOptions, ReasonOptions } from "../../config";
@@ -27,6 +27,7 @@ import { membersHooks, adminHooks } from "../../hooks";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { data: clubUserData } = adminHooks.useFetchClubUsersData();
   const createAthlete = membersHooks.useCreateMember();
@@ -58,6 +59,8 @@ export default function NewAthletePage() {
   const is_force_ident = watch("force_ident");
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
+    setLoading(true);
+
     const formData = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -77,6 +80,7 @@ export default function NewAthletePage() {
 
     createAthlete.mutate(formData, {
       onSuccess: () => {
+        setLoading(false);
         if (mode === "redirect") {
           navigate("/athletes/");
         } else {
@@ -85,6 +89,7 @@ export default function NewAthletePage() {
         }
       },
       onError: (data: any) => {
+        setLoading(false);
         if (data.response?.data.incompatible_athlete) {
           setError("competitor", {
             message: data.response?.data.incompatible_athlete[0],
@@ -511,6 +516,8 @@ export default function NewAthletePage() {
             size={"large"}
             color={"success"}
             type={"submit"}
+            loading={loading}
+            loadingPosition="start"
             onClick={handleSubmit((data) => onSubmit(data, "redirect"))}
           >
             Submeter e voltar
@@ -521,6 +528,8 @@ export default function NewAthletePage() {
             size={"large"}
             color={"success"}
             type={"submit"}
+            loading={loading}
+            loadingPosition="start"
             onClick={handleSubmit((data) => onSubmit(data, "scroll"))}
           >
             Submeter e Adicionar outro

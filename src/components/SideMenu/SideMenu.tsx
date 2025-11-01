@@ -21,7 +21,7 @@ import {
 } from "../../dashboard/config";
 import { AxiosResponse } from "axios";
 
-const drawerWidth = 300;
+const drawerWidth = 270;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -97,7 +97,10 @@ export default function SideMenu(
       <CssBaseline>
         <Drawer variant="permanent" open={isMenuOpen}>
           <Divider />
-          <List>
+          <List
+            onMouseEnter={() => setIsMenuOpen(true)}
+            onMouseLeave={() => setIsMenuOpen(false)}
+          >
             {sideMenuConfig.map((options, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
@@ -142,7 +145,10 @@ export default function SideMenu(
             ))}
           </List>
           <Divider />
-          <List>
+          <List
+            onMouseEnter={() => setIsMenuOpen(true)}
+            onMouseLeave={() => setIsMenuOpen(false)}
+          >
             {accountSideMenuConfig.map((options, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">

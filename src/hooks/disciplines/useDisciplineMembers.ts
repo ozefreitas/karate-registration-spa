@@ -9,6 +9,7 @@ export const useAddDisciplineAthlete = () => {
   return useMutation({
     mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
       addDisciplineAthlete(disciplineId, data),
+    retry: false,
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
@@ -24,7 +25,7 @@ export const useAddDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

@@ -292,6 +292,7 @@ export default function AthletesModal(
 
       const results = await Promise.allSettled(
         entries.map(([discipline]) => {
+          console.log(discipline);
           const payload = {
             disciplineId: discipline.split("_")[1],
             data: {
@@ -326,15 +327,6 @@ export default function AthletesModal(
 
       setIsMutationDelayActive(false);
     } catch {
-      enqueueSnackbar("Um erro ocurreu! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
       setIsMutationDelayActive(false);
     }
   };
@@ -550,7 +542,91 @@ export default function AthletesModal(
               </FormHelperText>
             )}
           </Grid>
-        ) : !isWeightInputScreenOpen ? (
+        ) : isWeightInputScreenOpen ? (
+          isMutationDelayActive ? (
+            <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            </Grid>
+          ) : (
+            <Grid container size={12}>
+              <Grid size={1}>
+                <Tooltip title="Voltar atrás">
+                  <IconButton
+                    onClick={() => {
+                      handleWeightInputScreenClose();
+                      handleDisciplineScreenOpen();
+                    }}
+                    aria-label="back to disciplines viwer"
+                  >
+                    <KeyboardArrowLeft />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+              <Grid size={11}>
+                <Typography sx={{ m: 1, mb: 3 }}>
+                  O escalão disponível na Modalidade encontrada requer um peso,{" "}
+                  {userRole === "free_club"
+                    ? doesNotHaveWeight
+                      ? "e este Atleta não tem um peso associado."
+                      : "e este Atleta já tem um peso associado."
+                    : null}
+                  <br />
+                  {userRole === "free_club"
+                    ? doesNotHaveWeight
+                      ? "Insira o peso do Atleta no campo seguinte para prosseguir."
+                      : "Confirme o peso do Atleta para prosseguir."
+                    : "Dirija-se à pagina e insira o peso deste Atleta clicando neste botão."}
+                </Typography>
+              </Grid>
+              <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
+                {userRole === "free_club" ? (
+                  <Grid
+                    container
+                    justifyContent="space-evenly"
+                    alignItems="center"
+                    size={12}
+                  >
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Peso"
+                      required
+                      value={freeClubWeight}
+                      onChange={(e) => {
+                        setFreeClubWeight(e.target.value);
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleSubmit(onSubmit)()}
+                    >
+                      Prosseguir
+                    </Button>
+                  </Grid>
+                ) : (
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      navigate(
+                        `/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
+                      );
+                    }}
+                  >
+                    Ir para Atleta
+                  </Button>
+                )}
+              </Grid>
+            </Grid>
+          )
+        ) : (
           <List>
             {isAthletesNotInEventLoading ? (
               <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
@@ -565,152 +641,72 @@ export default function AthletesModal(
               </Grid>
             ) : athletesNotInEventError ? (
               <div>Ocorreu um erro</div>
-            ) : filteredAthletes.length !== 0 ? (
-              userRole === "free_club" && searchQuery === "" ? (
-                <ListItem>
-                  <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Mmebro, ou inicie uma subscrição."></ListItemText>
-                </ListItem>
-              ) : (
-                filteredAthletes.map((athlete: Athlete, index: string) => (
-                  <ListItem
-                    key={index}
-                    disablePadding
-                    secondaryAction={
-                      disciplinesData?.data.results.length !== 0 ? (
-                        <Tooltip title="Selecionar Modalidade">
-                          <IconButton
-                            onClick={() => {
-                              setCurrentAthleteId(athlete.id);
-                              handleDisciplineScreenOpen();
-                            }}
-                            aria-label="go to disciplines selection"
-                          >
-                            <KeyboardArrowRight color="success" />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        <label>
-                          <Checkbox
-                            sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
-                            edge="end"
-                            onChange={() => handleToggle(athlete.id)}
-                            checked={checked.includes(athlete.id)}
-                            slotProps={{
-                              input: {
-                                "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
-                              },
-                            }}
-                          />
-                        </label>
-                      )
-                    }
-                  >
-                    <ListItemButton
-                      key={index}
-                      onClick={() => handleToggle(athlete.id)}
-                    >
-                      <ListItemIcon>
-                        <Person />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name}`}
-                        secondary={`${athlete.gender} / Idade calculada: ${
-                          athlete.age
-                        } / Peso: ${athlete.weight ?? "N/A"}`}
-                      />
-                    </ListItemButton>
-                    <Divider />
-                  </ListItem>
-                ))
-              )
-            ) : (
+            ) : filteredAthletes.length === 0 ? (
               <ListItem>
                 <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
               </ListItem>
+            ) : userRole === "free_club" && searchQuery === "" ? (
+              <ListItem>
+                <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Mmebro, ou inicie uma subscrição."></ListItemText>
+              </ListItem>
+            ) : (
+              filteredAthletes.map((athlete: Athlete, index: string) => (
+                <ListItem
+                  key={index}
+                  disablePadding
+                  secondaryAction={
+                    disciplinesData?.data.results.length === 0 ? (
+                      <label>
+                        <Checkbox
+                          sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                          edge="end"
+                          onChange={() => handleToggle(athlete.id)}
+                          checked={checked.includes(athlete.id)}
+                          slotProps={{
+                            input: {
+                              "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
+                            },
+                          }}
+                        />
+                      </label>
+                    ) : (
+                      <Tooltip title="Selecionar Modalidade">
+                        <IconButton
+                          onClick={() => {
+                            setCurrentAthleteId(athlete.id);
+                            handleDisciplineScreenOpen();
+                          }}
+                          aria-label="go to disciplines selection"
+                        >
+                          <KeyboardArrowRight color="success" />
+                        </IconButton>
+                      </Tooltip>
+                    )
+                  }
+                >
+                  <ListItemButton
+                    key={index}
+                    onClick={() => {
+                      setCurrentAthleteId(athlete.id);
+                      handleDisciplineScreenOpen();
+                      handleToggle(athlete.id);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${athlete.first_name} ${athlete.last_name}`}
+                      secondary={`${athlete.gender} / Idade calculada: ${
+                        athlete.age
+                      } / Peso: ${athlete.weight ?? "N/A"}`}
+                    />
+                  </ListItemButton>
+                  <Divider />
+                </ListItem>
+              ))
             )}
           </List>
-        ) : isMutationDelayActive ? (
-          <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          </Grid>
-        ) : (
-          <Grid container size={12}>
-            <Grid size={1}>
-              <Tooltip title="Voltar atrás">
-                <IconButton
-                  onClick={() => {
-                    handleWeightInputScreenClose();
-                    handleDisciplineScreenOpen();
-                  }}
-                  aria-label="back to disciplines viwer"
-                >
-                  <KeyboardArrowLeft />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-            <Grid size={11}>
-              <Typography sx={{ m: 1, mb: 3 }}>
-                O escalão disponível na Modalidade encontrada requer um peso,{" "}
-                {userRole === "free_club"
-                  ? doesNotHaveWeight
-                    ? "e este Atleta não tem um peso associado."
-                    : "e este Atleta já tem um peso associado."
-                  : null}
-                <br />
-                {userRole === "free_club"
-                  ? doesNotHaveWeight
-                    ? "Insira o peso do Atleta no campo seguinte para prosseguir."
-                    : "Confirme o peso do Atleta para prosseguir."
-                  : "Dirija-se à pagina e insira o peso deste Atleta clicando neste botão."}
-              </Typography>
-            </Grid>
-            <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
-              {userRole === "free_club" ? (
-                <Grid
-                  container
-                  justifyContent="space-evenly"
-                  alignItems="center"
-                  size={12}
-                >
-                  <TextField
-                    color="warning"
-                    variant={"outlined"}
-                    label="Peso"
-                    required
-                    value={freeClubWeight}
-                    onChange={(e) => {
-                      setFreeClubWeight(e.target.value);
-                    }}
-                  />
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => handleSubmit(onSubmit)()}
-                  >
-                    Prosseguir
-                  </Button>
-                </Grid>
-              ) : (
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    navigate(
-                      `/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
-                    );
-                  }}
-                >
-                  Ir para Atleta
-                </Button>
-              )}
-            </Grid>
-          </Grid>
         )}
       </DialogContent>
       <DialogActions sx={{ pr: 4, pb: 2 }}>
