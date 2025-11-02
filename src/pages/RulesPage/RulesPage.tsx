@@ -36,13 +36,14 @@ export default function RulesPage() {
                 color: "white",
               }}
             ></Card>
-            <Grid bottom={-20} left={"55%"} position={"absolute"}>
+            <Grid bottom={-20} left={"48%"} position={"absolute"}>
               <a
                 href={item.file} // path inside public/
                 download={item.rename} // optional rename
                 style={{ textDecoration: "none" }}
               >
                 <Button
+                size="large"
                   disabled={item.disabled}
                   startIcon={<FileDownload></FileDownload>}
                   variant="contained"

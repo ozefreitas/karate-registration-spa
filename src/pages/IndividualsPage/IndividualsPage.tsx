@@ -194,7 +194,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             onClick={() => setIsModalOpen(true)}
             startIcon={<Add />}
           >
-            Selecionar Atletas
+            Inscrever
           </Button>
         </Grid>
       ) : null}

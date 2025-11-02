@@ -102,12 +102,6 @@ export const MatchTypeOptions: { label: string; value: string }[] = [
   // { value: "katakumiteequipa", label: "Kata e Kumite Equipa" },
 ];
 
-export const NotificationUrgencyOptions: { label: string; value: string }[] = [
-  { value: "green", label: "Verde" },
-  { value: "yellow", label: "Amarelo" },
-  { value: "orange", label: "Laranja" },
-  { value: "red", label: "Vermelho" },
-];
 
 export const QuotesOptions: { label: string; value: string }[] = [
   { value: "overdue", label: "Em dívida" },
@@ -141,13 +135,6 @@ export const KataOptions: { label: string; value: string }[] = [
   { value: "ninjushiho", label: "Ninjushiho" },
   { value: "wankan", label: "Wankan" },
   { value: "unsi", label: "Unsu" },
-];
-
-export const NotificationColorOptions: { label: string; value: string }[] = [
-  { value: "green", label: "green" },
-  { value: "yellow", label: "green" },
-  { value: "orange", label: "green" },
-  { value: "red", label: "green" },
 ];
 
 export const RulesOptions: {

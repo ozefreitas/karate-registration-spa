@@ -130,6 +130,12 @@ export default function CategoriesModal(
     setPage(page + 1);
   };
 
+  React.useEffect(() => {
+    if (props.isModalOpen === false) {
+      setPage(1);
+    }
+  }, [props.isModalOpen]);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
@@ -359,7 +365,8 @@ export default function CategoriesModal(
             <IconButton
               onClick={handleNextButtonClick}
               disabled={
-                !categoriesData?.data.count || page * itemsPerPage >= categoriesData.data.count
+                !categoriesData?.data.count ||
+                page * itemsPerPage >= categoriesData.data.count
               }
               aria-label="next page"
             >

@@ -71,6 +71,7 @@ export default function PersonalInfoSection(
   };
 
   const updateAthlete = membersHooks.useUpdateMemberData();
+  const patchMember = membersHooks.usePatchMemberData();
 
   const {
     control,
@@ -89,36 +90,53 @@ export default function PersonalInfoSection(
       gender: props.athleteData?.data.gender,
       competitor: props.athleteData?.data.competitor,
       birthDate: props.athleteData?.data.birth_date,
-      weight: props.athleteData?.data.weight ?? "N/A",
+      weight:
+        props.athleteData?.data.weight === null
+          ? "N/A"
+          : props.athleteData?.data.weight,
       quotes: props.athleteData?.data.quotes ? "regular" : "overdue",
     },
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    const formData = {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      graduation: data.graduation,
-      id_number: data.id_number,
-      gender: data.gender,
-      competitor: data.competitor,
-      birth_date: data.birthDate,
-      quotes: data.quotes,
-      weight: data.weight === "N/A" || data.weight === "" ? null : data.weight,
-    };
-    console.log(formData);
-    const updateData = {
-      memberId: props.athleteData?.data.id,
-      data: formData,
-    };
-    updateAthlete.mutate(updateData, {
-      onSuccess: () => {
-        if (editField === "weight") {
-          handleWeightModalOpen();
-        }
-      },
-    });
+    if (
+      editField === "weight" ||
+      !["main_admin", "superuser"].includes(userRole)
+    ) {
+      const payload = {
+        memberId: props.athleteData?.data.id,
+        data: { weight: data.weight },
+      };
+      patchMember.mutateAsync(payload, {
+        onError: () => {
+          setValue("weight", props.athleteData?.data.weight);
+        },
+      });
+    } else {
+      const formData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        graduation: data.graduation,
+        id_number: data.id_number,
+        gender: data.gender,
+        competitor: data.competitor,
+        birth_date: data.birthDate,
+        quotes: data.quotes === "regular",
+        weight:
+          data.weight === "N/A" || data.weight === "" ? null : data.weight,
+      };
+      const updateData = {
+        memberId: props.athleteData?.data.id,
+        data: formData,
+      };
+      updateAthlete.mutate(updateData, {
+        onSuccess: () => {
+          if (editField === "weight") {
+            handleWeightModalOpen();
+          }
+        },
+      });
+    }
   };
 
   return (
@@ -566,13 +584,8 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          // error={!!errors.has_registrations}
-        >
+        <FormControl sx={{ pb: 2 }} component="fieldset">
           <FormControlLabel
-            sx={{ mr: 2 }}
             labelPlacement="start"
             label={
               <Typography
@@ -583,7 +596,7 @@ export default function PersonalInfoSection(
                   color: editField === "weight" ? "red" : "black",
                 }}
               >
-                Peso:
+                Peso (kg):
               </Typography>
             }
             control={
@@ -592,9 +605,17 @@ export default function PersonalInfoSection(
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleSubmit(onSubmit)();
+                        setIsEditMode(false);
+                      }
+                    }}
                     color="warning"
                     variant={isEditMode ? "outlined" : "standard"}
                     label=""
+                    type={isEditMode ? "number" : "text"}
                     fullWidth
                     slotProps={{
                       input: {
@@ -603,6 +624,7 @@ export default function PersonalInfoSection(
                         style: {
                           fontSize: 20,
                           marginRight: 10,
+                          width: 200,
                           color:
                             field.value === "N/A" ? "lightgray" : "inherit",
                         },

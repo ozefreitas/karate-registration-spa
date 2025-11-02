@@ -39,6 +39,7 @@ import CategoriesModal from "../../components/Categories/CategoriesModal";
 
 export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(true);
   const [isCategoriesExpanded, setIsCategoriesExpanded] =
@@ -140,6 +141,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   });
 
   const onSubmit = async (data: any) => {
+    setLoading(true);
     const formData = {
       name: data.name,
       location: data.location,
@@ -209,6 +211,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           setError("name", { message: sameIdMessage });
           setError("season", { message: sameIdMessage });
         }
+        setLoading(false);
       },
     });
     const eventId = eventResponse.data.id;
@@ -234,6 +237,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           },
         });
       });
+      setLoading(false);
     });
   };
 
@@ -946,6 +950,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             size={"large"}
             color={"success"}
             type={"submit"}
+            loading={loading}
+            loadingPosition="start"
             sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();

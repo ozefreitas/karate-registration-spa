@@ -21,7 +21,7 @@ import IndividualsPage from "./pages/IndividualsPage/IndividualsPage";
 import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
 import ProtectedRoute from "./access/ProtectedRoute";
 import NewEventPage from "./pages/EventsPage/NewEventPage";
-import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
+import NotificationManagerPage from "./pages/NotificationsPage/NotificationManagerPage";
 import UnAuthorizedPage from "./pages/ErrorPages/UnAuthorizedPage";
 // import ServerErrorPage from "./pages/ErrorPages/ServerErrorPage";
 import NotFoundPage from "./pages/ErrorPages/NotFoundPage";
@@ -214,11 +214,22 @@ function App() {
               }
             />
             <Route
+              path="notifications/"
+              element={
+                isAuthLoading ? null : (
+                  <ProtectedRoute
+                    element={<WIPPage />}
+                    allowedRoles={["main_admin", "subed_club"]}
+                  />
+                )
+              }
+            />
+            <Route
               path="notifications_manager/"
               element={
                 isAuthLoading ? null : (
                   <ProtectedRoute
-                    element={<NotificationsPage />}
+                    element={<NotificationManagerPage />}
                     allowedRoles={["main_admin"]}
                   />
                 )

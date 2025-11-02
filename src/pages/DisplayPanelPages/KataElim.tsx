@@ -9,7 +9,7 @@ export default function CompetitorCard(props: Readonly<{ match: string }>) {
   const [winner, setWinner] = useState({ aka: false, shiro: false });
 
   console.log(winner, setAkaScore, props.match);
-
+  
   const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
 

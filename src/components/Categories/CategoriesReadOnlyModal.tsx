@@ -139,7 +139,7 @@ export default function CategoriesReadOnlyModal(
     return disciplinesSearched.slice(start, end);
   }, [disciplinesSearched, page]);
 
-  console.log(paginatedDisciplines);
+  console.log(props.disciplineData[0].categories.length);
 
   return (
     <Dialog
@@ -237,7 +237,7 @@ export default function CategoriesReadOnlyModal(
               onClick={handleNextButtonClick}
               disabled={
                 props.disciplineData === undefined ||
-                page * itemsPerPage >= props.disciplineData.length
+                page * itemsPerPage >= props.disciplineData[0].categories.length
               }
               aria-label="next page"
             >

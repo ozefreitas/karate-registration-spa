@@ -13,6 +13,19 @@ import {
   DeveloperBoard,
   AdminPanelSettings,
   Category,
+  EventBusy,
+  EventAvailable,
+  Info,
+  StarRate,
+  PersonAddAlt1,
+  Password,
+  AccountBalanceWallet,
+  Email,
+  HourglassDisabled,
+  Settings,
+  RecordVoiceOver,
+  Warning,
+  Report,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -54,6 +67,12 @@ export const getSideMenuConfig = (userRole: string) => {
       to: "/notifications_manager/",
     },
     {
+      name: "notifications",
+      label: "Notificações",
+      icon: <NotificationsActive sx={{ color: "#e81c24" }} />,
+      to: "/notifications/",
+    },
+    {
       name: "rules",
       label: "Regras",
       icon: <Rule sx={{ color: "#e81c24" }} />,
@@ -85,7 +104,7 @@ export const getSideMenuConfig = (userRole: string) => {
     },
   ];
 
-  // Filter for SKIP (national) account
+  // mentioned names are not displayed
   if (userRole === "main_admin") {
     return baseMenu.filter(
       (item) =>
@@ -102,6 +121,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
+        item.name !== "notifications" &&
         item.name !== "categories"
     );
   } else if (userRole === "subed_club") {
@@ -165,6 +185,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   generate: "Gerar",
   all_registry: "Inscrições",
   notifications_manager: "Gestor de Notificações",
+  notifications: "Notificações",
   new_event: "Novo Evento",
   not_found: "Não Encontrado",
   unauthorized: "Não permitido",
@@ -173,4 +194,82 @@ export const breadcrumbsConvertion: Record<string, string> = {
   categories: "Escalões",
   new_category: "Novo Escalão",
   reset: "Recuperar Password",
+};
+
+export const NotificationTypeOptions: {
+  label: string;
+  value: string;
+  icon: any;
+}[] = [
+  { value: "none", label: "Geral", icon: <Info fontSize="large" /> },
+  {
+    value: "request",
+    label: "Pedido de Conta",
+    icon: <RecordVoiceOver fontSize="large" />,
+  },
+  {
+    value: "res",
+    label: "Reposição de Password",
+    icon: <Password fontSize="large" />,
+  },
+  {
+    value: "create_athlete",
+    label: "Novo Membro Adicionado",
+    icon: <PersonAddAlt1 fontSize="large" />,
+  },
+  {
+    value: "rate_event",
+    label: "Classificar Evento",
+    icon: <StarRate fontSize="large" />,
+  },
+  {
+    value: "registrations_closing",
+    label: "Inscrições a fechar",
+    icon: <Warning fontSize="large" />,
+  },
+  {
+    value: "registrations_close",
+    label: "Inscrições fechadas",
+    icon: <EventBusy fontSize="large" />,
+  },
+  {
+    value: "open_registrations",
+    label: "Inscrições abertas",
+    icon: <EventAvailable fontSize="large" />,
+  },
+  {
+    value: "classifications_available",
+    label: "Resultados disponíveis",
+    icon: <EmojiEvents fontSize="large" />,
+  },
+  {
+    value: "payment_available",
+    label: "Pagamento disponíveis",
+    icon: <AccountBalanceWallet fontSize="large" />,
+  },
+  {
+    value: "payment_overdue",
+    label: "Pagamento expirado",
+    icon: <HourglassDisabled fontSize="large" />,
+  },
+  {
+    value: "administrative",
+    label: "Mensagem Administrativa",
+    icon: <Email fontSize="large" />,
+  },
+  {
+    value: "system",
+    label: "Alterações de Sistema",
+    icon: <Settings fontSize="large" />,
+  },
+  {
+    value: "Danger",
+    label: "Atenção Imediata!",
+    icon: <Report color="error" fontSize="large" />,
+  },
+];
+
+export const getNotificationTypeIcon = (type: string) => {
+  const obj = NotificationTypeOptions.find((item) => item.value === type);
+  return obj?.icon;
 };

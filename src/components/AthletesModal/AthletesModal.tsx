@@ -263,7 +263,7 @@ export default function AthletesModal(
       userRole === "free_club" &&
       props.eventData.has_categories
     ) {
-      const target = filteredAthletes.filter(
+      const target = filteredAthletes.find(
         (athlete: any) => athlete.id === currentAthleteId
       );
       const hasWeight = target[0].weight !== null;
@@ -276,7 +276,7 @@ export default function AthletesModal(
 
     try {
       if (isWeightInputScreenOpen) {
-        const target = filteredAthletes.filter(
+        const target = filteredAthletes.find(
           (athlete: any) => athlete.id === currentAthleteId
         );
         if (target[0].weight !== freeClubWeight) {
@@ -292,7 +292,6 @@ export default function AthletesModal(
 
       const results = await Promise.allSettled(
         entries.map(([discipline]) => {
-          console.log(discipline);
           const payload = {
             disciplineId: discipline.split("_")[1],
             data: {
@@ -399,7 +398,7 @@ export default function AthletesModal(
             <Close />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Selecionar Atletas para {props.eventData?.name}
+            Inscrever para {props.eventData?.name}
           </Typography>
           {athletesNotInEventData?.data.results.length !== 0 &&
           !isDisciplineScreenOpen &&
@@ -493,7 +492,7 @@ export default function AthletesModal(
                                       Object.keys(
                                         control._defaultValues
                                       ).forEach((name) => {
-                                        // all defaultValues are set to False if the currernt field is not the one being clicked one
+                                        // all defaultValues are set to False if the currernt field is not the one being clicked on
                                         setValue(name, name === fieldName, {
                                           shouldValidate: true,
                                           shouldDirty: true,
@@ -712,6 +711,10 @@ export default function AthletesModal(
       <DialogActions sx={{ pr: 4, pb: 2 }}>
         {isDisciplineScreenOpen || isWeightInputScreenOpen ? null : (
           <>
+            <Typography variant="body1" mr={1} color="textSecondary">
+              Página:
+            </Typography>
+            <Typography mr={2}>{page + 1}</Typography>
             <Tooltip title="Página anterior">
               <IconButton
                 onClick={handleBackButtonClick}
@@ -726,7 +729,7 @@ export default function AthletesModal(
                 onClick={handleNextButtonClick}
                 disabled={
                   !athletesNotInEventData?.data?.count ||
-                  athletesNotInEventData.data.count <= 10
+                  athletesNotInEventData.data.count <= (page + 1) * 10
                 }
                 aria-label="next page"
               >
