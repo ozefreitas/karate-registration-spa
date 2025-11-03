@@ -171,9 +171,14 @@ export default function Header(
               src={skipLogo}
               alt=""
             />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              pl={1}
+              variant="h6"
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
               <Link style={{ color: "white" }} to="/">
-                Martial Arts Score - {import.meta.env.VITE_DISPLAY_ADMIN_NAME}
+                FightTec - {import.meta.env.VITE_DISPLAY_ADMIN_NAME}
               </Link>
             </Typography>
             <Stack alignItems="center" direction="row" spacing={3}>
@@ -325,7 +330,7 @@ export default function Header(
           </Typography>
         </MenuItem>
         <MenuItem
-          disabled
+          selected={location.pathname.startsWith("/profile")}
           sx={{ p: 2 }}
           onClick={() => {
             handleClose();
@@ -362,7 +367,7 @@ export default function Header(
                 display: "block",
                 position: "absolute",
                 top: 0,
-                right: 20,
+                right: 25,
                 width: 10,
                 height: 10,
                 bgcolor: "background.paper",
@@ -418,8 +423,16 @@ export default function Header(
           </ListItem>
         ) : (
           <List sx={{ display: "flex", flexDirection: "column" }}>
-            {notificationData?.data.map((noti: Notification, index: string) => (
-              <MenuItem disableRipple disableTouchRipple key={index}>
+            {notificationData?.data.map((noti: Notification, index: number) => (
+              <MenuItem
+                divider={
+                  notificationError !== null ||
+                  notificationData.data.length - 1 === index
+                }
+                disableRipple
+                disableTouchRipple
+                key={index}
+              >
                 <ListItem
                   disablePadding
                   sx={{ width: 700, mb: 0 }}
@@ -507,7 +520,9 @@ export default function Header(
           </List>
         )}
         <MenuItem
-          disabled={notificationData?.data.length === 0}
+          disabled={
+            notificationData?.data.length === 0 || notificationError !== null
+          }
           onClick={() => navigate("/notifications/")}
           sx={{ p: 2, display: "flex", justifyContent: "center" }}
         >

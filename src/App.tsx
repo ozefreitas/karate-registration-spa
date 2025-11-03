@@ -362,6 +362,14 @@ function App() {
               }
             />
             <Route
+              path="profile/"
+              element={isAuthLoading ? null : <WIPPage></WIPPage>}
+            />
+            <Route
+              path="profile/notifications/"
+              element={isAuthLoading ? null : <WIPPage></WIPPage>}
+            />
+            <Route
               path="news/"
               element={
                 isAuthLoading ? null : (
