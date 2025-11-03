@@ -21,6 +21,7 @@ import {
   CircularProgress,
   ListItemIcon,
 } from "@mui/material";
+import fighttecLogo from "./../../assets/FightTecLogo-white-font-removebg-cropped.png";
 import skipLogo from "./../../assets/skip-logo.png";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
@@ -167,20 +168,24 @@ export default function Header(
         >
           <Toolbar>
             <img
-              style={{ width: "100px", margin: "10px" }}
-              src={skipLogo}
+              style={{
+                width: "250px",
+                margin: "10px",
+                marginTop: 30,
+                marginLeft: 0,
+                marginRight: 20,
+                marginBottom: 30,
+              }}
+              src={fighttecLogo}
               alt=""
             />
+            <img src={skipLogo} style={{ width: 80 }} alt="" />
             <Typography
               pl={1}
               variant="h6"
               component="div"
               sx={{ flexGrow: 1 }}
-            >
-              <Link style={{ color: "white" }} to="/">
-                FightTec - {import.meta.env.VITE_DISPLAY_ADMIN_NAME}
-              </Link>
-            </Typography>
+            ></Typography>
             <Stack alignItems="center" direction="row" spacing={3}>
               <Typography variant="body1">
                 Época desportiva: {currentSeason}

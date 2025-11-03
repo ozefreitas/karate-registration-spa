@@ -139,8 +139,6 @@ export default function CategoriesReadOnlyModal(
     return disciplinesSearched.slice(start, end);
   }, [disciplinesSearched, page]);
 
-  console.log(props.disciplineData[0].categories.length);
-
   return (
     <Dialog
       open={props.isModalOpen}

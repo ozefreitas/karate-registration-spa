@@ -235,7 +235,7 @@ export default function AthletesModal(
     control,
     handleSubmit,
     reset,
-    setValue,
+    // setValue,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -289,6 +289,8 @@ export default function AthletesModal(
       }
 
       const entries = Object.entries(data).filter(([, value]) => value);
+
+      console.log(entries);
 
       const results = await Promise.allSettled(
         entries.map(([discipline]) => {
@@ -368,6 +370,7 @@ export default function AthletesModal(
       open={props.isModalOpen}
       onClose={() => {
         setIsDisciplineScreenOpen(false);
+        setPage(0);
         props.handleModalClose();
       }}
       maxWidth="md"
@@ -397,9 +400,27 @@ export default function AthletesModal(
           >
             <Close />
           </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Inscrever para {props.eventData?.name}
-          </Typography>
+          {isDisciplineScreenOpen ? (
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Inscrever{" "}
+              {
+                athletesNotInEventData?.data.results.find(
+                  (athlete: Athlete) => athlete.id === currentAthleteId
+                )?.full_name
+              }{" "}
+              em {props.eventData?.name}
+            </Typography>
+          ) : (
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              Inscrever em{" "}
+              {
+                athletesNotInEventData?.data.results.find(
+                  (athlete: Athlete) => athlete.id === currentAthleteId
+                )?.id
+              }{" "}
+              {props.eventData?.name}
+            </Typography>
+          )}
           {athletesNotInEventData?.data.results.length !== 0 &&
           !isDisciplineScreenOpen &&
           !isWeightInputScreenOpen ? (
@@ -455,7 +476,7 @@ export default function AthletesModal(
             <Grid size={11}>
               <Typography sx={{ m: 1, mb: 3 }}>
                 Estas são as Modalidades disponíveis para este Evento. Selecione
-                {props.eventData.has_categories ? "as tais" : "a tal"} em que
+                {props.eventData.has_categories ? " as tais" : " a tal"} em que
                 este Atleta irá participar.
               </Typography>
             </Grid>
@@ -487,21 +508,22 @@ export default function AthletesModal(
                                   {...field}
                                   checked={field.value}
                                   onChange={(e) => {
-                                    if (e.target.checked) {
-                                      // turn all OFF, then only this one ON
-                                      Object.keys(
-                                        control._defaultValues
-                                      ).forEach((name) => {
-                                        // all defaultValues are set to False if the currernt field is not the one being clicked on
-                                        setValue(name, name === fieldName, {
-                                          shouldValidate: true,
-                                          shouldDirty: true,
-                                        });
-                                      });
-                                    } else {
-                                      // allow turning everything off if you want
-                                      field.onChange(false);
-                                    }
+                                    field.onChange(e.target.checked);
+                                    // if (e.target.checked) {
+                                    //   // turn all OFF, then only this one ON
+                                    //   Object.keys(
+                                    //     control._defaultValues
+                                    //   ).forEach((name) => {
+                                    //     // all defaultValues are set to False if the currernt field is not the one being clicked on
+                                    //     setValue(name, name === fieldName, {
+                                    //       shouldValidate: true,
+                                    //       shouldDirty: true,
+                                    //     });
+                                    //   });
+                                    // } else {
+                                    //   // allow turning everything off if you want
+                                    //   field.onChange(false);
+                                    // }
                                   }}
                                   name={fieldName}
                                 />
@@ -570,11 +592,11 @@ export default function AthletesModal(
               </Grid>
               <Grid size={11}>
                 <Typography sx={{ m: 1, mb: 3 }}>
-                  O escalão disponível na Modalidade encontrada requer um peso,{" "}
+                  O escalão disponível na Modalidade encontrada requer um peso,
                   {userRole === "free_club"
                     ? doesNotHaveWeight
-                      ? "e este Atleta não tem um peso associado."
-                      : "e este Atleta já tem um peso associado."
+                      ? " e este Atleta não tem um peso associado."
+                      : " e este Atleta já tem um peso associado."
                     : null}
                   <br />
                   {userRole === "free_club"

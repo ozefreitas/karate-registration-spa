@@ -4,7 +4,7 @@ export const DisplayPanelLayout = () => (
   <div
     style={{
       backgroundColor: "black",
-      height: "100vh",
+      height: "95vh",
       color: "white",
       overflowY: "hidden",
       overflowX: "hidden"

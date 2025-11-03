@@ -9,7 +9,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
     <>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
-          title={"Bem-vindo à plataforma de registos da SKI-P."}
+          title={`Bem-vindo à plataforma de registos da ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}.`}
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
@@ -28,7 +28,9 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
               Este é o ecrã principal desta plataforma. Aqui poderá ver
               informações relevantes e rápidas, assim como notificações
               específicas para si. Dúvidas devem remeter para a página de{" "}
-              <a href="/help/">Ajuda</a>.
+              <a href="/help/">Ajuda</a>. <p></p> Como primeira utilização desta
+              plataforma, todos os utilizadores terão acesso ao regime{" "}
+              <i>Premium</i>, de forma a poderem ver/adicionar novos Atletas.
             </>
           )}
         </CardContent>

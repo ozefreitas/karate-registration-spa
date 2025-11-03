@@ -1,5 +1,4 @@
-import skipLogo from "../../assets/skip-logo.png";
-import ksaApp from "../../assets/Karatescore_nobg500.png";
+import fighttechVisionLogo from "../../assets/FightTecVision-font-white-removebg-cropped.png";
 import { Grid } from "@mui/material";
 
 export default function DisplayPage() {
@@ -9,9 +8,13 @@ export default function DisplayPage() {
       container
       justifyContent="space-evenly"
       alignContent="center"
+      alignItems={"center"}
     >
-      <img style={{ width: "300px", margin: "10px" }} src={skipLogo} alt="" />
-      <img style={{ width: "300px", margin: "10px" }} src={ksaApp} alt="" />
+      <img
+        style={{ width: "500px", margin: "10px" }}
+        src={fighttechVisionLogo}
+        alt=""
+      />
     </Grid>
   );
 }
