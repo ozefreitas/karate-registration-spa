@@ -51,7 +51,16 @@ export default function NextCompHomeComponent(
               />
             </ListItemButton>
           </ListItem>
-        ) : nextCompData?.data.length !== 0 ? (
+        ) : nextCompData?.data.length === 0 ? (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ m: 0 }}>
+              <ListItemIcon>
+                <SportsMma></SportsMma>
+              </ListItemIcon>
+              <ListItemText primary={"Não há Eventos disponíveis."} />
+            </ListItemButton>
+          </ListItem>
+        ) : (
           <List>
             <Tooltip title={"Consultar"}>
               <ListItem sx={{ m: 0 }}>
@@ -66,15 +75,6 @@ export default function NextCompHomeComponent(
               </ListItem>
             </Tooltip>
           </List>
-        ) : (
-          <ListItem sx={{ m: 0 }}>
-            <ListItemButton disabled sx={{ m: 0 }}>
-              <ListItemIcon>
-                <SportsMma></SportsMma>
-              </ListItemIcon>
-              <ListItemText primary={"Não há Eventos disponíveis."} />
-            </ListItemButton>
-          </ListItem>
         )}
         <CardActions
           sx={{

@@ -93,7 +93,7 @@ export const getSideMenuConfig = (userRole: string) => {
     },
     {
       name: "results_display",
-      label: "Quadro Resultados",
+      label: "Mostrador",
       icon: <DeveloperBoard sx={{ color: "#e81c24" }} />,
       to: "/results_display/",
     },

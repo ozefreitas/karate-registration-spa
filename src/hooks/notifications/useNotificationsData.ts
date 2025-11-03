@@ -6,8 +6,6 @@ export const useFetchHomeClubNotifications = () => {
     queryKey: ["club-notifications"],
     queryFn: fetchCurrentClubNotifications,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    retry: false,
   });
 };
 

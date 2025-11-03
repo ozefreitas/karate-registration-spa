@@ -31,7 +31,6 @@ export const useFetchLastFiveMembers = () => {
   return useQuery({
     queryKey: ["lastfive-members"],
     queryFn: fetchLastFiveMembers,
-    staleTime: 0,
     refetchOnWindowFocus: false,
   });
 };

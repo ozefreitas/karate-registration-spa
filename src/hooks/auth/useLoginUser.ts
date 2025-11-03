@@ -22,6 +22,7 @@ export const useLogInUser = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
       navigate("/");
     },
     onError: () => {

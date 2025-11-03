@@ -8,6 +8,7 @@ import {
   AppBar,
   Menu,
   MenuItem,
+  List,
   IconButton,
   Breadcrumbs,
   Button,
@@ -222,8 +223,17 @@ export default function Header(
                         badgeContent={notificationData?.data.length}
                         max={9}
                       >
-                        <Avatar>
-                          <NotificationsActive sx={{ height: 20 }} />
+                        <Avatar
+                          sx={{
+                            height: 50,
+                            width: 50,
+                            bgcolor:
+                              notificationData?.data.length === 0
+                                ? null
+                                : "green",
+                          }}
+                        >
+                          <NotificationsActive sx={{ height: 25, width: 25 }} />
                         </Avatar>
                       </Badge>
                     </Tooltip>
@@ -407,95 +417,94 @@ export default function Header(
             </ListItemButton>
           </ListItem>
         ) : (
-          <MenuItem
-            disableRipple
-            disableTouchRipple
-            divider
-            sx={{ display: "flex", flexDirection: "column" }}
-          >
+          <List sx={{ display: "flex", flexDirection: "column" }}>
             {notificationData?.data.map((noti: Notification, index: string) => (
-              <ListItem
-                key={index}
-                disablePadding
-                sx={{ width: 600 }}
-                secondaryAction={
-                  <Grid borderRadius={5}>
-                    <Tooltip
-                      title="Remover Notificação"
-                      placement="bottom-start"
-                    >
-                      <IconButton
-                        disabled={!noti.can_remove}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeNotification.mutate(noti.id);
-                        }}
-                        aria-label="delete notification"
+              <MenuItem disableRipple disableTouchRipple key={index}>
+                <ListItem
+                  disablePadding
+                  sx={{ width: 700, mb: 0 }}
+                  secondaryAction={
+                    <Grid borderRadius={5}>
+                      <Tooltip
+                        title="Remover Notificação"
+                        placement="bottom-start"
                       >
-                        <Delete
-                          color={noti.can_remove ? "error" : "disabled"}
-                        />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Prosseguir ação" placement="bottom-start">
-                      <IconButton
-                        onClick={() => {
-                          handleFollowingAction(noti.type);
-                        }}
-                        aria-label="notification action"
-                        disabled={
-                          noti.type === "none" || noti.type === "administrative"
-                        }
-                      >
-                        <KeyboardArrowRight
-                          color={
+                        <IconButton
+                          disabled={!noti.can_remove}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeNotification.mutate(noti.id);
+                          }}
+                          aria-label="delete notification"
+                        >
+                          <Delete
+                            color={noti.can_remove ? "error" : "disabled"}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Prosseguir ação" placement="bottom-start">
+                        <IconButton
+                          onClick={() => {
+                            handleFollowingAction(noti.type);
+                          }}
+                          aria-label="notification action"
+                          disabled={
                             noti.type === "none" ||
                             noti.type === "administrative"
-                              ? "disabled"
-                              : "success"
                           }
-                        />
-                      </IconButton>
-                    </Tooltip>
-                  </Grid>
-                }
-              >
-                <ListItemIcon sx={{ px: 1 }}>
-                  {getNotificationTypeIcon(noti.type)}
-                </ListItemIcon>
-                <ListItemText
-                  sx={{
-                    p: 1,
-                    pr: 15,
-                    width: 400,
-                    "& .MuiListItemText-secondary": {
-                      whiteSpace: "normal",
-                      wordBreak: "break-word",
-                    },
-                  }}
-                  primary={
-                    <Grid
-                      container
-                      justifyContent={"space-between"}
-                      alignItems={"center"}
-                    >
-                      <Typography>
-                        {noti.type === "none"
-                          ? "Geral"
-                          : NotificationTypeOptions.find(
-                              (item) => item.value === noti.type
-                            )?.label}
-                      </Typography>
-                      <Typography variant="caption" color="textDisabled">
-                        {formatTimeDifference(noti.created_at)}
-                      </Typography>
+                        >
+                          <KeyboardArrowRight
+                            color={
+                              noti.type === "none" ||
+                              noti.type === "administrative"
+                                ? "disabled"
+                                : "success"
+                            }
+                          />
+                        </IconButton>
+                      </Tooltip>
                     </Grid>
                   }
-                  secondary={noti.notification}
-                />
-              </ListItem>
+                >
+                  <ListItemIcon sx={{ px: 1 }}>
+                    {getNotificationTypeIcon(noti.type)}
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      pl: 2,
+                      p: 1,
+                      pr: 15,
+                      "& .MuiListItemText-secondary": {
+                        whiteSpace: "normal",
+                        overflowWrap: "break-word",
+                        wordBreak: "break-word",
+                        hyphens: "auto", // 👈 key line
+                      },
+                    }}
+                    primary={
+                      <Grid
+                        container
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Typography>
+                          {noti.type === "none"
+                            ? "Geral"
+                            : NotificationTypeOptions.find(
+                                (item) => item.value === noti.type
+                              )?.label}
+                        </Typography>
+                        <Typography variant="caption" color="textDisabled">
+                          {formatTimeDifference(noti.created_at)}
+                        </Typography>
+                      </Grid>
+                    }
+                    secondary={noti.notification}
+                  />
+                </ListItem>
+              </MenuItem>
             ))}
-          </MenuItem>
+          </List>
         )}
         <MenuItem
           disabled={notificationData?.data.length === 0}
