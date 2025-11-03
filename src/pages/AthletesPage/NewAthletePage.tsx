@@ -22,11 +22,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+import { useAuth } from "../../access/GlobalAuthProvider";
 import FormCard from "../../dashboard/FormCard";
 import { membersHooks, adminHooks } from "../../hooks";
+import FormAccordion from "../../dashboard/FormAccordion";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
 
   const { data: clubUserData } = adminHooks.useFetchClubUsersData();
@@ -49,7 +52,7 @@ export default function NewAthletePage() {
       force_ident: false,
       id_number: "",
       birth_date: undefined,
-      // weight: "",
+      weight: "",
       competitor: false,
       reason: "",
       club: "",
@@ -437,72 +440,75 @@ export default function NewAthletePage() {
             />
           </Grid>
         </FormCard>
-        {/* <FormAccordion
-          title="Competições"
-          expanded={expanded}
-          tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
-        >
-          <Grid sx={{ p: 2 }} size={6}>
-            <Controller
-              name="weight"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  type="text"
-                  label="Peso"
-                  multiline
-                  required
-                  slotProps={{ input: { inputProps: { min: 0, max: 100 } } }}
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.weight}
-                  helperText={errors.weight?.message}
-                ></TextField>
-              )}
-            />
-          </Grid>
-        </FormAccordion> */}
-        <FormCard
-          title="Associar Clube/Associação"
-          subheader="Aqui aparecerão todos os Clubes disponíveis na plataforma, quer já tenham criado uma conta ou não."
-        >
-          <Grid size={12} sx={{ p: 2 }}>
-            <Controller
-              name="club"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Clube"
-                  fullWidth
-                  select
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.club}
-                  helperText={errors.club?.message}
-                >
-                  <MenuItem value="0">-- Selecionar --</MenuItem>
-                  {clubUserData?.data.map((item: any, index: string) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.username}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-        </FormCard>
+        {user?.data.role === "subed_club" ? (
+          <FormAccordion
+            title="Competições"
+            expanded={watch("competitor")}
+            tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
+          >
+            <Grid sx={{ p: 2 }} size={6}>
+              <Controller
+                name="weight"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    type="text"
+                    label="Peso"
+                    multiline
+                    required
+                    slotProps={{ input: { inputProps: { min: 0, max: 100 } } }}
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.weight}
+                    helperText={errors.weight?.message}
+                  ></TextField>
+                )}
+              />
+            </Grid>
+          </FormAccordion>
+        ) : user?.data.role === "main_admin" ? (
+          <FormCard
+            title="Associar Clube/Associação"
+            subheader="Aqui aparecerão todos os Clubes disponíveis na plataforma, quer já tenham criado uma conta ou não."
+          >
+            <Grid size={12} sx={{ p: 2 }}>
+              <Controller
+                name="club"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Clube"
+                    fullWidth
+                    select
+                    multiline
+                    required
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.club}
+                    helperText={errors.club?.message}
+                  >
+                    <MenuItem value="0">-- Selecionar --</MenuItem>
+                    {clubUserData?.data.map((item: any, index: string) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.username}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+          </FormCard>
+        ) : null}
         <Grid
           sx={{ m: 3, mr: 4 }}
           justifyContent="flex-end"

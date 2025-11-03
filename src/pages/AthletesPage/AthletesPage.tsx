@@ -126,7 +126,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
           ></AthletesTable>
         ) : null}
       </Grid>
-      {props.userRole === "main_admin" ? (
+      {props.userRole === "main_admin" || props.userRole === "subed_club" ? (
         <Grid sx={{ m: 3, mt: 2 }}>
           <AddButton label="Adicionar" to="new_athlete/"></AddButton>
         </Grid>

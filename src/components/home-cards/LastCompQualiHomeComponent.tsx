@@ -149,7 +149,7 @@ export default function LastCompQualiHomeComponent(
           ) : (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemText primary={"Classificaões não disponíveis."} />
+                <ListItemText primary={"Classificações não disponíveis."} />
               </ListItemButton>
             </ListItem>
           )}

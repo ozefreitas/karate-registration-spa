@@ -116,7 +116,8 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<NewAthletePage />}
-                    allowedRoles={["main_admin", "single_admin"]}
+                    // allowedRoles={["main_admin", "single_admin"]}
+                    allowedRoles={["main_admin", "single_admin", "subed_club"]}
                   />
                 )
               }
@@ -214,7 +215,7 @@ function App() {
               }
             />
             <Route
-              path="notifications/"
+              path="list_notifications/"
               element={
                 isAuthLoading ? null : (
                   <ProtectedRoute
@@ -344,7 +345,7 @@ function App() {
                 isAuthLoading ? null : (
                   <ProtectedRoute
                     element={<ResultsMainPage />}
-                    allowedRoles={["main_admin"]}
+                    allowedRoles={["main_admin", "technician"]}
                   />
                 )
               }

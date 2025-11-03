@@ -17,27 +17,40 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           }}
         ></CardHeader>
         <CardContent>
-          Este é o ecrã principal desta plataforma. Aqui poderá ver informações
-          relevantes e rápidas, assim como notificações específicas para si.
-          Dúvidas devem remeter para a página de <a href="/help/">Ajuda</a>.
+          {props.userRole === "technician" ? (
+            <>
+              Contas técnicas apenas têm acesso ao monitor de resultados.
+              Carregue <a href="/results_display/">aqui</a> ou remeta à barra
+              lateral para aceder a esse ecrã.
+            </>
+          ) : (
+            <>
+              Este é o ecrã principal desta plataforma. Aqui poderá ver
+              informações relevantes e rápidas, assim como notificações
+              específicas para si. Dúvidas devem remeter para a página de{" "}
+              <a href="/help/">Ajuda</a>.
+            </>
+          )}
         </CardContent>
       </Card>
-      <Grid container size={12}>
-        <Grid size={6}>
-          <AthletesHomeComponent
-            userRole={props.userRole}
-          ></AthletesHomeComponent>
-          <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
+      {props.userRole === "technician" ? null : (
+        <Grid container size={12}>
+          <Grid size={6}>
+            <AthletesHomeComponent
+              userRole={props.userRole}
+            ></AthletesHomeComponent>
+            <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
+          </Grid>
+          <Grid size={6}>
+            <NextCompHomeComponent
+              userRole={props.userRole}
+            ></NextCompHomeComponent>
+            <LastCompQualiHomeComponent
+              userRole={props.userRole}
+            ></LastCompQualiHomeComponent>
+          </Grid>
         </Grid>
-        <Grid size={6}>
-          <NextCompHomeComponent
-            userRole={props.userRole}
-          ></NextCompHomeComponent>
-          <LastCompQualiHomeComponent
-            userRole={props.userRole}
-          ></LastCompQualiHomeComponent>
-        </Grid>
-      </Grid>
+      )}
     </>
   );
 }

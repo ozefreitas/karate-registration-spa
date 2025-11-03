@@ -13,14 +13,14 @@ export function getCompAge(dateOfBirth: Date): number {
   // If birthday hasn't occurred yet this year, subtract 1
   if (
     now.getMonth() < dateOfBirth.getMonth() ||
-    (now.getMonth() === dateOfBirth.getMonth() && now.getDate() < dateOfBirth.getDate())
+    (now.getMonth() === dateOfBirth.getMonth() &&
+      now.getDate() < dateOfBirth.getDate())
   ) {
     currentAge -= 1;
   }
 
   return currentAge;
 }
-
 
 export function formatTimeDifference(isoString: string): string {
   const now = new Date();
@@ -33,13 +33,16 @@ export function formatTimeDifference(isoString: string): string {
   const days = Math.floor(hours / 24);
 
   if (seconds < 60) return "há poucos segundos";
-  if (minutes < 60) return `há ${minutes} ${minutes === 1 ? "minuto" : "minutos"}`;
+  if (minutes < 60)
+    return `há ${minutes} ${minutes === 1 ? "minuto" : "minutos"}`;
   if (hours < 24) return `há ${hours} ${hours === 1 ? "hora" : "horas"}`;
   return `há ${days} ${days === 1 ? "dia" : "dias"}`;
 }
 
-
-export function formatDateTime(isoString: string, type: "day" | "hour"): string {
+export function formatDateTime(
+  isoString: string,
+  type: "day" | "hour"
+): string {
   const date = new Date(isoString);
 
   if (type === "day") {

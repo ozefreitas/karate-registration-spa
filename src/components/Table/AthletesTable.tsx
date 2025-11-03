@@ -544,7 +544,6 @@ export default function AthletesTable(
                     <StyledTableCell></StyledTableCell>
                   )}
                   <TablePagination
-                    // labelRowsPerPage="Entradas por página:"
                     rowsPerPageOptions={[
                       5,
                       10,

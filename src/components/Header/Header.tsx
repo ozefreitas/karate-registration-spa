@@ -30,12 +30,15 @@ import {
   Delete,
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
-import { breadcrumbsConvertion } from "../../dashboard/config";
+import {
+  breadcrumbsConvertion,
+  getNotificationTypeIcon,
+  NotificationTypeOptions,
+} from "../../dashboard/config";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks, notificationsHooks, authHooks } from "../../hooks";
 import { formatTimeDifference } from "../../utils/utils";
-import { getNotificationTypeIcon } from "../../dashboard/config";
 
 export default function Header(
   props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
@@ -46,6 +49,7 @@ export default function Header(
     can_remove: boolean;
     type: string;
     created_at: any;
+    target_event: any;
   };
 
   const navigate = useNavigate();
@@ -113,6 +117,18 @@ export default function Header(
       navigate("/athletes/");
     } else if (noti_type === "rate_event") {
       navigate("/events/");
+    } else if (noti_type === "reset") {
+      navigate("/settings/");
+    } else if (noti_type === "classifications_available") {
+      navigate("/classifications/");
+    } else if (
+      [
+        "open_registrations",
+        "registrations_closing",
+        "registrations_close",
+      ].includes(noti_type)
+    ) {
+      navigate("/events/");
     }
   };
 
@@ -179,7 +195,9 @@ export default function Header(
                     ? "SUPER ADMIN"
                     : props.me?.data.role === "free_club"
                     ? "CLUBE - GRÁTIS"
-                    : "CLUBE - PREMIUM"}
+                    : props.me?.data.role === "subed_club"
+                    ? "CLUBE - PREMIUM"
+                    : "TÉCNICO"}
                 </Button>
               )}
               <Grid container>
@@ -197,7 +215,7 @@ export default function Header(
                   aria-haspopup="true"
                   aria-expanded={openNotifications ? "true" : undefined}
                 >
-                  {isAuthenticated ? (
+                  {isAuthenticated && user?.data.role !== "technician" ? (
                     <Tooltip title="Notificações" placement="top">
                       <Badge
                         color="error"
@@ -419,27 +437,42 @@ export default function Header(
                         />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Prosseguir ação" placement="left">
+                    <Tooltip title="Prosseguir ação" placement="bottom-start">
                       <IconButton
                         onClick={() => {
                           handleFollowingAction(noti.type);
                         }}
                         aria-label="notification action"
-                        disabled={noti.type === "none"}
+                        disabled={
+                          noti.type === "none" || noti.type === "administrative"
+                        }
                       >
                         <KeyboardArrowRight
-                          color={noti.type === "none" ? "disabled" : "success"}
+                          color={
+                            noti.type === "none" ||
+                            noti.type === "administrative"
+                              ? "disabled"
+                              : "success"
+                          }
                         />
                       </IconButton>
                     </Tooltip>
                   </Grid>
                 }
               >
-                <ListItemIcon>
+                <ListItemIcon sx={{ px: 1 }}>
                   {getNotificationTypeIcon(noti.type)}
                 </ListItemIcon>
                 <ListItemText
-                  sx={{ pl: 2, p: 1, pr: 15 }}
+                  sx={{
+                    p: 1,
+                    pr: 15,
+                    width: 400,
+                    "& .MuiListItemText-secondary": {
+                      whiteSpace: "normal",
+                      wordBreak: "break-word",
+                    },
+                  }}
                   primary={
                     <Grid
                       container
@@ -447,7 +480,11 @@ export default function Header(
                       alignItems={"center"}
                     >
                       <Typography>
-                        {noti.type === "none" ? "Geral" : noti.type}
+                        {noti.type === "none"
+                          ? "Geral"
+                          : NotificationTypeOptions.find(
+                              (item) => item.value === noti.type
+                            )?.label}
                       </Typography>
                       <Typography variant="caption" color="textDisabled">
                         {formatTimeDifference(noti.created_at)}

@@ -223,6 +223,18 @@ export default function CategoriesReadOnlyModal(
       </DialogContent>
       <DialogActions sx={{ pr: 4, pb: 2 }}>
         <>
+          <Typography variant="body1" mr={1} color="textSecondary">
+            Página:
+          </Typography>
+          <Typography mr={1}>{page}</Typography>
+          <Typography variant="body1" mr={1} color="textSecondary">
+            de
+          </Typography>
+          <Typography mr={2}>
+            {Math.ceil(
+              props.disciplineData[0].categories.length / itemsPerPage
+            )}
+          </Typography>
           <Tooltip title="Página anterior">
             <IconButton
               onClick={handleBackButtonClick}

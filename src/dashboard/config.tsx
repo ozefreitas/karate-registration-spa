@@ -26,6 +26,7 @@ import {
   RecordVoiceOver,
   Warning,
   Report,
+  EditNotifications,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -63,14 +64,14 @@ export const getSideMenuConfig = (userRole: string) => {
     {
       name: "notifications_manager",
       label: "Gestor de Notificações",
-      icon: <NotificationsActive sx={{ color: "#e81c24" }} />,
+      icon: <EditNotifications sx={{ color: "#e81c24" }} />,
       to: "/notifications_manager/",
     },
     {
-      name: "notifications",
+      name: "list_notifications",
       label: "Notificações",
       icon: <NotificationsActive sx={{ color: "#e81c24" }} />,
-      to: "/notifications/",
+      to: "/list_notifications/",
     },
     {
       name: "rules",
@@ -111,7 +112,8 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "help" &&
         item.name !== "classifications" &&
         item.name !== "rules" &&
-        item.name !== "teams"
+        item.name !== "teams" &&
+        item.name !== "results_display"
     );
   } else if (userRole === undefined || userRole === "free_club") {
     return baseMenu.filter(
@@ -121,7 +123,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
-        item.name !== "notifications" &&
+        item.name !== "list_notifications" &&
         item.name !== "categories"
     );
   } else if (userRole === "subed_club") {
@@ -131,6 +133,20 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "categories"
+    );
+  } else if (userRole === "technician") {
+    return baseMenu.filter(
+      (item) =>
+        item.name !== "athletes" &&
+        item.name !== "teams" &&
+        item.name !== "settings" &&
+        item.name !== "notifications_manager" &&
+        item.name !== "list_notifications" &&
+        item.name !== "categories" &&
+        item.name !== "events" &&
+        item.name !== "help" &&
+        item.name !== "rules" &&
+        item.name !== "classifications"
     );
   }
 
@@ -158,6 +174,13 @@ export const getAccountSideMenuConfig = (userRole: string) => {
     return baseMenu.filter((item) => item.name !== "contacts");
   } else if (userRole === undefined) {
     return baseMenu.filter((item) => item.name !== "feedback");
+  } else if (userRole === "technician") {
+    return baseMenu.filter(
+      (item) =>
+        item.name !== "feedback" &&
+        item.name !== "contacts" &&
+        item.name !== "news"
+    );
   }
 
   return baseMenu;
@@ -185,7 +208,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   generate: "Gerar",
   all_registry: "Inscrições",
   notifications_manager: "Gestor de Notificações",
-  notifications: "Notificações",
+  list_notifications: "Notificações",
   new_event: "Novo Evento",
   not_found: "Não Encontrado",
   unauthorized: "Não permitido",
@@ -208,7 +231,7 @@ export const NotificationTypeOptions: {
     icon: <RecordVoiceOver fontSize="large" />,
   },
   {
-    value: "res",
+    value: "reset",
     label: "Reposição de Password",
     icon: <Password fontSize="large" />,
   },

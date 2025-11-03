@@ -714,7 +714,13 @@ export default function AthletesModal(
             <Typography variant="body1" mr={1} color="textSecondary">
               Página:
             </Typography>
-            <Typography mr={2}>{page + 1}</Typography>
+            <Typography mr={1}>{page + 1}</Typography>
+            <Typography variant="body1" mr={1} color="textSecondary">
+              de
+            </Typography>
+            <Typography mr={2}>
+              {Math.ceil(athletesNotInEventData?.data.count / 10)}
+            </Typography>
             <Tooltip title="Página anterior">
               <IconButton
                 onClick={handleBackButtonClick}
@@ -729,7 +735,7 @@ export default function AthletesModal(
                 onClick={handleNextButtonClick}
                 disabled={
                   !athletesNotInEventData?.data?.count ||
-                  athletesNotInEventData.data.count <= (page + 1) * 10
+                  athletesNotInEventData?.data.count <= (page + 1) * 10
                 }
                 aria-label="next page"
               >

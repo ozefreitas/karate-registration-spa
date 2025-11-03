@@ -10,7 +10,7 @@ export default function MainAppLayout(
 ) {
   return (
     <>
-      {props.me?.data.role !== "main_admin" && (
+      {!["main_admin", "technician"].includes(props.me?.data.role) && (
         <Announcement></Announcement>
       )}
       <Header me={props.me}></Header>
