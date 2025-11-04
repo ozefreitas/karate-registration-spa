@@ -20,6 +20,10 @@ import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalAuthProvider } from "./access/GlobalAuthProvider.tsx";
 
+document.title = import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
+  ? `FightTech Platform - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
+  : "FightTech";
+
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(

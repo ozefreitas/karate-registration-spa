@@ -9,7 +9,7 @@ export const useLogOutUser = () => {
 
   return useMutation({
     mutationFn: logoutUser,
-    onSuccess: () => {
+    onSettled: () => {
       enqueueSnackbar("Saiu da sua conta!", {
         variant: "success",
         anchorOrigin: {

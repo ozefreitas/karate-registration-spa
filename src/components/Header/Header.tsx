@@ -167,18 +167,29 @@ export default function Header(
           position="static"
         >
           <Toolbar>
-            <img
-              style={{
-                width: "250px",
-                margin: "10px",
-                marginTop: 30,
-                marginLeft: 0,
-                marginRight: 20,
-                marginBottom: 30,
-              }}
-              src={fighttecLogo}
-              alt=""
-            />
+            <a href="/">
+              <Grid
+                sx={{
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.1)",
+                  },
+                }}
+              >
+                <img
+                  style={{
+                    width: "250px",
+                    margin: "10px",
+                    marginTop: 30,
+                    marginLeft: 0,
+                    marginRight: 20,
+                    marginBottom: 30,
+                  }}
+                  src={fighttecLogo}
+                  alt=""
+                />
+              </Grid>
+            </a>
             <img src={skipLogo} style={{ width: 80 }} alt="" />
             <Typography
               pl={1}
