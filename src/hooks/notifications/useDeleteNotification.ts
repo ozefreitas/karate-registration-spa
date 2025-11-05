@@ -22,7 +22,7 @@ export const useRemoveNotification = () => {
       queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

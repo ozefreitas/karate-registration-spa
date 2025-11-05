@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import {
   Grid,
   Table,
@@ -20,7 +20,6 @@ import {
   Box,
   Checkbox,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import {
   Edit,
   Delete,
@@ -116,6 +115,10 @@ function TablePaginationActions(props: Readonly<TablePaginationActionsProps>) {
   );
 }
 
+function getNestedValue(obj: any, path: string) {
+  return path.split(".").reduce((acc, key) => acc?.[key], obj);
+}
+
 export default function AthletesTable(
   props: Readonly<{
     type:
@@ -126,7 +129,7 @@ export default function AthletesTable(
       | "Categorias"
       | "CategoriasReadOnly"
       | "EventCategories";
-    discipline?: string;
+    discipline?: any;
     data: any;
     count: number;
     columnsHeaders: any;
@@ -144,7 +147,7 @@ export default function AthletesTable(
     setDisciplineCategories?: any;
   }>
 ) {
-  console.log(props.data);
+  console.log(props.discipline);
   // type Order = "asc" | "desc";
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
@@ -311,7 +314,7 @@ export default function AthletesTable(
     },
   }));
 
-  const StyledTableRow = styled(TableRow)(({}) => ({
+  const StyledTableRow = styled(TableRow)(() => ({
     textAlign: "center",
     height: 50,
     "&:nth-of-type(even)": {
@@ -354,16 +357,12 @@ export default function AthletesTable(
     setSelected(newSelected);
   };
 
-  function getNestedValue(obj: any, path: string) {
-    return path.split(".").reduce((acc, key) => acc?.[key], obj);
-  }
-
   const paginatedData = useMemo(() => {
-    const start =
-      (props.page ? props.page : internalPage) *
-      (props.pageSize ? props.pageSize : internalPageSize);
-    const end = start + (props.pageSize ? props.pageSize : internalPageSize);
-    return props.data.slice(start, end);
+    if (internalPage && internalPageSize) {
+      const start = internalPage * internalPageSize;
+      const end = start + internalPageSize;
+      return props.data.slice(start, end);
+    } else return props.data;
   }, [props.data, props.page, internalPage]);
 
   return (
@@ -475,7 +474,7 @@ export default function AthletesTable(
                             </Tooltip>
                             {props.userRole === "main_admin" ||
                             (props.userRole === "subed_club" &&
-                              props.editable ) ? (
+                              props.editable) ? (
                               <Tooltip arrow title="Editar">
                                 <IconButton
                                   onClick={(e) => {
@@ -585,7 +584,7 @@ export default function AthletesTable(
               </TableFooter>
             </Table>
           </TableContainer>
-          {props.type !== "Equipas" ? (
+          {props.type === "Equipas" ? null : (
             <>
               <EditAthleteModal
                 isModalOpen={isEditModalOpen}
@@ -599,7 +598,7 @@ export default function AthletesTable(
                 id={actionedAthlete}
               ></EditIndividualModal>
             </>
-          ) : null}
+          )}
           {selected.length > 0 ? (
             <DeleteAthleteModal
               isModalOpen={isDeleteAllModalOpen}

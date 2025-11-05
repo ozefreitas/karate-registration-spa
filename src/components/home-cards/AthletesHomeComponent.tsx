@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
+import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
 
@@ -118,11 +119,19 @@ export default function AthletesHomeComponent(
             </ListItem>
           ) : null}
         </List>
-
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          {props.userRole !== "free_club" ? (
+          {props.userRole === "free_club" ? null : props.userRole ===
+            "subed_club" ? (
+            <Grid container size={12} justifyContent={"space-between"}>
+              <AddButton
+                label="Adicionar"
+                to="athletes/new_athlete/"
+              ></AddButton>
+              <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
+            </Grid>
+          ) : (
             <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
-          ) : null}
+          )}
         </CardActions>
       </Card>
     </Grid>

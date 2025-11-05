@@ -21,7 +21,7 @@ export const useCreateNotification = () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

@@ -25,7 +25,7 @@ export const useUpdateEventData = () => {
       queryClient.invalidateQueries({ queryKey: ["next-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -61,7 +61,7 @@ export const usePatchEventData = () => {
       queryClient.invalidateQueries({ queryKey: ["next-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

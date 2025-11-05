@@ -21,7 +21,7 @@ export const useRemoveEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

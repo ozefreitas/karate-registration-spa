@@ -26,7 +26,7 @@ export const useUpdateMemberData = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -62,7 +62,7 @@ export const usePatchMemberData = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

@@ -99,7 +99,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         ) : eventsError ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <ListItem>
-              <ListItemText primary="Um erro ocorreu ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
+              <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
         ) : eventsData?.data.results.length !== 0 ? (

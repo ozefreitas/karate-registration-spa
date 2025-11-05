@@ -5,7 +5,7 @@ import { signUpWithToken } from "../../api";
 export const useSignUpWithToken = () => {
   const { enqueueSnackbar } = useSnackbar();
 
-//   const queryClient = useQueryClient();
+  //   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: signUpWithToken,
     onSuccess: () => {
@@ -18,10 +18,10 @@ export const useSignUpWithToken = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-    //   queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
+      //   queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

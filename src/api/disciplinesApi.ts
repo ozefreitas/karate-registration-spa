@@ -22,6 +22,10 @@ export const removeDisciplineAthlete = (disciplineId: string, data: any) => {
   return authClient.post(`/disciplines/${disciplineId}/delete_athlete/`, data);
 };
 
+export const removeAllDisciplineAthlete = (disciplineId: string) => {
+  return authClient.delete(`/disciplines/${disciplineId}/delete_all_individuals/`);
+};
+
 // discipline categories operations
 
 export const addDisciplineCategory = (disciplineId: string, data: any) => {

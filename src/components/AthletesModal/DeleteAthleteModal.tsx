@@ -49,6 +49,7 @@ export default function DeleteAthleteModal(
     discipline?: any;
   }>
 ) {
+  console.log(props.discipline);
   const removeDisciplineAthlete = disciplinesHooks.useDeleteDisciplineAthlete();
   const removeEventAthlete = eventsHooks.useRemoveEventAthlete();
   const removeAthlete = membersHooks.useDeleteAthleteData();
@@ -59,6 +60,8 @@ export default function DeleteAthleteModal(
   const removeAllCategories = categoriesHooks.useDeleteAllCategoriesData();
   const removeDisciplineCategory =
     disciplinesHooks.useRemoveDisciplineCategory();
+  const removeAllDisciplineAthletes =
+    disciplinesHooks.useDeleteAllDisciplineAthlete();
   const navigate = useNavigate();
   const { eventId } = useParams<{ eventId: string }>();
 
@@ -144,7 +147,7 @@ export default function DeleteAthleteModal(
       } else if (props.from === "Categorias") {
         removeAllCategories.mutate();
       } else {
-        // removeAllIndividuals.mutate();
+        removeAllDisciplineAthletes.mutate({ disciplineId: props.discipline });
       }
       props.setSelected([]);
     }

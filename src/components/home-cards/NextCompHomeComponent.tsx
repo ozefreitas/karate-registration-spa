@@ -47,7 +47,7 @@ export default function NextCompHomeComponent(
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
               <ListItemText
-                primary={"Um erro ocorreu a procurar o próximo Evento."}
+                primary={"Ocorreu um erro a procurar o próximo Evento."}
               />
             </ListItemButton>
           </ListItem>

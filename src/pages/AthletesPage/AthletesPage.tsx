@@ -105,7 +105,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
         ) : athletesError ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <ListItem>
-              <ListItemText primary="Um erro ocorreu ao encontrar os seus Atletas, tente mais tarde ou contacte um administrador."></ListItemText>
+              <ListItemText primary="Ocorreu um erro ao encontrar os seus Atletas, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
         ) : athletesData?.data === undefined ? null : (

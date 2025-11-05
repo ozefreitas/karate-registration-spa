@@ -25,7 +25,7 @@ export const useLogOutUser = () => {
       window.location.reload();
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu. Tente mais tarde.", {
+      enqueueSnackbar("Ocorreu um erro. Tente mais tarde.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

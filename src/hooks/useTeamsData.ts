@@ -38,7 +38,7 @@ export const useFetchSingleTeamData = () => {
   return useMutation({
     mutationFn: fetchSingleTeam,
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -83,7 +83,7 @@ export const useUpdateTeamData = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -124,7 +124,7 @@ export const useRemoveTeamData = () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -165,7 +165,7 @@ export const useRemoveAllTeamsData = () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
     onError: () => {
-      enqueueSnackbar("Um erro ocorreu! Tente novamente.", {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
