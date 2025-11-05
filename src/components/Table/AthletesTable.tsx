@@ -147,7 +147,6 @@ export default function AthletesTable(
     setDisciplineCategories?: any;
   }>
 ) {
-  console.log(props.discipline);
   // type Order = "asc" | "desc";
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
@@ -358,7 +357,7 @@ export default function AthletesTable(
   };
 
   const paginatedData = useMemo(() => {
-    if (internalPage && internalPageSize) {
+    if (props.page === undefined && props.pageSize === undefined) {
       const start = internalPage * internalPageSize;
       const end = start + internalPageSize;
       return props.data.slice(start, end);
@@ -472,7 +471,8 @@ export default function AthletesTable(
                                 <Visibility color="primary"></Visibility>
                               </IconButton>
                             </Tooltip>
-                            {props.userRole === "main_admin" ||
+                            {(props.userRole === "main_admin" &&
+                              props.editable) ||
                             (props.userRole === "subed_club" &&
                               props.editable) ? (
                               <Tooltip arrow title="Editar">
@@ -584,7 +584,10 @@ export default function AthletesTable(
               </TableFooter>
             </Table>
           </TableContainer>
-          {props.type === "Equipas" ? null : (
+          {props.type === "Equipas" ||
+          props.type === "CategoriasReadOnly" ||
+          props.type === "Categorias" ||
+          props.type === "EventCategories" ? null : (
             <>
               <EditAthleteModal
                 isModalOpen={isEditModalOpen}
@@ -622,11 +625,13 @@ export default function AthletesTable(
           )}
         </Grid>
       )}
-      <CategoryInfoModal
-        isModalOpen={isCategoryInfoModalOpen}
-        handleModalClose={handleCategoryInfoModalClose}
-        categoryId={actionedAthlete}
-      ></CategoryInfoModal>
+      {actionedAthlete === "" ? null : (
+        <CategoryInfoModal
+          isModalOpen={isCategoryInfoModalOpen}
+          handleModalClose={handleCategoryInfoModalClose}
+          categoryId={actionedAthlete}
+        ></CategoryInfoModal>
+      )}
     </>
   );
 }

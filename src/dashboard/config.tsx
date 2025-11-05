@@ -27,6 +27,7 @@ import {
   Warning,
   Report,
   EditNotifications,
+  MonetizationOn,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -155,6 +156,12 @@ export const getSideMenuConfig = (userRole: string) => {
 
 export const getAccountSideMenuConfig = (userRole: string) => {
   const baseMenu = [
+    {
+      name: "pricing",
+      label: "Planos",
+      icon: <MonetizationOn />,
+      to: "/pricing/",
+    },
     { name: "news", label: "Novidades", icon: <Celebration />, to: "/news/" },
     {
       name: "feedback",
@@ -171,7 +178,8 @@ export const getAccountSideMenuConfig = (userRole: string) => {
   ];
 
   if (userRole === "main_admin") {
-    return baseMenu.filter((item) => item.name !== "contacts");
+    return baseMenu.filter((item) => item.name !== "contacts" &&
+        item.name !== "pricing");
   } else if (userRole === undefined) {
     return baseMenu.filter((item) => item.name !== "feedback");
   } else if (userRole === "technician") {
@@ -179,7 +187,8 @@ export const getAccountSideMenuConfig = (userRole: string) => {
       (item) =>
         item.name !== "feedback" &&
         item.name !== "contacts" &&
-        item.name !== "news"
+        item.name !== "news" &&
+        item.name !== "pricing"
     );
   }
 
@@ -217,6 +226,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   categories: "Escalões",
   new_category: "Novo Escalão",
   reset: "Recuperar Password",
+  pricing: "Planos de Subscrição"
 };
 
 export const NotificationTypeOptions: {

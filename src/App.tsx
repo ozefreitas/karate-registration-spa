@@ -45,6 +45,8 @@ import { SnackbarProvider } from "notistack";
 import WIPPage from "./pages/ErrorPages/WIPPage";
 // import SnackbarCloser from "./dashboard/SnackBarCloser";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
+import PricingPage from "./pages/PricesPage/PricingPage";
+import ScrollToTop from "./utils/scrollToTop";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -73,366 +75,395 @@ function App() {
     <SnackbarProvider>
       <BrowserRouter>
         {/* <SnackbarCloser /> */}
-        <Routes>
-          <Route element={<MainAppLayout me={user} />}>
-            <Route
-              path="/"
-              element={
-                ["main_admin", "single_admin"].includes(userRole) ? (
-                  <AdminHomePage userRole={userRole} />
-                ) : (
-                  <HomePage userRole={userRole} />
-                )
-              }
-            />
-            <Route path="signup/:token/" element={<SignupWrapper />} />
-            <Route path="request_account/" element={<RequestAccountPage />} />
-            <Route path="login/" element={<LoginPage />} />
-            <Route
-              path="athletes/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<AthletesPage userRole={userRole} />}
-                    allowedRoles={["subed_club", "main_admin", "single_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="athletes/:id/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<SingleAthletePage />}
-                    allowedRoles={["subed_club", "main_admin", "single_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="athletes/new_athlete/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<NewAthletePage />}
-                    // allowedRoles={["main_admin", "single_admin"]}
-                    allowedRoles={["main_admin", "single_admin", "subed_club"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="teams/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage></WIPPage>}
-                    // element={<TeamsPage userRole={userRole} />}
-                    allowedRoles={["subed_club"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="teams/:id/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage></WIPPage>}
-                    // element={<SingleTeamPage />}
-                    allowedRoles={["subed_club", "main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="teams/new_team/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage></WIPPage>}
-                    // element={<NewTeamPage />}
-                    allowedRoles={["subed_club"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<EventsPage userRole={userRole} />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/new_event/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<NewEventPage userRole={userRole} />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/categories/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<EventCategoriesPage userRole={userRole} />}
-                    allowedRoles={["main_admin", "subed_club"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="categories/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<CategoriesPage userRole={userRole} />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="categories/new_category/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<NewCategoryPage />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="list_notifications/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage />}
-                    allowedRoles={["main_admin", "subed_club"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="notifications_manager/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<NotificationManagerPage />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<EventCard userRole={userRole} />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/all_registry"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<EventAllRegistryPage userRole={userRole} />}
-                    allowedRoles={["main_admin"]} // not allow dojos for now
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/draw/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<DrawPage />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/draw/generate/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<GenerateDrawPage />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/individuals/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<IndividualsPage userRole={userRole} />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="events/:id/teams/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<RegisteredTeamsPage />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="rules/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<RulesPage />}
-                    allowedRoles={["free_club", "subed_club"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="classifications/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<ClassificationsPage />}
-                    allowedRoles={["free_club", "subed_club"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="help/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<HelpPage />}
-                    allowedRoles={["free_club", "subed_club"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="results_display/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<ResultsMainPage />}
-                    allowedRoles={["main_admin", "technician"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="settings/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<MainSettingsPage />}
-                    allowedRoles={["main_admin"]}
-                  />
-                )
-              }
-            />
-            <Route
-              path="profile/"
-              element={isAuthLoading ? null : <WIPPage></WIPPage>}
-            />
-            <Route
-              path="profile/notifications/"
-              element={isAuthLoading ? null : <WIPPage></WIPPage>}
-            />
-            <Route
-              path="news/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="feedback/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="contacts/"
-              element={
-                isAuthLoading ? null : (
-                  <ProtectedRoute
-                    element={<WIPPage />}
-                    allowedRoles={["free_club", "subed_club", "main_admin"]}
-                    allowUnauthenticated
-                  />
-                )
-              }
-            />
-            <Route
-              path="reset/:uidb64/:token"
-              element={<PasswordResetPage />}
-            />
-            <Route path="unauthorized/" element={<UnAuthorizedPage />} />
-            <Route path="not_found/" element={<NotFoundPage />} />
-          </Route>
-          <Route element={<DisplayPanelLayout />}>
-            <Route path="/display_panel/" element={<DisplayPage />} />
-            <Route
-              path="display_panel/kata_elim/"
-              element={<KataElim match="Kata" />}
-            />
-            <Route
-              path="display_panel/kata_final/"
-              element={<KataFinal matchType="final" />}
-            />
-            <Route
-              path="display_panel/kata_team/"
-              element={<KataFinal matchType="team" />}
-            />
-            <Route
-              path="display_panel/kumite_indiv/"
-              element={<KumiteIndiv />}
-            />
-            <Route path="display_panel/kumite_team/" element={<KumiteTeam />} />
-          </Route>
-        </Routes>
+        <ScrollToTop>
+          <Routes>
+            <Route element={<MainAppLayout me={user} />}>
+              <Route
+                path="/"
+                element={
+                  ["main_admin", "single_admin"].includes(userRole) ? (
+                    <AdminHomePage userRole={userRole} />
+                  ) : (
+                    <HomePage userRole={userRole} />
+                  )
+                }
+              />
+              <Route path="signup/:token/" element={<SignupWrapper />} />
+              <Route path="request_account/" element={<RequestAccountPage />} />
+              <Route path="login/" element={<LoginPage />} />
+              <Route
+                path="athletes/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<AthletesPage userRole={userRole} />}
+                      allowedRoles={[
+                        "subed_club",
+                        "main_admin",
+                        "single_admin",
+                      ]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="athletes/:id/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<SingleAthletePage />}
+                      allowedRoles={[
+                        "subed_club",
+                        "main_admin",
+                        "single_admin",
+                      ]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="athletes/new_athlete/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<NewAthletePage />}
+                      // allowedRoles={["main_admin", "single_admin"]}
+                      allowedRoles={[
+                        "main_admin",
+                        "single_admin",
+                        "subed_club",
+                      ]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="teams/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage></WIPPage>}
+                      // element={<TeamsPage userRole={userRole} />}
+                      allowedRoles={["subed_club"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="teams/:id/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage></WIPPage>}
+                      // element={<SingleTeamPage />}
+                      allowedRoles={["subed_club", "main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="teams/new_team/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage></WIPPage>}
+                      // element={<NewTeamPage />}
+                      allowedRoles={["subed_club"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<EventsPage userRole={userRole} />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/new_event/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<NewEventPage userRole={userRole} />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/categories/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<EventCategoriesPage userRole={userRole} />}
+                      allowedRoles={["main_admin", "subed_club"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="categories/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<CategoriesPage userRole={userRole} />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="categories/new_category/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<NewCategoryPage />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="list_notifications/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage />}
+                      allowedRoles={["main_admin", "subed_club"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="notifications_manager/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<NotificationManagerPage />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<EventCard userRole={userRole} />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/all_registry"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<EventAllRegistryPage userRole={userRole} />}
+                      allowedRoles={["main_admin"]} // not allow dojos for now
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/draw/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<DrawPage />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/draw/generate/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<GenerateDrawPage />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/individuals/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<IndividualsPage userRole={userRole} />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]} // keep "main_admin" for now, for debbuging effects
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/teams/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<RegisteredTeamsPage />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="rules/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<RulesPage />}
+                      allowedRoles={["free_club", "subed_club"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="classifications/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<ClassificationsPage />}
+                      allowedRoles={["free_club", "subed_club"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="help/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<HelpPage />}
+                      allowedRoles={["free_club", "subed_club"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="results_display/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<ResultsMainPage />}
+                      allowedRoles={["main_admin", "technician"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="settings/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<MainSettingsPage />}
+                      allowedRoles={["main_admin"]}
+                    />
+                  )
+                }
+              />
+              <Route
+                path="profile/"
+                element={isAuthLoading ? null : <WIPPage></WIPPage>}
+              />
+              <Route
+                path="profile/notifications/"
+                element={isAuthLoading ? null : <WIPPage></WIPPage>}
+              />
+              <Route
+                path="pricing/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<PricingPage />}
+                      allowedRoles={["free_club", "subed_club"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="news/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="feedback/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="contacts/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<WIPPage />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]}
+                      allowUnauthenticated
+                    />
+                  )
+                }
+              />
+              <Route
+                path="reset/:uidb64/:token"
+                element={<PasswordResetPage />}
+              />
+              <Route path="unauthorized/" element={<UnAuthorizedPage />} />
+              <Route path="not_found/" element={<NotFoundPage />} />
+            </Route>
+            <Route element={<DisplayPanelLayout />}>
+              <Route path="/display_panel/" element={<DisplayPage />} />
+              <Route
+                path="display_panel/kata_elim/"
+                element={<KataElim match="Kata" />}
+              />
+              <Route
+                path="display_panel/kata_final/"
+                element={<KataFinal matchType="final" />}
+              />
+              <Route
+                path="display_panel/kata_team/"
+                element={<KataFinal matchType="team" />}
+              />
+              <Route
+                path="display_panel/kumite_indiv/"
+                element={<KumiteIndiv />}
+              />
+              <Route
+                path="display_panel/kumite_team/"
+                element={<KumiteTeam />}
+              />
+            </Route>
+          </Routes>
+        </ScrollToTop>
       </BrowserRouter>
     </SnackbarProvider>
   );

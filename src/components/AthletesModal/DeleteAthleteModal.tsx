@@ -49,7 +49,6 @@ export default function DeleteAthleteModal(
     discipline?: any;
   }>
 ) {
-  console.log(props.discipline);
   const removeDisciplineAthlete = disciplinesHooks.useDeleteDisciplineAthlete();
   const removeEventAthlete = eventsHooks.useRemoveEventAthlete();
   const removeAthlete = membersHooks.useDeleteAthleteData();

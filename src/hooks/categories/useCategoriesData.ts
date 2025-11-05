@@ -14,6 +14,6 @@ export const useFetchSingleCategory = (categoryId: string) => {
     queryKey: ["single-category", categoryId],
     queryFn: () => fetchSingleCategory(categoryId),
     refetchOnWindowFocus: false,
-    enabled: !!categoryId,
+    enabled: categoryId !== "",
   });
 };

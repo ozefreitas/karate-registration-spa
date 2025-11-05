@@ -668,7 +668,7 @@ export default function AthletesModal(
               </ListItem>
             ) : userRole === "free_club" && searchQuery === "" ? (
               <ListItem>
-                <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Mmebro, ou inicie uma subscrição."></ListItemText>
+                <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
               filteredAthletes.map((athlete: Athlete, index: string) => (

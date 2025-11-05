@@ -142,7 +142,10 @@ export default function CategoriesReadOnlyModal(
   return (
     <Dialog
       open={props.isModalOpen}
-      onClose={props.handleModalClose}
+      onClose={() => {
+        props.handleModalClose();
+        setPage(1);
+      }}
       maxWidth="sm"
       fullWidth
       slots={{
