@@ -73,11 +73,11 @@ export default function NewAthletePage() {
       gender: data.gender,
       competitor: data.competitor,
       birth_date: data.birth_date,
-      // weight: data.weight,
+      weight: data.weight,
       club: data.club,
     };
 
-    if (data.force_ident === false) {
+    if (data.force_ident === true) {
       formData.id_number = 0;
     }
 
@@ -163,12 +163,11 @@ export default function NewAthletePage() {
           <strong>Importante</strong>: A regras em vigor ditam que a idade
           considerada para determinação de escalão é a idade que uma atleta tem
           no primeiro dia do último ano da presente época. <br /> Por exemplo:
-          Um atleta nascido no dia 16 de dezembro de 2010 terá, para todas as
-          provas da época 2024/2025, 14 anos, independentemente da idade a que
-          se apresentar a dada prova. Isto é, havendo uma prova no dia 02 de
-          novembro de 2024, o atleta terá na realidade 13 anos e por isso seria
-          Juvenil, no entanto, essa não é a idade tida em conta, mas sim a do
-          dia 1 de janeiro de 2025, onde terá 14 anos e será Cadete.
+          Um atleta nascido no dia 16 de dezembro de 2010 terá, paExemplo: Um
+          atleta nascido a 16 de dezembro de 2010 é considerado Cadete na época
+          2024/2025, pois a idade tida em conta é a que terá a 1 de janeiro de
+          2025 (14 anos), mesmo que ainda tenha 13 anos em provas
+          realizadas em 2024.
         </CardContent>
       </Card>
       <Grid container>
@@ -315,8 +314,9 @@ export default function NewAthletePage() {
               render={({ field }) => (
                 <FormControl component="fieldset" variant="standard">
                   <FormLabel sx={{ mb: 2 }}>
-                    Se, por alguma razão, pretende forçar um Nº{" "}
-                    {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}.
+                    Insira o Nº de identificação{" "}
+                    {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}. Caso ainda não
+                    tenha um atribuído, ligue o botão abaixo.
                   </FormLabel>
                   <Stack spacing={1}>
                     <FormControlLabel
@@ -331,14 +331,14 @@ export default function NewAthletePage() {
                           name="force_ident"
                         />
                       }
-                      label={`Forçar Nº ${
+                      label={`Não tem Nº ${
                         import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
                       }`}
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
-                    {!!errors.competitor && (
+                    {!!errors.force_ident && (
                       <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.competitor?.message}
+                        {errors.force_ident?.message}
                       </FormHelperText>
                     )}
                   </Stack>
@@ -360,7 +360,7 @@ export default function NewAthletePage() {
                     htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
                   }}
                   fullWidth
-                  disabled={!is_force_ident}
+                  disabled={is_force_ident}
                   multiline
                   maxRows={8}
                   {...field}

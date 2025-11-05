@@ -111,7 +111,7 @@ export default function EventCategoriesPage(
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : disciplinesData?.data !== undefined ? (
+        ) : disciplinesData?.data === undefined ? null : (
           disciplinesData.data.results.map(
             (discipline: Discipline, index: any) => (
               <span key={index}>
@@ -124,8 +124,12 @@ export default function EventCategoriesPage(
                   count={categoriesRows[index].length}
                   columnsHeaders={columnMaping}
                   actions
-                  selection
-                  deletable
+                  selection={["main_admin", "superuser"].includes(
+                    props.userRole
+                  )}
+                  deletable={["main_admin", "superuser"].includes(
+                    props.userRole
+                  )}
                   userRole={props.userRole}
                   discipline={discipline.id}
                 ></AthletesTable>
@@ -149,7 +153,7 @@ export default function EventCategoriesPage(
               </span>
             )
           )
-        ) : null}
+        )}
       </Grid>
       <CategoriesModal
         handleModalClose={handleCategoriesModalClose}

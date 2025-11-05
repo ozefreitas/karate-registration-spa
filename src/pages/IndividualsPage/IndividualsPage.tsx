@@ -139,8 +139,12 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             count={singleEventData?.data.individuals.length}
             columnsHeaders={columnMaping}
             actions
-            selection
-            deletable
+            selection={["main_admin", "superuser", "subed_club"].includes(
+              props.userRole
+            )}
+            deletable={["main_admin", "superuser", "subed_club"].includes(
+              props.userRole
+            )}
             userRole={props.userRole}
           ></AthletesTable>
         ) : (

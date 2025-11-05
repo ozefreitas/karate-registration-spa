@@ -325,9 +325,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 <CardHeader
                   title="Avaliação"
                   subheader={
-                    props.userRole !== "main_admin"
-                      ? "Depois da realização da prova, poderá deixar uma avaliação"
-                      : "Depois da realização da prova, os Clubes poderão avaliar o Evento."
+                    props.userRole === "main_admin"
+                      ? "Depois da realização da prova, os Clubes poderão avaliar o Evento."
+                      : "Depois da realização da prova, poderá deixar uma avaliação"
                   }
                   sx={{
                     "& .MuiCardHeader-title": {
@@ -403,7 +403,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     </Grid>
                   )}
                 </CardContent>
-                {props.userRole !== "main_admin" ? (
+                {props.userRole === "main_admin" ? null : (
                   <CardActions sx={{ justifyContent: "flex-end" }}>
                     <Stack
                       direction={{
@@ -434,13 +434,13 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       </Button>
                     </Stack>
                   </CardActions>
-                ) : null}
+                )}
               </Card>
             </Grid>
           </Grid>
         </Grid>
         <Grid size={12}>
-          {props.userRole !== undefined ? (
+          {props.userRole === undefined ? null : (
             <Card sx={{ m: 2, mt: 0 }}>
               <CardHeader
                 title="Ações"
@@ -461,17 +461,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     rowGap: 2,
                   }}
                 >
-                  {!["main_admin", "superuser"].includes(props.userRole) ? (
-                    <AddButton
-                      label="Adicionar/Consultar Inscrições"
-                      to="individuals/"
-                      disabled={
-                        isSingleEventLoading ||
-                        singleEventData?.data.has_ended ||
-                        !singleEventData?.data.has_registrations
-                      }
-                    ></AddButton>
-                  ) : (
+                  {["main_admin", "superuser"].includes(props.userRole) ? (
                     // props.userRole === "subed_club" ? (
                     //   <Tooltip
                     //     disableHoverListener={!singleEventData?.data.has_ended}
@@ -516,6 +506,16 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         handleOpen={handleEditModalOpen}
                       ></SettingsButton>
                     </>
+                  ) : (
+                    <AddButton
+                      label="Adicionar/Consultar Inscrições"
+                      to="individuals/"
+                      disabled={
+                        isSingleEventLoading ||
+                        singleEventData?.data.has_ended ||
+                        !singleEventData?.data.has_registrations
+                      }
+                    ></AddButton>
                   )}
                   {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                     <AddButton
@@ -578,7 +578,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 </Grid>
               </CardContent>
             </Card>
-          ) : null}
+          )}
         </Grid>
       </Grid>
       <DeleteEventModal

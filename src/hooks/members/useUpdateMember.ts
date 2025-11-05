@@ -20,6 +20,7 @@ export const useUpdateMemberData = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["disciplines"] });
       queryClient.invalidateQueries({ queryKey: ["single-athlete"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });

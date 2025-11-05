@@ -108,23 +108,29 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
               <ListItemText primary="Um erro ocorreu ao encontrar os seus Atletas, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
-        ) : athletesData?.data !== undefined ? (
+        ) : athletesData?.data === undefined ? null : (
           <AthletesTable
             type="Atletas"
             data={athleteRows}
             count={athletesData?.data.count}
             columnsHeaders={columnMaping}
             actions
-            selection
-            editable
-            deletable
+            editable={["main_admin", "superuser", "subed_club"].includes(
+              props.userRole
+            )}
+            selection={["main_admin", "superuser", "subed_club"].includes(
+              props.userRole
+            )}
+            deletable={["main_admin", "superuser", "subed_club"].includes(
+              props.userRole
+            )}
             page={page}
             setPage={setPage}
             pageSize={pageSize}
             setPageSize={setPageSize}
             userRole={props.userRole}
           ></AthletesTable>
-        ) : null}
+        )}
       </Grid>
       {props.userRole === "main_admin" || props.userRole === "subed_club" ? (
         <Grid sx={{ m: 3, mt: 2 }}>

@@ -246,15 +246,37 @@ export default function Header(
                       >
                         <Avatar
                           sx={{
-                            height: 50,
-                            width: 50,
+                            height:
+                              notificationData?.data.length === 0 ||
+                              notificationData === null
+                                ? null
+                                : 50,
+                            width:
+                              notificationData?.data.length === 0 ||
+                              notificationData === null
+                                ? null
+                                : 50,
                             bgcolor:
-                              notificationData?.data.length === 0
+                              notificationData?.data.length === 0 ||
+                              notificationData === null
                                 ? null
                                 : "green",
                           }}
                         >
-                          <NotificationsActive sx={{ height: 25, width: 25 }} />
+                          <NotificationsActive
+                            sx={{
+                              height:
+                                notificationData?.data.length === 0 ||
+                                notificationData === null
+                                  ? 20
+                                  : 25,
+                              width:
+                                notificationData?.data.length === 0 ||
+                                notificationData === null
+                                  ? 20
+                                  : 25,
+                            }}
+                          />
                         </Avatar>
                       </Badge>
                     </Tooltip>
@@ -539,7 +561,7 @@ export default function Header(
           disabled={
             notificationData?.data.length === 0 || notificationError !== null
           }
-          onClick={() => navigate("/notifications/")}
+          onClick={() => navigate("/list_notifications/")}
           sx={{ p: 2, display: "flex", justifyContent: "center" }}
         >
           Abrir todas as Notificações

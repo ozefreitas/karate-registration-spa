@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
@@ -144,6 +144,7 @@ export default function AthletesTable(
     setDisciplineCategories?: any;
   }>
 ) {
+  console.log(props.data);
   // type Order = "asc" | "desc";
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
@@ -174,7 +175,7 @@ export default function AthletesTable(
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    console.log(event)
+    console.log(event);
     if (props.setPage) {
       props.setPage(newPage);
     } else {
@@ -357,6 +358,14 @@ export default function AthletesTable(
     return path.split(".").reduce((acc, key) => acc?.[key], obj);
   }
 
+  const paginatedData = useMemo(() => {
+    const start =
+      (props.page ? props.page : internalPage) *
+      (props.pageSize ? props.pageSize : internalPageSize);
+    const end = start + (props.pageSize ? props.pageSize : internalPageSize);
+    return props.data.slice(start, end);
+  }, [props.data, props.page, internalPage]);
+
   return (
     <>
       {props.data.length === 0 ? (
@@ -403,7 +412,7 @@ export default function AthletesTable(
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {props.data.map((row: any) => {
+                {paginatedData.map((row: any) => {
                   const isItemSelected = selected.includes(row.id);
                   return (
                     <StyledTableRow
@@ -451,7 +460,8 @@ export default function AthletesTable(
                                     navigate(`/teams/${row.id}/`);
                                   } else if (
                                     props.type === "Categorias" ||
-                                    props.type === "CategoriasReadOnly"
+                                    props.type === "CategoriasReadOnly" ||
+                                    props.type === "EventCategories"
                                   ) {
                                     setActionedAthlete(row.id.toString());
                                     handleCategoryInfoModalOpen(e);
@@ -463,8 +473,9 @@ export default function AthletesTable(
                                 <Visibility color="primary"></Visibility>
                               </IconButton>
                             </Tooltip>
-                            {props.userRole === "main_admin" &&
-                            props.editable ? (
+                            {props.userRole === "main_admin" ||
+                            (props.userRole === "subed_club" &&
+                              props.editable ) ? (
                               <Tooltip arrow title="Editar">
                                 <IconButton
                                   onClick={(e) => {
@@ -483,17 +494,20 @@ export default function AthletesTable(
                             ) : null}
                             {props.deletable &&
                             (props.userRole === "main_admin" ||
+                              props.userRole === "subed_club" ||
                               props.type === "Modalidades" ||
                               props.type === "Individuais") ? (
                               <Tooltip arrow title="Remover">
                                 <IconButton
                                   onClick={(e) => {
                                     if (
-                                      props.selectedDisciplineForCategory !==
+                                      props.selectedDisciplineForCategory ===
                                       undefined
                                     ) {
+                                      handleRowDelete(e, row.id);
+                                    } else {
                                       handleCategoryRemove(e, row.id);
-                                    } else handleRowDelete(e, row.id);
+                                    }
                                   }}
                                 >
                                   <Delete color="error"></Delete>

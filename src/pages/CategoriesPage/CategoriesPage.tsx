@@ -69,22 +69,22 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : categoriesData?.data !== undefined ? (
+        ) : categoriesData?.data === undefined ? null : (
           <AthletesTable
             type="Categorias"
             data={categoryRows}
             count={categoriesData?.data.count}
             columnsHeaders={columnMaping}
             actions
-            selection
-            deletable
+            selection={["main_admin", "superuser"].includes(props.userRole)}
+            deletable={["main_admin", "superuser"].includes(props.userRole)}
             page={page}
             setPage={setPage}
             pageSize={pageSize}
             setPageSize={setPageSize}
             userRole={props.userRole}
           ></AthletesTable>
-        ) : null}
+        )}
         {props.userRole === "main_admin" ? (
           <Grid sx={{ m: 3, mt: 1 }} size={12}>
             <AddButton label="Adicionar" to="new_category/"></AddButton>

@@ -37,7 +37,9 @@ export default function PersonalInfoSection(
   const [searchParams] = useSearchParams();
   const editField = searchParams.get("edit_field");
 
-  const isPrivileged = ["main_admin", "superuser"].includes(userRole);
+  const isPrivileged = ["main_admin", "superuser", "subed_club"].includes(
+    userRole
+  );
 
   useEffect(() => {
     if (editField === "weight") {
@@ -86,7 +88,10 @@ export default function PersonalInfoSection(
       lastName: props.athleteData?.data.last_name,
       age: props.athleteData?.data.age,
       graduation: props.athleteData?.data.graduation,
-      id_number: props.athleteData?.data.id_number,
+      id_number:
+        props.athleteData?.data.id_number === null
+          ? "N/A"
+          : props.athleteData?.data.id_number,
       gender: props.athleteData?.data.gender,
       competitor: props.athleteData?.data.competitor,
       birthDate: props.athleteData?.data.birth_date,
@@ -148,7 +153,7 @@ export default function PersonalInfoSection(
         INFORMAÇÕES PESSOAIS
       </Typography>
       <Grid sx={{ mb: 3 }}>
-        {["main_admin", "superuser"].includes(userRole) ? (
+        {["main_admin", "superuser", "subed_club"].includes(userRole) ? (
           <Button
             sx={{ m: 1, mr: 4 }}
             variant="contained"
@@ -216,15 +221,7 @@ export default function PersonalInfoSection(
           alignItems: "center",
         }}
       >
-        <FormControl
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          {/* <FormLabel sx={{ mb: 1 }}>
-                    Selecione este campo se o Evento <strong>PERMITE</strong>{" "}
-                    inscrições livres.
-                  </FormLabel> */}
+        <FormControl component="fieldset" variant="standard">
           <FormControlLabel
             sx={{ mr: 2 }}
             labelPlacement="start"
@@ -457,7 +454,12 @@ export default function PersonalInfoSection(
                       input: {
                         readOnly: !isEditMode,
                         disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
                       },
                     }}
                     required

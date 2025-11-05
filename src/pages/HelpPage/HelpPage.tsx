@@ -221,11 +221,15 @@ export default function HelpPage() {
                 }}
               ></CardHeader>
               <CardContent>
-                A <i>Karate Score App</i> funciona com um sistema de subscrição,
-                ou seja, para ter acesso a todas as funcionalidades, terá de
-                pagar uma mensalidade. Apenas funções básicas de inscrições em
-                eventos estão disponíveis em contas <i>free</i>, e estas com
-                limitações. <p></p>
+                A{" "}
+                <i>
+                  <strong>FightTech</strong>
+                </i>{" "}
+                funciona com um sistema de subscrição, ou seja, para ter acesso
+                a todas as funcionalidades, terá de pagar uma mensalidade.
+                Apenas funções básicas de inscrições em eventos estão
+                disponíveis em contas <i>free</i>, e estas com limitações.{" "}
+                <p></p>
                 Para mais informações sobre as possiblidades de pagamento, assim
                 como das funcionalidades desbloquaedas com os mesmos, deve
                 enviar um email para jpsfreitas12@gmail.com, com o assunto
@@ -289,26 +293,18 @@ export default function HelpPage() {
                 A página de Início é um ecrã de resumo onde pode ver informação
                 relevante à cerca das suas últimas ações, provas seguintes,
                 notificações ou classificações. <br />
-                As Notificações têm 5 niveis de importância:
+                As Notificações dividem-se em múltiplas tipologias:
                 <ul>
-                  <li>Normal - Apenas informativa;</li>
-                  <li>
-                    <span style={{ color: "green" }}>Verde</span> - Sem
-                    importância nem necessidade de ser resolvida em breve;
-                  </li>
-                  <li>
-                    <span style={{ color: "#DBB727" }}>Amarela</span> - Requer
-                    alguma atenção;;
-                  </li>
-                  <li>
-                    <span style={{ color: "orange" }}>Laranja</span> - Necessita
-                    de ser resolvida em breve;
-                  </li>
-                  <li>
-                    <span style={{ color: "red" }}>Vermelha</span> - Merece
-                    completa atenção e deve ser resolvida o mais rápido
-                    possível. Deve contactar o seu administrador.
-                  </li>
+                  <li>Atleta Criado</li>
+                  <li>Avaliação de Evento</li>
+                  <li>Inscrições prestes a fechar</li>
+                  <li>Inscrições Fechadas</li>
+                  <li>Inscrições Abertas</li>
+                  <li>Classificações Disponíveis</li>
+                  <li>Mensagens Administrativas</li>
+                  <li>Definições de Sistema</li>
+                  <li>Pagamentos</li>
+                  <li>Perigo (necessitam de atenção imediata)</li>
                 </ul>
               </CardContent>
             </Card>

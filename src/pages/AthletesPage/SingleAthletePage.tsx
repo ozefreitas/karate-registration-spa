@@ -13,14 +13,17 @@ import PersonalInfoSection from "./PersonalInfoSection";
 import ResultsHistorySection from "./ResultsHistorySection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { membersHooks } from "../../hooks";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import RegistryHistorySection from "./RegistryHistorySection";
 
 export default function SingleAthletePage() {
   const { id: memberId } = useParams<{ id: string }>();
-  const { data: singleAthleteData, isLoading: isSingleAthleteLoading } =
-    membersHooks.useFetchSingleMemberData(memberId);
+  const {
+    data: singleAthleteData,
+    isLoading: isSingleAthleteLoading,
+    error: singleAthleteError,
+  } = membersHooks.useFetchSingleMemberData(memberId);
 
   const [currentScreen, setCurrentScreen] = useState<number>(1);
 
@@ -44,6 +47,8 @@ export default function SingleAthletePage() {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </Box>
+      ) : singleAthleteError ? (
+        <Navigate to={"/not_found/"}></Navigate>
       ) : (
         <Card sx={{ m: 2 }}>
           <CardContent
