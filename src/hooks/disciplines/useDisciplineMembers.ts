@@ -16,7 +16,7 @@ export const useAddDisciplineAthlete = () => {
     retry: false,
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
-        variant: "success",
+        variant: data.data.status === "info" ? "warning" : "success",
         anchorOrigin: {
           vertical: "top",
           horizontal: "center",
@@ -65,7 +65,7 @@ export const useDeleteDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -101,7 +101,7 @@ export const useDeleteAllDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

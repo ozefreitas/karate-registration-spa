@@ -178,8 +178,9 @@ export const getAccountSideMenuConfig = (userRole: string) => {
   ];
 
   if (userRole === "main_admin") {
-    return baseMenu.filter((item) => item.name !== "contacts" &&
-        item.name !== "pricing");
+    return baseMenu.filter(
+      (item) => item.name !== "contacts" && item.name !== "pricing"
+    );
   } else if (userRole === undefined) {
     return baseMenu.filter((item) => item.name !== "feedback");
   } else if (userRole === "technician") {
@@ -226,7 +227,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   categories: "Escalões",
   new_category: "Novo Escalão",
   reset: "Recuperar Password",
-  pricing: "Planos de Subscrição"
+  pricing: "Planos de Subscrição",
 };
 
 export const NotificationTypeOptions: {
@@ -257,32 +258,32 @@ export const NotificationTypeOptions: {
   },
   {
     value: "registrations_closing",
-    label: "Inscrições a fechar",
+    label: "Inscrições a Fechar",
     icon: <Warning fontSize="large" />,
   },
   {
     value: "registrations_close",
-    label: "Inscrições fechadas",
+    label: "Inscrições Fechadas",
     icon: <EventBusy fontSize="large" />,
   },
   {
     value: "open_registrations",
-    label: "Inscrições abertas",
+    label: "Inscrições Abertas",
     icon: <EventAvailable fontSize="large" />,
   },
   {
     value: "classifications_available",
-    label: "Resultados disponíveis",
+    label: "Resultados Disponíveis",
     icon: <EmojiEvents fontSize="large" />,
   },
   {
     value: "payment_available",
-    label: "Pagamento disponíveis",
+    label: "Pagamento Disponível",
     icon: <AccountBalanceWallet fontSize="large" />,
   },
   {
     value: "payment_overdue",
-    label: "Pagamento expirado",
+    label: "Pagamento Expirado",
     icon: <HourglassDisabled fontSize="large" />,
   },
   {

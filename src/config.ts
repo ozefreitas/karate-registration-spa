@@ -102,7 +102,6 @@ export const MatchTypeOptions: { label: string; value: string }[] = [
   // { value: "katakumiteequipa", label: "Kata e Kumite Equipa" },
 ];
 
-
 export const QuotesOptions: { label: string; value: string }[] = [
   { value: "overdue", label: "Em dívida" },
   { value: "regular", label: "Regular" },
@@ -135,6 +134,12 @@ export const KataOptions: { label: string; value: string }[] = [
   { value: "ninjushiho", label: "Ninjushiho" },
   { value: "wankan", label: "Wankan" },
   { value: "unsi", label: "Unsu" },
+];
+
+export const PaymentTypes: { value: string; label: string }[] = [
+  { value: "quotes", label: "Quotas" },
+  { value: "insurence", label: "Seguro Desportivo" },
+  { value: "events", label: "Eventos" },
 ];
 
 export const RulesOptions: {

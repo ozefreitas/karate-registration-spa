@@ -12,6 +12,7 @@ export const useFetchEventsData = (page: number, pageSize: number) => {
     queryKey: ["events", page, pageSize],
     queryFn: () => fetchEvents(page, pageSize),
     refetchOnWindowFocus: false,
+    enabled: pageSize !== 100,
   });
 };
 

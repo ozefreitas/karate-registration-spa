@@ -24,7 +24,7 @@ export const useAddEventAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -59,7 +59,7 @@ export const useRemoveEventAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

@@ -412,13 +412,7 @@ export default function AthletesModal(
             </Typography>
           ) : (
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Inscrever em{" "}
-              {
-                athletesNotInEventData?.data.results.find(
-                  (athlete: Athlete) => athlete.id === currentAthleteId
-                )?.id
-              }{" "}
-              {props.eventData?.name}
+              Inscrever em {props.eventData?.name}
             </Typography>
           )}
           {athletesNotInEventData?.data.results.length !== 0 &&

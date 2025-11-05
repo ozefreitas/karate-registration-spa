@@ -14,6 +14,10 @@ export const createNotification = (data: any) => {
   return authClient.post("/notifications/", data);
 };
 
+export const createAllClubsNotification = (data: any) => {
+  return authClient.post("/notifications/create_all_users/", data);
+};
+
 export const deleteNotification = (notificationId: string) => {
   return authClient.delete(`/notifications/${notificationId}/`);
 };

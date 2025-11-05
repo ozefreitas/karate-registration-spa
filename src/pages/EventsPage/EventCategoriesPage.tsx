@@ -13,7 +13,7 @@ import { Add } from "@mui/icons-material";
 import { disciplinesHooks } from "../../hooks";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>
@@ -33,6 +33,8 @@ export default function EventCategoriesPage(
     name: string;
     categories: Category[];
   };
+
+  const navigate = useNavigate();
 
   const { id: eventId } = useParams<{ id: string }>();
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
@@ -155,6 +157,20 @@ export default function EventCategoriesPage(
           )
         )}
       </Grid>
+      <Grid container justifyContent={"flex-end"}>
+        <Button
+          sx={{ mr: 2, mt: 1 }}
+          variant="contained"
+          size={"medium"}
+          type={"submit"}
+          onClick={() => {
+            navigate(`/events/${eventId}/`);
+          }}
+        >
+          Voltar
+        </Button>
+      </Grid>
+
       <CategoriesModal
         handleModalClose={handleCategoriesModalClose}
         isModalOpen={isCategoriesModalOpen}

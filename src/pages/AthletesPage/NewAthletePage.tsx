@@ -77,6 +77,10 @@ export default function NewAthletePage() {
       club: data.club,
     };
 
+    if (data.weight === "") {
+      formData.weight = null;
+    }
+
     if (data.force_ident === true) {
       formData.id_number = 0;
     }

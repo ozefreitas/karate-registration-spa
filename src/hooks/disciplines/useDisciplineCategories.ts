@@ -24,7 +24,7 @@ export const useAddDisciplineCategory = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",
@@ -59,7 +59,7 @@ export const useRemoveDisciplineCategory = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

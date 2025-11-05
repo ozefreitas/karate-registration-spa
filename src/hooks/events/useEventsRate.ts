@@ -31,7 +31,7 @@ export const useRateEvent = () => {
       queryClient.invalidateQueries({ queryKey: ["event-rate"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.data.error}`, {
+      enqueueSnackbar(`${data.response.data.error}`, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

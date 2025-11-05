@@ -45,7 +45,7 @@ import { SnackbarProvider } from "notistack";
 import WIPPage from "./pages/ErrorPages/WIPPage";
 // import SnackbarCloser from "./dashboard/SnackBarCloser";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
-import PricingPage from "./pages/PricesPage/PricingPage";
+// import PricingPage from "./pages/PricesPage/PricingPage";
 import ScrollToTop from "./utils/scrollToTop";
 
 function App() {
@@ -389,7 +389,8 @@ function App() {
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<PricingPage />}
+                      // element={<PricingPage />}
+                      element={<WIPPage />}
                       allowedRoles={["free_club", "subed_club"]}
                       allowUnauthenticated
                     />

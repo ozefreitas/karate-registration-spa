@@ -49,7 +49,8 @@ export default function NotificationActionModal(
         <Typography variant="h5">Apagar Notificação</Typography>
       </DialogTitle>
       <DialogContent>
-        Tem a certeza que pretende apagar esta Notificação?
+        Tem a certeza que pretende apagar esta Notificação? <br /> O Clube não
+        voltará a ver a mesma.
       </DialogContent>
       <DialogActions>
         <Stack
