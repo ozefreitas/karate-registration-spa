@@ -15,7 +15,7 @@ import { Check, Close, Warning, Lightbulb } from "@mui/icons-material";
 
 const PricingPage = () => {
   const [selected, setSelected] = useState<string>("mensal");
-  const [hasDiscount, setHasDiscout] = useState<boolean>(false);
+  // const [hasDiscount, setHasDiscout] = useState<boolean>(false);
   return (
     <>
       <PageInfoCard

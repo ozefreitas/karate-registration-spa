@@ -16,7 +16,6 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ConfirmPasswordResetModal from "../../components/Admin/ConfirmPasswordResetModal";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { Navigate } from "react-router-dom";
-import fightTecLogo from "./../../assets//FightTecLogo-icon-black-background.jpg";
 
 export default function LoginPage() {
   // const action = (snackbarId: SnackbarKey | undefined) => (
