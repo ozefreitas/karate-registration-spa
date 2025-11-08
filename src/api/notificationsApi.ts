@@ -4,9 +4,9 @@ export const fetchCurrentClubNotifications = () => {
   return authClient.get("/club_notifications/");
 };
 
-export const fetchNotifications = (clubId: string) => {
+export const fetchNotifications = (page: number, pageSize: number) => {
   return authClient.get("/notifications/", {
-    params: { club_notification: clubId },
+    params: { page: page, pageSize: pageSize },
   });
 };
 

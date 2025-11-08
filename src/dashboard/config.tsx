@@ -9,7 +9,6 @@ import {
   HelpCenter,
   Home,
   Groups,
-  NotificationsActive,
   DeveloperBoard,
   AdminPanelSettings,
   Category,
@@ -69,12 +68,6 @@ export const getSideMenuConfig = (userRole: string) => {
       to: "/notifications_manager/",
     },
     {
-      name: "list_notifications",
-      label: "Notificações",
-      icon: <NotificationsActive sx={{ color: "#e81c24" }} />,
-      to: "/list_notifications/",
-    },
-    {
       name: "rules",
       label: "Regras",
       icon: <Rule sx={{ color: "#e81c24" }} />,
@@ -124,7 +117,6 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
-        item.name !== "list_notifications" &&
         item.name !== "categories"
     );
   } else if (userRole === "subed_club") {
@@ -142,7 +134,6 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "teams" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
-        item.name !== "list_notifications" &&
         item.name !== "categories" &&
         item.name !== "events" &&
         item.name !== "help" &&

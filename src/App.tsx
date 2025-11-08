@@ -45,7 +45,8 @@ import { SnackbarProvider } from "notistack";
 import WIPPage from "./pages/ErrorPages/WIPPage";
 // import SnackbarCloser from "./dashboard/SnackBarCloser";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
-// import PricingPage from "./pages/PricesPage/PricingPage";
+import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
+import PricingPage from "./pages/InformationalPages/PricingPage";
 import ScrollToTop from "./utils/scrollToTop";
 
 function App() {
@@ -59,10 +60,6 @@ function App() {
       document.body.classList.remove("display-mode");
     }
   }, [location]);
-
-  if (isAuthLoading) {
-    return <div></div>;
-  }
 
   const SignupWrapper = () => {
     const { token } = useParams();
@@ -230,11 +227,11 @@ function App() {
                 }
               />
               <Route
-                path="list_notifications/"
+                path="profile/list_notifications/"
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<WIPPage />}
+                      element={<NotificationsPage />}
                       allowedRoles={["main_admin", "subed_club"]}
                     />
                   )
@@ -389,8 +386,8 @@ function App() {
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      // element={<PricingPage />}
-                      element={<WIPPage />}
+                      element={<PricingPage />}
+                      // element={<WIPPage />}
                       allowedRoles={["free_club", "subed_club"]}
                       allowUnauthenticated
                     />

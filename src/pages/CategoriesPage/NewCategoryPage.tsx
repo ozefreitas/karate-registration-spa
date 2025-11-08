@@ -1,7 +1,4 @@
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Grid,
   TextField,
   MenuItem,
@@ -21,6 +18,7 @@ import FormAccordion from "../../dashboard/FormAccordion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { categoriesHooks } from "../../hooks";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function NewCategoryPage() {
   const navigate = useNavigate();
@@ -155,27 +153,22 @@ export default function NewCategoryPage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de criação de Escalões"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá registar um Escalão, que poderá mais tarde ser usado para
-          associar às diferentes Modalidades dos seus Eventos (competições).{" "}
-          <br />
-          Estes Escalões serão úties para facilmente mudar pequenos aspetos de
-          cada competição quando regras mudam por exemplo. <br /> Sorteios
-          também serão gerados de acordo com cada Escalão. <p></p>
-          Todos os valores numéricos são <strong>inclusivos</strong>, isto é,
-          selecionar 9 anos para a idade mínima de um escalão, irá incluir os 9
-          anos para esse escalão.
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description={
+          <>
+            Aqui poderá registar um Escalão, que poderá mais tarde ser usado
+            para associar às diferentes Modalidades dos seus Eventos
+            (competições). <br />
+            Estes Escalões serão úties para facilmente mudar pequenos aspetos de
+            cada competição quando regras mudam por exemplo. <br /> Sorteios
+            também serão gerados de acordo com cada Escalão. <p></p>
+            Todos os valores numéricos são <strong>inclusivos</strong>, isto é,
+            selecionar 9 anos para a idade mínima de um escalão, irá incluir os
+            9 anos para esse escalão.
+          </>
+        }
+        title="Novo Escalão"
+      ></PageInfoCard>
       <Grid>
         <FormCard title="Informações Gerais">
           <Grid container size={12}>

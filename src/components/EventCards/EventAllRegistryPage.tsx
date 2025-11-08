@@ -15,8 +15,6 @@ import { useParams } from "react-router-dom";
 export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>
 ) {
-  const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(25);
   const { id: eventId } = useParams<{ id: string }>();
 
   const {
@@ -65,7 +63,17 @@ export default function EventAllRegistryPage(
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : disciplinesData?.data.results.length !== 0 ? (
+        ) : disciplinesData?.data.results.length === 0 ? (
+          <AthletesTable
+            count={singleEventData?.data.individuals.length}
+            type="Individuais"
+            data={singleEventData?.data.individuals}
+            columnsHeaders={columnMaping}
+            actions={false}
+            selection={false}
+            userRole={props.userRole}
+          ></AthletesTable>
+        ) : (
           disciplinesData?.data.results.map((discipline: any) => (
             <>
               <Typography sx={{ m: 3 }} variant="h5">
@@ -79,28 +87,10 @@ export default function EventAllRegistryPage(
                 columnsHeaders={columnMaping}
                 actions={false}
                 selection={false}
-                page={page}
-                setPage={setPage}
-                pageSize={pageSize}
-                setPageSize={setPageSize}
                 userRole={props.userRole}
               ></AthletesTable>
             </>
           ))
-        ) : (
-          <AthletesTable
-            count={singleEventData?.data.individuals.length}
-            type="Individuais"
-            data={singleEventData?.data.individuals}
-            columnsHeaders={columnMaping}
-            actions={false}
-            selection={false}
-            page={page}
-            setPage={setPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            userRole={props.userRole}
-          ></AthletesTable>
         )}
       </Grid>
     </>

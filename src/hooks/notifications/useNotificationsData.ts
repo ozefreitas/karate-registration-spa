@@ -10,10 +10,10 @@ export const useFetchHomeClubNotifications = () => {
   });
 };
 
-export const useFetchNotificationsData = (clubId: string) => {
+export const useFetchNotificationsData = (page: number, pageSize: number) => {
   return useQuery({
-    queryKey: ["notifications", clubId],
-    queryFn: () => fetchNotifications(clubId),
+    queryKey: ["notifications", page, pageSize],
+    queryFn: () => fetchNotifications(page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

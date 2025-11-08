@@ -1,8 +1,5 @@
 import { useState, useMemo } from "react";
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Grid,
   Box,
   CircularProgress,
@@ -12,6 +9,7 @@ import {
 import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function AthletesPage(props: Readonly<{ userRole: string }>) {
   type Club = {
@@ -56,7 +54,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
       { key: "last_name", label: "Último Nome" },
       { key: "gender", label: "Género" },
     ];
-    if (props.userRole === "main_admin") {
+    if (props.userRole === "main_admin" || props.userRole === "superuser") {
       columnMapping.push({ key: "username", label: "Clube" });
     } else {
       columnMapping.push({ key: "age", label: "Idade" });
@@ -68,17 +66,16 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de Atletas"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          {props.userRole !== "main_admin" ? (
+      <PageInfoCard
+        description={
+          props.userRole === "main_admin" ? (
+            <>
+              Aqui poderá consultar todos os Atletas/Alunos tutelados por si.
+              Pode consultar a informação de cada um, editar e remover.
+              snfuadsbh fieuhficb hoçg cjb cb c bhbxcjb gihrbcd vvbvbfvcb hv vv
+              h
+            </>
+          ) : (
             <>
               Aqui poderá consultar todos os seus Atletas/Alunos e consultar a
               informação detalhada de cada um (caso possua uma subscrição).
@@ -89,14 +86,10 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
               para cada prova de acordo com as regras em vigor e da época
               desportiva corrente.
             </>
-          ) : (
-            <>
-              Aqui poderá consultar todos os Atletas/Alunos tutelados por si.
-              Pode consultar a informação de cada um, editar e remover.
-            </>
-          )}
-        </CardContent>
-      </Card>
+          )
+        }
+        title="Atletas"
+      ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
         {isAthletesDataLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>

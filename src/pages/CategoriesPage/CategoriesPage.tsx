@@ -1,15 +1,9 @@
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { Grid, Box, CircularProgress } from "@mui/material";
 import { categoriesHooks } from "../../hooks";
 import AddButton from "../../components/Buttons/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { useMemo, useState } from "react";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
@@ -48,22 +42,17 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de Escalões"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá registar ver todos os Escalões que tem registado na
-          plataforma. Pode adicionar novos e eliminar. Deve criar Escalões
-          duplicados para diferentes Modalidades. <br />
-          Se desejar alterar algum Escalão, deverá apagar e criar um de novo.
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description={
+          <>
+            Aqui poderá registar ver todos os Escalões que tem registado na
+            plataforma. Pode adicionar novos e eliminar. Deve criar Escalões
+            duplicados para diferentes Modalidades. <br />
+            Se desejar alterar algum Escalão, deverá apagar e criar um de novo.
+          </>
+        }
+        title="Escalões"
+      ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
         {isCategoriesLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>

@@ -1,6 +1,5 @@
 import {
   Card,
-  CardHeader,
   CardContent,
   CardActions,
   Box,
@@ -24,6 +23,7 @@ import { authHooks, clubsHoks, adminHooks } from "../../hooks";
 import DeleteClubModal from "../../components/Admin/DeleteClubModal";
 import AddClubModal from "../../components/Admin/AddClubModal";
 import { useSnackbar } from "notistack";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function MainSettingsPage() {
   const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
@@ -172,21 +172,12 @@ export default function MainSettingsPage() {
   console.log(acountDetails);
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de Administrador"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá iniciar configurar esta plataforma, e da forma como é
+      <PageInfoCard
+        description="Aqui poderá iniciar configurar esta plataforma, e da forma como é
           apresentada para as contas associadas, assim como controlo sobre essas
-          mesmas contas.
-        </CardContent>
-      </Card>
+          mesmas contas."
+        title="Administrador"
+      ></PageInfoCard>
       <Card sx={{ m: 3, mt: 0 }}>
         <CardContent>
           <Box sx={{ width: "100%" }}>

@@ -1,6 +1,5 @@
 import {
   Card,
-  CardHeader,
   CardContent,
   Grid,
   Avatar,
@@ -25,8 +24,9 @@ import {
   AccessTime,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { eventsHooks } from "../../hooks";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
@@ -58,37 +58,28 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     error: eventsError,
   } = eventsHooks.useFetchEventsData(page + 1, 5);
 
+  const infoCard: ReactNode =
+    props.userRole === "free_club" ? (
+      <>
+        Aqui poderá consultar todos os Eventos que se encontram abertos a
+        receber inscrições, ou que se irão realizar dentro dos próximos 7 dias.
+        <p></p>Consultando cada cartão de Evento, pode observar toda a
+        informação relevante sobre esse Evento, assim como os passos para
+        inscrever os seus Atletas.
+      </>
+    ) : (
+      <>
+        Aqui poderá consultar todos os Eventos disponíveis no momento. Mais
+        tarde será também possível ver Estágios e outras provas de interesse.{" "}
+        <p></p> Consultando cada cartão de Evento, pode observar toda a
+        informação relevante sobre esse Evento, assim como os passos para
+        inscrever os seus Atletas.
+      </>
+    );
+
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de Eventos"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          {props.userRole !== "free_club" ? (
-            <>
-              Aqui poderá consultar todos os Eventos disponíveis no momento.
-              Mais tarde será também possível ver Estágios e outras provas de
-              interesse.
-            </>
-          ) : (
-            <>
-              Aqui poderá consultar todos os Eventos que se encontram abertos a
-              receber inscrições, ou que se irão realizar dentro dos próximos 7
-              dias.
-            </>
-          )}
-          <p></p>
-          Consultando cada cartão de Evento, pode observar toda a informação
-          relevante sobre esse Evento, assim como os passos para inscrever os
-          seus Atletas.
-        </CardContent>
-      </Card>
+      <PageInfoCard description={infoCard} title="Eventos"></PageInfoCard>
       <Grid container size={12} sx={{ m: 2 }}>
         {isEventsDataLoading ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
@@ -102,7 +93,13 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
-        ) : eventsData?.data.results.length !== 0 ? (
+        ) : eventsData?.data.results.length === 0 ? (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <Typography variant="h6" sx={{ color: "gray" }}>
+              Não foram encontrados Eventos.
+            </Typography>
+          </Grid>
+        ) : (
           <Grid size={12}>
             <Card sx={{ m: 2, mt: 0 }}>
               <CardContent>
@@ -202,12 +199,6 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                 ))}
               </CardContent>
             </Card>
-          </Grid>
-        ) : (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
-            <Typography variant="h6" sx={{ color: "gray" }}>
-              Não foram encontrados Eventos.
-            </Typography>
           </Grid>
         )}
 

@@ -10,25 +10,18 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { ExpandMore } from "@mui/icons-material";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function HelpPage() {
   return (
     <div>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title={"Página de Ajuda."}
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Nesta página pode encontrar todas as informações e ajudas que irá
+      <PageInfoCard
+        description="Nesta página pode encontrar todas as informações e ajudas que irá
           necessitar para o preenchimento dos formulários e navegação nesta
-          plataforma.
-        </CardContent>
-      </Card>
+          plataforma."
+        title="Ajuda"
+      ></PageInfoCard>
+
       <Grid container size={12}>
         <Grid size={6}>
           <Grid size={12}>

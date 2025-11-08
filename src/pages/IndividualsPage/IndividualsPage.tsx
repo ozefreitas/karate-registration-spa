@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Card,
-  CardHeader,
   CardContent,
   Grid,
   Button,
@@ -15,6 +14,7 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import AthletesModal from "../../components/AthletesModal/AthletesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -68,28 +68,23 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title={`Página de inscritos em ${singleEventData?.data.name}`}
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá consultar todos os Atletas que estão inscritos para a
-          prova que selecionou (ver acima). <br /> Tal como presente nas regras,
-          no período de retificações apenas pode eliminar inscrições, e quando
-          as inscrições estiverem fechadas não podem ser efetuadas operações,
-          apenas ser visualizadas as inscrições. <br />
-          Ao clicar em "Selecionar Atleta", apenas irão aparecer aqueles que
-          estejam marcados como "Competidores". Se algum Atleta não constar na
-          lista, por favor verifique na página de perfil desse Atleta se o campo
-          "É Competidor" está selecionado. Caso não possua uma subscrição,
-          contacte um administrador de imediato.
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description={
+          <>
+            Aqui poderá consultar todos os Atletas que estão inscritos para a
+            prova que selecionou. <br /> Tal como presente nas
+            regras, no período de retificações apenas pode eliminar inscrições,
+            e quando as inscrições estiverem fechadas não podem ser efetuadas
+            operações, apenas ser visualizadas as inscrições. <br />
+            Ao clicar em "Selecionar Atleta", apenas irão aparecer aqueles que
+            estejam marcados como "Competidores". Se algum Atleta não constar na
+            lista, por favor verifique na página de perfil desse Atleta se o
+            campo "É Competidor" está selecionado. Caso não possua uma
+            subscrição, contacte um administrador de imediato.
+          </>
+        }
+        title={`Página de inscritos em ${singleEventData?.data.name}`}
+      ></PageInfoCard>
       <Grid container sx={{ m: 2 }}>
         <Grid>
           <Card>

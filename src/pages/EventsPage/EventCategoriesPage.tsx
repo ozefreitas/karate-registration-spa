@@ -1,19 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Box,
-  CircularProgress,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Grid, Box, CircularProgress, Typography, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { disciplinesHooks } from "../../hooks";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>
@@ -85,17 +77,9 @@ export default function EventCategoriesPage(
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de Escalões por Evento"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          {["main_admin", "superuser"].includes(props.userRole) ? (
+      <PageInfoCard
+        description={
+          ["main_admin", "superuser"].includes(props.userRole) ? (
             <>
               Aqui poderá consultar todos os Escalões que escolheu para este
               Evento. Pode também adicionar novos ou remover. Se pretender
@@ -105,9 +89,10 @@ export default function EventCategoriesPage(
             </>
           ) : (
             "Aqui poderá consultar todos os Escalões disponíveis para este Evento. Caso depare com algum problema ou incorcordância com as regras, por favor contacte."
-          )}
-        </CardContent>
-      </Card>
+          )
+        }
+        title="Escalões de Evento"
+      ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
         {isDisciplinesDataLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>

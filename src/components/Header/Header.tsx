@@ -25,12 +25,7 @@ import fighttecLogo from "./../../assets/FightTecLogo-white-font-removebg-croppe
 import skipLogo from "./../../assets/skip-logo.png";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import {
-  NotificationsActive,
-  Logout,
-  KeyboardArrowRight,
-  Delete,
-} from "@mui/icons-material";
+import { NotificationsActive, Logout } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import {
   breadcrumbsConvertion,
@@ -112,28 +107,6 @@ export default function Header(
     error: notificationError,
   } = notificationsHooks.useFetchHomeClubNotifications();
 
-  const removeNotification = notificationsHooks.useRemoveNotification();
-
-  const handleFollowingAction = (noti_type: string) => {
-    if (noti_type === "create_athlete") {
-      navigate("/athletes/");
-    } else if (noti_type === "rate_event") {
-      navigate("/events/");
-    } else if (noti_type === "reset") {
-      navigate("/settings/");
-    } else if (noti_type === "classifications_available") {
-      navigate("/classifications/");
-    } else if (
-      [
-        "open_registrations",
-        "registrations_closing",
-        "registrations_close",
-      ].includes(noti_type)
-    ) {
-      navigate("/events/");
-    }
-  };
-
   const [anchorElNotifications, setAnchorElNotifications] =
     React.useState<null | HTMLElement>(null);
   const openNotifications = Boolean(anchorElNotifications);
@@ -202,86 +175,106 @@ export default function Header(
                 Época desportiva: {currentSeason}
               </Typography>
               {props.me?.data.role === undefined ? null : (
-                <Button
-                  color="warning"
-                  variant="contained"
-                  disableRipple
-                  disableFocusRipple
-                  disableElevation
-                  size="large"
+                <Tooltip
+                  title={"Consultar planos"}
+                  disableHoverListener={["superuser", "main_admin"].includes(
+                    props.me?.data.role
+                  )}
                 >
-                  {props.me?.data.role === "main_admin" ||
-                  props.me?.data.role === "single_admin"
-                    ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
-                    : props.me?.data.role === "superuser"
-                    ? "SUPER ADMIN"
-                    : props.me?.data.role === "free_club"
-                    ? "CLUBE - GRÁTIS"
-                    : props.me?.data.role === "subed_club"
-                    ? "CLUBE - PREMIUM"
-                    : "TÉCNICO"}
-                </Button>
+                  <span>
+                    <Button
+                      onClick={() => {
+                        if (
+                          !["superuser", "main_admin"].includes(
+                            props.me?.data.role
+                          )
+                        ) {
+                          navigate("/pricing/");
+                        }
+                      }}
+                      color="warning"
+                      variant="contained"
+                      disableRipple
+                      disableFocusRipple
+                      disableElevation
+                      size="large"
+                    >
+                      {props.me?.data.role === "main_admin" ||
+                      props.me?.data.role === "single_admin"
+                        ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
+                        : props.me?.data.role === "superuser"
+                        ? "SUPER ADMIN"
+                        : props.me?.data.role === "free_club"
+                        ? "CLUBE - GRÁTIS"
+                        : props.me?.data.role === "subed_club"
+                        ? "CLUBE - PREMIUM"
+                        : "TÉCNICO"}
+                    </Button>
+                  </span>
+                </Tooltip>
               )}
               <Grid container>
-                <IconButton
-                  onClick={(event) => {
-                    if (isAuthenticated) {
-                      handleClickNotifications(event);
+                {location.pathname.startsWith("/profile/list") ? null : (
+                  <IconButton
+                    onClick={(event) => {
+                      if (isAuthenticated) {
+                        handleClickNotifications(event);
+                      }
+                    }}
+                    size="small"
+                    sx={{ ml: 2 }}
+                    aria-controls={
+                      openNotifications ? "notification-menu" : undefined
                     }
-                  }}
-                  size="small"
-                  sx={{ ml: 2 }}
-                  aria-controls={
-                    openNotifications ? "notification-menu" : undefined
-                  }
-                  aria-haspopup="true"
-                  aria-expanded={openNotifications ? "true" : undefined}
-                >
-                  {isAuthenticated && user?.data.role !== "technician" ? (
-                    <Tooltip title="Notificações" placement="top">
-                      <Badge
-                        color="error"
-                        badgeContent={notificationData?.data.length}
-                        max={9}
-                      >
-                        <Avatar
-                          sx={{
-                            height:
-                              notificationData?.data.length === 0 ||
-                              notificationData === null
-                                ? null
-                                : 50,
-                            width:
-                              notificationData?.data.length === 0 ||
-                              notificationData === null
-                                ? null
-                                : 50,
-                            bgcolor:
-                              notificationData?.data.length === 0 ||
-                              notificationData === null
-                                ? null
-                                : "green",
-                          }}
+                    aria-haspopup="true"
+                    aria-expanded={openNotifications ? "true" : undefined}
+                  >
+                    {isAuthenticated && user?.data.role !== "technician" ? (
+                      <Tooltip title="Notificações" placement="top">
+                        <Badge
+                          color="error"
+                          badgeContent={notificationData?.data.length}
+                          max={9}
                         >
-                          <NotificationsActive
+                          <Avatar
                             sx={{
                               height:
                                 notificationData?.data.length === 0 ||
                                 notificationData === null
-                                  ? 20
-                                  : 25,
+                                  ? null
+                                  : 50,
                               width:
                                 notificationData?.data.length === 0 ||
                                 notificationData === null
-                                  ? 20
-                                  : 25,
+                                  ? null
+                                  : 50,
+                              bgcolor:
+                                notificationData?.data.length === 0 ||
+                                notificationData === null
+                                  ? null
+                                  : "green",
                             }}
-                          />
-                        </Avatar>
-                      </Badge>
-                    </Tooltip>
-                  ) : null}
-                </IconButton>
+                          >
+                            <NotificationsActive
+                              sx={{
+                                height:
+                                  notificationData?.data.length === 0 ||
+                                  notificationData === null
+                                    ? 20
+                                    : 25,
+                                width:
+                                  notificationData?.data.length === 0 ||
+                                  notificationData === null
+                                    ? 20
+                                    : 25,
+                              }}
+                            />
+                          </Avatar>
+                        </Badge>
+                      </Tooltip>
+                    ) : null}
+                  </IconButton>
+                )}
                 <IconButton
                   onClick={(event) => {
                     if (isAuthenticated) {
@@ -471,60 +464,15 @@ export default function Header(
                 disableTouchRipple
                 key={index}
               >
-                <ListItem
-                  disablePadding
-                  sx={{ width: 700, mb: 0 }}
-                  secondaryAction={
-                    <Grid borderRadius={5}>
-                      <Tooltip
-                        title="Remover Notificação"
-                        placement="bottom-start"
-                      >
-                        <IconButton
-                          disabled={!noti.can_remove}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            removeNotification.mutate(noti.id);
-                          }}
-                          aria-label="delete notification"
-                        >
-                          <Delete
-                            color={noti.can_remove ? "error" : "disabled"}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Prosseguir ação" placement="bottom-start">
-                        <IconButton
-                          onClick={() => {
-                            handleFollowingAction(noti.type);
-                          }}
-                          aria-label="notification action"
-                          disabled={
-                            noti.type === "none" ||
-                            noti.type === "administrative"
-                          }
-                        >
-                          <KeyboardArrowRight
-                            color={
-                              noti.type === "none" ||
-                              noti.type === "administrative"
-                                ? "disabled"
-                                : "success"
-                            }
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </Grid>
-                  }
-                >
+                <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
                   <ListItemIcon sx={{ px: 1 }}>
                     {getNotificationTypeIcon(noti.type)}
                   </ListItemIcon>
                   <ListItemText
                     sx={{
-                      pl: 2,
                       p: 1,
-                      pr: 15,
+                      pl: 3,
+                      pr: 3,
                       "& .MuiListItemText-secondary": {
                         whiteSpace: "normal",
                         overflowWrap: "break-word",
@@ -561,7 +509,7 @@ export default function Header(
           disabled={
             notificationData?.data.length === 0 || notificationError !== null
           }
-          onClick={() => navigate("/list_notifications/")}
+          onClick={() => navigate("/profile/list_notifications/")}
           sx={{ p: 2, display: "flex", justifyContent: "center" }}
         >
           Abrir todas as Notificações

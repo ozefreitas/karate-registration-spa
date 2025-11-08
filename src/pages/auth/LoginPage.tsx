@@ -16,9 +16,9 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import ConfirmPasswordResetModal from "../../components/Admin/ConfirmPasswordResetModal";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { Navigate } from "react-router-dom";
+import fightTecLogo from "./../../assets//FightTecLogo-icon-black-background.jpg";
 
 export default function LoginPage() {
-
   // const action = (snackbarId: SnackbarKey | undefined) => (
   //   <Close
   //     sx={{ cursor: "pointer" }}
@@ -31,7 +31,6 @@ export default function LoginPage() {
   // );
 
   const { user } = useAuth();
-  
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -177,6 +176,9 @@ export default function LoginPage() {
                 size={"large"}
                 color={"success"}
                 type={"submit"}
+                disabled={loginUser.isPending}
+                loading={loginUser.isPending}
+                loadingPosition="start"
                 onClick={() => {
                   handleSubmit(onSubmit)();
                 }}

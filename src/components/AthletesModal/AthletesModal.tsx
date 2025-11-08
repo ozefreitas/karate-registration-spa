@@ -724,8 +724,10 @@ export default function AthletesModal(
           </List>
         )}
       </DialogContent>
-      <DialogActions sx={{ pr: 4, pb: 2 }}>
-        {isDisciplineScreenOpen || isWeightInputScreenOpen ? null : (
+      {isDisciplineScreenOpen ||
+      isWeightInputScreenOpen ||
+      !athletesNotInEventData?.data?.count ? null : (
+        <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
               Página:
@@ -759,8 +761,8 @@ export default function AthletesModal(
               </IconButton>
             </Tooltip>
           </>
-        )}
-      </DialogActions>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

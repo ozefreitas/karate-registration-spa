@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -26,6 +26,25 @@ document.title = import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
 
 const queryClient = new QueryClient();
 
+const Root = () => {
+  useEffect(() => {
+    const splash = document.getElementById("splash-screen");
+
+    if (splash) {
+      // Trigger fade-out after React is ready
+      splash.classList.add("fade-out");
+
+      // Remove after transition ends
+      setTimeout(() => {
+        splash.remove();
+        document.body.classList.remove("splash-active");
+      }, 500); // same as CSS transition duration
+    }
+  }, []);
+
+  return <App />;
+};
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
@@ -33,7 +52,7 @@ createRoot(document.getElementById("root")!).render(
       <SnackbarProvider>
         <QueryClientProvider client={queryClient}>
           <GlobalAuthProvider>
-            <App />
+            <Root />
           </GlobalAuthProvider>
         </QueryClientProvider>
       </SnackbarProvider>

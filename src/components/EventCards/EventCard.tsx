@@ -44,6 +44,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
+import PageInfoCard from "../info-cards/PageInfoCard";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -141,22 +142,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0, mb: 0 }}>
-        <CardHeader
-          title="Página de Evento"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-            // pb: 0
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá consultar cada cartão de prova, pode observar toda a
+      <PageInfoCard
+        description="Aqui poderá consultar cada cartão de prova, pode observar toda a
           informação relevante sobre essa prova, assim como os passos para
-          inscrever os seus Atletas ou Equipas.
-        </CardContent>
-      </Card>
+          inscrever os seus Atletas ou Equipas."
+        title={`Evento - ${singleEventData?.data.name}`}
+      ></PageInfoCard>
       <Grid container sx={{ mt: 0 }}>
         <Grid container size={12} sx={{ m: 2 }}>
           <Grid size={6}>
@@ -441,7 +432,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         </Grid>
         <Grid size={12}>
           {props.userRole === undefined ? null : (
-            <Card sx={{ m: 2, mt: 0 }}>
+            <Card sx={{ m: 2 }}>
               <CardHeader
                 title="Ações"
                 sx={{

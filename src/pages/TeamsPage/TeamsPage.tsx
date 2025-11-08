@@ -11,6 +11,7 @@ import AddButton from "../../components/Buttons/AddButton";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { useFetchTeamsData } from "../../hooks/useTeamsData";
 import { useAuth } from "../../access/GlobalAuthProvider";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   type Athlete = {
@@ -72,6 +73,13 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
+      <PageInfoCard
+        description="Aqui poderá consultar todas as Equipas que registou na plataforma.
+          Pode consultar a informação de cada uma, editar e remover. <p></p>
+          <strong>Importante</strong>: Estas não servem como inscrição em
+          qualquer prova."
+        title="Equipas"
+      ></PageInfoCard>
       <Card sx={{ m: 2, mt: 0 }}>
         <CardHeader
           title="Página de Equipas"
@@ -81,19 +89,14 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
             },
           }}
         ></CardHeader>
-        <CardContent>
-          Aqui poderá consultar todas as Equipas que registou na plataforma.
-          Pode consultar a informação de cada uma, editar e remover. <p></p>
-          <strong>Importante</strong>: Estas não servem como inscrição em
-          qualquer prova.
-        </CardContent>
+        <CardContent></CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
         {isTeamsLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : teamsData?.data !== undefined ? (
+        ) : teamsData?.data === undefined ? null : (
           <AthletesTable
             count={teamsData?.data.length}
             type="Equipas"
@@ -108,13 +111,13 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
             setPageSize={setPageSize}
             userRole={props.userRole}
           ></AthletesTable>
-        ) : null}
+        )}
       </Grid>
-      {userRole !== "main_admin" ? (
+      {userRole === "main_admin" ? null : (
         <Grid sx={{ m: 3, mt: 2 }}>
           <AddButton label="Adicionar" to="new_team/"></AddButton>
         </Grid>
-      ) : null}
+      )}
     </>
   );
 }

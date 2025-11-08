@@ -358,11 +358,14 @@ export default function AthletesTable(
 
   const paginatedData = useMemo(() => {
     if (props.page === undefined && props.pageSize === undefined) {
+      if (internalPageSize === -1) {
+        return props.data;
+      }
       const start = internalPage * internalPageSize;
       const end = start + internalPageSize;
       return props.data.slice(start, end);
     } else return props.data;
-  }, [props.data, props.page, internalPage]);
+  }, [props.data, props.page, props.pageSize, internalPage, internalPageSize]);
 
   return (
     <>

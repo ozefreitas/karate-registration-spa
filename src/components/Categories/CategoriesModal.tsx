@@ -350,41 +350,43 @@ export default function CategoriesModal(
           )}
         </List>
       </DialogContent>
-      <DialogActions sx={{ pr: 4, pb: 2 }}>
-        <>
-          <Typography variant="body1" mr={1} color="textSecondary">
-            Página:
-          </Typography>
-          <Typography mr={1}>{page}</Typography>
-          <Typography variant="body1" mr={1} color="textSecondary">
-            de
-          </Typography>
-          <Typography mr={2}>
-            {Math.ceil(categoriesData?.data.count / itemsPerPage)}
-          </Typography>
-          <Tooltip title="Página anterior">
-            <IconButton
-              onClick={handleBackButtonClick}
-              disabled={page === 1}
-              aria-label="previous page"
-            >
-              <KeyboardArrowLeft />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Próxima página">
-            <IconButton
-              onClick={handleNextButtonClick}
-              disabled={
-                !categoriesData?.data.count ||
-                page * itemsPerPage >= categoriesData?.data.count
-              }
-              aria-label="next page"
-            >
-              <KeyboardArrowRight />
-            </IconButton>
-          </Tooltip>
-        </>
-      </DialogActions>
+      {categoriesData?.data.count ? (
+        <DialogActions sx={{ pr: 4, pb: 2 }}>
+          <>
+            <Typography variant="body1" mr={1} color="textSecondary">
+              Página:
+            </Typography>
+            <Typography mr={1}>{page}</Typography>
+            <Typography variant="body1" mr={1} color="textSecondary">
+              de
+            </Typography>
+            <Typography mr={2}>
+              {Math.ceil(categoriesData?.data.count / itemsPerPage)}
+            </Typography>
+            <Tooltip title="Página anterior">
+              <IconButton
+                onClick={handleBackButtonClick}
+                disabled={page === 1}
+                aria-label="previous page"
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Próxima página">
+              <IconButton
+                onClick={handleNextButtonClick}
+                disabled={
+                  !categoriesData?.data.count ||
+                  page * itemsPerPage >= categoriesData?.data.count
+                }
+                aria-label="next page"
+              >
+                <KeyboardArrowRight />
+              </IconButton>
+            </Tooltip>
+          </>
+        </DialogActions>
+      ) : null}
     </Dialog>
   );
 }

@@ -1,7 +1,4 @@
 import {
-  Card,
-  CardHeader,
-  CardContent,
   TextField,
   MenuItem,
   Typography,
@@ -20,7 +17,7 @@ import {
   FormHelperText,
   Tooltip,
 } from "@mui/material";
-import { notificationsHooks, adminHooks } from "../../hooks";
+import { notificationsHooks, adminHooks, eventsHooks } from "../../hooks";
 import FormCard from "../../dashboard/FormCard";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -28,13 +25,13 @@ import { Add, NotificationsActive } from "@mui/icons-material";
 import NotificationActionModal from "./NotificationActionModal";
 import { NotificationTypeOptions } from "../../dashboard/config";
 import { PaymentTypes } from "../../config";
-import { eventsHooks } from "../../hooks";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function NotificationManagerPage() {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
   const { data: clubUserData } = adminHooks.useFetchClubUsersData();
   const { data: notificationData, isLoading: isNotificationDataLoading } =
-    notificationsHooks.useFetchNotificationsData(selectedUserId);
+    notificationsHooks.useFetchNotificationsData(1, 100);
   const createNotification = notificationsHooks.useCreateNotification();
   const createAllClubsNotification =
     notificationsHooks.useCreateAllClubsNotification();
@@ -123,22 +120,13 @@ export default function NotificationManagerPage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de gerenciamento de Notificações"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá registar gerir todas as notificações para os clubes
+      <PageInfoCard
+        description="Aqui poderá registar gerir todas as notificações para os clubes
           associadas. Caso queira apagar um notificação, basta clicar nela. Não
           é, para já, possível editar notificações, para isso recomenda-se
-          apagar e criar uma nova.
-        </CardContent>
-      </Card>
+          apagar e criar uma nova."
+        title="Gestor de Notificações"
+      ></PageInfoCard>
       <FormCard title="Notificações ativas">
         <Grid size={12} sx={{ p: 2 }}>
           <TextField

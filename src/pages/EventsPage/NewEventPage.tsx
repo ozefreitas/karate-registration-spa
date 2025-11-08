@@ -1,7 +1,4 @@
 import {
-  Card,
-  CardContent,
-  CardHeader,
   Grid,
   Button,
   MenuItem,
@@ -36,6 +33,7 @@ import FormAccordion from "../../dashboard/FormAccordion";
 import { eventsHooks, disciplinesHooks, categoriesHooks } from "../../hooks";
 import AthletesTable from "../../components/Table/AthletesTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
@@ -286,20 +284,15 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de criação de Evento"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá registar um Evento.<p></p>
-          Eventos podem ser (para já) Encontros ou Competições
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description={
+          <>
+            Aqui poderá registar um Evento.<p></p>
+            Eventos podem ser (para já) Encontros ou Competições
+          </>
+        }
+        title="Novo Evento"
+      ></PageInfoCard>
       <Grid container>
         <FormCard title="Tipo de Evento">
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>

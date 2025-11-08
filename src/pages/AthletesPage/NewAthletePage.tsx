@@ -1,7 +1,4 @@
 import {
-  Card,
-  CardContent,
-  CardHeader,
   Grid,
   Button,
   MenuItem,
@@ -26,6 +23,7 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import FormCard from "../../dashboard/FormCard";
 import { membersHooks, adminHooks } from "../../hooks";
 import FormAccordion from "../../dashboard/FormAccordion";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function NewAthletePage() {
   const navigate = useNavigate();
@@ -151,29 +149,24 @@ export default function NewAthletePage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de criação de Atletas"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá registar cada Atleta/Aluno. Todos têm um conjunto de
-          informação que é obrigatória. Criar um atleta sem número SKIP irá
-          incrementar ao maior número que encontrar na base de dados.<p></p>
-          <strong>Importante</strong>: A regras em vigor ditam que a idade
-          considerada para determinação de escalão é a idade que uma atleta tem
-          no primeiro dia do último ano da presente época. <br /> Por exemplo:
-          Um atleta nascido no dia 16 de dezembro de 2010 terá, paExemplo: Um
-          atleta nascido a 16 de dezembro de 2010 é considerado Cadete na época
-          2024/2025, pois a idade tida em conta é a que terá a 1 de janeiro de
-          2025 (14 anos), mesmo que ainda tenha 13 anos em provas
-          realizadas em 2024.
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description={
+          <>
+            Aqui poderá registar cada Atleta/Aluno. Todos têm um conjunto de
+            informação que é obrigatória. Criar um atleta sem número SKIP irá
+            incrementar ao maior número que encontrar na base de dados.<p></p>
+            <strong>Importante</strong>: A regras em vigor ditam que a idade
+            considerada para determinação de escalão é a idade que uma atleta
+            tem no primeiro dia do último ano da presente época. <br /> Por
+            exemplo: Um atleta nascido no dia 16 de dezembro de 2010 terá,
+            paExemplo: Um atleta nascido a 16 de dezembro de 2010 é considerado
+            Cadete na época 2024/2025, pois a idade tida em conta é a que terá a
+            1 de janeiro de 2025 (14 anos), mesmo que ainda tenha 13 anos em
+            provas realizadas em 2024.
+          </>
+        }
+        title="Novo Atleta"
+      ></PageInfoCard>
       <Grid container>
         <FormCard title="Dados Pessoais">
           <Grid sx={{ p: 2 }} size={6}>

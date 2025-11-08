@@ -21,8 +21,8 @@ export const useLogOutUser = () => {
       });
       localStorage.removeItem("token");
       localStorage.removeItem("dismissedAnnouncementId");
-      navigate("/");
       window.location.reload();
+      navigate("/");
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro. Tente mais tarde.", {
