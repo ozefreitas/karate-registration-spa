@@ -15,7 +15,6 @@ import {
   Check,
   Close,
   Warning,
-  Lightbulb,
   Https,
   MilitaryTech,
 } from "@mui/icons-material";
