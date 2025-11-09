@@ -23,7 +23,8 @@ export default function EventAllRegistryPage(
   } = eventsHooks.useFetchSingleEventData(eventId!);
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!
+    eventId!,
+    true
   );
 
   const getColumnMaping = () => {

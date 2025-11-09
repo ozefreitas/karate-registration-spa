@@ -1,9 +1,10 @@
 import { authClient } from "./apiClient";
 
-export const fetchDisciplines = (eventId: string) => {
+export const fetchDisciplines = (eventId: string, restricted: boolean) => {
   return authClient.get(`/disciplines/`, {
     params: {
       event_disciplines: eventId,
+      restricted: restricted,
     },
   });
 };
@@ -23,7 +24,9 @@ export const removeDisciplineAthlete = (disciplineId: string, data: any) => {
 };
 
 export const removeAllDisciplineAthlete = (disciplineId: string) => {
-  return authClient.delete(`/disciplines/${disciplineId}/delete_all_individuals/`);
+  return authClient.delete(
+    `/disciplines/${disciplineId}/delete_all_individuals/`
+  );
 };
 
 // discipline categories operations

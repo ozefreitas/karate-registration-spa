@@ -221,54 +221,14 @@ export default function HelpPage() {
                 funciona com um sistema de subscrição, ou seja, para ter acesso
                 a todas as funcionalidades, terá de pagar uma mensalidade.
                 Apenas funções básicas de inscrições em eventos estão
-                disponíveis em contas <i>free</i>, e estas com limitações.{" "}
+                disponíveis em contas <i>free</i>, e estas com limitações.
                 <p></p>
                 Para mais informações sobre as possiblidades de pagamento, assim
-                como das funcionalidades desbloquaedas com os mesmos, deve
+                como das funcionalidades desbloquaedas com os mesmos, consulte a
+                página de <Link to={"/pricing"}>Planos</Link>. <br /> Para
+                informações de como atualizar o seu plano de subscrição, deve
                 enviar um email para jpsfreitas12@gmail.com, com o assunto
-                "Regimes de subscrição" seguido do seu nome de utilizador.{" "}
-                <p></p>
-                <strong>Detalhes</strong>: <br />
-                Qualquer pessoa à qual o seu adminitrador conceder acesso poderá
-                ter uma conta na <i>Karate Score App</i>. Todas as contas
-                começam na modalidade <i>free</i>. Utilizadores <i>free</i> não
-                terão acesso a qualquer informação detalhada sobre os seus
-                atletas, nem mesmo à própria listagem dos mesmos. Em baixo fica
-                um resumo das funcionalidades de cada tipo de conta:
-                <ul>
-                  <li>
-                    Conta <i>free</i>: Sem qualquer tipo de acesso a
-                    funcionalidades básicas. Única funcionalidade ativa será a
-                    de poder inscrever membros do seu Clube em provas
-                    determinadas pelo seu administrador. Para isso terá de saber
-                    o número identificativo ou nome do membro.
-                  </li>
-                  <li>
-                    Conta <i>subed</i> base: Primeiro regime de subscrição.
-                    Acesso a listagem completa dos membros do seu clube, APENAS
-                    daqueles registados na base de dados do seu administrador.
-                    Ainda impossível registar novos membros. Acesso a informação
-                    detalhada de cada membro. Acesso a notificações limitado.
-                  </li>
-                  <li>
-                    Conta <i>subed</i> pro: Regime de subscrição intermédio.
-                    Acesso a listagem completa dos membros do seu clube, APENAS
-                    daqueles registados na base de dados do seu administrador.
-                    Ainda impossível registar novos membros. Acesso a informação
-                    detalhada de cada membro. Acesso total a notificações
-                    personalizadas.
-                  </li>
-                  <li>
-                    Conta <i>subed</i> elite (<strong>em breve</strong>): Regime
-                    de subscrição avançado. Poderá agora registar membros do seu
-                    clube na plataforma, os quais apenas você poderá ver e
-                    aceder às suas informações. Poderá fazer pedidos diretos ao
-                    seu administrador de forma a adicionar um novo membro do seu
-                    clube na base de dados central, efetivando assim esse
-                    registo com um número de identificação único e posterior
-                    inscrição em eventos.
-                  </li>
-                </ul>
+                "Regimes de subscrição" seguido do seu nome de utilizador.
               </CardContent>
             </Card>
           </Grid>

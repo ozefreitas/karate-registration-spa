@@ -7,22 +7,14 @@ import {
   CircularProgress,
   Typography,
   List,
-  Tooltip,
-  IconButton,
   ListItem,
   ListItemText,
+  Pagination,
 } from "@mui/material";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import {
-  Today,
-  LocationPin,
-  HowToReg,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-  AccessTime,
-} from "@mui/icons-material";
+import { Today, LocationPin, HowToReg, AccessTime } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useState } from "react";
 import { eventsHooks } from "../../hooks";
@@ -44,12 +36,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
 
   const [page, setPage] = useState<number>(0);
 
-  const handleBackButtonClick = () => {
-    setPage(page - 1);
-  };
-
-  const handleNextButtonClick = () => {
-    setPage(page + 1);
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    console.log(event);
+    setPage(value);
   };
 
   const {
@@ -214,28 +203,14 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           {props.userRole === "main_admin" ? (
             <AddButton label="Adicionar" to="new_event/"></AddButton>
           ) : null}
-          <div>
-            <Tooltip title="Página anterior">
-              <IconButton
-                onClick={handleBackButtonClick}
-                disabled={page === 0}
-                aria-label="previous page"
-              >
-                <KeyboardArrowLeft fontSize="large" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Próxima página">
-              <IconButton
-                onClick={handleNextButtonClick}
-                disabled={
-                  page >= Math.ceil(eventsData?.data?.results.length / 5) - 1
-                }
-                aria-label="next page"
-              >
-                <KeyboardArrowRight fontSize="large" />
-              </IconButton>
-            </Tooltip>
-          </div>
+          <Grid size={12} mt={3} container justifyContent={"center"}>
+            <Pagination
+              count={Math.ceil(eventsData?.data.count / 5)}
+              page={page + 1}
+              onChange={handleChange}
+              color="primary"
+            />
+          </Grid>
         </Grid>
       </Grid>
     </>
