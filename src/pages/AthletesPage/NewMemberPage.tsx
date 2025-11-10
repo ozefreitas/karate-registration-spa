@@ -9,11 +9,17 @@ import {
   FormHelperText,
   FormControlLabel,
   Switch,
+  Checkbox,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { GraduationsOptions, GenderOptions, ReasonOptions } from "../../config";
+import {
+  GraduationsOptions,
+  GenderOptions,
+  ReasonOptions,
+  MemberTypes,
+} from "../../config";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -25,7 +31,7 @@ import { membersHooks, adminHooks } from "../../hooks";
 import FormAccordion from "../../dashboard/FormAccordion";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
-export default function NewAthletePage() {
+export default function NewMemberPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,7 +57,7 @@ export default function NewAthletePage() {
       id_number: "",
       birth_date: undefined,
       weight: "",
-      competitor: false,
+      member_type: [""],
       reason: "",
       club: "",
     },
@@ -69,7 +75,7 @@ export default function NewAthletePage() {
       category: data.category,
       id_number: data.id_number,
       gender: data.gender,
-      competitor: data.competitor,
+      member_type: data.member_type,
       birth_date: data.birth_date,
       weight: data.weight,
       club: data.club,
@@ -87,7 +93,7 @@ export default function NewAthletePage() {
       onSuccess: () => {
         setLoading(false);
         if (mode === "redirect") {
-          navigate("/athletes/");
+          navigate("/members/");
         } else {
           reset();
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -96,7 +102,7 @@ export default function NewAthletePage() {
       onError: (data: any) => {
         setLoading(false);
         if (data.response?.data.incompatible_athlete) {
-          setError("competitor", {
+          setError("member_type", {
             message: data.response?.data.incompatible_athlete[0],
           });
         } else if (data.response?.data.impossible_gender) {
@@ -371,35 +377,56 @@ export default function NewAthletePage() {
             />
           </Grid>
         </FormCard>
-        <FormCard title="Praticante">
+        <FormCard title="Tipo de Praticante">
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>
             <Controller
-              name="competitor"
+              name="member_type"
               control={control}
+              defaultValue={[]}
               render={({ field }) => (
                 <FormControl component="fieldset" variant="standard">
                   <FormLabel sx={{ mb: 2 }}>
                     Se pretende inscrever em provas, selecione este campo.
                   </FormLabel>
+
                   <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                          }}
-                          name="competitor"
+                    {MemberTypes.map((opt) => {
+                      const selected = field.value?.includes(opt.value);
+
+                      return (
+                        <FormControlLabel
+                          key={opt.value}
+                          labelPlacement="start"
+                          control={
+                            <Checkbox
+                              checked={selected}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  // add to array
+                                  field.onChange([
+                                    ...(field.value || []),
+                                    opt.value,
+                                  ]);
+                                } else {
+                                  // remove from array
+                                  field.onChange(
+                                    (field.value || []).filter(
+                                      (v) => v !== opt.value
+                                    )
+                                  );
+                                }
+                              }}
+                            />
+                          }
+                          label={opt.label}
+                          sx={{ justifyContent: "left", marginLeft: 0 }}
                         />
-                      }
-                      label="É Competidor"
-                      sx={{ justifyContent: "left", marginLeft: 0 }}
-                    />
-                    {!!errors.competitor && (
+                      );
+                    })}
+
+                    {!!errors.member_type && (
                       <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.competitor?.message}
+                        {errors.member_type?.message}
                       </FormHelperText>
                     )}
                   </Stack>
@@ -419,7 +446,7 @@ export default function NewAthletePage() {
                   select
                   fullWidth
                   multiline
-                  disabled={watch("competitor") === true}
+                  disabled={watch("member_type").includes("student")}
                   maxRows={8}
                   {...field}
                   onChange={(e) => {
@@ -440,7 +467,7 @@ export default function NewAthletePage() {
         {user?.data.role === "subed_club" ? (
           <FormAccordion
             title="Competições"
-            expanded={watch("competitor")}
+            expanded={watch("member_type").includes("athlete")}
             tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
           >
             <Grid sx={{ p: 2 }} size={6}>
@@ -541,7 +568,7 @@ export default function NewAthletePage() {
             variant="outlined"
             size="medium"
             onClick={() => {
-              navigate("/athletes/");
+              navigate("/members/");
             }}
           >
             Voltar

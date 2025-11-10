@@ -136,6 +136,12 @@ export const KataOptions: { label: string; value: string }[] = [
   { value: "unsi", label: "Unsu" },
 ];
 
+export const MemberTypes: { value: string; label: string }[] = [
+  { value: "student", label: "Aluno" },
+  { value: "athlete", label: "Competidor" },
+  { value: "coach", label: "Treinador" },
+];
+
 export const PaymentTypes: { value: string; label: string }[] = [
   { value: "quotes", label: "Quotas" },
   { value: "insurence", label: "Seguro Desportivo" },

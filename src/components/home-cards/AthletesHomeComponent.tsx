@@ -21,7 +21,7 @@ import { membersHooks } from "../../hooks";
 export default function AthletesHomeComponent(
   props: Readonly<{ userRole: string }>
 ) {
-  type Athlete = {
+  type Member = {
     id: string;
     first_name: string;
     last_name: string;
@@ -88,24 +88,22 @@ export default function AthletesHomeComponent(
               </ListItemButton>
             </ListItem>
           ) : (
-            lastFiveAthletesData?.data.map(
-              (athlete: Athlete, index: number) => (
-                <Tooltip key={index} title={"Consultar"}>
-                  <ListItem sx={{ m: 0, pb: 0 }}>
-                    <ListItemButton
-                      onClick={() => navigate(`athletes/${athlete.id}/`)}
-                    >
-                      <ListItemIcon>
-                        <Person />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={`${athlete.first_name} ${athlete.last_name} | ${athlete.gender} | ${athlete.age} anos`}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-              )
-            )
+            lastFiveAthletesData?.data.map((athlete: Member, index: number) => (
+              <Tooltip key={index} title={"Consultar"}>
+                <ListItem sx={{ m: 0, pb: 0 }}>
+                  <ListItemButton
+                    onClick={() => navigate(`members/${athlete.id}/`)}
+                  >
+                    <ListItemIcon>
+                      <Person />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${athlete.first_name} ${athlete.last_name} | ${athlete.gender} | ${athlete.age} anos`}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
+            ))
           )}
           {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>
@@ -125,12 +123,12 @@ export default function AthletesHomeComponent(
             <Grid container size={12} justifyContent={"space-between"}>
               <AddButton
                 label="Adicionar"
-                to="athletes/new_athlete/"
+                to="members/new_member/"
               ></AddButton>
-              <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
+              <InfoButton label="Ver Todos" to="members/"></InfoButton>
             </Grid>
           ) : (
-            <InfoButton label="Ver Todos" to="athletes/"></InfoButton>
+            <InfoButton label="Ver Todos" to="members/"></InfoButton>
           )}
         </CardActions>
       </Card>

@@ -2,7 +2,7 @@ import "./App.css";
 import MainAppLayout from "./layouts/MainAppLayout";
 import { DisplayPanelLayout } from "./layouts/DisplayPanelLayout";
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
-import AthletesPage from "./pages/AthletesPage/AthletesPage";
+import MembersPage from "./pages/AthletesPage/MembersPage";
 import EventsPage from "./pages/EventsPage/EventsPage";
 import EventCard from "./components/EventCards/EventCard";
 import HomePage from "./pages/HomePage/HomePage";
@@ -12,8 +12,8 @@ import RulesPage from "./pages/RulesPage/RulesPage";
 import HelpPage from "./pages/HelpPage/HelpPage";
 import RequestAccountPage from "./pages/auth/RequestAccountPage";
 import LoginPage from "./pages/auth/LoginPage";
-import NewAthletePage from "./pages/AthletesPage/NewAthletePage";
-import SingleAthletePage from "./pages/AthletesPage/SingleAthletePage";
+import NewMemberPage from "./pages/AthletesPage/NewMemberPage";
+import SingleMemberPage from "./pages/AthletesPage/SingleMemberPage";
 // import TeamsPage from "./pages/TeamsPage/TeamsPage";
 // import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 // import NewTeamPage from "./pages/TeamsPage/NewTeamPage";
@@ -89,11 +89,11 @@ function App() {
               <Route path="request_account/" element={<RequestAccountPage />} />
               <Route path="login/" element={<LoginPage />} />
               <Route
-                path="athletes/"
+                path="members/"
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<AthletesPage userRole={userRole} />}
+                      element={<MembersPage userRole={userRole} />}
                       allowedRoles={[
                         "subed_club",
                         "main_admin",
@@ -104,11 +104,11 @@ function App() {
                 }
               />
               <Route
-                path="athletes/:id/"
+                path="members/:id/"
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<SingleAthletePage />}
+                      element={<SingleMemberPage />}
                       allowedRoles={[
                         "subed_club",
                         "main_admin",
@@ -119,11 +119,11 @@ function App() {
                 }
               />
               <Route
-                path="athletes/new_athlete/"
+                path="members/new_member/"
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<NewAthletePage />}
+                      element={<NewMemberPage />}
                       // allowedRoles={["main_admin", "single_admin"]}
                       allowedRoles={[
                         "main_admin",

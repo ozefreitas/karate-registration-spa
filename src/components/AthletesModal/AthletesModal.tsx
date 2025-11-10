@@ -102,7 +102,7 @@ export default function AthletesModal(
     eventData: any;
   }>
 ) {
-  type Athlete = {
+  type Member = {
     age: any;
     id: string;
     first_name: string;
@@ -405,7 +405,7 @@ export default function AthletesModal(
               Inscrever{" "}
               {
                 athletesNotInEventData?.data.results.find(
-                  (athlete: Athlete) => athlete.id === currentAthleteId
+                  (athlete: Member) => athlete.id === currentAthleteId
                 )?.full_name
               }{" "}
               em {props.eventData?.name}
@@ -631,7 +631,7 @@ export default function AthletesModal(
                     variant="contained"
                     onClick={() => {
                       navigate(
-                        `/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
+                        `/members/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
                       );
                     }}
                   >
@@ -665,7 +665,7 @@ export default function AthletesModal(
                 <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
-              filteredAthletes.map((athlete: Athlete, index: string) => (
+              filteredAthletes.map((athlete: Member, index: string) => (
                 <ListItem
                   key={index}
                   disablePadding

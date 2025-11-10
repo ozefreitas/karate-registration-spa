@@ -54,7 +54,7 @@ export default function ClubStats() {
             <Tooltip content={CustomTooltip} />
             {/* <Legend layout="vertical" align="right" verticalAlign="middle" /> */}
             <Pie
-              dataKey="athlete_count"
+              dataKey="member_count"
               data={ClubAthletesData?.data}
               cx="50%"
               cy="50%"

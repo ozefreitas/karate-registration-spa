@@ -467,7 +467,7 @@ export default function AthletesTable(
                                     setActionedAthlete(row.id.toString());
                                     handleCategoryInfoModalOpen(e);
                                   } else {
-                                    navigate(`/athletes/${row.id}/`);
+                                    navigate(`/members/${row.id}/`);
                                   }
                                 }}
                               >

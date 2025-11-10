@@ -30,7 +30,7 @@ const NotificationsPage = () => {
 
   const handleFollowingAction = (noti_type: string) => {
     if (noti_type === "create_athlete") {
-      navigate("/athletes/");
+      navigate("/members/");
     } else if (noti_type === "rate_event") {
       navigate("/events/");
     } else if (noti_type === "reset") {

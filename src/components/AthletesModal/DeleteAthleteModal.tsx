@@ -73,7 +73,7 @@ export default function DeleteAthleteModal(
       if (props.from === "Atletas") {
         removeAthlete.mutate(id, {
           onSuccess: () => {
-            navigate("/athletes/");
+            navigate("/members/");
           },
         });
       } else if (props.from === "Equipas") {
