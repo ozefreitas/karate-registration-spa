@@ -93,7 +93,7 @@ export default function PersonalInfoSection(
           ? "N/A"
           : props.athleteData?.data.id_number,
       gender: props.athleteData?.data.gender,
-      competitor: props.athleteData?.data.competitor,
+      competitor: props.athleteData?.data.member_type === "athlete",
       birthDate: props.athleteData?.data.birth_date,
       weight:
         props.athleteData?.data.weight === null
@@ -105,8 +105,8 @@ export default function PersonalInfoSection(
 
   const onSubmit = (data: any) => {
     if (
-      editField === "weight" ||
-      !["main_admin", "superuser"].includes(userRole)
+      editField === "weight" 
+      // || !["main_admin", "superuser"].includes(userRole)
     ) {
       const payload = {
         memberId: props.athleteData?.data.id,
@@ -124,7 +124,7 @@ export default function PersonalInfoSection(
         graduation: data.graduation,
         id_number: data.id_number,
         gender: data.gender,
-        competitor: data.competitor,
+        member_type: data.competitor ? "athlete" : "student",
         birth_date: data.birthDate,
         quotes: data.quotes === "regular",
         weight:
@@ -699,40 +699,44 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        <Controller
-          name="competitor"
-          control={control}
-          render={({ field }) => (
-            <FormControl
-              sx={{ pb: 2, justifyContent: "center" }}
-              component="fieldset"
-              variant="standard"
-            >
-              <FormControlLabel
-                sx={{ mr: 2 }}
-                labelPlacement="start"
-                label={
-                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                    É competidor:
-                  </Typography>
-                }
-                control={
-                  <Switch
-                    disabled={!isEditMode}
-                    sx={{ ml: 2 }}
-                    {...field}
-                    checked={field.value}
-                    color="warning"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e.target.checked);
-                    }}
-                  />
-                }
-              ></FormControlLabel>
-            </FormControl>
-          )}
-        />
+        {props.athleteData?.data.member_type === "coach" ? null : (
+          <Controller
+            name="competitor"
+            control={control}
+            render={({ field }) => (
+              <FormControl
+                sx={{ pb: 2, justifyContent: "center" }}
+                component="fieldset"
+                variant="standard"
+              >
+                <FormControlLabel
+                  sx={{ mr: 2 }}
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                    >
+                      É competidor:
+                    </Typography>
+                  }
+                  control={
+                    <Switch
+                      disabled={!isEditMode}
+                      sx={{ ml: 2 }}
+                      {...field}
+                      checked={field.value}
+                      color="warning"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked);
+                      }}
+                    />
+                  }
+                ></FormControlLabel>
+              </FormControl>
+            )}
+          />
+        )}
       </Grid>
       <DeleteAthleteModal
         from="Atletas"

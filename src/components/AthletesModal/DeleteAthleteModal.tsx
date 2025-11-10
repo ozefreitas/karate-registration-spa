@@ -62,7 +62,7 @@ export default function DeleteAthleteModal(
   const removeAllDisciplineAthletes =
     disciplinesHooks.useDeleteAllDisciplineAthlete();
   const navigate = useNavigate();
-  const { eventId } = useParams<{ eventId: string }>();
+  const { id: eventId } = useParams<{ id: string }>();
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,

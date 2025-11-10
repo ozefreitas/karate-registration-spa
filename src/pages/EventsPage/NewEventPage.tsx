@@ -115,7 +115,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     handleSubmit,
     setError,
     setValue,
-    getValues,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -160,6 +160,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     };
 
     const eventResponse = await createEvent.mutateAsync(formData, {
+      onSuccess: () => navigate("/events/"),
       onError: (data: any) => {
         const errorData = data.response?.data || {};
 
@@ -211,15 +212,31 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         }
         setLoading(false);
       },
+      onSettled: () => {
+        if (discipline.length === 0) {
+          setLoading(false);
+        }
+      },
     });
+
     const eventId = eventResponse.data.id;
     const disciplineResponses = await Promise.all(
       disciplines.map((discipline) =>
-        createDiscipline.mutateAsync({
-          data: { event: eventId, name: discipline },
-        })
+        createDiscipline.mutateAsync(
+          {
+            data: { event: eventId, name: discipline },
+          },
+          {
+            onSuccess: () => {
+              if (!data.has_categories) {
+                setLoading(false);
+              }
+            },
+          }
+        )
       )
     );
+
     disciplineResponses.forEach((discipline) => {
       const findDiscipline = disciplineCategories.find(
         (item: any) => item.discipline === discipline.data.name
@@ -252,7 +269,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     }
   }, [isEncounter]);
 
-  const hasTegistrations = getValues("has_registrations");
+  const hasTegistrations = watch("has_registrations");
 
   useEffect(() => {
     if (hasTegistrations) {

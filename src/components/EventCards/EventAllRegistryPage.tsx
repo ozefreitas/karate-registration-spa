@@ -54,7 +54,7 @@ export default function EventAllRegistryPage(
           }}
         ></CardHeader>
         <CardContent>
-          Aqui poderá consultar todos os Atletas/Alunos que estão inscritos para
+          Aqui poderá consultar todos os Atletas/Treinadores que estão inscritos para
           a prova que selecionou (ver acima).
         </CardContent>
       </Card>

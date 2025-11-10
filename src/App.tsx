@@ -29,8 +29,8 @@ import EventAllRegistryPage from "./components/EventCards/EventAllRegistryPage";
 import MainSettingsPage from "./pages/SettingsPage/MainSettingsPage";
 import ResultsMainPage from "./pages/ResultsMonitorPage/ResultsMainPage";
 import DisplayPage from "./pages/ResultsMonitorPage/DisplayPage";
-import DrawPage from "./pages/DrawPage/DrawPage";
-import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
+// import DrawPage from "./pages/DrawPage/DrawPage";
+// import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
 import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
 import KataElim from "./pages/DisplayPanelPages/KataElim";
@@ -276,8 +276,9 @@ function App() {
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<DrawPage />}
-                      allowedRoles={["main_admin"]}
+                      // element={<DrawPage />}
+                      element={<WIPPage />}
+                      allowedRoles={["main_admin", "superuser"]}
                     />
                   )
                 }
@@ -287,8 +288,9 @@ function App() {
                 element={
                   isAuthLoading ? null : (
                     <ProtectedRoute
-                      element={<GenerateDrawPage />}
-                      allowedRoles={["main_admin"]}
+                      // element={<GenerateDrawPage />}
+                      element={<WIPPage />}
+                      allowedRoles={["main_admin", "superuser"]}
                     />
                   )
                 }

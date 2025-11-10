@@ -549,7 +549,7 @@ export default function AthletesModal(
                 verificados.
               </FormHelperText>
             ) : (
-              <FormHelperText sx={{ pt: 1 }}>
+              <FormHelperText sx={{ pt: 1, pb: 1 }}>
                 Apenas poderá selecionar uma Modalidade para cada Aluno. Quando
                 inscrito, este Aluno não voltará a aparecer na lista de seleção,
                 para isso terá de o eliminar da Modalidade corrente, e inscrever
@@ -670,7 +670,7 @@ export default function AthletesModal(
                   key={index}
                   disablePadding
                   secondaryAction={
-                    disciplinesData?.data.results.length === 0 ? (
+                    disciplinesData?.data.count === 0 ? (
                       <label>
                         <Checkbox
                           sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
@@ -702,9 +702,12 @@ export default function AthletesModal(
                   <ListItemButton
                     key={index}
                     onClick={() => {
-                      setCurrentAthleteId(athlete.id);
-                      handleDisciplineScreenOpen();
-                      handleToggle(athlete.id);
+                      if (disciplinesData?.data.count === 0) {
+                        handleToggle(athlete.id);
+                      } else {
+                        setCurrentAthleteId(athlete.id);
+                        handleDisciplineScreenOpen();
+                      }
                     }}
                   >
                     <ListItemIcon>

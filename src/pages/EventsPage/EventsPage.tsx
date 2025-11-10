@@ -200,17 +200,19 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           alignItems="center"
           size={12}
         >
+          {eventsData?.data.count === 0 ? null : (
+            <Grid size={12} mt={3} container justifyContent={"center"}>
+              <Pagination
+                count={Math.ceil(eventsData?.data.count / 5)}
+                page={page + 1}
+                onChange={handleChange}
+                color="primary"
+              />
+            </Grid>
+          )}
           {props.userRole === "main_admin" ? (
             <AddButton label="Adicionar" to="new_event/"></AddButton>
           ) : null}
-          <Grid size={12} mt={3} container justifyContent={"center"}>
-            <Pagination
-              count={Math.ceil(eventsData?.data.count / 5)}
-              page={page + 1}
-              onChange={handleChange}
-              color="primary"
-            />
-          </Grid>
         </Grid>
       </Grid>
     </>

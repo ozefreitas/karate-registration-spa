@@ -10,6 +10,7 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { MemberTypes } from "../../config";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   type Club = {
@@ -20,11 +21,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
 
   type Member = {
     id: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     gender: string;
     club: Club;
     age: string;
+    member_type: string;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -40,24 +41,31 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const athleteRows = useMemo(() => {
     return athletesData?.data.results.map((athlete: Member) => ({
       id: athlete.id,
-      first_name: athlete.first_name,
-      last_name: athlete.last_name,
+      full_name: athlete.full_name,
       gender: athlete.gender,
       username: athlete.club.username,
+      member_type: MemberTypes.find(
+        (item) => item.value === athlete.member_type
+      )?.label,
       age: athlete.age,
     }));
   }, [athletesData]);
 
   const getColumnMaping = () => {
     const columnMapping = [
-      { key: "first_name", label: "Primeiro Nome" },
-      { key: "last_name", label: "Último Nome" },
+      { key: "full_name", label: "Nome" },
       { key: "gender", label: "Género" },
     ];
     if (props.userRole === "main_admin" || props.userRole === "superuser") {
-      columnMapping.push({ key: "username", label: "Clube" });
+      columnMapping.push(
+        { key: "username", label: "Clube" },
+        { key: "member_type", label: "Tipo" }
+      );
     } else {
-      columnMapping.push({ key: "age", label: "Idade" });
+      columnMapping.push(
+        { key: "age", label: "Idade" },
+        { key: "member_type", label: "Tipo" }
+      );
     }
     return columnMapping;
   };

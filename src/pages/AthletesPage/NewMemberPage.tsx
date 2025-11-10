@@ -20,6 +20,7 @@ import {
   ReasonOptions,
   MemberTypes,
 } from "../../config";
+import { useSnackbar } from "notistack";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -32,6 +33,7 @@ import FormAccordion from "../../dashboard/FormAccordion";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function NewMemberPage() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
@@ -63,9 +65,22 @@ export default function NewMemberPage() {
     },
   });
 
+  console.log(watch("member_type"));
   const is_force_ident = watch("force_ident");
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
+    if (data.member_type.length <= 1) {
+      enqueueSnackbar("Tem de selecionar um Tipo de Praticante!", {
+        variant: "warning",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      return;
+    }
     setLoading(true);
 
     const formData = {
@@ -89,54 +104,59 @@ export default function NewMemberPage() {
       formData.id_number = 0;
     }
 
-    createAthlete.mutate(formData, {
-      onSuccess: () => {
-        setLoading(false);
-        if (mode === "redirect") {
-          navigate("/members/");
-        } else {
-          reset();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      },
-      onError: (data: any) => {
-        setLoading(false);
-        if (data.response?.data.incompatible_athlete) {
-          setError("member_type", {
-            message: data.response?.data.incompatible_athlete[0],
-          });
-        } else if (data.response?.data.impossible_gender) {
-          setError("gender", {
-            message: data.response?.data.impossible_gender[0],
-          });
-        }
+    data.member_type
+      .filter((item: string) => item !== "")
+      .forEach((type: string) => {
+        const payload = { ...formData, member_type: type };
+        createAthlete.mutate(payload, {
+          onSuccess: () => {
+            setLoading(false);
+            if (mode === "redirect") {
+              navigate("/members/");
+            } else {
+              reset();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          },
+          onError: (data: any) => {
+            setLoading(false);
+            if (data.response?.data.incompatible_athlete) {
+              setError("member_type", {
+                message: data.response?.data.incompatible_athlete[0],
+              });
+            } else if (data.response?.data.impossible_gender) {
+              setError("gender", {
+                message: data.response?.data.impossible_gender[0],
+              });
+            }
 
-        const errorData = data.response?.data || {};
+            const errorData = data.response?.data || {};
 
-        type Fields =
-          | "first_name"
-          | "last_name"
-          | "graduation"
-          | "birth_date"
-          | "gender"
-          | "club";
+            type Fields =
+              | "first_name"
+              | "last_name"
+              | "graduation"
+              | "birth_date"
+              | "gender"
+              | "club";
 
-        const fields: Fields[] = [
-          "first_name",
-          "last_name",
-          "graduation",
-          "birth_date",
-          "gender",
-          "club",
-        ];
+            const fields: Fields[] = [
+              "first_name",
+              "last_name",
+              "graduation",
+              "birth_date",
+              "gender",
+              "club",
+            ];
 
-        fields.forEach((field) => {
-          if (errorData[field]?.[0]) {
-            setError(field, { message: errorData[field][0] });
-          }
+            fields.forEach((field) => {
+              if (errorData[field]?.[0]) {
+                setError(field, { message: errorData[field][0] });
+              }
+            });
+          },
         });
-      },
-    });
+      });
   };
 
   useEffect(() => {
@@ -386,9 +406,9 @@ export default function NewMemberPage() {
               render={({ field }) => (
                 <FormControl component="fieldset" variant="standard">
                   <FormLabel sx={{ mb: 2 }}>
-                    Se pretende inscrever em provas, selecione este campo.
+                    Selecione os campos adequados. Um membro só poderá ser Aluno
+                    ou Competidor, nunca os dois em simultâneo.
                   </FormLabel>
-
                   <Stack spacing={1}>
                     {MemberTypes.map((opt) => {
                       const selected = field.value?.includes(opt.value);
@@ -423,7 +443,6 @@ export default function NewMemberPage() {
                         />
                       );
                     })}
-
                     {!!errors.member_type && (
                       <FormHelperText error sx={{ marginLeft: "14px" }}>
                         {errors.member_type?.message}
@@ -446,7 +465,7 @@ export default function NewMemberPage() {
                   select
                   fullWidth
                   multiline
-                  disabled={watch("member_type").includes("student")}
+                  disabled={!watch("member_type").includes("student")}
                   maxRows={8}
                   {...field}
                   onChange={(e) => {
