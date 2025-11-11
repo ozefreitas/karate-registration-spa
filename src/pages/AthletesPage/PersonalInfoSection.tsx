@@ -105,8 +105,8 @@ export default function PersonalInfoSection(
 
   const onSubmit = (data: any) => {
     if (
-      editField === "weight" ||
-      !["main_admin", "superuser"].includes(userRole)
+      editField === "weight" 
+      // || !["main_admin", "superuser"].includes(userRole)
     ) {
       const payload = {
         memberId: props.athleteData?.data.id,
