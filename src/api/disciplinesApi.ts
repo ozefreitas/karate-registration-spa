@@ -1,10 +1,17 @@
 import { authClient } from "./apiClient";
 
-export const fetchDisciplines = (eventId: string, restricted: boolean) => {
+export const fetchDisciplines = (
+  eventId: string,
+  restricted: boolean,
+  is_coach?: boolean,
+  is_team?: boolean,
+) => {
   return authClient.get(`/disciplines/`, {
     params: {
       event_disciplines: eventId,
       restricted: restricted,
+      is_coach: is_coach,
+      is_team: is_team,
     },
   });
 };

@@ -17,7 +17,7 @@ import SingleMemberPage from "./pages/AthletesPage/SingleMemberPage";
 // import TeamsPage from "./pages/TeamsPage/TeamsPage";
 // import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 // import NewTeamPage from "./pages/TeamsPage/NewTeamPage";
-import IndividualsPage from "./pages/IndividualsPage/IndividualsPage";
+import IndividualsPage from "./pages/RegistrationPages/IndividualsPage";
 import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
 import ProtectedRoute from "./access/ProtectedRoute";
 import NewEventPage from "./pages/EventsPage/NewEventPage";
@@ -29,6 +29,7 @@ import EventAllRegistryPage from "./components/EventCards/EventAllRegistryPage";
 import MainSettingsPage from "./pages/SettingsPage/MainSettingsPage";
 import ResultsMainPage from "./pages/ResultsMonitorPage/ResultsMainPage";
 import DisplayPage from "./pages/ResultsMonitorPage/DisplayPage";
+import CoachesPage from "./pages/RegistrationPages/CoachesPage";
 // import DrawPage from "./pages/DrawPage/DrawPage";
 // import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
@@ -301,6 +302,17 @@ function App() {
                   isAuthLoading ? null : (
                     <ProtectedRoute
                       element={<IndividualsPage userRole={userRole} />}
+                      allowedRoles={["free_club", "subed_club", "main_admin"]} // keep "main_admin" for now, for debbuging effects
+                    />
+                  )
+                }
+              />
+              <Route
+                path="events/:id/coaches/"
+                element={
+                  isAuthLoading ? null : (
+                    <ProtectedRoute
+                      element={<CoachesPage userRole={userRole} />}
                       allowedRoles={["free_club", "subed_club", "main_admin"]} // keep "main_admin" for now, for debbuging effects
                     />
                   )

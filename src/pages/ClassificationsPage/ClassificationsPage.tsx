@@ -47,7 +47,12 @@ export default function ClassificationsPage() {
 
       <Grid sx={{ m: 2, mt: 4 }}>
         {classificationsData?.data.length === 0 ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid
+            sx={{ mt: 1, mb: 3 }}
+            container
+            justifyContent="center"
+            size={12}
+          >
             <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
               Não foram encontrados registos.
             </Typography>

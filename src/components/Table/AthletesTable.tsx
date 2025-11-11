@@ -29,9 +29,9 @@ import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
 } from "@mui/icons-material";
-import EditAthleteModal from "../AthletesModal/EditAthleteModal";
-import DeleteAthleteModal from "../AthletesModal/DeleteAthleteModal";
-import EditIndividualModal from "../AthletesModal/EditIndividualModal";
+import EditAthleteModal from "../Modals/EditAthleteModal";
+import DeleteAthleteModal from "../Modals/DeleteAthleteModal";
+import EditIndividualModal from "../Modals/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
 
@@ -128,7 +128,8 @@ export default function AthletesTable(
       | "Modalidades"
       | "Categorias"
       | "CategoriasReadOnly"
-      | "EventCategories";
+      | "EventCategories"
+      | "Treinadores";
     discipline?: any;
     data: any;
     count: number;
@@ -370,7 +371,7 @@ export default function AthletesTable(
   return (
     <>
       {props.data.length === 0 ? (
-        <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+        <Grid sx={{ mt: 1, mb: 3 }} container justifyContent="center" size={12}>
           <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
             Não foram encontrados registos.
           </Typography>

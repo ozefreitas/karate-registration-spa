@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Add, Visibility } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
-import AthletesModal from "../../components/AthletesModal/AthletesModal";
+import AthletesModal from "../../components/Modals/AthletesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -36,14 +36,13 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     setIsCategoriesListModalOpen(true);
   };
 
-  const {
-    data: singleEventData,
-    isLoading: isSingleEventLoading,
-    error: singleEventError,
-  } = eventsHooks.useFetchSingleEventData(eventId!);
+  const { data: singleEventData, isLoading: isSingleEventLoading } =
+    eventsHooks.useFetchSingleEventData(eventId!);
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!
+    eventId!,
+    false,
+    false
   );
 
   const state = singleEventData?.data.is_open

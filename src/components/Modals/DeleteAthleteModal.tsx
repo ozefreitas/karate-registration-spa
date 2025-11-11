@@ -44,7 +44,8 @@ export default function DeleteAthleteModal(
       | "Modalidades"
       | "Categorias"
       | "CategoriasReadOnly"
-      | "EventCategories";
+      | "EventCategories"
+      | "Treinadores";
     setSelected?: any;
     discipline?: any;
   }>

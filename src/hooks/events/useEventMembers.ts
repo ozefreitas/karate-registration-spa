@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { addEventAthlete, deleteEventAthlete } from "../../api";
 
-export const useAddEventAthlete = () => {
+export const useAddEventMember = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();

@@ -3,6 +3,7 @@ import {
   fetchMembers,
   fetchSingleMember,
   fetchMembersNotInEvent,
+  fetchCoachesNotInEvent,
   fetchMembersInCategoryGender,
   fetchDisciplineMemberNotIn,
   fetchLastFiveMembers,
@@ -38,11 +39,25 @@ export const useFetchLastFiveMembers = () => {
 export const useFetchAthletesNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
 ) => {
   return useQuery({
     queryKey: ["athletes-notin-event", eventId, page, pageSize],
     queryFn: () => fetchMembersNotInEvent(eventId, page, pageSize),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: !!eventId,
+  });
+};
+
+export const useFetchCoachesNotInEvent = (
+  eventId: string,
+  page: number,
+  pageSize: number,
+) => {
+  return useQuery({
+    queryKey: ["coaches-notin-event", eventId, page, pageSize],
+    queryFn: () => fetchCoachesNotInEvent(eventId, page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!eventId,

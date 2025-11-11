@@ -83,7 +83,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             </ListItem>
           </Grid>
         ) : eventsData?.data.results.length === 0 ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid
+            sx={{ mt: 1, mb: 3 }}
+            container
+            justifyContent="center"
+            size={12}
+          >
             <Typography variant="h6" sx={{ color: "gray" }}>
               Não foram encontrados Eventos.
             </Typography>

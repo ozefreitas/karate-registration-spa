@@ -66,7 +66,12 @@ const NotificationsPage = () => {
             <CircularProgress />
           </Grid>
         ) : notificationsData?.data.results.length === 0 ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid
+            sx={{ mt: 1, mb: 3 }}
+            container
+            justifyContent="center"
+            size={12}
+          >
             <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
               Não foram encontrados registos.
             </Typography>

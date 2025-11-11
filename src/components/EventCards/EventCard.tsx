@@ -444,45 +444,47 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container size={12} sx={{ mx: 2 }}>
-          <Card
-            sx={{
-              width: "100%",
-              bgcolor: singleEventData?.data.is_open
-                ? "green"
-                : singleEventData?.data.is_retification
-                ? "#ffc40c"
-                : "red",
-            }}
-          >
-            <CardContent
+        {singleEventData?.data.has_registrations ? (
+          <Grid container size={12} sx={{ mx: 2 }}>
+            <Card
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                p: 2,
-                "&:last-child": {
-                  paddingBottom: 2,
-                },
+                width: "100%",
+                bgcolor: singleEventData?.data.is_open
+                  ? "green"
+                  : singleEventData?.data.is_retification
+                  ? "#ffc40c"
+                  : "red",
               }}
             >
-              {isSingleEventLoading ? (
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: "bold",
-                    color: "white",
-                  }}
-                >
-                  Estado: {state}
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  p: 2,
+                  "&:last-child": {
+                    paddingBottom: 2,
+                  },
+                }}
+              >
+                {isSingleEventLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    Estado: {state}
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ) : null}
         <Grid size={12}>
           {props.userRole === undefined ? null : (
             <Card sx={{ m: 2 }}>
@@ -551,15 +553,26 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       ></SettingsButton>
                     </>
                   ) : (
-                    <AddButton
-                      label="Adicionar/Consultar Inscrições"
-                      to="individuals/"
-                      disabled={
-                        isSingleEventLoading ||
-                        singleEventData?.data.has_ended ||
-                        !singleEventData?.data.has_registrations
-                      }
-                    ></AddButton>
+                    <>
+                      <AddButton
+                        label="Adicionar/Consultar Inscrições"
+                        to="individuals/"
+                        disabled={
+                          isSingleEventLoading ||
+                          singleEventData?.data.has_ended ||
+                          !singleEventData?.data.has_registrations
+                        }
+                      ></AddButton>
+                      <AddButton
+                        label="Adicionar/Consultar Treinadores"
+                        to="coaches/"
+                        disabled={
+                          isSingleEventLoading ||
+                          singleEventData?.data.has_ended ||
+                          !singleEventData?.data.has_registrations
+                        }
+                      ></AddButton>
+                    </>
                   )}
                   {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                     <AddButton

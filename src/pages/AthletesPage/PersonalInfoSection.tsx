@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import DeleteAthleteModal from "../../components/AthletesModal/DeleteAthleteModal";
+import DeleteAthleteModal from "../../components/Modals/DeleteAthleteModal";
 import {
   Delete,
   Edit,
@@ -26,7 +26,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { useSearchParams } from "react-router-dom";
-import WeightConfirmModal from "../../components/AthletesModal/WeightConfirmModal";
+import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
 
 export default function PersonalInfoSection(
   props: Readonly<{ athleteData: any }>

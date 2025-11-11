@@ -220,6 +220,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   categories: "Escalões",
   new_category: "Novo Escalão",
   reset: "Recuperar Password",
+  coaches: "Treinadores Registados",
   pricing: "Planos de Subscrição",
 };
 

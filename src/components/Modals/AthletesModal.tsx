@@ -143,7 +143,7 @@ export default function AthletesModal(
     setChecked(newChecked);
   };
 
-  const addEventAthlete = eventsHooks.useAddEventAthlete();
+  const addEventAthlete = eventsHooks.useAddEventMember();
 
   const handleIndividualsSubmit = (athleteList: string[]) => {
     if (athleteList.length === 0) {
@@ -715,9 +715,9 @@ export default function AthletesModal(
                     </ListItemIcon>
                     <ListItemText
                       primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.gender} / Idade calculada: ${
+                      secondary={`${athlete.gender} | Idade calculada: ${
                         athlete.age
-                      } / Peso: ${athlete.weight ?? "N/A"}`}
+                      } | Peso: ${athlete.weight ?? "N/A"}`}
                     />
                   </ListItemButton>
                   <Divider />
