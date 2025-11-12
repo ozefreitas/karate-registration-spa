@@ -14,7 +14,7 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function TeamsPage(props: Readonly<{ userRole: string }>) {
-  type Athlete = {
+  type Member = {
     id: string;
     first_name: string;
     last_name: string;
@@ -26,12 +26,12 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   type Team = {
     id: string;
     team_number: number;
-    athlete1: Athlete;
+    athlete1: Member;
     athlete1_full_name: string;
     athlete2_full_name: string;
     athlete3_full_name: string;
-    athlete2: Athlete;
-    athlete3: Athlete;
+    athlete2: Member;
+    athlete3: Member;
     category: string;
     gender: string;
     match_type: string;

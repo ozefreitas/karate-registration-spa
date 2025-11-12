@@ -24,6 +24,18 @@ export const fetchMembersNotInEvent = (
   });
 };
 
+export const fetchCoachesNotInEvent = (
+  eventId: string,
+  page: number,
+  pageSize: number
+) => {
+  return authClient.get("/athletes/", {
+    params: { coach_not_in_event: eventId, page: page, page_size: pageSize },
+  });
+};
+
+
+
 export const fetchMembersInCategoryGender = (
   category: string,
   gender: string

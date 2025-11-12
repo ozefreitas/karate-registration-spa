@@ -18,7 +18,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
 import { useUpdateTeamData } from "../../hooks/useTeamsData";
 import { Controller, SubmitHandler } from "react-hook-form";
-import PickOneAthleteModal from "../AthletesModal/PickOneAthleteModal";
+import PickOneAthleteModal from "../Modals/PickOneAthleteModal";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,20 +41,19 @@ export default function EditTeamModal(
     handleSubmit: any;
   }>
 ) {
-
   const [isPickOneAthleteModalOpen, setIsPickOneAthleteModalOpen] =
-      useState<boolean>(false);
-    const [athleteNumber, setAthleteNumber] = useState<number | null>(null);
-  
-    const handlePickOneAthleteModalOpen = (number: number) => {
-      setAthleteNumber(number);
-      setIsPickOneAthleteModalOpen(true);
-    };
-  
-    const handlePickOneAthleteModalClose = () => {
-      setIsPickOneAthleteModalOpen(false);
-    };
-    
+    useState<boolean>(false);
+  const [athleteNumber, setAthleteNumber] = useState<number | null>(null);
+
+  const handlePickOneAthleteModalOpen = (number: number) => {
+    setAthleteNumber(number);
+    setIsPickOneAthleteModalOpen(true);
+  };
+
+  const handlePickOneAthleteModalClose = () => {
+    setIsPickOneAthleteModalOpen(false);
+  };
+
   type UpdateTeam = {
     athlete1Id: string;
     athlete2Id: string;
@@ -150,9 +149,7 @@ export default function EditTeamModal(
                           <Button
                             sx={{ ml: 2 }}
                             size="small"
-                            onClick={() =>
-                              handlePickOneAthleteModalOpen(1)
-                            }
+                            onClick={() => handlePickOneAthleteModalOpen(1)}
                             variant="contained"
                           >
                             Alterar
@@ -184,9 +181,7 @@ export default function EditTeamModal(
                           <Button
                             sx={{ ml: 2 }}
                             size="small"
-                            onClick={() =>
-                              handlePickOneAthleteModalOpen(2)
-                            }
+                            onClick={() => handlePickOneAthleteModalOpen(2)}
                             variant="contained"
                           >
                             Alterar
@@ -218,9 +213,7 @@ export default function EditTeamModal(
                           <Button
                             size="small"
                             sx={{ ml: 2 }}
-                            onClick={() =>
-                              handlePickOneAthleteModalOpen(3)
-                            }
+                            onClick={() => handlePickOneAthleteModalOpen(3)}
                             variant="contained"
                           >
                             Alterar

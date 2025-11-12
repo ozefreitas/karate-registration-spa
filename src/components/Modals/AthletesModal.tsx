@@ -102,7 +102,7 @@ export default function AthletesModal(
     eventData: any;
   }>
 ) {
-  type Athlete = {
+  type Member = {
     age: any;
     id: string;
     first_name: string;
@@ -143,7 +143,7 @@ export default function AthletesModal(
     setChecked(newChecked);
   };
 
-  const addEventAthlete = eventsHooks.useAddEventAthlete();
+  const addEventAthlete = eventsHooks.useAddEventMember();
 
   const handleIndividualsSubmit = (athleteList: string[]) => {
     if (athleteList.length === 0) {
@@ -405,7 +405,7 @@ export default function AthletesModal(
               Inscrever{" "}
               {
                 athletesNotInEventData?.data.results.find(
-                  (athlete: Athlete) => athlete.id === currentAthleteId
+                  (athlete: Member) => athlete.id === currentAthleteId
                 )?.full_name
               }{" "}
               em {props.eventData?.name}
@@ -549,7 +549,7 @@ export default function AthletesModal(
                 verificados.
               </FormHelperText>
             ) : (
-              <FormHelperText sx={{ pt: 1 }}>
+              <FormHelperText sx={{ pt: 1, pb: 1 }}>
                 Apenas poderá selecionar uma Modalidade para cada Aluno. Quando
                 inscrito, este Aluno não voltará a aparecer na lista de seleção,
                 para isso terá de o eliminar da Modalidade corrente, e inscrever
@@ -631,7 +631,7 @@ export default function AthletesModal(
                     variant="contained"
                     onClick={() => {
                       navigate(
-                        `/athletes/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
+                        `/members/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
                       );
                     }}
                   >
@@ -665,12 +665,12 @@ export default function AthletesModal(
                 <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
-              filteredAthletes.map((athlete: Athlete, index: string) => (
+              filteredAthletes.map((athlete: Member, index: string) => (
                 <ListItem
                   key={index}
                   disablePadding
                   secondaryAction={
-                    disciplinesData?.data.results.length === 0 ? (
+                    disciplinesData?.data.count === 0 ? (
                       <label>
                         <Checkbox
                           sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
@@ -702,9 +702,12 @@ export default function AthletesModal(
                   <ListItemButton
                     key={index}
                     onClick={() => {
-                      setCurrentAthleteId(athlete.id);
-                      handleDisciplineScreenOpen();
-                      handleToggle(athlete.id);
+                      if (disciplinesData?.data.count === 0) {
+                        handleToggle(athlete.id);
+                      } else {
+                        setCurrentAthleteId(athlete.id);
+                        handleDisciplineScreenOpen();
+                      }
                     }}
                   >
                     <ListItemIcon>
@@ -712,9 +715,9 @@ export default function AthletesModal(
                     </ListItemIcon>
                     <ListItemText
                       primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.gender} / Idade calculada: ${
+                      secondary={`${athlete.gender} | Idade calculada: ${
                         athlete.age
-                      } / Peso: ${athlete.weight ?? "N/A"}`}
+                      } | Peso: ${athlete.weight ?? "N/A"}`}
                     />
                   </ListItemButton>
                   <Divider />

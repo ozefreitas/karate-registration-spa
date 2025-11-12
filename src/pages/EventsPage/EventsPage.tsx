@@ -83,7 +83,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             </ListItem>
           </Grid>
         ) : eventsData?.data.results.length === 0 ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid
+            sx={{ mt: 1, mb: 3 }}
+            container
+            justifyContent="center"
+            size={12}
+          >
             <Typography variant="h6" sx={{ color: "gray" }}>
               Não foram encontrados Eventos.
             </Typography>
@@ -200,17 +205,19 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           alignItems="center"
           size={12}
         >
+          {eventsData?.data.count === 0 ? null : (
+            <Grid size={12} mt={3} container justifyContent={"center"}>
+              <Pagination
+                count={Math.ceil(eventsData?.data.count / 5)}
+                page={page + 1}
+                onChange={handleChange}
+                color="primary"
+              />
+            </Grid>
+          )}
           {props.userRole === "main_admin" ? (
             <AddButton label="Adicionar" to="new_event/"></AddButton>
           ) : null}
-          <Grid size={12} mt={3} container justifyContent={"center"}>
-            <Pagination
-              count={Math.ceil(eventsData?.data.count / 5)}
-              page={page + 1}
-              onChange={handleChange}
-              color="primary"
-            />
-          </Grid>
         </Grid>
       </Grid>
     </>

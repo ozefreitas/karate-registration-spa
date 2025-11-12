@@ -25,7 +25,7 @@ import { classificationsHooks } from "../../hooks";
 export default function LastCompQualiHomeComponent(
   props: Readonly<{ userRole: string }>
 ) {
-  type Athlete = {
+  type Member = {
     id: string;
     first_name: string;
     last_name: string;
@@ -39,9 +39,9 @@ export default function LastCompQualiHomeComponent(
   type CategoryClassification = {
     id: number;
     full_category: string;
-    first_place: Athlete;
-    second_place: Athlete;
-    third_place: Athlete;
+    first_place: Member;
+    second_place: Member;
+    third_place: Member;
   };
 
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ export default function LastCompQualiHomeComponent(
                         <Tooltip title={"Consultar"}>
                           <ListItemButton
                             onClick={() =>
-                              navigate(`athletes/${category.first_place.id}/`)
+                              navigate(`members/${category.first_place.id}/`)
                             }
                             sx={{
                               m: 0,
@@ -106,7 +106,7 @@ export default function LastCompQualiHomeComponent(
                       <Tooltip title={"Consultar"}>
                         <ListItem
                           onClick={() =>
-                            navigate(`athletes/${category.second_place.id}/`)
+                            navigate(`members/${category.second_place.id}/`)
                           }
                           sx={{ m: 0 }}
                         >
@@ -127,7 +127,7 @@ export default function LastCompQualiHomeComponent(
                         <ListItem sx={{ m: 0 }}>
                           <ListItemButton
                             onClick={() =>
-                              navigate(`athletes/${category.third_place.id}/`)
+                              navigate(`members/${category.third_place.id}/`)
                             }
                             sx={{
                               m: 0,

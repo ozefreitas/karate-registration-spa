@@ -17,7 +17,10 @@ import {
   ListItemIcon,
   Box,
   CircularProgress,
+  Chip,
+  ListItemText,
 } from "@mui/material";
+import React from "react";
 import { Add, Delete, SportsMartialArts } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
@@ -52,6 +55,17 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
     useState<boolean>(false);
   const [disciplineCategories, setDisciplineCategories] = useState<any>([]);
+  type DisciplineOption = {
+    discipline: string;
+    is_coach: boolean;
+    is_team: boolean;
+  };
+
+  const [disciplineOptions, setDisciplineOptions] = useState<
+    DisciplineOption[]
+  >([]);
+
+  console.log(disciplineOptions);
 
   const handleCategoriesModalOpen = () => {
     setIsCategoriesModalOpen(true);
@@ -66,16 +80,28 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     const indexToRemove2 = disciplineCategories.findIndex(
       (obj: any) => obj.discipline === item
     );
+    const indexToRemove3 = disciplineOptions.findIndex(
+      (obj: any) => obj.discipline === item
+    );
+
     const newDisciplines = [...disciplines];
     const newDisciplineCategories = [...disciplineCategories];
+    const newDisciplineOptions = [...disciplineOptions];
+
     if (indexToRemove > -1) {
       newDisciplines.splice(indexToRemove, 1);
     }
     if (indexToRemove2 > -1) {
       newDisciplineCategories.splice(indexToRemove2, 1);
     }
+
+    if (indexToRemove3 > -1) {
+      newDisciplineOptions.splice(indexToRemove3, 1);
+    }
+
     setDisciplines(newDisciplines);
     setDisciplineCategories(newDisciplineCategories);
+    setDisciplineOptions(newDisciplineOptions);
   };
 
   const createEvent = eventsHooks.useCreateEvent();
@@ -115,6 +141,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     handleSubmit,
     setError,
     setValue,
+    watch,
     getValues,
     formState: { errors },
   } = useForm({
@@ -135,8 +162,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       encounter_type: "",
       has_registrations: true,
       has_categories: true,
+      is_team: false,
+      is_coach: false,
     },
   });
+
+  console.log(watch("is_coach"));
 
   const onSubmit = async (data: any) => {
     setLoading(true);
@@ -160,6 +191,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     };
 
     const eventResponse = await createEvent.mutateAsync(formData, {
+      onSuccess: () => navigate("/events/"),
       onError: (data: any) => {
         const errorData = data.response?.data || {};
 
@@ -211,15 +243,41 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         }
         setLoading(false);
       },
+      onSettled: () => {
+        if (discipline.length === 0) {
+          setLoading(false);
+        }
+      },
     });
+
     const eventId = eventResponse.data.id;
+
     const disciplineResponses = await Promise.all(
-      disciplines.map((discipline) =>
-        createDiscipline.mutateAsync({
-          data: { event: eventId, name: discipline },
-        })
-      )
+      disciplines.map((discipline) => {
+        const options = disciplineOptions.find(
+          (obj: any) => obj.discipline === discipline
+        );
+
+        return createDiscipline.mutateAsync(
+          {
+            data: {
+              event: eventId,
+              name: discipline,
+              is_coach: options?.is_coach,
+              is_team: options?.is_team,
+            },
+          },
+          {
+            onSuccess: () => {
+              if (!data.has_categories) {
+                setLoading(false);
+              }
+            },
+          }
+        );
+      })
     );
+
     disciplineResponses.forEach((discipline) => {
       const findDiscipline = disciplineCategories.find(
         (item: any) => item.discipline === discipline.data.name
@@ -252,7 +310,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     }
   }, [isEncounter]);
 
-  const hasTegistrations = getValues("has_registrations");
+  const hasTegistrations = watch("has_registrations");
 
   useEffect(() => {
     if (hasTegistrations) {
@@ -281,6 +339,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  useEffect(() => {
+    if (discipline.toLowerCase() === "treinadores") {
+      setValue("is_coach", true);
+    }
+  }, [discipline, setValue]);
 
   return (
     <>
@@ -811,10 +875,27 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 onClick={() => {
                   if (discipline === "") {
                     setDisciplineWarning(true);
-                  } else {
-                    setDisciplines((prev) => [...prev, discipline]);
-                    setDiscipline("");
+                    return;
                   }
+
+                  const isCoach = getValues("is_coach");
+                  const isTeam = getValues("is_team");
+
+                  setDisciplines((prev) => [...prev, discipline]);
+
+                  setDisciplineOptions((prev) => [
+                    ...prev,
+                    {
+                      discipline,
+                      is_coach: isCoach,
+                      is_team: isTeam,
+                    },
+                  ]);
+
+                  // Now it's safe to reset
+                  setValue("is_coach", false);
+                  setValue("is_team", false);
+                  setDiscipline("");
                 }}
               >
                 <Add color="success" />
@@ -830,21 +911,141 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </ListItem>
             ) : (
               <List dense>
-                {disciplines.map((discipline, index) => (
-                  <ListItem key={index}>
-                    <ListItemButton sx={{ p: 1, pl: 3 }}>
-                      <ListItemIcon>
-                        <SportsMartialArts />
-                      </ListItemIcon>
-                      {discipline}
-                    </ListItemButton>
-                    <IconButton onClick={() => handleRemove(discipline)}>
-                      <Delete color="error" />
-                    </IconButton>
-                  </ListItem>
-                ))}
+                {disciplines.map((discipline, index) => {
+                  const options = disciplineOptions.filter(
+                    (opt) => opt.discipline === discipline
+                  );
+
+                  return (
+                    <ListItem key={index}>
+                      <ListItemButton sx={{ p: 1, pl: 3 }}>
+                        <ListItemIcon>
+                          <SportsMartialArts />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={discipline}
+                          secondary={
+                            <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
+                              {options.map((opt, idx) => (
+                                <React.Fragment key={idx}>
+                                  {opt.is_coach && (
+                                    <Chip
+                                      color="success"
+                                      size="small"
+                                      label="Treinadores"
+                                    />
+                                  )}
+                                  {opt.is_team && (
+                                    <Chip
+                                      color="success"
+                                      size="small"
+                                      label="Equipas"
+                                    />
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </Stack>
+                          }
+                        />
+                      </ListItemButton>
+
+                      <IconButton onClick={() => handleRemove(discipline)}>
+                        <Delete color="error" />
+                      </IconButton>
+                    </ListItem>
+                  );
+                })}
               </List>
             )}
+          </Grid>
+          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+            <Controller
+              name="is_coach"
+              control={eventMetadataControl}
+              render={({ field }) => (
+                <FormControl
+                  component="fieldset"
+                  variant="standard"
+                  error={!!errors.encounter}
+                >
+                  <FormLabel sx={{ mb: 1 }}>
+                    Selecione este campo se esta Modalidade for direcionada para
+                    a inscrição de Treinadores no evento.
+                  </FormLabel>
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          sx={{ ml: 2 }}
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                          }}
+                          name="is_coach"
+                        />
+                      }
+                      label="Treinadores"
+                      sx={{ justifyContent: "left", marginLeft: 0 }}
+                    />
+                    {field.value && (
+                      <FormHelperText
+                        variant="filled"
+                        sx={{ fontSize: 12, marginLeft: "14px" }}
+                      >
+                        Esta Modalidade irá aceitar apenas Membros guardados com
+                        o tipo "Treinador"
+                      </FormHelperText>
+                    )}
+                  </Stack>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+            <Controller
+              name="is_team"
+              control={eventMetadataControl}
+              render={({ field }) => (
+                <FormControl
+                  component="fieldset"
+                  variant="standard"
+                  error={!!errors.encounter}
+                >
+                  <FormLabel sx={{ mb: 1 }}>
+                    Selecione este campo se esta Modalidade for direcionada para
+                    a inscrição de Equipas no evento.
+                  </FormLabel>
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          sx={{ ml: 2 }}
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                          }}
+                          name="is_team"
+                        />
+                      }
+                      label="Equipas"
+                      sx={{ justifyContent: "left", marginLeft: 0 }}
+                    />
+                    {field.value && (
+                      <FormHelperText
+                        variant="filled"
+                        sx={{ fontSize: 12, marginLeft: "14px" }}
+                      >
+                        Esta Modalidade irá aceitar apenas Equipas
+                      </FormHelperText>
+                    )}
+                  </Stack>
+                </FormControl>
+              )}
+            />
           </Grid>
         </FormAccordion>
         <FormAccordion
@@ -853,7 +1054,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           tooltipMessage='Apenas poderá abrir esta secção se selecionar "Escalões".'
         >
           <Grid size={3}>
-            {disciplines.length === 0 ? (
+            {disciplines.length === 0 ||
+            (disciplines.length === 1 &&
+              disciplines[0].toLowerCase() === "treinadores") ? (
               <ListItem>
                 <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
                   As Modalidades que adicionar no campo de cima aparecerão aqui.
@@ -862,22 +1065,27 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </ListItem>
             ) : (
               <List dense>
-                {disciplines.map((discipline, index) => (
-                  <ListItem key={index}>
-                    <ListItemButton
-                      selected={discipline === selectedDisciplineForCategory}
-                      onClick={() =>
-                        setSelectedDisciplineForCategory(discipline)
-                      }
-                      sx={{ p: 1, pl: 3 }}
-                    >
-                      <ListItemIcon>
-                        <SportsMartialArts />
-                      </ListItemIcon>
-                      {discipline}
-                    </ListItemButton>
-                  </ListItem>
-                ))}
+                {disciplines
+                  .filter(
+                    (discipline: string) =>
+                      discipline.toLowerCase() !== "treinadores"
+                  )
+                  .map((discipline, index) => (
+                    <ListItem key={index}>
+                      <ListItemButton
+                        selected={discipline === selectedDisciplineForCategory}
+                        onClick={() =>
+                          setSelectedDisciplineForCategory(discipline)
+                        }
+                        sx={{ p: 1, pl: 3 }}
+                      >
+                        <ListItemIcon>
+                          <SportsMartialArts />
+                        </ListItemIcon>
+                        {discipline}
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
               </List>
             )}
             <Button

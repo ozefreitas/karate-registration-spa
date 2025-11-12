@@ -38,6 +38,7 @@ import {
   Today,
   FileDownload,
   Edit,
+  HowToReg,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useEffect, useState } from "react";
@@ -138,6 +139,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
     }
   };
 
+  const state = singleEventData?.data.is_open
+    ? "Inscrições abertas"
+    : singleEventData?.data.is_retification
+    ? "Período de retificações"
+    : "Inscrições fechadas";
+
   if (singleEventError) return <Navigate to="/not_found/" />;
 
   return (
@@ -145,7 +152,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       <PageInfoCard
         description="Aqui poderá consultar cada cartão de prova, pode observar toda a
           informação relevante sobre essa prova, assim como os passos para
-          inscrever os seus Atletas ou Equipas."
+          inscrever os seus Atletas, Equipas e Treinadores."
         title={`Evento - ${singleEventData?.data.name}`}
       ></PageInfoCard>
       <Grid container sx={{ mt: 0 }}>
@@ -223,6 +230,13 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           text={singleEventData?.data.contact}
                           icon={<Tty />}
                         ></CompInfoToolTip>
+                        {singleEventData?.data.has_registrations ? (
+                          <CompInfoToolTip
+                            title="Número de Inscritos"
+                            text={singleEventData?.data.number_registrations.toString()}
+                            icon={<HowToReg />}
+                          ></CompInfoToolTip>
+                        ) : null}
                       </List>
                     </Stack>
                   </>
@@ -430,6 +444,47 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
             </Grid>
           </Grid>
         </Grid>
+        {singleEventData?.data.has_registrations ? (
+          <Grid container size={12} sx={{ mx: 2 }}>
+            <Card
+              sx={{
+                width: "100%",
+                bgcolor: singleEventData?.data.is_open
+                  ? "green"
+                  : singleEventData?.data.is_retification
+                  ? "#ffc40c"
+                  : "red",
+              }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  p: 2,
+                  "&:last-child": {
+                    paddingBottom: 2,
+                  },
+                }}
+              >
+                {isSingleEventLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: "bold",
+                      color: "white",
+                    }}
+                  >
+                    Estado: {state}
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ) : null}
         <Grid size={12}>
           {props.userRole === undefined ? null : (
             <Card sx={{ m: 2 }}>
@@ -498,15 +553,26 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       ></SettingsButton>
                     </>
                   ) : (
-                    <AddButton
-                      label="Adicionar/Consultar Inscrições"
-                      to="individuals/"
-                      disabled={
-                        isSingleEventLoading ||
-                        singleEventData?.data.has_ended ||
-                        !singleEventData?.data.has_registrations
-                      }
-                    ></AddButton>
+                    <>
+                      <AddButton
+                        label="Adicionar/Consultar Inscrições"
+                        to="individuals/"
+                        disabled={
+                          isSingleEventLoading ||
+                          singleEventData?.data.has_ended ||
+                          !singleEventData?.data.has_registrations
+                        }
+                      ></AddButton>
+                      <AddButton
+                        label="Adicionar/Consultar Treinadores"
+                        to="coaches/"
+                        disabled={
+                          isSingleEventLoading ||
+                          singleEventData?.data.has_ended ||
+                          !singleEventData?.data.has_registrations
+                        }
+                      ></AddButton>
+                    </>
                   )}
                   {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                     <AddButton

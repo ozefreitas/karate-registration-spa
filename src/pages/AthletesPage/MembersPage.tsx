@@ -10,21 +10,22 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { MemberTypes } from "../../config";
 
-export default function AthletesPage(props: Readonly<{ userRole: string }>) {
+export default function MembersPage(props: Readonly<{ userRole: string }>) {
   type Club = {
     id: string;
     username: string;
     role: string;
   };
 
-  type Athlete = {
+  type Member = {
     id: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     gender: string;
     club: Club;
     age: string;
+    member_type: string;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -38,26 +39,33 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
 
   // Memoize `rows` to compute only when `athletes` changes
   const athleteRows = useMemo(() => {
-    return athletesData?.data.results.map((athlete: Athlete) => ({
+    return athletesData?.data.results.map((athlete: Member) => ({
       id: athlete.id,
-      first_name: athlete.first_name,
-      last_name: athlete.last_name,
+      full_name: athlete.full_name,
       gender: athlete.gender,
       username: athlete.club.username,
+      member_type: MemberTypes.find(
+        (item) => item.value === athlete.member_type
+      )?.label,
       age: athlete.age,
     }));
   }, [athletesData]);
 
   const getColumnMaping = () => {
     const columnMapping = [
-      { key: "first_name", label: "Primeiro Nome" },
-      { key: "last_name", label: "Último Nome" },
+      { key: "full_name", label: "Nome" },
       { key: "gender", label: "Género" },
     ];
     if (props.userRole === "main_admin" || props.userRole === "superuser") {
-      columnMapping.push({ key: "username", label: "Clube" });
+      columnMapping.push(
+        { key: "username", label: "Clube" },
+        { key: "member_type", label: "Tipo" }
+      );
     } else {
-      columnMapping.push({ key: "age", label: "Idade" });
+      columnMapping.push(
+        { key: "age", label: "Idade" },
+        { key: "member_type", label: "Tipo" }
+      );
     }
     return columnMapping;
   };
@@ -72,12 +80,10 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
             <>
               Aqui poderá consultar todos os Atletas/Alunos tutelados por si.
               Pode consultar a informação de cada um, editar e remover.
-              snfuadsbh fieuhficb hoçg cjb cb c bhbxcjb gihrbcd vvbvbfvcb hv vv
-              h
             </>
           ) : (
             <>
-              Aqui poderá consultar todos os seus Atletas/Alunos e consultar a
+              Aqui poderá consultar todos os seus Membros e consultar a
               informação detalhada de cada um (caso possua uma subscrição).
               <p></p>
               <strong>Importante</strong>: Estes não servem como inscrição em
@@ -88,7 +94,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
             </>
           )
         }
-        title="Atletas"
+        title="Membros"
       ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
         {isAthletesDataLoading ? (
@@ -127,7 +133,7 @@ export default function AthletesPage(props: Readonly<{ userRole: string }>) {
       </Grid>
       {props.userRole === "main_admin" || props.userRole === "subed_club" ? (
         <Grid sx={{ m: 3, mt: 2 }}>
-          <AddButton label="Adicionar" to="new_athlete/"></AddButton>
+          <AddButton label="Adicionar" to="new_member/"></AddButton>
         </Grid>
       ) : null}
     </>

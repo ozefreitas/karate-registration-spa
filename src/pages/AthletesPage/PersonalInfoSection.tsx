@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import DeleteAthleteModal from "../../components/AthletesModal/DeleteAthleteModal";
+import DeleteAthleteModal from "../../components/Modals/DeleteAthleteModal";
 import {
   Delete,
   Edit,
@@ -26,7 +26,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { useSearchParams } from "react-router-dom";
-import WeightConfirmModal from "../../components/AthletesModal/WeightConfirmModal";
+import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
 
 export default function PersonalInfoSection(
   props: Readonly<{ athleteData: any }>
@@ -93,7 +93,7 @@ export default function PersonalInfoSection(
           ? "N/A"
           : props.athleteData?.data.id_number,
       gender: props.athleteData?.data.gender,
-      competitor: props.athleteData?.data.competitor,
+      competitor: props.athleteData?.data.member_type === "athlete",
       birthDate: props.athleteData?.data.birth_date,
       weight:
         props.athleteData?.data.weight === null
@@ -124,7 +124,7 @@ export default function PersonalInfoSection(
         graduation: data.graduation,
         id_number: data.id_number,
         gender: data.gender,
-        competitor: data.competitor,
+        member_type: data.competitor ? "athlete" : "student",
         birth_date: data.birthDate,
         quotes: data.quotes === "regular",
         weight:
@@ -699,40 +699,44 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        <Controller
-          name="competitor"
-          control={control}
-          render={({ field }) => (
-            <FormControl
-              sx={{ pb: 2, justifyContent: "center" }}
-              component="fieldset"
-              variant="standard"
-            >
-              <FormControlLabel
-                sx={{ mr: 2 }}
-                labelPlacement="start"
-                label={
-                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                    É competidor:
-                  </Typography>
-                }
-                control={
-                  <Switch
-                    disabled={!isEditMode}
-                    sx={{ ml: 2 }}
-                    {...field}
-                    checked={field.value}
-                    color="warning"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e.target.checked);
-                    }}
-                  />
-                }
-              ></FormControlLabel>
-            </FormControl>
-          )}
-        />
+        {props.athleteData?.data.member_type === "coach" ? null : (
+          <Controller
+            name="competitor"
+            control={control}
+            render={({ field }) => (
+              <FormControl
+                sx={{ pb: 2, justifyContent: "center" }}
+                component="fieldset"
+                variant="standard"
+              >
+                <FormControlLabel
+                  sx={{ mr: 2 }}
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                    >
+                      É competidor:
+                    </Typography>
+                  }
+                  control={
+                    <Switch
+                      disabled={!isEditMode}
+                      sx={{ ml: 2 }}
+                      {...field}
+                      checked={field.value}
+                      color="warning"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked);
+                      }}
+                    />
+                  }
+                ></FormControlLabel>
+              </FormControl>
+            )}
+          />
+        )}
       </Grid>
       <DeleteAthleteModal
         from="Atletas"

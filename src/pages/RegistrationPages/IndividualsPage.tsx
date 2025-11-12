@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Add, Visibility } from "@mui/icons-material";
 import AthletesTable from "../../components/Table/AthletesTable";
-import AthletesModal from "../../components/AthletesModal/AthletesModal";
+import AthletesModal from "../../components/Modals/AthletesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -40,7 +40,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     eventsHooks.useFetchSingleEventData(eventId!);
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!
+    eventId!,
+    false,
+    false
   );
 
   const state = singleEventData?.data.is_open
@@ -51,8 +53,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
 
   const getColumnMaping = () => {
     const columnMapping = [
-      { key: "first_name", label: "Primeiro Nome" },
-      { key: "last_name", label: "Último Nome" },
+      { key: "full_name", label: "Nome" },
       { key: "gender", label: "Género" },
     ];
     if (
@@ -72,10 +73,10 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         description={
           <>
             Aqui poderá consultar todos os Atletas que estão inscritos para a
-            prova que selecionou. <br /> Tal como presente nas
-            regras, no período de retificações apenas pode eliminar inscrições,
-            e quando as inscrições estiverem fechadas não podem ser efetuadas
-            operações, apenas ser visualizadas as inscrições. <br />
+            prova que selecionou. <p></p> Tal como presente nas regras, no
+            período de retificações apenas pode eliminar inscrições, e quando as
+            inscrições estiverem fechadas não podem ser efetuadas operações,
+            apenas ser visualizadas as inscrições. <p></p>
             Ao clicar em "Selecionar Atleta", apenas irão aparecer aqueles que
             estejam marcados como "Competidores". Se algum Atleta não constar na
             lista, por favor verifique na página de perfil desse Atleta se o
@@ -83,7 +84,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             subscrição, contacte um administrador de imediato.
           </>
         }
-        title={`Página de inscritos em ${singleEventData?.data.name}`}
+        title={`Inscritos em ${singleEventData?.data.name}`}
       ></PageInfoCard>
       <Grid container sx={{ m: 2 }}>
         <Grid>
@@ -176,7 +177,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 actions
                 selection
                 deletable
-                editable={!singleEventData?.data.is_closed}
                 userRole={props.userRole}
               ></AthletesTable>
             </span>

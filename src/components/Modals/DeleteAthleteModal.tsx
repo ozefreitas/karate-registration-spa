@@ -44,7 +44,8 @@ export default function DeleteAthleteModal(
       | "Modalidades"
       | "Categorias"
       | "CategoriasReadOnly"
-      | "EventCategories";
+      | "EventCategories"
+      | "Treinadores";
     setSelected?: any;
     discipline?: any;
   }>
@@ -62,7 +63,7 @@ export default function DeleteAthleteModal(
   const removeAllDisciplineAthletes =
     disciplinesHooks.useDeleteAllDisciplineAthlete();
   const navigate = useNavigate();
-  const { eventId } = useParams<{ eventId: string }>();
+  const { id: eventId } = useParams<{ id: string }>();
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
@@ -73,7 +74,7 @@ export default function DeleteAthleteModal(
       if (props.from === "Atletas") {
         removeAthlete.mutate(id, {
           onSuccess: () => {
-            navigate("/athletes/");
+            navigate("/members/");
           },
         });
       } else if (props.from === "Equipas") {

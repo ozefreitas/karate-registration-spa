@@ -75,7 +75,7 @@ export default function HelpPage() {
                     Este formulário contém um número de campos necessários para
                     identificar um Atleta. Os campos obrigatórios estão marcados
                     com "*". Pode consultar regras mais específicas na própria{" "}
-                    <Link to={"/athletes/new_athlete/"}>página</Link>. Registar
+                    <Link to={"/members/new_member/"}>página</Link>. Registar
                     Atletas não tem nenhuma data nem periodo definidos, pelo que
                     pode (e deve) fazê-lo muito antes e fora do periodo de
                     inscrições em provas.

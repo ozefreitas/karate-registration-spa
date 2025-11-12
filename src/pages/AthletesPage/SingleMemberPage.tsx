@@ -17,7 +17,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import RegistryHistorySection from "./RegistryHistorySection";
 
-export default function SingleAthletePage() {
+export default function SingleMemberPage() {
   const { id: memberId } = useParams<{ id: string }>();
   const {
     data: singleAthleteData,

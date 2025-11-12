@@ -81,7 +81,7 @@ export default function PickOneAthleteModal(
     number: number | null;
   }>
 ) {
-  type Athlete = {
+  type Member = {
     id: string;
     first_name: string;
     last_name: string;
@@ -161,7 +161,7 @@ export default function PickOneAthleteModal(
             <div>Ocorreu um erro</div>
           ) : athleteInCategoryGenderData?.data.length !== 0 ? (
             athleteInCategoryGenderData?.data.results.map(
-              (athlete: Athlete, index: string) => (
+              (athlete: Member, index: string) => (
                 <ListItem
                   key={index}
                   disablePadding

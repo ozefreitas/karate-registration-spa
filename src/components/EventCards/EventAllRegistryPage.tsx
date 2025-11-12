@@ -1,7 +1,4 @@
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Grid,
   Box,
   CircularProgress,
@@ -10,6 +7,7 @@ import {
 import AthletesTable from "../../components/Table/AthletesTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
+import PageInfoCard from "../info-cards/PageInfoCard";
 
 export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>
@@ -44,20 +42,15 @@ export default function EventAllRegistryPage(
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title={`Página de inscritos em ${singleEventData?.data.name}`}
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá consultar todos os Atletas/Alunos que estão inscritos para
-          a prova que selecionou (ver acima).
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description={
+          <>
+            Aqui poderá consultar todos os Atletas/Treinadores que estão
+            inscritos para a prova que selecionou (ver acima).
+          </>
+        }
+        title="Visualização de inscrições gerais"
+      ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
         {isSingleEventLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -85,7 +78,7 @@ export default function EventAllRegistryPage(
                 discipline={discipline.id}
                 data={discipline.individuals}
                 columnsHeaders={columnMaping}
-                actions={false}
+                actions={["main_admin", "superuser"].includes(props.userRole)}
                 selection={false}
                 userRole={props.userRole}
               ></AthletesTable>

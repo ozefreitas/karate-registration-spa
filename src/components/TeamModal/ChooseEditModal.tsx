@@ -15,7 +15,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useFetchSingleTeamData } from "../../hooks/useTeamsData";
 // import { membersHooks } from "../../hooks";
-import EditAthleteModal from "../AthletesModal/EditAthleteModal";
+import EditAthleteModal from "../Modals/EditAthleteModal";
 import { useForm } from "react-hook-form";
 import EditTeamModal from "./EditTeamModal";
 

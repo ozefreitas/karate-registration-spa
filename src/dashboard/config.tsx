@@ -38,10 +38,10 @@ export const getSideMenuConfig = (userRole: string) => {
       to: "/",
     },
     {
-      name: "athletes",
-      label: "Atletas",
+      name: "members",
+      label: "Membros",
       icon: <Person sx={{ color: "#e81c24" }} />,
-      to: "/athletes/",
+      to: "/members/",
     },
     {
       name: "teams",
@@ -190,6 +190,7 @@ export const getAccountSideMenuConfig = (userRole: string) => {
 export const breadcrumbsConvertion: Record<string, string> = {
   "": "Início",
   athletes: "Atletas",
+  members: "Membros",
   teams: "Equipas",
   classifications: "Classificações",
   events: "Eventos",
@@ -202,6 +203,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   request_account: "Pedir Conta",
   signup: "Criar Conta",
   new_athlete: "Novo Atleta",
+  new_member: "Novo Membro",
   new_team: "Nova Equipa",
   individuals: "Individuais Registados",
   registered_teams: "Equipas Registadas",
@@ -218,6 +220,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   categories: "Escalões",
   new_category: "Novo Escalão",
   reset: "Recuperar Password",
+  coaches: "Treinadores Registados",
   pricing: "Planos de Subscrição",
 };
 
