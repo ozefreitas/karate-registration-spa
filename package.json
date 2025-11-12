@@ -27,6 +27,7 @@
     "phosphor-react": "^1.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.56.3",
     "recharts": "^3.0.2"
   },
