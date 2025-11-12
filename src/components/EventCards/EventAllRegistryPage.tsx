@@ -1,7 +1,4 @@
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Grid,
   Box,
   CircularProgress,
