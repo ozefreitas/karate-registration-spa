@@ -27,10 +27,13 @@ import dayjs from "dayjs";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { useSearchParams } from "react-router-dom";
 import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
+import { isFloat } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function PersonalInfoSection(
   props: Readonly<{ athleteData: any }>
 ) {
+  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
   const userRole = user?.data.role;
 
@@ -104,8 +107,20 @@ export default function PersonalInfoSection(
   });
 
   const onSubmit = (data: any) => {
+    if (isFloat(data.weight)) {
+      enqueueSnackbar("Peso tem de ser um número real inteiro!", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      return;
+    }
     if (
-      editField === "weight" 
+      editField === "weight"
       // || !["main_admin", "superuser"].includes(userRole)
     ) {
       const payload = {

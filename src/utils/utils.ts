@@ -22,6 +22,26 @@ export function getCompAge(dateOfBirth: Date): number {
   return currentAge;
 }
 
+/**
+ * Checks if a value is an integer
+ * @param {*} value - The value to check
+ * @returns {boolean}
+ */
+export function isInteger(value: any): boolean {
+  const num = Number(value);
+  return !Number.isNaN(num) && Number.isInteger(num);
+}
+
+/**
+ * Checks if a value is a float (real number with decimals)
+ * @param {*} value - The value to check
+ * @returns {boolean}
+ */
+export function isFloat(value: any): boolean {
+  const num = Number(value);
+  return !Number.isNaN(num) && Number.isFinite(num) && !Number.isInteger(num);
+}
+
 export function formatTimeDifference(isoString: string): string {
   const now = new Date();
   const past = new Date(isoString);
