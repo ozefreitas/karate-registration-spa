@@ -23,14 +23,17 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
     setIsModalOpen(false);
   };
 
-  const { data: singleEventData, isLoading: isSingleEventLoading } =
-    eventsHooks.useFetchSingleEventData(eventId!);
+  const {
+    data: singleEventData,
+    isLoading: isSingleEventLoading,
+    error: singleEventError,
+  } = eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!,
-    false,
-    true
-  );
+  const {
+    data: disciplinesData,
+    isLoading: isCoachDisciplineLoading,
+    error: disciplinesError,
+  } = disciplinesHooks.useFetchDisciplinesData(eventId!, false, true);
 
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
@@ -47,8 +50,6 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
   };
 
   const columnMaping = getColumnMaping();
-
-  console.log(disciplinesData?.data.results[0].individuals)
 
   return (
     <>
@@ -107,10 +108,22 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
       </Grid>
 
       <Grid size={12} sx={{ m: 2 }}>
-        {isSingleEventLoading ? (
+        {isSingleEventLoading || isCoachDisciplineLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
+        ) : singleEventError || disciplinesError ? (
+          <Grid
+            sx={{ mt: 1, mb: 3 }}
+            container
+            justifyContent="center"
+            size={12}
+          >
+            <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
+              Ocorreu um erro ao encontrar os Treinadores inscritos para este
+              Evento.
+            </Typography>
+          </Grid>
         ) : disciplinesData?.data.results.length === 0 ? null : (
           <AthletesTable
             type="Treinadores"
