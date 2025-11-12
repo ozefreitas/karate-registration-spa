@@ -403,54 +403,58 @@ export default function NewMemberPage() {
               name="member_type"
               control={control}
               defaultValue={[]}
-              render={({ field }) => (
-                <FormControl component="fieldset" variant="standard">
-                  <FormLabel sx={{ mb: 2 }}>
-                    Selecione os campos adequados. Um membro só poderá ser Aluno
-                    ou Competidor, nunca os dois em simultâneo.
-                  </FormLabel>
-                  <Stack spacing={1}>
-                    {MemberTypes.map((opt) => {
-                      const selected = field.value?.includes(opt.value);
+              render={({ field }) => {
+                const { value = [], onChange } = field;
 
-                      return (
+                const handleToggle = (optionValue: string) => {
+                  let newValue = [...value];
+
+                  // If already selected → remove it
+                  if (newValue.includes(optionValue)) {
+                    newValue = newValue.filter((v) => v !== optionValue);
+                  } else {
+                    // Otherwise, add it — but handle "student" vs "athlete" exclusivity
+                    if (optionValue === "student") {
+                      newValue = newValue.filter((v) => v !== "athlete");
+                    } else if (optionValue === "athlete") {
+                      newValue = newValue.filter((v) => v !== "student");
+                    }
+                    newValue.push(optionValue);
+                  }
+
+                  onChange(newValue);
+                };
+
+                return (
+                  <FormControl component="fieldset" variant="standard">
+                    <FormLabel sx={{ mb: 2 }}>
+                      Se pretende inscrever em provas, selecione este campo.
+                    </FormLabel>
+                    <Stack spacing={1}>
+                      {MemberTypes.map((type) => (
                         <FormControlLabel
-                          key={opt.value}
+                          key={type.value}
                           labelPlacement="start"
                           control={
                             <Checkbox
-                              checked={selected}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  // add to array
-                                  field.onChange([
-                                    ...(field.value || []),
-                                    opt.value,
-                                  ]);
-                                } else {
-                                  // remove from array
-                                  field.onChange(
-                                    (field.value || []).filter(
-                                      (v) => v !== opt.value
-                                    )
-                                  );
-                                }
-                              }}
+                              checked={value.includes(type.value)}
+                              onChange={() => handleToggle(type.value)}
                             />
                           }
-                          label={opt.label}
+                          label={type.label}
                           sx={{ justifyContent: "left", marginLeft: 0 }}
                         />
-                      );
-                    })}
-                    {!!errors.member_type && (
-                      <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.member_type?.message}
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
+                      ))}
+
+                      {!!errors.member_type && (
+                        <FormHelperText error sx={{ marginLeft: "14px" }}>
+                          {errors.member_type?.message}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </FormControl>
+                );
+              }}
             />
           </Grid>
           <Grid sx={{ p: 3 }} size={6}>
