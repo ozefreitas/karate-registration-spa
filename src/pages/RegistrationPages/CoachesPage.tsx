@@ -129,6 +129,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
             type="Treinadores"
             data={disciplinesData?.data.results[0].individuals}
             count={disciplinesData?.data.results[0].individuals.length}
+            discipline={disciplinesData?.data.results[0].id}
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
