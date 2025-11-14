@@ -138,10 +138,10 @@ export default function CoachesModal(
     setChecked(newChecked);
   };
 
-  const addDisciplineAthlete = disciplinesHooks.useAddDisciplineAthlete();
+  const addDisciplineMember = disciplinesHooks.useAddDisciplineAthlete();
 
-  const handleIndividualsSubmit = (athleteList: string[]) => {
-    if (athleteList.length === 0) {
+  const handleIndividualsSubmit = (memberList: string[]) => {
+    if (memberList.length === 0) {
       enqueueSnackbar("Tem de selecionar pelo menos um treinador!", {
         variant: "warning",
         anchorOrigin: {
@@ -152,10 +152,13 @@ export default function CoachesModal(
         preventDuplicate: true,
       });
     } else {
-      athleteList.forEach((athlete: string) => {
-        const athleteData = { member_id: athlete, event_id: props.eventData.id };
-        const data = { disciplineId: props.disciplineId, data: athleteData };
-        addDisciplineAthlete.mutate(data);
+      memberList.forEach((member: string) => {
+        const memberData = {
+          member_id: member,
+          event_id: props.eventData.id,
+        };
+        const data = { disciplineId: props.disciplineId, data: memberData };
+        addDisciplineMember.mutate(data);
       });
       setChecked([]);
       props.handleModalClose();
@@ -176,7 +179,7 @@ export default function CoachesModal(
     refetch();
   }, [location]);
 
-  const filteredAthletes = React.useMemo(() => {
+  const filteredCoaches = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
     if (!query) return coachesNotInEventData?.data.results ?? [];
@@ -272,16 +275,16 @@ export default function CoachesModal(
             </Grid>
           ) : coachesNotInEventError ? (
             <div>Ocorreu um erro</div>
-          ) : filteredAthletes.length === 0 ? (
+          ) : filteredCoaches.length === 0 ? (
             <ListItem>
-              <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
+              <ListItemText primary="Não tem Treinadores que ainda não estejam inscritos nesta prova."></ListItemText>
             </ListItem>
           ) : userRole === "free_club" && searchQuery === "" ? (
             <ListItem>
-              <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
+              <ListItemText primary="O seu plano não concede acesso à listagem de Treinadores. Pesquise pelo Nº de Indentificação ou nome, ou inicie uma subscrição."></ListItemText>
             </ListItem>
           ) : (
-            filteredAthletes.map((athlete: Member, index: string) => (
+            filteredCoaches.map((member: Member, index: string) => (
               <ListItem
                 key={index}
                 disablePadding
@@ -290,11 +293,11 @@ export default function CoachesModal(
                     <Checkbox
                       sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                       edge="end"
-                      onChange={() => handleToggle(athlete.id)}
-                      checked={checked.includes(athlete.id)}
+                      onChange={() => handleToggle(member.id)}
+                      checked={checked.includes(member.id)}
                       slotProps={{
                         input: {
-                          "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
+                          "aria-labelledby": `checkbox-list-secondary-label-${member.first_name}`,
                         },
                       }}
                     />
@@ -304,18 +307,18 @@ export default function CoachesModal(
                 <ListItemButton
                   key={index}
                   onClick={() => {
-                    handleToggle(athlete.id);
+                    handleToggle(member.id);
                   }}
                 >
                   <ListItemIcon>
                     <Person />
                   </ListItemIcon>
                   <ListItemText
-                    primary={`${athlete.full_name}`}
-                    secondary={`${athlete.gender} | Graduação: ${
+                    primary={`${member.full_name}`}
+                    secondary={`${member.gender} | Graduação: ${
                       GraduationsOptions.find(
                         (grad: any) =>
-                          grad.value.toString() === athlete.graduation
+                          grad.value.toString() === member.graduation
                       )?.label ?? "N/A"
                     }`}
                   />
@@ -326,41 +329,43 @@ export default function CoachesModal(
           )}
         </List>
       </DialogContent>
-      <DialogActions sx={{ pr: 4, pb: 2 }}>
-        <>
-          <Typography variant="body1" mr={1} color="textSecondary">
-            Página:
-          </Typography>
-          <Typography mr={1}>{page + 1}</Typography>
-          <Typography variant="body1" mr={1} color="textSecondary">
-            de
-          </Typography>
-          <Typography mr={2}>
-            {Math.ceil(coachesNotInEventData?.data.count / 10)}
-          </Typography>
-          <Tooltip title="Página anterior">
-            <IconButton
-              onClick={handleBackButtonClick}
-              disabled={page === 0}
-              aria-label="previous page"
-            >
-              <KeyboardArrowLeft />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Próxima página">
-            <IconButton
-              onClick={handleNextButtonClick}
-              disabled={
-                !coachesNotInEventData?.data?.count ||
-                coachesNotInEventData?.data.count <= (page + 1) * 10
-              }
-              aria-label="next page"
-            >
-              <KeyboardArrowRight />
-            </IconButton>
-          </Tooltip>
-        </>
-      </DialogActions>
+      {coachesNotInEventData?.data?.count === 0 ? null : (
+        <DialogActions sx={{ pr: 4, pb: 2 }}>
+          <>
+            <Typography variant="body1" mr={1} color="textSecondary">
+              Página:
+            </Typography>
+            <Typography mr={1}>{page + 1}</Typography>
+            <Typography variant="body1" mr={1} color="textSecondary">
+              de
+            </Typography>
+            <Typography mr={2}>
+              {Math.ceil(coachesNotInEventData?.data.count / 10)}
+            </Typography>
+            <Tooltip title="Página anterior">
+              <IconButton
+                onClick={handleBackButtonClick}
+                disabled={page === 0}
+                aria-label="previous page"
+              >
+                <KeyboardArrowLeft />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Próxima página">
+              <IconButton
+                onClick={handleNextButtonClick}
+                disabled={
+                  !coachesNotInEventData?.data?.count ||
+                  coachesNotInEventData?.data.count <= (page + 1) * 10
+                }
+                aria-label="next page"
+              >
+                <KeyboardArrowRight />
+              </IconButton>
+            </Tooltip>
+          </>
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

@@ -169,7 +169,6 @@ export default function MainSettingsPage() {
       });
   }
 
-  console.log(acountDetails);
   return (
     <>
       <PageInfoCard

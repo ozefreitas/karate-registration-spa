@@ -7,6 +7,7 @@ import {
   Button,
   MenuItem,
   Switch,
+  Tooltip,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ import {
   Update,
   Clear,
   ArrowDropDown,
+  ContentCopy,
 } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions, QuotesOptions } from "../../config";
 import { membersHooks } from "../../hooks";
@@ -29,6 +31,7 @@ import { useSearchParams } from "react-router-dom";
 import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
 import { isFloat } from "../../utils/utils";
 import { useSnackbar } from "notistack";
+import DuplicateMemberModal from "../../components/Modals/DuplicateMemberModal";
 
 export default function PersonalInfoSection(
   props: Readonly<{ athleteData: any }>
@@ -54,6 +57,8 @@ export default function PersonalInfoSection(
   }, [editField]);
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isDuplicateModalOpen, setIsDuplicateModalOpen] =
+    useState<boolean>(false);
   const [isDeleteAthleteModalOpen, setIsDeleteAthleteModalOpen] =
     useState<boolean>(false);
   const [isWeightRedirectionModalOpen, setIsWeightRedirectionModalOpen] =
@@ -65,6 +70,14 @@ export default function PersonalInfoSection(
 
   const handleModalClose = () => {
     setIsDeleteAthleteModalOpen(false);
+  };
+
+  const handleDuplicateModalOpen = () => {
+    setIsDuplicateModalOpen(true);
+  };
+
+  const handleDuplicateModalClose = () => {
+    setIsDuplicateModalOpen(false);
   };
 
   const handleWeightModalOpen = () => {
@@ -161,12 +174,23 @@ export default function PersonalInfoSection(
 
   return (
     <>
-      <Typography
-        sx={{ color: "#e81c24", fontWeight: "bold", ml: 1, mb: 2 }}
-        variant="h4"
-      >
-        INFORMAÇÕES PESSOAIS
-      </Typography>
+      <Grid container alignItems={"center"} size={12}>
+        <Grid size={11}>
+          <Typography
+            sx={{ color: "#e81c24", fontWeight: "bold", ml: 1, mb: 2 }}
+            variant="h4"
+          >
+            INFORMAÇÕES PESSOAIS
+          </Typography>
+        </Grid>
+        <Grid size={1}>
+          <Tooltip title="Duplicar Membro">
+            <Button onClick={() => handleDuplicateModalOpen()}>
+              <ContentCopy></ContentCopy>
+            </Button>
+          </Tooltip>
+        </Grid>
+      </Grid>
       <Grid sx={{ mb: 3 }}>
         {["main_admin", "superuser", "subed_club"].includes(userRole) ? (
           <Button
@@ -753,6 +777,11 @@ export default function PersonalInfoSection(
           />
         )}
       </Grid>
+      <DuplicateMemberModal
+        handleModalClose={handleDuplicateModalClose}
+        isModalOpen={isDuplicateModalOpen}
+        memberData={props.athleteData?.data}
+      ></DuplicateMemberModal>
       <DeleteAthleteModal
         from="Atletas"
         handleModalClose={handleModalClose}

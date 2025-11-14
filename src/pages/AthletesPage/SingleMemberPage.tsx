@@ -3,7 +3,6 @@ import {
   Typography,
   Button,
   Card,
-  CardHeader,
   CardContent,
   Avatar,
   Box,
@@ -16,6 +15,7 @@ import { membersHooks } from "../../hooks";
 import { Navigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import RegistryHistorySection from "./RegistryHistorySection";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function SingleMemberPage() {
   const { id: memberId } = useParams<{ id: string }>();
@@ -29,20 +29,10 @@ export default function SingleMemberPage() {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title={"Perfil do Atleta"}
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Nesta página poderá consultar toda a informação inerente de um Atleta,
-          assim como editar ou remover este mesmo Atelta.
-        </CardContent>
-      </Card>
+      <PageInfoCard
+        description="Nesta página poderá consultar toda a informação inerente de um Atleta, assim como editar ou remover este mesmo Atelta."
+        title="Perfil de Membro"
+      ></PageInfoCard>
       {isSingleAthleteLoading ? (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
