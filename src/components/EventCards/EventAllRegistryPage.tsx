@@ -1,9 +1,4 @@
-import {
-  Grid,
-  Box,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Grid, Box, CircularProgress, Typography } from "@mui/material";
 import AthletesTable from "../../components/Table/AthletesTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
@@ -22,17 +17,20 @@ export default function EventAllRegistryPage(
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
     eventId!,
-    true
+    !["superuser", "main_admin"].includes(props.userRole)
   );
 
-  const getColumnMaping = () => {
+  const getColumnMaping = (isCoach?: boolean) => {
     const columnMapping = [
       { key: "first_name", label: "Primeiro Nome" },
       { key: "last_name", label: "Último Nome" },
       { key: "gender", label: "Género" },
       { key: "club", label: "Clube" },
     ];
-    if (disciplinesData?.data.results.length !== 0) {
+    if (
+      disciplinesData?.data.results.length !== 0 &&
+      (isCoach === undefined || isCoach === false)
+    ) {
       columnMapping.push({ key: "category", label: "Escalão" });
     }
     return columnMapping;
@@ -77,7 +75,7 @@ export default function EventAllRegistryPage(
                 type="Modalidades"
                 discipline={discipline.id}
                 data={discipline.individuals}
-                columnsHeaders={columnMaping}
+                columnsHeaders={getColumnMaping(discipline.is_coach)}
                 actions={["main_admin", "superuser"].includes(props.userRole)}
                 selection={false}
                 userRole={props.userRole}

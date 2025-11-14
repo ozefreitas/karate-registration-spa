@@ -139,7 +139,12 @@ export default function PersonalInfoSection(
         graduation: data.graduation,
         id_number: data.id_number,
         gender: data.gender,
-        member_type: data.competitor ? "athlete" : "student",
+        member_type:
+          props.athleteData?.data.member_type === "coach"
+            ? "coach"
+            : data.competitor
+            ? "athlete"
+            : "student",
         birth_date: data.birthDate,
         quotes: data.quotes === "regular",
         weight:
