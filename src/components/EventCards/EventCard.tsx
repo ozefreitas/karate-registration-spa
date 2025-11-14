@@ -139,11 +139,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
     }
   };
 
-  const state = singleEventData?.data.is_open
-    ? "Inscrições abertas"
-    : singleEventData?.data.is_retification
-    ? "Período de retificações"
-    : "Inscrições fechadas";
+  const state =
+    singleEventData?.data.is_open && !singleEventData.data.is_retification
+      ? "Inscrições abertas"
+      : singleEventData?.data.is_open && singleEventData?.data.is_retification
+      ? "Período de retificações"
+      : "Inscrições fechadas";
 
   if (singleEventError) return <Navigate to="/not_found/" />;
 
@@ -449,11 +450,14 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
             <Card
               sx={{
                 width: "100%",
-                bgcolor: singleEventData?.data.is_open
-                  ? "green"
-                  : singleEventData?.data.is_retification
-                  ? "#ffc40c"
-                  : "red",
+                bgcolor:
+                  singleEventData?.data.is_open &&
+                  !singleEventData.data.is_retification
+                    ? "green"
+                    : singleEventData.data.is_open &&
+                      singleEventData?.data.is_retification
+                    ? "#ffc40c"
+                    : "red",
               }}
             >
               <CardContent
@@ -475,7 +479,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     variant="h5"
                     sx={{
                       fontWeight: "bold",
-                      color: "white",
+                      color:
+                        singleEventData.data.is_open &&
+                        singleEventData?.data.is_retification
+                          ? "black"
+                          : "white",
                     }}
                   >
                     Estado: {state}
