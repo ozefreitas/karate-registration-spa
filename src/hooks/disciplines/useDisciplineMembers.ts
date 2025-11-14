@@ -27,6 +27,8 @@ export const useAddDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
+      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {
@@ -63,6 +65,7 @@ export const useDeleteDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {

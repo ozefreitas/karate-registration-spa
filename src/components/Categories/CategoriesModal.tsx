@@ -350,7 +350,7 @@ export default function CategoriesModal(
           )}
         </List>
       </DialogContent>
-      {categoriesData?.data.count ? (
+      {categoriesData?.data.count === 0 ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
@@ -386,7 +386,7 @@ export default function CategoriesModal(
             </Tooltip>
           </>
         </DialogActions>
-      ) : null}
+      )}
     </Dialog>
   );
 }

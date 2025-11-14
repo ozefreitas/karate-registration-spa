@@ -411,8 +411,14 @@ export default function Header(
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem divider sx={{ p: 2 }}>
-          Notificações
+        <MenuItem
+          divider
+          disableRipple
+          disableTouchRipple
+          onClick={(e) => e.stopPropagation()}
+          sx={{ p: 2 }}
+        >
+          Notificações Recentes
         </MenuItem>
         {isNotificationLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -460,8 +466,7 @@ export default function Header(
                   notificationError !== null ||
                   notificationData.data.length - 1 === index
                 }
-                disableRipple
-                disableTouchRipple
+                onClick={(e) => e.stopPropagation()}
                 key={index}
               >
                 <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
