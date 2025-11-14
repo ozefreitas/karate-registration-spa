@@ -15,7 +15,7 @@ export default function EventAllRegistryPage(
     // error: singleEventError,
   } = eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
+  const { data: disciplinesData, isLoading: isDisciplinesLoading } = disciplinesHooks.useFetchDisciplinesData(
     eventId!,
     !["superuser", "main_admin"].includes(props.userRole)
   );
@@ -50,7 +50,7 @@ export default function EventAllRegistryPage(
         title="Visualização de inscrições gerais"
       ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
-        {isSingleEventLoading ? (
+        {isSingleEventLoading || isDisciplinesLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>

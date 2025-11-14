@@ -102,7 +102,7 @@ export default function PersonalInfoSection(
         props.athleteData?.data.weight === null
           ? "N/A"
           : props.athleteData?.data.weight,
-      quotes: props.athleteData?.data.quotes ? "regular" : "overdue",
+      quotes: props.athleteData?.data.quotes ? "overdue" : "regular",
     },
   });
 
