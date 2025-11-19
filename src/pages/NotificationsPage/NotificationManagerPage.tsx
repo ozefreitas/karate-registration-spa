@@ -31,7 +31,7 @@ export default function NotificationManagerPage() {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
   const { data: clubUserData } = adminHooks.useFetchClubUsersData();
   const { data: notificationData, isLoading: isNotificationDataLoading } =
-    notificationsHooks.useFetchNotificationsData(1, 100);
+    notificationsHooks.useFetchNotificationsData(1, 100, selectedUserId);
   const createNotification = notificationsHooks.useCreateNotification();
   const createAllClubsNotification =
     notificationsHooks.useCreateAllClubsNotification();

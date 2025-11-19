@@ -15,6 +15,7 @@ import AthletesModal from "../../components/Modals/AthletesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { formatDateTime } from "../../utils/utils";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -51,21 +52,28 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     ? "Período de retificações"
     : "Inscrições fechadas";
 
-  const getColumnMaping = () => {
-    const columnMapping = [
+  const getColumnMapping = (isCoach?: boolean) => {
+    // Base columns except the one that must be last
+    const baseColumns = [
       { key: "full_name", label: "Nome" },
       { key: "gender", label: "Género" },
     ];
+
+    // Conditionally add category
     if (
       disciplinesData?.data.results.length !== 0 &&
-      singleEventData?.data.has_categories
+      (isCoach === undefined || isCoach === false)
     ) {
-      columnMapping.push({ key: "category", label: "Escalão" });
+      baseColumns.push({ key: "category", label: "Escalão" });
     }
-    return columnMapping;
+
+    // Always add this one last
+    baseColumns.push({ key: "added_at", label: "Data Inscrição" });
+
+    return baseColumns;
   };
 
-  const columnMaping = getColumnMaping();
+  const columnMaping = getColumnMapping();
 
   return (
     <>
@@ -144,43 +152,55 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             userRole={props.userRole}
           ></AthletesTable>
         ) : (
-          disciplinesData?.data.results.map((discipline: any, index: any) => (
-            <span key={index}>
-              <Grid
-                size={12}
-                sx={{ pr: 3 }}
-                container
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Typography sx={{ m: 3 }} variant="h5">
-                  {discipline.name}
-                </Typography>
-                {singleEventData?.data.has_categories ? (
-                  <Button
-                    startIcon={<Visibility />}
-                    variant="contained"
-                    onClick={() => {
-                      handleCategoriesListModalOpen(discipline.name);
-                    }}
-                  >
-                    Escalões
-                  </Button>
-                ) : null}
-              </Grid>
-              <AthletesTable
-                count={discipline.individuals.length}
-                type="Modalidades"
-                discipline={discipline.id}
-                data={discipline.individuals}
-                columnsHeaders={columnMaping}
-                actions
-                selection
-                deletable
-                userRole={props.userRole}
-              ></AthletesTable>
-            </span>
-          ))
+          disciplinesData?.data.results.map((discipline: any, index: any) => {
+            const disciplineIndividuals = discipline?.individuals.map(
+              (memberInfo: any) => ({
+                id: memberInfo.member.id,
+                full_name: memberInfo.member.full_name,
+                gender: memberInfo.member.gender,
+                club: memberInfo.member.club,
+                category: memberInfo.member.category,
+                added_at: formatDateTime(memberInfo.added_at, "both"),
+              })
+            );
+            return (
+              <span key={index}>
+                <Grid
+                  size={12}
+                  sx={{ pr: 3 }}
+                  container
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography sx={{ m: 3 }} variant="h5">
+                    {discipline.name}
+                  </Typography>
+                  {singleEventData?.data.has_categories ? (
+                    <Button
+                      startIcon={<Visibility />}
+                      variant="contained"
+                      onClick={() => {
+                        handleCategoriesListModalOpen(discipline.name);
+                      }}
+                    >
+                      Escalões
+                    </Button>
+                  ) : null}
+                </Grid>
+                <AthletesTable
+                  count={discipline.individuals.length}
+                  type="Modalidades"
+                  discipline={discipline.id}
+                  data={disciplineIndividuals}
+                  columnsHeaders={columnMaping}
+                  actions
+                  selection
+                  deletable
+                  userRole={props.userRole}
+                ></AthletesTable>
+              </span>
+            );
+          })
         )}
       </Grid>
       {singleEventData?.data.is_open ? (

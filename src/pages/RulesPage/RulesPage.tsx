@@ -7,7 +7,7 @@ export default function RulesPage() {
   return (
     <div>
       <PageInfoCard
-        description=" Aqui poderá fazer download das regras das provas atualmente em vigor.
+        description="Aqui poderá fazer download das regras das provas atualmente em vigor.
           Carregue no botão para obter os documentos correspondentes."
         title="Regras"
       ></PageInfoCard>

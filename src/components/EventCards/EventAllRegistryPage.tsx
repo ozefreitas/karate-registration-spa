@@ -3,6 +3,7 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
 import PageInfoCard from "../info-cards/PageInfoCard";
+import { formatDateTime } from "../../utils/utils";
 
 export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>
@@ -20,23 +21,29 @@ export default function EventAllRegistryPage(
     !["superuser", "main_admin"].includes(props.userRole)
   );
 
-  const getColumnMaping = (isCoach?: boolean) => {
-    const columnMapping = [
-      { key: "first_name", label: "Primeiro Nome" },
-      { key: "last_name", label: "Último Nome" },
+  const getColumnMapping = (isCoach?: boolean) => {
+    // Base columns except the one that must be last
+    const baseColumns = [
+      { key: "full_name", label: "Nome" },
       { key: "gender", label: "Género" },
       { key: "club", label: "Clube" },
     ];
+
+    // Conditionally add category
     if (
       disciplinesData?.data.results.length !== 0 &&
       (isCoach === undefined || isCoach === false)
     ) {
-      columnMapping.push({ key: "category", label: "Escalão" });
+      baseColumns.push({ key: "category", label: "Escalão" });
     }
-    return columnMapping;
+
+    // Always add this one last
+    baseColumns.push({ key: "added_at", label: "Data Inscrição" });
+
+    return baseColumns;
   };
 
-  const columnMaping = getColumnMaping();
+  const columnMaping = getColumnMapping();
 
   return (
     <>
@@ -65,23 +72,35 @@ export default function EventAllRegistryPage(
             userRole={props.userRole}
           ></AthletesTable>
         ) : (
-          disciplinesData?.data.results.map((discipline: any) => (
-            <>
-              <Typography sx={{ m: 3 }} variant="h5">
-                {discipline.name}
-              </Typography>
-              <AthletesTable
-                count={discipline.individuals.length}
-                type="Modalidades"
-                discipline={discipline.id}
-                data={discipline.individuals}
-                columnsHeaders={getColumnMaping(discipline.is_coach)}
-                actions={["main_admin", "superuser"].includes(props.userRole)}
-                selection={false}
-                userRole={props.userRole}
-              ></AthletesTable>
-            </>
-          ))
+          disciplinesData?.data.results.map((discipline: any) => {
+            const disciplineIndividuals = discipline?.individuals.map(
+              (memberInfo: any) => ({
+                id: memberInfo.member.id,
+                full_name: memberInfo.member.full_name,
+                gender: memberInfo.member.gender,
+                club: memberInfo.member.club,
+                category: memberInfo.member.category,
+                added_at: formatDateTime(memberInfo.added_at, "both"),
+              })
+            );
+            return (
+              <>
+                <Typography sx={{ m: 3 }} variant="h5">
+                  {discipline.name}
+                </Typography>
+                <AthletesTable
+                  count={discipline.individuals.length}
+                  type="Modalidades"
+                  discipline={discipline.id}
+                  data={disciplineIndividuals}
+                  columnsHeaders={getColumnMapping(discipline.is_coach)}
+                  actions={["main_admin", "superuser"].includes(props.userRole)}
+                  selection={false}
+                  userRole={props.userRole}
+                ></AthletesTable>
+              </>
+            );
+          })
         )}
       </Grid>
     </>

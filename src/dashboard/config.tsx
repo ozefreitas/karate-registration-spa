@@ -291,7 +291,7 @@ export const NotificationTypeOptions: {
     icon: <Settings fontSize="large" />,
   },
   {
-    value: "Danger",
+    value: "danger",
     label: "Atenção Imediata!",
     icon: <Report color="error" fontSize="large" />,
   },

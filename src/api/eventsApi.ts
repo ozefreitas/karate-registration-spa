@@ -1,11 +1,16 @@
 import { apiClient, authClient } from "./apiClient";
 
 // public endpoint
-export const fetchEvents = (page: number, pageSize: number) => {
+export const fetchEvents = (
+  page: number,
+  pageSize: number,
+  season?: string
+) => {
   return apiClient.get("/events/", {
     params: {
       page,
       page_size: pageSize,
+      season: season,
     },
   });
 };
@@ -71,6 +76,5 @@ export const fetchEventRegistrationFile = (eventId: string) => {
 // annoucements
 
 export const fetchActiveAnnouncement = () => {
-  return authClient.get(`/active_announcement/`, {
-  });
+  return authClient.get(`/active_announcement/`, {});
 };

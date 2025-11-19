@@ -23,6 +23,7 @@ export default function EventCategoriesPage(
   type Discipline = {
     id: string;
     name: string;
+    is_coach: boolean;
     categories: Category[];
   };
 
@@ -120,7 +121,8 @@ export default function EventCategoriesPage(
                   userRole={props.userRole}
                   discipline={discipline.id}
                 ></AthletesTable>
-                {["main_admin", "superuser"].includes(props.userRole) ? (
+                {["main_admin", "superuser"].includes(props.userRole) &&
+                discipline.is_coach ? (
                   <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
                     <Button
                       sx={{ m: 1 }}

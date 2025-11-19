@@ -30,7 +30,7 @@ import MainSettingsPage from "./pages/SettingsPage/MainSettingsPage";
 import ResultsMainPage from "./pages/ResultsMonitorPage/ResultsMainPage";
 import DisplayPage from "./pages/ResultsMonitorPage/DisplayPage";
 import CoachesPage from "./pages/RegistrationPages/CoachesPage";
-// import DrawPage from "./pages/DrawPage/DrawPage";
+import DrawPage from "./pages/DrawPage/DrawPage";
 // import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
 import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
@@ -237,7 +237,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<NotificationsPage />}
+                        element={<NotificationsPage me={user} />}
                         allowedRoles={["main_admin", "subed_club"]}
                       />
                     )
@@ -282,9 +282,8 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        // element={<DrawPage />}
-                        element={<WIPPage />}
-                        allowedRoles={["main_admin", "superuser"]}
+                        element={<DrawPage />}
+                        allowedRoles={["main_admin", "superuser", "subed_club"]}
                       />
                     )
                   }
