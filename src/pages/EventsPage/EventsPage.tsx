@@ -10,11 +10,9 @@ import {
   ListItem,
   ListItemText,
   Pagination,
-  MenuItem,
-  TextField,
   Button,
 } from "@mui/material";
-import FilterDrawer from "../../components/filter_drawers/FilterDrawer";
+import EventFilters from "../../components/filter_drawers/EventFilters";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
@@ -23,8 +21,7 @@ import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useState } from "react";
 import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import { SeasonOptions } from "../../config";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
@@ -53,11 +50,22 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     control,
     watch,
     formState: { errors },
+    formState: { dirtyFields },
   } = useForm({
     defaultValues: {
       season: "2025/2026",
+      has_registrations: false,
+      has_categories: false,
+      is_open: false,
+      is_retification: false,
+      is_closed: false,
+      encounter: false,
+      has_ended: false,
+      has_teams: false,
     },
   });
+
+  const changedCount = Object.keys(dirtyFields).length;
 
   const {
     data: eventsData,
@@ -92,44 +100,16 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           size={12}
           container
           px={3}
+          pb={2}
           spacing={2}
           justifyContent={"flex-end"}
           alignItems={"center"}
         >
-          <Grid sx={{ p: 2 }} size={2}>
-            <Controller
-              name="season"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Época"
-                  type="number"
-                  slotProps={{
-                    htmlInput: {
-                      inputMode: "numeric",
-                      pattern: "[0-9]*",
-                    },
-                  }}
-                  fullWidth
-                  select
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.season}
-                  helperText={errors.season?.message}
-                >
-                  {SeasonOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
+          <EventFilters
+            control={control}
+            errors={errors}
+            changedCount={changedCount}
+          ></EventFilters>
         </Grid>
         {isEventsDataLoading ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
