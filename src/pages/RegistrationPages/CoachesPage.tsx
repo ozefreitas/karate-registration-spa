@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
   Card,
@@ -14,6 +14,7 @@ import AthletesTable from "../../components/Table/AthletesTable";
 import CoachesModal from "../../components/Modals/CoachesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { formatDateTime } from "../../utils/utils";
 
 export default function CoachesPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -41,10 +42,23 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
     ? "Período de retificações"
     : "Inscrições fechadas";
 
+  // Memoize `rows` to compute only when `athletes` changes
+  const registrationRows = useMemo(() => {
+    return disciplinesData?.data.results[0].individuals.map(
+      (memberInfo: any) => ({
+        id: memberInfo.member.id,
+        full_name: memberInfo.member.full_name,
+        gender: memberInfo.member.gender,
+        added_at: formatDateTime(memberInfo.added_at, "both"),
+      })
+    );
+  }, [disciplinesData]);
+
   const getColumnMaping = () => {
     const columnMapping = [
       { key: "full_name", label: "Nome" },
       { key: "gender", label: "Género" },
+      { key: "added_at", label: "Data Inscrição" },
     ];
     return columnMapping;
   };
@@ -127,7 +141,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
         ) : disciplinesData?.data.results.length === 0 ? null : (
           <AthletesTable
             type="Treinadores"
-            data={disciplinesData?.data.results[0].individuals}
+            data={registrationRows}
             count={disciplinesData?.data.results[0].individuals.length}
             discipline={disciplinesData?.data.results[0].id}
             columnsHeaders={columnMaping}

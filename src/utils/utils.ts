@@ -61,7 +61,7 @@ export function formatTimeDifference(isoString: string): string {
 
 export function formatDateTime(
   isoString: string,
-  type: "day" | "hour"
+  type: "day" | "hour" | "both"
 ): string {
   const date = new Date(isoString);
 
@@ -77,6 +77,16 @@ export function formatDateTime(
       minute: "2-digit",
       hour12: false, // remove AM/PM
     });
+  }
+
+  if (type === "both") {
+    const formattedDate = date.toISOString().split("T")[0];
+    const formattedHour = date.toLocaleTimeString("pt-PT", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false, // remove AM/PM
+    });
+    return formattedHour + " de " + formattedDate;
   }
 
   throw new Error("Invalid type. Use 'day' or 'hour'.");

@@ -10,7 +10,11 @@ import {
   ListItem,
   ListItemText,
   Pagination,
+  MenuItem,
+  TextField,
+  Button,
 } from "@mui/material";
+import FilterDrawer from "../../components/filter_drawers/FilterDrawer";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
@@ -19,11 +23,15 @@ import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useState } from "react";
 import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { SeasonOptions } from "../../config";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
     id: string;
     name: string;
+    season: string;
     location: string;
     event_date: string;
     has_registrations: boolean;
@@ -33,8 +41,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     is_closed: boolean;
     has_ended: boolean;
   };
-
-  const [page, setPage] = useState<number>(0);
+  const navigate = useNavigate();
+  const [page, setPage] = useState<number>(1);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     console.log(event);
@@ -42,10 +50,20 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   };
 
   const {
+    control,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      season: "2025/2026",
+    },
+  });
+
+  const {
     data: eventsData,
     isLoading: isEventsDataLoading,
     error: eventsError,
-  } = eventsHooks.useFetchEventsData(page + 1, 5);
+  } = eventsHooks.useFetchEventsData(page, 5, watch("season"));
 
   const infoCard: ReactNode =
     props.userRole === "free_club" ? (
@@ -69,7 +87,50 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   return (
     <>
       <PageInfoCard description={infoCard} title="Eventos"></PageInfoCard>
-      <Grid container size={12} sx={{ m: 2 }}>
+      <Grid container size={12} sx={{ m: 2, mt: 0 }}>
+        <Grid
+          size={12}
+          container
+          px={3}
+          spacing={2}
+          justifyContent={"flex-end"}
+          alignItems={"center"}
+        >
+          <Grid sx={{ p: 2 }} size={2}>
+            <Controller
+              name="season"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Época"
+                  type="number"
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                    },
+                  }}
+                  fullWidth
+                  select
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.season}
+                  helperText={errors.season?.message}
+                >
+                  {SeasonOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+        </Grid>
         {isEventsDataLoading ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -81,8 +142,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             <ListItem>
               <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
+            <Button onClick={() => navigate("/events/")}>Refrescar</Button>
           </Grid>
-        ) : eventsData?.data.results.length === 0 ? (
+        ) : eventsData?.data.count === 0 ? (
           <Grid
             sx={{ mt: 1, mb: 3 }}
             container
@@ -209,7 +271,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             <Grid size={12} mt={3} container justifyContent={"center"}>
               <Pagination
                 count={Math.ceil(eventsData?.data.count / 5)}
-                page={page + 1}
+                page={page}
                 onChange={handleChange}
                 color="primary"
               />

@@ -217,7 +217,9 @@ export default function AthletesModal(
   }, [modalitiesFreeData]);
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!
+    eventId!,
+    false,
+    false
   );
 
   React.useEffect(() => {
@@ -542,7 +544,7 @@ export default function AthletesModal(
               </Grid>
             )}
             {props.eventData.has_categories ? (
-              <FormHelperText sx={{ pt: 1 }}>
+              <FormHelperText sx={{ p: 1 }}>
                 O escalão será calculado automaticamente de acordo com os
                 Escalões disponíveis para cada uma destas Modalidades. <br />
                 Também a graduação e pesos (quando obrigatórios) serão

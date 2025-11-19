@@ -12,6 +12,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { membersHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,6 +30,7 @@ export default function DuplicateMemberModal(
     memberData?: any;
   }>
 ) {
+   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const createMember = membersHooks.useCreateMember();
   const handleSubmit = () => {
@@ -37,12 +39,24 @@ export default function DuplicateMemberModal(
       props.memberData?.member_type === "coach" ? "student" : "coach";
     createMember.mutate(formData, {
       onSuccess: (data) => {
-        console.log(data);
         navigate(`/members/${data.data.id}`);
+      },
+      onError: (data: any) => {
+        const errorData = data.response?.data || {};
+        if (errorData.non_field_errors?.[0]) {
+          enqueueSnackbar("Já existe um membro com esta informação!", {
+            variant: "error",
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "center",
+            },
+            autoHideDuration: 5000,
+            preventDuplicate: true,
+          });
+        }
       },
     });
   };
-
   return (
     <Dialog
       open={props.isModalOpen}

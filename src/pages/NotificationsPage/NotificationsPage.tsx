@@ -16,7 +16,7 @@ import { Delete, KeyboardArrowRight } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
-const NotificationsPage = () => {
+const NotificationsPage = (props: { me: any }) => {
   const [page, setPage] = useState<number>(1);
   const [pageSize, _] = useState<number>(5);
   const navigate = useNavigate();
@@ -48,8 +48,10 @@ const NotificationsPage = () => {
     }
   };
 
+  console.log(props.me.data.id)
   const { data: notificationsData, isLoading: isNotificationsLoading } =
-    notificationsHooks.useFetchNotificationsData(page, pageSize);
+    notificationsHooks.useFetchNotificationsData(page, pageSize, props.me.data.id);
+
   return (
     <>
       <PageInfoCard description="" title="Notificações"></PageInfoCard>

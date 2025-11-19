@@ -190,7 +190,7 @@ export default function CategoriesReadOnlyModal(
         <List>
           {paginatedDisciplines.length === 0 ? (
             <ListItem>
-              <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
+              <ListItemText primary="Não tem Escalões que ainda não estejam associados a esta Modalidade."></ListItemText>
             </ListItem>
           ) : (
             paginatedDisciplines.map((category: Category, index: string) => (
@@ -222,7 +222,8 @@ export default function CategoriesReadOnlyModal(
           )}
         </List>
       </DialogContent>
-      {props.disciplineData === undefined ? null : (
+      {props.disciplineData === undefined ||
+      paginatedDisciplines.length === 0 ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">

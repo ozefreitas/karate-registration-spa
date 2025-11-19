@@ -167,8 +167,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     },
   });
 
-  console.log(watch("is_coach"));
-
   const onSubmit = async (data: any) => {
     setLoading(true);
     const formData = {

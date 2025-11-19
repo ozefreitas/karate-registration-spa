@@ -9,7 +9,7 @@ export const useCreateMember = () => {
   return useMutation({
     mutationFn: createMember,
     onSuccess: () => {
-      enqueueSnackbar("Atleta criado com sucesso!", {
+      enqueueSnackbar("Membro criado com sucesso!", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -22,16 +22,28 @@ export const useCreateMember = () => {
       queryClient.invalidateQueries({ queryKey: ["club-athletes"] });
       queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
     },
-    onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+    onError: (data: any) => {
+      const errorData = data.response?.data || {};
+      if (errorData.non_field_errors?.[0]) {
+        enqueueSnackbar("Já existe um membro com esta informação!", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      } else
+        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
     },
   });
 };
