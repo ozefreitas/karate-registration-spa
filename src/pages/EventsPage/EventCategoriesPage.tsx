@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Grid, Box, CircularProgress, Typography, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { disciplinesHooks } from "../../hooks";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -106,7 +106,7 @@ export default function EventCategoriesPage(
                 <Typography sx={{ m: 3 }} variant="h5">
                   {discipline.name}
                 </Typography>
-                <AthletesTable
+                <AllUseTable
                   type="EventCategories"
                   data={categoriesRows[index]}
                   count={categoriesRows[index].length}
@@ -120,7 +120,7 @@ export default function EventCategoriesPage(
                   )}
                   userRole={props.userRole}
                   discipline={discipline.id}
-                ></AthletesTable>
+                ></AllUseTable>
                 {["main_admin", "superuser"].includes(props.userRole) &&
                 discipline.is_coach ? (
                   <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>

@@ -9,7 +9,7 @@ import {
   FormLabel,
   MenuItem,
 } from "@mui/material";
-import { clubsHoks, authHooks } from "../../hooks";
+import { clubsHooks, authHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 export default function RequestAccountPage() {
@@ -39,7 +39,7 @@ export default function RequestAccountPage() {
     });
   };
 
-  const { data: availableClubsData } = clubsHoks.useFetchAvailableClubs();
+  const { data: availableClubsData } = clubsHooks.useFetchAvailableClubs();
 
   return (
     <Grid container sx={{ m: 40, mt: 0, mb: 0 }}>

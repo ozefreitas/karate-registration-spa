@@ -8,7 +8,6 @@ import {
   TextField,
   MenuItem,
   FormControl,
-  FormLabel,
   Stack,
   FormControlLabel,
   Switch,
@@ -26,9 +25,11 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function EventFilters(props: {
+export default function EventsFilters(props: {
+  isLoading: boolean;
   control: any;
   errors: any;
+  reset: any;
   changedCount: number;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -38,8 +39,8 @@ export default function EventFilters(props: {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 500 }} role="presentation">
-      <List>
+    <Box sx={{ width: 400 }} role="presentation">
+      <List sx={{p: 1, mt: 2}}>
         <Grid sx={{ p: 2 }} size={2}>
           <Controller
             name="season"
@@ -80,11 +81,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.has_registrations}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -99,7 +101,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Tem Inscrições"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -112,11 +114,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.has_categories}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -131,7 +134,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Tem Equipas"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -144,11 +147,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.has_categories}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -163,7 +167,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Tem Escalões"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -176,11 +180,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.is_open}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -195,7 +200,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Inscrições abertas"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -208,11 +213,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.is_retification}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -227,7 +233,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Em periodo de retificações"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -240,11 +246,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.is_closed}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -259,7 +266,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Inscrições fechadas"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -272,11 +279,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.encounter}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -291,7 +299,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Encontro"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -304,11 +312,12 @@ export default function EventFilters(props: {
             control={props.control}
             render={({ field }) => (
               <FormControl
+                sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
                 error={!!props.errors.has_ended}
               >
-                <Stack spacing={1}>
+                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
@@ -323,7 +332,7 @@ export default function EventFilters(props: {
                       />
                     }
                     label="Já realizado"
-                    sx={{ justifyContent: "left", marginLeft: 0 }}
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
               </FormControl>
@@ -331,12 +340,21 @@ export default function EventFilters(props: {
           />
         </Grid>
       </List>
+      <Grid size={12} mt={5} mx={10} container>
+        <Button
+          color="error"
+          sx={{ width: "100%" }}
+          onClick={() => props.reset()}
+          variant="contained"
+        >
+          Limpar
+        </Button>
+      </Grid>
     </Box>
   );
 
   return (
     <Grid
-      size={12}
       container
       spacing={2}
       justifyContent={"flex-end"}
@@ -346,6 +364,7 @@ export default function EventFilters(props: {
         endIcon={<Tune sx={{ ml: 1 }}></Tune>}
         size="large"
         variant="outlined"
+        disabled={props.isLoading}
         onClick={toggleDrawer(true)}
       >
         Filtros

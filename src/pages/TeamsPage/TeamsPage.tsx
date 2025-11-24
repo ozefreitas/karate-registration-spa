@@ -8,7 +8,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import AddButton from "../../components/Buttons/AddButton";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import { useFetchTeamsData } from "../../hooks/useTeamsData";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -97,7 +97,7 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
             <CircularProgress />
           </Box>
         ) : teamsData?.data === undefined ? null : (
-          <AthletesTable
+          <AllUseTable
             count={teamsData?.data.length}
             type="Equipas"
             data={teamRows}
@@ -110,7 +110,7 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
             pageSize={pageSize}
             setPageSize={setPageSize}
             userRole={props.userRole}
-          ></AthletesTable>
+          ></AllUseTable>
         )}
       </Grid>
       {userRole === "main_admin" ? null : (

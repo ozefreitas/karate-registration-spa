@@ -91,3 +91,9 @@ export function formatDateTime(
 
   throw new Error("Invalid type. Use 'day' or 'hour'.");
 }
+
+export function computeExpirationDate(year: number): string {
+  const expiration = new Date(year, 11, 31);
+
+  return expiration.toISOString().split("T")[0]; // "YYYY-MM-DD" format
+}

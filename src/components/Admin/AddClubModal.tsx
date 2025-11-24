@@ -15,7 +15,7 @@ import { useForm, Controller } from "react-hook-form";
 import React from "react";
 import { TransitionProps } from "notistack";
 import { Close } from "@mui/icons-material";
-import { clubsHoks } from "../../hooks";
+import { clubsHooks } from "../../hooks";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(
 export default function AddClubModal(
   props: Readonly<{ isOpen: boolean; handleClose: any }>
 ) {
-  const createClub = clubsHoks.useCreateClub();
+  const createClub = clubsHooks.useCreateClub();
 
   const {
     control,

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createClub } from "../../api";
+import { createClub, createAllClubsSubscription } from "../../api";
 
 export const useCreateClub = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -19,6 +19,39 @@ export const useCreateClub = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+
+export const useCreateAllClubsSubscription = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createAllClubsSubscription,
+    onSuccess: (data: any) => {
+      enqueueSnackbar(data.message, {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {

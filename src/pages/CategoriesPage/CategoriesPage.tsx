@@ -1,7 +1,7 @@
 import { Grid, Box, CircularProgress } from "@mui/material";
 import { categoriesHooks } from "../../hooks";
 import AddButton from "../../components/Buttons/AddButton";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import { useMemo, useState } from "react";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
@@ -59,7 +59,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             <CircularProgress />
           </Box>
         ) : categoriesData?.data === undefined ? null : (
-          <AthletesTable
+          <AllUseTable
             type="Categorias"
             data={categoryRows}
             count={categoriesData?.data.count}
@@ -72,7 +72,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             pageSize={pageSize}
             setPageSize={setPageSize}
             userRole={props.userRole}
-          ></AthletesTable>
+          ></AllUseTable>
         )}
         {props.userRole === "main_admin" ? (
           <Grid sx={{ m: 3, mt: 1 }} size={12}>

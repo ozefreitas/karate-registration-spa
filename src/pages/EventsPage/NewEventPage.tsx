@@ -34,7 +34,7 @@ import dayjs from "dayjs";
 import FormCard from "../../dashboard/FormCard";
 import FormAccordion from "../../dashboard/FormAccordion";
 import { eventsHooks, disciplinesHooks, categoriesHooks } from "../../hooks";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
@@ -1115,7 +1115,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 </Grid>
               </Grid>
             ) : (
-              <AthletesTable
+              <AllUseTable
                 type="CategoriasReadOnly"
                 data={categoryRows}
                 count={categoryRows.length}
@@ -1131,7 +1131,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 selectedDisciplineForCategory={selectedDisciplineForCategory}
                 disciplineCategories={disciplineCategories}
                 setDisciplineCategories={setDisciplineCategories}
-              ></AthletesTable>
+              ></AllUseTable>
             )}
           </Grid>
           <Grid sx={{ m: 2, mt: 1 }} container size={12}></Grid>

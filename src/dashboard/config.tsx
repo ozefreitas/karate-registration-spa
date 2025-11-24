@@ -27,6 +27,7 @@ import {
   Report,
   EditNotifications,
   MonetizationOn,
+  PointOfSale,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -66,6 +67,12 @@ export const getSideMenuConfig = (userRole: string) => {
       label: "Gestor de Notificações",
       icon: <EditNotifications sx={{ color: "#e81c24" }} />,
       to: "/notifications_manager/",
+    },
+    {
+      name: "payment_manager",
+      label: "Gestor de Quotas",
+      icon: <PointOfSale sx={{ color: "#e81c24" }} />,
+      to: "/payment_manager/",
     },
     {
       name: "rules",
@@ -117,12 +124,14 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
+        item.name !== "payment_manager" &&
         item.name !== "categories"
     );
   } else if (userRole === "subed_club") {
     return baseMenu.filter(
       (item) =>
         item.name !== "notifications_manager" &&
+        item.name !== "payment_manager" &&
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "categories"
@@ -134,6 +143,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "teams" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
+        item.name !== "payment_manager" &&
         item.name !== "categories" &&
         item.name !== "events" &&
         item.name !== "help" &&
@@ -222,6 +232,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   reset: "Recuperar Password",
   coaches: "Treinadores Registados",
   pricing: "Planos de Subscrição",
+  payment_manager: "Gestor de Pagamentos"
 };
 
 export const NotificationTypeOptions: {
@@ -241,7 +252,7 @@ export const NotificationTypeOptions: {
     icon: <Password fontSize="large" />,
   },
   {
-    value: "create_athlete",
+    value: "create_member",
     label: "Novo Membro Adicionado",
     icon: <PersonAddAlt1 fontSize="large" />,
   },

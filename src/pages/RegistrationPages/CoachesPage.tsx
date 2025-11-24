@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import CoachesModal from "../../components/Modals/CoachesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -139,7 +139,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
             </Typography>
           </Grid>
         ) : disciplinesData?.data.results.length === 0 ? null : (
-          <AthletesTable
+          <AllUseTable
             type="Treinadores"
             data={registrationRows}
             count={disciplinesData?.data.results[0].individuals.length}
@@ -153,7 +153,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
               props.userRole
             )}
             userRole={props.userRole}
-          ></AthletesTable>
+          ></AllUseTable>
         )}
       </Grid>
       {singleEventData?.data.is_open ? (

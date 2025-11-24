@@ -45,6 +45,7 @@ import { useAuth } from "./access/GlobalAuthProvider";
 import { SnackbarProvider } from "notistack";
 import WIPPage from "./pages/ErrorPages/WIPPage";
 // import SnackbarCloser from "./dashboard/SnackBarCloser";
+import PaymentManagerPage from "./pages/PaymentsPages/PaymentManagerPage";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 import PricingPage from "./pages/InformationalPages/PricingPage";
@@ -249,7 +250,18 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<NotificationManagerPage />}
-                        allowedRoles={["main_admin"]}
+                        allowedRoles={["main_admin", "superuser"]}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="payment_manager/"
+                  element={
+                    isAuthLoading ? null : (
+                      <ProtectedRoute
+                        element={<PaymentManagerPage userRole={userRole}  />}
+                        allowedRoles={["main_admin", "superuser"]}
                       />
                     )
                   }
@@ -396,7 +408,7 @@ function App() {
                   element={isAuthLoading ? null : <WIPPage></WIPPage>}
                 />
                 <Route
-                  path="profile/notifications/"
+                  path="profile//"
                   element={isAuthLoading ? null : <WIPPage></WIPPage>}
                 />
                 <Route

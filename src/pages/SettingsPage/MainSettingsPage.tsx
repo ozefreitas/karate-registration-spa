@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { Delete, Add, ContentCopy } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
-import { authHooks, clubsHoks, adminHooks } from "../../hooks";
+import { authHooks, clubsHooks, adminHooks } from "../../hooks";
 import DeleteClubModal from "../../components/Admin/DeleteClubModal";
 import AddClubModal from "../../components/Admin/AddClubModal";
 import { useSnackbar } from "notistack";
@@ -40,7 +40,7 @@ export default function MainSettingsPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
 
-  const { data: availableClubsData } = clubsHoks.useFetchAvailableClubs();
+  const { data: availableClubsData } = clubsHooks.useFetchAvailableClubs();
 
   const { refetch } = adminHooks.useFetchClubUsersData(clickedUsername);
 

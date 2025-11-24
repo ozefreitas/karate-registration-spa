@@ -12,7 +12,8 @@ import {
   Pagination,
   Button,
 } from "@mui/material";
-import EventFilters from "../../components/filter_drawers/EventFilters";
+import EventsFilters from "../../components/filter_drawers/EventsFilters";
+import EventsOrdering from "../../components/filter_drawers/EventsOrdering";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
@@ -22,7 +23,6 @@ import { ReactNode, useState } from "react";
 import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
@@ -38,7 +38,6 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     is_closed: boolean;
     has_ended: boolean;
   };
-  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -47,10 +46,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   };
 
   const {
-    control,
-    watch,
-    formState: { errors },
-    formState: { dirtyFields },
+    control: filtersControl,
+    watch: filtersWatch,
+    reset: filtersReset,
+    formState: { errors: filtersErrors },
+    formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
       season: "2025/2026",
@@ -65,13 +65,37 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     },
   });
 
-  const changedCount = Object.keys(dirtyFields).length;
+    const {
+    control: orderControl,
+    watch: orderWatch,
+    reset: orderReset,
+    formState: { errors: orderErrors },
+    formState: { dirtyFields: orderDirtyFields },
+  } = useForm({
+    defaultValues: {
+      name: "name",
+      event_date: "event_date",
+      start_registration: "start_registration"
+    },
+  });
+
+  const filtersChangedCount = Object.keys(filtersDirtyFields).length;
+  const orderChangedCount = Object.keys(orderDirtyFields).length;
 
   const {
     data: eventsData,
     isLoading: isEventsDataLoading,
     error: eventsError,
-  } = eventsHooks.useFetchEventsData(page, 5, watch("season"));
+    refetch,
+  } = eventsHooks.useFetchEventsData(
+    page,
+    5,
+    filtersWatch("season"),
+    filtersWatch("has_ended"),
+    filtersWatch("has_teams"),
+    filtersWatch("has_categories"),
+    filtersWatch("has_registrations")
+  );
 
   const infoCard: ReactNode =
     props.userRole === "free_club" ? (
@@ -96,33 +120,44 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     <>
       <PageInfoCard description={infoCard} title="Eventos"></PageInfoCard>
       <Grid container size={12} sx={{ m: 2, mt: 0 }}>
-        <Grid
-          size={12}
-          container
-          px={3}
-          pb={2}
-          spacing={2}
-          justifyContent={"flex-end"}
-          alignItems={"center"}
-        >
-          <EventFilters
-            control={control}
-            errors={errors}
-            changedCount={changedCount}
-          ></EventFilters>
-        </Grid>
+        {eventsError ? null : (
+          <Grid
+            size={12}
+            container
+            px={3}
+            pb={2}
+            spacing={2}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+          >
+            <EventsOrdering
+              isLoading={isEventsDataLoading}
+              control={orderControl}
+              reset={orderReset}
+              errors={orderErrors}
+              changedCount={orderChangedCount}
+            ></EventsOrdering>
+            <EventsFilters
+              isLoading={isEventsDataLoading}
+              control={filtersControl}
+              reset={filtersReset}
+              errors={filtersErrors}
+              changedCount={filtersChangedCount}
+            ></EventsFilters>
+          </Grid>
+        )}
         {isEventsDataLoading ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid my={3} container justifyContent="center" size={12}>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
           </Grid>
         ) : eventsError ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid my={3} container justifyContent="center" size={12}>
             <ListItem>
               <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
-            <Button onClick={() => navigate("/events/")}>Refrescar</Button>
+            <Button onClick={() => refetch()}>Refrescar</Button>
           </Grid>
         ) : eventsData?.data.count === 0 ? (
           <Grid
@@ -247,7 +282,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           alignItems="center"
           size={12}
         >
-          {eventsData?.data.count === 0 ? null : (
+          {eventsData?.data.count === 0 ||
+          isEventsDataLoading ||
+          eventsError ? null : (
             <Grid size={12} mt={3} container justifyContent={"center"}>
               <Pagination
                 count={Math.ceil(eventsData?.data.count / 5)}

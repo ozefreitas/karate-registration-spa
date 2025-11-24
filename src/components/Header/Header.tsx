@@ -233,23 +233,23 @@ export default function Header(
                       <Tooltip title="Notificações" placement="top">
                         <Badge
                           color="error"
-                          badgeContent={notificationData?.data.length}
+                          badgeContent={notificationData?.data.total}
                           max={9}
                         >
                           <Avatar
                             sx={{
                               height:
-                                notificationData?.data.length === 0 ||
+                                notificationData?.data.total === 0 ||
                                 notificationData === null
                                   ? null
                                   : 50,
                               width:
-                                notificationData?.data.length === 0 ||
+                                notificationData?.data.total === 0 ||
                                 notificationData === null
                                   ? null
                                   : 50,
                               bgcolor:
-                                notificationData?.data.length === 0 ||
+                                notificationData?.data.total === 0 ||
                                 notificationData === null
                                   ? null
                                   : "green",
@@ -258,12 +258,12 @@ export default function Header(
                             <NotificationsActive
                               sx={{
                                 height:
-                                  notificationData?.data.length === 0 ||
+                                  notificationData?.data.total === 0 ||
                                   notificationData === null
                                     ? 20
                                     : 25,
                                 width:
-                                  notificationData?.data.length === 0 ||
+                                  notificationData?.data.total === 0 ||
                                   notificationData === null
                                     ? 20
                                     : 25,
@@ -289,7 +289,9 @@ export default function Header(
                 >
                   {isAuthenticated ? (
                     <Grid container gap={3}>
-                      <Avatar {...stringAvatar(user?.data.username)}></Avatar>
+                      <Tooltip title="Conta" placement="top">
+                        <Avatar {...stringAvatar(user?.data.username)}></Avatar>
+                      </Tooltip>
                     </Grid>
                   ) : (
                     <Grid container spacing={2}>
@@ -416,9 +418,10 @@ export default function Header(
           disableRipple
           disableTouchRipple
           onClick={(e) => e.stopPropagation()}
-          sx={{ p: 2 }}
+          sx={{ p: 2, display: "flex", gap: 1 }}
         >
           Notificações Recentes
+          <Typography color="textDisabled">(a mostrar 5 primeiras)</Typography>
         </MenuItem>
         {isNotificationLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -452,7 +455,7 @@ export default function Header(
               </ListItemButton>
             </ListItem>
           )
-        ) : notificationData?.data.length === 0 ? (
+        ) : notificationData?.data.total === 0 ? (
           <ListItem>
             <ListItemButton disabled sx={{ m: 0, p: 3, pb: 0 }}>
               <ListItemText primary={"De momento não tem notificações."} />
@@ -460,64 +463,71 @@ export default function Header(
           </ListItem>
         ) : (
           <List sx={{ display: "flex", flexDirection: "column" }}>
-            {notificationData?.data.map((noti: Notification, index: number) => (
-              <MenuItem
-                divider={
-                  notificationError !== null ||
-                  notificationData.data.length - 1 === index
-                }
-                onClick={(e) => e.stopPropagation()}
-                key={index}
-              >
-                <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
-                  <ListItemIcon sx={{ px: 1 }}>
-                    {getNotificationTypeIcon(noti.type)}
-                  </ListItemIcon>
-                  <ListItemText
-                    sx={{
-                      p: 1,
-                      pl: 3,
-                      pr: 3,
-                      "& .MuiListItemText-secondary": {
-                        whiteSpace: "normal",
-                        overflowWrap: "break-word",
-                        wordBreak: "break-word",
-                        hyphens: "auto", // 👈 key line
-                      },
-                    }}
-                    primary={
-                      <Grid
-                        container
-                        justifyContent={"space-between"}
-                        alignItems={"center"}
-                      >
-                        <Typography>
-                          {noti.type === "none"
-                            ? "Geral"
-                            : NotificationTypeOptions.find(
-                                (item) => item.value === noti.type
-                              )?.label}
-                        </Typography>
-                        <Typography variant="caption" color="textDisabled">
-                          {formatTimeDifference(noti.created_at)}
-                        </Typography>
-                      </Grid>
-                    }
-                    secondary={noti.notification}
-                  />
-                </ListItem>
-              </MenuItem>
-            ))}
+            {notificationData?.data.response.map(
+              (noti: Notification, index: number) => (
+                <MenuItem
+                  divider={
+                    notificationError !== null ||
+                    notificationData.data.total - 2 === index
+                  }
+                  onClick={(e) => e.stopPropagation()}
+                  key={index}
+                >
+                  <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
+                    <ListItemIcon sx={{ px: 1 }}>
+                      {getNotificationTypeIcon(noti.type)}
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{
+                        p: 1,
+                        pl: 3,
+                        pr: 3,
+                        "& .MuiListItemText-secondary": {
+                          whiteSpace: "normal",
+                          overflowWrap: "break-word",
+                          wordBreak: "break-word",
+                          hyphens: "auto", // 👈 key line
+                        },
+                      }}
+                      primary={
+                        <Grid
+                          container
+                          justifyContent={"space-between"}
+                          alignItems={"center"}
+                        >
+                          <Typography>
+                            {noti.type === "none"
+                              ? "Geral"
+                              : NotificationTypeOptions.find(
+                                  (item) => item.value === noti.type
+                                )?.label}
+                          </Typography>
+                          <Typography variant="caption" color="textDisabled">
+                            {formatTimeDifference(noti.created_at)}
+                          </Typography>
+                        </Grid>
+                      }
+                      secondary={noti.notification}
+                    />
+                  </ListItem>
+                </MenuItem>
+              )
+            )}
           </List>
         )}
         <MenuItem
           disabled={
-            notificationData?.data.length === 0 || notificationError !== null
+            notificationData?.data.total === 0 || notificationError !== null
           }
           onClick={() => navigate("/profile/list_notifications/")}
-          sx={{ p: 2, display: "flex", justifyContent: "center" }}
+          sx={{ p: 2, display: "flex", justifyContent: "center", gap: 3 }}
         >
-          Abrir todas as Notificações
+          <Typography>Abrir todas as Notificações </Typography>
+          {notificationData?.data.total > 5 ? (
+            <Typography color="textDisabled">
+              (+ {notificationData?.data.total - 5} notificação)
+            </Typography>
+          ) : null}
         </MenuItem>
       </Menu>
       {!shouldRender && (

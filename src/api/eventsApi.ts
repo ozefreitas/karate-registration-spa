@@ -4,13 +4,21 @@ import { apiClient, authClient } from "./apiClient";
 export const fetchEvents = (
   page: number,
   pageSize: number,
-  season?: string
+  season?: string,
+  hasEnded?: boolean,
+  hasTeams?: boolean,
+  hasCategories?: boolean,
+  hasRegistrations?: boolean
 ) => {
   return apiClient.get("/events/", {
     params: {
       page,
       page_size: pageSize,
       season: season,
+      has_ended: hasEnded,
+      has_teams: hasTeams,
+      has_categories: hasCategories,
+      has_registrations: hasRegistrations,
     },
   });
 };

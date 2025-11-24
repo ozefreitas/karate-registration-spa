@@ -3,7 +3,7 @@ export * as categoriesHooks from "./categories";
 export * as disciplinesHooks from "./disciplines";
 export * as authHooks from "./auth";
 export * as adminHooks from "./admin";
-export * as notificationsHooks from "./notifications"
+export * as notificationsHooks from "./notifications";
 export * as membersHooks from "./members";
-export * as clubsHoks from "./clubs"
-export * as classificationsHooks from "./classifications"
+export * as clubsHooks from "./clubs";
+export * as classificationsHooks from "./classifications";

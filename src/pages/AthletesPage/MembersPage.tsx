@@ -6,7 +6,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -108,7 +108,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             </ListItem>
           </Grid>
         ) : athletesData?.data === undefined ? null : (
-          <AthletesTable
+          <AllUseTable
             type="Atletas"
             data={athleteRows}
             count={athletesData?.data.count}
@@ -128,7 +128,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             pageSize={pageSize}
             setPageSize={setPageSize}
             userRole={props.userRole}
-          ></AthletesTable>
+          ></AllUseTable>
         )}
       </Grid>
       {props.userRole === "main_admin" || props.userRole === "subed_club" ? (

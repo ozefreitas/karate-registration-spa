@@ -1,5 +1,5 @@
 import { Grid, Box, CircularProgress, Typography } from "@mui/material";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../Table/AllUseTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
 import PageInfoCard from "../info-cards/PageInfoCard";
@@ -62,7 +62,7 @@ export default function EventAllRegistryPage(
             <CircularProgress />
           </Box>
         ) : disciplinesData?.data.results.length === 0 ? (
-          <AthletesTable
+          <AllUseTable
             count={singleEventData?.data.individuals.length}
             type="Individuais"
             data={singleEventData?.data.individuals}
@@ -70,7 +70,7 @@ export default function EventAllRegistryPage(
             actions={false}
             selection={false}
             userRole={props.userRole}
-          ></AthletesTable>
+          ></AllUseTable>
         ) : (
           disciplinesData?.data.results.map((discipline: any) => {
             const disciplineIndividuals = discipline?.individuals.map(
@@ -88,7 +88,7 @@ export default function EventAllRegistryPage(
                 <Typography sx={{ m: 3 }} variant="h5">
                   {discipline.name}
                 </Typography>
-                <AthletesTable
+                <AllUseTable
                   count={discipline.individuals.length}
                   type="Modalidades"
                   discipline={discipline.id}
@@ -97,7 +97,7 @@ export default function EventAllRegistryPage(
                   actions={["main_admin", "superuser"].includes(props.userRole)}
                   selection={false}
                   userRole={props.userRole}
-                ></AthletesTable>
+                ></AllUseTable>
               </>
             );
           })

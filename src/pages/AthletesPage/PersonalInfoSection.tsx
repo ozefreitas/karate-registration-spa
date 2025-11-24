@@ -115,7 +115,7 @@ export default function PersonalInfoSection(
         props.athleteData?.data.weight === null
           ? "N/A"
           : props.athleteData?.data.weight,
-      quotes: props.athleteData?.data.quotes ? "overdue" : "regular",
+      // quotes: props.athleteData?.data.quotes ? "regular" : "overdue",
     },
   });
 
@@ -159,7 +159,7 @@ export default function PersonalInfoSection(
             ? "athlete"
             : "student",
         birth_date: data.birthDate,
-        quotes: data.quotes === "regular",
+        // quotes: data.quotes === "regular",
         weight:
           data.weight === "N/A" || data.weight === "" ? null : data.weight,
       };
@@ -688,7 +688,7 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        <FormControl
+        {/* <FormControl
           sx={{ pb: 2, justifyContent: "center" }}
           component="fieldset"
           variant="standard"
@@ -742,7 +742,7 @@ export default function PersonalInfoSection(
               />
             }
           ></FormControlLabel>
-        </FormControl>
+        </FormControl> */}
         {props.athleteData?.data.member_type === "coach" ? null : (
           <Controller
             name="competitor"

@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, Visibility } from "@mui/icons-material";
-import AthletesTable from "../../components/Table/AthletesTable";
+import AllUseTable from "../../components/Table/AllUseTable";
 import AthletesModal from "../../components/Modals/AthletesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
@@ -137,7 +137,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             <CircularProgress />
           </Box>
         ) : disciplinesData?.data.results.length === 0 ? (
-          <AthletesTable
+          <AllUseTable
             type="Individuais"
             data={singleEventData?.data.individuals}
             count={singleEventData?.data.individuals.length}
@@ -150,7 +150,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
               props.userRole
             )}
             userRole={props.userRole}
-          ></AthletesTable>
+          ></AllUseTable>
         ) : (
           disciplinesData?.data.results.map((discipline: any, index: any) => {
             const disciplineIndividuals = discipline?.individuals.map(
@@ -187,7 +187,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     </Button>
                   ) : null}
                 </Grid>
-                <AthletesTable
+                <AllUseTable
                   count={discipline.individuals.length}
                   type="Modalidades"
                   discipline={discipline.id}
@@ -197,7 +197,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                   selection
                   deletable
                   userRole={props.userRole}
-                ></AthletesTable>
+                ></AllUseTable>
               </span>
             );
           })

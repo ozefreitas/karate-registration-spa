@@ -119,7 +119,7 @@ function getNestedValue(obj: any, path: string) {
   return path.split(".").reduce((acc, key) => acc?.[key], obj);
 }
 
-export default function AthletesTable(
+export default function AllUseTable(
   props: Readonly<{
     type:
       | "Atletas"
@@ -129,7 +129,8 @@ export default function AthletesTable(
       | "Categorias"
       | "CategoriasReadOnly"
       | "EventCategories"
-      | "Treinadores";
+      | "Treinadores"
+      | "Pagamentos";
     discipline?: any;
     data: any;
     count: number;
@@ -146,12 +147,15 @@ export default function AthletesTable(
     selectedDisciplineForCategory?: any;
     disciplineCategories?: any;
     setDisciplineCategories?: any;
+    overideInternalPage?: boolean;
   }>
 ) {
   // type Order = "asc" | "desc";
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
-  const [internalPageSize, setInternalPageSize] = useState<number>(10);
+  const [internalPageSize, setInternalPageSize] = useState<number>(
+    props.overideInternalPage ? -1 : 10
+  );
   // const [order, setOrder] = useState<Order>("asc");
   // const [orderBy, setOrderBy] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
@@ -565,7 +569,7 @@ export default function AthletesTable(
                       5,
                       10,
                       25,
-                      { label: "All", value: -1 },
+                      { label: "Todas", value: -1 },
                     ]}
                     count={props.count}
                     rowsPerPage={

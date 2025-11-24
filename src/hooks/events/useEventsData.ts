@@ -7,10 +7,36 @@ import {
   fetchEventRegistrationFile,
 } from "../../api/";
 
-export const useFetchEventsData = (page: number, pageSize: number, season?: string) => {
+export const useFetchEventsData = (
+  page: number,
+  pageSize: number,
+  season?: string,
+  hasEnded?: boolean,
+  hasTeams?: boolean,
+  hasCategories?: boolean,
+  hasRegistrations?: boolean
+) => {
   return useQuery({
-    queryKey: ["events", page, pageSize, season],
-    queryFn: () => fetchEvents(page, pageSize, season),
+    queryKey: [
+      "events",
+      page,
+      pageSize,
+      season,
+      hasEnded,
+      hasTeams,
+      hasCategories,
+      hasRegistrations,
+    ],
+    queryFn: () =>
+      fetchEvents(
+        page,
+        pageSize,
+        season,
+        hasEnded,
+        hasTeams,
+        hasCategories,
+        hasRegistrations
+      ),
     refetchOnWindowFocus: false,
     enabled: pageSize !== 100,
   });

@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { clubsHoks } from "../../hooks";
+import { clubsHooks } from "../../hooks";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,7 +29,7 @@ export default function DeleteClubModal(
     setSelectedUserId: any;
   }>
 ) {
-  const removeClub = clubsHoks.useRemoveClub();
+  const removeClub = clubsHooks.useRemoveClub();
 
   const handleDelete = () => {
     if (props.id) {
