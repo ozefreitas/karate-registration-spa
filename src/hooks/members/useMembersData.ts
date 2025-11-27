@@ -9,10 +9,10 @@ import {
   fetchLastFiveMembers,
 } from "../../api";
 
-export const useFetchMembersData = (page: number, pageSize: number) => {
+export const useFetchMembersData = (page: number, pageSize: number, ordering?: string) => {
   return useQuery({
-    queryKey: ["athletes", page, pageSize],
-    queryFn: () => fetchMembers(page, pageSize),
+    queryKey: ["members", page, pageSize, ordering],
+    queryFn: () => fetchMembers(page, pageSize, ordering),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
   });
@@ -20,7 +20,7 @@ export const useFetchMembersData = (page: number, pageSize: number) => {
 
 export const useFetchSingleMemberData = (memberId: any) => {
   return useQuery({
-    queryKey: ["single-athlete", memberId],
+    queryKey: ["single-member", memberId],
     queryFn: () => fetchSingleMember(memberId),
     staleTime: 0,
     refetchOnWindowFocus: false,
@@ -36,13 +36,13 @@ export const useFetchLastFiveMembers = () => {
   });
 };
 
-export const useFetchAthletesNotInEvent = (
+export const useFetchMembersNotInEvent = (
   eventId: string,
   page: number,
   pageSize: number,
 ) => {
   return useQuery({
-    queryKey: ["athletes-notin-event", eventId, page, pageSize],
+    queryKey: ["members-notin-event", eventId, page, pageSize],
     queryFn: () => fetchMembersNotInEvent(eventId, page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -64,24 +64,24 @@ export const useFetchCoachesNotInEvent = (
   });
 };
 
-export const useFetchAthletesInCategoryGender = (
+export const useFetchMembersInCategoryGender = (
   category: string,
   gender: string
 ) => {
   return useQuery({
-    queryKey: ["athletes-in-category-gender", category, gender],
+    queryKey: ["members-in-category-gender", category, gender],
     queryFn: () => fetchMembersInCategoryGender(category, gender),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
 };
 
-export const useFetchDisciplinesnotInAthleteData = (
+export const useFetchDisciplinesnotInMemberData = (
   memberId: string,
   eventId: string
 ) => {
   return useQuery({
-    queryKey: ["disciplines-not-in-athlete", memberId, eventId],
+    queryKey: ["disciplines-not-in-member", memberId, eventId],
     queryFn: () => fetchDisciplineMemberNotIn(memberId, eventId),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,

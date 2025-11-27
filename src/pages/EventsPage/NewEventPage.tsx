@@ -119,7 +119,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     has_weight: string;
   };
 
-  // Memoize `rows` to compute only when `athletes` changes
+  // Memoize `rows` to compute only when `members` changes
   const categoryRows = useMemo(() => {
     const currentIds = disciplineCategories.find(
       (item: any) => item.discipline === selectedDisciplineForCategory

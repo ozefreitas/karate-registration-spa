@@ -28,21 +28,21 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EditAthleteModal(
+export default function EditMemberModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
     id: string;
   }>
 ) {
-  const { data: singleAthleteData, isLoading: isSingleAthleteLoading } =
+  const { data: singleMemberData, isLoading: isSingleMemberLoading } =
     membersHooks.useFetchSingleMemberData(props.id);
 
   const {
-    control: athleteControl,
-    handleSubmit: athleteHandleSubmit,
-    reset: athleteReset,
-    formState: { errors: athleteErrors },
+    control: memberControl,
+    handleSubmit: memberHandleSubmit,
+    reset: memberReset,
+    formState: { errors: memberErrors },
   } = useForm({
     defaultValues: {
       firstName: "",
@@ -57,20 +57,20 @@ export default function EditAthleteModal(
   });
 
   React.useEffect(() => {
-    // update the form with that athlete info
+    // update the form with that member info
     const formData = {
-      firstName: singleAthleteData?.data.first_name,
-      lastName: singleAthleteData?.data.last_name,
-      graduation: singleAthleteData?.data.graduation ?? "",
-      category: singleAthleteData?.data.category ?? "",
-      gender: singleAthleteData?.data.gender ?? "",
-      is_student: singleAthleteData?.data.is_student,
-      birthDate: singleAthleteData?.data.birth_date,
+      firstName: singleMemberData?.data.first_name,
+      lastName: singleMemberData?.data.last_name,
+      graduation: singleMemberData?.data.graduation ?? "",
+      category: singleMemberData?.data.category ?? "",
+      gender: singleMemberData?.data.gender ?? "",
+      is_student: singleMemberData?.data.is_student,
+      birthDate: singleMemberData?.data.birth_date,
     };
-    athleteReset(formData);
-  }, [singleAthleteData]);
+    memberReset(formData);
+  }, [singleMemberData]);
 
-  const updateAthleteData = membersHooks.useUpdateMemberData();
+  const updateMemberData = membersHooks.useUpdateMemberData();
 
   const onSubmit = (data: any) => {
     const formData = {
@@ -83,7 +83,7 @@ export default function EditAthleteModal(
       is_student: data?.is_student ?? false,
       birth_date: data?.birthDate ?? null,
     };
-    updateAthleteData.mutate({ memberId: props.id, data: formData });
+    updateMemberData.mutate({ memberId: props.id, data: formData });
   };
 
   return (
@@ -124,17 +124,17 @@ export default function EditAthleteModal(
             size="large"
             color="inherit"
             onClick={() => {
-              athleteHandleSubmit(onSubmit)();
+              memberHandleSubmit(onSubmit)();
               props.handleModalClose();
             }}
-            // disabled={athletesNotInEventData?.data.length === 0}
+            // disabled={membersNotInEventData?.data.length === 0}
           >
             Guardar
           </Button>
         </Toolbar>
       </AppBar>
       <DialogContent>
-        {isSingleAthleteLoading ? (
+        {isSingleMemberLoading ? (
           <Grid container justifyContent="center" size={12}>
             <CircularProgress />
           </Grid>
@@ -143,7 +143,7 @@ export default function EditAthleteModal(
             <Grid sx={{ m: 2 }} size={8}>
               <Controller
                 name="firstName"
-                control={athleteControl}
+                control={memberControl}
                 render={({ field }) => (
                   <TextField
                     color="warning"
@@ -154,8 +154,8 @@ export default function EditAthleteModal(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!athleteErrors.firstName}
-                    helperText={athleteErrors.firstName?.message}
+                    error={!!memberErrors.firstName}
+                    helperText={memberErrors.firstName?.message}
                   />
                 )}
               />
@@ -163,7 +163,7 @@ export default function EditAthleteModal(
             <Grid sx={{ m: 2 }} size={8}>
               <Controller
                 name="lastName"
-                control={athleteControl}
+                control={memberControl}
                 render={({ field }) => (
                   <TextField
                     color="warning"
@@ -174,8 +174,8 @@ export default function EditAthleteModal(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!athleteErrors.lastName}
-                    helperText={athleteErrors.lastName?.message}
+                    error={!!memberErrors.lastName}
+                    helperText={memberErrors.lastName?.message}
                   />
                 )}
               />
@@ -183,7 +183,7 @@ export default function EditAthleteModal(
             <Grid sx={{ m: 2 }} size={8}>
               <Controller
                 name="graduation"
-                control={athleteControl}
+                control={memberControl}
                 render={({ field }) => (
                   <TextField
                     color="warning"
@@ -198,8 +198,8 @@ export default function EditAthleteModal(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!athleteErrors.graduation}
-                    helperText={athleteErrors.graduation?.message}
+                    error={!!memberErrors.graduation}
+                    helperText={memberErrors.graduation?.message}
                   >
                     {GraduationsOptions.map((item, index) => (
                       <MenuItem key={index} value={item.value}>
@@ -213,7 +213,7 @@ export default function EditAthleteModal(
             <Grid sx={{ m: 2 }} size={8}>
               <Controller
                 name="gender"
-                control={athleteControl}
+                control={memberControl}
                 render={({ field }) => (
                   <TextField
                     color="warning"
@@ -228,8 +228,8 @@ export default function EditAthleteModal(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!athleteErrors.graduation}
-                    helperText={athleteErrors.graduation?.message}
+                    error={!!memberErrors.graduation}
+                    helperText={memberErrors.graduation?.message}
                   >
                     {GenderOptions.filter((item) =>
                       ["Masculino", "Feminino"].includes(item.label)

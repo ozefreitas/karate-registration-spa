@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchClubUsers,
-  fetchClubAthletes,
+  fetchClubMembers,
   fetchCurrentSeason,
   fetchPasswordRequests,
 } from "../../api";
@@ -15,10 +15,10 @@ export const useFetchClubUsersData = (username?: string) => {
   });
 };
 
-export const useFetchClubAthletesData = () => {
+export const useFetchClubMembersData = () => {
   return useQuery({
-    queryKey: ["club-athletes"],
-    queryFn: fetchClubAthletes,
+    queryKey: ["club-members"],
+    queryFn: fetchClubMembers,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

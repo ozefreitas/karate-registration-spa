@@ -121,7 +121,6 @@ export default function EditEventModal(
               handleSubmit(onSubmit)();
               props.handleClose();
             }}
-            // disabled={athletesNotInEventData?.data.length === 0}
           >
             Guardar
           </Button>

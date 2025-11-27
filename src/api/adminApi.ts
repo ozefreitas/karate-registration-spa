@@ -8,8 +8,8 @@ export const fetchClubUsers = (username?: string) => {
   return authClient.get(url);
 };
 
-export const fetchClubAthletes = () => {
-  return authClient.get("/users/athletes/");
+export const fetchClubMembers = () => {
+  return authClient.get("/users/members/");
 };
 
 export const fetchCurrentSeason = () => {

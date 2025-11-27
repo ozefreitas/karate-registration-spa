@@ -4,6 +4,7 @@ import { apiClient, authClient } from "./apiClient";
 export const fetchEvents = (
   page: number,
   pageSize: number,
+  ordering?: string,
   season?: string,
   hasEnded?: boolean,
   hasTeams?: boolean,
@@ -14,6 +15,7 @@ export const fetchEvents = (
     params: {
       page,
       page_size: pageSize,
+      ordering: ordering,
       season: season,
       has_ended: hasEnded,
       has_teams: hasTeams,
@@ -65,18 +67,18 @@ export const rateEvent = (eventId: string, data: any) => {
 
 // event member operations
 
-export const addEventAthlete = (eventId: string, data: any) => {
-  return authClient.post(`/events/${eventId}/add_athlete/`, data);
+export const addEventMember = (eventId: string, data: any) => {
+  return authClient.post(`/events/${eventId}/add_member/`, data);
 };
 
-export const deleteEventAthlete = (eventId: string, data: any) => {
-  return authClient.post(`/events/${eventId}/delete_athlete/`, data);
+export const deleteEventMember = (eventId: string, data: any) => {
+  return authClient.post(`/events/${eventId}/delete_member/`, data);
 };
 
 // file downloads
 
 export const fetchEventRegistrationFile = (eventId: string) => {
-  return authClient.get(`/events/${eventId}/export_athletes_excel/`, {
+  return authClient.get(`/events/${eventId}/export_members_excel/`, {
     responseType: "blob",
   });
 };

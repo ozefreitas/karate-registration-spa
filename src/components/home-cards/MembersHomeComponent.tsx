@@ -18,7 +18,7 @@ import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
 
-export default function AthletesHomeComponent(
+export default function MembersHomeComponent(
   props: Readonly<{ userRole: string }>
 ) {
   type Member = {
@@ -35,9 +35,9 @@ export default function AthletesHomeComponent(
   const navigate = useNavigate();
 
   const {
-    data: lastFiveAthletesData,
-    isLoading: isLastFiveAthletesLoading,
-    error: lastFiveAthletesError,
+    data: lastFiveMembersData,
+    isLoading: isLastFiveMembersLoading,
+    error: lastFiveMembersError,
   } = membersHooks.useFetchLastFiveMembers();
 
   return (
@@ -61,11 +61,11 @@ export default function AthletesHomeComponent(
                 <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
               </ListItemButton>
             </ListItem>
-          ) : isLastFiveAthletesLoading ? (
+          ) : isLastFiveMembersLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
-          ) : lastFiveAthletesError ? (
+          ) : lastFiveMembersError ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0 }}>
                 <ListItemIcon>
@@ -76,7 +76,7 @@ export default function AthletesHomeComponent(
                 />
               </ListItemButton>
             </ListItem>
-          ) : lastFiveAthletesData?.data.length === 0 ? (
+          ) : lastFiveMembersData?.data.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0 }}>
                 <ListItemIcon>
@@ -88,17 +88,17 @@ export default function AthletesHomeComponent(
               </ListItemButton>
             </ListItem>
           ) : (
-            lastFiveAthletesData?.data.map((athlete: Member, index: number) => (
+            lastFiveMembersData?.data.map((member: Member, index: number) => (
               <Tooltip key={index} title={"Consultar"}>
                 <ListItem sx={{ m: 0, pb: 0 }}>
                   <ListItemButton
-                    onClick={() => navigate(`members/${athlete.id}/`)}
+                    onClick={() => navigate(`members/${member.id}/`)}
                   >
                     <ListItemIcon>
                       <Person />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`${athlete.first_name} ${athlete.last_name} | ${athlete.gender} | ${athlete.age} anos`}
+                      primary={`${member.first_name} ${member.last_name} | ${member.gender} | ${member.age} anos`}
                     />
                   </ListItemButton>
                 </ListItem>

@@ -63,7 +63,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
     error: subscriptionsError,
   } = clubsHooks.useFetchClubSubscriptions(watch("search"));
 
-  // Memoize `rows` to compute only when `athletes` changes
+  // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
     return subscriptionsData?.data.map((subscription: Subscriptions) => ({
       id: subscription.id,

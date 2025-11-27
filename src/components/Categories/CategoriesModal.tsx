@@ -153,7 +153,7 @@ export default function CategoriesModal(
     setChecked(newChecked);
   };
 
-  const categoryAthletes = React.useMemo(() => {
+  const categoryMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
     if (!query) return categoriesData?.data.results ?? [];
@@ -168,8 +168,8 @@ export default function CategoriesModal(
   const paginatedCategories = React.useMemo(() => {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    return categoryAthletes.slice(start, end);
-  }, [categoryAthletes, page]);
+    return categoryMembers.slice(start, end);
+  }, [categoryMembers, page]);
 
   const handleSubmit = () => {
     const data = { discipline: props.disciplineData, categories: checked };

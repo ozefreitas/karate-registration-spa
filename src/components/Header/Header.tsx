@@ -468,7 +468,7 @@ export default function Header(
                 <MenuItem
                   divider={
                     notificationError !== null ||
-                    notificationData.data.total - 2 === index
+                    notificationData.data.total - 3 === index
                   }
                   onClick={(e) => e.stopPropagation()}
                   key={index}
@@ -525,7 +525,11 @@ export default function Header(
           <Typography>Abrir todas as Notificações </Typography>
           {notificationData?.data.total > 5 ? (
             <Typography color="textDisabled">
-              (+ {notificationData?.data.total - 5} notificação)
+              (+ {notificationData?.data.total - 5}{" "}
+              {notificationData?.data.total - 5 === 1
+                ? "notificação"
+                : "notificações"}
+              )
             </Typography>
           ) : null}
         </MenuItem>

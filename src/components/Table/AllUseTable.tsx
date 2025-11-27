@@ -29,8 +29,8 @@ import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
 } from "@mui/icons-material";
-import EditAthleteModal from "../Modals/EditAthleteModal";
-import DeleteAthleteModal from "../Modals/DeleteAthleteModal";
+import EditMemberModal from "../Modals/EditMemberModal";
+import DeleteMemberModal from "../Modals/DeleteMemberModal";
 import EditIndividualModal from "../Modals/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
@@ -173,7 +173,7 @@ export default function AllUseTable(
   const [isChooseModalOpen, setIsChooseModalOpen] = useState<boolean>(false);
   const [isTeamAthleteEditModalOpen, setIsTeamAthleteEditModalOpen] =
     useState<boolean>(false);
-  const [actionedAthlete, setActionedAthlete] = useState<string>("");
+  const [actionedRow, setActionedRow] = useState<string>("");
   const [chosenAthlete, setChosenAthlete] = useState<string>("");
   const [isCategoryInfoModalOpen, setIsCategoryInfoModalOpen] =
     useState<boolean>(false);
@@ -257,7 +257,7 @@ export default function AllUseTable(
     athleteId: string
   ) => {
     event.stopPropagation();
-    setActionedAthlete(athleteId);
+    setActionedRow(athleteId);
     setIsEditModalOpen(true);
   };
 
@@ -266,7 +266,7 @@ export default function AllUseTable(
     id: string
   ) => {
     event.stopPropagation();
-    setActionedAthlete(id);
+    setActionedRow(id);
     setIsEditConfirmModalOpen(true);
   };
 
@@ -280,7 +280,7 @@ export default function AllUseTable(
     id: string
   ) => {
     event.stopPropagation();
-    setActionedAthlete(id.toString());
+    setActionedRow(id.toString());
     setIsDeleteModalOpen(true);
   };
 
@@ -469,7 +469,7 @@ export default function AllUseTable(
                                     props.type === "CategoriasReadOnly" ||
                                     props.type === "EventCategories"
                                   ) {
-                                    setActionedAthlete(row.id.toString());
+                                    setActionedRow(row.id.toString());
                                     handleCategoryInfoModalOpen(e);
                                   } else {
                                     navigate(`/members/${row.id}/`);
@@ -597,21 +597,21 @@ export default function AllUseTable(
           props.type === "Categorias" ||
           props.type === "EventCategories" ? null : (
             <>
-              <EditAthleteModal
+              <EditMemberModal
                 isModalOpen={isEditModalOpen}
                 handleModalClose={handleEditModalClose}
-                id={actionedAthlete}
-              ></EditAthleteModal>
+                id={actionedRow}
+              ></EditMemberModal>
               <EditIndividualModal
                 isModalOpen={isEditConfirmModalOpen}
                 handleModalClose={handleEditConfirmModalClose}
                 handleEditModalOpen={handleEditModalOpen}
-                id={actionedAthlete}
+                id={actionedRow}
               ></EditIndividualModal>
             </>
           )}
           {selected.length > 0 ? (
-            <DeleteAthleteModal
+            <DeleteMemberModal
               isModalOpen={isDeleteAllModalOpen}
               handleModalClose={handleDeleteAllModalClose}
               handleModalOpen={handleDeleteAllModalOpen}
@@ -619,25 +619,25 @@ export default function AllUseTable(
               id={props.data.length === selected.length ? undefined : selected}
               setSelected={setSelected}
               discipline={props.discipline}
-            ></DeleteAthleteModal>
+            ></DeleteMemberModal>
           ) : (
-            <DeleteAthleteModal
+            <DeleteMemberModal
               isModalOpen={isDeleteModalOpen}
               handleModalClose={handleDeleteModalClose}
               handleModalOpen={handleDeleteModalOpen}
               from={props.type}
-              id={actionedAthlete}
+              id={actionedRow}
               setSelected={setSelected}
               discipline={props.discipline}
-            ></DeleteAthleteModal>
+            ></DeleteMemberModal>
           )}
         </Grid>
       )}
-      {actionedAthlete === "" ? null : (
+      {actionedRow === "" ? null : (
         <CategoryInfoModal
           isModalOpen={isCategoryInfoModalOpen}
           handleModalClose={handleCategoryInfoModalClose}
-          categoryId={actionedAthlete}
+          categoryId={actionedRow}
         ></CategoryInfoModal>
       )}
     </>

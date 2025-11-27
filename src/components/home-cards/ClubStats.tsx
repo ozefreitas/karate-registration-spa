@@ -16,7 +16,7 @@ import { adminHooks } from "../../hooks";
 
 export default function ClubStats() {
   const { data: ClubMembersData, isLoading: isClubMembersLoading } =
-    adminHooks.useFetchClubAthletesData();
+    adminHooks.useFetchClubMembersData();
 
   const CustomTooltip = ({ active, payload }: any) => {
     const isVisible = active && payload && payload.length;

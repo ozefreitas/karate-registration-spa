@@ -20,9 +20,9 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 export default function SingleMemberPage() {
   const { id: memberId } = useParams<{ id: string }>();
   const {
-    data: singleAthleteData,
-    isLoading: isSingleAthleteLoading,
-    error: singleAthleteError,
+    data: singleMemberData,
+    isLoading: isSingleMemberLoading,
+    error: singleMemberError,
   } = membersHooks.useFetchSingleMemberData(memberId);
 
   const [currentScreen, setCurrentScreen] = useState<number>(1);
@@ -33,11 +33,11 @@ export default function SingleMemberPage() {
         description="Nesta página poderá consultar toda a informação inerente de um Atleta, assim como editar ou remover este mesmo Atelta."
         title="Perfil de Membro"
       ></PageInfoCard>
-      {isSingleAthleteLoading ? (
+      {isSingleMemberLoading ? (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />
         </Box>
-      ) : singleAthleteError ? (
+      ) : singleMemberError ? (
         <Navigate to={"/not_found/"}></Navigate>
       ) : (
         <Card sx={{ m: 2 }}>
@@ -54,12 +54,13 @@ export default function SingleMemberPage() {
                 size={4}
                 container
                 justifyContent="center"
+                spacing={2}
                 alignContent="flex-start"
                 sx={{ backgroundColor: "lightgray", p: 4 }}
               >
-                {singleAthleteData ? (
+                {singleMemberData ? (
                   <Avatar
-                    {...stringAvatar(singleAthleteData?.data.full_name, 256)}
+                    {...stringAvatar(singleMemberData?.data.full_name, 256)}
                   ></Avatar>
                 ) : (
                   <Avatar sx={{ width: 256, height: 256, mb: 2 }}></Avatar>
@@ -74,24 +75,24 @@ export default function SingleMemberPage() {
                     sx={{ fontWeight: "bold", textAlign: "center" }}
                     variant="h5"
                   >
-                    {singleAthleteData?.data.full_name}
+                    {singleMemberData?.data.full_name}
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="center" size={6}>
                   <Typography variant="h6">
-                    {singleAthleteData?.data.gender}
+                    {singleMemberData?.data.gender}
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="center" size={6}>
                   <Typography variant="h6">
-                    {singleAthleteData?.data.birth_date}
+                    {singleMemberData?.data.birth_date}
                   </Typography>
                 </Grid>
                 <Grid
                   container
                   justifyContent="center"
                   size={12}
-                  sx={{ mt: 3 }}
+                  sx={{ mt: 10 }}
                 >
                   <Button
                     variant={currentScreen === 1 ? "contained" : "text"}
@@ -157,7 +158,7 @@ export default function SingleMemberPage() {
               <Grid size={8} sx={{ p: 4 }}>
                 {currentScreen === 1 ? (
                   <PersonalInfoSection
-                    athleteData={singleAthleteData}
+                    memberData={singleMemberData}
                   ></PersonalInfoSection>
                 ) : currentScreen === 2 ? (
                   <RegistryHistorySection></RegistryHistorySection>

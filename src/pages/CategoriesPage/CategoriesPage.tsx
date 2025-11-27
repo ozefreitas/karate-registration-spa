@@ -20,7 +20,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     has_weight: string;
   };
 
-  // Memoize `rows` to compute only when `athletes` changes
+  // Memoize `rows` to compute only when `members` changes
   const categoryRows = useMemo(() => {
     return categoriesData?.data.results.map((category: Category) => ({
       id: category.id,

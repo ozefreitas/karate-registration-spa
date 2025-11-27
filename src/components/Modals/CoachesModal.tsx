@@ -138,7 +138,7 @@ export default function CoachesModal(
     setChecked(newChecked);
   };
 
-  const addDisciplineMember = disciplinesHooks.useAddDisciplineAthlete();
+  const addDisciplineMember = disciplinesHooks.useAddDisciplineMember();
 
   const handleIndividualsSubmit = (memberList: string[]) => {
     if (memberList.length === 0) {
@@ -184,14 +184,14 @@ export default function CoachesModal(
 
     if (!query) return coachesNotInEventData?.data.results ?? [];
 
-    return coachesNotInEventData?.data.results.filter((athlete: any) => {
+    return coachesNotInEventData?.data.results.filter((member: any) => {
       const fullName =
-        `${athlete.first_name} ${athlete.last_name}`.toLowerCase();
+        `${member.first_name} ${member.last_name}`.toLowerCase();
       return (
-        athlete.first_name.toLowerCase().includes(query) ||
-        athlete.last_name.toLowerCase().includes(query) ||
+        member.first_name.toLowerCase().includes(query) ||
+        member.last_name.toLowerCase().includes(query) ||
         fullName.includes(query) ||
-        athlete.id_number === Number(query)
+        member.id_number === Number(query)
       );
     });
   }, [searchQuery, coachesNotInEventData]);

@@ -5,6 +5,8 @@ export const memberOrderingOptions: { value: string; label: string }[] = [
   { value: "-gender", label: "Descendente" },
   { value: "member_type", label: "Ascendente" },
   { value: "-member_type", label: "Descendente" },
+  { value: "-birth_date", label: "Ascendente" },
+  { value: "birth_date", label: "Descendente" },
 ];
 
 export const eventOrderingOptions: { value: string; label: string }[] = [

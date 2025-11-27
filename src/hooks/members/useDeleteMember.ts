@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { deleteMember, deleteAllMembers } from "../../api";
 
-export const useDeleteAthleteData = () => {
+export const useDeleteMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -18,9 +18,9 @@ export const useDeleteAthleteData = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
@@ -36,7 +36,7 @@ export const useDeleteAthleteData = () => {
   });
 };
 
-export const useDeleteAllAthleteData = () => {
+export const useDeleteAllMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -52,9 +52,9 @@ export const useDeleteAllAthleteData = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {

@@ -95,7 +95,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AthletesModal(
+export default function MembersModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
@@ -143,10 +143,10 @@ export default function AthletesModal(
     setChecked(newChecked);
   };
 
-  const addEventAthlete = eventsHooks.useAddEventMember();
+  const addEventMember = eventsHooks.useAddEventMember();
 
-  const handleIndividualsSubmit = (athleteList: string[]) => {
-    if (athleteList.length === 0) {
+  const handleIndividualsSubmit = (memberList: string[]) => {
+    if (memberList.length === 0) {
       enqueueSnackbar("Tem de selecionar pelo menos um atleta.", {
         variant: "warning",
         anchorOrigin: {
@@ -157,10 +157,10 @@ export default function AthletesModal(
         preventDuplicate: true,
       });
     } else {
-      athleteList.forEach((athlete: string) => {
-        const athleteData = { member_id: athlete };
-        const data = { eventId: props.eventData.id, data: athleteData };
-        addEventAthlete.mutate(data);
+      memberList.forEach((member: string) => {
+        const memberData = { member_id: member };
+        const data = { eventId: props.eventData.id, data: memberData };
+        addEventMember.mutate(data);
       });
       setChecked([]);
       props.handleModalClose();
@@ -179,7 +179,7 @@ export default function AthletesModal(
   };
 
   const handleDisciplineScreenClose = () => {
-    setCurrentAthleteId("");
+    setCurrentMemberId("");
     setIsDisciplineScreenOpen(false);
   };
 
@@ -195,14 +195,14 @@ export default function AthletesModal(
 
   const location = useLocation();
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [currentAthleteId, setCurrentAthleteId] = useState<string>("");
+  const [currentMemberId, setCurrentMemberId] = useState<string>("");
   const [disciplinesFree, setDisciplinesFree] = useState<string[]>([]);
   const [isMutationDelayActive, setIsMutationDelayActive] =
     useState<boolean>(false);
 
   const { data: modalitiesFreeData } =
-    membersHooks.useFetchDisciplinesnotInAthleteData(
-      currentAthleteId,
+    membersHooks.useFetchDisciplinesnotInMemberData(
+      currentMemberId,
       props.eventData?.id
     );
 
@@ -241,7 +241,7 @@ export default function AthletesModal(
     formState: { errors },
   } = useForm<FormValues>();
 
-  const addDisciplineAthlete = disciplinesHooks.useAddDisciplineAthlete();
+  const addDisciplineMember = disciplinesHooks.useAddDisciplineMember();
   const patchMember = membersHooks.usePatchMemberData();
 
   const onSubmit = async (data: any) => {
@@ -259,14 +259,14 @@ export default function AthletesModal(
         preventDuplicate: true,
       });
       return;
-      // free dojos must go thought this screen to confirm athlete weight and change it if needed, since they don't have access to the profile pages
+      // free dojos must go thought this screen to confirm member weight and change it if needed, since they don't have access to the profile pages
     } else if (
       !isWeightInputScreenOpen &&
       userRole === "free_club" &&
       props.eventData.has_categories
     ) {
-      const target = filteredAthletes.find(
-        (athlete: any) => athlete.id === currentAthleteId
+      const target = filteredMembers.find(
+        (member: any) => member.id === currentMemberId
       );
       const hasWeight = target[0].weight !== null;
       setDoesNotHaveWeight(!hasWeight);
@@ -278,12 +278,12 @@ export default function AthletesModal(
 
     try {
       if (isWeightInputScreenOpen) {
-        const target = filteredAthletes.find(
-          (athlete: any) => athlete.id === currentAthleteId
+        const target = filteredMembers.find(
+          (member: any) => member.id === currentMemberId
         );
         if (target[0].weight !== freeClubWeight) {
           const payload = {
-            memberId: currentAthleteId,
+            memberId: currentMemberId,
             data: { weight: freeClubWeight },
           };
           await patchMember.mutateAsync(payload);
@@ -299,11 +299,11 @@ export default function AthletesModal(
           const payload = {
             disciplineId: discipline.split("_")[1],
             data: {
-              member_id: currentAthleteId,
+              member_id: currentMemberId,
               event_id: props.eventData.id,
             },
           };
-          return addDisciplineAthlete.mutateAsync(payload);
+          return addDisciplineMember.mutateAsync(payload);
         })
       );
 
@@ -335,32 +335,32 @@ export default function AthletesModal(
   };
 
   const {
-    data: athletesNotInEventData,
-    isLoading: isAthletesNotInEventLoading,
-    error: athletesNotInEventError,
+    data: membersNotInEventData,
+    isLoading: isMembersNotInEventLoading,
+    error: membersNotInEventError,
     refetch,
-  } = membersHooks.useFetchAthletesNotInEvent(eventId!, page + 1, 10);
+  } = membersHooks.useFetchMembersNotInEvent(eventId!, page + 1, 10);
 
   React.useEffect(() => {
     refetch();
   }, [location]);
 
-  const filteredAthletes = React.useMemo(() => {
+  const filteredMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return athletesNotInEventData?.data.results ?? [];
+    if (!query) return membersNotInEventData?.data.results ?? [];
 
-    return athletesNotInEventData?.data.results.filter((athlete: any) => {
+    return membersNotInEventData?.data.results.filter((member: any) => {
       const fullName =
-        `${athlete.first_name} ${athlete.last_name}`.toLowerCase();
+        `${member.first_name} ${member.last_name}`.toLowerCase();
       return (
-        athlete.first_name.toLowerCase().includes(query) ||
-        athlete.last_name.toLowerCase().includes(query) ||
+        member.first_name.toLowerCase().includes(query) ||
+        member.last_name.toLowerCase().includes(query) ||
         fullName.includes(query) ||
-        athlete.id_number === Number(query)
+        member.id_number === Number(query)
       );
     });
-  }, [searchQuery, athletesNotInEventData]);
+  }, [searchQuery, membersNotInEventData]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -406,8 +406,8 @@ export default function AthletesModal(
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Inscrever{" "}
               {
-                athletesNotInEventData?.data.results.find(
-                  (athlete: Member) => athlete.id === currentAthleteId
+                membersNotInEventData?.data.results.find(
+                  (member: Member) => member.id === currentMemberId
                 )?.full_name
               }{" "}
               em {props.eventData?.name}
@@ -417,7 +417,7 @@ export default function AthletesModal(
               Inscrever em {props.eventData?.name}
             </Typography>
           )}
-          {athletesNotInEventData?.data.results.length !== 0 &&
+          {membersNotInEventData?.data.results.length !== 0 &&
           !isDisciplineScreenOpen &&
           !isWeightInputScreenOpen ? (
             <Search>
@@ -446,7 +446,7 @@ export default function AthletesModal(
                   handleIndividualsSubmit(checked);
                 }
               }}
-              disabled={athletesNotInEventData?.data.results.length === 0}
+              disabled={membersNotInEventData?.data.results.length === 0}
             >
               Adicionar
             </Button>
@@ -460,10 +460,10 @@ export default function AthletesModal(
               <Tooltip title="Voltar atrás">
                 <IconButton
                   onClick={() => {
-                    setCurrentAthleteId("");
+                    setCurrentMemberId("");
                     handleDisciplineScreenClose();
                   }}
-                  aria-label="back to athlete viwer"
+                  aria-label="back to member viwer"
                 >
                   <KeyboardArrowLeft />
                 </IconButton>
@@ -633,7 +633,7 @@ export default function AthletesModal(
                     variant="contained"
                     onClick={() => {
                       navigate(
-                        `/members/${currentAthleteId}/?edit_field=weight&event_id=${props.eventData.id}`
+                        `/members/${currentMemberId}/?edit_field=weight&event_id=${props.eventData.id}`
                       );
                     }}
                   >
@@ -645,7 +645,7 @@ export default function AthletesModal(
           )
         ) : (
           <List>
-            {isAthletesNotInEventLoading ? (
+            {isMembersNotInEventLoading ? (
               <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
                 <Box
                   sx={{
@@ -656,9 +656,9 @@ export default function AthletesModal(
                   <CircularProgress />
                 </Box>
               </Grid>
-            ) : athletesNotInEventError ? (
+            ) : membersNotInEventError ? (
               <div>Ocorreu um erro</div>
-            ) : filteredAthletes.length === 0 ? (
+            ) : filteredMembers.length === 0 ? (
               <ListItem>
                 <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
               </ListItem>
@@ -667,7 +667,7 @@ export default function AthletesModal(
                 <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
-              filteredAthletes.map((athlete: Member, index: string) => (
+              filteredMembers.map((member: Member, index: string) => (
                 <ListItem
                   key={index}
                   disablePadding
@@ -677,11 +677,11 @@ export default function AthletesModal(
                         <Checkbox
                           sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                           edge="end"
-                          onChange={() => handleToggle(athlete.id)}
-                          checked={checked.includes(athlete.id)}
+                          onChange={() => handleToggle(member.id)}
+                          checked={checked.includes(member.id)}
                           slotProps={{
                             input: {
-                              "aria-labelledby": `checkbox-list-secondary-label-${athlete.first_name}`,
+                              "aria-labelledby": `checkbox-list-secondary-label-${member.first_name}`,
                             },
                           }}
                         />
@@ -690,7 +690,7 @@ export default function AthletesModal(
                       <Tooltip title="Selecionar Modalidade">
                         <IconButton
                           onClick={() => {
-                            setCurrentAthleteId(athlete.id);
+                            setCurrentMemberId(member.id);
                             handleDisciplineScreenOpen();
                           }}
                           aria-label="go to disciplines selection"
@@ -705,9 +705,9 @@ export default function AthletesModal(
                     key={index}
                     onClick={() => {
                       if (disciplinesData?.data.count === 0) {
-                        handleToggle(athlete.id);
+                        handleToggle(member.id);
                       } else {
-                        setCurrentAthleteId(athlete.id);
+                        setCurrentMemberId(member.id);
                         handleDisciplineScreenOpen();
                       }
                     }}
@@ -716,10 +716,10 @@ export default function AthletesModal(
                       <Person />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.gender} | Idade calculada: ${
-                        athlete.age
-                      } | Peso: ${athlete.weight ?? "N/A"}`}
+                      primary={`${member.first_name} ${member.last_name}`}
+                      secondary={`${member.gender} | Idade calculada: ${
+                        member.age
+                      } | Peso: ${member.weight ?? "N/A"}`}
                     />
                   </ListItemButton>
                   <Divider />
@@ -731,7 +731,7 @@ export default function AthletesModal(
       </DialogContent>
       {isDisciplineScreenOpen ||
       isWeightInputScreenOpen ||
-      !athletesNotInEventData?.data?.count ? null : (
+      !membersNotInEventData?.data?.count ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
@@ -742,7 +742,7 @@ export default function AthletesModal(
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(athletesNotInEventData?.data.count / 10)}
+              {Math.ceil(membersNotInEventData?.data.count / 10)}
             </Typography>
             <Tooltip title="Página anterior">
               <IconButton
@@ -757,8 +757,8 @@ export default function AthletesModal(
               <IconButton
                 onClick={handleNextButtonClick}
                 disabled={
-                  !athletesNotInEventData?.data?.count ||
-                  athletesNotInEventData?.data.count <= (page + 1) * 10
+                  !membersNotInEventData?.data?.count ||
+                  membersNotInEventData?.data.count <= (page + 1) * 10
                 }
                 aria-label="next page"
               >

@@ -48,7 +48,7 @@ export default function EventCategoriesPage(
 
   useEffect(() => {}, [disciplinesData]);
 
-  // Memoize `rows` to compute only when `athletes` changes
+  // Memoize `rows` to compute only when `members` changes
   const categoriesRows = useMemo(() => {
     return disciplinesData?.data.results.map((discipline: Discipline) =>
       discipline.categories.map((category: Category) => ({

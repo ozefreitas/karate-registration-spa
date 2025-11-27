@@ -11,6 +11,9 @@ import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { MemberTypes } from "../../config";
+import MemberFilters from "../../components/filter_drawers/MemberFilters";
+import MemberOrdering from "../../components/filter_drawers/MemberOrdering";
+import { useForm } from "react-hook-form";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   type Club = {
@@ -30,26 +33,6 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
 
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
-
-  const {
-    data: athletesData,
-    isLoading: isAthletesDataLoading,
-    error: athletesError,
-  } = membersHooks.useFetchMembersData(page + 1, pageSize);
-
-  // Memoize `rows` to compute only when `athletes` changes
-  const athleteRows = useMemo(() => {
-    return athletesData?.data.results.map((athlete: Member) => ({
-      id: athlete.id,
-      full_name: athlete.full_name,
-      gender: athlete.gender,
-      username: athlete.club.username,
-      member_type: MemberTypes.find(
-        (item) => item.value === athlete.member_type
-      )?.label,
-      age: athlete.age,
-    }));
-  }, [athletesData]);
 
   const getColumnMaping = () => {
     const columnMapping = [
@@ -71,6 +54,89 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   };
 
   const columnMaping = getColumnMaping();
+
+  const {
+    control: filtersControl,
+    watch: filtersWatch,
+    reset: filtersReset,
+    formState: { errors: filtersErrors },
+    formState: { dirtyFields: filtersDirtyFields },
+  } = useForm({
+    defaultValues: {
+      has_registrations: false,
+      has_categories: false,
+      is_open: false,
+      is_retification: false,
+      is_closed: false,
+      encounter: false,
+      has_ended: false,
+      has_teams: false,
+    },
+  });
+
+  const {
+    control: orderControl,
+    watch: orderWatch,
+    reset: orderReset,
+    formState: { errors: orderErrors },
+    formState: { dirtyFields: orderDirtyFields },
+  } = useForm({
+    defaultValues: {
+      first_name: "",
+      gender: "",
+      member_type: "",
+    },
+  });
+
+  const filtersChangedCount = Object.keys(filtersDirtyFields).length;
+  const orderChangedCount = Object.keys(orderDirtyFields).length;
+
+  const [orderFields, setOrderFields] = useState([
+    {
+      key: "first_name",
+      label: "Primeiro Nome",
+      options: ["first_name", "-first_name"],
+    },
+    {
+      key: "gender",
+      label: "Género",
+      options: ["gender", "-gender"],
+    },
+    {
+      key: "member_type",
+      label: "Tipo",
+      options: ["member_type", "-member_type"],
+    },
+    {
+      key: "birth_date",
+      label: "Idade",
+      options: ["birth_date", "-birth_date"],
+    },
+  ]);
+
+  const ordering = orderFields
+    .map((f: any) => orderWatch(f.key)) // get value from react-hook-form
+    .filter(Boolean)
+    .join(",");
+
+  const {
+    data: membersData,
+    isLoading: isMembersDataLoading,
+    error: membersError,
+  } = membersHooks.useFetchMembersData(page + 1, pageSize, ordering);
+
+  // Memoize `rows` to compute only when `members` changes
+  const memberRows = useMemo(() => {
+    return membersData?.data.results.map((member: Member) => ({
+      id: member.id,
+      full_name: member.full_name,
+      gender: member.gender,
+      username: member.club.username,
+      member_type: MemberTypes.find((item) => item.value === member.member_type)
+        ?.label,
+      age: member.age,
+    }));
+  }, [membersData]);
 
   return (
     <>
@@ -97,21 +163,48 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         title="Membros"
       ></PageInfoCard>
       <Grid size={12} sx={{ m: 2 }}>
-        {isAthletesDataLoading ? (
+        {membersError ? null : (
+          <Grid
+            size={12}
+            container
+            px={3}
+            spacing={2}
+            justifyContent={"flex-end"}
+            alignItems={"center"}
+          >
+            <MemberOrdering
+              isLoading={isMembersDataLoading}
+              control={orderControl}
+              reset={orderReset}
+              errors={orderErrors}
+              changedCount={orderChangedCount}
+              orderFields={orderFields}
+              setOrderFields={setOrderFields}
+            ></MemberOrdering>
+            <MemberFilters
+              isLoading={isMembersDataLoading}
+              control={filtersControl}
+              reset={filtersReset}
+              errors={filtersErrors}
+              changedCount={filtersChangedCount}
+            ></MemberFilters>
+          </Grid>
+        )}
+        {isMembersDataLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : athletesError ? (
+        ) : membersError ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <ListItem>
               <ListItemText primary="Ocorreu um erro ao encontrar os seus Atletas, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
-        ) : athletesData?.data === undefined ? null : (
+        ) : membersData?.data === undefined ? null : (
           <AllUseTable
             type="Atletas"
-            data={athleteRows}
-            count={athletesData?.data.count}
+            data={memberRows}
+            count={membersData?.data.count}
             columnsHeaders={columnMaping}
             actions
             editable={["main_admin", "superuser", "subed_club"].includes(

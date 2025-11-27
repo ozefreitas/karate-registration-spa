@@ -86,7 +86,6 @@ export default function AddClubModal(
               handleSubmit(onSubmit)();
               props.handleClose();
             }}
-            // disabled={athletesNotInEventData?.data.length === 0}
           >
             Adicionar
           </Button>

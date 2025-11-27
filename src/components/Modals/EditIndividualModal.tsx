@@ -29,21 +29,21 @@ export default function EditIndividualModal(
     id: string;
   }>
 ) {
-  // const { data: fetchSingleAthlete } = membersHooks.useFetchSingleMemberData(
+  // const { data: fetchSingleMember } = membersHooks.useFetchSingleMemberData(
   //   props.id
   // );
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     // const formData = {
-    //   firstName: fetchSingleAthlete?.data.first_name,
-    //   lastName: fetchSingleAthlete?.data.last_name,
-    //   graduation: fetchSingleAthlete?.data.graduation,
-    //   category: fetchSingleAthlete?.data.category,
-    //   gender: fetchSingleAthlete?.data.gender,
-    //   id_number: fetchSingleAthlete?.data.id_number,
-    //   is_student: fetchSingleAthlete?.data.is_student,
-    //   birthDate: fetchSingleAthlete?.data.birth_date,
+    //   firstName: fetchSingleMember?.data.first_name,
+    //   lastName: fetchSingleMember?.data.last_name,
+    //   graduation: fetchSingleMember?.data.graduation,
+    //   category: fetchSingleMember?.data.category,
+    //   gender: fetchSingleMember?.data.gender,
+    //   id_number: fetchSingleMember?.data.id_number,
+    //   is_student: fetchSingleMember?.data.is_student,
+    //   birthDate: fetchSingleMember?.data.birth_date,
     // };
     // props.reset(formData);
     props.handleModalClose();

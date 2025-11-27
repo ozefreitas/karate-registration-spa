@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import DeleteAthleteModal from "../../components/Modals/DeleteAthleteModal";
+import DeleteMemberModal from "../../components/Modals/DeleteMemberModal";
 import {
   Delete,
   Edit,
@@ -34,7 +34,7 @@ import { useSnackbar } from "notistack";
 import DuplicateMemberModal from "../../components/Modals/DuplicateMemberModal";
 
 export default function PersonalInfoSection(
-  props: Readonly<{ athleteData: any }>
+  props: Readonly<{ memberData: any }>
 ) {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
@@ -59,17 +59,17 @@ export default function PersonalInfoSection(
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] =
     useState<boolean>(false);
-  const [isDeleteAthleteModalOpen, setIsDeleteAthleteModalOpen] =
+  const [isDeleteMemberModalOpen, setIsDeleteMemberModalOpen] =
     useState<boolean>(false);
   const [isWeightRedirectionModalOpen, setIsWeightRedirectionModalOpen] =
     useState<boolean>(false);
 
   const handleModalOpen = () => {
-    setIsDeleteAthleteModalOpen(true);
+    setIsDeleteMemberModalOpen(true);
   };
 
   const handleModalClose = () => {
-    setIsDeleteAthleteModalOpen(false);
+    setIsDeleteMemberModalOpen(false);
   };
 
   const handleDuplicateModalOpen = () => {
@@ -88,7 +88,7 @@ export default function PersonalInfoSection(
     setIsWeightRedirectionModalOpen(false);
   };
 
-  const updateAthlete = membersHooks.useUpdateMemberData();
+  const updateMember = membersHooks.useUpdateMemberData();
   const patchMember = membersHooks.usePatchMemberData();
 
   const {
@@ -100,26 +100,41 @@ export default function PersonalInfoSection(
     formState: { errors },
   } = useForm({
     defaultValues: {
-      firstName: props.athleteData?.data.first_name,
-      lastName: props.athleteData?.data.last_name,
-      age: props.athleteData?.data.age,
-      graduation: props.athleteData?.data.graduation,
+      firstName: props.memberData?.data.first_name,
+      lastName: props.memberData?.data.last_name,
+      age: props.memberData?.data.age,
+      graduation: props.memberData?.data.graduation,
       id_number:
-        props.athleteData?.data.id_number === null
+        props.memberData?.data.id_number === null
           ? "N/A"
-          : props.athleteData?.data.id_number,
-      gender: props.athleteData?.data.gender,
-      competitor: props.athleteData?.data.member_type === "athlete",
-      birthDate: props.athleteData?.data.birth_date,
+          : props.memberData?.data.id_number,
+      gender: props.memberData?.data.gender,
+      taxNumber:
+        props.memberData?.data.taxpayer_number === null
+          ? "N/A"
+          : props.memberData?.data.taxpayer_number,
+      postCode: props.memberData?.data.post_code,
+      quotesLegible: props.memberData?.data.quotes_legible,
+      registrationDate: props.memberData?.data.registration_date,
+      cardNumber:
+        props.memberData?.data.national_card_number === null
+          ? "N/A"
+          : props.memberData?.data.national_card_number,
+      address:
+        props.memberData?.data.address === null
+          ? "N/A"
+          : props.memberData?.data.address,
+      competitor: props.memberData?.data.member_type === "athlete",
+      birthDate: props.memberData?.data.birth_date,
       weight:
-        props.athleteData?.data.weight === null
+        props.memberData?.data.weight === null
           ? "N/A"
-          : props.athleteData?.data.weight,
-      // quotes: props.athleteData?.data.quotes ? "regular" : "overdue",
+          : props.memberData?.data.weight,
     },
   });
 
   const onSubmit = (data: any) => {
+    console.log(data);
     if (isFloat(data.weight)) {
       enqueueSnackbar("Peso tem de ser um número real inteiro!", {
         variant: "error",
@@ -137,12 +152,12 @@ export default function PersonalInfoSection(
       // || !["main_admin", "superuser"].includes(userRole)
     ) {
       const payload = {
-        memberId: props.athleteData?.data.id,
+        memberId: props.memberData?.data.id,
         data: { weight: data.weight },
       };
       patchMember.mutateAsync(payload, {
         onError: () => {
-          setValue("weight", props.athleteData?.data.weight);
+          setValue("weight", props.memberData?.data.weight);
         },
       });
     } else {
@@ -152,8 +167,20 @@ export default function PersonalInfoSection(
         graduation: data.graduation,
         id_number: data.id_number,
         gender: data.gender,
+        quotes_legible: data.quotesLegible,
+        taxpayer_number:
+          data.taxNumber === "N/A" || data.taxNumber === ""
+            ? null
+            : data.taxNumber,
+        post_code: data.postCode,
+        registration_date: data.registrationDate,
+        national_card_number:
+          data.cardNumber === "N/A" || data.cardNumber === ""
+            ? null
+            : data.cardNumber,
+        address: data.address,
         member_type:
-          props.athleteData?.data.member_type === "coach"
+          props.memberData?.data.member_type === "coach"
             ? "coach"
             : data.competitor
             ? "athlete"
@@ -164,10 +191,10 @@ export default function PersonalInfoSection(
           data.weight === "N/A" || data.weight === "" ? null : data.weight,
       };
       const updateData = {
-        memberId: props.athleteData?.data.id,
+        memberId: props.memberData?.data.id,
         data: formData,
       };
-      updateAthlete.mutate(updateData, {
+      updateMember.mutate(updateData, {
         onSuccess: () => {
           if (editField === "weight") {
             handleWeightModalOpen();
@@ -330,6 +357,8 @@ export default function PersonalInfoSection(
                     }
                     label=""
                     fullWidth
+                    multiline
+                    maxRows={2}
                     slotProps={{
                       input: {
                         readOnly: !isEditMode,
@@ -489,6 +518,7 @@ export default function PersonalInfoSection(
                 render={({ field }) => (
                   <TextField
                     color="warning"
+                    type={isEditMode ? "number" : "text"}
                     variant={
                       isPrivileged && isEditMode ? "outlined" : "standard"
                     }
@@ -652,7 +682,7 @@ export default function PersonalInfoSection(
                 render={({ field }) => (
                   <TextField
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") {
+                      if (e.key === "Enter" && editField) {
                         e.preventDefault();
                         handleSubmit(onSubmit)();
                         setIsEditMode(false);
@@ -743,7 +773,159 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl> */}
-        {props.athleteData?.data.member_type === "coach" ? null : (
+        <FormControl
+          sx={{ pb: 2 }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Número C.C./B.I.:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="cardNumber"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    type={isEditMode ? "number" : "text"}
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
+                    label=""
+                    fullWidth
+                    slotProps={{
+                      input: {
+                        readOnly: !isEditMode,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
+                      },
+                    }}
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.id_number}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        <FormControl
+          sx={{ pb: 2 }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Morada:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="address"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
+                    label=""
+                    fullWidth
+                    slotProps={{
+                      input: {
+                        readOnly: !isEditMode,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
+                      },
+                    }}
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.address}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        <FormControl
+          sx={{ pb: 2 }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                NIF:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="taxNumber"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
+                    label=""
+                    type={isEditMode ? "number" : "text"}
+                    fullWidth
+                    slotProps={{
+                      input: {
+                        readOnly: !isEditMode,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
+                      },
+                    }}
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.id_number}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        {props.memberData?.data.member_type === "coach" ? null : (
           <Controller
             name="competitor"
             control={control}
@@ -781,19 +963,123 @@ export default function PersonalInfoSection(
             )}
           />
         )}
+        <FormControl
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Data de Inscrição:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="registrationDate"
+                control={control}
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      {...field}
+                      format="YYYY-MM-DD"
+                      label=""
+                      onChange={(date) => {
+                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                      }}
+                      value={field.value ? dayjs(field.value) : null}
+                      enableAccessibleFieldDOMStructure={false}
+                      slotProps={{
+                        textField:
+                          isPrivileged && isEditMode
+                            ? {}
+                            : {
+                                variant: "standard",
+                                InputProps: {
+                                  disableUnderline: true,
+                                  sx: {
+                                    border: "none",
+                                    padding: 0,
+                                    fontSize: 20,
+                                  },
+                                },
+                                sx: {
+                                  // width: "100px",
+                                  "& .MuiInputBase-root": {
+                                    border: "none",
+                                    padding: 0,
+                                  },
+                                  "& .MuiInputBase-input": {
+                                    textAlign: "left",
+                                    padding: 0,
+                                  },
+                                },
+                              },
+                      }}
+                      slots={
+                        isPrivileged && isEditMode
+                          ? undefined
+                          : {
+                              openPickerIcon: () => null,
+                              textField: TextField,
+                            }
+                      }
+                    />
+                  </LocalizationProvider>
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        <Controller
+          name="quotesLegible"
+          control={control}
+          render={({ field }) => (
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Paga Quotas:
+                  </Typography>
+                }
+                control={
+                  <Switch
+                    disabled={!isEditMode}
+                    sx={{ ml: 2 }}
+                    {...field}
+                    checked={field.value}
+                    color="warning"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+          )}
+        />
       </Grid>
       <DuplicateMemberModal
         handleModalClose={handleDuplicateModalClose}
         isModalOpen={isDuplicateModalOpen}
-        memberData={props.athleteData?.data}
+        memberData={props.memberData?.data}
       ></DuplicateMemberModal>
-      <DeleteAthleteModal
+      <DeleteMemberModal
         from="Atletas"
         handleModalClose={handleModalClose}
         handleModalOpen={handleModalOpen}
-        isModalOpen={isDeleteAthleteModalOpen}
-        id={props.athleteData?.data.id}
-      ></DeleteAthleteModal>
+        isModalOpen={isDeleteMemberModalOpen}
+        id={props.memberData?.data.id}
+      ></DeleteMemberModal>
       <WeightConfirmModal
         handleModalClose={handleWeightModalClose}
         handleModalOpen={handleWeightModalOpen}

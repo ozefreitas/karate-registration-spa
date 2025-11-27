@@ -10,6 +10,7 @@ import {
 export const useFetchEventsData = (
   page: number,
   pageSize: number,
+  ordering?: string,
   season?: string,
   hasEnded?: boolean,
   hasTeams?: boolean,
@@ -21,6 +22,7 @@ export const useFetchEventsData = (
       "events",
       page,
       pageSize,
+      ordering,
       season,
       hasEnded,
       hasTeams,
@@ -31,6 +33,7 @@ export const useFetchEventsData = (
       fetchEvents(
         page,
         pageSize,
+        ordering,
         season,
         hasEnded,
         hasTeams,

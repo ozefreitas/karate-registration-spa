@@ -1,7 +1,7 @@
 /**
- * Function that returns the current age of an athlete
+ * Function that returns the current age of an member
  *
- * @param dateOfBirth - The birth date of the athlete. Must be a Date instance
+ * @param dateOfBirth - The birth date of the member. Must be a Date instance
  * @returns The age as a number
  */
 export function getCompAge(dateOfBirth: Date): number {

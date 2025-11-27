@@ -19,11 +19,11 @@ export const useUpdateMemberData = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
-      queryClient.invalidateQueries({ queryKey: ["single-athlete"] });
+      queryClient.invalidateQueries({ queryKey: ["single-member"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
@@ -56,10 +56,10 @@ export const usePatchMemberData = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.invalidateQueries({ queryKey: ["single-athlete"] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: ["single-member"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {

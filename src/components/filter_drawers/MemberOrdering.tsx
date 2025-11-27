@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { eventOrderingOptions } from "../../dashboard/filters";
+import { memberOrderingOptions } from "../../dashboard/filters";
 import { SwapVert } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
@@ -23,7 +23,7 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function EventsOrdering(props: {
+export default function MemberOrdering(props: {
   isLoading: boolean;
   control: any;
   errors: any;
@@ -73,7 +73,7 @@ export default function EventsOrdering(props: {
                       onChange={(e) => field.onChange(e.target.value)}
                     >
                       <MenuItem value="">-- Selecionar --</MenuItem>
-                      {eventOrderingOptions
+                      {memberOrderingOptions
                         .filter((opt) => item.options.includes(opt.value))
                         .map((opt) => (
                           <MenuItem key={opt.value} value={opt.value}>

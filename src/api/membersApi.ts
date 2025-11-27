@@ -1,17 +1,17 @@
 import { authClient } from "./apiClient";
 
-export const fetchMembers = (page: number, pageSize: number) => {
-  return authClient.get("/athletes/", {
-    params: { page: page, page_size: pageSize },
+export const fetchMembers = (page: number, pageSize: number, ordering?: string) => {
+  return authClient.get("/members/", {
+    params: { page: page, page_size: pageSize, ordering: ordering },
   });
 };
 
 export const fetchSingleMember = (memberId: string) => {
-  return authClient.get(`/athletes/${memberId}/`);
+  return authClient.get(`/members/${memberId}/`);
 };
 
 export const fetchLastFiveMembers = () => {
-  return authClient.get("/athletes/last_five/");
+  return authClient.get("/members/last_five/");
 };
 
 export const fetchMembersNotInEvent = (
@@ -19,7 +19,7 @@ export const fetchMembersNotInEvent = (
   page: number,
   pageSize: number
 ) => {
-  return authClient.get("/athletes/", {
+  return authClient.get("/members/", {
     params: { not_in_event: eventId, page: page, page_size: pageSize },
   });
 };
@@ -29,40 +29,38 @@ export const fetchCoachesNotInEvent = (
   page: number,
   pageSize: number
 ) => {
-  return authClient.get("/athletes/", {
+  return authClient.get("/members/", {
     params: { coach_not_in_event: eventId, page: page, page_size: pageSize },
   });
 };
-
-
 
 export const fetchMembersInCategoryGender = (
   category: string,
   gender: string
 ) => {
-  return authClient.get("/athletes/", {
+  return authClient.get("/members/", {
     params: { in_category: category, in_gender: gender },
   });
 };
 
 export const createMember = (data: any) => {
-  return authClient.post("/athletes/", data);
+  return authClient.post("/members/", data);
 };
 
 export const updateMember = (memberId: string, data: any) => {
-  return authClient.put(`/athletes/${memberId}/`, data);
+  return authClient.put(`/members/${memberId}/`, data);
 };
 
 export const patchMember = (memberId: string, data: any) => {
-  return authClient.patch(`/athletes/${memberId}/`, data);
+  return authClient.patch(`/members/${memberId}/`, data);
 };
 
 export const deleteMember = (memberId: string) => {
-  return authClient.delete(`/athletes/${memberId}/`);
+  return authClient.delete(`/members/${memberId}/`);
 };
 
 export const deleteAllMembers = () => {
-  return authClient.delete(`/athletes/delete_all/`);
+  return authClient.delete(`/members/delete_all/`);
 };
 
 export const fetchDisciplineMemberNotIn = (
@@ -70,6 +68,6 @@ export const fetchDisciplineMemberNotIn = (
   eventId: string
 ) => {
   return authClient.get(
-    `/athletes/${memberId}/unregistered_modalities/${eventId}/`
+    `/members/${memberId}/unregistered_modalities/${eventId}/`
   );
 };

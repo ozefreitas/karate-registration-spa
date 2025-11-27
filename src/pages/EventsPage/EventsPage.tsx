@@ -65,7 +65,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     },
   });
 
-    const {
+  const {
     control: orderControl,
     watch: orderWatch,
     reset: orderReset,
@@ -73,14 +73,37 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     formState: { dirtyFields: orderDirtyFields },
   } = useForm({
     defaultValues: {
-      name: "name",
+      name: "",
       event_date: "event_date",
-      start_registration: "start_registration"
+      start_registration: "",
     },
   });
 
   const filtersChangedCount = Object.keys(filtersDirtyFields).length;
   const orderChangedCount = Object.keys(orderDirtyFields).length;
+
+  const [orderFields, setOrderFields] = useState([
+    {
+      key: "name",
+      label: "Nome",
+      options: ["name", "-name"],
+    },
+    {
+      key: "event_date",
+      label: "Data",
+      options: ["event_date", "-event_date"],
+    },
+    {
+      key: "start_registration",
+      label: "Início de inscrições",
+      options: ["start_registration", "-start_registration"],
+    },
+  ]);
+
+  const ordering = orderFields
+    .map((f: any) => orderWatch(f.key)) // get value from react-hook-form
+    .filter(Boolean)
+    .join(",");
 
   const {
     data: eventsData,
@@ -90,6 +113,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   } = eventsHooks.useFetchEventsData(
     page,
     5,
+    ordering,
     filtersWatch("season"),
     filtersWatch("has_ended"),
     filtersWatch("has_teams"),
@@ -136,6 +160,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               reset={orderReset}
               errors={orderErrors}
               changedCount={orderChangedCount}
+              orderFields={orderFields}
+              setOrderFields={setOrderFields}
             ></EventsOrdering>
             <EventsFilters
               isLoading={isEventsDataLoading}

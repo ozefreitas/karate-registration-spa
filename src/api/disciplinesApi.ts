@@ -22,15 +22,15 @@ export const createDiscipline = (data: any) => {
 
 // discipline members operations
 
-export const addDisciplineAthlete = (disciplineId: string, data: any) => {
-  return authClient.post(`/disciplines/${disciplineId}/add_athlete/`, data);
+export const addDisciplineMember = (disciplineId: string, data: any) => {
+  return authClient.post(`/disciplines/${disciplineId}/add_member/`, data);
 };
 
-export const removeDisciplineAthlete = (disciplineId: string, data: any) => {
-  return authClient.post(`/disciplines/${disciplineId}/delete_athlete/`, data);
+export const removeDisciplineMember = (disciplineId: string, data: any) => {
+  return authClient.post(`/disciplines/${disciplineId}/delete_member/`, data);
 };
 
-export const removeAllDisciplineAthlete = (disciplineId: string) => {
+export const removeAllDisciplineMember = (disciplineId: string) => {
   return authClient.delete(
     `/disciplines/${disciplineId}/delete_all_individuals/`
   );

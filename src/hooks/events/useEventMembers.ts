@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { addEventAthlete, deleteEventAthlete } from "../../api";
+import { addEventMember, deleteEventMember } from "../../api";
 
 export const useAddEventMember = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -8,7 +8,7 @@ export const useAddEventMember = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
-      addEventAthlete(eventId, data),
+      addEventMember(eventId, data),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
@@ -21,7 +21,7 @@ export const useAddEventMember = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {
@@ -37,13 +37,13 @@ export const useAddEventMember = () => {
   });
 };
 
-export const useRemoveEventAthlete = () => {
+export const useRemoveEventMember = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
-      deleteEventAthlete(eventId, data),
+      deleteEventMember(eventId, data),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
@@ -56,7 +56,7 @@ export const useRemoveEventAthlete = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {

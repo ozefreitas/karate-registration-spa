@@ -39,7 +39,7 @@ export default function NewMemberPage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const { data: clubUserData } = adminHooks.useFetchClubUsersData();
-  const createAthlete = membersHooks.useCreateMember();
+  const createMember = membersHooks.useCreateMember();
 
   const {
     control,
@@ -56,17 +56,19 @@ export default function NewMemberPage() {
       category: "",
       gender: "",
       force_ident: false,
+      force_registration_date: false,
       id_number: "",
       birth_date: undefined,
       weight: "",
+      registration_date: undefined,
       member_type: [""],
       reason: "",
       club: "",
     },
   });
 
-  console.log(watch("member_type"));
   const is_force_ident = watch("force_ident");
+  const is_force_registration_date = watch("force_registration_date");
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
     if (data.member_type.length <= 1) {
@@ -92,6 +94,7 @@ export default function NewMemberPage() {
       gender: data.gender,
       member_type: data.member_type,
       birth_date: data.birth_date,
+      registration_date: data.registration_date,
       weight: data.weight,
       club: data.club,
     };
@@ -104,11 +107,17 @@ export default function NewMemberPage() {
       formData.id_number = 0;
     }
 
+    if (data.force_registration_date) {
+      formData.registration_date = undefined;
+    }
+
+    console.log(formData);
+
     data.member_type
       .filter((item: string) => item !== "")
       .forEach((type: string) => {
         const payload = { ...formData, member_type: type };
-        createAthlete.mutate(payload, {
+        createMember.mutate(payload, {
           onSuccess: () => {
             setLoading(false);
             if (mode === "redirect") {
@@ -120,9 +129,9 @@ export default function NewMemberPage() {
           },
           onError: (data: any) => {
             setLoading(false);
-            if (data.response?.data.incompatible_athlete) {
+            if (data.response?.data.incompatible_member) {
               setError("member_type", {
-                message: data.response?.data.incompatible_athlete[0],
+                message: data.response?.data.incompatible_member[0],
               });
             } else if (data.response?.data.impossible_gender) {
               setError("gender", {
@@ -138,7 +147,9 @@ export default function NewMemberPage() {
               | "graduation"
               | "birth_date"
               | "gender"
-              | "club";
+              | "club"
+              | "id_number"
+              | "registration_date";
 
             const fields: Fields[] = [
               "first_name",
@@ -147,6 +158,8 @@ export default function NewMemberPage() {
               "birth_date",
               "gender",
               "club",
+              "id_number",
+              "registration_date",
             ];
 
             fields.forEach((field) => {
@@ -346,6 +359,7 @@ export default function NewMemberPage() {
                       labelPlacement="start"
                       control={
                         <Switch
+                          sx={{ ml: 2 }}
                           {...field}
                           checked={field.value}
                           onChange={(e) => {
@@ -396,6 +410,74 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
+          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+            <Controller
+              name="force_registration_date"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset" variant="standard">
+                  <FormLabel sx={{ mb: 2 }}>
+                    Insira a data em que o registo deste membro foi efetivado.
+                    Caso esteja a data seja a atual, ligue o botão abaixo.
+                  </FormLabel>
+                  <Stack spacing={1}>
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          sx={{ ml: 2 }}
+                          {...field}
+                          checked={field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.checked);
+                          }}
+                          name="force_registration_date"
+                        />
+                      }
+                      label="Data de registo é a atual"
+                      sx={{ justifyContent: "left" }}
+                    />
+                    {!!errors.force_registration_date && (
+                      <FormHelperText error sx={{ marginLeft: "14px" }}>
+                        {errors.force_registration_date?.message}
+                      </FormHelperText>
+                    )}
+                  </Stack>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2, pt: 1 }} size={6}>
+            <Controller
+              name="registration_date"
+              control={control}
+              render={({ field }) => (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      disabled={is_force_registration_date}
+                      {...field}
+                      format="YYYY-MM-DD"
+                      label="Data de Registo em Clube"
+                      onChange={(date) => {
+                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                      }}
+                      value={field.value ? dayjs(field.value) : null}
+                      enableAccessibleFieldDOMStructure={false}
+                      slotProps={{
+                        textField: {
+                          fullWidth: true,
+                          error: !!errors?.registration_date,
+                          helperText: errors?.registration_date?.message || "",
+                        },
+                      }}
+                      slots={{ textField: TextField }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              )}
+            />
+          </Grid>
         </FormCard>
         <FormCard title="Tipo de Praticante">
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>
@@ -413,7 +495,7 @@ export default function NewMemberPage() {
                   if (newValue.includes(optionValue)) {
                     newValue = newValue.filter((v) => v !== optionValue);
                   } else {
-                    // Otherwise, add it — but handle "student" vs "athlete" exclusivity
+                    // Otherwise, add it — but handle "student" vs "member" exclusivity
                     if (optionValue === "student") {
                       newValue = newValue.filter((v) => v !== "athlete");
                     } else if (optionValue === "athlete") {

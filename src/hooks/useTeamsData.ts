@@ -77,10 +77,10 @@ export const useUpdateTeamData = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {

@@ -72,7 +72,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function PickOneAthleteModal(
+export default function PickOneMemberModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
@@ -94,7 +94,7 @@ export default function PickOneAthleteModal(
     data: athleteInCategoryGenderData,
     isLoading: isAthleteInCategoryGenderLoading,
     error: athleteInCategoryGenderError,
-  } = membersHooks.useFetchAthletesInCategoryGender(
+  } = membersHooks.useFetchMembersInCategoryGender(
     props.control._formValues.category,
     props.control._formValues.gender
   );

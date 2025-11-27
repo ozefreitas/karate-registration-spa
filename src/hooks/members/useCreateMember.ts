@@ -18,9 +18,9 @@ export const useCreateMember = () => {
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      queryClient.invalidateQueries({ queryKey: ["athletes"] });
-      queryClient.invalidateQueries({ queryKey: ["club-athletes"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: ["club-members"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: (data: any) => {
       const errorData = data.response?.data || {};

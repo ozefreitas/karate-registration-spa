@@ -29,7 +29,7 @@ const NotificationsPage = (props: { me: any }) => {
   const removeNotification = notificationsHooks.useRemoveNotification();
 
   const handleFollowingAction = (noti_type: string) => {
-    if (noti_type === "create_athlete") {
+    if (noti_type === "create_member") {
       navigate("/members/");
     } else if (noti_type === "rate_event") {
       navigate("/events/");

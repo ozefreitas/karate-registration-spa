@@ -1,18 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import {
-  addDisciplineAthlete,
-  removeDisciplineAthlete,
-  removeAllDisciplineAthlete,
+  addDisciplineMember,
+  removeDisciplineMember,
+  removeAllDisciplineMember,
 } from "../../api";
 
-export const useAddDisciplineAthlete = () => {
+export const useAddDisciplineMember = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
-      addDisciplineAthlete(disciplineId, data),
+      addDisciplineMember(disciplineId, data),
     retry: false,
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
@@ -27,7 +27,7 @@ export const useAddDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
       queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
     },
     onError: (data: any) => {
@@ -44,13 +44,13 @@ export const useAddDisciplineAthlete = () => {
   });
 };
 
-export const useDeleteDisciplineAthlete = () => {
+export const useDeleteDisciplineMember = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
-      removeDisciplineAthlete(disciplineId, data),
+      removeDisciplineMember(disciplineId, data),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
@@ -64,10 +64,10 @@ export const useDeleteDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
       queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
       queryClient.invalidateQueries({
-        queryKey: ["disciplines-not-in-athlete"],
+        queryKey: ["disciplines-not-in-member"],
       });
     },
     onError: (data: any) => {
@@ -84,13 +84,13 @@ export const useDeleteDisciplineAthlete = () => {
   });
 };
 
-export const useDeleteAllDisciplineAthlete = () => {
+export const useDeleteAllDisciplineMember = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId }: { disciplineId: string }) =>
-      removeAllDisciplineAthlete(disciplineId),
+      removeAllDisciplineMember(disciplineId),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",
@@ -104,7 +104,7 @@ export const useDeleteAllDisciplineAthlete = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
-      queryClient.invalidateQueries({ queryKey: ["athletes-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {

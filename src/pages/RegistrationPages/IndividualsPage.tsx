@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Add, Visibility } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
-import AthletesModal from "../../components/Modals/AthletesModal";
+import MembersModal from "../../components/Modals/MembersModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -217,11 +217,11 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           </Button>
         </Grid>
       ) : null}
-      <AthletesModal
+      <MembersModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
         eventData={singleEventData?.data}
-      ></AthletesModal>
+      ></MembersModal>
       {currentDiscipline === "" ? null : (
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}

@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
-import AthletesHomeComponent from "../../components/home-cards/AthletesHomeComponent";
+import MembersHomeComponent from "../../components/home-cards/MembersHomeComponent";
 import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
 import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
@@ -38,9 +38,9 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
       {props.userRole === "technician" ? null : (
         <Grid container size={12}>
           <Grid size={6}>
-            <AthletesHomeComponent
+            <MembersHomeComponent
               userRole={props.userRole}
-            ></AthletesHomeComponent>
+            ></MembersHomeComponent>
             <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
           </Grid>
           <Grid size={6}>

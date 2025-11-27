@@ -31,7 +31,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function DeleteAthleteModal(
+export default function DeleteMemberModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
@@ -51,18 +51,18 @@ export default function DeleteAthleteModal(
     discipline?: any;
   }>
 ) {
-  const removeDisciplineAthlete = disciplinesHooks.useDeleteDisciplineAthlete();
-  const removeEventAthlete = eventsHooks.useRemoveEventAthlete();
-  const removeAthlete = membersHooks.useDeleteAthleteData();
-  const removeAllAthletes = membersHooks.useDeleteAllAthleteData();
+  const removeDisciplineMember = disciplinesHooks.useDeleteDisciplineMember();
+  const removeEventMember = eventsHooks.useRemoveEventMember();
+  const removeMember = membersHooks.useDeleteMemberData();
+  const removeAllMembers = membersHooks.useDeleteAllMemberData();
   const removeTeam = useRemoveTeamData();
   const removeAllTeams = useRemoveAllTeamsData();
   const removeCategory = categoriesHooks.useDeleteCategory();
   const removeAllCategories = categoriesHooks.useDeleteAllCategoriesData();
   const removeDisciplineCategory =
     disciplinesHooks.useRemoveDisciplineCategory();
-  const removeAllDisciplineAthletes =
-    disciplinesHooks.useDeleteAllDisciplineAthlete();
+  const removeAllDisciplineMembers =
+    disciplinesHooks.useDeleteAllDisciplineMember();
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
 
@@ -73,7 +73,7 @@ export default function DeleteAthleteModal(
     event.stopPropagation();
     if (id !== undefined && typeof id === "string") {
       if (props.from === "Atletas") {
-        removeAthlete.mutate(id, {
+        removeMember.mutate(id, {
           onSuccess: () => {
             navigate("/members/");
           },
@@ -85,12 +85,12 @@ export default function DeleteAthleteModal(
           },
         });
       } else if (props.from === "Individuais") {
-        const athleteData = { member_id: id };
+        const memberData = { member_id: id };
         const data = {
           eventId: eventId!,
-          data: athleteData,
+          data: memberData,
         };
-        removeEventAthlete.mutate(data);
+        removeEventMember.mutate(data);
       } else if (props.from === "Categorias") {
         removeCategory.mutate(id);
       } else if (props.from === "EventCategories") {
@@ -106,49 +106,49 @@ export default function DeleteAthleteModal(
           disciplineId: props.discipline,
           data: { member_id: props.id },
         };
-        removeDisciplineAthlete.mutate(data);
+        removeDisciplineMember.mutate(data);
       }
     } else if (id !== undefined && Array.isArray(id)) {
       if (props.from === "Atletas") {
-        id.forEach((athleteId) => {
-          removeAthlete.mutate(athleteId);
+        id.forEach((memberId) => {
+          removeMember.mutate(memberId);
         });
       } else if (props.from === "Equipas") {
-        id.forEach((athleteId) => {
-          removeTeam.mutate(athleteId);
+        id.forEach((memberId) => {
+          removeTeam.mutate(memberId);
         });
       } else if (props.from === "Individuais") {
-        id.forEach((athleteId) => {
-          const athleteData = { member_id: athleteId };
+        id.forEach((memberId) => {
+          const memberData = { member_id: memberId };
           const data = {
             eventId: eventId!,
-            data: athleteData,
+            data: memberData,
           };
-          removeEventAthlete.mutate(data);
+          removeEventMember.mutate(data);
         });
       } else if (props.from === "Categorias") {
         id.forEach((categoryId) => {
           removeCategory.mutate(categoryId);
         });
       } else {
-        id.forEach((athleteId) => {
+        id.forEach((memberId) => {
           const data = {
             disciplineId: props.discipline,
-            data: { member_id: athleteId },
+            data: { member_id: memberId },
           };
-          removeDisciplineAthlete.mutate(data);
+          removeDisciplineMember.mutate(data);
         });
       }
       props.setSelected([]);
     } else {
       if (props.from === "Atletas") {
-        removeAllAthletes.mutate();
+        removeAllMembers.mutate();
       } else if (props.from === "Equipas") {
         removeAllTeams.mutate();
       } else if (props.from === "Categorias") {
         removeAllCategories.mutate();
       } else {
-        removeAllDisciplineAthletes.mutate({ disciplineId: props.discipline });
+        removeAllDisciplineMembers.mutate({ disciplineId: props.discipline });
       }
       props.setSelected([]);
     }

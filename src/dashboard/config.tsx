@@ -119,7 +119,7 @@ export const getSideMenuConfig = (userRole: string) => {
   } else if (userRole === undefined || userRole === "free_club") {
     return baseMenu.filter(
       (item) =>
-        item.name !== "athletes" &&
+        item.name !== "members" &&
         item.name !== "teams" &&
         item.name !== "results_display" &&
         item.name !== "settings" &&
@@ -139,7 +139,7 @@ export const getSideMenuConfig = (userRole: string) => {
   } else if (userRole === "technician") {
     return baseMenu.filter(
       (item) =>
-        item.name !== "athletes" &&
+        item.name !== "members" &&
         item.name !== "teams" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
