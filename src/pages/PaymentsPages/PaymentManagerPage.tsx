@@ -8,9 +8,13 @@ import {
   Card,
   CardHeader,
   MenuItem,
+  IconButton,
   TextField,
   CardContent,
   Typography,
+  Tooltip,
+  Menu,
+  Button,
 } from "@mui/material";
 import { clubsHooks } from "../../hooks";
 import { useMemo, useState } from "react";
@@ -21,6 +25,7 @@ import { Close, Check } from "@mui/icons-material";
 import PatchClubSubscriptionModal from "../../components/Admin/PatchClubSubscriptionModal";
 import { Controller, useForm } from "react-hook-form";
 import { computeExpirationDate } from "../../utils/utils";
+import { Add } from "@mui/icons-material";
 
 export default function PaymentManagerPage(props: { userRole: string }) {
   type Club = { id: string; username: string; role: string; tier: string };
@@ -37,12 +42,29 @@ export default function PaymentManagerPage(props: { userRole: string }) {
   const [currentId, setCurrentId] = useState<string>("");
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [currentState, setCurrentState] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = async () => {
+    setAnchorEl(null);
+  };
 
   const {
     control,
     watch,
+    handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: { search: "", overdueNumber: "" } });
+  } = useForm({
+    defaultValues: {
+      search: "",
+      overdueNumber: "",
+      year: undefined,
+      amount: "",
+    },
+  });
 
   const { data } = clubsHooks.useFetchAvailableYears();
 
@@ -62,6 +84,13 @@ export default function PaymentManagerPage(props: { userRole: string }) {
     isLoading: isSubscriptionsLoading,
     error: subscriptionsError,
   } = clubsHooks.useFetchClubSubscriptions(watch("search"));
+
+  const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();
+
+  const onSubmit = (data: any) => {
+    const formData = { year: data.year, amount: data.amount };
+    createYearSubscription.mutate(formData);
+  };
 
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
@@ -126,7 +155,23 @@ export default function PaymentManagerPage(props: { userRole: string }) {
       <Grid container m={4} spacing={2} size={12}>
         <Grid size={3}>
           <Card>
-            <CardHeader title={"Selecionar Ano"}></CardHeader>
+            <CardHeader
+              sx={{ pt: 2.5 }}
+              title={
+                <Grid
+                  container
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Typography variant="h5">Ano</Typography>
+                  <Tooltip title="Adicionar pagamento de quotas">
+                    <IconButton onClick={(e) => handleClick(e)}>
+                      <Add color="success"></Add>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              }
+            ></CardHeader>
             <CardContent>
               <Controller
                 name="search"
@@ -166,7 +211,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
         </Grid>
         <Grid size={2.5}>
           <Card sx={{ height: "100%" }}>
-            <CardHeader title={"Dojos em Falta"}></CardHeader>
+            <CardHeader title={"Clubes em Falta"}></CardHeader>
             <CardContent
               sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
             >
@@ -250,7 +295,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
         {watch("search") === "" ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <ListItem>
-              <ListItemText primary="Comece por seleciomar o ano para o qual quer ver o estado do pagamento de quotas."></ListItemText>
+              <ListItemText primary="Comece por selecionar o ano para o qual quer ver o estado do pagamento de quotas."></ListItemText>
             </ListItem>
           </Grid>
         ) : isSubscriptionsLoading ? (
@@ -283,6 +328,126 @@ export default function PaymentManagerPage(props: { userRole: string }) {
         username={currentUsername}
         currentState={currentState}
       ></PatchClubSubscriptionModal>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        slotProps={{
+          paper: {
+            elevation: 1,
+            sx: {
+              width: 350,
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              ml: 2,
+              "&::before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 160,
+                right: 345,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "left", vertical: "center" }}
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+      >
+        <MenuItem
+          disableRipple
+          disableTouchRipple
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Typography variant="h6" p={1}>
+            Criar notificação de Quotas
+          </Typography>
+        </MenuItem>
+        <MenuItem
+          disableTouchRipple
+          disableRipple
+          onClick={(e) => e.stopPropagation()}
+          sx={{ p: 2 }}
+        >
+          <Grid
+            container
+            size={12}
+            alignItems={"center"}
+            justifyContent={"center"}
+            spacing={1}
+          >
+            <Grid size={10}>
+              <Controller
+                name="year"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    placeholder="XXXX"
+                    color="warning"
+                    variant={"outlined"}
+                    label="Ano"
+                    type="number"
+                    slotProps={{
+                      htmlInput: {
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                      },
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.year}
+                    helperText={errors.year?.message}
+                  ></TextField>
+                )}
+              />
+            </Grid>
+            <Grid size={10}>
+              <Controller
+                name="amount"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    placeholder="XX.XX"
+                    variant={"outlined"}
+                    label="Montante"
+                    type="number"
+                    slotProps={{
+                      htmlInput: {
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                      },
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.year}
+                    helperText={errors.year?.message}
+                  ></TextField>
+                )}
+              />
+            </Grid>
+            <Grid container justifyContent={"center"} size={12}>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => handleSubmit(onSubmit)()}
+              >
+                OK
+              </Button>
+            </Grid>
+          </Grid>
+        </MenuItem>
+      </Menu>
     </>
   );
 }

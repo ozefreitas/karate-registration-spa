@@ -63,14 +63,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
-      has_registrations: false,
-      has_categories: false,
-      is_open: false,
-      is_retification: false,
-      is_closed: false,
-      encounter: false,
-      has_ended: false,
-      has_teams: false,
+      quotesLegible: false,
+      quotesOverdue: false,
+      isCoach: false,
+      isStudent: false,
+      isAthlete: false,
     },
   });
 
@@ -82,9 +79,10 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     formState: { dirtyFields: orderDirtyFields },
   } = useForm({
     defaultValues: {
-      first_name: "",
+      first_name: "first_name",
       gender: "",
       member_type: "",
+      birth_date: "",
     },
   });
 
@@ -119,11 +117,25 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     .filter(Boolean)
     .join(",");
 
+  const memberTypeFiltering = [
+    { value: "isStudent", label: "student" },
+    { value: "isAthlete", label: "athlete" },
+    { value: "isCoach", label: "coach" },
+  ]
+    .filter((item: any) => filtersWatch(item.value))
+    .map((item: any) => item.label)
+    .join(",");
+
   const {
     data: membersData,
     isLoading: isMembersDataLoading,
     error: membersError,
-  } = membersHooks.useFetchMembersData(page + 1, pageSize, ordering);
+  } = membersHooks.useFetchMembersData(
+    page + 1,
+    pageSize,
+    ordering,
+    memberTypeFiltering
+  );
 
   // Memoize `rows` to compute only when `members` changes
   const memberRows = useMemo(() => {

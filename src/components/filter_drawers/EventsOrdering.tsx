@@ -8,6 +8,7 @@ import {
   TextField,
   MenuItem,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { eventOrderingOptions } from "../../dashboard/filters";
@@ -55,6 +56,9 @@ export default function EventsOrdering(props: {
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
+        <Typography variant="h4" pl={2} mb={4}>
+          Ordenação
+        </Typography>
         <Grid container alignContent="center" alignItems="center">
           {props.orderFields.map((item: any, index: any) => (
             <React.Fragment key={item.key}>

@@ -9,11 +9,14 @@ import {
   Stack,
   FormControlLabel,
   Switch,
+  Chip,
+  Typography,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { Tune } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
+import { MemberTypes } from "../../config";
 
 const FiltersBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -38,16 +41,47 @@ export default function MemberFilters(props: {
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
       <List sx={{ p: 1, mt: 2 }}>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid container size={12}>
+          <Typography variant="h4" pl={2} mb={4}>
+            Filtragem
+          </Typography>
+        </Grid>
+        <Grid
+          sx={{ p: 3, pt: 1, pb: 1 }}
+          alignItems={"center"}
+          container
+          spacing={2}
+        >
+          <Typography fontSize={"1.05rem"}>Tipo</Typography>
+          {MemberTypes.map((item: any, index: any) => (
+            <Controller
+              key={index}
+              name={`is${
+                item.value.charAt(0).toUpperCase() + item.value.slice(1)
+              }`}
+              control={props.control}
+              render={({ field }) => (
+                <Chip
+                  variant={field.value ? "filled" : "outlined"}
+                  color={field.value ? "success" : "default"}
+                  clickable
+                  onClick={() => field.onChange(!field.value)}
+                  label={item.label}
+                ></Chip>
+              )}
+            ></Controller>
+          ))}
+        </Grid>
+        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container>
           <Controller
-            name="has_registrations"
+            name="quotesLegible"
             control={props.control}
             render={({ field }) => (
               <FormControl
                 sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
-                error={!!props.errors.has_registrations}
+                error={!!props.errors.quotesLegible}
               >
                 <Stack>
                   <FormControlLabel
@@ -60,10 +94,10 @@ export default function MemberFilters(props: {
                         onChange={(e) => {
                           field.onChange(e.target.checked);
                         }}
-                        name="has_registrations"
+                        name="quotesLegible"
                       />
                     }
-                    label="Tem Inscrições"
+                    label="Paga Quotas"
                     sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>
@@ -71,16 +105,16 @@ export default function MemberFilters(props: {
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container>
           <Controller
-            name="has_teams"
+            name="quotesOverdue"
             control={props.control}
             render={({ field }) => (
               <FormControl
                 sx={{ width: "100%" }}
                 component="fieldset"
                 variant="standard"
-                error={!!props.errors.has_categories}
+                error={!!props.errors.quotesOverdue}
               >
                 <Stack>
                   <FormControlLabel
@@ -93,208 +127,10 @@ export default function MemberFilters(props: {
                         onChange={(e) => {
                           field.onChange(e.target.checked);
                         }}
-                        name="has_teams"
+                        name="quotesOverdue"
                       />
                     }
-                    label="Tem Equipas"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
-            name="has_categories"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.has_categories}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="has_categories"
-                      />
-                    }
-                    label="Tem Escalões"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
-            name="is_open"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.is_open}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="is_open"
-                      />
-                    }
-                    label="Inscrições abertas"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
-            name="is_retification"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.is_retification}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="is_retification"
-                      />
-                    }
-                    label="Em periodo de retificações"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
-            name="is_closed"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.is_closed}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="is_closed"
-                      />
-                    }
-                    label="Inscrições fechadas"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
-            name="encounter"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.encounter}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="encounter"
-                      />
-                    }
-                    label="Encontro"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
-            name="has_ended"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.has_ended}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="has_ended"
-                      />
-                    }
-                    label="Já realizado"
+                    label="Quotas por pagar"
                     sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>

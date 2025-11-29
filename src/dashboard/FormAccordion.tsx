@@ -12,7 +12,7 @@ export default function FormAccordion(
   props: Readonly<{
     title: string;
     children: any;
-    expanded: boolean;
+    expanded?: boolean;
     tooltipMessage?: string;
     size?: "split" | "fullWidth";
   }>

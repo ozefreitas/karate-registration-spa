@@ -20,7 +20,7 @@ import {
   ArrowDropDown,
   ContentCopy,
 } from "@mui/icons-material";
-import { GenderOptions, GraduationsOptions, QuotesOptions } from "../../config";
+import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -97,6 +97,7 @@ export default function PersonalInfoSection(
     reset,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -130,11 +131,20 @@ export default function PersonalInfoSection(
         props.memberData?.data.weight === null
           ? "N/A"
           : props.memberData?.data.weight,
+      observations:
+        props.memberData?.data.observations === null ||
+        props.memberData?.data.observations === ""
+          ? "N/A"
+          : props.memberData?.data.observations,
+      conditions:
+        props.memberData?.data.conditions === null ||
+        props.memberData?.data.conditions === ""
+          ? "N/A"
+          : props.memberData?.data.conditions,
     },
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     if (isFloat(data.weight)) {
       enqueueSnackbar("Peso tem de ser um número real inteiro!", {
         variant: "error",
@@ -178,7 +188,16 @@ export default function PersonalInfoSection(
           data.cardNumber === "N/A" || data.cardNumber === ""
             ? null
             : data.cardNumber,
-        address: data.address,
+        address:
+          data.address === "N/A" || data.address === "" ? null : data.address,
+        conditions:
+          data.conditions === "N/A" || data.conditions === ""
+            ? null
+            : data.conditions,
+        observations:
+          data.observations === "N/A" || data.observations === ""
+            ? null
+            : data.observations,
         member_type:
           props.memberData?.data.member_type === "coach"
             ? "coach"
@@ -272,8 +291,16 @@ export default function PersonalInfoSection(
             size="small"
             color="warning"
             onClick={() => {
-              if (watch("weight") === "N/A") {
-                setValue("weight", "");
+              if (isEditMode === false) {
+                if (getValues("address") === "N/A") {
+                  setValue("address", "");
+                }
+                if (getValues("conditions") === "N/A") {
+                  setValue("conditions", "");
+                }
+                if (getValues("observations") === "N/A") {
+                  setValue("observations", "");
+                }
               }
               setIsEditMode(true);
             }}
@@ -773,158 +800,6 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl> */}
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Número C.C./B.I.:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="cardNumber"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    type={isEditMode ? "number" : "text"}
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.id_number}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Morada:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.address}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                NIF:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="taxNumber"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    type={isEditMode ? "number" : "text"}
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.id_number}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
         {props.memberData?.data.member_type === "coach" ? null : (
           <Controller
             name="competitor"
@@ -1067,6 +942,286 @@ export default function PersonalInfoSection(
             </FormControl>
           )}
         />
+      </Grid>
+      <Grid size={11}>
+        <Typography
+          sx={{ color: "#e81c24", fontWeight: "bold", ml: 1, mt: 8, mb: 4 }}
+          variant="h5"
+        >
+          Detalhes Adicionais
+        </Typography>
+      </Grid>
+      <Grid
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          rowGap: "30px",
+          justifyItems: "start",
+          alignItems: "center",
+        }}
+      >
+        <FormControl
+          sx={{ pb: 2 }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Morada:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="address"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
+                    label=""
+                    fullWidth
+                    slotProps={{
+                      input: {
+                        readOnly: !isEditMode,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
+                      },
+                    }}
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.address}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        <FormControl
+          sx={{ pb: 2 }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                NIF:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="taxNumber"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
+                    label=""
+                    type={isEditMode ? "number" : "text"}
+                    fullWidth
+                    slotProps={{
+                      input: {
+                        readOnly: !isEditMode,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
+                      },
+                    }}
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.id_number}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+        <FormControl
+          sx={{ pb: 2 }}
+          component="fieldset"
+          variant="standard"
+          // error={!!errors.has_registrations}
+        >
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Número C.C./B.I.:
+              </Typography>
+            }
+            control={
+              <Controller
+                name="cardNumber"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    type={isEditMode ? "number" : "text"}
+                    variant={
+                      isPrivileged && isEditMode ? "outlined" : "standard"
+                    }
+                    label=""
+                    fullWidth
+                    slotProps={{
+                      input: {
+                        readOnly: !isEditMode,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 20,
+                          marginRight: 10,
+                          color:
+                            field.value === "N/A" ? "lightgray" : "inherit",
+                        },
+                      },
+                    }}
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.id_number}
+                  />
+                )}
+              />
+            }
+          ></FormControlLabel>
+        </FormControl>
+      </Grid>
+      <Grid mt={"30px"} container rowSpacing={"30px"}>
+        <Grid size={12}>
+          <FormControl
+            sx={{ width: "100%" }}
+            component="fieldset"
+            variant="standard"
+            // error={!!errors.has_registrations}
+          >
+            <FormControlLabel
+              sx={{ mr: 2 }}
+              labelPlacement="start"
+              label={
+                <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                  Condições Médicas/ Alergias/Medicações:
+                </Typography>
+              }
+              control={
+                <Controller
+                  name="conditions"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={
+                        isPrivileged && isEditMode ? "outlined" : "standard"
+                      }
+                      label=""
+                      fullWidth
+                      multiline
+                      maxRows={4}
+                      slotProps={{
+                        input: {
+                          readOnly: !isEditMode,
+                          disableUnderline: true,
+                          style: {
+                            fontSize: 20,
+                            marginRight: 10,
+                            color:
+                              field.value === "N/A" ? "lightgray" : "inherit",
+                          },
+                        },
+                      }}
+                      required
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      error={!!errors.firstName}
+                    />
+                  )}
+                />
+              }
+            ></FormControlLabel>
+          </FormControl>
+        </Grid>
+        <Grid size={12}>
+          <FormControl
+            sx={{ width: "100%" }}
+            component="fieldset"
+            variant="standard"
+            // error={!!errors.has_registrations}
+          >
+            <FormControlLabel
+              sx={{ mr: 2 }}
+              labelPlacement="start"
+              label={
+                <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                  Observações:
+                </Typography>
+              }
+              control={
+                <Controller
+                  name="observations"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={
+                        isPrivileged && isEditMode ? "outlined" : "standard"
+                      }
+                      label=""
+                      fullWidth
+                      multiline
+                      maxRows={4}
+                      slotProps={{
+                        input: {
+                          readOnly: !isEditMode,
+                          disableUnderline: true,
+                          style: {
+                            fontSize: 20,
+                            marginRight: 10,
+                            color:
+                              field.value === "N/A" ? "lightgray" : "inherit",
+                          },
+                        },
+                      }}
+                      required
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      error={!!errors.firstName}
+                    />
+                  )}
+                />
+              }
+            ></FormControlLabel>
+          </FormControl>
+        </Grid>
       </Grid>
       <DuplicateMemberModal
         handleModalClose={handleDuplicateModalClose}

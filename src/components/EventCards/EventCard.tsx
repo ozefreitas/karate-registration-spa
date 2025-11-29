@@ -582,6 +582,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       ></AddButton>
                     </>
                   )}
+                  {singleEventData?.data.has_ended && !isSingleEventLoading ? (
+                    <InfoButton
+                      label="Consultar Inscrições"
+                      to="draw/"
+                    ></InfoButton>
+                  ) : null}
                   {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
                     <AddButton
                       label="Consultar Equipas"

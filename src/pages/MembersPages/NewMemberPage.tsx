@@ -56,16 +56,29 @@ export default function NewMemberPage() {
       category: "",
       gender: "",
       force_ident: false,
+      national_card_number: "",
+      taxpayer_number: "",
       force_registration_date: false,
       id_number: "",
       birth_date: undefined,
       weight: "",
+      post_code: "",
+      address: "",
       registration_date: undefined,
       member_type: [""],
       reason: "",
       club: "",
     },
   });
+
+  // const hasOptionals = [
+  //   "national_card_number",
+  //   "taxpayer_number",
+  //   "post_code",
+  //   "address",
+  // ]
+  //   .map((item: any) => watch(item))
+  //   .some((value) => value !== "");
 
   const is_force_ident = watch("force_ident");
   const is_force_registration_date = watch("force_registration_date");
@@ -97,6 +110,10 @@ export default function NewMemberPage() {
       registration_date: data.registration_date,
       weight: data.weight,
       club: data.club,
+      national_card_number: data.national_card_number,
+      taxpayer_number: data.taxpayer_number,
+      post_code: data.post_code,
+      address: data.address,
     };
 
     if (data.weight === "") {
@@ -110,8 +127,6 @@ export default function NewMemberPage() {
     if (data.force_registration_date) {
       formData.registration_date = undefined;
     }
-
-    console.log(formData);
 
     data.member_type
       .filter((item: string) => item !== "")
@@ -149,7 +164,11 @@ export default function NewMemberPage() {
               | "gender"
               | "club"
               | "id_number"
-              | "registration_date";
+              | "registration_date"
+              | "post_code"
+              | "national_card_number"
+              | "taxpayer_number"
+              | "address";
 
             const fields: Fields[] = [
               "first_name",
@@ -160,6 +179,10 @@ export default function NewMemberPage() {
               "club",
               "id_number",
               "registration_date",
+              "post_code",
+              "national_card_number",
+              "taxpayer_number",
+              "address",
             ];
 
             fields.forEach((field) => {
@@ -479,6 +502,91 @@ export default function NewMemberPage() {
             />
           </Grid>
         </FormCard>
+        <FormAccordion expanded={undefined} title="Dados Opcionais">
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="national_card_number"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  type="number"
+                  label="Nª C.C./B.I."
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.national_card_number}
+                  helperText={errors.national_card_number?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="taxpayer_number"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  type="number"
+                  label="NIF"
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.taxpayer_number}
+                  helperText={errors.taxpayer_number?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="address"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Morada"
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.address}
+                  helperText={errors.address?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid sx={{ p: 2 }} size={6}>
+            <Controller
+              name="post_code"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  type="number"
+                  label="Código Postal"
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.post_code}
+                  helperText={errors.post_code?.message}
+                />
+              )}
+            />
+          </Grid>
+        </FormAccordion>
         <FormCard title="Tipo de Praticante">
           <Grid sx={{ p: 3, pt: 1 }} container size={6}>
             <Controller
@@ -510,7 +618,7 @@ export default function NewMemberPage() {
                 return (
                   <FormControl component="fieldset" variant="standard">
                     <FormLabel sx={{ mb: 2 }}>
-                      Se pretende inscrever em provas, selecione este campo.
+                      Escolha pelo menos um tipo de membro. Não pode ser aluno e competidor.
                     </FormLabel>
                     <Stack spacing={1}>
                       {MemberTypes.map((type) => (

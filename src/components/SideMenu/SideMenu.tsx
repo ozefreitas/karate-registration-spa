@@ -20,6 +20,7 @@ import {
   getAccountSideMenuConfig,
 } from "../../dashboard/config";
 import { AxiosResponse } from "axios";
+import { clubsHooks } from "../../hooks";
 
 const drawerWidth = 260;
 
@@ -91,6 +92,11 @@ export default function SideMenu(
 
   const sideMenuConfig = getSideMenuConfig(props.me?.data.role);
   const accountSideMenuConfig = getAccountSideMenuConfig(props.me?.data.role);
+  const currentYear = new Date().getFullYear();
+
+  const { data: subscriptionsData } = clubsHooks.useFetchClubSubscriptions(
+    `${currentYear}`
+  );
 
   return (
     <Box>
@@ -113,6 +119,14 @@ export default function SideMenu(
                     onClick={() => navigate(options.to)}
                     sx={[
                       {
+                        m: 0.3,
+                        border:
+                          options.name === "payment_manager" &&
+                          subscriptionsData?.data?.filter(
+                            (item: any) => item.paid === false
+                          ).length > 0
+                            ? "solid red"
+                            : null,
                         "&.Mui-selected": {
                           borderRadius: "10px",
                         },

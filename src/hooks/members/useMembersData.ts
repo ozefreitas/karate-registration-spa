@@ -9,10 +9,10 @@ import {
   fetchLastFiveMembers,
 } from "../../api";
 
-export const useFetchMembersData = (page: number, pageSize: number, ordering?: string) => {
+export const useFetchMembersData = (page: number, pageSize: number, ordering?: string, memberType?: string) => {
   return useQuery({
-    queryKey: ["members", page, pageSize, ordering],
-    queryFn: () => fetchMembers(page, pageSize, ordering),
+    queryKey: ["members", page, pageSize, ordering, memberType],
+    queryFn: () => fetchMembers(page, pageSize, ordering, memberType),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
   });

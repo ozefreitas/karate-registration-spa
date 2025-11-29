@@ -318,18 +318,13 @@ export default function AllUseTable(
     },
   }));
 
-  const StyledTableRow = styled(TableRow)(() => ({
-    textAlign: "center",
-    height: 50,
-    "&:nth-of-type(even)": {
-      // backgroundColor: "gray",
-    },
-    // hide last border
-    "&:last-child td, &:last-child th": {
-      // border: 0,
-    },
-    cursor: "pointer",
-  }));
+  const StyledTableRow = styled(TableRow)<{ header?: boolean }>(
+    ({ header }) => ({
+      textAlign: "center",
+      height: 50,
+      cursor: header ? "default" : "pointer",
+    })
+  );
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -385,7 +380,7 @@ export default function AllUseTable(
           <TableContainer component={Paper}>
             <Table size="small" aria-label="simple table">
               <TableHead>
-                <StyledTableRow>
+                <StyledTableRow header>
                   {props.selection ? (
                     <StyledTableCell>
                       <label>

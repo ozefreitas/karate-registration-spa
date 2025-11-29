@@ -11,6 +11,7 @@ import {
   Stack,
   FormControlLabel,
   Switch,
+  Typography,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { SeasonOptions } from "../../config";
@@ -40,7 +41,10 @@ export default function EventsFilters(props: {
 
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
-      <List sx={{p: 1, mt: 2}}>
+      <List sx={{ p: 1, mt: 2 }}>
+        <Typography variant="h4" pl={2} mb={4}>
+          Filtragem
+        </Typography>
         <Grid sx={{ p: 2 }} size={2}>
           <Controller
             name="season"

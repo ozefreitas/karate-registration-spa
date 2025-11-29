@@ -8,6 +8,7 @@ import {
   TextField,
   MenuItem,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { memberOrderingOptions } from "../../dashboard/filters";
@@ -55,6 +56,9 @@ export default function MemberOrdering(props: {
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
+        <Typography variant="h4" pl={2} mb={4}>
+          Ordenação
+        </Typography>
         <Grid container alignContent="center" alignItems="center">
           {props.orderFields.map((item: any, index: any) => (
             <React.Fragment key={item.key}>
@@ -96,7 +100,7 @@ export default function MemberOrdering(props: {
 
               <Grid size={1}>
                 <IconButton
-                  disabled={index === 2}
+                  disabled={index === 3}
                   onClick={() => moveDown(index)}
                 >
                   <ArrowDownward />

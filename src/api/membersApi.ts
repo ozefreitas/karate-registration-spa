@@ -1,8 +1,18 @@
 import { authClient } from "./apiClient";
 
-export const fetchMembers = (page: number, pageSize: number, ordering?: string) => {
+export const fetchMembers = (
+  page: number,
+  pageSize: number,
+  ordering?: string,
+  memberType?: string
+) => {
   return authClient.get("/members/", {
-    params: { page: page, page_size: pageSize, ordering: ordering },
+    params: {
+      page: page,
+      page_size: pageSize,
+      ordering: ordering,
+      in_member_type: memberType,
+    },
   });
 };
 

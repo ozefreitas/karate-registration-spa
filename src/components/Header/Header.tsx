@@ -421,7 +421,11 @@ export default function Header(
           sx={{ p: 2, display: "flex", gap: 1 }}
         >
           Notificações Recentes
-          <Typography color="textDisabled">(a mostrar 5 primeiras)</Typography>
+          {notificationData?.data.total === 0 ? null : (
+            <Typography color="textDisabled">
+              (a mostrar 5 primeiras)
+            </Typography>
+          )}
         </MenuItem>
         {isNotificationLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -437,7 +441,7 @@ export default function Header(
             </ListItem>
           ) : axios.isAxiosError(notificationError) &&
             notificationError.response?.status === 403 ? (
-            <ListItem disablePadding sx={{ m: 0 }}>
+            <MenuItem divider>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemText
                   primary={
@@ -445,22 +449,22 @@ export default function Header(
                   }
                 />
               </ListItemButton>
-            </ListItem>
+            </MenuItem>
           ) : (
-            <ListItem disablePadding sx={{ m: 0 }}>
+            <MenuItem divider>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemText
                   primary={"Ocorreu um erro ao carregar as suas notificações."}
                 />
               </ListItemButton>
-            </ListItem>
+            </MenuItem>
           )
         ) : notificationData?.data.total === 0 ? (
-          <ListItem>
-            <ListItemButton disabled sx={{ m: 0, p: 3, pb: 0 }}>
+          <MenuItem divider>
+            <ListItemButton disabled sx={{ m: 0, p: 3 }}>
               <ListItemText primary={"De momento não tem notificações."} />
             </ListItemButton>
-          </ListItem>
+          </MenuItem>
         ) : (
           <List sx={{ display: "flex", flexDirection: "column" }}>
             {notificationData?.data.response.map(
@@ -468,7 +472,7 @@ export default function Header(
                 <MenuItem
                   divider={
                     notificationError !== null ||
-                    notificationData.data.total - 3 === index
+                    notificationData.data.response.length - 1 === index
                   }
                   onClick={(e) => e.stopPropagation()}
                   key={index}
@@ -486,7 +490,7 @@ export default function Header(
                           whiteSpace: "normal",
                           overflowWrap: "break-word",
                           wordBreak: "break-word",
-                          hyphens: "auto", // 👈 key line
+                          hyphens: "auto",
                         },
                       }}
                       primary={

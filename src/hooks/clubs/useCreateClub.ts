@@ -34,7 +34,6 @@ export const useCreateClub = () => {
   });
 };
 
-
 export const useCreateAllClubsSubscription = () => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -42,7 +41,7 @@ export const useCreateAllClubsSubscription = () => {
   return useMutation({
     mutationFn: createAllClubsSubscription,
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.message, {
+      enqueueSnackbar(data.data.message, {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -52,9 +51,12 @@ export const useCreateAllClubsSubscription = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["subscriptions-available-years"],
+      });
     },
-    onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+    onError: (data: any) => {
+      enqueueSnackbar(data.response.data.error, {
         variant: "error",
         anchorOrigin: {
           vertical: "top",

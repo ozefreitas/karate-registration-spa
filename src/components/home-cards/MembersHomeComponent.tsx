@@ -44,7 +44,7 @@ export default function MembersHomeComponent(
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          title={"Atletas adicionados recentemente"}
+          title={"Membros adicionados recentemente"}
           sx={{
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
