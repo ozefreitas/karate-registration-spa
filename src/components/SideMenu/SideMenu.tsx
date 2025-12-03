@@ -95,7 +95,8 @@ export default function SideMenu(
   const currentYear = new Date().getFullYear();
 
   const { data: subscriptionsData } = clubsHooks.useFetchClubSubscriptions(
-    `${currentYear}`
+    `${currentYear}`,
+    props.me?.data.role
   );
 
   return (
@@ -119,14 +120,27 @@ export default function SideMenu(
                     onClick={() => navigate(options.to)}
                     sx={[
                       {
-                        m: 0.3,
-                        border:
-                          options.name === "payment_manager" &&
-                          subscriptionsData?.data?.filter(
+                        m: 0.5,
+                        ...(options.name === "payment_manager" &&
+                          subscriptionsData?.data?.some(
                             (item: any) => item.paid === false
-                          ).length > 0
-                            ? "solid red"
-                            : null,
+                          ) && {
+                            animation: "pulseRed 1.5s infinite",
+                          }),
+                        "@keyframes pulseRed": {
+                          "0%": {
+                            boxShadow: "0 0 0 0 rgba(255, 0, 0, 0.7)",
+                            backgroundColor: "rgba(255, 0, 0, 0.15)",
+                          },
+                          "70%": {
+                            boxShadow: "0 0 0 12px rgba(255, 0, 0, 0)",
+                            backgroundColor: "rgba(255, 0, 0, 0.25)",
+                          },
+                          "100%": {
+                            boxShadow: "0 0 0 0 rgba(255, 0, 0, 0)",
+                            backgroundColor: "rgba(255, 0, 0, 0.15)",
+                          },
+                        },
                         "&.Mui-selected": {
                           borderRadius: "10px",
                         },

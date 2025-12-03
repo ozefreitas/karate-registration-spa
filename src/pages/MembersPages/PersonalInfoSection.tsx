@@ -234,13 +234,15 @@ export default function PersonalInfoSection(
             INFORMAÇÕES PESSOAIS
           </Typography>
         </Grid>
-        <Grid size={1}>
-          <Tooltip title="Duplicar Membro">
-            <Button onClick={() => handleDuplicateModalOpen()}>
-              <ContentCopy></ContentCopy>
-            </Button>
-          </Tooltip>
-        </Grid>
+        {["superuser", "subed_club"].includes(userRole) ? (
+          <Grid size={1}>
+            <Tooltip title="Duplicar Membro">
+              <Button onClick={() => handleDuplicateModalOpen()}>
+                <ContentCopy></ContentCopy>
+              </Button>
+            </Tooltip>
+          </Grid>
+        ) : null}
       </Grid>
       <Grid sx={{ mb: 3 }}>
         {["main_admin", "superuser", "subed_club"].includes(userRole) ? (

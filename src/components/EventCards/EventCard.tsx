@@ -585,7 +585,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   {singleEventData?.data.has_ended && !isSingleEventLoading ? (
                     <InfoButton
                       label="Consultar Inscrições"
-                      to="draw/"
+                      to="individuals/"
                     ></InfoButton>
                   ) : null}
                   {!isSingleEventLoading && singleEventData?.data?.has_teams ? (

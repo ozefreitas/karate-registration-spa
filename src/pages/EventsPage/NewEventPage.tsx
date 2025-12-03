@@ -211,6 +211,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           "event_date",
           "contact",
           "email_contact",
+          "start_registration",
+          "end_registration",
+          "retifications_deadline",
         ];
 
         fields.forEach((field) => {

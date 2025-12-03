@@ -30,7 +30,7 @@ export default function DuplicateMemberModal(
     memberData?: any;
   }>
 ) {
-   const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const createMember = membersHooks.useCreateMember();
   const handleSubmit = () => {
@@ -57,6 +57,7 @@ export default function DuplicateMemberModal(
       },
     });
   };
+
   return (
     <Dialog
       open={props.isModalOpen}
@@ -66,7 +67,7 @@ export default function DuplicateMemberModal(
       }}
     >
       <DialogTitle>
-        <Typography variant="h5">
+        <Typography p={2} pb={0} variant="h5">
           Duplicar {props.memberData?.full_name}
         </Typography>
       </DialogTitle>
@@ -87,7 +88,7 @@ export default function DuplicateMemberModal(
           }}
           sx={{
             p: 2,
-            gap: 4,
+            gap: 2,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },
           }}

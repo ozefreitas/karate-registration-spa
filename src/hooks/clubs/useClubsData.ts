@@ -14,13 +14,16 @@ export const useFetchAvailableClubs = () => {
   });
 };
 
-export const useFetchClubSubscriptions = (search: string) => {
+export const useFetchClubSubscriptions = (
+  search: string,
+  userRole?: string
+) => {
   return useQuery({
     queryKey: ["club-subscriptions", search],
     queryFn: () => fetchClubSubscriptions(search),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!search
+    enabled: !!search && ["main_admin", "superuser"].includes(userRole!),
   });
 };
 

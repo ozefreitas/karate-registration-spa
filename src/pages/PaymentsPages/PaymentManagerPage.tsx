@@ -17,7 +17,7 @@ import {
   Button,
 } from "@mui/material";
 import { clubsHooks } from "../../hooks";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { formatDateTime } from "../../utils/utils";
@@ -26,6 +26,7 @@ import PatchClubSubscriptionModal from "../../components/Admin/PatchClubSubscrip
 import { Controller, useForm } from "react-hook-form";
 import { computeExpirationDate } from "../../utils/utils";
 import { Add } from "@mui/icons-material";
+import { useSearchParams } from "react-router-dom";
 
 export default function PaymentManagerPage(props: { userRole: string }) {
   type Club = { id: string; username: string; role: string; tier: string };
@@ -47,6 +48,8 @@ export default function PaymentManagerPage(props: { userRole: string }) {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const [searchParams] = useSearchParams();
+  const year = searchParams.get("year");
 
   const handleClose = async () => {
     setAnchorEl(null);
@@ -56,6 +59,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
     control,
     watch,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -65,6 +69,12 @@ export default function PaymentManagerPage(props: { userRole: string }) {
       amount: "",
     },
   });
+
+  useEffect(() => {
+    if (year) {
+      setValue("search", year);
+    }
+  }, []);
 
   const { data } = clubsHooks.useFetchAvailableYears();
 
@@ -83,7 +93,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
     data: subscriptionsData,
     isLoading: isSubscriptionsLoading,
     error: subscriptionsError,
-  } = clubsHooks.useFetchClubSubscriptions(watch("search"));
+  } = clubsHooks.useFetchClubSubscriptions(watch("search"), props.userRole);
 
   const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();
 

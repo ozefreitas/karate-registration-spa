@@ -9,7 +9,9 @@ export const fetchEvents = (
   hasEnded?: boolean,
   hasTeams?: boolean,
   hasCategories?: boolean,
-  hasRegistrations?: boolean
+  hasRegistrations?: boolean,
+  month?: string,
+  day?: string
 ) => {
   return apiClient.get("/events/", {
     params: {
@@ -21,6 +23,16 @@ export const fetchEvents = (
       has_teams: hasTeams,
       has_categories: hasCategories,
       has_registrations: hasRegistrations,
+      in_month: month,
+      in_day: day,
+    },
+  });
+};
+
+export const fetchEventDaysperMonth = (month: string) => {
+  return authClient.get("/events/events_days_per_month/", {
+    params: {
+      month: month,
     },
   });
 };
@@ -30,7 +42,6 @@ export const fetchSingleEvent = (eventId: string) => {
   return apiClient.get(`/events/${eventId}/`);
 };
 
-// public endpoint
 export const fetchNextEvent = () => {
   return apiClient.get("/events/next_event/");
 };

@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 import { ptPT } from "@mui/material/locale";
+import { ptPT as corePtPT } from "@mui/material/locale";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/700.css";
 
@@ -133,7 +134,8 @@ const theme = createTheme(
       },
     },
   },
-  ptPT
+  ptPT,
+  corePtPT
 );
 
 export default theme;

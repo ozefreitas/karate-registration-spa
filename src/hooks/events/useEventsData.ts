@@ -5,6 +5,7 @@ import {
   fetchNextEvent,
   fetchLastEvent,
   fetchEventRegistrationFile,
+  fetchEventDaysperMonth,
 } from "../../api/";
 
 export const useFetchEventsData = (
@@ -15,7 +16,9 @@ export const useFetchEventsData = (
   hasEnded?: boolean,
   hasTeams?: boolean,
   hasCategories?: boolean,
-  hasRegistrations?: boolean
+  hasRegistrations?: boolean,
+  month?: string,
+  day?: string
 ) => {
   return useQuery({
     queryKey: [
@@ -28,6 +31,8 @@ export const useFetchEventsData = (
       hasTeams,
       hasCategories,
       hasRegistrations,
+      month,
+      day,
     ],
     queryFn: () =>
       fetchEvents(
@@ -38,9 +43,12 @@ export const useFetchEventsData = (
         hasEnded,
         hasTeams,
         hasCategories,
-        hasRegistrations
+        hasRegistrations,
+        month,
+        day
       ),
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
     enabled: pageSize !== 100,
   });
 };
@@ -81,5 +89,14 @@ export const useFetchEventRegistrationFile = (eventId: string) => {
     refetchOnMount: false,
     retry: false,
     enabled: false,
+  });
+};
+
+export const useFetchEventDaysperMonth = (month: string) => {
+  return useQuery({
+    queryKey: ["event-days-per-month", month],
+    queryFn: () => fetchEventDaysperMonth(month),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };

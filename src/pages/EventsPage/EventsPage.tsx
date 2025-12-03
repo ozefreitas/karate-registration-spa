@@ -11,18 +11,29 @@ import {
   ListItemText,
   Pagination,
   Button,
+  IconButton,
+  Icon,
+  Tooltip,
 } from "@mui/material";
 import EventsFilters from "../../components/filter_drawers/EventsFilters";
 import EventsOrdering from "../../components/filter_drawers/EventsOrdering";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { Today, LocationPin, HowToReg, AccessTime } from "@mui/icons-material";
+import {
+  Today,
+  LocationPin,
+  HowToReg,
+  AccessTime,
+  CalendarMonth,
+  Subject,
+} from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useState } from "react";
 import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useForm } from "react-hook-form";
+import EventCallendar from "../../components/Callendars/EventsCallendar";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
@@ -39,9 +50,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     has_ended: boolean;
   };
   const [page, setPage] = useState<number>(1);
+  const [currentView, setCurrentView] = useState<number>(1);
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    console.log(event);
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
@@ -170,6 +181,32 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               errors={filtersErrors}
               changedCount={filtersChangedCount}
             ></EventsFilters>
+            <Grid pl={2} container spacing={1} borderRadius={3}>
+              <Tooltip placement="top" title={"Vista de Lista"}>
+                <IconButton
+                  size="large"
+                  onClick={() => setCurrentView(1)}
+                  sx={{ bgcolor: currentView === 1 ? "#03a9f4" : undefined }}
+                  color="info"
+                >
+                  <Subject
+                    sx={{ color: currentView === 1 ? "white" : undefined }}
+                  ></Subject>
+                </IconButton>
+              </Tooltip>
+              <Tooltip placement="top" title={"Vista de Calendário"}>
+                <IconButton
+                  size="large"
+                  sx={{ bgcolor: currentView === 2 ? "#03a9f4" : undefined }}
+                  onClick={() => setCurrentView(2)}
+                  color="info"
+                >
+                  <CalendarMonth
+                    sx={{ color: currentView === 2 ? "white" : undefined }}
+                  ></CalendarMonth>
+                </IconButton>
+              </Tooltip>
+            </Grid>
           </Grid>
         )}
         {isEventsDataLoading ? (
@@ -186,17 +223,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             <Button onClick={() => refetch()}>Refrescar</Button>
           </Grid>
         ) : eventsData?.data.count === 0 ? (
-          <Grid
-            sx={{ mt: 1, mb: 3 }}
-            container
-            justifyContent="center"
-            size={12}
-          >
+          <Grid mt={5} container justifyContent="center" size={12}>
             <Typography variant="h6" sx={{ color: "gray" }}>
               Não foram encontrados Eventos.
             </Typography>
           </Grid>
-        ) : (
+        ) : currentView === 1 ? (
           <Grid size={12}>
             <Card sx={{ m: 2, mt: 0 }}>
               <CardContent>
@@ -297,6 +329,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               </CardContent>
             </Card>
           </Grid>
+        ) : (
+          <EventCallendar
+            ordering={ordering}
+            filtersWatch={filtersWatch}
+          ></EventCallendar>
         )}
 
         <Grid
@@ -310,7 +347,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         >
           {eventsData?.data.count === 0 ||
           isEventsDataLoading ||
-          eventsError ? null : (
+          eventsError ||
+          currentView === 2 ? null : (
             <Grid size={12} mt={3} container justifyContent={"center"}>
               <Pagination
                 count={Math.ceil(eventsData?.data.count / 5)}

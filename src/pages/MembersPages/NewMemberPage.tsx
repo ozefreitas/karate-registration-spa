@@ -116,17 +116,17 @@ export default function NewMemberPage() {
       address: data.address,
     };
 
-    if (data.weight === "") {
-      formData.weight = null;
-    }
+    (["national_card_number", "post_code", "taxpayer_number"] as const).forEach(
+      (key) => {
+        if (data[key] === "") {
+          formData[key] = null;
+        }
+      }
+    );
 
-    if (data.force_ident === true) {
-      formData.id_number = 0;
-    }
-
-    if (data.force_registration_date) {
-      formData.registration_date = undefined;
-    }
+    if (data.weight === "") formData.weight = null;
+    if (data.force_ident) formData.id_number = 0;
+    if (data.force_registration_date) formData.registration_date = undefined;
 
     data.member_type
       .filter((item: string) => item !== "")
@@ -618,7 +618,8 @@ export default function NewMemberPage() {
                 return (
                   <FormControl component="fieldset" variant="standard">
                     <FormLabel sx={{ mb: 2 }}>
-                      Escolha pelo menos um tipo de membro. Não pode ser aluno e competidor.
+                      Escolha pelo menos um tipo de membro. Não pode ser aluno e
+                      competidor.
                     </FormLabel>
                     <Stack spacing={1}>
                       {MemberTypes.map((type) => (

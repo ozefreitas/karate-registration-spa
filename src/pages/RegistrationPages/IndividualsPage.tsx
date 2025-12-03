@@ -8,21 +8,27 @@ import {
   Box,
   CircularProgress,
   Typography,
+  Tooltip,
 } from "@mui/material";
-import { Add, Visibility } from "@mui/icons-material";
+import { Add, ContentCopy, Visibility } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import MembersModal from "../../components/Modals/MembersModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";
+import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
+  const [disciplineToDuplicate, setDisciplineToDuplicate] =
+    useState<string>("");
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
+  const [isDuplicateModalOpen, setIsDuplicateModalOpen] =
+    useState<boolean>(false);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -35,6 +41,15 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const handleCategoriesListModalOpen = (disciplineName: string) => {
     setCurrentDiscipline(disciplineName);
     setIsCategoriesListModalOpen(true);
+  };
+
+  const handleDuplicateModalOpen = (disciplineName: string) => {
+    setDisciplineToDuplicate(disciplineName);
+    setIsDuplicateModalOpen(true);
+  };
+
+  const handleDuplicateModalClose = () => {
+    setIsDuplicateModalOpen(false);
   };
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
@@ -94,7 +109,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         }
         title={`Inscritos em ${singleEventData?.data.name}`}
       ></PageInfoCard>
-      <Grid container sx={{ m: 2 }}>
+      <Grid container m={2}>
         <Grid>
           <Card>
             <CardContent
@@ -112,9 +127,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
               ) : (
                 <Typography
                   variant="h6"
+                  px={2}
                   sx={{
-                    pl: 2,
-                    pr: 2,
                     fontWeight: "bold",
                     color: singleEventData?.data.is_open
                       ? "green"
@@ -167,25 +181,45 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
               <span key={index}>
                 <Grid
                   size={12}
-                  sx={{ pr: 3 }}
+                  pr={2}
+                  mt={5}
                   container
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Typography sx={{ m: 3 }} variant="h5">
+                  <Typography p={3} variant="h5">
                     {discipline.name}
                   </Typography>
-                  {singleEventData?.data.has_categories ? (
-                    <Button
-                      startIcon={<Visibility />}
-                      variant="contained"
-                      onClick={() => {
-                        handleCategoriesListModalOpen(discipline.name);
-                      }}
-                    >
-                      Escalões
-                    </Button>
-                  ) : null}
+                  <Grid container spacing={2}>
+                    {singleEventData?.data.has_categories ? (
+                      <Button
+                        startIcon={<Visibility />}
+                        variant="contained"
+                        onClick={() => {
+                          handleCategoriesListModalOpen(discipline.name);
+                        }}
+                      >
+                        Escalões
+                      </Button>
+                    ) : null}
+                    {singleEventData?.data.has_ended &&
+                    ["superuser", "subed_club"].includes(props.userRole) &&
+                    disciplineIndividuals.length !== 0 ? (
+                      <Grid size={1}>
+                        <Tooltip title="Copiar Inscrições">
+                          <Button
+                            startIcon={<ContentCopy></ContentCopy>}
+                            variant="contained"
+                            onClick={() =>
+                              handleDuplicateModalOpen(discipline.name)
+                            }
+                          >
+                            Copiar
+                          </Button>
+                        </Tooltip>
+                      </Grid>
+                    ) : null}
+                  </Grid>
                 </Grid>
                 <AllUseTable
                   count={discipline.individuals.length}
@@ -204,7 +238,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         )}
       </Grid>
       {singleEventData?.data.is_open ? (
-        <Grid container justifyContent="flex-end" sx={{ m: 4 }}>
+        <Grid container justifyContent="flex-end" m={4}>
           <Button
             sx={{ m: 1 }}
             variant="contained"
@@ -222,6 +256,18 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         handleModalClose={handleModalClose}
         eventData={singleEventData?.data}
       ></MembersModal>
+      {disciplineToDuplicate === "" ? null : (
+        <DuplicateRegistrationsModal
+          handleModalClose={handleDuplicateModalClose}
+          isModalOpen={isDuplicateModalOpen}
+          disciplineData={
+            disciplinesData?.data.results.filter(
+              (disicpline: any) => disicpline.name === disciplineToDuplicate
+            )[0]
+          }
+          eventName={singleEventData?.data.name}
+        ></DuplicateRegistrationsModal>
+      )}
       {currentDiscipline === "" ? null : (
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}

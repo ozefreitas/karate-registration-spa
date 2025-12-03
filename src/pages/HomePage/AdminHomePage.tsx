@@ -87,7 +87,9 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                     variant="contained"
                     startIcon={<Warning></Warning>}
                     size="large"
-                    onClick={() => navigate("/payment_manager/")}
+                    onClick={() =>
+                      navigate(`/payment_manager/?year=${currentYear}`)
+                    }
                   >
                     Resolver
                   </Button>
