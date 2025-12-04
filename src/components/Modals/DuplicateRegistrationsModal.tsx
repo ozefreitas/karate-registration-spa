@@ -131,7 +131,9 @@ export default function (
                 error={!!errors.eventId}
                 helperText={errors.eventId?.message}
               >
-                <MenuItem value="">-- Selecionar --</MenuItem>
+                <MenuItem sx={{ color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
                 {isEventsLoading ? (
                   <Grid container justifyContent="center" mt={1} size={12}>
                     <CircularProgress />
@@ -167,7 +169,9 @@ export default function (
                 error={!!errors.eventId}
                 helperText={errors.eventId?.message}
               >
-                <MenuItem value="">-- Selecionar --</MenuItem>
+                <MenuItem sx={{ color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
                 {isDisciplineLoading ? (
                   <Grid container justifyContent="center" mt={1} size={12}>
                     <CircularProgress />

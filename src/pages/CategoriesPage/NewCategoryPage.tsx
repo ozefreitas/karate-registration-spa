@@ -450,7 +450,9 @@ export default function NewCategoryPage() {
                   error={!!errors.min_grad}
                   helperText={errors.min_grad?.message}
                 >
-                  <MenuItem value="">--Selecionar--</MenuItem>
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
                   {GraduationsOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -482,7 +484,9 @@ export default function NewCategoryPage() {
                   error={!!errors.max_grad}
                   helperText={errors.max_grad?.message}
                 >
-                  <MenuItem value="">--Selecionar--</MenuItem>
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
                   {GraduationsOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}

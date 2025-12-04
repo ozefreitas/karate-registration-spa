@@ -76,7 +76,9 @@ export default function MemberOrdering(props: {
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     >
-                      <MenuItem value="">-- Selecionar --</MenuItem>
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
+                      </MenuItem>
                       {memberOrderingOptions
                         .filter((opt) => item.options.includes(opt.value))
                         .map((opt) => (

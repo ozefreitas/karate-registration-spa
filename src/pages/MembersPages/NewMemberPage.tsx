@@ -735,7 +735,9 @@ export default function NewMemberPage() {
                     error={!!errors.club}
                     helperText={errors.club?.message}
                   >
-                    <MenuItem value="0">-- Selecionar --</MenuItem>
+                    <MenuItem sx={{ color: "lightgrey" }} value="0">
+                      -- Selecionar --
+                    </MenuItem>
                     {clubUserData?.data.map((item: any, index: string) => (
                       <MenuItem key={index} value={item.id}>
                         {item.username}

@@ -172,9 +172,9 @@ export default function MainSettingsPage() {
   return (
     <>
       <PageInfoCard
-        description="Aqui poderá iniciar configurar esta plataforma, e da forma como é
+        description="Aqui poderá configurar esta plataforma, e da forma como é
           apresentada para as contas associadas, assim como controlo sobre essas
-          mesmas contas."
+          mesmas contas, controlar a forma como quotas são criadas, entre outras coisas."
         title="Administrador"
       ></PageInfoCard>
       <Card sx={{ m: 3, mt: 0 }}>
@@ -196,7 +196,7 @@ export default function MainSettingsPage() {
               textColor="inherit"
             >
               <Tab value="one" label="Gestor de contas" />
-              <Tab value="two" label="Work In Progress" />
+              <Tab value="two" label="Gestor de quotas" />
               <Tab value="three" label="Work In Progress" />
             </Tabs>
           </Box>
@@ -223,7 +223,9 @@ export default function MainSettingsPage() {
                     value={selectedUserId}
                     onChange={handleClubChange}
                   >
-                    <MenuItem value="">-- Selecionar --</MenuItem>
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
                     {availableClubsData?.data.results.map(
                       (item: any, index: string) => (
                         <MenuItem key={index} value={item.id}>
@@ -272,7 +274,9 @@ export default function MainSettingsPage() {
                     value={selectedRequestId}
                     onChange={handleAcountChange}
                   >
-                    <MenuItem value="">-- Selecionar --</MenuItem>
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
                     {requestAccountData?.data.results.map(
                       (item: any, index: string) => (
                         <MenuItem key={index} value={item.id}>
@@ -530,7 +534,9 @@ export default function MainSettingsPage() {
                     value={selectedPasswordRequestId}
                     onChange={handlePasswordRequestAcountChange}
                   >
-                    <MenuItem value="">-- Selecionar --</MenuItem>
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
                     {requestingPasswordsData?.data.map(
                       (item: any, index: string) => (
                         <MenuItem key={index} value={item.id}>
@@ -713,7 +719,14 @@ export default function MainSettingsPage() {
               </Grid>
             </>
           ) : value === "two" ? (
-            <Grid></Grid>
+            <Grid>
+              As quotas são criadas automaticamente no primeiro dia de setembro
+              de cada ano. <p></p>
+              Pode alterar aqui o montante pré-definido das quotas. Neste
+              momento, a todos os Clubes será pedido o mesmo valor. <p></p>
+              Ao serem criadas as quotas, cada Clube é automaticamente
+              notificado.
+            </Grid>
           ) : (
             <Grid></Grid>
           )}

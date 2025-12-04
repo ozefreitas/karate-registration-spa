@@ -260,7 +260,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<PaymentManagerPage userRole={userRole}  />}
+                        element={<PaymentManagerPage userRole={userRole} />}
                         allowedRoles={["main_admin", "superuser"]}
                       />
                     )

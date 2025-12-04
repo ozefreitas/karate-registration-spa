@@ -22,7 +22,7 @@ import {
 import { AxiosResponse } from "axios";
 import { clubsHooks } from "../../hooks";
 
-const drawerWidth = 260;
+const drawerWidth = 275;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -184,7 +184,7 @@ export default function SideMenu(
                     selected={location.pathname === options.to}
                     onClick={() => navigate(options.to)}
                     sx={[
-                      { minHeight: 48, px: 2.5 },
+                      { minHeight: 48, px: 2.5, m: 0.5 },
                       isMenuOpen
                         ? { justifyContent: "initial" }
                         : { justifyContent: "center" },
