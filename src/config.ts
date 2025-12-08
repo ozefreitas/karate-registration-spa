@@ -36,6 +36,31 @@ export const getGraduationFromValue = (gradValue: number) => {
   return gradLabel;
 };
 
+const MonthOptions: { label: string; value: number }[] = [
+  { label: "janeiro", value: 1 },
+  { label: "fevereiro", value: 2 },
+  { label: "março", value: 3 },
+  { label: "abril", value: 4 },
+  { label: "maio", value: 5 },
+  { label: "junho", value: 6 },
+  { label: "julho", value: 7 },
+  { label: "agosto", value: 8 },
+  { label: "setembro", value: 9 },
+  { label: "outubro", value: 10 },
+  { label: "novembro", value: 11 },
+  { label: "dezembro", value: 12 },
+];
+
+export const getMonthFromValue = (monthValue: number) => {
+  let monthLabel = undefined;
+  MonthOptions.forEach((label) => {
+    if (monthValue === label.value) {
+      monthLabel = label.label;
+    }
+  });
+  return monthLabel;
+};
+
 export const GenderOptions: { label: string; value: string }[] = [
   { label: "Masculino", value: "Masculino" },
   { label: "Feminino", value: "Feminino" },

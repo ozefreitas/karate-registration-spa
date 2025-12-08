@@ -16,7 +16,9 @@ import { Controller } from "react-hook-form";
 import { Tune } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
-import { MemberTypes } from "../../config";
+import { MemberTypes, GenderOptions } from "../../config";
+import { useAuth } from "../../access/GlobalAuthProvider";
+import { adminHooks } from "../../hooks";
 
 const FiltersBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -37,6 +39,13 @@ export default function MemberFilters(props: {
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
+  const { user } = useAuth();
+  const userRole = user?.data.role;
+
+  const { data: availableUsersData, isLoading: isAvailableUserLoading } =
+    adminHooks.useFetchClubUsersData();
+
+  console.log(availableUsersData);
 
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
@@ -46,12 +55,7 @@ export default function MemberFilters(props: {
             Filtragem
           </Typography>
         </Grid>
-        <Grid
-          sx={{ p: 3, pt: 1, pb: 1 }}
-          alignItems={"center"}
-          container
-          spacing={2}
-        >
+        <Grid sx={{ p: 3, py: 1 }} alignItems={"center"} container spacing={2}>
           <Typography fontSize={"1.05rem"}>Tipo</Typography>
           {MemberTypes.map((item: any, index: any) => (
             <Controller
@@ -72,72 +76,128 @@ export default function MemberFilters(props: {
             ></Controller>
           ))}
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container>
-          <Controller
-            name="quotesLegible"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.quotesLegible}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="quotesLegible"
-                      />
-                    }
-                    label="Paga Quotas"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
+        <Grid sx={{ p: 3, py: 2 }} alignItems={"center"} container spacing={2}>
+          <Typography fontSize={"1.05rem"}>Género</Typography>
+          {GenderOptions.filter(
+            (item: any) => item.label !== "Ambos" && item.label !== "Misto"
+          ).map((item: any, index: any) => (
+            <Controller
+              key={index}
+              name={`is${
+                item.value.charAt(0).toUpperCase() + item.value.slice(1)
+              }`}
+              control={props.control}
+              render={({ field }) => (
+                <Chip
+                  variant={field.value ? "filled" : "outlined"}
+                  color={field.value ? "success" : "default"}
+                  clickable
+                  onClick={() => field.onChange(!field.value)}
+                  label={item.label}
+                ></Chip>
+              )}
+            ></Controller>
+          ))}
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container>
-          <Controller
-            name="quotesOverdue"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.quotesOverdue}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="quotesOverdue"
+        {["main_admin", "superuser"].includes(userRole) ? (
+          isAvailableUserLoading ? null : (
+            <Grid
+              sx={{ p: 3, py: 1 }}
+              alignItems={"center"}
+              container
+              spacing={1}
+            >
+              <Typography fontSize={"1.05rem"} mr={1}>
+                Clube
+              </Typography>
+              {availableUsersData?.data.map((item: any, index: any) => (
+                <Controller
+                  key={index}
+                  name="isCoach"
+                  control={props.control}
+                  render={({ field }) => (
+                    <Chip
+                      variant={field.value ? "filled" : "outlined"}
+                      color={field.value ? "success" : "default"}
+                      clickable
+                      onClick={() => field.onChange(!field.value)}
+                      label={item.username}
+                    ></Chip>
+                  )}
+                ></Controller>
+              ))}
+            </Grid>
+          )
+        ) : (
+          <>
+            <Grid sx={{ p: 3, py: 2 }} container>
+              <Controller
+                name="quotesLegible"
+                control={props.control}
+                render={({ field }) => (
+                  <FormControl
+                    sx={{ width: "100%" }}
+                    component="fieldset"
+                    variant="standard"
+                    error={!!props.errors.quotesLegible}
+                  >
+                    <Stack>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                            }}
+                            name="quotesLegible"
+                          />
+                        }
+                        label="Paga Quotas"
+                        sx={{ justifyContent: "space-between", marginLeft: 0 }}
                       />
-                    }
-                    label="Quotas por pagar"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ p: 3, py: 2 }} container>
+              <Controller
+                name="quotesOverdue"
+                control={props.control}
+                render={({ field }) => (
+                  <FormControl
+                    sx={{ width: "100%" }}
+                    component="fieldset"
+                    variant="standard"
+                    error={!!props.errors.quotesOverdue}
+                  >
+                    <Stack>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                            }}
+                            name="quotesOverdue"
+                          />
+                        }
+                        label="Quotas por pagar"
+                        sx={{ justifyContent: "space-between", marginLeft: 0 }}
+                      />
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+          </>
+        )}
       </List>
       <Grid size={12} mt={5} mx={10} container>
         <Button

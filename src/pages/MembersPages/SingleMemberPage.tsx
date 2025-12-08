@@ -10,22 +10,30 @@ import {
 } from "@mui/material";
 import PersonalInfoSection from "./PersonalInfoSection";
 import ResultsHistorySection from "./ResultsHistorySection";
+import QuotesSettingsSection from "./QuotesSettingsSection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { membersHooks } from "../../hooks";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import RegistryHistorySection from "./RegistryHistorySection";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { MemberTypes } from "../../config";
 
 export default function SingleMemberPage() {
   const { id: memberId } = useParams<{ id: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const section = searchParams.get("section") || "info";
+
+  const changeSection = (name: string) => {
+    setSearchParams({ section: name });
+  };
+
   const {
     data: singleMemberData,
     isLoading: isSingleMemberLoading,
     error: singleMemberError,
   } = membersHooks.useFetchSingleMemberData(memberId);
-
-  const [currentScreen, setCurrentScreen] = useState<number>(1);
 
   return (
     <>
@@ -51,7 +59,7 @@ export default function SingleMemberPage() {
           >
             <Grid container size={12}>
               <Grid
-                size={4}
+                size={3}
                 container
                 justifyContent="center"
                 spacing={2}
@@ -88,82 +96,128 @@ export default function SingleMemberPage() {
                     {singleMemberData?.data.birth_date}
                   </Typography>
                 </Grid>
+                <Grid container justifyContent="center" size={6}>
+                  <Typography variant="h5">
+                    {
+                      MemberTypes.find(
+                        (item) =>
+                          item.value === singleMemberData?.data.member_type
+                      )?.label
+                    }
+                  </Typography>
+                </Grid>
                 <Grid
                   container
                   justifyContent="center"
+                  spacing={2}
                   size={12}
-                  sx={{ mt: 10 }}
+                  mt={10}
                 >
                   <Button
-                    variant={currentScreen === 1 ? "contained" : "text"}
+                    variant={section === "personal_info" ? "contained" : "text"}
                     fullWidth
                     sx={{
                       backgroundColor:
-                        currentScreen === 1 ? "#e81c24" : "white",
-                      color: currentScreen === 1 ? "white" : "black",
+                        section === "personal_info" ? "#e81c24" : "white",
+                      color: section === "personal_info" ? "white" : "black",
                       p: 1,
                       textTransform: "none",
                       fontWeight: "bold",
                       fontSize: 16,
                     }}
-                    onClick={() => setCurrentScreen(1)}
+                    onClick={() => {
+                      changeSection("personal_info");
+                    }}
                   >
                     Informações Pessoais
                   </Button>
                 </Grid>
-                <Grid
-                  container
-                  justifyContent="center"
-                  size={12}
-                  sx={{ mt: 2, mb: 2 }}
-                >
+                {singleMemberData?.data.quotes_legible ? (
+                  <Grid container justifyContent="center" size={12} mt={2}>
+                    <Button
+                      variant={
+                        section === "quotes_management" ? "contained" : "text"
+                      }
+                      fullWidth
+                      sx={{
+                        backgroundColor:
+                          section === "quotes_management" ? "#e81c24" : "white",
+                        color:
+                          section === "quotes_management" ? "white" : "black",
+                        p: 1,
+                        textTransform: "none",
+                        fontWeight: "bold",
+                        fontSize: 16,
+                      }}
+                      onClick={() => {
+                        changeSection("quotes_management");
+                      }}
+                    >
+                      Gestão de Quotas
+                    </Button>
+                  </Grid>
+                ) : null}
+                <Grid container justifyContent="center" size={12} mt={2}>
                   <Button
-                    variant={currentScreen === 2 ? "contained" : "text"}
+                    variant={
+                      section === "registration_history" ? "contained" : "text"
+                    }
                     fullWidth
                     disabled
                     sx={{
                       backgroundColor:
-                        currentScreen === 2 ? "#e81c24" : "white",
-                      color: currentScreen === 2 ? "white" : "black",
+                        section === "registration_history"
+                          ? "#e81c24"
+                          : "white",
+                      color:
+                        section === "registration_history" ? "white" : "black",
                       p: 1,
                       textTransform: "none",
                       fontWeight: "bold",
                       fontSize: 16,
                     }}
-                    onClick={() => setCurrentScreen(2)}
+                    onClick={() => {
+                      changeSection("registration_history");
+                    }}
                   >
                     Histórico de Inscrições
                   </Button>
                 </Grid>
-                <Grid container justifyContent="center" size={12}>
+                <Grid container justifyContent="center" size={12} mt={2}>
                   <Button
-                    variant={currentScreen === 3 ? "contained" : "text"}
+                    variant={
+                      section === "results_history" ? "contained" : "text"
+                    }
                     fullWidth
                     disabled
                     sx={{
                       backgroundColor:
-                        currentScreen === 3 ? "#e81c24" : "white",
-                      color: currentScreen === 3 ? "white" : "black",
+                        section === "results_history" ? "#e81c24" : "white",
+                      color: section === "results_history" ? "white" : "black",
                       p: 1,
                       textTransform: "none",
                       fontWeight: "bold",
                       fontSize: 16,
                     }}
-                    onClick={() => setCurrentScreen(3)}
+                    onClick={() => {
+                      changeSection("results_history");
+                    }}
                   >
                     Histórico de Resultados
                   </Button>
                 </Grid>
               </Grid>
-              <Grid size={8} sx={{ p: 4 }}>
-                {currentScreen === 1 ? (
+              <Grid size={9} sx={{ p: 4 }}>
+                {section === "personal_info" ? (
                   <PersonalInfoSection
                     memberData={singleMemberData}
                   ></PersonalInfoSection>
-                ) : currentScreen === 2 ? (
+                ) : section === "registration_history" ? (
                   <RegistryHistorySection></RegistryHistorySection>
-                ) : currentScreen === 3 ? (
+                ) : section === "results_history" ? (
                   <ResultsHistorySection></ResultsHistorySection>
+                ) : section === "quotes_management" ? (
+                  <QuotesSettingsSection></QuotesSettingsSection>
                 ) : null}
               </Grid>
             </Grid>

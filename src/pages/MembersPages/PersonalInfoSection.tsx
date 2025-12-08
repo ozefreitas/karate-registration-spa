@@ -115,7 +115,6 @@ export default function PersonalInfoSection(
           ? "N/A"
           : props.memberData?.data.taxpayer_number,
       postCode: props.memberData?.data.post_code,
-      quotesLegible: props.memberData?.data.quotes_legible,
       registrationDate: props.memberData?.data.registration_date,
       cardNumber:
         props.memberData?.data.national_card_number === null
@@ -177,7 +176,6 @@ export default function PersonalInfoSection(
         graduation: data.graduation,
         id_number: data.id_number,
         gender: data.gender,
-        quotes_legible: data.quotesLegible,
         taxpayer_number:
           data.taxNumber === "N/A" || data.taxNumber === ""
             ? null
@@ -205,7 +203,6 @@ export default function PersonalInfoSection(
             ? "athlete"
             : "student",
         birth_date: data.birthDate,
-        // quotes: data.quotes === "regular",
         weight:
           data.weight === "N/A" || data.weight === "" ? null : data.weight,
       };
@@ -910,40 +907,6 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        <Controller
-          name="quotesLegible"
-          control={control}
-          render={({ field }) => (
-            <FormControl
-              sx={{ pb: 2, justifyContent: "center" }}
-              component="fieldset"
-              variant="standard"
-            >
-              <FormControlLabel
-                sx={{ mr: 2 }}
-                labelPlacement="start"
-                label={
-                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                    Paga Quotas:
-                  </Typography>
-                }
-                control={
-                  <Switch
-                    disabled={!isEditMode}
-                    sx={{ ml: 2 }}
-                    {...field}
-                    checked={field.value}
-                    color="warning"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e.target.checked);
-                    }}
-                  />
-                }
-              ></FormControlLabel>
-            </FormControl>
-          )}
-        />
       </Grid>
       <Grid size={11}>
         <Typography

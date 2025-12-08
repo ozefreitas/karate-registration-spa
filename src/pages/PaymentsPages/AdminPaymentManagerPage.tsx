@@ -20,12 +20,14 @@ import { clubsHooks } from "../../hooks";
 import { useEffect, useMemo, useState } from "react";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { formatDateTime } from "../../utils/utils";
-import { Close, Check } from "@mui/icons-material";
+import { Close, Check, Edit, Add } from "@mui/icons-material";
 import PatchClubSubscriptionModal from "../../components/Admin/PatchClubSubscriptionModal";
 import { Controller, useForm } from "react-hook-form";
-import { computeExpirationDate } from "../../utils/utils";
-import { Add } from "@mui/icons-material";
 import { useSearchParams } from "react-router-dom";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 export default function AdminPaymentManagerPage(props: { userRole: string }) {
   type Club = { id: string; username: string; role: string; tier: string };
@@ -42,9 +44,14 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
   const [currentId, setCurrentId] = useState<string>("");
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [currentState, setCurrentState] = useState<boolean>(false);
+  const [currentAction, setCurrentAction] = useState<string>("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLElement>,
+    action: string
+  ) => {
+    setCurrentAction(action);
     setAnchorEl(event.currentTarget);
   };
   const [searchParams] = useSearchParams();
@@ -63,9 +70,9 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
   } = useForm({
     defaultValues: {
       search: "",
-      overdueNumber: "",
-      year: undefined,
+      overdueDate: undefined,
       amount: "",
+      year: "",
     },
   });
 
@@ -95,10 +102,34 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
   } = clubsHooks.useFetchClubSubscriptions(watch("search"), props.userRole);
 
   const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();
+  const patchConfigSubscriptionAmount =
+    clubsHooks.usePatchClubSubscriptionAmountbyYear();
+  const patchSubscriptionDueDate =
+    clubsHooks.usePatchClubSubscriptionDueDatebyYear();
 
   const onSubmit = (data: any) => {
-    const formData = { year: data.year, amount: data.amount };
-    createYearSubscription.mutate(formData);
+    if (currentAction === "amount") {
+      const formData = { year: data.search, amount: data.amount };
+      patchConfigSubscriptionAmount.mutate(formData, {
+        onSuccess: () => {
+          handleClose();
+        },
+      });
+    } else if (currentAction === "due_date") {
+      const formData = { year: data.search, due_date: data.overdueDate };
+      patchSubscriptionDueDate.mutate(formData, {
+        onSuccess: () => {
+          handleClose();
+        },
+      });
+    } else if (currentAction === "create") {
+      const formData = { year: data.year };
+      createYearSubscription.mutate(formData, {
+        onSuccess: () => {
+          handleClose();
+        },
+      });
+    }
   };
 
   // Memoize `rows` to compute only when `members` changes
@@ -159,7 +190,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
     <>
       <Grid container m={4} spacing={2} size={12}>
         <Grid size={3}>
-          <Card>
+          <Card sx={{ height: "100%" }}>
             <CardHeader
               sx={{ pt: 2.5 }}
               title={
@@ -169,8 +200,8 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                   alignItems={"center"}
                 >
                   <Typography variant="h5">Ano</Typography>
-                  <Tooltip title="Adicionar pagamento de quotas">
-                    <IconButton onClick={(e) => handleClick(e)}>
+                  <Tooltip title="Criar Quotas">
+                    <IconButton onClick={(e) => handleClick(e, "create")}>
                       <Add color="success"></Add>
                     </IconButton>
                   </Tooltip>
@@ -218,9 +249,20 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
         </Grid>
         <Grid size={2.5}>
           <Card sx={{ height: "100%" }}>
-            <CardHeader title={"Clubes em Falta"}></CardHeader>
+            <CardHeader
+              title={
+                <Typography variant="h5" pt={0.5}>
+                  Clubes em Falta
+                </Typography>
+              }
+            ></CardHeader>
             <CardContent
-              sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                pr: 5,
+                maxHeight: "100%",
+              }}
             >
               {isSubscriptionsLoading ? (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -243,7 +285,27 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
         </Grid>
         <Grid size={4}>
           <Card sx={{ height: "100%" }}>
-            <CardHeader title={"Data de Expiração"}></CardHeader>
+            <CardHeader
+              title={
+                <Grid
+                  container
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Typography variant="h5">Data Limite</Typography>
+                  <Tooltip title="Editar Data">
+                    <IconButton
+                      disabled={watch("search") === ""}
+                      onClick={(e) => handleClick(e, "due_date")}
+                    >
+                      <Edit
+                        color={watch("search") === "" ? "disabled" : "warning"}
+                      ></Edit>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              }
+            ></CardHeader>
             <CardContent
               sx={{
                 display: "flex",
@@ -263,7 +325,10 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                 >
                   {watch("search") === ""
                     ? 0
-                    : computeExpirationDate(Number(watch("search")))}
+                    : formatDateTime(
+                        subscriptionsData?.data[0].due_date,
+                        "day"
+                      )}
                 </Typography>
               )}
             </CardContent>
@@ -271,7 +336,28 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
         </Grid>
         <Grid size={2.5}>
           <Card sx={{ height: "100%" }}>
-            <CardHeader title={"Montante Total"}></CardHeader>
+            <CardHeader
+              sx={{ pb: 1 }}
+              title={
+                <Grid
+                  container
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Typography variant="h5">Montante</Typography>
+                  <Tooltip title="Editar Montante">
+                    <IconButton
+                      disabled={watch("search") === ""}
+                      onClick={(e) => handleClick(e, "amount")}
+                    >
+                      <Edit
+                        color={watch("search") === "" ? "disabled" : "warning"}
+                      ></Edit>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              }
+            ></CardHeader>
             <CardContent
               sx={{
                 display: "flex",
@@ -300,28 +386,32 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
       </Grid>
       <Grid size={12} sx={{ m: 2 }}>
         {watch("search") === "" ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
-            <ListItem>
-              <ListItemText primary="Comece por selecionar o ano para o qual quer ver o estado do pagamento de quotas."></ListItemText>
-            </ListItem>
-          </Grid>
+          <ListItem>
+            <ListItemText
+              sx={{ textAlign: "center", mt: 3, color: "grey" }}
+              primary="Comece por selecionar o ano para o qual quer ver o estado do pagamento de quotas."
+            ></ListItemText>
+          </ListItem>
         ) : isSubscriptionsLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
         ) : subscriptionsError ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
-            <ListItem>
-              <ListItemText primary="Ocorreu um erro ao encontrar a informação do pagamento de quotas. Tente mais tarde ou contacte um administrador."></ListItemText>
-            </ListItem>
-          </Grid>
+          <ListItem>
+            <ListItemText
+              sx={{ textAlign: "center", mt: 3 }}
+              primary="Ocorreu um erro ao encontrar a informação do pagamento de quotas. Tente mais tarde ou contacte um administrador."
+            ></ListItemText>
+          </ListItem>
         ) : subscriptionsData?.data === undefined ? null : (
           <AllUseTable
-            type="Atletas"
+            type="Pagamentos"
             data={subscriptionRows}
             count={subscriptionRows.length}
             columnsHeaders={columnMaping}
-            actions={false}
+            actions
+            editable
+            notWatchable
             selection={false}
             userRole={props.userRole}
             overideInternalPage
@@ -345,27 +435,15 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
           paper: {
             elevation: 1,
             sx: {
-              width: 350,
+              width: 330,
               overflow: "visible",
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              ml: 2,
-              "&::before": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: 160,
-                right: 345,
-                width: 10,
-                height: 10,
-                bgcolor: "background.paper",
-                transform: "translateY(-50%) rotate(45deg)",
-                zIndex: 0,
-              },
+              mt: 18,
             },
           },
         }}
-        transformOrigin={{ horizontal: "left", vertical: "center" }}
-        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+        transformOrigin={{ horizontal: "center", vertical: "top" }}
+        anchorOrigin={{ horizontal: "center", vertical: "top" }}
       >
         <MenuItem
           disableRipple
@@ -373,7 +451,11 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
           onClick={(e) => e.stopPropagation()}
         >
           <Typography variant="h6" p={1}>
-            Criar notificação de Quotas
+            {currentAction === "amount"
+              ? "Alterar montante a pagar"
+              : currentAction === "due_date"
+              ? "Alterar data limite"
+              : "Criar Quotas"}
           </Typography>
         </MenuItem>
         <MenuItem
@@ -389,61 +471,121 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
             justifyContent={"center"}
             spacing={1}
           >
-            <Grid size={10}>
-              <Controller
-                name="year"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    placeholder="XXXX"
-                    color="warning"
-                    variant={"outlined"}
-                    label="Ano"
-                    type="number"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: "numeric",
-                        pattern: "[0-9]*",
-                      },
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.year}
-                    helperText={errors.year?.message}
-                  ></TextField>
-                )}
-              />
-            </Grid>
-            <Grid size={10}>
-              <Controller
-                name="amount"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    placeholder="XX.XX"
-                    variant={"outlined"}
-                    label="Montante"
-                    type="number"
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: "numeric",
-                        pattern: "[0-9]*",
-                      },
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.year}
-                    helperText={errors.year?.message}
-                  ></TextField>
-                )}
-              />
-            </Grid>
-            <Grid container justifyContent={"center"} size={12}>
+            {currentAction === "create" ? (
+              <Grid size={10}>
+                <Controller
+                  name="year"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Ano"
+                      type="number"
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                        },
+                      }}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                    ></TextField>
+                  )}
+                />
+              </Grid>
+            ) : (
+              <Grid size={10}>
+                <Controller
+                  name="search"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Ano"
+                      type="number"
+                      disabled
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                        },
+                        input: {
+                          readOnly: true,
+                        },
+                      }}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                    ></TextField>
+                  )}
+                />
+              </Grid>
+            )}
+            {currentAction === "amount" ? (
+              <Grid size={10} pt={1}>
+                <Controller
+                  name="amount"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      placeholder="XX.XX"
+                      variant={"outlined"}
+                      label="Montante"
+                      type="number"
+                      required
+                      slotProps={{
+                        htmlInput: {
+                          inputMode: "numeric",
+                          pattern: "[0-9]*",
+                        },
+                      }}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      error={!!errors.amount}
+                      helperText={errors.amount?.message}
+                    ></TextField>
+                  )}
+                />
+              </Grid>
+            ) : currentAction === "due_date" ? (
+              <Grid size={10} pt={1}>
+                <Controller
+                  name="overdueDate"
+                  control={control}
+                  render={({ field }) => (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        {...field}
+                        format="YYYY-MM-DD"
+                        label="Nova Data *"
+                        onChange={(date) => {
+                          field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                        }}
+                        value={field.value ? dayjs(field.value) : null}
+                        slots={{ textField: TextField }}
+                        enableAccessibleFieldDOMStructure={false}
+                        slotProps={{
+                          textField: {
+                            fullWidth: true,
+                            error: !!errors?.overdueDate,
+                            helperText: errors?.overdueDate?.message || "",
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  )}
+                />
+              </Grid>
+            ) : null}
+            <Grid container justifyContent={"center"} size={12} mt={3}>
               <Button
                 variant="contained"
                 color="success"

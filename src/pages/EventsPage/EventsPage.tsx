@@ -186,7 +186,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                 <IconButton
                   size="large"
                   onClick={() => setCurrentView(1)}
-                  sx={{ bgcolor: currentView === 1 ? "#03a9f4" : undefined }}
+                  sx={{ bgcolor: currentView === 1 ? "#1976d2;" : undefined }}
                   color="info"
                 >
                   <Subject
@@ -197,7 +197,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               <Tooltip placement="top" title={"Vista de Calendário"}>
                 <IconButton
                   size="large"
-                  sx={{ bgcolor: currentView === 2 ? "#03a9f4" : undefined }}
+                  sx={{ bgcolor: currentView === 2 ? "#1976d2;" : undefined }}
                   onClick={() => setCurrentView(2)}
                   color="info"
                 >

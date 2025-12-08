@@ -4,7 +4,8 @@ export const fetchMembers = (
   page: number,
   pageSize: number,
   ordering?: string,
-  memberType?: string
+  memberType?: string,
+  gender?: string
 ) => {
   return authClient.get("/members/", {
     params: {
@@ -12,6 +13,7 @@ export const fetchMembers = (
       page_size: pageSize,
       ordering: ordering,
       in_member_type: memberType,
+      in_gender: gender,
     },
   });
 };

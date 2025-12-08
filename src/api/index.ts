@@ -8,3 +8,4 @@ export * from "./adminApi";
 export * from "./clubsApi"
 export * from "./authApi"
 export * from "./classificationsApi"
+export * from "./monthlyPaymentsApi"

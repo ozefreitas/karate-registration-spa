@@ -131,7 +131,6 @@ export const getSideMenuConfig = (userRole: string) => {
     return baseMenu.filter(
       (item) =>
         item.name !== "notifications_manager" &&
-        item.name !== "payment_manager" &&
         item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "categories"

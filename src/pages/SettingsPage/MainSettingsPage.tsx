@@ -201,7 +201,7 @@ export default function MainSettingsPage() {
             </Tabs>
           </Box>
           {value === "one" ? (
-            <>
+            <Grid p={1}>
               <Typography variant="h5" sx={{ pl: 4, mt: 3, mb: 2 }}>
                 Adicionar/Remover Clubes
               </Typography>
@@ -717,9 +717,9 @@ export default function MainSettingsPage() {
                   ) : null}
                 </Grid>
               </Grid>
-            </>
+            </Grid>
           ) : value === "two" ? (
-            <Grid>
+            <Grid p={1}>
               As quotas são criadas automaticamente no primeiro dia de setembro
               de cada ano. <p></p>
               Pode alterar aqui o montante pré-definido das quotas. Neste

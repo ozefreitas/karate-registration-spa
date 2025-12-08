@@ -27,3 +27,15 @@ export const patchClubSubscription = (clubId: string, data: any) => {
 export const createAllClubsSubscription = (data: any) => {
   return authClient.post("/club_subscription/create_all_users/", data);
 };
+
+export const patchClubSubscriptionAmountConfig = (data: any) => {
+  return authClient.patch("/club_subscription/update_subscription_amount/", data);
+};
+
+export const patchClubSubscriptionAmountbyYear = (data: any) => {
+  return authClient.patch("/club_subscription/update_all_users_amount/", data);
+};
+
+export const patchClubSubscriptionDueDatebyYear = (data: any) => {
+  return authClient.patch("/club_subscription/update_all_users_due_date/", data);
+};

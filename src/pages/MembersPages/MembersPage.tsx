@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
-import { membersHooks } from "../../hooks";
+import { membersHooks, adminHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { MemberTypes } from "../../config";
 import MemberFilters from "../../components/filter_drawers/MemberFilters";
@@ -33,6 +33,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
 
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
+
+  // const { data: availableUsersData } = adminHooks.useFetchClubUsersData();
 
   const getColumnMaping = () => {
     const columnMapping = [
@@ -68,6 +70,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       isCoach: false,
       isStudent: false,
       isAthlete: false,
+      isMasculino: false,
+      isFeminino: false,
     },
   });
 
@@ -126,6 +130,15 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     .map((item: any) => item.label)
     .join(",");
 
+  const selectedGender =
+    filtersWatch("isMasculino") && filtersWatch("isFeminino")
+      ? undefined
+      : filtersWatch("isMasculino")
+      ? "Masculino"
+      : filtersWatch("isFeminino")
+      ? "Feminino"
+      : undefined;
+
   const {
     data: membersData,
     isLoading: isMembersDataLoading,
@@ -134,7 +147,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     page + 1,
     pageSize,
     ordering,
-    memberTypeFiltering
+    memberTypeFiltering,
+    selectedGender
   );
 
   // Memoize `rows` to compute only when `members` changes

@@ -89,7 +89,7 @@ export function formatDateTime(
     return formattedHour + " de " + formattedDate;
   }
 
-  throw new Error("Invalid type. Use 'day' or 'hour'.");
+  throw new Error("Invalid type. Use 'day', 'hour' or 'both'.");
 }
 
 export function computeExpirationDate(year: number): string {

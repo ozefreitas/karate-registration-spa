@@ -137,6 +137,7 @@ export default function AllUseTable(
     columnsHeaders: any;
     actions: boolean;
     selection: boolean;
+    notWatchable?: boolean;
     editable?: boolean;
     deletable?: boolean;
     page?: number;
@@ -453,27 +454,31 @@ export default function AllUseTable(
                               justifyContent: "center",
                             }}
                           >
-                            <Tooltip arrow title="Consultar">
-                              <IconButton
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (props.type === "Equipas") {
-                                    navigate(`/teams/${row.id}/`);
-                                  } else if (
-                                    props.type === "Categorias" ||
-                                    props.type === "CategoriasReadOnly" ||
-                                    props.type === "EventCategories"
-                                  ) {
-                                    setActionedRow(row.id.toString());
-                                    handleCategoryInfoModalOpen(e);
-                                  } else {
-                                    navigate(`/members/${row.id}/`);
-                                  }
-                                }}
-                              >
-                                <Visibility color="primary"></Visibility>
-                              </IconButton>
-                            </Tooltip>
+                            {!props.notWatchable ? (
+                              <Tooltip arrow title="Consultar">
+                                <IconButton
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (props.type === "Equipas") {
+                                      navigate(`/teams/${row.id}/`);
+                                    } else if (
+                                      props.type === "Categorias" ||
+                                      props.type === "CategoriasReadOnly" ||
+                                      props.type === "EventCategories"
+                                    ) {
+                                      setActionedRow(row.id.toString());
+                                      handleCategoryInfoModalOpen(e);
+                                    } else {
+                                      navigate(
+                                        `/members/${row.id}/?section=personal_info`
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <Visibility color="primary"></Visibility>
+                                </IconButton>
+                              </Tooltip>
+                            ) : null}
                             {(props.userRole === "main_admin" &&
                               props.editable) ||
                             (props.userRole === "subed_club" &&
