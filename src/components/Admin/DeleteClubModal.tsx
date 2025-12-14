@@ -55,7 +55,7 @@ export default function DeleteClubModal(
       </DialogTitle>
       <DialogContent>
         Tem a certeza que pretende apagar esta conta? Esta ação irá eliminar
-        todos os seus atletas, inscrições dos mesmos em eventos e informações
+        todos os seus Membros, inscrições dos mesmos em Eventos e informações
         guardada do próprio Clube. <p></p> NÃO PODERA VOLTAR ATRÁS!
       </DialogContent>
       <DialogActions>

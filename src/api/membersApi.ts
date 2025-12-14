@@ -5,7 +5,9 @@ export const fetchMembers = (
   pageSize: number,
   ordering?: string,
   memberType?: string,
-  gender?: string
+  gender?: string,
+  quotesLegible?: boolean,
+  monthlyPaymentStatus?: string
 ) => {
   return authClient.get("/members/", {
     params: {
@@ -14,6 +16,8 @@ export const fetchMembers = (
       ordering: ordering,
       in_member_type: memberType,
       in_gender: gender,
+      is_quotes_legible: quotesLegible,
+      monthly_payment_status: monthlyPaymentStatus,
     },
   });
 };

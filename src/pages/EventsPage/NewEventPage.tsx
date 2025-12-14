@@ -436,10 +436,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   }}
                   fullWidth
                   select
-                  multiline
                   disabled={!isEnabled}
                   required
-                  maxRows={8}
                   helperText="Só poderá escolher um tipo de encontro se selecionar o campo anterior."
                   {...field}
                   onChange={(e) => {

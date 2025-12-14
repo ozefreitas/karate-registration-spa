@@ -682,7 +682,7 @@ export default function NewMemberPage() {
           <FormAccordion
             title="Competições"
             expanded={watch("member_type").includes("athlete")}
-            tooltipMessage="Apenas poderá abrir esta secção, se este Atleta for participar em competições."
+            tooltipMessage="Apenas poderá abrir esta secção, se este Membro for do tipo Competidor."
           >
             <Grid sx={{ p: 2 }} size={6}>
               <Controller

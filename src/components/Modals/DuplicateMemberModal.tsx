@@ -34,12 +34,12 @@ export default function DuplicateMemberModal(
   const navigate = useNavigate();
   const createMember = membersHooks.useCreateMember();
   const handleSubmit = () => {
-    const formData = props.memberData;
+    const formData = { ...props.memberData };
     formData.member_type =
       props.memberData?.member_type === "coach" ? "student" : "coach";
     createMember.mutate(formData, {
       onSuccess: (data) => {
-        navigate(`/members/${data.data.id}`);
+        navigate(`/members/${data.data.id}/?section=personal_info`);
       },
       onError: (data: any) => {
         const errorData = data.response?.data || {};
@@ -67,19 +67,22 @@ export default function DuplicateMemberModal(
       }}
     >
       <DialogTitle>
-        <Typography p={2} pb={0} variant="h5">
+        <Typography variant="h5">
           Duplicar {props.memberData?.full_name}
         </Typography>
       </DialogTitle>
-      <DialogContent>
-        Esta ação irá duplicar este Membro para{" "}
-        <strong>
-          {props.memberData?.member_type === "coach"
-            ? "Competidor/Aluno"
-            : "Treinador"}
-        </strong>
-        . <p></p>Deseja prosseguir?
-      </DialogContent>
+      {props.memberData?.member_type !== "coach" ? (
+        <DialogContent>
+          Esta ação irá duplicar este Membro para <strong>Treinador</strong>.{" "}
+          <p></p>Deseja prosseguir?
+        </DialogContent>
+      ) : (
+        <DialogContent>
+          Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>. Caso
+          já exista como Aluno, dirija-se à página do mesmo diretamente e altere
+          o campo "É Competidor".<p></p>Deseja prosseguir?
+        </DialogContent>
+      )}
       <DialogActions>
         <Stack
           direction={{

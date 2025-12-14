@@ -8,12 +8,13 @@ import {
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
-import { membersHooks, adminHooks } from "../../hooks";
+import { membersHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { MemberTypes } from "../../config";
 import MemberFilters from "../../components/filter_drawers/MemberFilters";
 import MemberOrdering from "../../components/filter_drawers/MemberOrdering";
 import { useForm } from "react-hook-form";
+import { VerifiedUser, AccountCircle } from "@mui/icons-material";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   type Club = {
@@ -29,6 +30,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     club: Club;
     age: string;
     member_type: string;
+    can_update_sensitive: boolean;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -49,7 +51,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     } else {
       columnMapping.push(
         { key: "age", label: "Idade" },
-        { key: "member_type", label: "Tipo" }
+        { key: "member_type", label: "Tipo" },
+        { key: "verified", label: "Verificado" }
       );
     }
     return columnMapping;
@@ -60,6 +63,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const {
     control: filtersControl,
     watch: filtersWatch,
+    setValue: filtersSetValue,
     reset: filtersReset,
     formState: { errors: filtersErrors },
     formState: { dirtyFields: filtersDirtyFields },
@@ -148,7 +152,9 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     pageSize,
     ordering,
     memberTypeFiltering,
-    selectedGender
+    selectedGender,
+    filtersWatch("quotesLegible") ? filtersWatch("quotesLegible") : undefined,
+    filtersWatch("quotesOverdue") ? "unpaid" : undefined
   );
 
   // Memoize `rows` to compute only when `members` changes
@@ -161,6 +167,12 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       member_type: MemberTypes.find((item) => item.value === member.member_type)
         ?.label,
       age: member.age,
+      verified: member.can_update_sensitive ? (
+        <AccountCircle color="disabled"/>
+      ) : (
+        <VerifiedUser color="disabled"/>
+      ),
+      can_update_sensitive: member.can_update_sensitive
     }));
   }, [membersData]);
 
@@ -210,6 +222,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             <MemberFilters
               isLoading={isMembersDataLoading}
               control={filtersControl}
+              setValue={filtersSetValue}
               reset={filtersReset}
               errors={filtersErrors}
               changedCount={filtersChangedCount}
@@ -223,7 +236,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         ) : membersError ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <ListItem>
-              <ListItemText primary="Ocorreu um erro ao encontrar os seus Atletas, tente mais tarde ou contacte um administrador."></ListItemText>
+              <ListItemText primary="Ocorreu um erro ao encontrar os seus Membros, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
         ) : membersData?.data === undefined ? null : (
@@ -247,6 +260,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             pageSize={pageSize}
             setPageSize={setPageSize}
             userRole={props.userRole}
+            disallowEdit
           ></AllUseTable>
         )}
       </Grid>

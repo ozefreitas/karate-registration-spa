@@ -115,7 +115,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<SingleMemberPage />}
+                        element={<SingleMemberPage userRole={userRole}/>}
                         allowedRoles={[
                           "subed_club",
                           "main_admin",

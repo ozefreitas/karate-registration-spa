@@ -33,7 +33,7 @@ export default function RulesPage() {
           ></Card>
           <Grid bottom={-20} left={"48%"} position={"absolute"}>
             <a
-              href={DrawSettings.file} // path inside public/
+              // href={DrawSettings.file} // path inside public/
               download={DrawSettings.rename} // optional rename
               style={{ textDecoration: "none" }}
             >
@@ -41,6 +41,7 @@ export default function RulesPage() {
                 size="large"
                 startIcon={<FileDownload></FileDownload>}
                 variant="contained"
+                disabled
               >
                 Download
               </Button>

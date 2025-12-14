@@ -198,7 +198,6 @@ export const getAccountSideMenuConfig = (userRole: string) => {
 
 export const breadcrumbsConvertion: Record<string, string> = {
   "": "Início",
-  athletes: "Atletas",
   members: "Membros",
   teams: "Equipas",
   classifications: "Classificações",

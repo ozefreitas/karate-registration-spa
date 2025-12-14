@@ -633,7 +633,7 @@ export default function MembersModal(
                     variant="contained"
                     onClick={() => {
                       navigate(
-                        `/members/${currentMemberId}/?edit_field=weight&event_id=${props.eventData.id}`
+                        `/members/${currentMemberId}/?edit_field=weight&event_id=${props.eventData.id}&section=personal_info`
                       );
                     }}
                   >
@@ -664,7 +664,7 @@ export default function MembersModal(
               </ListItem>
             ) : userRole === "free_club" && searchQuery === "" ? (
               <ListItem>
-                <ListItemText primary="O seu plano não concede acesso à listagem de atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
+                <ListItemText primary="O seu plano não concede acesso à listagem de Atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
               filteredMembers.map((member: Member, index: string) => (

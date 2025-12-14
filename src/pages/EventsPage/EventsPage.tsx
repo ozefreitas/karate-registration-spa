@@ -12,7 +12,6 @@ import {
   Pagination,
   Button,
   IconButton,
-  Icon,
   Tooltip,
 } from "@mui/material";
 import EventsFilters from "../../components/filter_drawers/EventsFilters";
@@ -112,7 +111,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   ]);
 
   const ordering = orderFields
-    .map((f: any) => orderWatch(f.key)) // get value from react-hook-form
+    .map((f: any) => orderWatch(f.key)) 
     .filter(Boolean)
     .join(",");
 
@@ -139,7 +138,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         receber inscrições, ou que se irão realizar dentro dos próximos 7 dias.
         <p></p>Consultando cada cartão de Evento, pode observar toda a
         informação relevante sobre esse Evento, assim como os passos para
-        inscrever os seus Atletas.
+        inscrever os seus Membros.
       </>
     ) : (
       <>
@@ -147,7 +146,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         tarde será também possível ver Estágios e outras provas de interesse.{" "}
         <p></p> Consultando cada cartão de Evento, pode observar toda a
         informação relevante sobre esse Evento, assim como os passos para
-        inscrever os seus Atletas.
+        inscrever os seus Membros.
       </>
     );
 

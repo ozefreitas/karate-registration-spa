@@ -47,6 +47,8 @@ export default function PersonalInfoSection(
     userRole
   );
 
+  const canUpdateSensitive = props.memberData?.data.can_update_sensitive;
+
   useEffect(() => {
     if (editField === "weight") {
       if (watch("weight") === "N/A") {
@@ -98,7 +100,7 @@ export default function PersonalInfoSection(
     watch,
     setValue,
     getValues,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm({
     defaultValues: {
       firstName: props.memberData?.data.first_name,
@@ -121,11 +123,13 @@ export default function PersonalInfoSection(
           ? "N/A"
           : props.memberData?.data.national_card_number,
       address:
-        props.memberData?.data.address === null
+        props.memberData?.data.address === null ||
+        props.memberData?.data.address === ""
           ? "N/A"
           : props.memberData?.data.address,
       competitor: props.memberData?.data.member_type === "athlete",
       birthDate: props.memberData?.data.birth_date,
+      quotesLegible: props.memberData?.data.quotes_legible,
       weight:
         props.memberData?.data.weight === null
           ? "N/A"
@@ -170,11 +174,19 @@ export default function PersonalInfoSection(
         },
       });
     } else {
+      if (Object.keys(dirtyFields).length === 0) {
+        setIsEditMode(false);
+        reset();
+        return;
+      }
       const formData = {
         first_name: data.firstName,
         last_name: data.lastName,
         graduation: data.graduation,
-        id_number: data.id_number,
+        id_number:
+          data.id_number === "N/A" || data.id_number === ""
+            ? null
+            : data.id_number,
         gender: data.gender,
         taxpayer_number:
           data.taxNumber === "N/A" || data.taxNumber === ""
@@ -202,6 +214,7 @@ export default function PersonalInfoSection(
             : data.competitor
             ? "athlete"
             : "student",
+        quotes_legible: data.quotesLegible,
         birth_date: data.birthDate,
         weight:
           data.weight === "N/A" || data.weight === "" ? null : data.weight,
@@ -211,14 +224,35 @@ export default function PersonalInfoSection(
         data: formData,
       };
       updateMember.mutate(updateData, {
-        onSuccess: () => {
+        onSuccess: (data: any) => {
+          setValue("age", data.data.data.age);
           if (editField === "weight") {
             handleWeightModalOpen();
           }
         },
+        onError: () => {
+          reset();
+        },
       });
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("update_button")?.click();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        document.getElementById("escape_button")?.click();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -257,6 +291,7 @@ export default function PersonalInfoSection(
         {isEditMode ? (
           <>
             <Button
+              id="update_button"
               sx={{ m: 1 }}
               variant="contained"
               size="small"
@@ -270,6 +305,7 @@ export default function PersonalInfoSection(
               Atualizar
             </Button>
             <Button
+              id="escape_button"
               sx={{ m: 1 }}
               variant="contained"
               size="small"
@@ -335,13 +371,15 @@ export default function PersonalInfoSection(
                   <TextField
                     color="warning"
                     variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
+                      canUpdateSensitive && isPrivileged && isEditMode
+                        ? "outlined"
+                        : "standard"
                     }
                     label=""
                     fullWidth
                     slotProps={{
                       input: {
-                        readOnly: !isPrivileged || !isEditMode,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
                       },
@@ -379,7 +417,9 @@ export default function PersonalInfoSection(
                   <TextField
                     color="warning"
                     variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
+                      canUpdateSensitive && isPrivileged && isEditMode
+                        ? "outlined"
+                        : "standard"
                     }
                     label=""
                     fullWidth
@@ -387,7 +427,7 @@ export default function PersonalInfoSection(
                     maxRows={2}
                     slotProps={{
                       input: {
-                        readOnly: !isEditMode,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
                       },
@@ -428,13 +468,15 @@ export default function PersonalInfoSection(
                       format="YYYY-MM-DD"
                       label=""
                       onChange={(date) => {
-                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                        if (isEditMode && canUpdateSensitive) {
+                          field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                        }
                       }}
                       value={field.value ? dayjs(field.value) : null}
                       enableAccessibleFieldDOMStructure={false}
                       slotProps={{
                         textField:
-                          isPrivileged && isEditMode
+                          isPrivileged && isEditMode && canUpdateSensitive
                             ? {}
                             : {
                                 variant: "standard",
@@ -460,7 +502,7 @@ export default function PersonalInfoSection(
                               },
                       }}
                       slots={
-                        isPrivileged && isEditMode
+                        isPrivileged && isEditMode && canUpdateSensitive
                           ? undefined
                           : {
                               openPickerIcon: () => null,
@@ -544,15 +586,17 @@ export default function PersonalInfoSection(
                 render={({ field }) => (
                   <TextField
                     color="warning"
-                    type={isEditMode ? "number" : "text"}
+                    type={isEditMode && canUpdateSensitive ? "number" : "text"}
                     variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
+                      canUpdateSensitive && isPrivileged && isEditMode
+                        ? "outlined"
+                        : "standard"
                     }
                     label=""
                     fullWidth
                     slotProps={{
                       input: {
-                        readOnly: !isEditMode,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                         disableUnderline: true,
                         style: {
                           fontSize: 20,
@@ -596,19 +640,24 @@ export default function PersonalInfoSection(
                     color="warning"
                     select
                     variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
+                      canUpdateSensitive && isPrivileged && isEditMode
+                        ? "outlined"
+                        : "standard"
                     }
                     label=""
                     fullWidth
                     slotProps={{
                       input: {
-                        readOnly: !isEditMode,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
                       },
                       select: {
-                        IconComponent: isEditMode ? ArrowDropDown : () => null,
-                        readOnly: !isEditMode,
+                        IconComponent:
+                          isEditMode && canUpdateSensitive
+                            ? ArrowDropDown
+                            : () => null,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                       },
                     }}
                     required
@@ -651,19 +700,24 @@ export default function PersonalInfoSection(
                     color="warning"
                     select
                     variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
+                      canUpdateSensitive && isPrivileged && isEditMode
+                        ? "outlined"
+                        : "standard"
                     }
                     label=""
                     fullWidth
                     slotProps={{
                       input: {
-                        readOnly: !isEditMode,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                         disableUnderline: true,
                         style: { fontSize: 20, marginRight: 10 },
                       },
                       select: {
-                        IconComponent: isEditMode ? ArrowDropDown : () => null,
-                        readOnly: !isEditMode,
+                        IconComponent:
+                          isEditMode && canUpdateSensitive
+                            ? ArrowDropDown
+                            : () => null,
+                        readOnly: !isEditMode || !canUpdateSensitive,
                       },
                     }}
                     required
@@ -744,61 +798,6 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        {/* <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Estado quotas:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="quotes"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    select
-                    slotProps={{
-                      input: {
-                        readOnly: true,
-                        disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
-                      },
-                      select: {
-                        IconComponent: isEditMode ? ArrowDropDown : () => null,
-                        readOnly: !isEditMode,
-                      },
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.quotes}
-                  >
-                    {QuotesOptions.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl> */}
         {props.memberData?.data.member_type === "coach" ? null : (
           <Controller
             name="competitor"
@@ -817,6 +816,44 @@ export default function PersonalInfoSection(
                       sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
                     >
                       É competidor:
+                    </Typography>
+                  }
+                  control={
+                    <Switch
+                      disabled={!isEditMode}
+                      sx={{ ml: 2 }}
+                      {...field}
+                      checked={field.value}
+                      color="warning"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked);
+                      }}
+                    />
+                  }
+                ></FormControlLabel>
+              </FormControl>
+            )}
+          />
+        )}
+        {!["subed_club", "single_admin"].includes(userRole) ? null : (
+          <Controller
+            name="quotesLegible"
+            control={control}
+            render={({ field }) => (
+              <FormControl
+                sx={{ pb: 2, justifyContent: "center" }}
+                component="fieldset"
+                variant="standard"
+              >
+                <FormControlLabel
+                  sx={{ mr: 2 }}
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                    >
+                      Paga quotas:
                     </Typography>
                   }
                   control={
@@ -861,13 +898,15 @@ export default function PersonalInfoSection(
                       format="YYYY-MM-DD"
                       label=""
                       onChange={(date) => {
-                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                        if (isEditMode && canUpdateSensitive) {
+                          field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                        }
                       }}
                       value={field.value ? dayjs(field.value) : null}
                       enableAccessibleFieldDOMStructure={false}
                       slotProps={{
                         textField:
-                          isPrivileged && isEditMode
+                          isPrivileged && isEditMode && canUpdateSensitive
                             ? {}
                             : {
                                 variant: "standard",
@@ -893,7 +932,7 @@ export default function PersonalInfoSection(
                               },
                       }}
                       slots={
-                        isPrivileged && isEditMode
+                        isPrivileged && isEditMode && canUpdateSensitive
                           ? undefined
                           : {
                               openPickerIcon: () => null,
@@ -1019,7 +1058,7 @@ export default function PersonalInfoSection(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!errors.id_number}
+                    error={!!errors.taxNumber}
                   />
                 )}
               />
@@ -1070,7 +1109,7 @@ export default function PersonalInfoSection(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!errors.id_number}
+                    error={!!errors.cardNumber}
                   />
                 )}
               />
@@ -1133,7 +1172,7 @@ export default function PersonalInfoSection(
             ></FormControlLabel>
           </FormControl>
         </Grid>
-        <Grid size={12}>
+        <Grid size={12} mt={2} container>
           <FormControl
             sx={{ width: "100%" }}
             component="fieldset"

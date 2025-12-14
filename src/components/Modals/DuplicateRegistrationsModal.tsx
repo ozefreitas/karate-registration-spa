@@ -17,7 +17,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { eventsHooks, disciplinesHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "notistack";
+// import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 
 const Transition = React.forwardRef(function Transition(
@@ -37,7 +37,7 @@ export default function (
     eventName: string;
   }>
 ) {
-  const { enqueueSnackbar } = useSnackbar();
+  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const { data: eventsData, isLoading: isEventsLoading } =

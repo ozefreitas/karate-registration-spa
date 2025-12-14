@@ -27,7 +27,7 @@ export default function ServerErrorPage({ error, resetErrorBoundary }: any) {
         <Button
           variant="contained"
           size="large"
-          onClick={() => resetErrorBoundary}
+          onClick={() => resetErrorBoundary()}
         >
           Tentar Novamente
         </Button>

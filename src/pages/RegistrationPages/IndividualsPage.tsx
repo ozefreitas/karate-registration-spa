@@ -95,7 +95,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       <PageInfoCard
         description={
           <>
-            Aqui poderá consultar todos os Atletas que estão inscritos para a
+            Aqui poderá consultar todos os Membros que estão inscritos para a
             prova que selecionou. <p></p> Tal como presente nas regras, no
             período de retificações apenas pode eliminar inscrições, e quando as
             inscrições estiverem fechadas não podem ser efetuadas operações,

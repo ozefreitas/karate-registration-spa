@@ -9,8 +9,8 @@ export const useUpdateMemberData = () => {
   return useMutation({
     mutationFn: ({ memberId, data }: { memberId: string; data: any }) =>
       updateMember(memberId, data),
-    onSuccess: () => {
-      enqueueSnackbar("Atleta atualizado com sucesso!", {
+    onSuccess: (data: any) => {
+      enqueueSnackbar(data.data.message, {
         variant: "success",
         anchorOrigin: {
           vertical: "top",
@@ -25,16 +25,29 @@ export const useUpdateMemberData = () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
-    onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+    onError: (data: any) => {
+      const errorData = data.response?.data || {};
+      if (errorData.not_allowed?.[0]) {
+        enqueueSnackbar(errorData.not_allowed?.[0], {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      } else {
+        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      }
     },
   });
 };

@@ -17,3 +17,14 @@ export const eventOrderingOptions: { value: string; label: string }[] = [
   { value: "start_registration", label: "Ascendente" },
   { value: "-start_registration", label: "Descendente" },
 ];
+
+export const quotesOrderingOptions: { value: string; label: string }[] = [
+  { value: "year", label: "Ascendente" },
+  { value: "-year", label: "Descendente" },
+  { value: "month", label: "Ascendente" },
+  { value: "-month", label: "Descendente" },
+  { value: "paid", label: "Ascendente (Em Falta 1º)" },
+  { value: "-paid", label: "Descendente (Pago 1º)" },
+  { value: "paid_at", label: "Mais Recentes 1º" },
+  { value: "-paid_at", label: "Mais Antigas 1º" },
+];

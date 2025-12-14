@@ -466,7 +466,7 @@ export default function Header(
             </ListItemButton>
           </MenuItem>
         ) : (
-          <List sx={{ display: "flex", flexDirection: "column" }}>
+          <List sx={{ display: "flex", flexDirection: "column", p: 0 }}>
             {notificationData?.data.response.map(
               (noti: Notification, index: number) => (
                 <MenuItem

@@ -6,12 +6,13 @@ import {
   fetchPasswordRequests,
 } from "../../api";
 
-export const useFetchClubUsersData = (username?: string) => {
+export const useFetchClubUsersData = (username?: string, userRole?: string) => {
   return useQuery({
     queryKey: ["club-users"],
     queryFn: () => fetchClubUsers(username),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: userRole == "main_admin",
   });
 };
 

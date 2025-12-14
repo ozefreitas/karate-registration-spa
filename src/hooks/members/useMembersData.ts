@@ -9,10 +9,36 @@ import {
   fetchLastFiveMembers,
 } from "../../api";
 
-export const useFetchMembersData = (page: number, pageSize: number, ordering?: string, memberType?: string, gender?: string) => {
+export const useFetchMembersData = (
+  page: number,
+  pageSize: number,
+  ordering?: string,
+  memberType?: string,
+  gender?: string,
+  quotesLegible?: boolean,
+  monthlyPaymentStatus?: string
+) => {
   return useQuery({
-    queryKey: ["members", page, pageSize, ordering, memberType, gender],
-    queryFn: () => fetchMembers(page, pageSize, ordering, memberType, gender),
+    queryKey: [
+      "members",
+      page,
+      pageSize,
+      ordering,
+      memberType,
+      gender,
+      quotesLegible,
+      monthlyPaymentStatus,
+    ],
+    queryFn: () =>
+      fetchMembers(
+        page,
+        pageSize,
+        ordering,
+        memberType,
+        gender,
+        quotesLegible,
+        monthlyPaymentStatus
+      ),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
   });
@@ -39,7 +65,7 @@ export const useFetchLastFiveMembers = () => {
 export const useFetchMembersNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number,
+  pageSize: number
 ) => {
   return useQuery({
     queryKey: ["members-notin-event", eventId, page, pageSize],
@@ -53,7 +79,7 @@ export const useFetchMembersNotInEvent = (
 export const useFetchCoachesNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number,
+  pageSize: number
 ) => {
   return useQuery({
     queryKey: ["coaches-notin-event", eventId, page, pageSize],

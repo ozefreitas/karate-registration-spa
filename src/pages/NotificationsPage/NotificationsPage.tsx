@@ -21,22 +21,24 @@ const NotificationsPage = (props: { me: any }) => {
   const [pageSize, _] = useState<number>(5);
   const navigate = useNavigate();
 
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    console.log(event);
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
   const removeNotification = notificationsHooks.useRemoveNotification();
 
-  const handleFollowingAction = (noti_type: string) => {
+  const handleFollowingAction = (noti: any) => {
+    const noti_type = noti.type;
     if (noti_type === "create_member") {
       navigate("/members/");
     } else if (noti_type === "rate_event") {
-      navigate("/events/");
+      navigate(`/events/${noti.target_event.id}/`);
     } else if (noti_type === "reset") {
       navigate("/settings/");
     } else if (noti_type === "classifications_available") {
       navigate("/classifications/");
+    } else if (noti_type === "payment_overdue") {
+      navigate(`/members/${noti.target_member.id}/?section=quotes_management`);
     } else if (
       [
         "open_registrations",
@@ -48,9 +50,13 @@ const NotificationsPage = (props: { me: any }) => {
     }
   };
 
-  console.log(props.me.data.id)
+  console.log(props.me.data.id);
   const { data: notificationsData, isLoading: isNotificationsLoading } =
-    notificationsHooks.useFetchNotificationsData(page, pageSize, props.me.data.id);
+    notificationsHooks.useFetchNotificationsData(
+      page,
+      pageSize,
+      props.me.data.id
+    );
 
   return (
     <>
@@ -94,8 +100,8 @@ const NotificationsPage = (props: { me: any }) => {
               }}
               key={index}
             >
-              <CardContent sx={{ p: 3, pr: 0, display: "flex" }}>
-                <Grid container alignItems={"center"}>
+              <CardContent sx={{ p: 3, pl: 5, pr: 0, display: "flex" }}>
+                <Grid container alignItems={"center"} pr={1}>
                   {getNotificationTypeIcon(item.type)}
                 </Grid>
                 <Grid container alignItems={"center"} size={12} pl={4}>
@@ -121,7 +127,7 @@ const NotificationsPage = (props: { me: any }) => {
                   <Tooltip title="Prosseguir ação" placement="bottom-start">
                     <IconButton
                       onClick={() => {
-                        handleFollowingAction(item.type);
+                        handleFollowingAction(item);
                       }}
                       aria-label="notification action"
                       disabled={

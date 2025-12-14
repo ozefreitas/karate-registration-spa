@@ -50,7 +50,7 @@ export default function HelpPage() {
           <Grid size={12}>
             <Card sx={{ m: 2 }}>
               <CardHeader
-                title={"Atletas"}
+                title={"Membros"}
                 sx={{
                   "& .MuiCardHeader-title": {
                     fontWeight: "bold",
@@ -58,9 +58,9 @@ export default function HelpPage() {
                 }}
               ></CardHeader>
               <CardContent>
-                Os Atletas servem como referência para todos as provas a
+                Os Membros servem como referência para todos as provas a
                 realizar, ou seja, serão a partir destes que terão de selecionar
-                para cada prova. Atletas por si só (na página de Atletas) NÂO
+                para cada prova. Membros por si só (na página de Membros) NÂO
                 SERVEM COMO INSCRIÇÃO EM QUALQUER PROVA!<p></p>
                 <Accordion sx={{ m: 1 }}>
                   <AccordionSummary expandIcon={<ExpandMore />}>
@@ -76,7 +76,7 @@ export default function HelpPage() {
                     identificar um Atleta. Os campos obrigatórios estão marcados
                     com "*". Pode consultar regras mais específicas na própria{" "}
                     <Link to={"/members/new_member/"}>página</Link>. Registar
-                    Atletas não tem nenhuma data nem periodo definidos, pelo que
+                    Membros não tem nenhuma data nem periodo definidos, pelo que
                     pode (e deve) fazê-lo muito antes e fora do periodo de
                     inscrições em provas.
                   </AccordionDetails>
@@ -87,12 +87,12 @@ export default function HelpPage() {
                       sx={{ fontSize: 14, fontWeight: "bold" }}
                       component="span"
                     >
-                      Página de todos os Atletas
+                      Página de todos os Membros
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    Ná página de Atletas poderá consultar uma tabela simples com
-                    a informação mais importante de cada atletas por linha. Tem
+                    Ná página de Membros poderá consultar uma tabela simples com
+                    a informação mais importante de cada membro por linha. Tem
                     também um botão para adicionar um novo Atleta, e que o irá
                     levar para o formulário.
                   </AccordionDetails>
@@ -277,7 +277,7 @@ export default function HelpPage() {
                 independente. Pode inscrever Atletas e Equipas (para as
                 competições que o permitirem) a partir do cartão de cada prova.
                 As inscrições funcionam a partir da seleção de Atletas
-                previamente registados na página Atletas.
+                previamente registados na página Membros.
               </CardContent>
             </Card>
           </Grid>
@@ -301,7 +301,7 @@ export default function HelpPage() {
                   <li>Data de fim de periodo de retificações;</li>
                   <li>Data de realização;</li>
                 </ul>
-                Lá dentro poderá consultar e inscrever Atletas nesse mesmo
+                Lá dentro poderá consultar e inscrever Membros nesse mesmo
                 evento. Apenas poderá inscrever entre a data de início e a de
                 fim de inscrições. Até ao fim do periodo de retificações apenas
                 poderá fazer edições.

@@ -72,7 +72,7 @@ export default function MembersHomeComponent(
                   <Person />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Ocorreu um erro ao carregar os atletas."}
+                  primary={"Ocorreu um erro ao carregar os membros."}
                 />
               </ListItemButton>
             </ListItem>
@@ -83,7 +83,7 @@ export default function MembersHomeComponent(
                   <Person />
                 </ListItemIcon>
                 <ListItemText
-                  primary={"Não registou nenhum Atleta recentemente."}
+                  primary={"Não registou nenhum Membro recentemente."}
                 />
               </ListItemButton>
             </ListItem>
@@ -92,7 +92,9 @@ export default function MembersHomeComponent(
               <Tooltip key={index} title={"Consultar"}>
                 <ListItem sx={{ m: 0, pb: 0 }}>
                   <ListItemButton
-                    onClick={() => navigate(`members/${member.id}/`)}
+                    onClick={() =>
+                      navigate(`members/${member.id}/?section=personal_info`)
+                    }
                   >
                     <ListItemIcon>
                       <Person />
@@ -121,10 +123,7 @@ export default function MembersHomeComponent(
           {props.userRole === "free_club" ? null : props.userRole ===
             "subed_club" ? (
             <Grid container size={12} justifyContent={"space-between"}>
-              <AddButton
-                label="Adicionar"
-                to="members/new_member/"
-              ></AddButton>
+              <AddButton label="Adicionar" to="members/new_member/"></AddButton>
               <InfoButton label="Ver Todos" to="members/"></InfoButton>
             </Grid>
           ) : (

@@ -34,6 +34,7 @@ import DeleteMemberModal from "../Modals/DeleteMemberModal";
 import EditIndividualModal from "../Modals/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
+import EditMemberActivePaymentModal from "../Modals/EditMemberActivePaymentModal";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -149,6 +150,7 @@ export default function AllUseTable(
     disciplineCategories?: any;
     setDisciplineCategories?: any;
     overideInternalPage?: boolean;
+    disallowEdit?: boolean;
   }>
 ) {
   // type Order = "asc" | "desc";
@@ -166,6 +168,7 @@ export default function AllUseTable(
   };
 
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
   const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] =
     useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -210,6 +213,19 @@ export default function AllUseTable(
 
   const handleEditModalClose = () => {
     setIsEditModalOpen(false);
+  };
+
+  const handlePaymentModalOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    paymentId: string
+  ) => {
+    event.stopPropagation();
+    setActionedRow(paymentId);
+    setIsPaymentModalOpen(true);
+  };
+
+  const handlePaymentModalClose = () => {
+    setIsPaymentModalOpen(false);
   };
 
   const handleEditConfirmModalClose = () => {
@@ -485,17 +501,37 @@ export default function AllUseTable(
                               props.editable) ? (
                               <Tooltip arrow title="Editar">
                                 <IconButton
+                                  disabled={
+                                    row.can_update_sensitive !== undefined
+                                      ? props.disallowEdit &&
+                                        row.can_update_sensitive
+                                        ? false
+                                        : true
+                                      : false
+                                  }
                                   onClick={(e) => {
+                                    e.stopPropagation();
                                     if (props.type == "Individuais") {
                                       handleRowEditFromIndiv(e, row.id);
                                     } else if (props.type == "Equipas") {
                                       handleRowEditFromTeam(e);
+                                    } else if (props.type == "Pagamentos") {
+                                      handlePaymentModalOpen(e, row.id);
                                     } else {
                                       handleRowEdit(e, row.id);
                                     }
                                   }}
                                 >
-                                  <Edit color="warning"></Edit>
+                                  <Edit
+                                    color={
+                                      row.can_update_sensitive !== undefined
+                                        ? props.disallowEdit &&
+                                          row.can_update_sensitive
+                                          ? "warning"
+                                          : "disabled"
+                                        : "warning"
+                                    }
+                                  ></Edit>
                                 </IconButton>
                               </Tooltip>
                             ) : null}
@@ -640,6 +676,11 @@ export default function AllUseTable(
           categoryId={actionedRow}
         ></CategoryInfoModal>
       )}
+      <EditMemberActivePaymentModal
+        isOpen={isPaymentModalOpen}
+        handleClose={handlePaymentModalClose}
+        paymentId={actionedRow}
+      ></EditMemberActivePaymentModal>
     </>
   );
 }

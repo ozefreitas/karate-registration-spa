@@ -30,6 +30,7 @@ const FiltersBadge = styled(Badge)`
 export default function MemberFilters(props: {
   isLoading: boolean;
   control: any;
+  setValue: any;
   errors: any;
   reset: any;
   changedCount: number;
@@ -43,9 +44,7 @@ export default function MemberFilters(props: {
   const userRole = user?.data.role;
 
   const { data: availableUsersData, isLoading: isAvailableUserLoading } =
-    adminHooks.useFetchClubUsersData();
-
-  console.log(availableUsersData);
+    adminHooks.useFetchClubUsersData(undefined, userRole);
 
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
@@ -130,7 +129,7 @@ export default function MemberFilters(props: {
           )
         ) : (
           <>
-            <Grid sx={{ p: 3, py: 2 }} container>
+            <Grid sx={{ p: 3, py: 1 }} container>
               <Controller
                 name="quotesLegible"
                 control={props.control}
@@ -163,7 +162,7 @@ export default function MemberFilters(props: {
                 )}
               />
             </Grid>
-            <Grid sx={{ p: 3, py: 2 }} container>
+            <Grid sx={{ p: 3, py: 1 }} container>
               <Controller
                 name="quotesOverdue"
                 control={props.control}
@@ -183,6 +182,9 @@ export default function MemberFilters(props: {
                             {...field}
                             checked={field.value}
                             onChange={(e) => {
+                              if (e.target.checked) {
+                                props.setValue("quotesLegible", true);
+                              }
                               field.onChange(e.target.checked);
                             }}
                             name="quotesOverdue"
