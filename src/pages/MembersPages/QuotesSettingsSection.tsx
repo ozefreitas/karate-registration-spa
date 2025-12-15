@@ -207,7 +207,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
         </Grid>
       ) : data?.data.length !== 0 ? (
         <Grid container justifyContent={"flex-end"} spacing={2} mt={3}>
-          <Grid size={3}>
+          <Grid size={6}>
             <Card
               elevation={2}
               sx={{
@@ -227,37 +227,73 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                   alignContent={"flex-end"}
                   flexDirection={"column"}
                 >
-                  <Button
-                    sx={{ mb: 2 }}
-                    variant="contained"
-                    size="small"
-                    color="warning"
-                    onClick={handleEditPlanModalOpen}
-                    startIcon={<Edit />}
-                  >
-                    Editar
-                  </Button>
                   {isLoading ? (
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                       <CircularProgress />
                     </Box>
                   ) : (
-                    <Typography
-                      color={
-                        props.quotesConfig !== undefined
-                          ? "info"
-                          : "textDisabled"
-                      }
-                      variant="h3"
-                    >
-                      {preDefined}€
-                    </Typography>
+                    <Grid container alignItems={"center"} spacing={3}>
+                      <Typography
+                        color={
+                          props.quotesConfig !== undefined
+                            ? "info"
+                            : "textDisabled"
+                        }
+                        variant="h3"
+                      >
+                        {preDefined}€
+                      </Typography>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="warning"
+                        onClick={handleEditPlanModalOpen}
+                        startIcon={<Edit />}
+                      >
+                        Editar
+                      </Button>
+                    </Grid>
                   )}
                 </Grid>
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={2.5}>
+
+          <Grid size={6}>
+            <Card
+              elevation={2}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <CardHeader sx={{ pb: 1 }} title="Em pagamento"></CardHeader>
+              <CardContent
+                sx={{
+                  pr: 5,
+                  maxHeight: "100%",
+                }}
+              >
+                {isLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <Grid container justifyContent={"flex-end"}>
+                    <Typography color="info" variant="h3">
+                      {getMonthFromValue(Number(month))}
+                    </Typography>
+                    <Typography color="info" variant="h3">
+                      -{year}
+                    </Typography>
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid size={6}>
             <Card
               elevation={2}
               sx={{
@@ -285,7 +321,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                 ) : (
                   <Typography
                     color={data?.data.length !== 0 ? "info" : "textDisabled"}
-                    variant="h2"
+                    variant="h3"
                   >
                     {data?.data.length !== 0
                       ? data?.data?.filter(
@@ -298,7 +334,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={2.5}>
+          <Grid size={6}>
             <Card
               elevation={2}
               sx={{
@@ -326,7 +362,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                 ) : (
                   <Typography
                     color={data?.data.length !== 0 ? "info" : "textDisabled"}
-                    variant="h2"
+                    variant="h3"
                   >
                     {data?.data.length !== 0
                       ? data?.data?.filter(
@@ -339,44 +375,9 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               </CardContent>
             </Card>
           </Grid>
-
-          <Grid size={4}>
-            <Card
-              elevation={2}
-              sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <CardHeader sx={{ pb: 1 }} title="Em pagamento"></CardHeader>
-              <CardContent
-                sx={{
-                  pr: 5,
-                  maxHeight: "100%",
-                }}
-              >
-                {isLoading ? (
-                  <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <Grid container justifyContent={"flex-end"}>
-                    <Typography color="info" variant="h3">
-                      {getMonthFromValue(Number(month))}
-                    </Typography>
-                    <Typography color="info" variant="h3">
-                      {year}
-                    </Typography>
-                  </Grid>
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
         </Grid>
       ) : null}
-      <Grid mt={5}>
+      <Grid mt={10}>
         {error ? null : (
           <Grid
             size={12}

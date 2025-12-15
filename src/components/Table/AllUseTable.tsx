@@ -131,7 +131,8 @@ export default function AllUseTable(
       | "CategoriasReadOnly"
       | "EventCategories"
       | "Treinadores"
-      | "Pagamentos";
+      | "Pagamentos"
+      | "Plano";
     discipline?: any;
     data: any;
     count: number;
@@ -542,6 +543,14 @@ export default function AllUseTable(
                               props.type === "Individuais") ? (
                               <Tooltip arrow title="Remover">
                                 <IconButton
+                                  disabled={
+                                    row.can_update_sensitive !== undefined
+                                      ? props.disallowEdit &&
+                                        row.can_update_sensitive
+                                        ? false
+                                        : true
+                                      : false
+                                  }
                                   onClick={(e) => {
                                     if (
                                       props.selectedDisciplineForCategory ===
@@ -553,7 +562,16 @@ export default function AllUseTable(
                                     }
                                   }}
                                 >
-                                  <Delete color="error"></Delete>
+                                  <Delete
+                                    color={
+                                      row.can_update_sensitive !== undefined
+                                        ? props.disallowEdit &&
+                                          row.can_update_sensitive
+                                          ? "error"
+                                          : "disabled"
+                                        : "error"
+                                    }
+                                  ></Delete>
                                 </IconButton>
                               </Tooltip>
                             ) : null}

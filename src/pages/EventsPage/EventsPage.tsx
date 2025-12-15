@@ -26,6 +26,7 @@ import {
   AccessTime,
   CalendarMonth,
   Subject,
+  East,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useState } from "react";
@@ -33,6 +34,7 @@ import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useForm } from "react-hook-form";
 import EventCallendar from "../../components/Callendars/EventsCallendar";
+import { useNavigate } from "react-router-dom";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
@@ -48,6 +50,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     is_closed: boolean;
     has_ended: boolean;
   };
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [currentView, setCurrentView] = useState<number>(1);
 
@@ -111,7 +114,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   ]);
 
   const ordering = orderFields
-    .map((f: any) => orderWatch(f.key)) 
+    .map((f: any) => orderWatch(f.key))
     .filter(Boolean)
     .join(",");
 
@@ -313,11 +316,29 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               alignContent="flex-end"
                               size={4}
                             >
-                              <SettingsButton
-                                size="large"
-                                label="Consultar"
-                                to={`/events/${comp.id}/`}
-                              ></SettingsButton>
+                              <Tooltip placement="top" title="Ir para">
+                                <IconButton
+                                  sx={{
+                                    transition: "0.3s",
+                                    borderRadius: 3,
+                                    p: 1.5,
+                                    px: 2,
+                                    border: 2,
+                                    borderColor: "red",
+                                    "&:hover": {
+                                      transform: "translateY(-3px)",
+                                      boxShadow: 6,
+                                      borderColor: "red",
+                                      bgcolor: "red",
+                                    },
+                                  }}
+                                  onClick={() =>
+                                    navigate(`/events/${comp.id}/`)
+                                  }
+                                >
+                                  <East sx={{ color: "black" }}></East>
+                                </IconButton>
+                              </Tooltip>
                             </Grid>
                           </Grid>
                         </Grid>

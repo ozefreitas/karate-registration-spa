@@ -116,26 +116,28 @@ export default function SingleMemberPage(
                       )?.label
                     }
                   </Typography>
-                  <Tooltip title="Navegar" arrow>
-                    <Chip
-                      color="primary"
-                      variant="outlined"
-                      sx={{ p: 1 }}
-                      onClick={() =>
-                        navigate(
-                          `/members/${singleMemberData?.data.has_another}`
-                        )
-                      }
-                      clickable
-                      icon={<OpenInNew />}
-                      size="small"
-                      label={
-                        singleMemberData?.data.member_type === "coach"
-                          ? "Aluno/Competidor"
-                          : "Treinador"
-                      }
-                    ></Chip>
-                  </Tooltip>
+                  {singleMemberData?.data.has_another !== null ? (
+                    <Tooltip title="Navegar para correspondente" arrow>
+                      <Chip
+                        color="primary"
+                        variant="outlined"
+                        sx={{ p: 1 }}
+                        onClick={() =>
+                          navigate(
+                            `/members/${singleMemberData?.data.has_another}/`
+                          )
+                        }
+                        clickable
+                        icon={<OpenInNew />}
+                        size="small"
+                        label={
+                          singleMemberData?.data.member_type === "coach"
+                            ? "Aluno/Competidor"
+                            : "Treinador"
+                        }
+                      ></Chip>
+                    </Tooltip>
+                  ) : null}
                 </Grid>
 
                 <Grid

@@ -14,14 +14,22 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  IconButton,
   List,
   Pagination,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
-import { AccessTime, HowToReg, LocationPin, Today } from "@mui/icons-material";
-import SettingsButton from "../Buttons/SettingsButton";
+import {
+  AccessTime,
+  HowToReg,
+  LocationPin,
+  Today,
+  East,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import "dayjs/locale/pt";
 import {
   PickerSelectionState,
@@ -68,7 +76,7 @@ export default function EventCallendar(props: {
     is_closed: boolean;
     has_ended: boolean;
   };
-
+  const navigate = useNavigate();
   const initialValue = dayjs();
   const [month, setMonth] = React.useState<string>(
     initialValue.format("YYYY-MM")
@@ -262,11 +270,29 @@ export default function EventCallendar(props: {
                                   alignContent="flex-end"
                                   size={4}
                                 >
-                                  <SettingsButton
-                                    size="large"
-                                    label="Consultar"
-                                    to={`/events/${comp.id}/`}
-                                  ></SettingsButton>
+                                  <Tooltip placement="top" title="Ir para">
+                                    <IconButton
+                                      sx={{
+                                        transition: "0.3s",
+                                        borderRadius: 3,
+                                        p: 1.5,
+                                        px: 2,
+                                        border: 2,
+                                        borderColor: "red",
+                                        "&:hover": {
+                                          transform: "translateY(-3px)",
+                                          boxShadow: 6,
+                                          borderColor: "red",
+                                          bgcolor: "red",
+                                        },
+                                      }}
+                                      onClick={() =>
+                                        navigate(`/events/${comp.id}/`)
+                                      }
+                                    >
+                                      <East sx={{ color: "black" }}></East>
+                                    </IconButton>
+                                  </Tooltip>
                                 </Grid>
                               </Grid>
                             </Grid>
