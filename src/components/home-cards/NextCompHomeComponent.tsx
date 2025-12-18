@@ -11,6 +11,8 @@ import {
   Tooltip,
   Box,
   CircularProgress,
+  Typography,
+  Chip,
 } from "@mui/material";
 import { SportsMma } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
@@ -62,15 +64,77 @@ export default function NextCompHomeComponent(
           </ListItem>
         ) : (
           <List>
-            <Tooltip title={"Consultar"}>
+            <Tooltip title={"Consultar"} placement="left">
               <ListItem sx={{ m: 0 }}>
                 <ListItemButton
+                  sx={{
+                    minWidth: 0,
+                  }}
                   onClick={() => navigate(`events/${nextCompData?.data.id}/`)}
                 >
                   <ListItemIcon>
                     <SportsMma></SportsMma>
                   </ListItemIcon>
-                  <ListItemText primary={nextCompData?.data.name} />
+                  <ListItemText
+                    sx={{
+                      overflowX: "auto",
+                      whiteSpace: "nowrap",
+                      minWidth: 0,
+                      "&::-webkit-scrollbar": {
+                        height: 0,
+                      },
+                      maskImage:
+                        "linear-gradient(to right, black 85%, transparent 100%)",
+                    }}
+                    primary={
+                      <Grid
+                        container
+                        alignItems="center"
+                        spacing={2}
+                        pr={5}
+                        wrap="nowrap"
+                        sx={{
+                          width: "max-content",
+                        }}
+                      >
+                        <Typography>{nextCompData?.data.name}</Typography>
+                        {nextCompData?.data.has_registrations ? (
+                          <Chip
+                            variant="outlined"
+                            color={
+                              nextCompData?.data.is_open
+                                ? "success"
+                                : nextCompData?.data.is_retification
+                                ? "warning"
+                                : "error"
+                            }
+                            label={
+                              nextCompData?.data.is_open
+                                ? "Inscrições Abertas"
+                                : nextCompData?.data.is_retification
+                                ? "Periodo Retificalções"
+                                : "Inscrições Fechadas"
+                            }
+                          ></Chip>
+                        ) : null}
+                        <Chip
+                          label={nextCompData?.data.season}
+                          variant="outlined"
+                        ></Chip>
+                        <Chip
+                          label={
+                            nextCompData?.data.encounter
+                              ? "Encontro"
+                              : "Competição"
+                          }
+                          variant="outlined"
+                        ></Chip>
+                        {nextCompData?.data.has_teams ? (
+                          <Chip label="Equipas" variant="outlined"></Chip>
+                        ) : null}
+                      </Grid>
+                    }
+                  />
                 </ListItemButton>
               </ListItem>
             </Tooltip>

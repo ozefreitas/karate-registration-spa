@@ -14,10 +14,10 @@ export const useFetchMonthlyPaymentPlansData = () => {
   });
 };
 
-export const useFetchMonthlyMemberSubscriptionsData = (memberId: string, ordering: string) => {
+export const useFetchMonthlyMemberSubscriptionsData = (ordering: string, memberId?: string) => {
   return useQuery({
     queryKey: ["member-monthly-subscription", memberId, ordering],
-    queryFn: () => fetchMonthlyMemberSubscriptions(memberId, ordering),
+    queryFn: () => fetchMonthlyMemberSubscriptions(ordering, memberId),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
   });

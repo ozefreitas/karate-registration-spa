@@ -34,15 +34,8 @@ export default function CategoryInfoModal(
     categoryId: any;
   }>
 ) {
-  const {
-    data: singleCategoryData,
-    refetch,
-    isLoading: isSingleCategoryDataLoading,
-  } = categoriesHooks.useFetchSingleCategory(props.categoryId);
-
-  React.useEffect(() => {
-    refetch();
-  }, [props.categoryId]);
+  const { data: singleCategoryData, isLoading: isSingleCategoryDataLoading } =
+    categoriesHooks.useFetchSingleCategory(props.categoryId);
 
   return (
     <Dialog

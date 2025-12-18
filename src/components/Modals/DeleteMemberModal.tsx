@@ -15,6 +15,7 @@ import {
   membersHooks,
   disciplinesHooks,
   categoriesHooks,
+  monthlyPaymentsHooks,
 } from "../../hooks";
 import {
   useRemoveTeamData,
@@ -64,6 +65,8 @@ export default function DeleteMemberModal(
     disciplinesHooks.useRemoveDisciplineCategory();
   const removeAllDisciplineMembers =
     disciplinesHooks.useDeleteAllDisciplineMember();
+  const removeMonthlyMenberPaymentPlan =
+    monthlyPaymentsHooks.useDeleteMonthlyPaymentPlanData();
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
 
@@ -102,6 +105,8 @@ export default function DeleteMemberModal(
           disciplineId: props.discipline,
           data: data,
         });
+      } else if (props.from === "Plano") {
+        removeMonthlyMenberPaymentPlan.mutate(id);
       } else {
         const data = {
           disciplineId: props.discipline,
@@ -172,8 +177,8 @@ export default function DeleteMemberModal(
       <DialogContent>
         {props.from === "Atletas"
           ? props.id !== undefined
-            ? "Tem a certeza que pretende apagar este(s) Atleta(s)? Esta ação irá eliminar também todas as inscrições deste(s) Atleta(s) em todas as provas."
-            : "Tem a certeza que pretende apagar todos os seus Atletas? Esta ação irá eliminar também todas as inscrições de todos os Atletas em todas as provas"
+            ? "Tem a certeza que pretende apagar este(s) Membro(s)? Esta ação irá eliminar também todas as inscrições deste(s) Membro(s) em todas as provas."
+            : "Tem a certeza que pretende apagar todos os seus Membros? Esta ação irá eliminar também todas as inscrições de todos os Membros em todas as provas"
           : props.from === "Categorias"
           ? props.id !== undefined
             ? "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
@@ -182,9 +187,11 @@ export default function DeleteMemberModal(
           ? props.id !== undefined
             ? "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
             : "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
-          : props.id !== undefined
-          ? "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
-          : "Tem a certeza que pretende apagar todas as Inscrições?"}
+          : props.from === "Individuais"
+          ? props.id !== undefined
+            ? "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
+            : "Tem a certeza que pretende apagar todas as Inscrições?"
+          : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
       </DialogContent>
       <DialogActions>
         <Stack

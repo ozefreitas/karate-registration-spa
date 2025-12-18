@@ -31,6 +31,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     age: string;
     member_type: string;
     can_update_sensitive: boolean;
+    past_month_payment_status: string;
   };
 
   const [page, setPage] = useState<number>(0);
@@ -168,11 +169,16 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         ?.label,
       age: member.age,
       verified: member.can_update_sensitive ? (
-        <AccountCircle color="disabled"/>
+        <Grid container flexDirection={"column"} alignItems={"center"}>
+          <AccountCircle color="disabled" />
+        </Grid>
       ) : (
-        <VerifiedUser color="disabled"/>
+        <Grid container flexDirection={"column"} alignItems={"center"}>
+          <VerifiedUser color="disabled" />
+        </Grid>
       ),
-      can_update_sensitive: member.can_update_sensitive
+      can_update_sensitive: member.can_update_sensitive,
+      past_month_payment_status: member.past_month_payment_status,
     }));
   }, [membersData]);
 

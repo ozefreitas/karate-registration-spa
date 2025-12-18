@@ -13,6 +13,7 @@ import {
   TablePagination,
   Paper,
   tableCellClasses,
+  tableRowClasses,
   Tooltip,
   Typography,
   IconButton,
@@ -29,12 +30,12 @@ import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
 } from "@mui/icons-material";
-import EditMemberModal from "../Modals/EditMemberModal";
-import DeleteMemberModal from "../Modals/DeleteMemberModal";
-import EditIndividualModal from "../Modals/EditIndividualModal";
+import EditMemberModal from "../modals/EditMemberModal";
+import DeleteMemberModal from "../modals/DeleteMemberModal";
+import EditIndividualModal from "../modals/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
-import EditMemberActivePaymentModal from "../Modals/EditMemberActivePaymentModal";
+import EditMemberActivePaymentModal from "../modals/EditMemberActivePaymentModal";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -176,10 +177,10 @@ export default function AllUseTable(
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] =
     useState<boolean>(false);
   const [isChooseModalOpen, setIsChooseModalOpen] = useState<boolean>(false);
-  const [isTeamAthleteEditModalOpen, setIsTeamAthleteEditModalOpen] =
+  const [isTeamMemberEditModalOpen, setIsTeamMemberEditModalOpen] =
     useState<boolean>(false);
   const [actionedRow, setActionedRow] = useState<string>("");
-  const [chosenAthlete, setChosenAthlete] = useState<string>("");
+  const [chosenMember, setChosenMember] = useState<string>("");
   const [isCategoryInfoModalOpen, setIsCategoryInfoModalOpen] =
     useState<boolean>(false);
 
@@ -253,12 +254,12 @@ export default function AllUseTable(
     setIsChooseModalOpen(false);
   };
 
-  const handleTeamAthleteEditModalOpen = () => {
-    setIsTeamAthleteEditModalOpen(true);
+  const handleTeamMemberEditModalOpen = () => {
+    setIsTeamMemberEditModalOpen(true);
   };
 
-  const handleTeamAthleteEditModalClose = () => {
-    setIsTeamAthleteEditModalOpen(false);
+  const handleTeamMemberEditModalClose = () => {
+    setIsTeamMemberEditModalOpen(false);
   };
 
   const handleCategoryInfoModalOpen = (event: any) => {
@@ -272,10 +273,10 @@ export default function AllUseTable(
 
   const handleRowEdit = (
     event: React.MouseEvent<HTMLElement>,
-    athleteId: string
+    memberId: string
   ) => {
     event.stopPropagation();
-    setActionedRow(athleteId);
+    setActionedRow(memberId);
     setIsEditModalOpen(true);
   };
 
@@ -327,22 +328,48 @@ export default function AllUseTable(
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: "#e81c24",
       fontSize: 18,
       color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 16,
+      paddingTop: 8,
+      paddingBottom: 8,
     },
   }));
 
-  const StyledTableRow = styled(TableRow)<{ header?: boolean }>(
-    ({ header }) => ({
-      textAlign: "center",
-      height: 50,
-      cursor: header ? "default" : "pointer",
-    })
-  );
+  const StyledTableRow = styled(TableRow)<{
+    header?: boolean;
+    warning?: boolean;
+  }>(({ header, warning }) => ({
+    [`&.${tableRowClasses.head}`]: {
+      backgroundColor: "#e81c24",
+      border: "4px solid #e81c24",
+    },
+    textAlign: "center",
+    cursor: header ? "default" : "pointer",
+
+    backgroundColor: warning ? "rgba(255, 165, 0, 0.10)" : undefined,
+    borderLeft: warning ? "4px solid rgba(255, 165, 0, 0.7)" : undefined,
+    borderRight: warning ? "4px solid rgba(255, 165, 0, 0.7)" : undefined,
+
+    animation: warning ? "rowWarningPulse 1.5s ease-in-out infinite" : "none",
+
+    "@keyframes rowWarningPulse": {
+      "0%": {
+        backgroundColor: "rgba(255, 165, 0, 0.08)",
+        borderLeftColor: "rgba(255, 165, 0, 0.45)",
+      },
+      "50%": {
+        backgroundColor: "rgba(255, 165, 0, 0.18)",
+        borderLeftColor: "rgba(255, 165, 0, 0.95)",
+      },
+      "100%": {
+        backgroundColor: "rgba(255, 165, 0, 0.08)",
+        borderLeftColor: "rgba(255, 165, 0, 0.45)",
+      },
+    },
+  }));
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -414,7 +441,7 @@ export default function AllUseTable(
                           }
                           onChange={handleSelectAllClick}
                           slotProps={{
-                            input: { "aria-label": "select all athletes" },
+                            input: { "aria-label": "select all members" },
                           }}
                         />
                       </label>
@@ -436,6 +463,10 @@ export default function AllUseTable(
                   return (
                     <StyledTableRow
                       hover
+                      warning={
+                        getNestedValue(row, "past_month_payment_status") ===
+                        "unpaid"
+                      }
                       selected={isItemSelected}
                       onClick={(event) => {
                         if (props.selection) {
@@ -450,7 +481,7 @@ export default function AllUseTable(
                             color="primary"
                             checked={isItemSelected}
                             slotProps={{
-                              input: { "aria-label": "select athlete" },
+                              input: { "aria-label": "select member" },
                             }}
                           />
                         </StyledTableCell>
@@ -580,16 +611,16 @@ export default function AllUseTable(
                             <ChooseEditModal
                               isModalOpen={isChooseModalOpen}
                               handleModalClose={handleChooseModalClose}
-                              isEditModalOpen={isTeamAthleteEditModalOpen}
+                              isEditModalOpen={isTeamMemberEditModalOpen}
                               handleEditModalClose={
-                                handleTeamAthleteEditModalClose
+                                handleTeamMemberEditModalClose
                               }
                               handleEditModalOpen={
-                                handleTeamAthleteEditModalOpen
+                                handleTeamMemberEditModalOpen
                               }
                               id={row.id}
-                              chosenAthlete={chosenAthlete}
-                              setChosenAthlete={setChosenAthlete}
+                              chosenMember={chosenMember}
+                              setChosenMember={setChosenMember}
                             ></ChooseEditModal>
                           ) : null}
                         </StyledTableCell>
@@ -649,7 +680,8 @@ export default function AllUseTable(
           {props.type === "Equipas" ||
           props.type === "CategoriasReadOnly" ||
           props.type === "Categorias" ||
-          props.type === "EventCategories" ? null : (
+          props.type === "EventCategories" ||
+          props.type === "Plano" ? null : (
             <>
               <EditMemberModal
                 isModalOpen={isEditModalOpen}
@@ -687,18 +719,22 @@ export default function AllUseTable(
           )}
         </Grid>
       )}
-      {actionedRow === "" ? null : (
+      {props.type === "Categorias" ||
+      props.type === "CategoriasReadOnly" ||
+      props.type === "EventCategories" ? (
         <CategoryInfoModal
           isModalOpen={isCategoryInfoModalOpen}
           handleModalClose={handleCategoryInfoModalClose}
           categoryId={actionedRow}
         ></CategoryInfoModal>
-      )}
-      <EditMemberActivePaymentModal
-        isOpen={isPaymentModalOpen}
-        handleClose={handlePaymentModalClose}
-        paymentId={actionedRow}
-      ></EditMemberActivePaymentModal>
+      ) : null}
+      {props.type === "Pagamentos" ? (
+        <EditMemberActivePaymentModal
+          isOpen={isPaymentModalOpen}
+          handleClose={handlePaymentModalClose}
+          paymentId={actionedRow}
+        ></EditMemberActivePaymentModal>
+      ) : null}
     </>
   );
 }

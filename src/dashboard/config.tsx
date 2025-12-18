@@ -70,7 +70,7 @@ export const getSideMenuConfig = (userRole: string) => {
     },
     {
       name: "payment_manager",
-      label: "Gestor de Quotas",
+      label: "Gestor de Pagamentos",
       icon: <PointOfSale sx={{ color: "#e81c24" }} />,
       to: "/payment_manager/",
     },

@@ -9,7 +9,7 @@ export const useDeleteMemberData = () => {
   return useMutation({
     mutationFn: deleteMember,
     onSuccess: () => {
-      enqueueSnackbar("Atleta(s) removido(s) da plataforma com sucesso!", {
+      enqueueSnackbar("Membro(s) removido(s) da plataforma com sucesso!", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",

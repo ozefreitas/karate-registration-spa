@@ -11,25 +11,29 @@ import {
   Tooltip,
   Box,
   CircularProgress,
+  Typography,
+  Chip,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
+import { MemberTypes } from "../../config";
+import stringAvatar from "../../dashboard/utils/avatarColor";
 
 export default function MembersHomeComponent(
   props: Readonly<{ userRole: string }>
 ) {
   type Member = {
     id: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     age: string;
     graduation: string;
     category: string;
     match_type: string;
     gender: string;
+    member_type: string;
   };
 
   const navigate = useNavigate();
@@ -89,9 +93,12 @@ export default function MembersHomeComponent(
             </ListItem>
           ) : (
             lastFiveMembersData?.data.map((member: Member, index: number) => (
-              <Tooltip key={index} title={"Consultar"}>
+              <Tooltip key={index} title={"Consultar"} placement="right">
                 <ListItem sx={{ m: 0, pb: 0 }}>
                   <ListItemButton
+                    sx={{
+                      minWidth: 0,
+                    }}
                     onClick={() =>
                       navigate(`members/${member.id}/?section=personal_info`)
                     }
@@ -100,7 +107,50 @@ export default function MembersHomeComponent(
                       <Person />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`${member.first_name} ${member.last_name} | ${member.gender} | ${member.age} anos`}
+                      sx={{
+                        overflowX: "auto",
+                        whiteSpace: "nowrap",
+                        minWidth: 0,
+                        "&::-webkit-scrollbar": {
+                          height: 0,
+                        },
+                        maskImage:
+                          "linear-gradient(to right, black 85%, transparent 100%)",
+                      }}
+                      primary={
+                        <Grid
+                          container
+                          alignItems="center"
+                          spacing={2}
+                          pr={3}
+                          wrap="nowrap"
+                          sx={{
+                            width: "max-content",
+                          }}
+                        >
+                          <Typography>{member.full_name}</Typography>
+                          <Chip
+                            color={
+                              member.member_type === "coach"
+                                ? "secondary"
+                                : member.member_type === "student"
+                                ? "info"
+                                : "warning"
+                            }
+                            variant="outlined"
+                            label={`${
+                              MemberTypes.find(
+                                (item: any) => item.value === member.member_type
+                              )?.label
+                            }`}
+                          ></Chip>
+                          <Chip variant="outlined" label={member.gender}></Chip>
+                          <Chip
+                            variant="outlined"
+                            label={`${member.age} anos`}
+                          ></Chip>
+                        </Grid>
+                      }
                     />
                   </ListItemButton>
                 </ListItem>

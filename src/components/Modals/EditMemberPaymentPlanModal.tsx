@@ -36,8 +36,10 @@ export default function EditMemberPaymentPlan(
     currentQuotesConfig: any;
   }>
 ) {
-  const { data: monthlyPaymentPlans } =
-    monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
+  const {
+    data: monthlyPaymentPlansData,
+    isLoading: isMonthlyPaymentPlansLoadng,
+  } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
 
   const patchMemberMonthlyPaymentConfig =
     monthlyPaymentsHooks.usePatchMemberMonthlyPaymentConfig();
@@ -109,14 +111,16 @@ export default function EditMemberPaymentPlan(
                   }}
                   error={!!errors.name}
                 >
-                  <MenuItem value="None" sx={{ color: "lightgrey" }}>
+                  <MenuItem value="" sx={{ color: "lightgrey" }}>
                     -- Selecionar --
                   </MenuItem>
-                  {monthlyPaymentPlans?.data.map((item: any, index: any) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.name} ({item.amount}€)
-                    </MenuItem>
-                  ))}
+                  {monthlyPaymentPlansData?.data.map(
+                    (item: any, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.name} ({item.amount}€)
+                      </MenuItem>
+                    )
+                  )}
                 </TextField>
               </>
             )}

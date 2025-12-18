@@ -13,18 +13,22 @@ import AllUseTable from "../../components/Table/AllUseTable";
 import PatchClubSubscriptionModal from "../../components/Admin/PatchClubSubscriptionModal";
 import { Controller, useForm } from "react-hook-form";
 import FormCard from "../../dashboard/FormCard";
-import { Add } from "@mui/icons-material";
+import { Add, Delete, Error, Remove, Warning } from "@mui/icons-material";
 import { useSearchParams } from "react-router-dom";
+import FormAccordion from "../../dashboard/FormAccordion";
+import CreateMemberPaymentPlanModal from "../../components/modals/CreateMemberPaymentPlanModal";
 
 export default function MemberPaymemtManagerPage(props: { userRole: string }) {
-  // type Club = { id: string; username: string; role: string; tier: string };
   type Plan = {
+    id: string;
     is_default: boolean;
     name: string;
     amount: string;
   };
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isCreatePlanModalOpen, setIsCreatePlanModalOpen] =
+    useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>("");
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [currentState, setCurrentState] = useState<boolean>(false);
@@ -72,6 +76,17 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
     setIsModalOpen(false);
   };
 
+  const handleCreatePlanModalOpen = () => {
+    setIsCreatePlanModalOpen(true);
+  };
+
+  const handleCreatePlanModalClose = () => {
+    setIsCreatePlanModalOpen(false);
+  };
+
+  const { data, isLoading, error } =
+    monthlyPaymentsHooks.useFetchMonthlyMemberSubscriptionsData("", undefined);
+
   const {
     data: plansData,
     isLoading: isPlansLoading,
@@ -88,6 +103,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
     return plansData?.data.map((plan: Plan) => ({
+      id: plan.id,
       amount: `${plan.amount}€`,
       is_default: plan.is_default ? (
         <Chip variant="outlined" label="Sim" color="success"></Chip>
@@ -109,8 +125,45 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
 
   const columnMaping = getColumnMaping();
 
+  const immediateAction = data?.data.filter(
+    (item: any) => item.paid === false && item.inside_limit === false
+  ).length;
+
+  const warnings = data?.data.filter(
+    (item: any) => item.paid === false && item.inside_limit === true
+  ).length;
+
   return (
     <>
+      <FormAccordion
+        title="Avisos"
+        summary={
+          <Grid>
+            <Chip
+              sx={{ p: 1 }}
+              icon={<Error></Error>}
+              color="error"
+              label={`${immediateAction} erro(s) atenção imediata`}
+            ></Chip>
+            <Chip
+              sx={{ p: 1, ml: 2 }}
+              icon={<Warning></Warning>}
+              color="warning"
+              label={`${warnings} aviso(s)`}
+            ></Chip>
+          </Grid>
+        }
+      >
+        <Grid borderRadius={5} bgcolor={"#bad7ff63"} p={4} width={"100%"}>
+          {data?.data
+            .filter(
+              (item: any) => item.paid === false && item.inside_limit === false
+            )
+            .map((payments: any) => (
+              <Grid>{payments.member.full_name}</Grid>
+            ))}
+        </Grid>
+      </FormAccordion>
       <FormCard title="Planos de Pagamento">
         <Grid size={12} m={2} mb={0}>
           {isPlansLoading ? (
@@ -125,7 +178,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
             </Grid>
           ) : plansData?.data === undefined ? null : (
             <AllUseTable
-              type="Atletas"
+              type="Plano"
               data={subscriptionRows}
               count={subscriptionRows.length}
               columnsHeaders={columnMaping}
@@ -145,7 +198,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
               color={"success"}
               type={"submit"}
               startIcon={<Add></Add>}
-              // onClick={handleAddClubModalOpen}
+              onClick={handleCreatePlanModalOpen}
             >
               Adicionar Plano
             </Button>
@@ -160,6 +213,10 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
         username={currentUsername}
         currentState={currentState}
       ></PatchClubSubscriptionModal>
+      <CreateMemberPaymentPlanModal
+        handleClose={handleCreatePlanModalClose}
+        isOpen={isCreatePlanModalOpen}
+      ></CreateMemberPaymentPlanModal>
     </>
   );
 }

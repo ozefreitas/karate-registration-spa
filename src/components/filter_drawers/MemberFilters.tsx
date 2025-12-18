@@ -190,7 +190,7 @@ export default function MemberFilters(props: {
                             name="quotesOverdue"
                           />
                         }
-                        label="Quotas por pagar"
+                        label="Quotas por pagar (mês corrente)"
                         sx={{ justifyContent: "space-between", marginLeft: 0 }}
                       />
                     </Stack>

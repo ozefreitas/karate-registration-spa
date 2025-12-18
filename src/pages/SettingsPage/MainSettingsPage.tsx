@@ -196,7 +196,7 @@ export default function MainSettingsPage() {
               textColor="inherit"
             >
               <Tab value="one" label="Gestor de contas" />
-              <Tab value="two" label="Gestor de quotas" />
+              <Tab value="two" label="Gestor de pagamentos" />
               <Tab value="three" label="Work In Progress" />
             </Tabs>
           </Box>

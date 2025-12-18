@@ -15,7 +15,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useFetchSingleTeamData } from "../../hooks/useTeamsData";
 // import { membersHooks } from "../../hooks";
-import EditMemberModal from "../Modals/EditMemberModal";
+import EditMemberModal from "../modals/EditMemberModal";
 import { useForm } from "react-hook-form";
 import EditTeamModal from "./EditTeamModal";
 
@@ -36,8 +36,8 @@ export default function ChooseEditModal(
     handleEditModalOpen: any;
     handleEditModalClose: any;
     id: string;
-    chosenAthlete: string;
-    setChosenAthlete: any;
+    chosenMember: string;
+    setChosenMember: any;
   }>
 ) {
   console.log(props.isModalOpen);
@@ -127,7 +127,7 @@ export default function ChooseEditModal(
     //     };
     //     props.reset(formData);
     //     // props.handleModalClose();
-    //     props.setChosenAthlete(id);
+    //     props.setChosenMember(id);
     //     props.handleEditModalOpen();
     //   },
     // });
@@ -250,7 +250,7 @@ export default function ChooseEditModal(
       <EditMemberModal
         isModalOpen={props.isEditModalOpen}
         handleModalClose={props.handleEditModalClose}
-        id={props.chosenAthlete}
+        id={props.chosenMember}
       ></EditMemberModal>
       <EditTeamModal
         isModalOpen={isEditTeamModalOpen}

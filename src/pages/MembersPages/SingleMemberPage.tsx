@@ -188,7 +188,7 @@ export default function SingleMemberPage(
                         changeSection("quotes_management");
                       }}
                     >
-                      Gestão de Quotas
+                      Gestão de Pagamentos
                     </Button>
                   </Grid>
                 )}

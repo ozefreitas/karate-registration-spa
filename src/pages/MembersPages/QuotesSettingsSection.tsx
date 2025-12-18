@@ -21,13 +21,14 @@ import { formatDateTime } from "../../utils/utils";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { getMonthFromValue } from "../../config";
 import QuotesOrdering from "../../components/filter_drawers/QuotesOrdering";
-import PatchMemberSubscriptionModal from "../../components/Modals/PatchMemberSubscriptionModal";
-import EditMemberPaymentPlan from "../../components/Modals/EditMemberPaymentPlan";
+import PatchMemberSubscriptionModal from "../../components/modals/PatchMemberSubscriptionModal";
+import EditMemberPaymentPlanModal from "../../components/modals/EditMemberPaymentPlanModal";
 import { useForm } from "react-hook-form";
 
 const QuotesSettingsSection = (props: { quotesConfig: any }) => {
   const { id: memberId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [enabled, setEnabled] = useState<boolean>(false);
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] =
     useState<boolean>(false);
   const [currentPaymentObj, setCurrentPaymentObj] = useState<any>(null);
@@ -47,10 +48,12 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
   };
 
   const handleEditPlanModalOpen = () => {
+    setEnabled(true);
     setIsEditPlanModalOpen(true);
   };
 
   const handleEditPlanModalClose = () => {
+    setEnabled(false);
     setIsEditPlanModalOpen(false);
   };
 
@@ -120,8 +123,8 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
 
   const { data, isLoading, error } =
     monthlyPaymentsHooks.useFetchMonthlyMemberSubscriptionsData(
-      memberId!,
-      ordering
+      ordering,
+      memberId!
     );
 
   // Memoize `rows` to compute only when `members` changes
@@ -195,7 +198,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
             sx={{ color: "#e81c24", fontWeight: "bold", ml: 1, mb: 2 }}
             variant="h4"
           >
-            GESTÃO DE QUOTAS
+            GESTÃO DE PAGAMENTOS
           </Typography>
         </Grid>
       </Grid>
@@ -320,7 +323,14 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                   </Box>
                 ) : (
                   <Typography
-                    color={data?.data.length !== 0 ? "info" : "textDisabled"}
+                    color={
+                      data?.data?.filter(
+                        (item: any) =>
+                          item.inside_limit === false && item.paid === false
+                      ).length !== 0
+                        ? "error"
+                        : "textDisabled"
+                    }
                     variant="h3"
                   >
                     {data?.data.length !== 0
@@ -417,11 +427,13 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           ></AllUseTable>
         )}
       </Grid>
-      <EditMemberPaymentPlan
-        isOpen={isEditPlanModalOpen}
-        handleClose={handleEditPlanModalClose}
-        currentQuotesConfig={props.quotesConfig}
-      ></EditMemberPaymentPlan>
+      {enabled ? (
+        <EditMemberPaymentPlanModal
+          isOpen={isEditPlanModalOpen}
+          handleClose={handleEditPlanModalClose}
+          currentQuotesConfig={props.quotesConfig}
+        ></EditMemberPaymentPlanModal>
+      ) : null}
       {currentPaymentObj === null ? null : (
         <PatchMemberSubscriptionModal
           handleClose={handleModalClose}

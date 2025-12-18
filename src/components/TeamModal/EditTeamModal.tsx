@@ -18,7 +18,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
 import { useUpdateTeamData } from "../../hooks/useTeamsData";
 import { Controller, SubmitHandler } from "react-hook-form";
-import PickOneMemberModal from "../Modals/PickOneMemberModal";
+import PickOneMemberModal from "../modals/PickOneMemberModal";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

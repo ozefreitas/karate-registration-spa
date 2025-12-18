@@ -6,11 +6,19 @@ export const fetchMonthlyPaymentPlans = () => {
   return authClient.get("/monthly_payment_plans/");
 };
 
+export const createMonthlyPaymentPlan = (data: any) => {
+  return authClient.post("/monthly_payment_plans/", data);
+};
+
+export const deleteMonthlyPaymentPlan = (planId: string) => {
+  return authClient.delete(`/monthly_payment_plans/${planId}/`);
+};
+
 // subscriptions details
 
 export const fetchMonthlyMemberSubscriptions = (
-  memberId: string,
-  ordering: string
+  ordering: string,
+  memberId?: string
 ) => {
   return authClient.get("/monthly_payments/", {
     params: {

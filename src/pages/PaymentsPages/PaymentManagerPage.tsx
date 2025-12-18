@@ -13,7 +13,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
             disponibilidade de pagamento de novas quotas. <p></p>
             As notificações de quotas são criadas automaticamanete de acordo com
             a data estipulada no seu <strong>painel de administrador</strong>,
-            na <i>tab</i> <strong>Gestão de Quotas</strong>. <p></p>
+            na <i>tab</i> <strong>Gestão de Pagamentos</strong>. <p></p>
             Começe por selecionar o ano para o qual pretende verificar o estado
             de pagamento de quotas dos seus Clubes. <p></p>
             Pode editar a data limite e montante a ser pago pelo clubes na carta{" "}
@@ -21,7 +21,7 @@ export default function PaymentManagerPage(props: { userRole: string }) {
             respetivamente.
           </>
         }
-        title="Gestor de Pagamento de Quotas"
+        title="Gestor de Pagamentos"
       ></PageInfoCard>
       {props.userRole === "main_admin" ? (
         <AdminPaymentManagerPage
