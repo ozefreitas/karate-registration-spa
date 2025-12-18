@@ -27,9 +27,12 @@ import { NotificationTypeOptions } from "../../dashboard/config";
 import { PaymentTypes } from "../../config";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
-export default function NotificationManagerPage() {
+export default function NotificationManagerPage(props: { userRole: string }) {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
-  const { data: clubUserData } = adminHooks.useFetchClubUsersData();
+  const { data: clubUserData } = adminHooks.useFetchClubUsersData(
+    undefined,
+    props.userRole
+  );
   const { data: notificationData, isLoading: isNotificationDataLoading } =
     notificationsHooks.useFetchNotificationsData(1, 100, selectedUserId);
   const createNotification = notificationsHooks.useCreateNotification();
@@ -234,6 +237,7 @@ export default function NotificationManagerPage() {
                     labelPlacement="start"
                     control={
                       <Switch
+                        sx={{ ml: 2 }}
                         {...field}
                         checked={field.value}
                         onChange={(e) => {

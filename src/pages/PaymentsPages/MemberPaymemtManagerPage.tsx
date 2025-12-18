@@ -6,15 +6,22 @@ import {
   ListItemText,
   Chip,
   Button,
+  ListItemIcon,
+  ListItemButton,
+  Typography,
 } from "@mui/material";
-import { clubsHooks, monthlyPaymentsHooks } from "../../hooks";
+import { monthlyPaymentsHooks } from "../../hooks";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import AllUseTable from "../../components/Table/AllUseTable";
-import PatchClubSubscriptionModal from "../../components/Admin/PatchClubSubscriptionModal";
-import { Controller, useForm } from "react-hook-form";
 import FormCard from "../../dashboard/FormCard";
-import { Add, Delete, Error, Remove, Warning } from "@mui/icons-material";
-import { useSearchParams } from "react-router-dom";
+import {
+  Add,
+  Error,
+  Info,
+  Warning,
+  KeyboardDoubleArrowUp,
+} from "@mui/icons-material";
 import FormAccordion from "../../dashboard/FormAccordion";
 import CreateMemberPaymentPlanModal from "../../components/modals/CreateMemberPaymentPlanModal";
 
@@ -25,56 +32,16 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
     name: string;
     amount: string;
   };
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isShowable, setIsShowable] = useState<boolean>(true);
   const [isCreatePlanModalOpen, setIsCreatePlanModalOpen] =
     useState<boolean>(false);
-  const [currentId, setCurrentId] = useState<string>("");
-  const [currentUsername, setCurrentUsername] = useState<string>("");
-  const [currentState, setCurrentState] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const [searchParams] = useSearchParams();
-  const year = searchParams.get("year");
-
-  const handleClose = async () => {
-    setAnchorEl(null);
-  };
-
-  const {
-    control,
-    watch,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      search: "",
-      overdueNumber: "",
-      year: undefined,
-      amount: "",
-    },
-  });
-
-  useEffect(() => {
-    if (year) {
-      setValue("search", year);
-    }
-  }, []);
-
-  const handleModalOpen = (id: string, username: string, state: boolean) => {
-    setCurrentId(id);
-    setCurrentUsername(username);
-    setCurrentState(state);
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
+  const [isSelected, setIsSelected] = useState<string[]>([
+    "error",
+    "warning",
+    "info",
+  ]);
 
   const handleCreatePlanModalOpen = () => {
     setIsCreatePlanModalOpen(true);
@@ -82,6 +49,23 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
 
   const handleCreatePlanModalClose = () => {
     setIsCreatePlanModalOpen(false);
+  };
+
+  const handleIsExpandedOpen = () => {
+    setIsExpanded((prev) => !prev);
+    if (isExpanded) {
+      setTimeout(() => {
+        setIsSelected(["error", "warning", "info"]);
+      }, 100);
+    }
+  };
+
+  const handleSelected = (value: string) => {
+    setIsSelected((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
   };
 
   const { data, isLoading, error } =
@@ -92,13 +76,6 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
     isLoading: isPlansLoading,
     error: plansError,
   } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
-
-  const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();
-
-  const onSubmit = (data: any) => {
-    const formData = { year: data.year, amount: data.amount };
-    createYearSubscription.mutate(formData);
-  };
 
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
@@ -133,36 +110,174 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
     (item: any) => item.paid === false && item.inside_limit === true
   ).length;
 
+  const infos = 0;
+
+  useEffect(() => {
+    let count = 0;
+    if (isSelected.includes("error")) {
+      count = count + immediateAction;
+    } else if (isSelected.includes("warning")) {
+      count = count + warnings;
+    } else if (isSelected.includes("info")) {
+      count = count + infos;
+    }
+
+    if (count === 0) {
+      setIsShowable(false);
+    } else {
+      setIsShowable(true);
+    }
+  }, [isSelected]);
+
   return (
     <>
       <FormAccordion
-        title="Avisos"
+        expanded={isExpanded}
+        onChange={handleIsExpandedOpen}
+        title="Validação de Pagamentos"
         summary={
           <Grid>
             <Chip
-              sx={{ p: 1 }}
+              sx={{
+                p: 1,
+                boxShadow: isExpanded ? 6 : "none",
+                cursor: isExpanded ? "pointer" : "default",
+                transition: "0.3s",
+                "&:hover": {
+                  transform: isExpanded ? "translateY(-3px)" : "none",
+                },
+              }}
               icon={<Error></Error>}
               color="error"
-              label={`${immediateAction} erro(s) atenção imediata`}
+              clickable={isExpanded}
+              variant={isSelected.includes("error") ? "filled" : "outlined"}
+              onClick={(e) => {
+                if (isExpanded) {
+                  e.stopPropagation();
+                  handleSelected("error");
+                }
+              }}
+              label={`${immediateAction} erro(s) - Atenção imediata`}
             ></Chip>
             <Chip
-              sx={{ p: 1, ml: 2 }}
+              sx={{
+                p: 1,
+                ml: 2,
+                boxShadow: isExpanded ? 6 : "none",
+                cursor: isExpanded ? "pointer" : "default",
+                transition: "0.3s",
+                "&:hover": {
+                  transform: isExpanded ? "translateY(-3px)" : "none",
+                },
+              }}
               icon={<Warning></Warning>}
               color="warning"
-              label={`${warnings} aviso(s)`}
+              clickable={isExpanded}
+              variant={isSelected.includes("warning") ? "filled" : "outlined"}
+              onClick={(e) => {
+                if (isExpanded) {
+                  e.stopPropagation();
+                  handleSelected("warning");
+                }
+              }}
+              label={`${warnings} aviso(s) - Ação recomendada`}
+            ></Chip>
+            <Chip
+              sx={{
+                p: 1,
+                ml: 2,
+                boxShadow: isExpanded ? 6 : "none",
+                cursor: isExpanded ? "pointer" : "default",
+                transition: "0.3s",
+                "&:hover": {
+                  transform: isExpanded ? "translateY(-3px)" : "none",
+                },
+              }}
+              icon={<Info></Info>}
+              color="info"
+              clickable={isExpanded}
+              variant={isSelected.includes("info") ? "filled" : "outlined"}
+              onClick={(e) => {
+                if (isExpanded) {
+                  e.stopPropagation();
+                  handleSelected("info");
+                }
+              }}
+              label={`${infos} - Informações`}
             ></Chip>
           </Grid>
         }
       >
-        <Grid borderRadius={5} bgcolor={"#bad7ff63"} p={4} width={"100%"}>
-          {data?.data
-            .filter(
-              (item: any) => item.paid === false && item.inside_limit === false
-            )
-            .map((payments: any) => (
-              <Grid>{payments.member.full_name}</Grid>
-            ))}
-        </Grid>
+        {isLoading ? (
+          <Grid container justifyContent={"center"}>
+            <CircularProgress />
+          </Grid>
+        ) : error ? (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <ListItem>
+              <ListItemText primary="Ocorreu um erro ao encontrar a informação do pagamento de quotas. Tente mais tarde ou contacte um administrador."></ListItemText>
+            </ListItem>
+          </Grid>
+        ) : isSelected.length === 0 ? (
+          <Typography sx={{ color: "gray", my: 2 }}>
+            Selecione pelo menos um dos campos em cima para ver as validações de
+            pagamentos. {<KeyboardDoubleArrowUp />}
+          </Typography>
+        ) : !isShowable ? (
+          <Typography sx={{ color: "gray", my: 2 }}>
+            Não foram encontrados registos para as validações selecionadas.
+          </Typography>
+        ) : (
+          isSelected.length > 0 &&
+          isShowable && (
+            <Grid borderRadius={5} bgcolor={"#bad7ff63"} p={2} width={"100%"}>
+              {isSelected.includes("error") &&
+                data?.data
+                  .filter(
+                    (item: any) =>
+                      item.paid === false && item.inside_limit === false
+                  )
+                  .map((payments: any, index: any) => (
+                    <ListItem sx={{ m: 0, pb: 0 }} key={index}>
+                      <ListItemButton
+                        onClick={() =>
+                          navigate(
+                            `/members/${payments.member.id}/?section=payments_management`
+                          )
+                        }
+                      >
+                        <ListItemIcon>
+                          <Error color="error" />
+                        </ListItemIcon>
+                        <ListItemText primary={payments.member.full_name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+              {isSelected.includes("warning") &&
+                data?.data
+                  .filter(
+                    (item: any) =>
+                      item.paid === false && item.inside_limit === true
+                  )
+                  .map((payments: any, index: any) => (
+                    <ListItem sx={{ m: 0, pb: 0 }} key={index}>
+                      <ListItemButton
+                        onClick={() =>
+                          navigate(
+                            `/members/${payments.member.id}/?section=payments_management`
+                          )
+                        }
+                      >
+                        <ListItemIcon>
+                          <Warning color="warning" />
+                        </ListItemIcon>
+                        <ListItemText primary={payments.member.full_name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+            </Grid>
+          )
+        )}
       </FormAccordion>
       <FormCard title="Planos de Pagamento">
         <Grid size={12} m={2} mb={0}>
@@ -173,7 +288,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
           ) : plansError ? (
             <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
               <ListItem>
-                <ListItemText primary="Ocorreu um erro ao encontrar a informação do pagamento de quotas. Tente mais tarde ou contacte um administrador."></ListItemText>
+                <ListItemText primary="Ocorreu um erro ao encontrar a listagem de Planos de Pagamento. Tente mais tarde ou contacte um administrador."></ListItemText>
               </ListItem>
             </Grid>
           ) : plansData?.data === undefined ? null : (
@@ -205,14 +320,6 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
           </Grid>
         </Grid>
       </FormCard>
-
-      <PatchClubSubscriptionModal
-        handleClose={handleModalClose}
-        isOpen={isModalOpen}
-        id={currentId}
-        username={currentUsername}
-        currentState={currentState}
-      ></PatchClubSubscriptionModal>
       <CreateMemberPaymentPlanModal
         handleClose={handleCreatePlanModalClose}
         isOpen={isCreatePlanModalOpen}

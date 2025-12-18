@@ -14,13 +14,14 @@ export default function FormAccordion(
     summary?: any;
     children: any;
     expanded?: boolean;
+    onChange?: () => void;
     tooltipMessage?: string;
     size?: "split" | "fullWidth";
   }>
 ) {
   return (
     <Grid sx={{ m: 6, mt: 2, mb: 2 }} size={12}>
-      <Accordion square expanded={props.expanded}>
+      <Accordion square expanded={props.expanded} onChange={props.onChange}>
         <Tooltip
           placement="bottom-start"
           title={!props.expanded ? props.tooltipMessage : ""}
@@ -28,7 +29,7 @@ export default function FormAccordion(
           <AccordionSummary expandIcon={<ExpandMore />}>
             <Typography
               sx={{
-                width: "50%",
+                width: "30%",
                 fontSize: 18,
                 fontWeight: "bold",
                 flexShrink: 0,
@@ -40,11 +41,10 @@ export default function FormAccordion(
             <Typography
               component="span"
               sx={{
-                width: "50%",
+                width: "70%",
                 pr: 5,
                 fontSize: 18,
                 textAlign: "right",
-                color: "text.secondary",
               }}
             >
               {props.summary}

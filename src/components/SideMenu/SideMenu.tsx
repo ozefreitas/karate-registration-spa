@@ -129,16 +129,16 @@ export default function SideMenu(
                           }),
                         "@keyframes pulseRed": {
                           "0%": {
-                            boxShadow: "0 0 0 0 rgba(255, 0, 0, 0.7)",
-                            backgroundColor: "rgba(255, 0, 0, 0.15)",
+                            boxShadow: "0 0 0 0 rgba(255, 165, 0, 0.7)",
+                            backgroundColor: "rgba(255, 165, 0, 0.15)",
                           },
                           "70%": {
-                            boxShadow: "0 0 0 12px rgba(255, 0, 0, 0)",
-                            backgroundColor: "rgba(255, 0, 0, 0.25)",
+                            boxShadow: "0 0 0 12px rgba(255, 165, 0, 0)",
+                            backgroundColor: "rgba(255, 165, 0, 0.25)",
                           },
                           "100%": {
-                            boxShadow: "0 0 0 0 rgba(255, 0, 0, 0)",
-                            backgroundColor: "rgba(255, 0, 0, 0.15)",
+                            boxShadow: "0 0 0 0 rgba(255, 165, 0, 0)",
+                            backgroundColor: "rgba(255, 165, 0, 0.15)",
                           },
                         },
                         "&.Mui-selected": {

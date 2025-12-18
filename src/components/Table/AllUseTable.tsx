@@ -36,6 +36,7 @@ import EditIndividualModal from "../modals/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
 import EditMemberActivePaymentModal from "../modals/EditMemberActivePaymentModal";
+import EditPaymentPlanModal from "../modals/EditPaymentPlanModal";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -171,6 +172,7 @@ export default function AllUseTable(
 
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState<boolean>(false);
   const [isEditConfirmModalOpen, setIsEditConfirmModalOpen] =
     useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -228,6 +230,19 @@ export default function AllUseTable(
 
   const handlePaymentModalClose = () => {
     setIsPaymentModalOpen(false);
+  };
+
+  const handlePaymentPlanModalOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    paymentId: string
+  ) => {
+    event.stopPropagation();
+    setActionedRow(paymentId);
+    setIsPlanModalOpen(true);
+  };
+
+  const handlePaymentPlanModalClose = () => {
+    setIsPlanModalOpen(false);
   };
 
   const handleEditConfirmModalClose = () => {
@@ -549,6 +564,8 @@ export default function AllUseTable(
                                       handleRowEditFromTeam(e);
                                     } else if (props.type == "Pagamentos") {
                                       handlePaymentModalOpen(e, row.id);
+                                    } else if (props.type === "Plano") {
+                                      handlePaymentPlanModalOpen(e, row.id);
                                     } else {
                                       handleRowEdit(e, row.id);
                                     }
@@ -734,6 +751,13 @@ export default function AllUseTable(
           handleClose={handlePaymentModalClose}
           paymentId={actionedRow}
         ></EditMemberActivePaymentModal>
+      ) : null}
+      {props.type === "Plano" ? (
+        <EditPaymentPlanModal
+          handleModalClose={handlePaymentPlanModalClose}
+          isModalOpen={isPlanModalOpen}
+          id={actionedRow}
+        ></EditPaymentPlanModal>
       ) : null}
     </>
   );

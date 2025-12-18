@@ -170,22 +170,24 @@ export default function SingleMemberPage(
                   <Grid container justifyContent="center" size={12} mt={2}>
                     <Button
                       variant={
-                        section === "quotes_management" ? "contained" : "text"
+                        section === "payments_management" ? "contained" : "text"
                       }
                       fullWidth
                       disabled={!singleMemberData?.data.quotes_legible}
                       sx={{
                         backgroundColor:
-                          section === "quotes_management" ? "#e81c24" : "white",
+                          section === "payments_management"
+                            ? "#e81c24"
+                            : "white",
                         color:
-                          section === "quotes_management" ? "white" : "black",
+                          section === "payments_management" ? "white" : "black",
                         p: 1,
                         textTransform: "none",
                         fontWeight: "bold",
                         fontSize: 16,
                       }}
                       onClick={() => {
-                        changeSection("quotes_management");
+                        changeSection("payments_management");
                       }}
                     >
                       Gestão de Pagamentos
@@ -251,7 +253,7 @@ export default function SingleMemberPage(
                   <RegistryHistorySection></RegistryHistorySection>
                 ) : section === "results_history" ? (
                   <ResultsHistorySection></ResultsHistorySection>
-                ) : section === "quotes_management" ? (
+                ) : section === "payments_management" ? (
                   <QuotesSettingsSection
                     quotesConfig={singleMemberData?.data.monthly_payment_config}
                   ></QuotesSettingsSection>

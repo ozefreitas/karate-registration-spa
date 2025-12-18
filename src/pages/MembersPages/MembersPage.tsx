@@ -177,7 +177,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           <VerifiedUser color="disabled" />
         </Grid>
       ),
-      can_update_sensitive: member.can_update_sensitive,
+      can_update_sensitive:
+        props.userRole === "main_admin" ? true : member.can_update_sensitive,
       past_month_payment_status: member.past_month_payment_status,
     }));
   }, [membersData]);

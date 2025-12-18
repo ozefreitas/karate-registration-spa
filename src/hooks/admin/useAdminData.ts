@@ -12,7 +12,7 @@ export const useFetchClubUsersData = (username?: string, userRole?: string) => {
     queryFn: () => fetchClubUsers(username),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: userRole == "main_admin",
+    enabled: userRole === "main_admin",
   });
 };
 

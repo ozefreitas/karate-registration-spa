@@ -292,8 +292,6 @@ export default function MembersModal(
 
       const entries = Object.entries(data).filter(([, value]) => value);
 
-      console.log(entries);
-
       const results = await Promise.allSettled(
         entries.map(([discipline]) => {
           const payload = {
@@ -351,8 +349,7 @@ export default function MembersModal(
     if (!query) return membersNotInEventData?.data.results ?? [];
 
     return membersNotInEventData?.data.results.filter((member: any) => {
-      const fullName =
-        `${member.first_name} ${member.last_name}`.toLowerCase();
+      const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
       return (
         member.first_name.toLowerCase().includes(query) ||
         member.last_name.toLowerCase().includes(query) ||
@@ -368,7 +365,6 @@ export default function MembersModal(
 
   return (
     <Dialog
-      // keepMounted
       open={props.isModalOpen}
       onClose={() => {
         setIsDisciplineScreenOpen(false);

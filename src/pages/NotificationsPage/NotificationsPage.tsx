@@ -38,7 +38,9 @@ const NotificationsPage = (props: { me: any }) => {
     } else if (noti_type === "classifications_available") {
       navigate("/classifications/");
     } else if (noti_type === "payment_overdue") {
-      navigate(`/members/${noti.target_member.id}/?section=quotes_management`);
+      navigate(
+        `/members/${noti.target_member.id}/?section=payments_management`
+      );
     } else if (
       [
         "open_registrations",

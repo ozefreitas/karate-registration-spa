@@ -1,6 +1,7 @@
 import {
   patchMonthlyMemberSubscription,
   patchMemberMonthlyPaymentConfig,
+  patchMonthlyPaymentPlanData,
 } from "./../../api/monthlyPaymentsApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
@@ -72,6 +73,41 @@ export const usePatchMemberMonthlyPaymentConfig = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["single-member"],
+      });
+    },
+    onError: () => {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+export const usePatchMonthlyPaymentPlanData = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ planId, data }: { planId: string; data: any }) =>
+      patchMonthlyPaymentPlanData(planId, data),
+    onSuccess: () => {
+      enqueueSnackbar("Plano atualizado", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["monthly-subscription-plans"],
       });
     },
     onError: () => {

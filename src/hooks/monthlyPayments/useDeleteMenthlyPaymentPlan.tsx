@@ -22,16 +22,29 @@ export const useDeleteMonthlyPaymentPlanData = () => {
         queryKey: ["monthly-subscription-plans"],
       });
     },
-    onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+    onError: (data: any) => {
+      const errorData = data.response?.data || {};
+      if (errorData.detail) {
+        enqueueSnackbar(errorData.detail, {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      } else {
+        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      }
     },
   });
 };

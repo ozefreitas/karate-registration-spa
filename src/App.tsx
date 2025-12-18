@@ -115,7 +115,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<SingleMemberPage userRole={userRole}/>}
+                        element={<SingleMemberPage userRole={userRole} />}
                         allowedRoles={[
                           "subed_club",
                           "main_admin",
@@ -249,7 +249,9 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<NotificationManagerPage />}
+                        element={
+                          <NotificationManagerPage userRole={userRole} />
+                        }
                         allowedRoles={["main_admin", "superuser"]}
                       />
                     )

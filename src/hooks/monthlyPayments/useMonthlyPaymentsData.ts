@@ -1,6 +1,7 @@
 import {
   fetchMonthlyMemberSubscriptions,
   fetchMonthlyPaymentPlans,
+  fetchSingleMonthlyPaymentPlanData,
   fetchSingleMonthlyMemberSubscription,
 } from "../../api";
 import { useQuery } from "@tanstack/react-query";
@@ -14,7 +15,20 @@ export const useFetchMonthlyPaymentPlansData = () => {
   });
 };
 
-export const useFetchMonthlyMemberSubscriptionsData = (ordering: string, memberId?: string) => {
+export const useFetcSingleMonthlyMemberSubscriptionsData = (planId: string) => {
+  return useQuery({
+    queryKey: ["single-monthly-subscription-plans", planId],
+    queryFn: () => fetchSingleMonthlyPaymentPlanData(planId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: planId !== "",
+  });
+};
+
+export const useFetchMonthlyMemberSubscriptionsData = (
+  ordering: string,
+  memberId?: string
+) => {
   return useQuery({
     queryKey: ["member-monthly-subscription", memberId, ordering],
     queryFn: () => fetchMonthlyMemberSubscriptions(ordering, memberId),
