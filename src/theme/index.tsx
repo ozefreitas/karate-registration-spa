@@ -112,7 +112,16 @@ const theme = createTheme(
       },
       MuiButton: {
         styleOverrides: {
-          root: { borderRadius: 12 },
+          root: {
+            borderRadius: 12,
+            boxShadow: "6px 6px 10px rgba(0,0,0,0.2)", // add your desired box shadow
+            cursor: "pointer",
+            transition: "0.3s",
+            "&:hover": {
+              transform: "translateY(-3px)",
+              boxShadow: "8px 8px 15px rgba(0,0,0,0.3)", // optional: stronger shadow on hover
+            },
+          },
         },
       },
       MuiTabs: {

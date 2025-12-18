@@ -798,7 +798,8 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        {props.memberData?.data.member_type === "coach" ? null : (
+        {props.memberData?.data.member_type === "coach" ||
+        userRole === "main_admin" ? null : (
           <Controller
             name="competitor"
             control={control}

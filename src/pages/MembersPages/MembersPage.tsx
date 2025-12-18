@@ -47,7 +47,6 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     if (props.userRole === "main_admin" || props.userRole === "superuser") {
       columnMapping.push(
         { key: "username", label: "Clube" },
-        { key: "member_type", label: "Tipo" }
       );
     } else {
       columnMapping.push(

@@ -36,6 +36,7 @@ export default function NewMemberPage() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const userRole = user?.data.role;
   const [loading, setLoading] = useState<boolean>(false);
 
   const { data: clubUserData } = adminHooks.useFetchClubUsersData();
@@ -587,98 +588,100 @@ export default function NewMemberPage() {
             />
           </Grid>
         </FormAccordion>
-        <FormCard title="Tipo de Praticante">
-          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
-            <Controller
-              name="member_type"
-              control={control}
-              defaultValue={[]}
-              render={({ field }) => {
-                const { value = [], onChange } = field;
+        {userRole === "main_admin" ? null : (
+          <FormCard title="Tipo de Praticante">
+            <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+              <Controller
+                name="member_type"
+                control={control}
+                defaultValue={[]}
+                render={({ field }) => {
+                  const { value = [], onChange } = field;
 
-                const handleToggle = (optionValue: string) => {
-                  let newValue = [...value];
+                  const handleToggle = (optionValue: string) => {
+                    let newValue = [...value];
 
-                  // If already selected → remove it
-                  if (newValue.includes(optionValue)) {
-                    newValue = newValue.filter((v) => v !== optionValue);
-                  } else {
-                    // Otherwise, add it — but handle "student" vs "member" exclusivity
-                    if (optionValue === "student") {
-                      newValue = newValue.filter((v) => v !== "athlete");
-                    } else if (optionValue === "athlete") {
-                      newValue = newValue.filter((v) => v !== "student");
+                    // If already selected → remove it
+                    if (newValue.includes(optionValue)) {
+                      newValue = newValue.filter((v) => v !== optionValue);
+                    } else {
+                      // Otherwise, add it — but handle "student" vs "member" exclusivity
+                      if (optionValue === "student") {
+                        newValue = newValue.filter((v) => v !== "athlete");
+                      } else if (optionValue === "athlete") {
+                        newValue = newValue.filter((v) => v !== "student");
+                      }
+                      newValue.push(optionValue);
                     }
-                    newValue.push(optionValue);
-                  }
 
-                  onChange(newValue);
-                };
+                    onChange(newValue);
+                  };
 
-                return (
-                  <FormControl component="fieldset" variant="standard">
-                    <FormLabel sx={{ mb: 2 }}>
-                      Escolha pelo menos um tipo de membro. Não pode ser aluno e
-                      competidor.
-                    </FormLabel>
-                    <Stack spacing={1}>
-                      {MemberTypes.map((type) => (
-                        <FormControlLabel
-                          key={type.value}
-                          labelPlacement="start"
-                          control={
-                            <Checkbox
-                              checked={value.includes(type.value)}
-                              onChange={() => handleToggle(type.value)}
-                            />
-                          }
-                          label={type.label}
-                          sx={{ justifyContent: "left", marginLeft: 0 }}
-                        />
-                      ))}
+                  return (
+                    <FormControl component="fieldset" variant="standard">
+                      <FormLabel sx={{ mb: 2 }}>
+                        Escolha pelo menos um tipo de membro. Não pode ser aluno
+                        e competidor.
+                      </FormLabel>
+                      <Stack spacing={1}>
+                        {MemberTypes.map((type) => (
+                          <FormControlLabel
+                            key={type.value}
+                            labelPlacement="start"
+                            control={
+                              <Checkbox
+                                checked={value.includes(type.value)}
+                                onChange={() => handleToggle(type.value)}
+                              />
+                            }
+                            label={type.label}
+                            sx={{ justifyContent: "left", marginLeft: 0 }}
+                          />
+                        ))}
 
-                      {!!errors.member_type && (
-                        <FormHelperText error sx={{ marginLeft: "14px" }}>
-                          {errors.member_type?.message}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                  </FormControl>
-                );
-              }}
-            />
-          </Grid>
-          <Grid sx={{ p: 3 }} size={6}>
-            <Controller
-              name="reason"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Razão da Prática"
-                  select
-                  fullWidth
-                  multiline
-                  disabled={!watch("member_type").includes("student")}
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                >
-                  <MenuItem value="None">Prefere não dizer</MenuItem>
-                  {ReasonOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-        </FormCard>
-        {user?.data.role === "subed_club" ? (
+                        {!!errors.member_type && (
+                          <FormHelperText error sx={{ marginLeft: "14px" }}>
+                            {errors.member_type?.message}
+                          </FormHelperText>
+                        )}
+                      </Stack>
+                    </FormControl>
+                  );
+                }}
+              />
+            </Grid>
+            <Grid sx={{ p: 3 }} size={6}>
+              <Controller
+                name="reason"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Razão da Prática"
+                    select
+                    fullWidth
+                    multiline
+                    disabled={!watch("member_type").includes("student")}
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                  >
+                    <MenuItem value="None">Prefere não dizer</MenuItem>
+                    {ReasonOptions.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+          </FormCard>
+        )}
+        {userRole === "subed_club" ? (
           <FormAccordion
             title="Competições"
             expanded={watch("member_type").includes("athlete")}
@@ -709,7 +712,7 @@ export default function NewMemberPage() {
               />
             </Grid>
           </FormAccordion>
-        ) : user?.data.role === "main_admin" ? (
+        ) : userRole === "main_admin" ? (
           <FormCard
             title="Associar Clube/Associação"
             subheader="Aqui aparecerão todos os Clubes disponíveis na plataforma, quer já tenham criado uma conta ou não."

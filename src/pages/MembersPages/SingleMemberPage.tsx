@@ -116,7 +116,8 @@ export default function SingleMemberPage(
                       )?.label
                     }
                   </Typography>
-                  {singleMemberData?.data.has_another !== null ? (
+                  {singleMemberData?.data.has_another !== null &&
+                  props.userRole !== "main_admin" ? (
                     <Tooltip title="Navegar para correspondente" arrow>
                       <Chip
                         color="primary"
