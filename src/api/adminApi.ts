@@ -15,3 +15,16 @@ export const fetchClubMembers = () => {
 export const fetchCurrentSeason = () => {
   return apiClient.get("/current_season/");
 };
+
+// member validation requests
+
+export const fetchMemberValidationRequests = () => {
+  return authClient.get("/member_validation/");
+};
+
+export const patchMemberValidationRequests = (
+  validationId: string,
+  data: any
+) => {
+  return authClient.patch(`/member_validation/${validationId}/`, data);
+};

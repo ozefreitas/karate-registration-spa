@@ -393,6 +393,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
             size={12}
             container
             px={3}
+            mb={3}
             spacing={2}
             justifyContent={"flex-end"}
             alignItems={"center"}

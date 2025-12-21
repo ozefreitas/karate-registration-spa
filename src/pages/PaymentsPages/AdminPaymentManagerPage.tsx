@@ -405,7 +405,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
           </ListItem>
         ) : subscriptionsData?.data === undefined ? null : (
           <AllUseTable
-            type="Pagamentos"
+            type="PagamentosAnuais"
             data={subscriptionRows}
             count={subscriptionRows.length}
             columnsHeaders={columnMaping}

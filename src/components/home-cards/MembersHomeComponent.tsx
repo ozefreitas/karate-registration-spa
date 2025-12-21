@@ -93,8 +93,8 @@ export default function MembersHomeComponent(
             </ListItem>
           ) : (
             lastFiveMembersData?.data.map((member: Member, index: number) => (
-              <Tooltip key={index} title={"Consultar"} placement="right">
-                <ListItem sx={{ m: 0, pb: 0 }}>
+              <ListItem key={index} sx={{ m: 0, pb: 0 }}>
+                <Tooltip title={"Consultar"} placement="right">
                   <ListItemButton
                     sx={{
                       minWidth: 0,
@@ -153,8 +153,8 @@ export default function MembersHomeComponent(
                       }
                     />
                   </ListItemButton>
-                </ListItem>
-              </Tooltip>
+                </Tooltip>
+              </ListItem>
             ))
           )}
           {props.userRole === "free_club" ? (

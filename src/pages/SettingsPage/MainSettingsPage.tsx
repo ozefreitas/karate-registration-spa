@@ -16,19 +16,30 @@ import {
   Tooltip,
   FormLabel,
   FormHelperText,
+  IconButton,
+  Chip,
 } from "@mui/material";
-import { Delete, Add, ContentCopy } from "@mui/icons-material";
+import {
+  Delete,
+  Add,
+  ContentCopy,
+  Close,
+  Check,
+  Block,
+  ThumbUp,
+} from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
-import { authHooks, clubsHooks, adminHooks } from "../../hooks";
+import { authHooks, clubsHooks, adminHooks, membersHooks } from "../../hooks";
 import DeleteClubModal from "../../components/Admin/DeleteClubModal";
 import AddClubModal from "../../components/Admin/AddClubModal";
 import { useSnackbar } from "notistack";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { useSearchParams } from "react-router-dom";
+import AllUseTable from "../../components/Table/AllUseTable";
 
 export default function MainSettingsPage() {
   const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
   const { enqueueSnackbar } = useSnackbar();
-  const [value, setValue] = useState("one");
   const [clickedUsername, setClickedUsername] = useState<string>("");
   console.log(setClickedUsername);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
@@ -39,6 +50,9 @@ export default function MainSettingsPage() {
   const [createdPasswordURL, setCreatedPasswordURL] = useState<string>("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const section = searchParams.get("section") || "accounts_manager";
 
   const { data: availableClubsData } = clubsHooks.useFetchAvailableClubs();
 
@@ -97,7 +111,7 @@ export default function MainSettingsPage() {
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     event.preventDefault();
-    setValue(newValue);
+    setSearchParams({ section: newValue });
   };
 
   const handleClubChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,6 +183,89 @@ export default function MainSettingsPage() {
       });
   }
 
+  type Member = {
+    first_name: string;
+    last_name: string;
+    id: string;
+    gender: string;
+  };
+  type Club = { username: string };
+  type Request = {
+    id: string;
+    message: string;
+    member: Member;
+    member_birth_date: string;
+    requested_by: Club;
+    status: string;
+  };
+
+  const {
+    data: memberValidationRequestData,
+    isLoading: isMemberValidationRequestsLoading,
+  } = membersHooks.useFetchMemberValidationRequestsData();
+
+  const patchMemberValidationStatus =
+    membersHooks.usePatchMemberValidationRequest();
+
+  // Memoize `rows` to compute only when `members` changes
+  const requestsRows = useMemo(() => {
+    return memberValidationRequestData?.data.results.map(
+      (request: Request) => ({
+        id: request.id,
+        memberId: request.member.id,
+        message: request.message,
+        fullName: `${request.member.first_name} ${request.member.last_name}`,
+        birthDate: request.member_birth_date,
+        gender: request.member.gender,
+        username: request.requested_by.username,
+        actions:
+          request.status === "rejected" ? (
+            <Chip color="error" label="Rejeitado" icon={<Block />}></Chip>
+          ) : request.status === "approved" ? (
+            <Chip color="success" label="Aprovado" icon={<ThumbUp />}></Chip>
+          ) : (
+            <Grid>
+              <Tooltip title="Aceitar">
+                <IconButton
+                  onClick={() => {
+                    patchMemberValidationStatus.mutate({
+                      validationId: request.id,
+                      data: { status: "approved" },
+                    });
+                  }}
+                  color="success"
+                >
+                  <Check color="success"></Check>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Rejeitar">
+                <IconButton
+                  onClick={() => {
+                    patchMemberValidationStatus.mutate({
+                      validationId: request.id,
+                      data: { status: "rejected" },
+                    });
+                  }}
+                  color="error"
+                >
+                  <Close color="error"></Close>
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          ),
+      })
+    );
+  }, [memberValidationRequestData]);
+
+  const columnMapping = [
+    { key: "fullName", label: "Nome" },
+    { key: "birthDate", label: "Data de Nascimento" },
+    { key: "gender", label: "Género" },
+    { key: "username", label: "Clube" },
+    { key: "message", label: "Mensagem" },
+    { key: "actions", label: "Ações" },
+  ];
+
   return (
     <>
       <PageInfoCard
@@ -190,17 +287,17 @@ export default function MainSettingsPage() {
                 mt: 0,
                 color: "#e81c24",
               }}
-              value={value}
+              value={section}
               onChange={handleChange}
               variant="fullWidth"
               textColor="inherit"
             >
-              <Tab value="one" label="Gestor de contas" />
-              <Tab value="two" label="Gestor de pagamentos" />
-              <Tab value="three" label="Work In Progress" />
+              <Tab value="accounts_manager" label="Gestor de Contas" />
+              <Tab value="payments_settings" label="Definições de Pagamentos" />
+              <Tab value="members_manager" label="Gestor de Membros" />
             </Tabs>
           </Box>
-          {value === "one" ? (
+          {section === "accounts_manager" ? (
             <Grid p={1}>
               <Typography variant="h5" sx={{ pl: 4, mt: 3, mb: 2 }}>
                 Adicionar/Remover Clubes
@@ -718,7 +815,7 @@ export default function MainSettingsPage() {
                 </Grid>
               </Grid>
             </Grid>
-          ) : value === "two" ? (
+          ) : section === "payments_settings" ? (
             <Grid p={1}>
               As quotas são criadas automaticamente no primeiro dia de setembro
               de cada ano. <p></p>
@@ -727,8 +824,19 @@ export default function MainSettingsPage() {
               Ao serem criadas as quotas, cada Clube é automaticamente
               notificado.
             </Grid>
-          ) : (
-            <Grid></Grid>
+          ) : isMemberValidationRequestsLoading ? null : (
+            <Grid mt={5}>
+              <AllUseTable
+                count={memberValidationRequestData?.data.count}
+                data={requestsRows}
+                actions={false}
+                selection={false}
+                type="Atletas"
+                userRole="main_admin"
+                columnsHeaders={columnMapping}
+                overideInternalPage
+              ></AllUseTable>
+            </Grid>
           )}
         </CardContent>
       </Card>

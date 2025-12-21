@@ -139,7 +139,7 @@ export default function EventCallendar(props: {
       <Card sx={{ m: 2, mt: 0 }}>
         <CardContent>
           <Grid container justifyContent={"space-between"} size={12}>
-            <Grid size={3} p={1}>
+            <Grid size={4} p={1}>
               <Card elevation={3}>
                 <LocalizationProvider
                   dateAdapter={AdapterDayjs}
@@ -164,7 +164,7 @@ export default function EventCallendar(props: {
                 </LocalizationProvider>
               </Card>
             </Grid>
-            <Grid size={9}>
+            <Grid size={8}>
               <CardContent
                 sx={{
                   p: 0,

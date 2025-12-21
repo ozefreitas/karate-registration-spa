@@ -31,16 +31,18 @@ const NotificationsPage = (props: { me: any }) => {
     const noti_type = noti.type;
     if (noti_type === "create_member") {
       navigate("/members/");
+    } else if (noti_type === "member_updated") {
+      navigate(`/members/${noti.target_member}/?section=personal_info`);
     } else if (noti_type === "rate_event") {
       navigate(`/events/${noti.target_event.id}/`);
     } else if (noti_type === "reset") {
       navigate("/settings/");
     } else if (noti_type === "classifications_available") {
       navigate("/classifications/");
+    } else if (noti_type === "member_request") {
+      navigate("/settings/?section=members_manager");
     } else if (noti_type === "payment_overdue") {
-      navigate(
-        `/members/${noti.target_member.id}/?section=payments_management`
-      );
+      navigate(`/members/${noti.target_member}/?section=payments_management`);
     } else if (
       [
         "open_registrations",
@@ -102,7 +104,7 @@ const NotificationsPage = (props: { me: any }) => {
               }}
               key={index}
             >
-              <CardContent sx={{ p: 3, pl: 5, pr: 0, display: "flex" }}>
+              <CardContent sx={{ pt: 3, pl: 5, pr: 0, display: "flex" }}>
                 <Grid container alignItems={"center"} pr={1}>
                   {getNotificationTypeIcon(item.type)}
                 </Grid>

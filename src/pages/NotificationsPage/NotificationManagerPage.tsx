@@ -304,7 +304,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
                 helperText={errors.type?.message}
               >
                 {NotificationTypeOptions.filter(
-                  (item) => !["reset"].includes(item.value)
+                  (item) => !["reset", "member_request"].includes(item.value)
                 ).map((item: any, index: any) => (
                   <MenuItem key={index} value={item.value}>
                     {item.label}
@@ -353,6 +353,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
             "open_registrations",
             "classifications_available",
             "rate_event",
+            "member_updated",
           ].includes(watch("type")) ? (
           <Grid sx={{ p: 2 }} size={6}>
             <Controller

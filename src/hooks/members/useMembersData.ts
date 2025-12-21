@@ -7,6 +7,7 @@ import {
   fetchMembersInCategoryGender,
   fetchDisciplineMemberNotIn,
   fetchLastFiveMembers,
+  fetchMemberValidationRequests,
 } from "../../api";
 
 export const useFetchMembersData = (
@@ -16,7 +17,8 @@ export const useFetchMembersData = (
   memberType?: string,
   gender?: string,
   quotesLegible?: boolean,
-  monthlyPaymentStatus?: string
+  monthlyPaymentStatus?: string,
+  isValidated?: boolean
 ) => {
   return useQuery({
     queryKey: [
@@ -28,6 +30,7 @@ export const useFetchMembersData = (
       gender,
       quotesLegible,
       monthlyPaymentStatus,
+      isValidated,
     ],
     queryFn: () =>
       fetchMembers(
@@ -37,7 +40,8 @@ export const useFetchMembersData = (
         memberType,
         gender,
         quotesLegible,
-        monthlyPaymentStatus
+        monthlyPaymentStatus,
+        isValidated
       ),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
@@ -112,5 +116,14 @@ export const useFetchDisciplinesnotInMemberData = (
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
     enabled: memberId !== "",
+  });
+};
+
+export const useFetchMemberValidationRequestsData = () => {
+  return useQuery({
+    queryKey: ["members-validation"],
+    queryFn: fetchMemberValidationRequests,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 };

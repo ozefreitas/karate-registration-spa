@@ -102,7 +102,23 @@ export default function SideMenu(
   return (
     <Box>
       <CssBaseline>
-        <Drawer variant="permanent" open={isMenuOpen}>
+        <Drawer
+          variant="permanent"
+          open={isMenuOpen}
+          sx={{
+            "& .MuiDrawer-paper": {
+              marginTop: "10px",
+              marginBottom: "10px",
+              marginLeft: "10px",
+              height: "calc(100% - 20px)",
+              "&::-webkit-scrollbar": {
+                width: 5
+              },
+              // maskImage:
+              //   "linear-gradient(to bottom, white 95%, transparent 100%)",
+            },
+          }}
+        >
           <Divider />
           <List
             onMouseEnter={() => setIsMenuOpen(true)}

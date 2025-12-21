@@ -19,6 +19,8 @@ import {
   Clear,
   ArrowDropDown,
   ContentCopy,
+  AccountCircle,
+  VerifiedUser,
 } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
@@ -47,7 +49,8 @@ export default function PersonalInfoSection(
     userRole
   );
 
-  const canUpdateSensitive = props.memberData?.data.can_update_sensitive;
+  const canUpdateSensitive =
+    userRole === "main_admin" || !props.memberData?.data.is_validated;
 
   useEffect(() => {
     if (editField === "weight") {
@@ -257,13 +260,22 @@ export default function PersonalInfoSection(
   return (
     <>
       <Grid container alignItems={"center"} size={12}>
-        <Grid size={11}>
+        <Grid size={11} container gap={3} alignItems={"center"}>
           <Typography
-            sx={{ color: "#e81c24", fontWeight: "bold", ml: 1, mb: 2 }}
+            sx={{ color: "#e81c24", fontWeight: "bold", ml: 1 }}
             variant="h4"
           >
             INFORMAÇÕES PESSOAIS
           </Typography>
+          {!props.memberData?.data.is_validated ? (
+            <Tooltip title="Próprio" sx={{ cursor: "pointer" }}>
+              <AccountCircle color="info" fontSize="large" />
+            </Tooltip>
+          ) : (
+            <Tooltip title="Verificado">
+              <VerifiedUser color="info" fontSize="large" />
+            </Tooltip>
+          )}
         </Grid>
         {["superuser", "subed_club"].includes(userRole) ? (
           <Grid size={1}>
@@ -275,7 +287,7 @@ export default function PersonalInfoSection(
           </Grid>
         ) : null}
       </Grid>
-      <Grid sx={{ mb: 3 }}>
+      <Grid mb={5} mt={2}>
         {["main_admin", "superuser", "subed_club"].includes(userRole) ? (
           <Button
             sx={{ m: 1, mr: 4 }}
@@ -283,6 +295,7 @@ export default function PersonalInfoSection(
             size="small"
             color="error"
             startIcon={<Delete />}
+            disabled={!canUpdateSensitive}
             onClick={handleModalOpen}
           >
             Remover

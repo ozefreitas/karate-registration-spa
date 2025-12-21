@@ -134,6 +134,7 @@ export default function AllUseTable(
       | "EventCategories"
       | "Treinadores"
       | "Pagamentos"
+      | "PagamentosAnuais"
       | "Plano";
     discipline?: any;
     data: any;
@@ -343,11 +344,11 @@ export default function AllUseTable(
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
-      fontSize: 18,
-      color: theme.palette.common.white,
+      fontSize: 17,
+      // color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 16,
+      fontSize: 15,
       paddingTop: 8,
       paddingBottom: 8,
     },
@@ -358,8 +359,8 @@ export default function AllUseTable(
     warning?: boolean;
   }>(({ header, warning }) => ({
     [`&.${tableRowClasses.head}`]: {
-      backgroundColor: "#e81c24",
-      border: "4px solid #e81c24",
+      backgroundColor: "lightgray",
+      border: "4px solid lightgray",
     },
     textAlign: "center",
     cursor: header ? "default" : "pointer",

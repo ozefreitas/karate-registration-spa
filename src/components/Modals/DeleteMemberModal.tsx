@@ -48,6 +48,7 @@ export default function DeleteMemberModal(
       | "EventCategories"
       | "Treinadores"
       | "Pagamentos"
+      | "PagamentosAnuais"
       | "Plano";
     setSelected?: any;
     discipline?: any;

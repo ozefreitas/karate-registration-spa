@@ -25,7 +25,7 @@ import fighttecLogo from "./../../assets/FightTecLogo-white-font-removebg-croppe
 import skipLogo from "./../../assets/skip-logo.png";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { NotificationsActive, Logout } from "@mui/icons-material";
+import { NotificationsActive, Logout, Refresh } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import {
   breadcrumbsConvertion,
@@ -132,7 +132,7 @@ export default function Header(
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           sx={{
-            borderRadius: 2,
+            borderRadius: 4,
             width: "99%",
             margin: "auto",
             backgroundColor: "#5a5a5a",
@@ -248,11 +248,12 @@ export default function Header(
                                 notificationData === null
                                   ? null
                                   : 50,
-                              bgcolor:
-                                notificationData?.data.total === 0 ||
-                                notificationData === null
-                                  ? null
-                                  : "green",
+                              bgcolor: notificationError
+                                ? "red"
+                                : notificationData?.data.total === 0 ||
+                                  notificationData === null
+                                ? null
+                                : "green",
                             }}
                           >
                             <NotificationsActive
@@ -418,17 +419,28 @@ export default function Header(
           disableRipple
           disableTouchRipple
           onClick={(e) => e.stopPropagation()}
-          sx={{ p: 2, display: "flex", gap: 1 }}
+          sx={{
+            p: 2,
+            display: "flex",
+            gap: 1,
+            justifyContent: "space-between",
+          }}
         >
           Notificações Recentes
-          {notificationData?.data.total === 0 ? null : (
+          {(!isNotificationLoading && notificationData?.data.total === 0) ||
+          notificationError ? null : (
             <Typography color="textDisabled">
               (a mostrar 5 primeiras)
             </Typography>
           )}
+          {notificationError ? (
+            <IconButton>
+              <Refresh color="primary"></Refresh>
+            </IconButton>
+          ) : null}
         </MenuItem>
         {isNotificationLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box m={2} sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
         ) : notificationError ? (
@@ -452,7 +464,7 @@ export default function Header(
             </MenuItem>
           ) : (
             <MenuItem divider>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+              <ListItemButton disabled>
                 <ListItemText
                   primary={"Ocorreu um erro ao carregar as suas notificações."}
                 />

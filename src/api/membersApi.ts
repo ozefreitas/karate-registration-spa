@@ -7,7 +7,8 @@ export const fetchMembers = (
   memberType?: string,
   gender?: string,
   quotesLegible?: boolean,
-  monthlyPaymentStatus?: string
+  monthlyPaymentStatus?: string,
+  isValidated?: boolean
 ) => {
   return authClient.get("/members/", {
     params: {
@@ -18,6 +19,7 @@ export const fetchMembers = (
       in_gender: gender,
       is_quotes_legible: quotesLegible,
       monthly_payment_status: monthlyPaymentStatus,
+      is_validated: isValidated,
     },
   });
 };
@@ -86,4 +88,10 @@ export const fetchDisciplineMemberNotIn = (
   return authClient.get(
     `/members/${memberId}/unregistered_modalities/${eventId}/`
   );
+};
+
+// request member validation
+
+export const createMemberValidationRequest = (data: any) => {
+  return authClient.post("/member_validation/", data);
 };

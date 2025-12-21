@@ -64,8 +64,8 @@ export default function NextCompHomeComponent(
           </ListItem>
         ) : (
           <List>
-            <Tooltip title={"Consultar"} placement="left">
-              <ListItem sx={{ m: 0 }}>
+            <ListItem sx={{ m: 0 }}>
+              <Tooltip title={"Consultar"} placement="left">
                 <ListItemButton
                   sx={{
                     minWidth: 0,
@@ -136,8 +136,8 @@ export default function NextCompHomeComponent(
                     }
                   />
                 </ListItemButton>
-              </ListItem>
-            </Tooltip>
+              </Tooltip>
+            </ListItem>
           </List>
         )}
         <CardActions

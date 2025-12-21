@@ -131,6 +131,39 @@ export default function MemberFilters(props: {
           <>
             <Grid sx={{ p: 3, py: 1 }} container>
               <Controller
+                name="isValidated"
+                control={props.control}
+                render={({ field }) => (
+                  <FormControl
+                    sx={{ width: "100%" }}
+                    component="fieldset"
+                    variant="standard"
+                    error={!!props.errors.isVerified}
+                  >
+                    <Stack>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                            }}
+                            name="quotesLegible"
+                          />
+                        }
+                        label="Apenas Verificados"
+                        sx={{ justifyContent: "space-between", marginLeft: 0 }}
+                      />
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ p: 3, py: 1 }} container>
+              <Controller
                 name="quotesLegible"
                 control={props.control}
                 render={({ field }) => (

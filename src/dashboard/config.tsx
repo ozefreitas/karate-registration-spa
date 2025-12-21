@@ -28,6 +28,8 @@ import {
   EditNotifications,
   MonetizationOn,
   PointOfSale,
+  ManageAccounts,
+  QuestionMark,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -102,7 +104,7 @@ export const getSideMenuConfig = (userRole: string) => {
       name: "settings",
       label: "Definições",
       icon: <AdminPanelSettings sx={{ color: "#e81c24" }} />,
-      to: "/settings/",
+      to: "/settings/?section=accounts_manager",
     },
   ];
 
@@ -253,6 +255,16 @@ export const NotificationTypeOptions: {
     value: "create_member",
     label: "Novo Membro Adicionado",
     icon: <PersonAddAlt1 fontSize="large" />,
+  },
+  {
+    value: "member_updated",
+    label: "Membro Atualizado",
+    icon: <ManageAccounts fontSize="large" />,
+  },
+  {
+    value: "member_request",
+    label: "Pedido de Adição de Membro",
+    icon: <QuestionMark fontSize="large" />,
   },
   {
     value: "rate_event",

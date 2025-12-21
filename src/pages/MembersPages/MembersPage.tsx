@@ -5,6 +5,9 @@ import {
   CircularProgress,
   ListItem,
   ListItemText,
+  Typography,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
@@ -14,7 +17,12 @@ import { MemberTypes } from "../../config";
 import MemberFilters from "../../components/filter_drawers/MemberFilters";
 import MemberOrdering from "../../components/filter_drawers/MemberOrdering";
 import { useForm } from "react-hook-form";
-import { VerifiedUser, AccountCircle } from "@mui/icons-material";
+import {
+  VerifiedUser,
+  AccountCircle,
+  HourglassBottom,
+} from "@mui/icons-material";
+import RequestValidationModal from "../../components/modals/RequestValidationModal";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   type Club = {
@@ -28,15 +36,27 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     full_name: string;
     gender: string;
     club: Club;
+    updated_by: Club;
     age: string;
     member_type: string;
-    can_update_sensitive: boolean;
+    is_validated: boolean;
     past_month_payment_status: string;
+    request_status: string;
   };
 
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
+  const [actionedMember, setActionedMember] = useState<string>("");
 
+  const handleModalOpen = (id: string) => {
+    setIsRequestModalOpen(true);
+    setActionedMember(id);
+  };
+
+  const handleModalClose = () => {
+    setIsRequestModalOpen(false);
+  };
   // const { data: availableUsersData } = adminHooks.useFetchClubUsersData();
 
   const getColumnMaping = () => {
@@ -45,9 +65,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       { key: "gender", label: "Género" },
     ];
     if (props.userRole === "main_admin" || props.userRole === "superuser") {
-      columnMapping.push(
-        { key: "username", label: "Clube" },
-      );
+      columnMapping.push({ key: "username", label: "Clube" });
     } else {
       columnMapping.push(
         { key: "age", label: "Idade" },
@@ -55,6 +73,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         { key: "verified", label: "Verificado" }
       );
     }
+    columnMapping.push({ key: "updated_by", label: "Ult. Edição" });
     return columnMapping;
   };
 
@@ -76,6 +95,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       isAthlete: false,
       isMasculino: false,
       isFeminino: false,
+      isValidated: false,
     },
   });
 
@@ -154,7 +174,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     memberTypeFiltering,
     selectedGender,
     filtersWatch("quotesLegible") ? filtersWatch("quotesLegible") : undefined,
-    filtersWatch("quotesOverdue") ? "unpaid" : undefined
+    filtersWatch("quotesOverdue") ? "unpaid" : undefined,
+    filtersWatch("isValidated") ? true : undefined
   );
 
   // Memoize `rows` to compute only when `members` changes
@@ -162,23 +183,47 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     return membersData?.data.results.map((member: Member) => ({
       id: member.id,
       full_name: member.full_name,
-      gender: member.gender,
+      gender: member.gender === "Masculino" ? "M" : "F",
       username: member.club.username,
       member_type: MemberTypes.find((item) => item.value === member.member_type)
         ?.label,
       age: member.age,
-      verified: member.can_update_sensitive ? (
-        <Grid container flexDirection={"column"} alignItems={"center"}>
-          <AccountCircle color="disabled" />
-        </Grid>
-      ) : (
+      verified: member.is_validated ? (
         <Grid container flexDirection={"column"} alignItems={"center"}>
           <VerifiedUser color="disabled" />
         </Grid>
+      ) : member.request_status === null ||
+        member.request_status !== "pending" ? (
+        <Tooltip arrow title="Pedir Verificação">
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              handleModalOpen(member.id);
+            }}
+          >
+            <AccountCircle color="primary" />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip arrow title="Pendente">
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <HourglassBottom color="primary" />
+          </IconButton>
+        </Tooltip>
       ),
       can_update_sensitive:
-        props.userRole === "main_admin" ? true : member.can_update_sensitive,
+        props.userRole === "main_admin" ? true : !member.is_validated,
       past_month_payment_status: member.past_month_payment_status,
+      updated_by:
+        member.updated_by?.username === undefined ? (
+          <Typography color="textDisabled">N/A</Typography>
+        ) : (
+          member.updated_by.username
+        ),
     }));
   }, [membersData]);
 
@@ -195,6 +240,15 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             <>
               Aqui poderá consultar todos os seus Membros e consultar a
               informação detalhada de cada um (caso possua uma subscrição).
+              <p>
+                Membros registados na{" "}
+                {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA} não podem ser
+                removidos, e apenas este possuem um número de identificação.
+                Pode pedir a validação de um Membro junto da{" "}
+                {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA} através da coluna{" "}
+                <i>Verificado</i>. Apenas membros validados podem integrar
+                Eventos.
+              </p>
               <p></p>
               <strong>Importante</strong>: Estes não servem como inscrição em
               qualquer prova. A idade aqui apresentada não é a utilizada como
@@ -212,6 +266,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             size={12}
             container
             px={3}
+            mb={3}
             spacing={2}
             justifyContent={"flex-end"}
             alignItems={"center"}
@@ -275,6 +330,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           <AddButton label="Adicionar" to="new_member/"></AddButton>
         </Grid>
       ) : null}
+      <RequestValidationModal
+        id={actionedMember}
+        isOpen={isRequestModalOpen}
+        handleClose={handleModalClose}
+      ></RequestValidationModal>
     </>
   );
 }

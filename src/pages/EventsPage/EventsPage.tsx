@@ -167,7 +167,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             size={12}
             container
             px={3}
-            pb={2}
+            mb={3}
             spacing={2}
             justifyContent={"flex-end"}
             alignItems={"center"}
@@ -236,13 +236,13 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             </ListItem>
             <Button onClick={() => refetch()}>Refrescar</Button>
           </Grid>
-        ) : eventsData?.data.count === 0 ? (
+        ) : eventsData?.data.count === 0 && currentView === "list" ? (
           <Grid mt={5} container justifyContent="center" size={12}>
             <Typography variant="h6" sx={{ color: "gray" }}>
               Não foram encontrados Eventos.
             </Typography>
           </Grid>
-        ) : currentView === "list" ? (
+        ) : eventsData?.data.count !== 0 && currentView === "list" ? (
           <Grid size={12}>
             <Card sx={{ m: 2, mt: 0 }}>
               <CardContent>
