@@ -276,45 +276,45 @@ export default function Header(
                     ) : null}
                   </IconButton>
                 )}
-                <IconButton
-                  onClick={(event) => {
-                    if (isAuthenticated) {
-                      handleClick(event);
-                    }
-                  }}
-                  size="small"
-                  sx={{ ml: 2 }}
-                  aria-controls={open ? "account-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                >
-                  {isAuthenticated ? (
+                {isAuthenticated ? (
+                  <IconButton
+                    onClick={(event) => {
+                      if (isAuthenticated) {
+                        handleClick(event);
+                      }
+                    }}
+                    size="small"
+                    sx={{ ml: 2 }}
+                    aria-controls={open ? "account-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                  >
                     <Grid container gap={3}>
                       <Tooltip title="Conta" placement="top">
                         <Avatar {...stringAvatar(user?.data.username)}></Avatar>
                       </Tooltip>
                     </Grid>
-                  ) : (
-                    <Grid container spacing={2}>
+                  </IconButton>
+                ) : (
+                  <Grid container spacing={2}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={() => navigate("/login/")}
+                    >
+                      Login
+                    </Button>
+                    {props.me?.data.role === "single_admin" ? null : (
                       <Button
                         variant="contained"
-                        color="error"
-                        onClick={() => navigate("/login/")}
+                        color="secondary"
+                        onClick={() => navigate("/request_account/")}
                       >
-                        Login
+                        Pedir Conta
                       </Button>
-                      {props.me?.data.role === "single_admin" ? null : (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => navigate("/request_account/")}
-                        >
-                          Pedir Conta
-                        </Button>
-                      )}
-                    </Grid>
-                  )}
-                </IconButton>
+                    )}
+                  </Grid>
+                )}
               </Grid>
             </Stack>
           </Toolbar>
