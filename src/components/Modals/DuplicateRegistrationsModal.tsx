@@ -105,12 +105,17 @@ export default function (
       }}
       fullWidth
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography p={1} variant="h5">
           Copiar Inscrições
         </Typography>
       </DialogTitle>
-      <DialogContent sx={{ pb: 0 }}>
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
         <Grid sx={{ p: 2 }} size={6}>
           <Controller
             name="eventId"

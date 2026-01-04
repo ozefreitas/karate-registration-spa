@@ -81,10 +81,15 @@ export default function EditMemberPaymentPlan(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Alterar montante pré-definido</Typography>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
         <p>
           Escolha o montante a ser pedido a este Membro. <br /> Este será
           utilizado para criar novas quotas no primeiro dia de cada mês. <br />{" "}

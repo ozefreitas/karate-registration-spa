@@ -48,10 +48,15 @@ export default function RequestValidationModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Validar Membro</Typography>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
         <p>
           Esta ação irá fazer um pedido ao seu administrador de forma a validar
           este Membro, tornando-se parte integrante da lista oficial de membros.
@@ -59,7 +64,7 @@ export default function RequestValidationModal(
         <p>
           Tenha a certeza de que os campos introduzidos estão corretos, uma vez
           que campos sensíveis não poderão ser alterados novamente após a
-          validação ser confirmada. <br />
+          validação ser confirmada.
         </p>
       </DialogContent>
       <DialogActions>

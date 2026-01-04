@@ -39,11 +39,18 @@ export default function WeightConfirmModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Novo peso adicionado</Typography>
       </DialogTitle>
-      <DialogContent>
-        Peso adicionado com sucesso. Deseja voltar à página de Inscrições?
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
+        <p>
+          Peso adicionado com sucesso. Deseja voltar à página de Inscrições?
+        </p>
       </DialogContent>
       <DialogActions>
         <Stack

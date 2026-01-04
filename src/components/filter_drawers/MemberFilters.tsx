@@ -27,14 +27,14 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function MemberFilters(props: {
+export default function MemberFilters(props: Readonly<{
   isLoading: boolean;
   control: any;
   setValue: any;
   errors: any;
   reset: any;
   changedCount: number;
-}) {
+}>) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {

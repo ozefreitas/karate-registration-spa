@@ -89,7 +89,7 @@ export default function EditMemberActivePaymentModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">
           Alterar montante corrente para{" "}
           {getMonthFromValue(singleMonthlyMemberPayment?.data.month)} de{" "}
@@ -97,15 +97,28 @@ export default function EditMemberActivePaymentModal(
         </Typography>
       </DialogTitle>
       {singleMonthlyMemberPayment?.data.paid ? (
-        <DialogContent>
-          De forma a evitar equivocos no valor pago pelo Membro, a opção de
-          editar o montante a pagar para uma quota já criada está desativado.
-          <p></p>
-          Para alterar o montante a pagar/pago, reverta o estado de pagamento na
-          tabela, e tente editar novamente.
+        <DialogContent
+          sx={{
+            borderBottom: "1px solid lightgrey",
+            borderTop: "1px solid lightgrey",
+          }}
+        >
+          <p>
+            De forma a evitar equivocos no valor pago pelo Membro, a opção de
+            editar o montante a pagar para uma quota já criada está desativado.
+          </p>
+          <p>
+            Para alterar o montante a pagar/pago, reverta o estado de pagamento
+            na tabela, e tente editar novamente.
+          </p>
         </DialogContent>
       ) : (
-        <DialogContent>
+        <DialogContent
+          sx={{
+            borderBottom: "1px solid lightgrey",
+            borderTop: "1px solid lightgrey",
+          }}
+        >
           <p>Altere o montante que este Membro terá de pagar para este mês.</p>
           Esta ação pode ser desfeita enquanto o estado de pagamento se mantiver{" "}
           <Typography fontWeight={"bold"} color="error" component="span">

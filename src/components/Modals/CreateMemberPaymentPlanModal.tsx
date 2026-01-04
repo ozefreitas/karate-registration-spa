@@ -64,10 +64,15 @@ export default function CreateMemberPaymentPlanModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Criar novo plano de pagamento</Typography>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
         <p>Insira o nome (descritivo) do novo plano, e montante respetivo.</p>
         <Grid sx={{ p: 2 }} size={6}>
           <Controller

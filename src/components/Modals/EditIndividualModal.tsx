@@ -58,14 +58,21 @@ export default function EditIndividualModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Editar Atleta</Typography>
       </DialogTitle>
-      <DialogContent>
-        Não é possível editar uma Inscrição, apenas o pode fazer no própria
-        Atleta. <br />
-        Ao clicar em <strong>Continuar</strong>, irá editar o Atleta, mudando
-        todas as inscrições dele.
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
+        <p>
+          Não é possível editar uma Inscrição, apenas o pode fazer no própria
+          Atleta. <br />
+          Ao clicar em <strong>Continuar</strong>, irá editar o Atleta, mudando
+          todas as inscrições dele.
+        </p>
       </DialogContent>
       <DialogActions>
         <Stack

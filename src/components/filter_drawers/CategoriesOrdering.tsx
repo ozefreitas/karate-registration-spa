@@ -11,10 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { eventOrderingOptions } from "../../dashboard/filters";
+import { categoryOrderingOptions } from "../../dashboard/filters";
+import { SwapVert } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
-import { ArrowUpward, ArrowDownward, SwapVert } from "@mui/icons-material";
+import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 
 const FiltersBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -23,15 +24,17 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function EventsOrdering(props: {
-  isLoading: boolean;
-  control: any;
-  errors: any;
-  reset: any;
-  changedCount: number;
-  orderFields: any;
-  setOrderFields: any;
-}) {
+export default function CategoriesOrdering(
+  props: Readonly<{
+    isLoading: boolean;
+    control: any;
+    errors: any;
+    reset: any;
+    changedCount: number;
+    orderFields: any;
+    setOrderFields: any;
+  }>
+) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -78,7 +81,7 @@ export default function EventsOrdering(props: {
                       <MenuItem sx={{ color: "lightgrey" }} value="">
                         -- Selecionar --
                       </MenuItem>
-                      {eventOrderingOptions
+                      {categoryOrderingOptions
                         .filter((opt) => item.options.includes(opt.value))
                         .map((opt) => (
                           <MenuItem key={opt.value} value={opt.value}>
@@ -111,7 +114,7 @@ export default function EventsOrdering(props: {
           ))}
         </Grid>
       </List>
-      <Grid size={12} mt={5} mx={10} container>
+      <Grid size={12} my={5} mx={10} container>
         <Button
           color="error"
           sx={{ width: "100%" }}

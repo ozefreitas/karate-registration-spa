@@ -48,21 +48,28 @@ export default function PatchClubSubscriptionModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Alteração de estado</Typography>
       </DialogTitle>
-      <DialogContent>
-        Esta ação irá atualizar o estado do pagamento de {props.username} de
-        <br />
-        <strong style={{ color: props.currentState ? "green" : "red" }}>
-          {props.currentState ? "Pago" : "Em Falta"}
-        </strong>{" "}
-        <br />
-        para <br />
-        <strong style={{ color: !props.currentState ? "green" : "red" }}>
-          {!props.currentState ? "Pago" : "Em Falta"}
-        </strong>
-        .{" "}
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
+        <p>
+          Esta ação irá atualizar o estado do pagamento de {props.username} de
+          <br />
+          <strong style={{ color: props.currentState ? "green" : "red" }}>
+            {props.currentState ? "Pago" : "Em Falta"}
+          </strong>{" "}
+          <br />
+          para <br />
+          <strong style={{ color: !props.currentState ? "green" : "red" }}>
+            {!props.currentState ? "Pago" : "Em Falta"}
+          </strong>
+          .
+        </p>
         <p>
           Tem a certeza que pretende continuar? Poderá desfazer esta ação mais
           tarde.

@@ -66,18 +66,30 @@ export default function DuplicateMemberModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">
           Duplicar {props.memberData?.full_name}
         </Typography>
       </DialogTitle>
       {props.memberData?.member_type !== "coach" ? (
-        <DialogContent>
-          Esta ação irá duplicar este Membro para <strong>Treinador</strong>.{" "}
-          <p></p>Deseja prosseguir?
+        <DialogContent
+          sx={{
+            borderBottom: "1px solid lightgrey",
+            borderTop: "1px solid lightgrey",
+          }}
+        >
+          <p>
+            Esta ação irá duplicar este Membro para <strong>Treinador</strong>.{" "}
+          </p>
+          <p>Deseja prosseguir?</p>
         </DialogContent>
       ) : (
-        <DialogContent>
+        <DialogContent
+          sx={{
+            borderBottom: "1px solid lightgrey",
+            borderTop: "1px solid lightgrey",
+          }}
+        >
           Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>. Caso
           já exista como Aluno, dirija-se à página do mesmo diretamente e altere
           o campo "É Competidor".<p></p>Deseja prosseguir?

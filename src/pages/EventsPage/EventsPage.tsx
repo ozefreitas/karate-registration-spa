@@ -328,11 +328,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               alignContent="flex-end"
                               size={4}
                             >
-                              <Tooltip placement="top" title="Ir para">
+                              <Tooltip arrow placement="top" title="Ir para">
                                 <IconButton
                                   sx={{
                                     transition: "0.3s",
-                                    borderRadius: 3,
+                                    borderRadius: 4,
                                     p: 1.5,
                                     px: 2,
                                     border: 2,

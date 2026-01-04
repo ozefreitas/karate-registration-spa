@@ -9,6 +9,8 @@ import {
   ListItemIcon,
   ListItemButton,
   Typography,
+  TextField,
+  FormHelperText,
 } from "@mui/material";
 import { monthlyPaymentsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
@@ -21,9 +23,11 @@ import {
   Info,
   Warning,
   KeyboardDoubleArrowUp,
+  Save,
 } from "@mui/icons-material";
 import FormAccordion from "../../dashboard/FormAccordion";
 import CreateMemberPaymentPlanModal from "../../components/modals/CreateMemberPaymentPlanModal";
+import { Controller, useForm } from "react-hook-form";
 
 export default function MemberPaymemtManagerPage(props: { userRole: string }) {
   type Plan = {
@@ -128,6 +132,14 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
       setIsShowable(true);
     }
   }, [isSelected]);
+
+  const {
+    control,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: { day: "" },
+  });
 
   return (
     <>
@@ -279,6 +291,44 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
           )
         )}
       </FormAccordion>
+      <FormCard title="Gestão de Pagamentos">
+        <Grid sx={{ p: 2, pt: 3 }} size={6}>
+          <Controller
+            name="day"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Dia"
+                type="number"
+                slotProps={{
+                  htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
+                }}
+                fullWidth
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
+                error={!!errors.day}
+                helperText={errors.day?.message}
+              ></TextField>
+            )}
+          />
+        </Grid>
+        <Grid sx={{ p: 2, pt: 3 }} size={6}>
+          <FormHelperText>
+            Selecione um dia do mês entre 1 e 28 para criar as quotas mensais.
+            Caso altere o dia, e as quotas do presente mês já tiverem side
+            criadas, apenas serão criadas novas no mês subsquente.
+          </FormHelperText>
+        </Grid>
+        {watch("day") === "" ? null : (
+          <Button sx={{ ml: 2 }} variant="contained" endIcon={<Save></Save>}>
+            Guardar
+          </Button>
+        )}
+      </FormCard>
       <FormCard title="Planos de Pagamento">
         <Grid size={12} m={2} mb={0}>
           {isPlansLoading ? (

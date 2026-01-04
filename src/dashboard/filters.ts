@@ -18,6 +18,32 @@ export const eventOrderingOptions: { value: string; label: string }[] = [
   { value: "-start_registration", label: "Descendente" },
 ];
 
+export const categoryFilteringAgeOptions: { value: string; label: string }[] = [
+  { value: "minAge", label: "Idade Mínima" },
+  { value: "maxAge", label: "Idade Máxima" },
+  { value: "minGrad", label: "Graduação Mínima" },
+  { value: "maxGrad", label: "Graduação Máxima" },
+  { value: "minWeight", label: "Peso Mínimo" },
+  { value: "maxWeight", label: "Peso Máximo" },
+];
+
+export const categoryOrderingOptions: { value: string; label: string }[] = [
+  { value: "name", label: "Ascendente" },
+  { value: "-name", label: "Descendente" },
+  { value: "min_age", label: "Ascendente" },
+  { value: "-min_age", label: "Descendente" },
+  { value: "max_age", label: "Ascendente" },
+  { value: "-max_age", label: "Descendente" },
+  { value: "min_grad", label: "Ascendente" },
+  { value: "-min_grad", label: "Descendente" },
+  { value: "max_grad", label: "Ascendente" },
+  { value: "-max_grad", label: "Descendente" },
+  { value: "min_weight", label: "Ascendente" },
+  { value: "-min_weight", label: "Descendente" },
+  { value: "max_weight", label: "Ascendente" },
+  { value: "-max_weight", label: "Descendente" },
+];
+
 export const quotesOrderingOptions: { value: string; label: string }[] = [
   { value: "year", label: "Ascendente" },
   { value: "-year", label: "Descendente" },

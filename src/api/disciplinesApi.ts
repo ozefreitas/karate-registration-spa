@@ -39,7 +39,7 @@ export const removeAllDisciplineMember = (disciplineId: string) => {
 // discipline categories operations
 
 export const addDisciplineCategory = (disciplineId: string, data: any) => {
-  return authClient.post(`/disciplines/${disciplineId}/add_category/`, data);
+  return authClient.patch(`/disciplines/${disciplineId}/add_categories/`, data);
 };
 
 export const removeDisciplineCategory = (disciplineId: string, data: any) => {

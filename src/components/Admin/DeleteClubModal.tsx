@@ -50,13 +50,20 @@ export default function DeleteClubModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Apagar Evento</Typography>
       </DialogTitle>
-      <DialogContent>
-        Tem a certeza que pretende apagar esta conta? Esta ação irá eliminar
-        todos os seus Membros, inscrições dos mesmos em Eventos e informações
-        guardada do próprio Clube. <p></p> NÃO PODERA VOLTAR ATRÁS!
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
+        <p>
+          Tem a certeza que pretende apagar esta conta? Esta ação irá eliminar
+          todos os seus Membros, inscrições dos mesmos em Eventos e informações
+          guardada do próprio Clube. <p></p> NÃO PODERA VOLTAR ATRÁS!
+        </p>
       </DialogContent>
       <DialogActions>
         <Stack

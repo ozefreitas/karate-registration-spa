@@ -65,7 +65,12 @@ export default function ConfirmPasswordResetModal(
           </Typography>
         </Toolbar>
       </AppBar>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
         <Grid sx={{ m: 2, mb: 0 }} container justifyContent="center">
           <Typography>
             Esta ação irá criar um pedido para reiniciar a sua password. Irá

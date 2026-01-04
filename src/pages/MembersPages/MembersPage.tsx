@@ -184,7 +184,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       id: member.id,
       full_name: member.full_name,
       gender: member.gender === "Masculino" ? "M" : "F",
-      username: member.club.username,
+      username: member.club?.username,
       member_type: MemberTypes.find((item) => item.value === member.member_type)
         ?.label,
       age: member.age,
@@ -218,12 +218,9 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       can_update_sensitive:
         props.userRole === "main_admin" ? true : !member.is_validated,
       past_month_payment_status: member.past_month_payment_status,
-      updated_by:
-        member.updated_by?.username === undefined ? (
-          <Typography color="textDisabled">N/A</Typography>
-        ) : (
-          member.updated_by.username
-        ),
+      updated_by: member.updated_by?.username ?? (
+        <Typography color="textDisabled">N/A</Typography>
+      ),
     }));
   }, [membersData]);
 

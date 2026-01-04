@@ -48,22 +48,29 @@ export default function PatchMemberSubscriptionModal(
         transition: Transition,
       }}
     >
-      <DialogTitle>
+      <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">Alteração de estado</Typography>
       </DialogTitle>
-      <DialogContent>
-        Esta ação irá atualizar o estado do pagamento de{" "}
-        {props.paymentObj.month}-{props.paymentObj.year} de
-        <br />
-        <strong style={{ color: props.paymentObj.paid ? "green" : "red" }}>
-          {props.paymentObj.paid ? "Pago" : "Em Falta"}
-        </strong>{" "}
-        <br />
-        para <br />
-        <strong style={{ color: !props.paymentObj.paid ? "green" : "red" }}>
-          {!props.paymentObj.paid ? "Pago" : "Em Falta"}
-        </strong>
-        .{" "}
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
+        <p>
+          Esta ação irá atualizar o estado do pagamento de{" "}
+          {props.paymentObj.month}-{props.paymentObj.year} de
+          <br />
+          <strong style={{ color: props.paymentObj.paid ? "green" : "red" }}>
+            {props.paymentObj.paid ? "Pago" : "Em Falta"}
+          </strong>{" "}
+          <br />
+          para <br />
+          <strong style={{ color: !props.paymentObj.paid ? "green" : "red" }}>
+            {!props.paymentObj.paid ? "Pago" : "Em Falta"}
+          </strong>
+          .{" "}
+        </p>
         <p>
           Tem a certeza que pretende continuar? Poderá desfazer esta ação mais
           tarde.

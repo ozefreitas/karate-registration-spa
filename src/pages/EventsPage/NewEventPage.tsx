@@ -283,16 +283,14 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       const findDiscipline = disciplineCategories.find(
         (item: any) => item.discipline === discipline.data.name
       );
-      findDiscipline.categories.forEach((category: string) => {
-        const data = {
-          disciplineId: discipline.data.id,
-          data: { category_id: category },
-        };
-        addDisciplineCategory.mutate(data, {
-          onSuccess: () => {
-            navigate("/events/");
-          },
-        });
+      const data = {
+        disciplineId: discipline.data.id,
+        data: { category_ids: findDiscipline.categories },
+      };
+      addDisciplineCategory.mutate(data, {
+        onSuccess: () => {
+          navigate("/events/");
+        },
       });
       setLoading(false);
     });
@@ -445,7 +443,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   }}
                   error={!!errors.encounter_type}
                 >
-                  <MenuItem value="None">-- Não Definido --</MenuItem>
+                  <MenuItem value="None">-- Selecionar --</MenuItem>
                   {EncounterOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -615,7 +613,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   error={!!errors.season}
                   helperText={errors.season?.message}
                 >
-                  <MenuItem value="None">-- Não Definido --</MenuItem>
+                  <MenuItem value="None">-- Selecionar --</MenuItem>
                   {SeasonOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -1108,7 +1106,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               <Grid container size={12} justifyContent="center">
                 <Grid sx={{ mt: 5 }} size={6}>
                   <ListItem>
-                    <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+                    <ListItemButton sx={{ p: 2, color: "gray" }}>
                       Selecione uma Modalidade no campo ao lado para visualizar
                       os Escalões já adicionadas.
                     </ListItemButton>
