@@ -1,4 +1,10 @@
-import { Grid, Box, CircularProgress, ListItem, ListItemText } from "@mui/material";
+import {
+  Grid,
+  Box,
+  CircularProgress,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import { categoriesHooks } from "../../hooks";
 import AddButton from "../../components/Buttons/AddButton";
 import AllUseTable from "../../components/Table/AllUseTable";
@@ -25,6 +31,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     control: filtersControl,
     reset: filtersReset,
     watch: filtersWatch,
+    setValue: filtersSetValue,
     formState: { errors: filtersErrors },
     formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
@@ -38,8 +45,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
       hasWeight: false,
       minWeight: true,
       maxWeight: true,
-      isMasculino: false,
-      isFeminino: false,
+      isMasculino: true,
+      isFeminino: true,
     },
   });
 
@@ -133,12 +140,12 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     pageSize,
     ordering,
     selectedGender,
-    filtersWatch("minAge") === false ? undefined : true,
-    filtersWatch("maxAge") === false ? undefined : true,
-    filtersWatch("minGrad") === false ? undefined : true,
-    filtersWatch("maxGrad") === false ? undefined : true,
-    filtersWatch("minWeight") === false ? undefined : true,
-    filtersWatch("maxWeight") === false ? undefined : true
+    filtersWatch("hasAge") ? !!filtersWatch("minAge") : undefined,
+    filtersWatch("hasAge") ? !!filtersWatch("maxAge") : undefined,
+    filtersWatch("hasGrad") ? !!filtersWatch("minGrad") : undefined,
+    filtersWatch("hasGrad") ? !!filtersWatch("maxGrad") : undefined,
+    filtersWatch("hasWeight") ? !!filtersWatch("minWeight") : undefined,
+    filtersWatch("hasWeight") ? !!filtersWatch("maxWeight") : undefined
   );
 
   // Memoize `rows` to compute only when `members` changes
@@ -193,6 +200,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
               reset={filtersReset}
               watch={filtersWatch}
               errors={filtersErrors}
+              setValue={filtersSetValue}
               changedCount={filtersChangedCount}
             ></CategoriesFilters>
           </Grid>
@@ -204,7 +212,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
         ) : categoriesError ? (
           <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
             <ListItem>
-              <ListItemText primary="Ocorreu um erro ao encontrar os seus Membros, tente mais tarde ou contacte um administrador."></ListItemText>
+              <ListItemText primary="Ocorreu um erro ao encontrar os Escalões, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
         ) : categoriesData?.data === undefined ? null : (

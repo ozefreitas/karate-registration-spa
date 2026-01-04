@@ -33,6 +33,7 @@ export default function CategoriesFilters(
     errors: any;
     reset: any;
     watch: any;
+    setValue: any;
     changedCount: number;
   }>
 ) {
@@ -69,6 +70,8 @@ export default function CategoriesFilters(
                         checked={field.value}
                         onChange={(e) => {
                           field.onChange(e.target.checked);
+                          props.setValue("minAge", true);
+                          props.setValue("maxAge", true);
                         }}
                         name="hasAge"
                       />
@@ -129,6 +132,8 @@ export default function CategoriesFilters(
                         checked={field.value}
                         onChange={(e) => {
                           field.onChange(e.target.checked);
+                          props.setValue("minGrad", true);
+                          props.setValue("maxGrad", true);
                         }}
                         name="hasGrad"
                       />
@@ -191,6 +196,8 @@ export default function CategoriesFilters(
                         checked={field.value}
                         onChange={(e) => {
                           field.onChange(e.target.checked);
+                          props.setValue("minWeight", true);
+                          props.setValue("maxWeight", true);
                         }}
                         name="hasWeight"
                       />
