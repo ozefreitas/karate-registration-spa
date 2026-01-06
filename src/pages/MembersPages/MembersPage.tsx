@@ -22,7 +22,7 @@ import {
   AccountCircle,
   HourglassBottom,
 } from "@mui/icons-material";
-import RequestValidationModal from "../../components/modals/RequestValidationModal";
+import RequestValidationModal from "../../components/Modals/RequestValidationModal";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   type Club = {

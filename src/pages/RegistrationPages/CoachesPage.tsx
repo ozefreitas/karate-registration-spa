@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
-import CoachesModal from "../../components/modals/CoachesModal";
+import CoachesModal from "../../components/Modals/CoachesModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";

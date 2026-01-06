@@ -30,13 +30,13 @@ import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
 } from "@mui/icons-material";
-import EditMemberModal from "../modals/EditMemberModal";
-import DeleteMemberModal from "../modals/DeleteMemberModal";
-import EditIndividualModal from "../modals/EditIndividualModal";
+import EditMemberModal from "../Modals/EditMemberModal";
+import DeleteMemberModal from "../Modals/DeleteMemberModal";
+import EditIndividualModal from "../Modals/EditIndividualModal";
 import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
-import EditMemberActivePaymentModal from "../modals/EditMemberActivePaymentModal";
-import EditPaymentPlanModal from "../modals/EditPaymentPlanModal";
+import EditMemberActivePaymentModal from "../Modals/EditMemberActivePaymentModal";
+import EditPaymentPlanModal from "../Modals/EditPaymentPlanModal";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -397,7 +397,6 @@ export default function AllUseTable(
   };
 
   const handleRowClick = (event: React.MouseEvent<unknown>, id: string) => {
-    console.log(id);
     event.stopPropagation();
     const selectedIndex = selected.indexOf(id);
     let newSelected: string[] = [];

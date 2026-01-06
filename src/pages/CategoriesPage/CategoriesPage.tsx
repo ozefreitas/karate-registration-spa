@@ -17,7 +17,7 @@ import CategoriesOrdering from "../../components/filter_drawers/CategoriesOrderi
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
-
+  
   type Category = {
     id: string;
     name: string;

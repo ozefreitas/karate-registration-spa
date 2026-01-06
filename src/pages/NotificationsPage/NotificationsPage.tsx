@@ -54,7 +54,6 @@ const NotificationsPage = (props: { me: any }) => {
     }
   };
 
-  console.log(props.me.data.id);
   const { data: notificationsData, isLoading: isNotificationsLoading } =
     notificationsHooks.useFetchNotificationsData(
       page,

@@ -26,7 +26,7 @@ import {
   Save,
 } from "@mui/icons-material";
 import FormAccordion from "../../dashboard/FormAccordion";
-import CreateMemberPaymentPlanModal from "../../components/modals/CreateMemberPaymentPlanModal";
+import CreateMemberPaymentPlanModal from "../../components/Modals/CreateMemberPaymentPlanModal";
 import { Controller, useForm } from "react-hook-form";
 
 export default function MemberPaymemtManagerPage(props: { userRole: string }) {
@@ -148,7 +148,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
         onChange={handleIsExpandedOpen}
         title="Validação de Pagamentos"
         summary={
-          <Grid>
+          <Grid container justifyContent={"flex-end"} rowSpacing={1} columnSpacing={2}>
             <Chip
               sx={{
                 p: 1,
@@ -174,7 +174,6 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
             <Chip
               sx={{
                 p: 1,
-                ml: 2,
                 boxShadow: isExpanded ? 6 : "none",
                 cursor: isExpanded ? "pointer" : "default",
                 transition: "0.3s",
@@ -197,7 +196,6 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
             <Chip
               sx={{
                 p: 1,
-                ml: 2,
                 boxShadow: isExpanded ? 6 : "none",
                 cursor: isExpanded ? "pointer" : "default",
                 transition: "0.3s",
@@ -296,7 +294,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
           <Controller
             name="day"
             control={control}
-            render={({ field }) => (
+            render={({ field }: any) => (
               <TextField
                 color="warning"
                 variant={"outlined"}
@@ -319,8 +317,8 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
         <Grid sx={{ p: 2, pt: 3 }} size={6}>
           <FormHelperText>
             Selecione um dia do mês entre 1 e 28 para criar as quotas mensais.
-            Caso altere o dia, e as quotas do presente mês já tiverem side
-            criadas, apenas serão criadas novas no mês subsquente.
+            Caso altere o dia, e as quotas do presente mês já tiverem sido
+            criadas, apenas serão criadas novas no mês seguinte.
           </FormHelperText>
         </Grid>
         {watch("day") === "" ? null : (

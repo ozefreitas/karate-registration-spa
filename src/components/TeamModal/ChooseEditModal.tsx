@@ -15,7 +15,7 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { useFetchSingleTeamData } from "../../hooks/useTeamsData";
 // import { membersHooks } from "../../hooks";
-import EditMemberModal from "../modals/EditMemberModal";
+import EditMemberModal from "../Modals/EditMemberModal";
 import { useForm } from "react-hook-form";
 import EditTeamModal from "./EditTeamModal";
 
@@ -111,7 +111,6 @@ export default function ChooseEditModal(
   }, [props.id]);
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>, id: string) => {
-    console.log(id);
     event.stopPropagation();
     // fetchSingleAthlete.mutate(id, {
     //   onSuccess: (data: any) => {

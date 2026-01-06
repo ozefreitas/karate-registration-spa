@@ -21,8 +21,8 @@ import { formatDateTime } from "../../utils/utils";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { getMonthFromValue } from "../../config";
 import QuotesOrdering from "../../components/filter_drawers/QuotesOrdering";
-import PatchMemberSubscriptionModal from "../../components/modals/PatchMemberSubscriptionModal";
-import EditMemberPaymentPlanModal from "../../components/modals/EditMemberPaymentPlanModal";
+import PatchMemberSubscriptionModal from "../../components/Modals/PatchMemberSubscriptionModal";
+import EditMemberPaymentPlanModal from "../../components/Modals/EditMemberPaymentPlanModal";
 import { useForm } from "react-hook-form";
 
 const QuotesSettingsSection = (props: { quotesConfig: any }) => {

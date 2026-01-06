@@ -12,12 +12,12 @@ import {
 } from "@mui/material";
 import { Add, ContentCopy, Visibility } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
-import MembersModal from "../../components/modals/MembersModal";
+import MembersModal from "../../components/Modals/MembersModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";
-import DuplicateRegistrationsModal from "../../components/modals/DuplicateRegistrationsModal";
+import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();

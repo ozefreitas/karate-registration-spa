@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
-import DeleteMemberModal from "../../components/modals/DeleteMemberModal";
+import DeleteMemberModal from "../../components/Modals/DeleteMemberModal";
 import {
   Delete,
   Edit,
@@ -30,10 +30,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { useSearchParams } from "react-router-dom";
-import WeightConfirmModal from "../../components/modals/WeightConfirmModal";
+import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
 import { isFloat } from "../../utils/utils";
 import { useSnackbar } from "notistack";
-import DuplicateMemberModal from "../../components/modals/DuplicateMemberModal";
+import DuplicateMemberModal from "../../components/Modals/DuplicateMemberModal";
 
 export default function PersonalInfoSection(
   props: Readonly<{ memberData: any }>
