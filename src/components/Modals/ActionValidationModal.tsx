@@ -21,23 +21,27 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function RequestValidationModal(
+export default function ActionValidationModal(
   props: Readonly<{
     isOpen: boolean;
     handleClose: any;
     id: string;
+    type: "approve" | "reject" | null;
   }>
 ) {
   const [requestText, setRequestText] = useState("");
-  const createMemberValidationRequest =
-    membersHooks.useCreateMemberValidationRequest();
+
+  const patchMemberValidationStatus =
+    membersHooks.usePatchMemberValidationRequest();
 
   const onSubmit = () => {
-    const payload = {
-      member: props.id,
-      message: requestText,
-    };
-    createMemberValidationRequest.mutate(payload);
+    patchMemberValidationStatus.mutate({
+      validationId: props.id,
+      data: {
+        status: props.type === "approve" ? "approved" : "rejected",
+        admin_comment: requestText,
+      },
+    });
     props.handleClose();
   };
 
@@ -50,7 +54,7 @@ export default function RequestValidationModal(
       }}
     >
       <DialogTitle variant="h5" sx={{ p: 3 }}>
-        Validar Membro
+        {props.type === "approve" ? "Validar Membro" : "Rejeitar Membro"}
       </DialogTitle>
       <DialogContent
         sx={{
@@ -58,25 +62,34 @@ export default function RequestValidationModal(
           borderTop: "1px solid lightgrey",
         }}
       >
-        <p>
-          Esta ação irá fazer um pedido ao seu administrador de forma a validar
-          este Membro, tornando-se parte integrante da lista oficial de membros.
-        </p>
-        <p>
-          Tenha a certeza de que os campos introduzidos estão corretos, uma vez
-          que campos sensíveis não poderão ser alterados novamente após a
-          validação ser confirmada.
-        </p>
-        <p>
-          Introduza uma mensagem para informar o administrador de informação que
-          ache pertinente.
-        </p>
+        {props.type === "approve" ? (
+          <>
+            <p>
+              Está prestes a validar este Membro. Depois disto, este Membro
+              ficará disponível para ser inscrito em Eventos.
+            </p>
+            <p>Pode anexar uma mensagem para informar o Clube.</p>
+          </>
+        ) : (
+          <>
+            <p>
+              Está a rejeitar a validação deste Membro. O Clube será notificado
+              e poderá enviar um novo pedido logo a seguir.
+            </p>
+            <p>
+              Anexe uma mensagem para informar o Clube desta decisão, e o que
+              deverá fazer para corrigir a informação deste Membro.
+            </p>
+          </>
+        )}
         <Grid container>
           <TextField
             color="warning"
             variant={"outlined"}
             label="Mensagem"
             fullWidth
+            multiline
+            maxRows={5}
             value={requestText}
             onChange={(e) => {
               setRequestText(e.target.value);

@@ -18,6 +18,7 @@ import {
   FormHelperText,
   IconButton,
   Chip,
+  Popover,
 } from "@mui/material";
 import {
   Delete,
@@ -36,6 +37,8 @@ import { useSnackbar } from "notistack";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useSearchParams } from "react-router-dom";
 import AllUseTable from "../../components/Table/AllUseTable";
+import { formatDateTime } from "../../utils/utils";
+import ActionValidationModal from "../../components/Modals/ActionValidationModal";
 
 export default function MainSettingsPage() {
   const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
@@ -50,9 +53,64 @@ export default function MainSettingsPage() {
   const [createdPasswordURL, setCreatedPasswordURL] = useState<string>("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
+  const [isActionValidationModalOpen, setIsActionValidationModalOpen] =
+    useState<boolean>(false);
+  const [currentValidationId, setCurrentValidationId] = useState<string>("");
+  const [currentValidationType, setCurrentValidationType] = useState<
+    "approve" | "reject" | null
+  >(null);
+
+  const handleActionValidationModalOpen = (
+    id: string,
+    type: "approve" | "reject"
+  ) => {
+    setCurrentValidationId(id);
+    setCurrentValidationType(type);
+    setIsActionValidationModalOpen(true);
+  };
+
+  const handleActionValidationModalClose = () => {
+    setIsActionValidationModalOpen(false);
+  };
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const section = searchParams.get("section") || "accounts_manager";
+
+  const [anchorPosition, setAnchorPosition] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
+  const [activeRequestMessage, setActiveRequestMessage] = useState<
+    string | null
+  >(null);
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    requestId: string,
+    message: string
+  ) => {
+    event.preventDefault();
+
+    setAnchorPosition({
+      top: event.clientY + 20,
+      left: event.clientX + 10,
+    });
+
+    setActiveRequestId(requestId);
+    setActiveRequestMessage(message);
+  };
+
+  const handleClose = () => {
+    setAnchorPosition(null);
+    setActiveRequestId(null);
+    setTimeout(() => {
+      setActiveRequestMessage(null);
+    }, 100);
+  };
+
+  const open = Boolean(anchorPosition);
 
   const { data: availableClubsData } = clubsHooks.useFetchAvailableClubs();
 
@@ -102,10 +160,10 @@ export default function MainSettingsPage() {
   );
 
   useEffect(() => {
-    if (isTokenAvailable?.data.error !== undefined) {
-      setCreatedToken("");
-    } else {
+    if (isTokenAvailable?.data.error === undefined) {
       setCreatedToken(isTokenAvailable?.data.token);
+    } else {
+      setCreatedToken("");
     }
   }, [isTokenAvailable]);
 
@@ -196,6 +254,8 @@ export default function MainSettingsPage() {
     member: Member;
     member_birth_date: string;
     requested_by: Club;
+    reviewed_at: string;
+    created_at: string;
     status: string;
   };
 
@@ -204,8 +264,8 @@ export default function MainSettingsPage() {
     isLoading: isMemberValidationRequestsLoading,
   } = membersHooks.useFetchMemberValidationRequestsData();
 
-  const patchMemberValidationStatus =
-    membersHooks.usePatchMemberValidationRequest();
+  const deleteMemberValidationRequest =
+    membersHooks.useDeleteMemberValidationRequest();
 
   // Memoize `rows` to compute only when `members` changes
   const requestsRows = useMemo(() => {
@@ -213,25 +273,80 @@ export default function MainSettingsPage() {
       (request: Request) => ({
         id: request.id,
         memberId: request.member.id,
-        message: request.message,
+        message:
+          request.message === "" ? (
+            <Typography color="textDisabled">N/A</Typography>
+          ) : (
+            <Button
+              sx={{
+                borderRadius: 10,
+                boxShadow: "none",
+                "&:hover": {
+                  transform: "none",
+                  boxShadow: "none",
+                },
+                textTransform: "none",
+              }}
+              size="small"
+              variant="outlined"
+              onClick={(e) => handleClick(e, request.id, request.message)}
+            >
+              Ver
+            </Button>
+          ),
         fullName: `${request.member.first_name} ${request.member.last_name}`,
+        reviewed_at: formatDateTime(request.reviewed_at, "both"),
+        created_at: formatDateTime(request.created_at, "both"),
         birthDate: request.member_birth_date,
-        gender: request.member.gender,
+        gender: request.member.gender === "Masculino" ? "M" : "F",
         username: request.requested_by.username,
         actions:
           request.status === "rejected" ? (
-            <Chip color="error" label="Rejeitado" icon={<Block />}></Chip>
+            <Grid
+              container
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Chip color="error" label="Rejeitado" icon={<Block />}></Chip>
+              <Tooltip title="Remover">
+                <IconButton
+                  onClick={() => {
+                    deleteMemberValidationRequest.mutate({
+                      validationId: request.id,
+                    });
+                  }}
+                  color="error"
+                >
+                  <Delete color="error"></Delete>
+                </IconButton>
+              </Tooltip>
+            </Grid>
           ) : request.status === "approved" ? (
-            <Chip color="success" label="Aprovado" icon={<ThumbUp />}></Chip>
+            <Grid
+              container
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
+              <Chip color="success" label="Aprovado" icon={<ThumbUp />}></Chip>
+              <Tooltip title="Remover">
+                <IconButton
+                  onClick={() => {
+                    deleteMemberValidationRequest.mutate({
+                      validationId: request.id,
+                    });
+                  }}
+                  color="error"
+                >
+                  <Delete color="error"></Delete>
+                </IconButton>
+              </Tooltip>
+            </Grid>
           ) : (
             <Grid>
               <Tooltip title="Aceitar">
                 <IconButton
                   onClick={() => {
-                    patchMemberValidationStatus.mutate({
-                      validationId: request.id,
-                      data: { status: "approved" },
-                    });
+                    handleActionValidationModalOpen(request.id, "approve");
                   }}
                   color="success"
                 >
@@ -241,10 +356,7 @@ export default function MainSettingsPage() {
               <Tooltip title="Rejeitar">
                 <IconButton
                   onClick={() => {
-                    patchMemberValidationStatus.mutate({
-                      validationId: request.id,
-                      data: { status: "rejected" },
-                    });
+                    handleActionValidationModalOpen(request.id, "reject");
                   }}
                   color="error"
                 >
@@ -259,10 +371,12 @@ export default function MainSettingsPage() {
 
   const columnMapping = [
     { key: "fullName", label: "Nome" },
-    { key: "birthDate", label: "Data de Nascimento" },
+    { key: "birthDate", label: "Data Nascimento" },
     { key: "gender", label: "Género" },
     { key: "username", label: "Clube" },
     { key: "message", label: "Mensagem" },
+    { key: "created_at", label: "Criado" },
+    { key: "reviewed_at", label: "Revisto" },
     { key: "actions", label: "Ações" },
   ];
 
@@ -850,6 +964,24 @@ export default function MainSettingsPage() {
         handleClose={handleAddClubModalClose}
         isOpen={isAddClubModalOpen}
       ></AddClubModal>
+      <ActionValidationModal
+        handleClose={handleActionValidationModalClose}
+        isOpen={isActionValidationModalOpen}
+        id={currentValidationId}
+        type={currentValidationType}
+      ></ActionValidationModal>
+      <Popover
+        open={open}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          anchorPosition
+            ? { top: anchorPosition.top, left: anchorPosition.left }
+            : undefined
+        }
+      >
+        <Typography sx={{ p: 2 }}>{activeRequestMessage}</Typography>
+      </Popover>
     </>
   );
 }

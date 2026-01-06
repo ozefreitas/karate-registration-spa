@@ -621,7 +621,7 @@ export default function NewMemberPage() {
                     <FormControl component="fieldset" variant="standard">
                       <FormLabel sx={{ mb: 2 }}>
                         Escolha pelo menos um tipo de membro. Não pode ser aluno
-                        e competidor.
+                        e competidor em simultâneo .
                       </FormLabel>
                       <Stack spacing={1}>
                         {MemberTypes.map((type) => (

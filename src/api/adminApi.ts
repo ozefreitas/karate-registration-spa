@@ -28,3 +28,7 @@ export const patchMemberValidationRequests = (
 ) => {
   return authClient.patch(`/member_validation/${validationId}/`, data);
 };
+
+export const deleteMemberValidationRequest = (validationId: any) => {
+  return authClient.delete(`/member_validation/${validationId}/`);
+};

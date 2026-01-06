@@ -4,6 +4,7 @@ import {
   updateMember,
   patchMember,
   patchMemberValidationRequests,
+  deleteMemberValidationRequest,
 } from "../../api";
 
 export const useUpdateMemberData = () => {
@@ -111,6 +112,39 @@ export const usePatchMemberValidationRequest = () => {
       });
       queryClient.invalidateQueries({ queryKey: ["members-validation"] });
       queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
+    },
+    onError: () => {
+      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+    },
+  });
+};
+
+export const useDeleteMemberValidationRequest = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ validationId }: { validationId: string }) =>
+      deleteMemberValidationRequest(validationId),
+    onSuccess: () => {
+      enqueueSnackbar("Pedido eliminado", {
+        variant: "success",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+        autoHideDuration: 5000,
+        preventDuplicate: true,
+      });
+      queryClient.invalidateQueries({ queryKey: ["members-validation"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
