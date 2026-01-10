@@ -26,30 +26,32 @@ export default function FormAccordion(
           placement="bottom-start"
           title={!props.expanded ? props.tooltipMessage : ""}
         >
-          <AccordionSummary expandIcon={<ExpandMore />}>
-            <Typography
-              sx={{
-                width: "30%",
-                fontSize: 18,
-                fontWeight: "bold",
-                flexShrink: 0,
-              }}
-              component="span"
-            >
-              {props.title}
-            </Typography>
-            <Typography
-              component="span"
-              sx={{
-                width: "70%",
-                pr: 5,
-                fontSize: 18,
-                textAlign: "right",
-              }}
-            >
-              {props.summary}
-            </Typography>
-          </AccordionSummary>
+          <span>
+            <AccordionSummary expandIcon={<ExpandMore />}>
+              <Typography
+                sx={{
+                  width: "30%",
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  flexShrink: 0,
+                }}
+                component="span"
+              >
+                {props.title}
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  width: "70%",
+                  pr: 5,
+                  fontSize: 18,
+                  textAlign: "right",
+                }}
+              >
+                {props.summary}
+              </Typography>
+            </AccordionSummary>
+          </span>
         </Tooltip>
         <AccordionDetails>
           <Grid alignItems="flex-start" container>

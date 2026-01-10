@@ -103,16 +103,20 @@ export default function TeamsHomeComponent(
           ) : (
             lastFiveTeamsData?.data.map((team: Team, index: string) => (
               <Tooltip key={index} title={"Consultar"}>
-                <ListItem sx={{ m: 0, pb: 0 }}>
-                  <ListItemButton onClick={() => navigate(`teams/${team.id}/`)}>
-                    <ListItemIcon>
-                      <Groups />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={`${team.match_type} ${team.category} ${team.gender} Nº ${team.team_number}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
+                <span>
+                  <ListItem sx={{ m: 0, pb: 0 }}>
+                    <ListItemButton
+                      onClick={() => navigate(`teams/${team.id}/`)}
+                    >
+                      <ListItemIcon>
+                        <Groups />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={`${team.match_type} ${team.category} ${team.gender} Nº ${team.team_number}`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </span>
               </Tooltip>
             ))
           )}

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { addDisciplineCategory, removeDisciplineCategory } from "../../api";
 
-export const useAddDisciplineCategory = () => {
+export const useAddDisciplineCategory = (addToEvent?: boolean) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -22,6 +22,11 @@ export const useAddDisciplineCategory = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
+      if (addToEvent) {
+        queryClient.invalidateQueries({
+          queryKey: ["category-not-in-discipline"],
+        });
+      }
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {

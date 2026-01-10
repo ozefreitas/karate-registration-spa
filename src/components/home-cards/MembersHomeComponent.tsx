@@ -95,64 +95,70 @@ export default function MembersHomeComponent(
             lastFiveMembersData?.data.map((member: Member, index: number) => (
               <ListItem key={index} sx={{ m: 0, pb: 0 }}>
                 <Tooltip title={"Consultar"} placement="right">
-                  <ListItemButton
-                    sx={{
-                      minWidth: 0,
-                    }}
-                    onClick={() =>
-                      navigate(`members/${member.id}/?section=personal_info`)
-                    }
-                  >
-                    <ListItemIcon>
-                      <Person />
-                    </ListItemIcon>
-                    <ListItemText
+                  <span>
+                    <ListItemButton
                       sx={{
-                        overflowX: "auto",
-                        whiteSpace: "nowrap",
                         minWidth: 0,
-                        "&::-webkit-scrollbar": {
-                          height: 0,
-                        },
-                        maskImage:
-                          "linear-gradient(to right, black 85%, transparent 100%)",
                       }}
-                      primary={
-                        <Grid
-                          container
-                          alignItems="center"
-                          spacing={2}
-                          pr={3}
-                          wrap="nowrap"
-                          sx={{
-                            width: "max-content",
-                          }}
-                        >
-                          <Typography>{member.full_name}</Typography>
-                          <Chip
-                            color={
-                              member.member_type === "coach"
-                                ? "secondary"
-                                : member.member_type === "student"
-                                ? "info"
-                                : "warning"
-                            }
-                            variant="outlined"
-                            label={`${
-                              MemberTypes.find(
-                                (item: any) => item.value === member.member_type
-                              )?.label
-                            }`}
-                          ></Chip>
-                          <Chip variant="outlined" label={member.gender}></Chip>
-                          <Chip
-                            variant="outlined"
-                            label={`${member.age} anos`}
-                          ></Chip>
-                        </Grid>
+                      onClick={() =>
+                        navigate(`members/${member.id}/?section=personal_info`)
                       }
-                    />
-                  </ListItemButton>
+                    >
+                      <ListItemIcon>
+                        <Person />
+                      </ListItemIcon>
+                      <ListItemText
+                        sx={{
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          minWidth: 0,
+                          "&::-webkit-scrollbar": {
+                            height: 0,
+                          },
+                          maskImage:
+                            "linear-gradient(to right, black 85%, transparent 100%)",
+                        }}
+                        primary={
+                          <Grid
+                            container
+                            alignItems="center"
+                            spacing={2}
+                            pr={3}
+                            wrap="nowrap"
+                            sx={{
+                              width: "max-content",
+                            }}
+                          >
+                            <Typography>{member.full_name}</Typography>
+                            <Chip
+                              color={
+                                member.member_type === "coach"
+                                  ? "secondary"
+                                  : member.member_type === "student"
+                                  ? "info"
+                                  : "warning"
+                              }
+                              variant="outlined"
+                              label={`${
+                                MemberTypes.find(
+                                  (item: any) =>
+                                    item.value === member.member_type
+                                )?.label
+                              }`}
+                            ></Chip>
+                            <Chip
+                              variant="outlined"
+                              label={member.gender}
+                            ></Chip>
+                            <Chip
+                              variant="outlined"
+                              label={`${member.age} anos`}
+                            ></Chip>
+                          </Grid>
+                        }
+                      />
+                    </ListItemButton>
+                  </span>
                 </Tooltip>
               </ListItem>
             ))

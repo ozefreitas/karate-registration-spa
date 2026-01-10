@@ -195,24 +195,28 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       ) : member.request_status === null ||
         member.request_status !== "pending" ? (
         <Tooltip arrow title="Pedir Verificação">
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              handleModalOpen(member.id);
-            }}
-          >
-            <AccountCircle color="primary" />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handleModalOpen(member.id);
+              }}
+            >
+              <AccountCircle color="primary" />
+            </IconButton>
+          </span>
         </Tooltip>
       ) : (
         <Tooltip arrow title="Pendente">
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <HourglassBottom color="primary" />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <HourglassBottom color="primary" />
+            </IconButton>
+          </span>
         </Tooltip>
       ),
       can_update_sensitive:

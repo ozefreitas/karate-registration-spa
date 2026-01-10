@@ -58,6 +58,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
     eventId!,
     false,
+    false,
     false
   );
 
@@ -101,8 +102,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             inscrições estiverem fechadas não podem ser efetuadas operações,
             apenas ser visualizadas as inscrições. <p></p>
             Ao clicar em "Selecionar Atleta", apenas irão aparecer aqueles que
-            estejam marcados como "Competidores". Se algum Atleta não constar na
-            lista, por favor verifique na página de perfil desse Atleta se o
+            estejam marcados como "Competidores". Se Membro não constar na
+            lista, por favor verifique na página de perfil desse Membro se o
             campo "É Competidor" está selecionado. Caso não possua uma
             subscrição, contacte um administrador de imediato.
           </>
@@ -144,7 +145,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           </Card>
         </Grid>
       </Grid>
-
       <Grid size={12} sx={{ m: 2 }}>
         {isSingleEventLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -207,15 +207,17 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     disciplineIndividuals.length !== 0 ? (
                       <Grid size={1}>
                         <Tooltip title="Copiar Inscrições">
-                          <Button
-                            startIcon={<ContentCopy></ContentCopy>}
-                            variant="contained"
-                            onClick={() =>
-                              handleDuplicateModalOpen(discipline.name)
-                            }
-                          >
-                            Copiar
-                          </Button>
+                          <span>
+                            <Button
+                              startIcon={<ContentCopy></ContentCopy>}
+                              variant="contained"
+                              onClick={() =>
+                                handleDuplicateModalOpen(discipline.name)
+                              }
+                            >
+                              Copiar
+                            </Button>
+                          </span>
                         </Tooltip>
                       </Grid>
                     ) : null}

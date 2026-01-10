@@ -309,59 +309,63 @@ export default function MainSettingsPage() {
             >
               <Chip color="error" label="Rejeitado" icon={<Block />}></Chip>
               <Tooltip title="Remover">
-                <IconButton
-                  onClick={() => {
-                    deleteMemberValidationRequest.mutate({
-                      validationId: request.id,
-                    });
-                  }}
-                  color="error"
-                >
-                  <Delete color="error"></Delete>
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      deleteMemberValidationRequest.mutate({
+                        validationId: request.id,
+                      });
+                    }}
+                    color="error"
+                  >
+                    <Delete color="error"></Delete>
+                  </IconButton>
+                </span>
               </Tooltip>
             </Grid>
           ) : request.status === "approved" ? (
-            <Grid
-              container
-              alignItems={"center"}
-              justifyContent={"center"}
-            >
+            <Grid container alignItems={"center"} justifyContent={"center"}>
               <Chip color="success" label="Aprovado" icon={<ThumbUp />}></Chip>
               <Tooltip title="Remover">
-                <IconButton
-                  onClick={() => {
-                    deleteMemberValidationRequest.mutate({
-                      validationId: request.id,
-                    });
-                  }}
-                  color="error"
-                >
-                  <Delete color="error"></Delete>
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      deleteMemberValidationRequest.mutate({
+                        validationId: request.id,
+                      });
+                    }}
+                    color="error"
+                  >
+                    <Delete color="error"></Delete>
+                  </IconButton>
+                </span>
               </Tooltip>
             </Grid>
           ) : (
             <Grid>
               <Tooltip title="Aceitar">
-                <IconButton
-                  onClick={() => {
-                    handleActionValidationModalOpen(request.id, "approve");
-                  }}
-                  color="success"
-                >
-                  <Check color="success"></Check>
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      handleActionValidationModalOpen(request.id, "approve");
+                    }}
+                    color="success"
+                  >
+                    <Check color="success"></Check>
+                  </IconButton>
+                </span>
               </Tooltip>
               <Tooltip title="Rejeitar">
-                <IconButton
-                  onClick={() => {
-                    handleActionValidationModalOpen(request.id, "reject");
-                  }}
-                  color="error"
-                >
-                  <Close color="error"></Close>
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      handleActionValidationModalOpen(request.id, "reject");
+                    }}
+                    color="error"
+                  >
+                    <Close color="error"></Close>
+                  </IconButton>
+                </span>
               </Tooltip>
             </Grid>
           ),
@@ -712,15 +716,17 @@ export default function MainSettingsPage() {
                               </FormHelperText>
                             </Grid>
                             <Tooltip title="Copiar para áera de transferência">
-                              <Button
-                                onClick={() =>
-                                  copyToClipboard(
-                                    `${baseURL}/signup/${createdToken}/`
-                                  )
-                                }
-                              >
-                                <ContentCopy></ContentCopy>
-                              </Button>
+                              <span>
+                                <Button
+                                  onClick={() =>
+                                    copyToClipboard(
+                                      `${baseURL}/signup/${createdToken}/`
+                                    )
+                                  }
+                                >
+                                  <ContentCopy></ContentCopy>
+                                </Button>
+                              </span>
                             </Tooltip>
                           </Grid>
                         </CardContent>
@@ -900,25 +906,27 @@ export default function MainSettingsPage() {
                             </Grid>
                             <Grid container alignItems="center">
                               <Tooltip title="Copiar para áera de transferência">
-                                <Button
-                                  onClick={() => {
-                                    copyToClipboard(createdPasswordURL);
-                                    enqueueSnackbar(
-                                      "Copiado para área de transferência!",
-                                      {
-                                        variant: "success",
-                                        anchorOrigin: {
-                                          vertical: "top",
-                                          horizontal: "center",
-                                        },
-                                        autoHideDuration: 3000,
-                                        preventDuplicate: true,
-                                      }
-                                    );
-                                  }}
-                                >
-                                  <ContentCopy></ContentCopy>
-                                </Button>
+                                <span>
+                                  <Button
+                                    onClick={() => {
+                                      copyToClipboard(createdPasswordURL);
+                                      enqueueSnackbar(
+                                        "Copiado para área de transferência!",
+                                        {
+                                          variant: "success",
+                                          anchorOrigin: {
+                                            vertical: "top",
+                                            horizontal: "center",
+                                          },
+                                          autoHideDuration: 3000,
+                                          preventDuplicate: true,
+                                        }
+                                      );
+                                    }}
+                                  >
+                                    <ContentCopy></ContentCopy>
+                                  </Button>
+                                </span>
                               </Tooltip>
                             </Grid>
                           </Grid>

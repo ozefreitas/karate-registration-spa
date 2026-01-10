@@ -20,9 +20,9 @@ import {
   Chip,
   ListItemText,
 } from "@mui/material";
-import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Add, Delete, SportsMartialArts } from "@mui/icons-material";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, Fragment } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { EncounterOptions, SeasonOptions } from "../../config";
@@ -40,6 +40,7 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
   const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(true);
@@ -189,7 +190,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     };
 
     const eventResponse = await createEvent.mutateAsync(formData, {
-      onSuccess: () => navigate("/events/"),
+      onSuccess: () => {
+        if (discipline.length === 0) {
+          navigate("/events/");
+          queryClient.invalidateQueries({ queryKey: ["events"] });
+        }
+      },
       onError: (data: any) => {
         const errorData = data.response?.data || {};
 
@@ -271,7 +277,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           {
             onSuccess: () => {
               if (!data.has_categories) {
-                setLoading(false);
+                navigate("/events/");
+                queryClient.invalidateQueries({ queryKey: ["events"] });
               }
             },
           }
@@ -290,6 +297,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       addDisciplineCategory.mutate(data, {
         onSuccess: () => {
           navigate("/events/");
+          queryClient.invalidateQueries({ queryKey: ["events"] });
         },
       });
       setLoading(false);
@@ -868,41 +876,43 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           </Grid>
           <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
             <Tooltip title="Adicionar">
-              <IconButton
-                onClick={() => {
-                  if (discipline === "") {
-                    setDisciplineWarning(true);
-                    return;
-                  }
+              <span>
+                <IconButton
+                  onClick={() => {
+                    if (discipline === "") {
+                      setDisciplineWarning(true);
+                      return;
+                    }
 
-                  const isCoach = getValues("is_coach");
-                  const isTeam = getValues("is_team");
+                    const isCoach = getValues("is_coach");
+                    const isTeam = getValues("is_team");
 
-                  setDisciplines((prev) => [...prev, discipline]);
+                    setDisciplines((prev) => [...prev, discipline]);
 
-                  setDisciplineOptions((prev) => [
-                    ...prev,
-                    {
-                      discipline,
-                      is_coach: isCoach,
-                      is_team: isTeam,
-                    },
-                  ]);
+                    setDisciplineOptions((prev) => [
+                      ...prev,
+                      {
+                        discipline,
+                        is_coach: isCoach,
+                        is_team: isTeam,
+                      },
+                    ]);
 
-                  // Now it's safe to reset
-                  setValue("is_coach", false);
-                  setValue("is_team", false);
-                  setDiscipline("");
-                }}
-              >
-                <Add color="success" />
-              </IconButton>
+                    // Now it's safe to reset
+                    setValue("is_coach", false);
+                    setValue("is_team", false);
+                    setDiscipline("");
+                  }}
+                >
+                  <Add color="success" />
+                </IconButton>
+              </span>
             </Tooltip>
           </Grid>
-          <Grid size={5} sx={{ ml: 3, mt: 1 }}>
+          <Grid size={6} sx={{ ml: 3, mt: 0 }}>
             {disciplines.length === 0 ? (
               <ListItem>
-                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+                <ListItemButton sx={{ p: 1, px: 3, color: "gray" }}>
                   Não tem modalidades para adicionar a este Evento.
                 </ListItemButton>
               </ListItem>
@@ -924,7 +934,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                           secondary={
                             <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
                               {options.map((opt, idx) => (
-                                <React.Fragment key={idx}>
+                                <Fragment key={idx}>
                                   {opt.is_coach && (
                                     <Chip
                                       color="success"
@@ -939,7 +949,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                                       label="Equipas"
                                     />
                                   )}
-                                </React.Fragment>
+                                </Fragment>
                               ))}
                             </Stack>
                           }

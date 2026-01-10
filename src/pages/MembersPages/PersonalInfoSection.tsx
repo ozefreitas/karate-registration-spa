@@ -269,20 +269,26 @@ export default function PersonalInfoSection(
           </Typography>
           {!props.memberData?.data.is_validated ? (
             <Tooltip title="Próprio" sx={{ cursor: "pointer" }}>
-              <AccountCircle color="info" fontSize="large" />
+              <span>
+                <AccountCircle color="info" fontSize="large" />
+              </span>
             </Tooltip>
           ) : (
             <Tooltip title="Verificado">
-              <VerifiedUser color="info" fontSize="large" />
+              <span>
+                <VerifiedUser color="info" fontSize="large" />
+              </span>
             </Tooltip>
           )}
         </Grid>
         {["superuser", "subed_club"].includes(userRole) ? (
           <Grid size={1}>
             <Tooltip title="Duplicar Membro">
-              <Button onClick={() => handleDuplicateModalOpen()}>
-                <ContentCopy></ContentCopy>
-              </Button>
+              <span>
+                <Button onClick={() => handleDuplicateModalOpen()}>
+                  <ContentCopy></ContentCopy>
+                </Button>
+              </span>
             </Tooltip>
           </Grid>
         ) : null}

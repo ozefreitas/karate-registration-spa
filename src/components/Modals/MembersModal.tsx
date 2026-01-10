@@ -24,6 +24,7 @@ import {
   CircularProgress,
   ListItemIcon,
   TextField,
+  Chip,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -105,8 +106,7 @@ export default function MembersModal(
   type Member = {
     age: any;
     id: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
     category: string;
     gender: string;
     weight: string;
@@ -362,6 +362,7 @@ export default function MembersModal(
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
+  console.log(filteredMembers);
 
   return (
     <Dialog
@@ -454,15 +455,17 @@ export default function MembersModal(
           <Grid container size={12}>
             <Grid size={1}>
               <Tooltip title="Voltar atrás">
-                <IconButton
-                  onClick={() => {
-                    setCurrentMemberId("");
-                    handleDisciplineScreenClose();
-                  }}
-                  aria-label="back to member viwer"
-                >
-                  <KeyboardArrowLeft />
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      setCurrentMemberId("");
+                      handleDisciplineScreenClose();
+                    }}
+                    aria-label="back to member viwer"
+                  >
+                    <KeyboardArrowLeft />
+                  </IconButton>
+                </span>
               </Tooltip>
             </Grid>
             <Grid size={11}>
@@ -571,15 +574,17 @@ export default function MembersModal(
             <Grid container size={12}>
               <Grid size={1}>
                 <Tooltip title="Voltar atrás">
-                  <IconButton
-                    onClick={() => {
-                      handleWeightInputScreenClose();
-                      handleDisciplineScreenOpen();
-                    }}
-                    aria-label="back to disciplines viwer"
-                  >
-                    <KeyboardArrowLeft />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={() => {
+                        handleWeightInputScreenClose();
+                        handleDisciplineScreenOpen();
+                      }}
+                      aria-label="back to disciplines viwer"
+                    >
+                      <KeyboardArrowLeft />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </Grid>
               <Grid size={11}>
@@ -677,22 +682,24 @@ export default function MembersModal(
                           checked={checked.includes(member.id)}
                           slotProps={{
                             input: {
-                              "aria-labelledby": `checkbox-list-secondary-label-${member.first_name}`,
+                              "aria-labelledby": `checkbox-list-secondary-label-${member.full_name}-${index}`,
                             },
                           }}
                         />
                       </label>
                     ) : (
                       <Tooltip title="Selecionar Modalidade">
-                        <IconButton
-                          onClick={() => {
-                            setCurrentMemberId(member.id);
-                            handleDisciplineScreenOpen();
-                          }}
-                          aria-label="go to disciplines selection"
-                        >
-                          <KeyboardArrowRight color="success" />
-                        </IconButton>
+                        <span>
+                          <IconButton
+                            onClick={() => {
+                              setCurrentMemberId(member.id);
+                              handleDisciplineScreenOpen();
+                            }}
+                            aria-label="go to disciplines selection"
+                          >
+                            <KeyboardArrowRight color="success" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     )
                   }
@@ -712,10 +719,22 @@ export default function MembersModal(
                       <Person />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`${member.first_name} ${member.last_name}`}
-                      secondary={`${member.gender} | Idade calculada: ${
-                        member.age
-                      } | Peso: ${member.weight ?? "N/A"}`}
+                      primary={`${member.full_name}`}
+                      secondary={
+                        <Grid container spacing={2} mt={1}>
+                          <Chip size="small" label={member.gender}></Chip>
+                          <Chip
+                            size="small"
+                            label={`${member.age} anos (calculada)`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Peso: ${
+                              member.weight ? `${member.weight} Kg` : "N/A"
+                            }`}
+                          ></Chip>
+                        </Grid>
+                      }
                     />
                   </ListItemButton>
                   <Divider />
@@ -741,25 +760,29 @@ export default function MembersModal(
               {Math.ceil(membersNotInEventData?.data.count / 10)}
             </Typography>
             <Tooltip title="Página anterior">
-              <IconButton
-                onClick={handleBackButtonClick}
-                disabled={page === 0}
-                aria-label="previous page"
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleBackButtonClick}
+                  disabled={page === 0}
+                  aria-label="previous page"
+                >
+                  <KeyboardArrowLeft />
+                </IconButton>
+              </span>
             </Tooltip>
             <Tooltip title="Próxima página">
-              <IconButton
-                onClick={handleNextButtonClick}
-                disabled={
-                  !membersNotInEventData?.data?.count ||
-                  membersNotInEventData?.data.count <= (page + 1) * 10
-                }
-                aria-label="next page"
-              >
-                <KeyboardArrowRight />
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleNextButtonClick}
+                  disabled={
+                    !membersNotInEventData?.data?.count ||
+                    membersNotInEventData?.data.count <= (page + 1) * 10
+                  }
+                  aria-label="next page"
+                >
+                  <KeyboardArrowRight />
+                </IconButton>
+              </span>
             </Tooltip>
           </>
         </DialogActions>

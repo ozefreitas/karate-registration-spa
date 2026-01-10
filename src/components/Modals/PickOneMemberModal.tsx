@@ -167,14 +167,16 @@ export default function PickOneMemberModal(
                   disablePadding
                   secondaryAction={
                     <Tooltip title="Escolher">
-                      <IconButton
-                        onClick={() => {
-                          handleAthletePick(athlete);
-                          props.handleModalClose();
-                        }}
-                      >
-                        <Add color="success"></Add>
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          onClick={() => {
+                            handleAthletePick(athlete);
+                            props.handleModalClose();
+                          }}
+                        >
+                          <Add color="success"></Add>
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   }
                 >

@@ -77,7 +77,7 @@ function TablePaginationActions(props: Readonly<TablePaginationActionsProps>) {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}>
+    <Box sx={{ display: "flex", justifyContent: "flex-end", pr: 3 }}>
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
@@ -519,27 +519,29 @@ export default function AllUseTable(
                           >
                             {!props.notWatchable ? (
                               <Tooltip arrow title="Consultar">
-                                <IconButton
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (props.type === "Equipas") {
-                                      navigate(`/teams/${row.id}/`);
-                                    } else if (
-                                      props.type === "Categorias" ||
-                                      props.type === "CategoriasReadOnly" ||
-                                      props.type === "EventCategories"
-                                    ) {
-                                      setActionedRow(row.id.toString());
-                                      handleCategoryInfoModalOpen(e);
-                                    } else {
-                                      navigate(
-                                        `/members/${row.id}/?section=personal_info`
-                                      );
-                                    }
-                                  }}
-                                >
-                                  <Visibility color="primary"></Visibility>
-                                </IconButton>
+                                <span>
+                                  <IconButton
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (props.type === "Equipas") {
+                                        navigate(`/teams/${row.id}/`);
+                                      } else if (
+                                        props.type === "Categorias" ||
+                                        props.type === "CategoriasReadOnly" ||
+                                        props.type === "EventCategories"
+                                      ) {
+                                        setActionedRow(row.id.toString());
+                                        handleCategoryInfoModalOpen(e);
+                                      } else {
+                                        navigate(
+                                          `/members/${row.id}/?section=personal_info`
+                                        );
+                                      }
+                                    }}
+                                  >
+                                    <Visibility color="primary"></Visibility>
+                                  </IconButton>
+                                </span>
                               </Tooltip>
                             ) : null}
                             {(props.userRole === "main_admin" &&
@@ -547,41 +549,43 @@ export default function AllUseTable(
                             (props.userRole === "subed_club" &&
                               props.editable) ? (
                               <Tooltip arrow title="Editar">
-                                <IconButton
-                                  disabled={
-                                    row.can_update_sensitive !== undefined
-                                      ? props.disallowEdit &&
-                                        row.can_update_sensitive
-                                        ? false
-                                        : true
-                                      : false
-                                  }
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (props.type == "Individuais") {
-                                      handleRowEditFromIndiv(e, row.id);
-                                    } else if (props.type == "Equipas") {
-                                      handleRowEditFromTeam(e);
-                                    } else if (props.type == "Pagamentos") {
-                                      handlePaymentModalOpen(e, row.id);
-                                    } else if (props.type === "Plano") {
-                                      handlePaymentPlanModalOpen(e, row.id);
-                                    } else {
-                                      handleRowEdit(e, row.id);
-                                    }
-                                  }}
-                                >
-                                  <Edit
-                                    color={
+                                <span>
+                                  <IconButton
+                                    disabled={
                                       row.can_update_sensitive !== undefined
                                         ? props.disallowEdit &&
                                           row.can_update_sensitive
-                                          ? "warning"
-                                          : "disabled"
-                                        : "warning"
+                                          ? false
+                                          : true
+                                        : false
                                     }
-                                  ></Edit>
-                                </IconButton>
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      if (props.type == "Individuais") {
+                                        handleRowEditFromIndiv(e, row.id);
+                                      } else if (props.type == "Equipas") {
+                                        handleRowEditFromTeam(e);
+                                      } else if (props.type == "Pagamentos") {
+                                        handlePaymentModalOpen(e, row.id);
+                                      } else if (props.type === "Plano") {
+                                        handlePaymentPlanModalOpen(e, row.id);
+                                      } else {
+                                        handleRowEdit(e, row.id);
+                                      }
+                                    }}
+                                  >
+                                    <Edit
+                                      color={
+                                        row.can_update_sensitive !== undefined
+                                          ? props.disallowEdit &&
+                                            row.can_update_sensitive
+                                            ? "warning"
+                                            : "disabled"
+                                          : "warning"
+                                      }
+                                    ></Edit>
+                                  </IconButton>
+                                </span>
                               </Tooltip>
                             ) : null}
                             {props.deletable &&
@@ -590,37 +594,39 @@ export default function AllUseTable(
                               props.type === "Modalidades" ||
                               props.type === "Individuais") ? (
                               <Tooltip arrow title="Remover">
-                                <IconButton
-                                  disabled={
-                                    row.can_update_sensitive !== undefined
-                                      ? props.disallowEdit &&
-                                        row.can_update_sensitive
-                                        ? false
-                                        : true
-                                      : false
-                                  }
-                                  onClick={(e) => {
-                                    if (
-                                      props.selectedDisciplineForCategory ===
-                                      undefined
-                                    ) {
-                                      handleRowDelete(e, row.id);
-                                    } else {
-                                      handleCategoryRemove(e, row.id);
-                                    }
-                                  }}
-                                >
-                                  <Delete
-                                    color={
+                                <span>
+                                  <IconButton
+                                    disabled={
                                       row.can_update_sensitive !== undefined
                                         ? props.disallowEdit &&
                                           row.can_update_sensitive
-                                          ? "error"
-                                          : "disabled"
-                                        : "error"
+                                          ? false
+                                          : true
+                                        : false
                                     }
-                                  ></Delete>
-                                </IconButton>
+                                    onClick={(e) => {
+                                      if (
+                                        props.selectedDisciplineForCategory ===
+                                        undefined
+                                      ) {
+                                        handleRowDelete(e, row.id);
+                                      } else {
+                                        handleCategoryRemove(e, row.id);
+                                      }
+                                    }}
+                                  >
+                                    <Delete
+                                      color={
+                                        row.can_update_sensitive !== undefined
+                                          ? props.disallowEdit &&
+                                            row.can_update_sensitive
+                                            ? "error"
+                                            : "disabled"
+                                          : "error"
+                                      }
+                                    ></Delete>
+                                  </IconButton>
+                                </span>
                               </Tooltip>
                             ) : null}
                           </Stack>
@@ -651,16 +657,20 @@ export default function AllUseTable(
                   {props.selection ? (
                     <StyledTableCell>
                       <Tooltip arrow title="Remover Selecionados">
-                        <IconButton
-                          disabled={selected.length === 0}
-                          onClick={() => {
-                            handleSelectionDelete();
-                          }}
-                        >
-                          <Delete
-                            color={selected.length === 0 ? "disabled" : "error"}
-                          ></Delete>
-                        </IconButton>
+                        <span>
+                          <IconButton
+                            disabled={selected.length === 0}
+                            onClick={() => {
+                              handleSelectionDelete();
+                            }}
+                          >
+                            <Delete
+                              color={
+                                selected.length === 0 ? "disabled" : "error"
+                              }
+                            ></Delete>
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     </StyledTableCell>
                   ) : (

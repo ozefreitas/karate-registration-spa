@@ -24,8 +24,8 @@ export const useCreateMember = () => {
     },
     onError: (data: any) => {
       const errorData = data.response?.data || {};
-      if (errorData.non_field_errors?.[0]) {
-        enqueueSnackbar("Já existe um membro com esta informação!", {
+      if (errorData.member_type_missmatch?.[0]) {
+        enqueueSnackbar(errorData.member_type_missmatch?.[0], {
           variant: "error",
           anchorOrigin: {
             vertical: "top",

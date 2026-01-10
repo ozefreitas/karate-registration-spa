@@ -116,35 +116,42 @@ const NotificationsPage = (props: { me: any }) => {
                 </Grid>
                 <Grid borderRadius={5}>
                   <Tooltip title="Remover Notificação" placement="bottom-start">
-                    <IconButton
-                      disabled={!item.can_remove}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeNotification.mutate(item.id);
-                      }}
-                      aria-label="delete notification"
-                    >
-                      <Delete color={item.can_remove ? "error" : "disabled"} />
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        disabled={!item.can_remove}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeNotification.mutate(item.id);
+                        }}
+                        aria-label="delete notification"
+                      >
+                        <Delete
+                          color={item.can_remove ? "error" : "disabled"}
+                        />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                   <Tooltip title="Prosseguir ação" placement="bottom-start">
-                    <IconButton
-                      onClick={() => {
-                        handleFollowingAction(item);
-                      }}
-                      aria-label="notification action"
-                      disabled={
-                        item.type === "none" || item.type === "administrative"
-                      }
-                    >
-                      <KeyboardArrowRight
-                        color={
+                    <span>
+                      <IconButton
+                        onClick={() => {
+                          handleFollowingAction(item);
+                        }}
+                        aria-label="notification action"
+                        disabled={
                           item.type === "none" || item.type === "administrative"
-                            ? "disabled"
-                            : "success"
                         }
-                      />
-                    </IconButton>
+                      >
+                        <KeyboardArrowRight
+                          color={
+                            item.type === "none" ||
+                            item.type === "administrative"
+                              ? "disabled"
+                              : "success"
+                          }
+                        />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </Grid>
               </CardContent>

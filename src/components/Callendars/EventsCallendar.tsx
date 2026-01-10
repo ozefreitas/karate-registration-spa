@@ -271,27 +271,29 @@ export default function EventCallendar(props: {
                                   size={4}
                                 >
                                   <Tooltip placement="top" title="Ir para">
-                                    <IconButton
-                                      sx={{
-                                        transition: "0.3s",
-                                        borderRadius: 3,
-                                        p: 1.5,
-                                        px: 2,
-                                        border: 2,
-                                        borderColor: "red",
-                                        "&:hover": {
-                                          transform: "translateY(-3px)",
-                                          boxShadow: 6,
+                                    <span>
+                                      <IconButton
+                                        sx={{
+                                          transition: "0.3s",
+                                          borderRadius: 3,
+                                          p: 1.5,
+                                          px: 2,
+                                          border: 2,
                                           borderColor: "red",
-                                          bgcolor: "red",
-                                        },
-                                      }}
-                                      onClick={() =>
-                                        navigate(`/events/${comp.id}/`)
-                                      }
-                                    >
-                                      <East sx={{ color: "black" }}></East>
-                                    </IconButton>
+                                          "&:hover": {
+                                            transform: "translateY(-3px)",
+                                            boxShadow: 6,
+                                            borderColor: "red",
+                                            bgcolor: "red",
+                                          },
+                                        }}
+                                        onClick={() =>
+                                          navigate(`/events/${comp.id}/`)
+                                        }
+                                      >
+                                        <East sx={{ color: "black" }}></East>
+                                      </IconButton>
+                                    </span>
                                   </Tooltip>
                                 </Grid>
                               </Grid>

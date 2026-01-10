@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchCategories, fetchSingleCategory } from "../../api";
+import {
+  fetchCategories,
+  fetchSingleCategory,
+  fetchCategoriesNotinDiscipline,
+} from "../../api";
 
 export const useFetchCategoriesData = (
   page?: number,
@@ -50,5 +54,14 @@ export const useFetchSingleCategory = (categoryId: string) => {
     queryFn: () => fetchSingleCategory(categoryId),
     refetchOnWindowFocus: false,
     enabled: categoryId !== "" && categoryId !== undefined,
+  });
+};
+
+export const useFetchCategoryNotinDiscipline = (disciplineId: string) => {
+  return useQuery({
+    queryKey: ["category-not-in-discipline", disciplineId],
+    queryFn: () => fetchCategoriesNotinDiscipline(disciplineId),
+    refetchOnWindowFocus: false,
+    enabled: disciplineId !== "" && disciplineId !== undefined,
   });
 };

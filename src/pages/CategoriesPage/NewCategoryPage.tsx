@@ -640,7 +640,7 @@ export default function NewCategoryPage() {
               setValue("max_age", "");
             }}
           >
-            Submeter e Adicionar Outra
+            Submeter e Adicionar Outro
           </Button>
           <Button
             variant="contained"

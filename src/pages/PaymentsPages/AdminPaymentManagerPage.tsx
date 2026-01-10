@@ -200,10 +200,12 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                   alignItems={"center"}
                 >
                   <Typography variant="h5">Ano</Typography>
-                  <Tooltip title="Criar Quotas">
-                    <IconButton onClick={(e) => handleClick(e, "create")}>
-                      <Add color="success"></Add>
-                    </IconButton>
+                  <Tooltip arrow title="Criar Quotas">
+                    <span>
+                      <IconButton onClick={(e) => handleClick(e, "create")}>
+                        <Add color="success"></Add>
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </Grid>
               }
@@ -293,15 +295,19 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                   alignItems={"center"}
                 >
                   <Typography variant="h5">Data Limite</Typography>
-                  <Tooltip title="Editar Data">
-                    <IconButton
-                      disabled={watch("search") === ""}
-                      onClick={(e) => handleClick(e, "due_date")}
-                    >
-                      <Edit
-                        color={watch("search") === "" ? "disabled" : "warning"}
-                      ></Edit>
-                    </IconButton>
+                  <Tooltip arrow title="Editar Data">
+                    <span>
+                      <IconButton
+                        disabled={watch("search") === ""}
+                        onClick={(e) => handleClick(e, "due_date")}
+                      >
+                        <Edit
+                          color={
+                            watch("search") === "" ? "disabled" : "warning"
+                          }
+                        ></Edit>
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </Grid>
               }
@@ -345,15 +351,19 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                   alignItems={"center"}
                 >
                   <Typography variant="h5">Montante</Typography>
-                  <Tooltip title="Editar Montante">
-                    <IconButton
-                      disabled={watch("search") === ""}
-                      onClick={(e) => handleClick(e, "amount")}
-                    >
-                      <Edit
-                        color={watch("search") === "" ? "disabled" : "warning"}
-                      ></Edit>
-                    </IconButton>
+                  <Tooltip arrow title="Editar Montante">
+                    <span>
+                      <IconButton
+                        disabled={watch("search") === ""}
+                        onClick={(e) => handleClick(e, "amount")}
+                      >
+                        <Edit
+                          color={
+                            watch("search") === "" ? "disabled" : "warning"
+                          }
+                        ></Edit>
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </Grid>
               }

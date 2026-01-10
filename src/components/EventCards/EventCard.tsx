@@ -560,37 +560,37 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         handleOpen={handleEditModalOpen}
                       ></SettingsButton>
                     </>
-                  ) : (
-                    <>
-                      <AddButton
-                        label="Adicionar/Consultar Inscrições"
-                        to="individuals/"
-                        disabled={
-                          isSingleEventLoading ||
-                          singleEventData?.data.has_ended ||
-                          !singleEventData?.data.has_registrations
-                        }
-                      ></AddButton>
-                      <AddButton
-                        label="Adicionar/Consultar Treinadores"
-                        to="coaches/"
-                        disabled={
-                          isSingleEventLoading ||
-                          singleEventData?.data.has_ended ||
-                          !singleEventData?.data.has_registrations
-                        }
-                      ></AddButton>
-                    </>
-                  )}
+                  ) : singleEventData?.data.has_any_indiv ? (
+                    <AddButton
+                      label="Adicionar/Consultar Inscrições"
+                      to="individuals/"
+                      disabled={
+                        isSingleEventLoading ||
+                        singleEventData?.data.has_ended ||
+                        !singleEventData?.data.has_registrations
+                      }
+                    ></AddButton>
+                  ) : singleEventData?.data.has_coach ? (
+                    <AddButton
+                      label="Adicionar/Consultar Treinadores"
+                      to="coaches/"
+                      disabled={
+                        isSingleEventLoading ||
+                        singleEventData?.data.has_ended ||
+                        !singleEventData?.data.has_registrations
+                      }
+                    ></AddButton>
+                  ) : null}
                   {singleEventData?.data.has_ended && !isSingleEventLoading ? (
                     <InfoButton
                       label="Consultar Inscrições"
                       to="individuals/"
                     ></InfoButton>
                   ) : null}
-                  {!isSingleEventLoading && singleEventData?.data?.has_teams ? (
+                  {!isSingleEventLoading &&
+                  singleEventData?.data?.has_any_team ? (
                     <AddButton
-                      label="Consultar Equipas"
+                      label="Adicionar/Consultar Equipas"
                       to="teams/"
                     ></AddButton>
                   ) : null}

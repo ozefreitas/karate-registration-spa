@@ -112,7 +112,7 @@ export default function SideMenu(
               marginLeft: "10px",
               height: "calc(100% - 20px)",
               "&::-webkit-scrollbar": {
-                width: 5
+                width: 5,
               },
               // maskImage:
               //   "linear-gradient(to bottom, white 95%, transparent 100%)",
@@ -127,63 +127,65 @@ export default function SideMenu(
             {sideMenuConfig.map((options, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
-                  <ListItemButton
-                    selected={
-                      options.name === ""
-                        ? location.pathname === "/"
-                        : location.pathname.startsWith(`/${options.name}`)
-                    }
-                    onClick={() => navigate(options.to)}
-                    sx={[
-                      {
-                        m: 0.5,
-                        ...(options.name === "payment_manager" &&
-                          subscriptionsData?.data?.some(
-                            (item: any) => item.paid === false
-                          ) && {
-                            animation: "pulseRed 1.5s infinite",
-                          }),
-                        "@keyframes pulseRed": {
-                          "0%": {
-                            boxShadow: "0 0 0 0 rgba(255, 165, 0, 0.7)",
-                            backgroundColor: "rgba(255, 165, 0, 0.15)",
-                          },
-                          "70%": {
-                            boxShadow: "0 0 0 12px rgba(255, 165, 0, 0)",
-                            backgroundColor: "rgba(255, 165, 0, 0.25)",
-                          },
-                          "100%": {
-                            boxShadow: "0 0 0 0 rgba(255, 165, 0, 0)",
-                            backgroundColor: "rgba(255, 165, 0, 0.15)",
-                          },
-                        },
-                        "&.Mui-selected": {
-                          borderRadius: "10px",
-                        },
-                        "&:hover": {
-                          borderRadius: "10px",
-                        },
-                        minHeight: 48,
-                        px: 2.5,
-                      },
-                      isMenuOpen
-                        ? { justifyContent: "initial" }
-                        : { justifyContent: "center" },
-                    ]}
-                  >
-                    <ListItemIcon
+                  <span>
+                    <ListItemButton
+                      selected={
+                        options.name === ""
+                          ? location.pathname === "/"
+                          : location.pathname.startsWith(`/${options.name}`)
+                      }
+                      onClick={() => navigate(options.to)}
                       sx={[
-                        { minWidth: 0, justifyContent: "center" },
-                        isMenuOpen ? { mr: 3 } : { mr: "auto" },
+                        {
+                          m: 0.5,
+                          ...(options.name === "payment_manager" &&
+                            subscriptionsData?.data?.some(
+                              (item: any) => item.paid === false
+                            ) && {
+                              animation: "pulseRed 1.5s infinite",
+                            }),
+                          "@keyframes pulseRed": {
+                            "0%": {
+                              boxShadow: "0 0 0 0 rgba(255, 165, 0, 0.7)",
+                              backgroundColor: "rgba(255, 165, 0, 0.15)",
+                            },
+                            "70%": {
+                              boxShadow: "0 0 0 12px rgba(255, 165, 0, 0)",
+                              backgroundColor: "rgba(255, 165, 0, 0.25)",
+                            },
+                            "100%": {
+                              boxShadow: "0 0 0 0 rgba(255, 165, 0, 0)",
+                              backgroundColor: "rgba(255, 165, 0, 0.15)",
+                            },
+                          },
+                          "&.Mui-selected": {
+                            borderRadius: "10px",
+                          },
+                          "&:hover": {
+                            borderRadius: "10px",
+                          },
+                          minHeight: 48,
+                          px: 2.5,
+                        },
+                        isMenuOpen
+                          ? { justifyContent: "initial" }
+                          : { justifyContent: "center" },
                       ]}
                     >
-                      {options.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={options.label}
-                      sx={[isMenuOpen ? { opacity: 1 } : { opacity: 0 }]}
-                    />
-                  </ListItemButton>
+                      <ListItemIcon
+                        sx={[
+                          { minWidth: 0, justifyContent: "center" },
+                          isMenuOpen ? { mr: 3 } : { mr: "auto" },
+                        ]}
+                      >
+                        {options.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={options.label}
+                        sx={[isMenuOpen ? { opacity: 1 } : { opacity: 0 }]}
+                      />
+                    </ListItemButton>
+                  </span>
                 </Tooltip>
               </ListItem>
             ))}
@@ -196,29 +198,31 @@ export default function SideMenu(
             {accountSideMenuConfig.map((options, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
                 <Tooltip title={options.label} placement="right">
-                  <ListItemButton
-                    selected={location.pathname === options.to}
-                    onClick={() => navigate(options.to)}
-                    sx={[
-                      { minHeight: 48, px: 2.5, m: 0.5 },
-                      isMenuOpen
-                        ? { justifyContent: "initial" }
-                        : { justifyContent: "center" },
-                    ]}
-                  >
-                    <ListItemIcon
+                  <span>
+                    <ListItemButton
+                      selected={location.pathname === options.to}
+                      onClick={() => navigate(options.to)}
                       sx={[
-                        { minWidth: 0, justifyContent: "center" },
-                        isMenuOpen ? { mr: 3 } : { mr: "auto" },
+                        { minHeight: 48, px: 2.5, m: 0.5 },
+                        isMenuOpen
+                          ? { justifyContent: "initial" }
+                          : { justifyContent: "center" },
                       ]}
                     >
-                      {options.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={options.label}
-                      sx={[isMenuOpen ? { opacity: 1 } : { opacity: 0 }]}
-                    />
-                  </ListItemButton>
+                      <ListItemIcon
+                        sx={[
+                          { minWidth: 0, justifyContent: "center" },
+                          isMenuOpen ? { mr: 3 } : { mr: "auto" },
+                        ]}
+                      >
+                        {options.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={options.label}
+                        sx={[isMenuOpen ? { opacity: 1 } : { opacity: 0 }]}
+                      />
+                    </ListItemButton>
+                  </span>
                 </Tooltip>
               </ListItem>
             ))}

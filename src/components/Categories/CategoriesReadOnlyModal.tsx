@@ -239,26 +239,30 @@ export default function CategoriesReadOnlyModal(
               )}
             </Typography>
             <Tooltip title="Página anterior">
-              <IconButton
-                onClick={handleBackButtonClick}
-                disabled={page === 1}
-                aria-label="previous page"
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleBackButtonClick}
+                  disabled={page === 1}
+                  aria-label="previous page"
+                >
+                  <KeyboardArrowLeft />
+                </IconButton>
+              </span>
             </Tooltip>
             <Tooltip title="Próxima página">
-              <IconButton
-                onClick={handleNextButtonClick}
-                disabled={
-                  props.disciplineData === undefined ||
-                  page * itemsPerPage >=
-                    props.disciplineData[0].categories.length
-                }
-                aria-label="next page"
-              >
-                <KeyboardArrowRight />
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleNextButtonClick}
+                  disabled={
+                    props.disciplineData === undefined ||
+                    page * itemsPerPage >=
+                      props.disciplineData[0].categories.length
+                  }
+                  aria-label="next page"
+                >
+                  <KeyboardArrowRight />
+                </IconButton>
+              </span>
             </Tooltip>
           </>
         </DialogActions>

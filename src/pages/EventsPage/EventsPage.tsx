@@ -26,6 +26,7 @@ import {
   CalendarMonth,
   Subject,
   East,
+  Groups,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useEffect, useState } from "react";
@@ -39,8 +40,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   type Event = {
     id: string;
     name: string;
-    season: string;
     location: string;
+    season: string;
     event_date: string;
     has_registrations: boolean;
     number_registrations: number;
@@ -48,6 +49,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     is_retification: boolean;
     is_closed: boolean;
     has_ended: boolean;
+    has_any_team: boolean;
   };
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
@@ -190,35 +192,41 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             ></EventsFilters>
             <Grid pl={2} container spacing={1} borderRadius={3}>
               <Tooltip placement="top" title={"Vista de Lista"}>
-                <IconButton
-                  size="large"
-                  onClick={() => setCurrentView("list")}
-                  sx={{
-                    bgcolor: currentView === "list" ? "#1976d2;" : undefined,
-                  }}
-                  color="info"
-                >
-                  <Subject
-                    sx={{ color: currentView === "list" ? "white" : undefined }}
-                  ></Subject>
-                </IconButton>
+                <span>
+                  <IconButton
+                    size="large"
+                    onClick={() => setCurrentView("list")}
+                    sx={{
+                      bgcolor: currentView === "list" ? "#1976d2;" : undefined,
+                    }}
+                    color="info"
+                  >
+                    <Subject
+                      sx={{
+                        color: currentView === "list" ? "white" : undefined,
+                      }}
+                    ></Subject>
+                  </IconButton>
+                </span>
               </Tooltip>
               <Tooltip placement="top" title={"Vista de Calendário"}>
-                <IconButton
-                  size="large"
-                  sx={{
-                    bgcolor:
-                      currentView === "calendar" ? "#1976d2;" : undefined,
-                  }}
-                  onClick={() => setCurrentView("calendar")}
-                  color="info"
-                >
-                  <CalendarMonth
+                <span>
+                  <IconButton
+                    size="large"
                     sx={{
-                      color: currentView === "calendar" ? "white" : undefined,
+                      bgcolor:
+                        currentView === "calendar" ? "#1976d2;" : undefined,
                     }}
-                  ></CalendarMonth>
-                </IconButton>
+                    onClick={() => setCurrentView("calendar")}
+                    color="info"
+                  >
+                    <CalendarMonth
+                      sx={{
+                        color: currentView === "calendar" ? "white" : undefined,
+                      }}
+                    ></CalendarMonth>
+                  </IconButton>
+                </span>
               </Tooltip>
             </Grid>
           </Grid>
@@ -282,7 +290,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                 {comp.name}
                               </Typography>
                             </Grid>
-                            <Grid size={8}>
+                            <Grid size={9}>
                               <List>
                                 <Grid container size={12}>
                                   <Grid size={7}>
@@ -302,23 +310,36 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                     ) : null}
                                   </Grid>
                                 </Grid>
+                                <Grid container size={12}>
+                                  <Grid size={7}>
+                                    <CompInfoToolTip
+                                      title="Estado"
+                                      text={
+                                        comp.has_ended
+                                          ? "Realizado"
+                                          : comp.is_open || comp.is_retification
+                                          ? "Inscrições em Progresso"
+                                          : comp.is_closed
+                                          ? "Inscrições Encerradas"
+                                          : "Por Iniciar"
+                                      }
+                                      icon={<AccessTime />}
+                                    ></CompInfoToolTip>
+                                  </Grid>
+                                  <Grid size={5}>
+                                    {comp.has_any_team ? (
+                                      <CompInfoToolTip
+                                        title=""
+                                        text="Equipas Disponíveis"
+                                        icon={<Groups />}
+                                      ></CompInfoToolTip>
+                                    ) : null}
+                                  </Grid>
+                                </Grid>
                                 <CompInfoToolTip
                                   title="Localização"
                                   text={comp.location}
                                   icon={<LocationPin />}
-                                ></CompInfoToolTip>
-                                <CompInfoToolTip
-                                  title="Estado"
-                                  text={
-                                    comp.has_ended
-                                      ? "Realizado"
-                                      : comp.is_open || comp.is_retification
-                                      ? "Inscrições em Progresso"
-                                      : comp.is_closed
-                                      ? "Inscrições Encerradas"
-                                      : "Por Iniciar"
-                                  }
-                                  icon={<AccessTime />}
                                 ></CompInfoToolTip>
                               </List>
                             </Grid>
@@ -326,30 +347,32 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               container
                               justifyContent="flex-end"
                               alignContent="flex-end"
-                              size={4}
+                              size={3}
                             >
                               <Tooltip arrow placement="top" title="Ir para">
-                                <IconButton
-                                  sx={{
-                                    transition: "0.3s",
-                                    borderRadius: 4,
-                                    p: 1.5,
-                                    px: 2,
-                                    border: 2,
-                                    borderColor: "red",
-                                    "&:hover": {
-                                      transform: "translateY(-3px)",
-                                      boxShadow: 6,
+                                <span>
+                                  <IconButton
+                                    sx={{
+                                      transition: "0.3s",
+                                      borderRadius: 4,
+                                      p: 1.5,
+                                      px: 2,
+                                      border: 2,
                                       borderColor: "red",
-                                      bgcolor: "red",
-                                    },
-                                  }}
-                                  onClick={() =>
-                                    navigate(`/events/${comp.id}/`)
-                                  }
-                                >
-                                  <East sx={{ color: "black" }}></East>
-                                </IconButton>
+                                      "&:hover": {
+                                        transform: "translateY(-3px)",
+                                        boxShadow: 6,
+                                        borderColor: "red",
+                                        bgcolor: "red",
+                                      },
+                                    }}
+                                    onClick={() =>
+                                      navigate(`/events/${comp.id}/`)
+                                    }
+                                  >
+                                    <East sx={{ color: "black" }}></East>
+                                  </IconButton>
+                                </span>
                               </Tooltip>
                             </Grid>
                           </Grid>

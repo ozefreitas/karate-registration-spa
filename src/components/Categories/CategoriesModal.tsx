@@ -178,12 +178,13 @@ export default function CategoriesModal(
         (item) => item.discipline === props.disciplineData
       );
 
-      if (existingIndex !== -1) {
+      if (existingIndex === -1) {
+        return [...prev, data];
+      } else {
         // Merge categories without duplicates
         const updatedCategories = Array.from(
           new Set([...prev[existingIndex].categories, ...checked])
         );
-
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
@@ -191,8 +192,6 @@ export default function CategoriesModal(
         };
 
         return updated;
-      } else {
-        return [...prev, data];
       }
     });
     props.handleModalClose();
@@ -364,25 +363,29 @@ export default function CategoriesModal(
               {Math.ceil(categoriesData?.data.count / itemsPerPage)}
             </Typography>
             <Tooltip title="Página anterior">
-              <IconButton
-                onClick={handleBackButtonClick}
-                disabled={page === 1}
-                aria-label="previous page"
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleBackButtonClick}
+                  disabled={page === 1}
+                  aria-label="previous page"
+                >
+                  <KeyboardArrowLeft />
+                </IconButton>
+              </span>
             </Tooltip>
             <Tooltip title="Próxima página">
-              <IconButton
-                onClick={handleNextButtonClick}
-                disabled={
-                  !categoriesData?.data.count ||
-                  page * itemsPerPage >= categoriesData?.data.count
-                }
-                aria-label="next page"
-              >
-                <KeyboardArrowRight />
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleNextButtonClick}
+                  disabled={
+                    !categoriesData?.data.count ||
+                    page * itemsPerPage >= categoriesData?.data.count
+                  }
+                  aria-label="next page"
+                >
+                  <KeyboardArrowRight />
+                </IconButton>
+              </span>
             </Tooltip>
           </>
         </DialogActions>

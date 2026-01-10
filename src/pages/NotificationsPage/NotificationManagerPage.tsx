@@ -168,22 +168,24 @@ export default function NotificationManagerPage(props: { userRole: string }) {
                 (notification: any, index: string) => (
                   <ListItem dense sx={{ m: 0 }} key={index}>
                     <Tooltip title="Clique para eliminar esta Notificação">
-                      <ListItemButton
-                        sx={{ p: 1 }}
-                        onClick={() => handleClick(notification.id)}
-                      >
-                        <ListItemIcon>
-                          <NotificationsActive />
-                        </ListItemIcon>
-                        <Typography
-                          sx={{
-                            m: 0,
-                            pb: 0,
-                          }}
+                      <span>
+                        <ListItemButton
+                          sx={{ p: 1 }}
+                          onClick={() => handleClick(notification.id)}
                         >
-                          {notification.notification}
-                        </Typography>
-                      </ListItemButton>
+                          <ListItemIcon>
+                            <NotificationsActive />
+                          </ListItemIcon>
+                          <Typography
+                            sx={{
+                              m: 0,
+                              pb: 0,
+                            }}
+                          >
+                            {notification.notification}
+                          </Typography>
+                        </ListItemButton>
+                      </span>
                     </Tooltip>
                   </ListItem>
                 )

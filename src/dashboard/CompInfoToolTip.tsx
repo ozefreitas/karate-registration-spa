@@ -6,7 +6,9 @@ export default function CompInfoToolTip(
   return (
     <ListItem sx={{ m: 0, pb: 0 }}>
       <Tooltip placement="left" sx={{ cursor: "pointer" }} title={props.title}>
-        <ListItemIcon>{props.icon}</ListItemIcon>
+        <span>
+          <ListItemIcon>{props.icon}</ListItemIcon>
+        </span>
       </Tooltip>
       <ListItemText
         sx={{ color: props.text ? "black" : "GrayText" }}

@@ -21,22 +21,21 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
-import { GraduationsOptions } from "../../config";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import {
   Close,
   KeyboardArrowRight,
   KeyboardArrowLeft,
-  Person,
+  Category,
+  Add,
 } from "@mui/icons-material";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
-import { disciplinesHooks, membersHooks } from "../../hooks";
-import { useSnackbar } from "notistack";
-import { useLocation, useParams } from "react-router-dom";
-import { useAuth } from "../../access/GlobalAuthProvider";
+import { categoriesHooks, disciplinesHooks } from "../../hooks";
+import { getGraduationFromValue } from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -89,30 +88,40 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CoachesModal(
+export default function AddEventCategoriesModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
-    eventData: any;
-    disciplineId: string;
+    disciplineData: any;
   }>
 ) {
-  type Member = {
-    age: any;
+  type Category = {
     id: string;
-    first_name: string;
-    last_name: string;
-    full_name: string;
-    graduation: string;
+    name: string;
     gender: string;
-    weight: string;
+    has_age: string;
+    min_age: string;
+    max_age: string;
+    has_grad: string;
+    min_grad: number;
+    max_grad: number;
+    has_weight: string;
+    min_weight: string;
+    max_weight: string;
   };
 
-  const { id: eventId } = useParams<{ id: string }>();
-  const { user } = useAuth();
-  const userRole = user?.data.role;
+  const navigate = useNavigate();
+  const [page, setPage] = useState<number>(1);
+  const [checked, setChecked] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const {
+    data: categoriesNotinDisciplineData,
+    isLoading: iscategoriesNotinDisciplineLoading,
+    error: categoriesNotinDisciplineError,
+  } = categoriesHooks.useFetchCategoryNotinDiscipline(props.disciplineData.id);
 
-  const [page, setPage] = useState<number>(0);
+  const addDisciplineCategories =
+    disciplinesHooks.useAddDisciplineCategory(true);
 
   const handleBackButtonClick = () => {
     setPage(page - 1);
@@ -122,8 +131,15 @@ export default function CoachesModal(
     setPage(page + 1);
   };
 
-  const [checked, setChecked] = React.useState<string[]>([]);
-  const { enqueueSnackbar } = useSnackbar();
+  React.useEffect(() => {
+    if (props.isModalOpen === false) {
+      setPage(1);
+    }
+  }, [props.isModalOpen]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
   const handleToggle = (value: string) => {
     const currentIndex = checked.indexOf(value);
@@ -138,75 +154,40 @@ export default function CoachesModal(
     setChecked(newChecked);
   };
 
-  const addDisciplineMember = disciplinesHooks.useAddDisciplineMember();
-
-  const handleIndividualsSubmit = (memberList: string[]) => {
-    if (memberList.length === 0) {
-      enqueueSnackbar("Tem de selecionar pelo menos um treinador!", {
-        variant: "warning",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
-    } else {
-      memberList.forEach((member: string) => {
-        const memberData = {
-          member_id: member,
-          event_id: props.eventData.id,
-        };
-        const data = { disciplineId: props.disciplineId, data: memberData };
-        addDisciplineMember.mutate(data);
-      });
-      setChecked([]);
-      props.handleModalClose();
-    }
-  };
-
-  const location = useLocation();
-  const [searchQuery, setSearchQuery] = React.useState("");
-
-  const {
-    data: coachesNotInEventData,
-    isLoading: isCoachesNotInEventLoading,
-    error: coachesNotInEventError,
-    refetch,
-  } = membersHooks.useFetchCoachesNotInEvent(eventId!, page + 1, 10);
-
-  React.useEffect(() => {
-    refetch();
-  }, [location]);
-
-  const filteredCoaches = React.useMemo(() => {
+  const categoryMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return coachesNotInEventData?.data.results ?? [];
+    if (!query) return categoriesNotinDisciplineData?.data.results ?? [];
 
-    return coachesNotInEventData?.data.results.filter((member: any) => {
-      const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
-      return (
-        member.first_name.toLowerCase().includes(query) ||
-        member.last_name.toLowerCase().includes(query) ||
-        fullName.includes(query) ||
-        member.id_number === Number(query)
-      );
-    });
-  }, [searchQuery, coachesNotInEventData]);
+    return categoriesNotinDisciplineData?.data.results.filter(
+      (category: Category) => {
+        return category.name.toLowerCase().includes(query);
+      }
+    );
+  }, [searchQuery, categoriesNotinDisciplineData]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+  const itemsPerPage = 10;
+
+  const paginatedCategories = React.useMemo(() => {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return categoryMembers.slice(start, end);
+  }, [categoryMembers, page]);
+
+  const handleSubmit = () => {
+    const data = {
+      disciplineId: props.disciplineData.id,
+      data: { category_ids: checked },
+    };
+    addDisciplineCategories.mutate(data);
+    setChecked([]);
+    props.handleModalClose();
   };
 
   return (
     <Dialog
-      // keepMounted
       open={props.isModalOpen}
-      onClose={() => {
-        setPage(0);
-        props.handleModalClose();
-      }}
+      onClose={props.handleModalClose}
       maxWidth="md"
       fullWidth
       slots={{
@@ -232,71 +213,65 @@ export default function CoachesModal(
             <Close />
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Inscrever Treinadores em {props.eventData?.name}
+            Selecionar Escalões para {props.disciplineData.name}
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Procurar"
-              inputProps={{ "aria-label": "procurar" }}
-              value={searchQuery}
-              onChange={handleInputChange}
-            />
-          </Search>
-
-          <Button
-            autoFocus
-            size="large"
-            color="inherit"
-            onClick={() => {
-              handleIndividualsSubmit(checked);
-            }}
-            disabled={coachesNotInEventData?.data.results.length === 0}
-          >
-            Adicionar
-          </Button>
+          {categoriesNotinDisciplineData?.data.results.length === 0 ? null : (
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Procurar"
+                inputProps={{ "aria-label": "procurar" }}
+                value={searchQuery}
+                onChange={handleInputChange}
+              />
+            </Search>
+          )}
+          <span>
+            <Button
+              autoFocus
+              size="large"
+              color="inherit"
+              onClick={handleSubmit}
+              disabled={
+                categoriesNotinDisciplineData?.data.results.length === 0
+              }
+            >
+              Adicionar
+            </Button>
+          </span>
         </Toolbar>
       </AppBar>
       <DialogContent sx={{ pb: 0 }}>
         <List>
-          {isCoachesNotInEventLoading ? (
-            <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
+          {iscategoriesNotinDisciplineLoading ? (
+            <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <CircularProgress />
               </Box>
             </Grid>
-          ) : coachesNotInEventError ? (
+          ) : categoriesNotinDisciplineError ? (
             <div>Ocorreu um erro</div>
-          ) : filteredCoaches.length === 0 ? (
+          ) : categoriesNotinDisciplineData?.data.results.length === 0 ? (
             <ListItem>
-              <ListItemText primary="Não tem Treinadores que ainda não estejam inscritos nesta prova."></ListItemText>
-            </ListItem>
-          ) : userRole === "free_club" && searchQuery === "" ? (
-            <ListItem>
-              <ListItemText primary="O seu plano não concede acesso à listagem de Treinadores. Pesquise pelo Nº de Indentificação ou nome, ou inicie uma subscrição."></ListItemText>
+              <ListItemText primary="Não tem Escalões que ainda não tenham sido adicionados a esta Modalidade."></ListItemText>
             </ListItem>
           ) : (
-            filteredCoaches.map((member: Member, index: string) => (
+            paginatedCategories.map((category: Category, index: string) => (
               <ListItem
                 key={index}
                 disablePadding
                 secondaryAction={
                   <label>
                     <Checkbox
-                      sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
+                      // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                       edge="end"
-                      onChange={() => handleToggle(member.id)}
-                      checked={checked.includes(member.id)}
+                      onChange={() => handleToggle(category.id)}
+                      checked={checked.includes(category.id)}
                       slotProps={{
                         input: {
-                          "aria-labelledby": `checkbox-list-secondary-label-${member.first_name}`,
+                          "aria-labelledby": `checkbox-list-secondary-label-${category.name}`,
                         },
                       }}
                     />
@@ -305,21 +280,26 @@ export default function CoachesModal(
               >
                 <ListItemButton
                   key={index}
-                  onClick={() => {
-                    handleToggle(member.id);
-                  }}
+                  onClick={() => handleToggle(category.id)}
                 >
                   <ListItemIcon>
-                    <Person />
+                    <Category />
                   </ListItemIcon>
                   <ListItemText
-                    primary={`${member.full_name}`}
-                    secondary={`${member.gender} | Graduação: ${
-                      GraduationsOptions.find(
-                        (grad: any) =>
-                          grad.value.toString() === member.graduation
-                      )?.label ?? "N/A"
-                    }`}
+                    primary={`${category.name} ${category.gender}`}
+                    secondary={
+                      <>
+                        Idade Min.: {category.min_age ?? "N/A"} / Idade Máx.:{" "}
+                        {category.max_age ?? "N/A"} <br /> Grad Min.:{" "}
+                        {getGraduationFromValue(Number(category.min_grad)) ??
+                          "N/A"}{" "}
+                        / Grad Máx.:{" "}
+                        {getGraduationFromValue(Number(category.max_grad)) ??
+                          "N/A"}
+                        <br /> Peso Min.: {category.min_weight ?? "N/A"} / Peso
+                        Máx.: {category.max_weight ?? "N/A"}
+                      </>
+                    }
                   />
                 </ListItemButton>
                 <Divider />
@@ -328,24 +308,26 @@ export default function CoachesModal(
           )}
         </List>
       </DialogContent>
-      {coachesNotInEventData?.data?.count === 0 ? null : (
+      {categoriesNotinDisciplineData?.data.count === 0 ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
               Página:
             </Typography>
-            <Typography mr={1}>{page + 1}</Typography>
+            <Typography mr={1}>{page}</Typography>
             <Typography variant="body1" mr={1} color="textSecondary">
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(coachesNotInEventData?.data.count / 10)}
+              {Math.ceil(
+                categoriesNotinDisciplineData?.data.count / itemsPerPage
+              )}
             </Typography>
             <Tooltip title="Página anterior">
               <span>
                 <IconButton
                   onClick={handleBackButtonClick}
-                  disabled={page === 0}
+                  disabled={page === 1}
                   aria-label="previous page"
                 >
                   <KeyboardArrowLeft />
@@ -357,8 +339,9 @@ export default function CoachesModal(
                 <IconButton
                   onClick={handleNextButtonClick}
                   disabled={
-                    !coachesNotInEventData?.data?.count ||
-                    coachesNotInEventData?.data.count <= (page + 1) * 10
+                    !categoriesNotinDisciplineData?.data.count ||
+                    page * itemsPerPage >=
+                      categoriesNotinDisciplineData?.data.count
                   }
                   aria-label="next page"
                 >

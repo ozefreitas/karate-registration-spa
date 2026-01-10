@@ -16,7 +16,6 @@ import NewMemberPage from "./pages/MembersPages/NewMemberPage";
 import SingleMemberPage from "./pages/MembersPages/SingleMemberPage";
 // import TeamsPage from "./pages/TeamsPage/TeamsPage";
 // import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
-// import NewTeamPage from "./pages/TeamsPage/NewTeamPage";
 import IndividualsPage from "./pages/RegistrationPages/IndividualsPage";
 import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
 import ProtectedRoute from "./access/ProtectedRoute";
@@ -161,18 +160,6 @@ function App() {
                         element={<WIPPage></WIPPage>}
                         // element={<SingleTeamPage />}
                         allowedRoles={["subed_club", "main_admin"]}
-                      />
-                    )
-                  }
-                />
-                <Route
-                  path="teams/new_team/"
-                  element={
-                    isAuthLoading ? null : (
-                      <ProtectedRoute
-                        element={<WIPPage></WIPPage>}
-                        // element={<NewTeamPage />}
-                        allowedRoles={["subed_club"]}
                       />
                     )
                   }
@@ -341,7 +328,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<RegisteredTeamsPage />}
+                        element={<RegisteredTeamsPage userRole={userRole} />}
                         allowedRoles={["free_club", "subed_club", "main_admin"]}
                       />
                     )

@@ -207,7 +207,7 @@ export default function Header(
                         : props.me?.data.role === "free_club"
                         ? "CLUBE - GRÁTIS"
                         : props.me?.data.role === "subed_club"
-                        ? "CLUBE - PREMIUM"
+                        ? `CLUBE - PREMIUM - ${props.me.data.tier}`
                         : "TÉCNICO"}
                     </Button>
                   </span>
@@ -231,47 +231,49 @@ export default function Header(
                   >
                     {isAuthenticated && user?.data.role !== "technician" ? (
                       <Tooltip title="Notificações" placement="top">
-                        <Badge
-                          color="error"
-                          badgeContent={notificationData?.data.total}
-                          max={9}
-                        >
-                          <Avatar
-                            sx={{
-                              height:
-                                notificationData?.data.total === 0 ||
-                                notificationData === null
-                                  ? null
-                                  : 50,
-                              width:
-                                notificationData?.data.total === 0 ||
-                                notificationData === null
-                                  ? null
-                                  : 50,
-                              bgcolor: notificationError
-                                ? "red"
-                                : notificationData?.data.total === 0 ||
-                                  notificationData === null
-                                ? null
-                                : "green",
-                            }}
+                        <span>
+                          <Badge
+                            color="error"
+                            badgeContent={notificationData?.data.total}
+                            max={9}
                           >
-                            <NotificationsActive
+                            <Avatar
                               sx={{
                                 height:
                                   notificationData?.data.total === 0 ||
                                   notificationData === null
-                                    ? 20
-                                    : 25,
+                                    ? null
+                                    : 50,
                                 width:
                                   notificationData?.data.total === 0 ||
                                   notificationData === null
-                                    ? 20
-                                    : 25,
+                                    ? null
+                                    : 50,
+                                bgcolor: notificationError
+                                  ? "red"
+                                  : notificationData?.data.total === 0 ||
+                                    notificationData === null
+                                  ? null
+                                  : "green",
                               }}
-                            />
-                          </Avatar>
-                        </Badge>
+                            >
+                              <NotificationsActive
+                                sx={{
+                                  height:
+                                    notificationData?.data.total === 0 ||
+                                    notificationData === null
+                                      ? 20
+                                      : 25,
+                                  width:
+                                    notificationData?.data.total === 0 ||
+                                    notificationData === null
+                                      ? 20
+                                      : 25,
+                                }}
+                              />
+                            </Avatar>
+                          </Badge>
+                        </span>
                       </Tooltip>
                     ) : null}
                   </IconButton>
@@ -291,7 +293,11 @@ export default function Header(
                   >
                     <Grid container gap={3}>
                       <Tooltip title="Conta" placement="top">
-                        <Avatar {...stringAvatar(user?.data.username)}></Avatar>
+                        <span>
+                          <Avatar
+                            {...stringAvatar(user?.data.username)}
+                          ></Avatar>
+                        </span>
                       </Tooltip>
                     </Grid>
                   </IconButton>

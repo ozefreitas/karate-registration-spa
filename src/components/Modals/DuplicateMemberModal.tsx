@@ -90,9 +90,11 @@ export default function DuplicateMemberModal(
             borderTop: "1px solid lightgrey",
           }}
         >
-          Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>. Caso
-          já exista como Aluno, dirija-se à página do mesmo diretamente e altere
-          o campo "É Competidor".<p></p>Deseja prosseguir?
+          <p>
+            Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>.
+            Caso já exista como Aluno, dirija-se à página do mesmo diretamente e
+            altere o campo "É Competidor".<p></p>Deseja prosseguir?
+          </p>
         </DialogContent>
       )}
       <DialogActions>

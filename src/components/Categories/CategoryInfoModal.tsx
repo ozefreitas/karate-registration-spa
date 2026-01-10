@@ -288,7 +288,7 @@ export default function CategoryInfoModal(
                 labelPlacement="start"
                 label={
                   <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                    Peso Mínimo:
+                    Peso Mínimo (Kg):
                   </Typography>
                 }
                 control={
@@ -319,7 +319,7 @@ export default function CategoryInfoModal(
                 labelPlacement="start"
                 label={
                   <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                    Peso Máximo:
+                    Peso Máximo (Kg):
                   </Typography>
                 }
                 control={

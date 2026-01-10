@@ -3,7 +3,7 @@ import { Grid, Box, CircularProgress, Typography, Button } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { disciplinesHooks } from "../../hooks";
 import AllUseTable from "../../components/Table/AllUseTable";
-import CategoriesModal from "../../components/Categories/CategoriesModal";
+import AddEventCategoriesModal from "../../components/Categories/AddEventCategoriesModal";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
@@ -32,8 +32,10 @@ export default function EventCategoriesPage(
   const { id: eventId } = useParams<{ id: string }>();
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
     useState<boolean>(false);
-  const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
-  const [disciplineCategories, setDisciplineCategories] = useState<any>([]);
+  const [currentDiscipline, setCurrentDiscipline] = useState<{
+    name: string;
+    id: string;
+  }>({ name: "", id: "" });
 
   const handleCategoriesModalOpen = () => {
     setIsCategoriesModalOpen(true);
@@ -122,7 +124,7 @@ export default function EventCategoriesPage(
                   discipline={discipline.id}
                 ></AllUseTable>
                 {["main_admin", "superuser"].includes(props.userRole) &&
-                discipline.is_coach ? (
+                !discipline.is_coach ? (
                   <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
                     <Button
                       sx={{ m: 1 }}
@@ -130,7 +132,10 @@ export default function EventCategoriesPage(
                       size="large"
                       color="success"
                       onClick={() => {
-                        setCurrentDiscipline(discipline.name);
+                        setCurrentDiscipline({
+                          name: discipline.name,
+                          id: discipline.id,
+                        });
                         handleCategoriesModalOpen();
                       }}
                       startIcon={<Add />}
@@ -157,14 +162,11 @@ export default function EventCategoriesPage(
           Voltar
         </Button>
       </Grid>
-
-      <CategoriesModal
+      <AddEventCategoriesModal
         handleModalClose={handleCategoriesModalClose}
         isModalOpen={isCategoriesModalOpen}
         disciplineData={currentDiscipline}
-        disciplineCategories={disciplineCategories}
-        setDisciplineCategories={setDisciplineCategories}
-      ></CategoriesModal>
+      ></AddEventCategoriesModal>
     </>
   );
 }

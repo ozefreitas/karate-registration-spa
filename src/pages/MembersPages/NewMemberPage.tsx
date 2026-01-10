@@ -153,6 +153,10 @@ export default function NewMemberPage() {
               setError("gender", {
                 message: data.response?.data.impossible_gender[0],
               });
+            } else if (data.response?.data.impossible_age) {
+              setError("birth_date", {
+                message: data.response?.data.impossible_age[0],
+              });
             }
 
             const errorData = data.response?.data || {};
@@ -191,6 +195,7 @@ export default function NewMemberPage() {
                 setError(field, { message: errorData[field][0] });
               }
             });
+            window.scrollTo({ top: 0, behavior: "smooth" });
           },
         });
       });

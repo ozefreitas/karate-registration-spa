@@ -88,58 +88,64 @@ export default function LastCompQualiHomeComponent(
                         }}
                       >
                         <Tooltip title={"Consultar"}>
-                          <ListItemButton
-                            onClick={() =>
-                              navigate(`members/${category.first_place.id}/`)
-                            }
-                            sx={{
-                              m: 0,
-                              pb: 0,
-                            }}
-                          >
-                            <ListItemText
-                              primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
-                            />
-                          </ListItemButton>
+                          <span>
+                            <ListItemButton
+                              onClick={() =>
+                                navigate(`members/${category.first_place.id}/`)
+                              }
+                              sx={{
+                                m: 0,
+                                pb: 0,
+                              }}
+                            >
+                              <ListItemText
+                                primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
+                              />
+                            </ListItemButton>
+                          </span>
                         </Tooltip>
                       </ListItem>
                       <Tooltip title={"Consultar"}>
-                        <ListItem
-                          onClick={() =>
-                            navigate(`members/${category.second_place.id}/`)
-                          }
-                          sx={{ m: 0 }}
-                        >
-                          <ListItemButton
-                            sx={{
-                              m: 0,
-                              pb: 0,
-                              pt: 0,
-                            }}
+                        <span>
+                          <ListItem
+                            onClick={() =>
+                              navigate(`members/${category.second_place.id}/`)
+                            }
+                            sx={{ m: 0 }}
                           >
-                            <ListItemText
-                              primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
-                            />
-                          </ListItemButton>
-                        </ListItem>
+                            <ListItemButton
+                              sx={{
+                                m: 0,
+                                pb: 0,
+                                pt: 0,
+                              }}
+                            >
+                              <ListItemText
+                                primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        </span>
                       </Tooltip>
                       <Tooltip title={"Consultar"}>
-                        <ListItem sx={{ m: 0 }}>
-                          <ListItemButton
-                            onClick={() =>
-                              navigate(`members/${category.third_place.id}/`)
-                            }
-                            sx={{
-                              m: 0,
-                              pb: 0,
-                              pt: 0,
-                            }}
-                          >
-                            <ListItemText
-                              primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
-                            />
-                          </ListItemButton>
-                        </ListItem>
+                        <span>
+                          <ListItem sx={{ m: 0 }}>
+                            <ListItemButton
+                              onClick={() =>
+                                navigate(`members/${category.third_place.id}/`)
+                              }
+                              sx={{
+                                m: 0,
+                                pb: 0,
+                                pt: 0,
+                              }}
+                            >
+                              <ListItemText
+                                primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>
+                        </span>
                       </Tooltip>
                     </List>
                   </AccordionDetails>

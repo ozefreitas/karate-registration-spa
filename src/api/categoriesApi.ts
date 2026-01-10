@@ -29,6 +29,12 @@ export const fetchCategories = (
   return authClient.get("/categories/", { params });
 };
 
+export const fetchCategoriesNotinDiscipline = (
+  disciplineId: string
+) => {
+  return authClient.get("/categories/", { params: {not_in_discipline: disciplineId} });
+};
+
 export const fetchSingleCategory = (categoryId: string) => {
   return authClient.get(`/categories/${categoryId}/`);
 };
