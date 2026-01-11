@@ -7,4 +7,5 @@ export * as notificationsHooks from "./notifications";
 export * as membersHooks from "./members";
 export * as clubsHooks from "./clubs";
 export * as classificationsHooks from "./classifications";
-export * as monthlyPaymentsHooks from "./monthlyPayments"
+export * as monthlyPaymentsHooks from "./monthlyPayments";
+export * as teamsHooks from "./teams";

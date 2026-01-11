@@ -35,10 +35,11 @@ export const fetchLastFiveMembers = () => {
 export const fetchMembersNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
+  gender?: string
 ) => {
   return authClient.get("/members/", {
-    params: { not_in_event: eventId, page: page, page_size: pageSize },
+    params: { not_in_event: eventId, page: page, page_size: pageSize, in_gender: gender },
   });
 };
 

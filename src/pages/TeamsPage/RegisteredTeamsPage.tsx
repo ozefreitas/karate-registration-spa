@@ -47,6 +47,11 @@ export default function RegisteredTeamsPage(
     ? "Período de retificações"
     : "Inscrições fechadas";
 
+  const handleAddNewTeamModalOpen = (disciplineName: string) => {
+    setCurrentDiscipline(disciplineName);
+    setIsModalOpen(true);
+  };
+
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -72,17 +77,20 @@ export default function RegisteredTeamsPage(
   const getColumnMapping = (isCoach?: boolean) => {
     // Base columns except the one that must be last
     const baseColumns = [
-      { key: "full_name", label: "Nome" },
+      { key: "member1", label: "Atleta 1" },
+      { key: "member2", label: "Atleta 2" },
+      { key: "member3", label: "Atleta 3" },
       { key: "gender", label: "Género" },
+      { key: "category", label: "Escalão" },
     ];
 
     // Conditionally add category
-    if (
-      disciplinesData?.data.results.length !== 0 &&
-      (isCoach === undefined || isCoach === false)
-    ) {
-      baseColumns.push({ key: "category", label: "Escalão" });
-    }
+    // if (
+    //   disciplinesData?.data.results.length !== 0 &&
+    //   (isCoach === undefined || isCoach === false)
+    // ) {
+    //   baseColumns.push({ key: "category", label: "Escalão" });
+    // }
 
     // Always add this one last
     baseColumns.push({ key: "added_at", label: "Data Inscrição" });
@@ -158,16 +166,17 @@ export default function RegisteredTeamsPage(
           ></AllUseTable>
         ) : (
           disciplinesData?.data.results.map((discipline: any, index: any) => {
-            const disciplineIndividuals = discipline?.individuals.map(
-              (memberInfo: any) => ({
-                id: memberInfo.member.id,
-                full_name: memberInfo.member.full_name,
-                gender: memberInfo.member.gender,
-                club: memberInfo.member.club,
-                category: memberInfo.member.category,
-                added_at: formatDateTime(memberInfo.added_at, "both"),
-              })
-            );
+            const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
+              id: teamInfo.team.id,
+              member1: teamInfo.team.athlete1.full_name,
+              member2: teamInfo.team.athlete2.full_name,
+              member3: teamInfo.team.athlete3.full_name,
+              // full_name: teamInfo.full_name,
+              gender: teamInfo.team.gender,
+              // club: memberInfo.member.club,
+              // category: memberInfo.member.category,
+              added_at: formatDateTime(teamInfo.added_at, "both"),
+            }));
             return (
               <span key={index}>
                 <Grid
@@ -195,7 +204,7 @@ export default function RegisteredTeamsPage(
                     ) : null}
                     {singleEventData?.data.has_ended &&
                     ["superuser", "subed_club"].includes(props.userRole) &&
-                    disciplineIndividuals.length !== 0 ? (
+                    disciplineTeams.length !== 0 ? (
                       <Grid size={1}>
                         <Tooltip title="Copiar Inscrições">
                           <span>
@@ -215,10 +224,10 @@ export default function RegisteredTeamsPage(
                   </Grid>
                 </Grid>
                 <AllUseTable
-                  count={discipline.individuals.length}
+                  count={discipline.teams.length}
                   type="Modalidades"
                   discipline={discipline.id}
-                  data={disciplineIndividuals}
+                  data={disciplineTeams}
                   columnsHeaders={columnMaping}
                   actions
                   selection
@@ -231,10 +240,12 @@ export default function RegisteredTeamsPage(
                     variant="contained"
                     size="large"
                     color="success"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                      handleAddNewTeamModalOpen(discipline.name);
+                    }}
                     startIcon={<Add />}
                   >
-                    Inscrever
+                    Adicionar
                   </Button>
                 </Grid>
               </span>
@@ -245,7 +256,7 @@ export default function RegisteredTeamsPage(
       <NewTeamPageModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
-        disciplineData={disciplinesData?.data.results.filter(
+        disciplineData={disciplinesData?.data.results.find(
           (disicpline: any) => disicpline.name === currentDiscipline
         )}
       ></NewTeamPageModal>

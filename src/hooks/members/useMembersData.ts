@@ -69,14 +69,16 @@ export const useFetchLastFiveMembers = () => {
 export const useFetchMembersNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
+  gender?: string,
+  enabled?: boolean
 ) => {
   return useQuery({
-    queryKey: ["members-notin-event", eventId, page, pageSize],
-    queryFn: () => fetchMembersNotInEvent(eventId, page, pageSize),
+    queryKey: ["members-notin-event", eventId, page, pageSize, gender],
+    queryFn: () => fetchMembersNotInEvent(eventId, page, pageSize, gender),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!eventId,
+    enabled: !!eventId && !!enabled,
   });
 };
 

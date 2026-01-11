@@ -451,7 +451,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   }}
                   error={!!errors.encounter_type}
                 >
-                  <MenuItem value="None">-- Selecionar --</MenuItem>
+                  <MenuItem sx={{ color: "lightgrey" }} value="None">
+                    -- Selecionar --
+                  </MenuItem>
                   {EncounterOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -621,7 +623,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   error={!!errors.season}
                   helperText={errors.season?.message}
                 >
-                  <MenuItem value="None">-- Selecionar --</MenuItem>
+                  <MenuItem sx={{ color: "lightgrey" }} value="None">
+                    -- Selecionar --
+                  </MenuItem>
                   {SeasonOptions.map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}

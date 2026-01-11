@@ -36,6 +36,22 @@ export const removeAllDisciplineMember = (disciplineId: string) => {
   );
 };
 
+// discipline teams operations
+
+export const addDisciplineTeam = (disciplineId: string, data: any) => {
+  return authClient.post(`/disciplines/${disciplineId}/add_team/`, data);
+};
+
+export const removeDisciplineTeam = (disciplineId: string, data: any) => {
+  return authClient.post(`/disciplines/${disciplineId}/delete_team/`, data);
+};
+
+export const removeAllDisciplineTeam = (disciplineId: string) => {
+  return authClient.delete(
+    `/disciplines/${disciplineId}/delete_all_teams/`
+  );
+};
+
 // discipline categories operations
 
 export const addDisciplineCategory = (disciplineId: string, data: any) => {
