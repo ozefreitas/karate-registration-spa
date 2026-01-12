@@ -213,7 +213,7 @@ export default function NewTeamPageModal(
             elevation={watch("athlete1") === "" ? 1 : 3}
             sx={{
               width: "100%",
-              minHeight: "40vh",
+              minHeight: "30vh",
               m: 2,
               mt: 5,
             }}
@@ -320,7 +320,7 @@ export default function NewTeamPageModal(
             elevation={watch("athlete2") === "" ? 1 : 3}
             sx={{
               width: "100%",
-              minHeight: "40vh",
+              minHeight: "30vh",
               m: 2,
               mt: 5,
             }}
@@ -426,7 +426,7 @@ export default function NewTeamPageModal(
             elevation={watch("athlete3") === "" ? 1 : 3}
             sx={{
               width: "100%",
-              minHeight: "40vh",
+              minHeight: "30vh",
               m: 2,
               mt: 5,
             }}

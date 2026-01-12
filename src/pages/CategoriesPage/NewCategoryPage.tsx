@@ -212,7 +212,9 @@ export default function NewCategoryPage() {
                     error={!!errors.name}
                     helperText={errors.name?.message}
                   >
-                    {GenderOptions.map((item, index) => (
+                    {GenderOptions.filter(
+                      (item) => item.value !== "Ambos" && item.value !== "Misto"
+                    ).map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>

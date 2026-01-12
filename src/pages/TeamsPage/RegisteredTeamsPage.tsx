@@ -174,7 +174,7 @@ export default function RegisteredTeamsPage(
               // full_name: teamInfo.full_name,
               gender: teamInfo.team.gender,
               // club: memberInfo.member.club,
-              // category: memberInfo.member.category,
+              category: teamInfo.team.category,
               added_at: formatDateTime(teamInfo.added_at, "both"),
             }));
             return (

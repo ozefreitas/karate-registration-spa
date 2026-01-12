@@ -158,7 +158,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       custody: "",
       email_contact: "",
       contact: undefined,
-      has_teams: false,
       encounter: false,
       encounter_type: "",
       has_registrations: true,
@@ -182,7 +181,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       custody: data.custody,
       email_contact: data.email_contact,
       contact: data.contact,
-      has_teams: data.has_teams,
       encounter: data.encounter,
       encounter_type: data.encounter_type,
       has_registrations: data.has_registrations,
@@ -193,7 +191,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       onSuccess: () => {
         if (discipline.length === 0) {
           navigate("/events/");
-          queryClient.invalidateQueries({ queryKey: ["events"] });
+          queryClient.refetchQueries({ queryKey: ["events"] });
         }
       },
       onError: (data: any) => {
@@ -278,7 +276,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             onSuccess: () => {
               if (!data.has_categories) {
                 navigate("/events/");
-                queryClient.invalidateQueries({ queryKey: ["events"] });
+                queryClient.refetchQueries({ queryKey: ["events"] });
               }
             },
           }
@@ -297,7 +295,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       addDisciplineCategory.mutate(data, {
         onSuccess: () => {
           navigate("/events/");
-          queryClient.invalidateQueries({ queryKey: ["events"] });
+          queryClient.refetchQueries({ queryKey: ["events"] });
         },
       });
       setLoading(false);
