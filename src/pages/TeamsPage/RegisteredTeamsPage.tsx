@@ -234,9 +234,9 @@ export default function RegisteredTeamsPage(
                   deletable
                   userRole={props.userRole}
                 ></AllUseTable>
-                <Grid container justifyContent="flex-end" m={4}>
+                <Grid container justifyContent="flex-end" m={2}>
                   <Button
-                    sx={{ m: 1 }}
+                    sx={{ m: 1, mr: 0 }}
                     variant="contained"
                     size="large"
                     color="success"

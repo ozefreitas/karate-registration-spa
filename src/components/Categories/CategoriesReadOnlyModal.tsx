@@ -13,6 +13,8 @@ import {
   Toolbar,
   Tooltip,
   ListItemIcon,
+  Grid,
+  Chip,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -202,17 +204,54 @@ export default function CategoriesReadOnlyModal(
                   <ListItemText
                     primary={`${category.name} ${category.gender}`}
                     secondary={
-                      <>
-                        Idade Min.: {category.min_age ?? "N/A"} / Idade Máx.:{" "}
-                        {category.max_age ?? "N/A"} <br /> Grad Min.:{" "}
-                        {getGraduationFromValue(Number(category.min_grad)) ??
-                          "N/A"}{" "}
-                        / Grad Máx.:{" "}
-                        {getGraduationFromValue(Number(category.max_grad)) ??
-                          "N/A"}
-                        <br /> Peso Min.: {category.min_weight ?? "N/A"} / Peso
-                        Máx.: {category.max_weight ?? "N/A"}
-                      </>
+                      <Grid mt={1} container spacing={1}>
+                        <Grid container spacing={1}>
+                          <Chip
+                            size="small"
+                            label={`Idade Min.: ${
+                              category.min_age ?? "N/A"
+                            } anos`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Idade Máx.: ${
+                              category.max_age ?? "N/A"
+                            } anos`}
+                          ></Chip>
+                        </Grid>
+                        <Grid container spacing={1}>
+                          <Chip
+                            size="small"
+                            label={`Graduação Min.: ${
+                              getGraduationFromValue(
+                                Number(category.min_grad)
+                              ) ?? "N/A"
+                            }`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Graduação Máx.: ${
+                              getGraduationFromValue(
+                                Number(category.max_grad)
+                              ) ?? "N/A"
+                            }`}
+                          ></Chip>
+                        </Grid>
+                        <Grid container spacing={1}>
+                          <Chip
+                            size="small"
+                            label={`Peso Min.: ${
+                              category.min_weight ?? "N/A"
+                            } ${category.min_weight ? "Kg" : ""}`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Peso Máx.: ${
+                              category.max_weight ?? "N/A"
+                            } ${category.max_weight ? "Kg" : ""}`}
+                          ></Chip>
+                        </Grid>
+                      </Grid>
                     }
                   />
                 </ListItemButton>
