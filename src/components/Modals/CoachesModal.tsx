@@ -247,6 +247,7 @@ export default function CoachesModal(
           </Search>
 
           <Button
+            sx={{ ml: 2 }}
             autoFocus
             size="large"
             color="inherit"

@@ -232,7 +232,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
           ></AllUseTable>
         )}
         {props.userRole === "main_admin" ? (
-          <Grid sx={{ m: 3, mt: 1 }} size={12}>
+          <Grid sx={{ m: 1 }} size={12}>
             <AddButton label="Adicionar" to="new_category/"></AddButton>
           </Grid>
         ) : null}

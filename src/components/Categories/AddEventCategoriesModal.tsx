@@ -230,6 +230,7 @@ export default function AddEventCategoriesModal(
           )}
           <span>
             <Button
+              sx={{ ml: 2 }}
               autoFocus
               size="large"
               color="inherit"

@@ -46,7 +46,7 @@ export const removeDisciplineTeam = (disciplineId: string, data: any) => {
   return authClient.post(`/disciplines/${disciplineId}/delete_team/`, data);
 };
 
-export const removeAllDisciplineTeam = (disciplineId: string) => {
+export const removeAllDisciplineTeams = (disciplineId: string) => {
   return authClient.delete(
     `/disciplines/${disciplineId}/delete_all_teams/`
   );

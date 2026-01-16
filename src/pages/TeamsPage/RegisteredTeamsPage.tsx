@@ -171,9 +171,7 @@ export default function RegisteredTeamsPage(
               member1: teamInfo.team.athlete1.full_name,
               member2: teamInfo.team.athlete2.full_name,
               member3: teamInfo.team.athlete3.full_name,
-              // full_name: teamInfo.full_name,
               gender: teamInfo.team.gender,
-              // club: memberInfo.member.club,
               category: teamInfo.team.category,
               added_at: formatDateTime(teamInfo.added_at, "both"),
             }));
@@ -225,7 +223,7 @@ export default function RegisteredTeamsPage(
                 </Grid>
                 <AllUseTable
                   count={discipline.teams.length}
-                  type="Modalidades"
+                  type="Equipas"
                   discipline={discipline.id}
                   data={disciplineTeams}
                   columnsHeaders={columnMaping}

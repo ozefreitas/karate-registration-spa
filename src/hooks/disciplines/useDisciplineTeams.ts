@@ -3,7 +3,7 @@ import { useSnackbar } from "notistack";
 import {
   addDisciplineTeam,
   removeDisciplineTeam,
-  removeAllDisciplineTeam,
+  removeAllDisciplineTeams,
 } from "../../api";
 
 export const useAddDisciplineTeam = () => {
@@ -80,13 +80,13 @@ export const useDeleteDisciplineTeam = () => {
   });
 };
 
-export const useDeleteAllDisciplineTeam = () => {
+export const useRemoveAllDisciplineTeams = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId }: { disciplineId: string }) =>
-      removeAllDisciplineTeam(disciplineId),
+      removeAllDisciplineTeams(disciplineId),
     onSuccess: (data: any) => {
       enqueueSnackbar(`${data.data.message}`, {
         variant: "success",

@@ -46,7 +46,7 @@ export default function EventCategoriesPage(
   };
 
   const { data: disciplinesData, isLoading: isDisciplinesDataLoading } =
-    disciplinesHooks.useFetchDisciplinesData(eventId!);
+    disciplinesHooks.useFetchDisciplinesData(eventId!, undefined, false);
 
   useEffect(() => {}, [disciplinesData]);
 
@@ -125,9 +125,9 @@ export default function EventCategoriesPage(
                 ></AllUseTable>
                 {["main_admin", "superuser"].includes(props.userRole) &&
                 !discipline.is_coach ? (
-                  <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
+                  <Grid container size={0.5}>
                     <Button
-                      sx={{ m: 1 }}
+                      sx={{ m: 2 }}
                       variant="contained"
                       size="large"
                       color="success"

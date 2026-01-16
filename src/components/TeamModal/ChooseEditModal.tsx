@@ -13,7 +13,6 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { useFetchSingleTeamData } from "../../hooks/useTeamsData";
 // import { membersHooks } from "../../hooks";
 import EditMemberModal from "../Modals/EditMemberModal";
 import { useForm } from "react-hook-form";
@@ -40,7 +39,6 @@ export default function ChooseEditModal(
     setChosenMember: any;
   }>
 ) {
-  console.log(props.isModalOpen);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any>(null);
 
@@ -55,7 +53,7 @@ export default function ChooseEditModal(
     setIsEditTeamModalOpen(false);
   };
 
-  const fetchSingleTeam = useFetchSingleTeamData();
+  // const fetchSingleTeam = useFetchSingleTeamData();
   // const {data: singleAthleteData, refetch: refetchSingleAthleteData} = membersHooks.useFetchSingleMemberData(props.id);
 
   const {
@@ -85,28 +83,28 @@ export default function ChooseEditModal(
   useEffect(() => {
     if (props.isModalOpen && props.id) {
       setIsLoading(true);
-      fetchSingleTeam.mutate(props.id, {
-        onSuccess: (data: any) => {
-          setIsLoading(false);
-          setTeamData(data);
-          const formData = {
-            athlete1: data?.data.athlete1_full_name,
-            athlete2: data?.data.athlete2_full_name,
-            athlete3: data?.data.athlete3_full_name,
-            // athlete4: data?.data.athlete4,
-            // athlete5: data?.data.athlete5,
-            athlete1Id: data?.data.athlete1.id,
-            athlete2Id: data?.data.athlete2.id,
-            athlete3Id: data?.data.athlete3.id,
-            // athlete4Id: data?.data.athlete4.id,
-            // athlete5Id: data?.data.athlete5.id,
-            category: data?.data.category,
-            gender: data?.data.gender,
-            teamNumber: data?.data.team_number,
-          };
-          teamReset(formData);
-        },
-      });
+      // fetchSingleTeam.mutate(props.id, {
+      //   onSuccess: (data: any) => {
+      //     setIsLoading(false);
+      //     setTeamData(data);
+      //     const formData = {
+      //       athlete1: data?.data.athlete1_full_name,
+      //       athlete2: data?.data.athlete2_full_name,
+      //       athlete3: data?.data.athlete3_full_name,
+      //       // athlete4: data?.data.athlete4,
+      //       // athlete5: data?.data.athlete5,
+      //       athlete1Id: data?.data.athlete1.id,
+      //       athlete2Id: data?.data.athlete2.id,
+      //       athlete3Id: data?.data.athlete3.id,
+      //       // athlete4Id: data?.data.athlete4.id,
+      //       // athlete5Id: data?.data.athlete5.id,
+      //       category: data?.data.category,
+      //       gender: data?.data.gender,
+      //       teamNumber: data?.data.team_number,
+      //     };
+      //     teamReset(formData);
+      //   },
+      // });
     }
   }, [props.id]);
 

@@ -16,7 +16,7 @@ import { useState } from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Close } from "@mui/icons-material";
-import { useUpdateTeamData } from "../../hooks/useTeamsData";
+// import { useUpdateTeamData } from "../../hooks/useTeamsData";
 import { Controller, SubmitHandler } from "react-hook-form";
 import PickOneMemberModal from "../Modals/PickOneMemberModal";
 
@@ -62,7 +62,7 @@ export default function EditTeamModal(
     athlete5Id: string | null;
   };
 
-  const updateTeamData = useUpdateTeamData();
+  // const updateTeamData = useUpdateTeamData();
 
   const onSubmit: SubmitHandler<UpdateTeam> = (data) => {
     const formData = {
@@ -72,15 +72,15 @@ export default function EditTeamModal(
       athlete4: data.athlete4Id,
       athlete5: data.athlete5Id,
     };
-    updateTeamData.mutate(
-      { teamId: props.id, data: formData },
-      {
-        onSuccess: () => {
-          // props.handleChoseModalClose();
-          // props.handleModalClose();
-        },
-      }
-    );
+    // updateTeamData.mutate(
+    //   { teamId: props.id, data: formData },
+    //   {
+    //     onSuccess: () => {
+    //       // props.handleChoseModalClose();
+    //       // props.handleModalClose();
+    //     },
+    //   }
+    // );
   };
 
   return (

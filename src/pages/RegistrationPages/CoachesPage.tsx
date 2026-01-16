@@ -159,7 +159,6 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
       {singleEventData?.data.is_open ? (
         <Grid container justifyContent="flex-end" sx={{ m: 4 }}>
           <Button
-            sx={{ m: 1 }}
             variant="contained"
             size="large"
             color="success"

@@ -433,6 +433,7 @@ export default function MembersModal(
           disciplinesData?.data.results.length === 0 ||
           (isWeightInputScreenOpen && userRole !== "free_club") ? (
             <Button
+              sx={{ ml: 2 }}
               autoFocus
               size="large"
               color="inherit"

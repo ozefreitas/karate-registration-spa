@@ -517,7 +517,7 @@ export default function AllUseTable(
                               justifyContent: "center",
                             }}
                           >
-                            {!props.notWatchable ? (
+                            {props.notWatchable ? null : (
                               <Tooltip arrow title="Consultar">
                                 <span>
                                   <IconButton
@@ -543,7 +543,7 @@ export default function AllUseTable(
                                   </IconButton>
                                 </span>
                               </Tooltip>
-                            ) : null}
+                            )}
                             {(props.userRole === "main_admin" &&
                               props.editable) ||
                             (props.userRole === "subed_club" &&

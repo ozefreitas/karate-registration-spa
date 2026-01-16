@@ -1,7 +1,7 @@
 import * as React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { TransitionProps } from "@mui/material/transitions";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, set, useForm } from "react-hook-form";
 import {
   Avatar,
   Card,
@@ -20,7 +20,7 @@ import {
   Slide,
 } from "@mui/material";
 import { membersHooks, teamsHooks, disciplinesHooks } from "../../hooks";
-import { GenderOptions } from "../../config";
+import { GenderOptions, getGraduationFromValue } from "../../config";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import stringAvatar from "../../dashboard/utils/avatarColor";
@@ -46,6 +46,10 @@ export default function NewTeamPageModal(
   const { user } = useAuth();
   const userRole = user?.data.role;
 
+  const [possible_categories, setPossibleCategories] = React.useState<string[]>(
+    []
+  );
+
   const createTeam = teamsHooks.useCreateTeam();
   const addDisciplineTeam = disciplinesHooks.useAddDisciplineTeam();
 
@@ -54,24 +58,43 @@ export default function NewTeamPageModal(
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
       athlete1: "",
       athlete2: "",
       athlete3: "",
+      category: "",
       gender: undefined,
+      is_category_visible: false,
     },
   });
 
   const onSubmit = async (data: any) => {
     try {
-      const team = await createTeam.mutateAsync(data);
-
-      await addDisciplineTeam.mutateAsync({
-        disciplineId: props.disciplineData.id,
-        data: { team_id: team.data.id },
-      });
+      await addDisciplineTeam.mutateAsync(
+        {
+          disciplineId: props.disciplineData.id,
+          data: {
+            athlete1: data.athlete1,
+            athlete2: data.athlete2,
+            athlete3: data.athlete3,
+            gender: data.gender,
+            chosen_category: data.category
+          },
+        },
+        {
+          onSuccess: (data: any) => {
+            reset();
+            props.handleModalClose();
+            if (data.data.status === "info") {
+              setValue("is_category_visible", true);
+              setPossibleCategories(data.data.category_ids);
+            }
+          },
+        }
+      );
     } catch (error) {
       console.error(error);
     }
@@ -151,11 +174,12 @@ export default function NewTeamPageModal(
                 fullWidth
                 select
                 required
+                disabled={watch("is_category_visible")}
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
                 }}
-                error={!!errors.athlete1}
+                error={!!errors.gender}
               >
                 <MenuItem sx={{ color: "lightgrey" }} value={undefined}>
                   -- Selecionar --
@@ -171,6 +195,82 @@ export default function NewTeamPageModal(
             )}
           ></Controller>
         </Grid>
+        {watch("is_category_visible") ? (
+          <Grid container size={12} p={2}>
+            <FormHelperText sx={{ p: 2, pt: 0 }} error>
+              Escolha entre os Escalões possíveis para esta Equipa, de acordo
+              com os Atletas que selecionou anteriormente
+            </FormHelperText>
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Escalão"
+                  fullWidth
+                  select
+                  required
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={true}
+                >
+                  <MenuItem sx={{ color: "lightgrey" }} value={undefined}>
+                    -- Selecionar --
+                  </MenuItem>
+                  {props.disciplineData.categories
+                    ?.filter((item: any) =>
+                      possible_categories.includes(item.id)
+                    )
+                    .map((item: any, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        <Grid container spacing={1} alignItems={"center"}>
+                          <Typography>{item.name}</Typography>
+                          <Chip
+                            size="small"
+                            label={`Idade Min.: ${item.min_age ?? "N/A"} anos`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Idade Máx.: ${item.max_age ?? "N/A"} anos`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Graduação Min.: ${
+                              getGraduationFromValue(Number(item.min_grad)) ??
+                              "N/A"
+                            }`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Graduação Máx.: ${
+                              getGraduationFromValue(Number(item.max_grad)) ??
+                              "N/A"
+                            }`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Peso Min.: ${item.min_weight ?? "N/A"} ${
+                              item.min_weight ? "Kg" : ""
+                            }`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Peso Máx.: ${item.max_weight ?? "N/A"} ${
+                              item.max_weight ? "Kg" : ""
+                            }`}
+                          ></Chip>
+                        </Grid>
+                      </MenuItem>
+                    ))}
+                </TextField>
+              )}
+            ></Controller>
+          </Grid>
+        ) : null}
         <Grid p={2} pb={0} size={12}>
           <FormHelperText sx={{ p: 2, pt: 0 }}>
             Depois selecione os Membros para formarem esta Equipa. Poderá ver
@@ -189,7 +289,9 @@ export default function NewTeamPageModal(
                 fullWidth
                 select
                 required
-                disabled={watch("gender") === undefined}
+                disabled={
+                  watch("gender") === undefined || watch("is_category_visible")
+                }
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
@@ -296,7 +398,9 @@ export default function NewTeamPageModal(
                 fullWidth
                 select
                 required
-                disabled={watch("gender") === undefined}
+                disabled={
+                  watch("gender") === undefined || watch("is_category_visible")
+                }
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
@@ -402,7 +506,9 @@ export default function NewTeamPageModal(
                 label="Atleta 3"
                 fullWidth
                 select
-                disabled={watch("gender") === undefined}
+                disabled={
+                  watch("gender") === undefined || watch("is_category_visible")
+                }
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);

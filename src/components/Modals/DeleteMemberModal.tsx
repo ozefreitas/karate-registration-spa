@@ -16,11 +16,8 @@ import {
   disciplinesHooks,
   categoriesHooks,
   monthlyPaymentsHooks,
+  teamsHooks,
 } from "../../hooks";
-import {
-  useRemoveTeamData,
-  useRemoveAllTeamsData,
-} from "../../hooks/useTeamsData";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
@@ -58,8 +55,9 @@ export default function DeleteMemberModal(
   const removeEventMember = eventsHooks.useRemoveEventMember();
   const removeMember = membersHooks.useDeleteMemberData();
   const removeAllMembers = membersHooks.useDeleteAllMemberData();
-  const removeTeam = useRemoveTeamData();
-  const removeAllTeams = useRemoveAllTeamsData();
+  const removeTeam = teamsHooks.useDeleteTeamData();
+  const removeDisciplineTeam = disciplinesHooks.useDeleteDisciplineTeam();
+  const removeAllTeams = disciplinesHooks.useRemoveAllDisciplineTeams();
   const removeCategory = categoriesHooks.useDeleteCategory();
   const removeAllCategories = categoriesHooks.useDeleteAllCategoriesData();
   const removeDisciplineCategory =
@@ -84,11 +82,17 @@ export default function DeleteMemberModal(
           },
         });
       } else if (props.from === "Equipas") {
-        removeTeam.mutate(id, {
-          onSuccess: () => {
-            navigate("/teams/");
+        removeDisciplineTeam.mutate(
+          {
+            disciplineId: props.discipline,
+            data: { team_id: props.id },
           },
-        });
+          {
+            onSuccess: () => {
+              removeTeam.mutate(id);
+            },
+          }
+        );
       } else if (props.from === "Individuais") {
         const memberData = { member_id: id };
         const data = {
@@ -151,7 +155,7 @@ export default function DeleteMemberModal(
       if (props.from === "Atletas") {
         removeAllMembers.mutate();
       } else if (props.from === "Equipas") {
-        removeAllTeams.mutate();
+        removeAllTeams.mutate({ disciplineId: props.discipline });
       } else if (props.from === "Categorias") {
         removeAllCategories.mutate();
       } else {
@@ -198,6 +202,10 @@ export default function DeleteMemberModal(
             ? props.id === undefined
               ? "Tem a certeza que pretende apagar todas as Inscrições?"
               : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
+            : props.from === "Equipas"
+            ? props.id === undefined
+              ? "Tem a certeza que pretende apagar todas as Equipas?"
+              : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
             : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
         </p>
       </DialogContent>

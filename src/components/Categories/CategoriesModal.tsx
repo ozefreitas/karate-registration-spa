@@ -242,6 +242,7 @@ export default function CategoriesModal(
           </Search>
           <span>
             <Button
+              sx={{ ml: 2 }}
               autoFocus
               size="large"
               color="inherit"

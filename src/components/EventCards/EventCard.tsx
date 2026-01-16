@@ -154,7 +154,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         description="Aqui poderá consultar cada cartão de prova, pode observar toda a
           informação relevante sobre essa prova, assim como os passos para
           inscrever os seus Atletas, Equipas e Treinadores."
-        title={`Evento - ${singleEventData?.data.name}`}
+        title={
+          isSingleEventLoading ? "" : `Evento - ${singleEventData?.data.name}`
+        }
       ></PageInfoCard>
       <Grid container sx={{ mt: 0 }}>
         <Grid container size={12} sx={{ m: 2 }}>
@@ -177,7 +179,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   <>
                     <Stack alignItems="center">
                       <Typography variant="h4">
-                        {singleEventData?.data.name}
+                        {singleEventData?.data.name ?? ""}
                       </Typography>
                     </Stack>
                     <Stack sx={{ p: 2 }}>
