@@ -55,7 +55,6 @@ export default function DeleteMemberModal(
   const removeEventMember = eventsHooks.useRemoveEventMember();
   const removeMember = membersHooks.useDeleteMemberData();
   const removeAllMembers = membersHooks.useDeleteAllMemberData();
-  const removeTeam = teamsHooks.useDeleteTeamData();
   const removeDisciplineTeam = disciplinesHooks.useDeleteDisciplineTeam();
   const removeAllTeams = disciplinesHooks.useRemoveAllDisciplineTeams();
   const removeCategory = categoriesHooks.useDeleteCategory();
@@ -82,17 +81,10 @@ export default function DeleteMemberModal(
           },
         });
       } else if (props.from === "Equipas") {
-        removeDisciplineTeam.mutate(
-          {
-            disciplineId: props.discipline,
-            data: { team_id: props.id },
-          },
-          {
-            onSuccess: () => {
-              removeTeam.mutate(id);
-            },
-          }
-        );
+        removeDisciplineTeam.mutate({
+          disciplineId: props.discipline,
+          data: { team_id: props.id },
+        });
       } else if (props.from === "Individuais") {
         const memberData = { member_id: id };
         const data = {
@@ -125,8 +117,11 @@ export default function DeleteMemberModal(
           removeMember.mutate(memberId);
         });
       } else if (props.from === "Equipas") {
-        id.forEach((memberId) => {
-          removeTeam.mutate(memberId);
+        id.forEach((teamId) => {
+          removeDisciplineTeam.mutate({
+            disciplineId: props.discipline,
+            data: { team_id: teamId },
+          });
         });
       } else if (props.from === "Individuais") {
         id.forEach((memberId) => {
@@ -198,7 +193,7 @@ export default function DeleteMemberModal(
             ? props.id === undefined
               ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
               : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
-            : props.from === "Individuais"
+            : props.from === "Individuais" || props.from === "Modalidades"
             ? props.id === undefined
               ? "Tem a certeza que pretende apagar todas as Inscrições?"
               : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"

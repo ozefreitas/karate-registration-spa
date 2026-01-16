@@ -25,6 +25,8 @@ export default function NewCategoryPage() {
   const [isAgeExpanded, setIsAgeExpanded] = useState<boolean>(true);
   const [isGradExpanded, setIsGradExpanded] = useState<boolean>(true);
   const [isWeightExpanded, setIsWeightExpanded] = useState<boolean>(false);
+  const [isMaxAthletesExpanded, setIsMaxAthletesExpanded] =
+    useState<boolean>(false);
   const {
     control,
     handleSubmit,
@@ -47,6 +49,8 @@ export default function NewCategoryPage() {
       weight_type: false,
       min_weight: undefined,
       max_weight: undefined,
+      has_athlete_max: false,
+      max_athletes: "",
     },
   });
 
@@ -69,6 +73,7 @@ export default function NewCategoryPage() {
       max_grad: data.max_grad === "" ? undefined : data.max_grad,
       min_weight: data.min_weight,
       max_weight: data.max_weight,
+      max_athletes: data.max_athletes === "" ? undefined : data.max_athletes,
     };
 
     if (data.gender === "Ambos") {
@@ -212,9 +217,7 @@ export default function NewCategoryPage() {
                     error={!!errors.name}
                     helperText={errors.name?.message}
                   >
-                    {GenderOptions.filter(
-                      (item) => item.value !== "Ambos" && item.value !== "Misto"
-                    ).map((item, index) => (
+                    {GenderOptions.map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>
@@ -368,6 +371,47 @@ export default function NewCategoryPage() {
                           limites inferiores e inferiores
                         </FormHelperText>
                       )}
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+              <Controller
+                name="has_athlete_max"
+                control={control}
+                render={({ field }) => (
+                  <FormControl
+                    component="fieldset"
+                    variant="standard"
+                    error={!!errors.has_age}
+                  >
+                    <FormLabel sx={{ mb: 1 }}>
+                      Selecione este campo se este Escalão for fazer parte de
+                      Equipas, de forma a ter um limite de Atletas
+                    </FormLabel>
+                    <Stack spacing={1}>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                              if (e.target.checked) {
+                                setIsMaxAthletesExpanded(true);
+                              } else {
+                                setIsMaxAthletesExpanded(false);
+                              }
+                            }}
+                            name="has_athlete_max"
+                          />
+                        }
+                        label="Limite Máximo de Atletas"
+                        sx={{ justifyContent: "left", marginLeft: 0 }}
+                      />
                     </Stack>
                   </FormControl>
                 )}
@@ -539,15 +583,6 @@ export default function NewCategoryPage() {
                       sx={{ justifyContent: "left", marginLeft: 0 }}
                     />
                     <Typography sx={{ pl: 1 }}>Limites</Typography>
-                    {/* {field.value && (
-                        <FormHelperText
-                          variant="filled"
-                          sx={{ fontSize: 12, marginLeft: "14px" }}
-                        >
-                          Terá de selecionar ou um limite de separação, ou
-                          limites inferiores e inferiores
-                        </FormHelperText>
-                      )} */}
                   </Stack>
                 </FormControl>
               )}
@@ -622,8 +657,36 @@ export default function NewCategoryPage() {
             </Grid>
           )}
         </FormAccordion>
+        <FormAccordion
+          title="Seleção de Número Máximo de Atletas"
+          expanded={isMaxAthletesExpanded}
+          tooltipMessage='Apenas poderá abrir esta secção se tiver selecionado "Graduações".'
+          size="split"
+        >
+          <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={3}>
+            <Controller
+              name="max_athletes"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  type="number"
+                  variant={"outlined"}
+                  label="Número Máximo"
+                  required={isMaxAthletesExpanded}
+                  disabled={!isMaxAthletesExpanded}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                />
+              )}
+            />
+          </Grid>
+        </FormAccordion>
         <Grid
-          sx={{ m: 5 }}
+          m={6}
+          mb={0}
           justifyContent="flex-end"
           spacing={2}
           container
@@ -635,7 +698,6 @@ export default function NewCategoryPage() {
             size={"large"}
             color={"success"}
             type={"submit"}
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
               setValue("min_age", "");
@@ -649,7 +711,6 @@ export default function NewCategoryPage() {
             size={"large"}
             color={"success"}
             type={"submit"}
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
               navigate("/categories/");
@@ -661,7 +722,6 @@ export default function NewCategoryPage() {
             variant="outlined"
             size={"small"}
             type={"submit"}
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               navigate("/categories/");
             }}

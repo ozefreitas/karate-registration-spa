@@ -71,11 +71,29 @@ export const useFetchMembersNotInEvent = (
   page: number,
   pageSize: number,
   gender?: string,
-  enabled?: boolean
+  enabled?: boolean,
+  teams?: boolean,
+  disciplineId?: string
 ) => {
   return useQuery({
-    queryKey: ["members-notin-event", eventId, page, pageSize, gender],
-    queryFn: () => fetchMembersNotInEvent(eventId, page, pageSize, gender),
+    queryKey: [
+      "members-notin-event",
+      eventId,
+      page,
+      pageSize,
+      gender,
+      teams,
+      disciplineId,
+    ],
+    queryFn: () =>
+      fetchMembersNotInEvent(
+        eventId,
+        page,
+        pageSize,
+        gender,
+        teams,
+        disciplineId
+      ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!eventId && !!enabled,
@@ -105,6 +123,7 @@ export const useFetchMembersInCategoryGender = (
     queryFn: () => fetchMembersInCategoryGender(category, gender),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: false,
   });
 };
 

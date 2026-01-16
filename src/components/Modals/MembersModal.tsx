@@ -42,7 +42,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { eventsHooks, membersHooks, disciplinesHooks } from "../../hooks";
 import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 
 const Search = styled("div")(({ theme }) => ({
@@ -101,6 +101,7 @@ export default function MembersModal(
     isModalOpen: boolean;
     handleModalClose: any;
     eventData: any;
+    disciplinesData: any;
   }>
 ) {
   type Member = {
@@ -118,15 +119,6 @@ export default function MembersModal(
   const userRole = user?.data.role;
 
   const [page, setPage] = useState<number>(0);
-
-  const handleBackButtonClick = () => {
-    setPage(page - 1);
-  };
-
-  const handleNextButtonClick = () => {
-    setPage(page + 1);
-  };
-
   const [checked, setChecked] = React.useState<string[]>([]);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -142,6 +134,70 @@ export default function MembersModal(
 
     setChecked(newChecked);
   };
+
+  const [isDisciplineScreenOpen, setIsDisciplineScreenOpen] =
+    useState<boolean>(false);
+  const [isWeightInputScreenOpen, setIsWeightInputScreenOpen] =
+    useState<boolean>(false);
+  const [doesNotHaveWeight, setDoesNotHaveWeight] = useState<boolean>(false);
+  const [freeClubWeight, setFreeClubWeight] = useState<string>("");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [currentMemberId, setCurrentMemberId] = useState<string>("");
+  const [disciplinesFree, setDisciplinesFree] = useState<string[]>([]);
+  const [isMutationDelayActive, setIsMutationDelayActive] =
+    useState<boolean>(false);
+
+  const handleBackButtonClick = () => {
+    setPage(page - 1);
+  };
+
+  const handleNextButtonClick = () => {
+    setPage(page + 1);
+  };
+
+  const {
+    data: membersNotInEventData,
+    isLoading: isMembersNotInEventLoading,
+    error: membersNotInEventError,
+    refetch,
+  } = membersHooks.useFetchMembersNotInEvent(
+    eventId!,
+    page + 1,
+    10,
+    undefined,
+    false
+  );
+
+  React.useEffect(() => {
+    if (props.isModalOpen) {
+      refetch();
+    }
+  }, [props.isModalOpen]);
+
+  const { data: disciplinesFreeData } =
+    membersHooks.useFetchDisciplinesnotInMemberData(
+      currentMemberId,
+      props.eventData?.id
+    );
+
+  React.useEffect(() => {
+    if (!disciplinesFreeData?.data) return;
+
+    const newDisciplines = disciplinesFreeData.data.map(
+      (modalities: any) => `${modalities.name}_${modalities.id}`
+    );
+
+    setDisciplinesFree(newDisciplines);
+  }, [disciplinesFreeData]);
+
+  React.useEffect(() => {
+    const defaultValues: any = {};
+    props.disciplinesData?.data.results.forEach((discipline: any) => {
+      defaultValues[`${discipline.name}_${discipline.id}`] = false;
+    });
+
+    reset(defaultValues);
+  }, [props.disciplinesData]);
 
   const addEventMember = eventsHooks.useAddEventMember();
 
@@ -167,13 +223,6 @@ export default function MembersModal(
     }
   };
 
-  const [isDisciplineScreenOpen, setIsDisciplineScreenOpen] =
-    useState<boolean>(false);
-  const [isWeightInputScreenOpen, setIsWeightInputScreenOpen] =
-    useState<boolean>(false);
-  const [doesNotHaveWeight, setDoesNotHaveWeight] = useState<boolean>(false);
-  const [freeClubWeight, setFreeClubWeight] = useState<string>("");
-
   const handleDisciplineScreenOpen = () => {
     setIsDisciplineScreenOpen(true);
   };
@@ -192,44 +241,6 @@ export default function MembersModal(
   const handleWeightInputScreenClose = () => {
     setIsWeightInputScreenOpen(false);
   };
-
-  const location = useLocation();
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [currentMemberId, setCurrentMemberId] = useState<string>("");
-  const [disciplinesFree, setDisciplinesFree] = useState<string[]>([]);
-  const [isMutationDelayActive, setIsMutationDelayActive] =
-    useState<boolean>(false);
-
-  const { data: modalitiesFreeData } =
-    membersHooks.useFetchDisciplinesnotInMemberData(
-      currentMemberId,
-      props.eventData?.id
-    );
-
-  React.useEffect(() => {
-    if (!modalitiesFreeData?.data) return;
-
-    const newDisciplines = modalitiesFreeData.data.map(
-      (modalities: any) => `${modalities.name}_${modalities.id}`
-    );
-
-    setDisciplinesFree(newDisciplines);
-  }, [modalitiesFreeData]);
-
-  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!,
-    false,
-    false
-  );
-
-  React.useEffect(() => {
-    const defaultValues: any = {};
-    disciplinesData?.data.results.forEach((discipline: any) => {
-      defaultValues[`${discipline.name}_${discipline.id}`] = false;
-    });
-
-    reset(defaultValues);
-  }, [disciplinesData]);
 
   type FormValues = Record<string, boolean>;
 
@@ -332,17 +343,6 @@ export default function MembersModal(
     }
   };
 
-  const {
-    data: membersNotInEventData,
-    isLoading: isMembersNotInEventLoading,
-    error: membersNotInEventError,
-    refetch,
-  } = membersHooks.useFetchMembersNotInEvent(eventId!, page + 1, 10);
-
-  React.useEffect(() => {
-    refetch();
-  }, [location]);
-
   const filteredMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
@@ -362,7 +362,6 @@ export default function MembersModal(
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-  console.log(filteredMembers);
 
   return (
     <Dialog
@@ -387,7 +386,7 @@ export default function MembersModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -430,13 +429,13 @@ export default function MembersModal(
             </Search>
           ) : null}
           {isDisciplineScreenOpen ||
-          disciplinesData?.data.results.length === 0 ||
+          props.disciplinesData?.data.results.length === 0 ||
           (isWeightInputScreenOpen && userRole !== "free_club") ? (
             <Button
-              sx={{ ml: 2 }}
+              sx={{ bgcolor: "#2e7d32", mx: 2 }}
               autoFocus
-              size="large"
               color="inherit"
+              size="large"
               onClick={() => {
                 if (isDisciplineScreenOpen || isWeightInputScreenOpen) {
                   handleSubmit(onSubmit)();
@@ -648,15 +647,8 @@ export default function MembersModal(
         ) : (
           <List>
             {isMembersNotInEventLoading ? (
-              <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CircularProgress />
-                </Box>
+              <Grid mt={3} p={2} height={100} justifyContent="center" size={12}>
+                <CircularProgress />
               </Grid>
             ) : membersNotInEventError ? (
               <div>Ocorreu um erro</div>
@@ -674,7 +666,7 @@ export default function MembersModal(
                   key={index}
                   disablePadding
                   secondaryAction={
-                    disciplinesData?.data.count === 0 ? (
+                    props.disciplinesData?.data.count === 0 ? (
                       <label>
                         <Checkbox
                           sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
@@ -708,7 +700,7 @@ export default function MembersModal(
                   <ListItemButton
                     key={index}
                     onClick={() => {
-                      if (disciplinesData?.data.count === 0) {
+                      if (props.disciplinesData?.data.count === 0) {
                         handleToggle(member.id);
                       } else {
                         setCurrentMemberId(member.id);

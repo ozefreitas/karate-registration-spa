@@ -66,7 +66,7 @@ export default function AddClubModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -79,8 +79,9 @@ export default function AddClubModal(
             Adicionar Clube
           </Typography>
           <Button
-            autoFocus
             size="large"
+            sx={{ bgcolor: "#2e7d32" }}
+            autoFocus
             color="inherit"
             onClick={() => {
               handleSubmit(onSubmit)();

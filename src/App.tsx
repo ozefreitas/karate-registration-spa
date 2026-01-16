@@ -204,7 +204,7 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<CategoriesPage userRole={userRole} />}
-                        allowedRoles={["main_admin"]}
+                        allowedRoles={["main_admin", "single_admin"]}
                       />
                     )
                   }

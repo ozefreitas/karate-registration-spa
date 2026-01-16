@@ -36,10 +36,19 @@ export const fetchMembersNotInEvent = (
   eventId: string,
   page: number,
   pageSize: number,
-  gender?: string
+  gender?: string,
+  teams?: boolean,
+  disciplineId?: string
 ) => {
   return authClient.get("/members/", {
-    params: { not_in_event: eventId, page: page, page_size: pageSize, in_gender: gender },
+    params: {
+      not_in_event: eventId,
+      page: page,
+      page_size: pageSize,
+      in_gender: gender,
+      teams: teams,
+      discipline_id: disciplineId,
+    },
   });
 };
 

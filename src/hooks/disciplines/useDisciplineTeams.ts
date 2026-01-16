@@ -29,15 +29,38 @@ export const useAddDisciplineTeam = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.response.data.error}`, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      console.log(data)
+      const errorData = data.response?.data || {};
+      if (errorData.athletes?.[0]) {
+        enqueueSnackbar(errorData.athletes?.[0], {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      } else if (errorData.error) {
+        enqueueSnackbar(errorData.error, {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
+      } else
+        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "top",
+            horizontal: "center",
+          },
+          autoHideDuration: 5000,
+          preventDuplicate: true,
+        });
     },
   });
 };

@@ -158,14 +158,16 @@ const NotificationsPage = (props: { me: any }) => {
             </Card>
           ))
         )}
-        <Grid size={12} mt={3} container justifyContent={"center"}>
-          <Pagination
-            count={Math.ceil(notificationsData?.data.count / pageSize)}
-            page={page}
-            onChange={handleChange}
-            color="primary"
-          />
-        </Grid>
+        {notificationsData?.data.results.length === 0 ? null : (
+          <Grid size={12} mt={3} container justifyContent={"center"}>
+            <Pagination
+              count={Math.ceil(notificationsData?.data.count / pageSize)}
+              page={page}
+              onChange={handleChange}
+              color="primary"
+            />
+          </Grid>
+        )}
       </Grid>
     </>
   );

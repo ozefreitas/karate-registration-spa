@@ -105,6 +105,7 @@ export default function Header(
     data: notificationData,
     isLoading: isNotificationLoading,
     error: notificationError,
+    refetch,
   } = notificationsHooks.useFetchHomeClubNotifications();
 
   const [anchorElNotifications, setAnchorElNotifications] =
@@ -432,7 +433,7 @@ export default function Header(
             justifyContent: "space-between",
           }}
         >
-          Notificações Recentes
+          Notificações Recentes dlihasd
           {(!isNotificationLoading && notificationData?.data.total === 0) ||
           notificationError ? null : (
             <Typography color="textDisabled">
@@ -440,7 +441,7 @@ export default function Header(
             </Typography>
           )}
           {notificationError ? (
-            <IconButton>
+            <IconButton onClick={() => refetch()}>
               <Refresh color="primary"></Refresh>
             </IconButton>
           ) : null}

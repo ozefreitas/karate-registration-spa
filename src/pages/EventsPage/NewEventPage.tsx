@@ -118,6 +118,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     has_age: string;
     has_grad: string;
     has_weight: string;
+    max_athletes: number;
   };
 
   // Memoize `rows` to compute only when `members` changes
@@ -134,6 +135,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         has_age: category.has_age,
         has_grad: category.has_grad,
         has_weight: category.has_weight,
+        max_athletes: category.max_athletes === null ? "Não" : "Sim",
       }));
   }, [categoriesData, selectedDisciplineForCategory, disciplineCategories]);
 
@@ -329,6 +331,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     { key: "has_age", label: "Limite Idades" },
     { key: "has_grad", label: "Limite Ranks" },
     { key: "has_weight", label: "Limite Pesos" },
+    { key: "max_athletes", label: "Limite Atletas (Equipas)" },
   ];
 
   useEffect(() => {
@@ -1148,7 +1151,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           <Grid sx={{ m: 2, mt: 1 }} container size={12}></Grid>
         </FormAccordion>
         <Grid
-          sx={{ m: 6, mb: 0 }}
+          m={6}
+          mt={2}
+          mb={0}
           justifyContent="flex-end"
           spacing={2}
           container

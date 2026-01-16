@@ -128,7 +128,7 @@ export default function PickOneMemberModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"

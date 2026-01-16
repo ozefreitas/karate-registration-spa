@@ -105,7 +105,7 @@ export default function EditTeamModal(
             backgroundColor: "#e81c24",
           }}
         >
-          <Toolbar>
+          <Toolbar style={{ paddingRight: 0 }}>
             <IconButton
               edge="start"
               color="inherit"
@@ -120,9 +120,10 @@ export default function EditTeamModal(
               {props.control._formValues.teamNumber}
             </Typography>
             <Button
+              sx={{ bgcolor: "#2e7d32" }}
               autoFocus
-              size="large"
               color="inherit"
+              size="large"
               onClick={(e) => {
                 e.stopPropagation();
                 props.handleSubmit(onSubmit)();

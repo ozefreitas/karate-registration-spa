@@ -70,7 +70,7 @@ export default function CategoryInfoModal(
           </Typography>
         </Toolbar>
       </AppBar>
-      <DialogContent sx={{ pb: 0 }}>
+      <DialogContent>
         {isSingleCategoryDataLoading ? (
           <Grid
             height={100}
@@ -170,7 +170,13 @@ export default function CategoryInfoModal(
                       input: {
                         readOnly: true,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.min_age
+                            ? "black"
+                            : "lightgray",
+                        },
                       },
                     }}
                   />
@@ -201,7 +207,13 @@ export default function CategoryInfoModal(
                       input: {
                         readOnly: true,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.max_age
+                            ? "black"
+                            : "lightgray",
+                        },
                       },
                     }}
                   />
@@ -236,7 +248,13 @@ export default function CategoryInfoModal(
                       input: {
                         readOnly: true,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.min_grad
+                            ? "black"
+                            : "lightgray",
+                        },
                       },
                     }}
                   />
@@ -271,7 +289,13 @@ export default function CategoryInfoModal(
                       input: {
                         readOnly: true,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.max_grad
+                            ? "black"
+                            : "lightgray",
+                        },
                       },
                     }}
                   />
@@ -302,7 +326,13 @@ export default function CategoryInfoModal(
                       input: {
                         readOnly: true,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.min_weight
+                            ? "black"
+                            : "lightgray",
+                        },
                       },
                     }}
                   />
@@ -333,7 +363,50 @@ export default function CategoryInfoModal(
                       input: {
                         readOnly: true,
                         disableUnderline: true,
-                        style: { fontSize: 18, marginRight: 10 },
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.max_weight
+                            ? "black"
+                            : "lightgray",
+                        },
+                      },
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormControlLabel
+                sx={{ mr: 2 }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                    Número Máximo de Atletas:
+                  </Typography>
+                }
+                control={
+                  <TextField
+                    sx={{ width: "100px" }}
+                    color="warning"
+                    variant="standard"
+                    label=""
+                    value={singleCategoryData?.data.max_athletes ?? "N/A"}
+                    slotProps={{
+                      input: {
+                        readOnly: true,
+                        disableUnderline: true,
+                        style: {
+                          fontSize: 18,
+                          marginRight: 10,
+                          color: singleCategoryData?.data.max_athletes
+                            ? "black"
+                            : "lightgray",
+                        },
                       },
                     }}
                   />

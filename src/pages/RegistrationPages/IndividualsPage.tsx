@@ -240,7 +240,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         )}
       </Grid>
       {singleEventData?.data.is_open ? (
-        <Grid container justifyContent="flex-end" m={4}>
+        <Grid container justifyContent="flex-end" m={3}>
           <Button
             sx={{ m: 1 }}
             variant="contained"
@@ -257,15 +257,16 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
         eventData={singleEventData?.data}
+        disciplinesData={disciplinesData}
       ></MembersModal>
       {disciplineToDuplicate === "" ? null : (
         <DuplicateRegistrationsModal
           handleModalClose={handleDuplicateModalClose}
           isModalOpen={isDuplicateModalOpen}
           disciplineData={
-            disciplinesData?.data.results.filter(
+            disciplinesData?.data.results.find(
               (disicpline: any) => disicpline.name === disciplineToDuplicate
-            )[0]
+            )
           }
           eventName={singleEventData?.data.name}
         ></DuplicateRegistrationsModal>

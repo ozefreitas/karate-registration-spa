@@ -266,29 +266,36 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           <Grid
             size={12}
             container
-            px={3}
-            mb={3}
-            spacing={2}
-            justifyContent={"flex-end"}
+            ml={1}
+            mr={2}
+            justifyContent={"space-between"}
             alignItems={"center"}
           >
-            <MemberOrdering
-              isLoading={isMembersDataLoading}
-              control={orderControl}
-              reset={orderReset}
-              errors={orderErrors}
-              changedCount={orderChangedCount}
-              orderFields={orderFields}
-              setOrderFields={setOrderFields}
-            ></MemberOrdering>
-            <MemberFilters
-              isLoading={isMembersDataLoading}
-              control={filtersControl}
-              setValue={filtersSetValue}
-              reset={filtersReset}
-              errors={filtersErrors}
-              changedCount={filtersChangedCount}
-            ></MemberFilters>
+            {props.userRole === "main_admin" ||
+            props.userRole === "subed_club" ? (
+              <Grid>
+                <AddButton label="Adicionar" to="new_member/"></AddButton>
+              </Grid>
+            ) : null}
+            <Grid container spacing={2}>
+              <MemberOrdering
+                isLoading={isMembersDataLoading}
+                control={orderControl}
+                reset={orderReset}
+                errors={orderErrors}
+                changedCount={orderChangedCount}
+                orderFields={orderFields}
+                setOrderFields={setOrderFields}
+              ></MemberOrdering>
+              <MemberFilters
+                isLoading={isMembersDataLoading}
+                control={filtersControl}
+                setValue={filtersSetValue}
+                reset={filtersReset}
+                errors={filtersErrors}
+                changedCount={filtersChangedCount}
+              ></MemberFilters>
+            </Grid>
           </Grid>
         )}
         {isMembersDataLoading ? (
@@ -326,11 +333,6 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           ></AllUseTable>
         )}
       </Grid>
-      {props.userRole === "main_admin" || props.userRole === "subed_club" ? (
-        <Grid sx={{ m: 3, mt: 2 }}>
-          <AddButton label="Adicionar" to="new_member/"></AddButton>
-        </Grid>
-      ) : null}
       <RequestValidationModal
         id={actionedMember}
         isOpen={isRequestModalOpen}

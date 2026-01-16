@@ -17,7 +17,7 @@ import CategoriesOrdering from "../../components/filter_drawers/CategoriesOrderi
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
-  
+
   type Category = {
     id: string;
     name: string;
@@ -25,6 +25,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     has_age: string;
     has_grad: string;
     has_weight: string;
+    max_athletes: number;
   };
 
   const {
@@ -74,9 +75,10 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const columnMaping = [
     { key: "name", label: "Nome" },
     { key: "gender", label: "Género" },
-    { key: "has_age", label: "Idade" },
-    { key: "has_grad", label: "Rank" },
-    { key: "has_weight", label: "Peso" },
+    { key: "has_age", label: "Limite Idade" },
+    { key: "has_grad", label: "Limite Rank" },
+    { key: "has_weight", label: "Limite Peso" },
+    { key: "max_athletes", label: "Limite Atletas (Equipas)" },
   ];
 
   const [orderFields, setOrderFields] = useState([
@@ -157,6 +159,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
       has_age: category.has_age,
       has_grad: category.has_grad,
       has_weight: category.has_weight,
+      max_athletes: category.max_athletes === null ? "Não" : "Sim",
     }));
   }, [categoriesData]);
 
@@ -179,30 +182,35 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
           <Grid
             size={12}
             container
-            px={3}
             mb={3}
-            spacing={2}
-            justifyContent={"flex-end"}
+            justifyContent={"space-between"}
             alignItems={"center"}
           >
-            <CategoriesOrdering
-              isLoading={isCategoriesLoading}
-              control={orderControl}
-              reset={orderReset}
-              errors={orderErrors}
-              changedCount={orderChangedCount}
-              orderFields={orderFields}
-              setOrderFields={setOrderFields}
-            ></CategoriesOrdering>
-            <CategoriesFilters
-              isLoading={isCategoriesLoading}
-              control={filtersControl}
-              reset={filtersReset}
-              watch={filtersWatch}
-              errors={filtersErrors}
-              setValue={filtersSetValue}
-              changedCount={filtersChangedCount}
-            ></CategoriesFilters>
+            {props.userRole === "main_admin" ? (
+              <Grid pl={1}>
+                <AddButton label="Adicionar" to="new_category/"></AddButton>
+              </Grid>
+            ) : null}
+            <Grid container spacing={2} pr={2}>
+              <CategoriesOrdering
+                isLoading={isCategoriesLoading}
+                control={orderControl}
+                reset={orderReset}
+                errors={orderErrors}
+                changedCount={orderChangedCount}
+                orderFields={orderFields}
+                setOrderFields={setOrderFields}
+              ></CategoriesOrdering>
+              <CategoriesFilters
+                isLoading={isCategoriesLoading}
+                control={filtersControl}
+                reset={filtersReset}
+                watch={filtersWatch}
+                errors={filtersErrors}
+                setValue={filtersSetValue}
+                changedCount={filtersChangedCount}
+              ></CategoriesFilters>
+            </Grid>
           </Grid>
         )}
         {isCategoriesLoading ? (
@@ -231,11 +239,6 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             userRole={props.userRole}
           ></AllUseTable>
         )}
-        {props.userRole === "main_admin" ? (
-          <Grid sx={{ m: 1 }} size={12}>
-            <AddButton label="Adicionar" to="new_category/"></AddButton>
-          </Grid>
-        ) : null}
       </Grid>
     </>
   );

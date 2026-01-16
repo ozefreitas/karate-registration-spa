@@ -222,7 +222,7 @@ export default function CoachesModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -247,9 +247,9 @@ export default function CoachesModal(
           </Search>
 
           <Button
-            sx={{ ml: 2 }}
-            autoFocus
             size="large"
+            sx={{ bgcolor: "#2e7d32", ml: 2 }}
+            autoFocus
             color="inherit"
             onClick={() => {
               handleIndividualsSubmit(checked);

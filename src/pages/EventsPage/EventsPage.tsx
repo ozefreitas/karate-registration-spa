@@ -168,66 +168,81 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           <Grid
             size={12}
             container
-            px={3}
+            px={2}
             mb={3}
-            spacing={2}
-            justifyContent={"flex-end"}
+            justifyContent={
+              ["superuser", "main_admin"].includes(props.userRole)
+                ? "space-between"
+                : "flex-end"
+            }
             alignItems={"center"}
           >
-            <EventsOrdering
-              isLoading={isEventsDataLoading}
-              control={orderControl}
-              reset={orderReset}
-              errors={orderErrors}
-              changedCount={orderChangedCount}
-              orderFields={orderFields}
-              setOrderFields={setOrderFields}
-            ></EventsOrdering>
-            <EventsFilters
-              isLoading={isEventsDataLoading}
-              control={filtersControl}
-              reset={filtersReset}
-              errors={filtersErrors}
-              changedCount={filtersChangedCount}
-            ></EventsFilters>
-            <Grid pl={2} container spacing={1} borderRadius={3}>
-              <Tooltip placement="top" title={"Vista de Lista"}>
-                <span>
-                  <IconButton
-                    size="large"
-                    onClick={() => setCurrentView("list")}
-                    sx={{
-                      bgcolor: currentView === "list" ? "#1976d2;" : undefined,
-                    }}
-                    color="info"
-                  >
-                    <Subject
+            {props.userRole === "main_admin" ? (
+              <AddButton label="Adicionar" to="new_event/"></AddButton>
+            ) : null}
+            <Grid
+              container
+              spacing={2}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <EventsOrdering
+                isLoading={isEventsDataLoading}
+                control={orderControl}
+                reset={orderReset}
+                errors={orderErrors}
+                changedCount={orderChangedCount}
+                orderFields={orderFields}
+                setOrderFields={setOrderFields}
+              ></EventsOrdering>
+              <EventsFilters
+                isLoading={isEventsDataLoading}
+                control={filtersControl}
+                reset={filtersReset}
+                errors={filtersErrors}
+                changedCount={filtersChangedCount}
+              ></EventsFilters>
+              <Grid pl={2} container spacing={1} borderRadius={3}>
+                <Tooltip placement="top" title={"Vista de Lista"}>
+                  <span>
+                    <IconButton
+                      size="large"
+                      onClick={() => setCurrentView("list")}
                       sx={{
-                        color: currentView === "list" ? "white" : undefined,
+                        bgcolor:
+                          currentView === "list" ? "#1976d2;" : undefined,
                       }}
-                    ></Subject>
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip placement="top" title={"Vista de Calendário"}>
-                <span>
-                  <IconButton
-                    size="large"
-                    sx={{
-                      bgcolor:
-                        currentView === "calendar" ? "#1976d2;" : undefined,
-                    }}
-                    onClick={() => setCurrentView("calendar")}
-                    color="info"
-                  >
-                    <CalendarMonth
+                      color="info"
+                    >
+                      <Subject
+                        sx={{
+                          color: currentView === "list" ? "white" : undefined,
+                        }}
+                      ></Subject>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip placement="top" title={"Vista de Calendário"}>
+                  <span>
+                    <IconButton
+                      size="large"
                       sx={{
-                        color: currentView === "calendar" ? "white" : undefined,
+                        bgcolor:
+                          currentView === "calendar" ? "#1976d2;" : undefined,
                       }}
-                    ></CalendarMonth>
-                  </IconButton>
-                </span>
-              </Tooltip>
+                      onClick={() => setCurrentView("calendar")}
+                      color="info"
+                    >
+                      <CalendarMonth
+                        sx={{
+                          color:
+                            currentView === "calendar" ? "white" : undefined,
+                        }}
+                      ></CalendarMonth>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </Grid>
             </Grid>
           </Grid>
         )}
@@ -413,9 +428,6 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               />
             </Grid>
           )}
-          {props.userRole === "main_admin" ? (
-            <AddButton label="Adicionar" to="new_event/"></AddButton>
-          ) : null}
         </Grid>
       </Grid>
     </>

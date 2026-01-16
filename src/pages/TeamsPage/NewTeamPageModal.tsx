@@ -41,16 +41,12 @@ export default function NewTeamPageModal(
     disciplineData: any;
   }>
 ) {
-  const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
-  const { user } = useAuth();
-  const userRole = user?.data.role;
 
   const [possible_categories, setPossibleCategories] = React.useState<string[]>(
     []
   );
 
-  const createTeam = teamsHooks.useCreateTeam();
   const addDisciplineTeam = disciplinesHooks.useAddDisciplineTeam();
 
   const {
@@ -66,7 +62,7 @@ export default function NewTeamPageModal(
       athlete2: "",
       athlete3: "",
       category: "",
-      gender: undefined,
+      gender: "",
       is_category_visible: false,
     },
   });
@@ -81,16 +77,17 @@ export default function NewTeamPageModal(
             athlete2: data.athlete2,
             athlete3: data.athlete3,
             gender: data.gender,
-            chosen_category: data.category
+            chosen_category: data.category,
           },
         },
         {
           onSuccess: (data: any) => {
-            reset();
-            props.handleModalClose();
             if (data.data.status === "info") {
               setValue("is_category_visible", true);
               setPossibleCategories(data.data.category_ids);
+            } else {
+              reset();
+              props.handleModalClose();
             }
           },
         }
@@ -101,19 +98,23 @@ export default function NewTeamPageModal(
   };
 
   const selectedGender =
-    watch("gender") === "Misto" ? undefined : watch("gender");
+    watch("gender") === "Misto" || watch("gender") === ""
+      ? undefined
+      : watch("gender");
 
   const {
     data: membersNotInEventData,
-    isLoading: isMembersNotInEventLoading,
-    error: membersNotInEventError,
-    refetch,
+    // isLoading: isMembersNotInEventLoading,
+    // error: membersNotInEventError,
+    // refetch,
   } = membersHooks.useFetchMembersNotInEvent(
     eventId!,
     1,
     100,
     selectedGender,
-    props.isModalOpen && watch("gender") !== undefined
+    props.isModalOpen && watch("gender") !== undefined,
+    true,
+    props.disciplineData?.id
   );
 
   return (
@@ -134,7 +135,7 @@ export default function NewTeamPageModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -147,6 +148,7 @@ export default function NewTeamPageModal(
             Adicionar nova Equipa a {props.disciplineData?.name}
           </Typography>
           <Button
+            sx={{ bgcolor: "#2e7d32" }}
             autoFocus
             color="inherit"
             onClick={() => {
@@ -157,7 +159,7 @@ export default function NewTeamPageModal(
           </Button>
         </Toolbar>
       </AppBar>
-      <Grid container size={12} p={5} pt={3}>
+      <Grid container size={12} px={{ xs: 2, sm: 5 }} pt={3}>
         <Grid container size={12} p={2}>
           <FormHelperText sx={{ p: 2, pt: 0 }}>
             Comece por selecionar um género. Este será usado tanto para procurar
@@ -177,11 +179,12 @@ export default function NewTeamPageModal(
                 disabled={watch("is_category_visible")}
                 {...field}
                 onChange={(e) => {
+                  reset();
                   field.onChange(e);
                 }}
                 error={!!errors.gender}
               >
-                <MenuItem sx={{ color: "lightgrey" }} value={undefined}>
+                <MenuItem sx={{ color: "lightgrey" }} value={""}>
                   -- Selecionar --
                 </MenuItem>
                 {GenderOptions?.filter((item) => item.value !== "Ambos").map(
@@ -227,8 +230,13 @@ export default function NewTeamPageModal(
                     )
                     .map((item: any, index: any) => (
                       <MenuItem key={index} value={item.id}>
-                        <Grid container spacing={1} alignItems={"center"}>
-                          <Typography>{item.name}</Typography>
+                        <Grid
+                          container
+                          spacing={2}
+                          py={1}
+                          alignContent={"center"}
+                        >
+                          <Typography mr={2}>{item.name}</Typography>
                           <Chip
                             size="small"
                             label={`Idade Min.: ${item.min_age ?? "N/A"} anos`}
@@ -263,6 +271,14 @@ export default function NewTeamPageModal(
                               item.max_weight ? "Kg" : ""
                             }`}
                           ></Chip>
+                          {item.max_athletes ? (
+                            <Chip
+                              size="small"
+                              label={`Número Máx. de Atletas (Equipas): ${
+                                item.max_athletes ?? "N/A"
+                              } ${item.max_athletes ? "Atletas" : ""}`}
+                            ></Chip>
+                          ) : null}
                         </Grid>
                       </MenuItem>
                     ))}
@@ -277,337 +293,405 @@ export default function NewTeamPageModal(
             mais informações acerca de cada Membro depois de o selecionar.
           </FormHelperText>
         </Grid>
-        <Grid container size={4} p={2} pt={0} alignContent={"flex-start"}>
-          <Controller
-            name="athlete1"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Atleta 1"
-                fullWidth
-                select
-                required
-                disabled={
-                  watch("gender") === undefined || watch("is_category_visible")
-                }
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.athlete1}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {membersNotInEventData?.data.results.map(
-                  (item: any, index: any) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.full_name}
-                    </MenuItem>
-                  )
-                )}
-              </TextField>
-            )}
-          ></Controller>
-          <Card
-            elevation={watch("athlete1") === "" ? 1 : 3}
-            sx={{
-              width: "100%",
-              minHeight: "30vh",
-              m: 2,
-              mt: 5,
-            }}
+        <Grid
+          p={2}
+          pt={0}
+          size={12}
+          container
+          justifyContent={"center"}
+          spacing={2}
+        >
+          <Grid
+            container
+            size={{ xs: 12, md: 6, lg: 4 }}
+            alignContent={"flex-start"}
           >
-            <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
-              {watch("athlete1") === "" ? (
-                <Typography color="textDisabled" mt={8}>
-                  Prévisualização indisponível. <br></br> Selecione um Atleta
-                  acima.
-                </Typography>
-              ) : (
-                <Grid
-                  container
-                  direction={"column"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  spacing={2}
+            <Controller
+              name="athlete1"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Atleta 1"
+                  fullWidth
+                  select
+                  required
+                  disabled={
+                    watch("gender") === "" || watch("is_category_visible")
+                  }
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.athlete1}
                 >
-                  <Avatar
-                    {...stringAvatar(
-                      membersNotInEventData?.data.results.find(
-                        (item: any) => item.id === watch("athlete1")
-                      ).full_name,
-                      128
-                    )}
-                  ></Avatar>
-                  <Typography variant="h4">
-                    {
-                      membersNotInEventData?.data.results.find(
-                        (item: any) => item.id === watch("athlete1")
-                      ).full_name
-                    }
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {membersNotInEventData?.data.results.map(
+                    (item: any, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.full_name}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              )}
+            ></Controller>
+            <Card
+              elevation={watch("athlete1") === "" ? 1 : 3}
+              sx={{
+                width: "100%",
+                minHeight: "30vh",
+                m: 2,
+                mt: 3,
+              }}
+            >
+              <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
+                {watch("athlete1") === "" ? (
+                  <Typography color="textDisabled" mt={8}>
+                    Prévisualização indisponível. <br></br> Selecione um Atleta
+                    acima.
                   </Typography>
-                  <Grid container justifyContent={"center"}>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                ) : (
+                  <Grid
+                    container
+                    direction={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    spacing={2}
+                  >
+                    <Avatar
+                      {...stringAvatar(
+                        membersNotInEventData?.data.results.find(
+                          (item: any) => item.id === watch("athlete1")
+                        ).full_name,
+                        128
+                      )}
+                    ></Avatar>
+                    <Typography variant="h4">
+                      {
+                        membersNotInEventData?.data.results.find(
+                          (item: any) => item.id === watch("athlete1")
+                        ).full_name
+                      }
+                    </Typography>
+                    <Grid container justifyContent={"center"}>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete1")
                           ).age
-                        } anos
+                        } anos (calculados)
                       `}
-                    ></Chip>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete1")
                           ).gender
                         }
                       `}
-                    ></Chip>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete1")
                           ).weight
                         } Kg
                       `}
-                    ></Chip>
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`Escalão (previsto): 
+                        ${
+                          membersNotInEventData?.data.results.find(
+                            (item: any) => item.id === watch("athlete1")
+                          ).category
+                        }
+                      `}
+                      ></Chip>
+                    </Grid>
                   </Grid>
-                </Grid>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid container size={4} p={2} pt={0} alignContent={"flex-start"}>
-          <Controller
-            name="athlete2"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Atleta 2"
-                fullWidth
-                select
-                required
-                disabled={
-                  watch("gender") === undefined || watch("is_category_visible")
-                }
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.athlete2}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {membersNotInEventData?.data.results.map(
-                  (item: any, index: any) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.full_name}
-                    </MenuItem>
-                  )
                 )}
-              </TextField>
-            )}
-          ></Controller>
-          <Card
-            elevation={watch("athlete2") === "" ? 1 : 3}
-            sx={{
-              width: "100%",
-              minHeight: "30vh",
-              m: 2,
-              mt: 5,
-            }}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid
+            container
+            size={{ xs: 12, md: 6, lg: 4 }}
+            alignContent={"flex-start"}
           >
-            <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
-              {watch("athlete2") === "" ? (
-                <Typography color="textDisabled" mt={8}>
-                  Prévisualização indisponível. <br></br> Selecione um Atleta
-                  acima.
-                </Typography>
-              ) : (
-                <Grid
-                  container
-                  direction={"column"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  spacing={2}
+            <Controller
+              name="athlete2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Atleta 2"
+                  fullWidth
+                  select
+                  required
+                  disabled={
+                    watch("gender") === "" || watch("is_category_visible")
+                  }
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.athlete2}
                 >
-                  <Avatar
-                    {...stringAvatar(
-                      membersNotInEventData?.data.results.find(
-                        (item: any) => item.id === watch("athlete2")
-                      ).full_name,
-                      128
-                    )}
-                  ></Avatar>
-                  <Typography variant="h4">
-                    {
-                      membersNotInEventData?.data.results.find(
-                        (item: any) => item.id === watch("athlete2")
-                      ).full_name
-                    }
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {membersNotInEventData?.data.results.map(
+                    (item: any, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.full_name}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              )}
+            ></Controller>
+            <Card
+              elevation={watch("athlete2") === "" ? 1 : 3}
+              sx={{
+                width: "100%",
+                minHeight: "30vh",
+                m: 2,
+                mt: 3,
+              }}
+            >
+              <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
+                {watch("athlete2") === "" ? (
+                  <Typography color="textDisabled" mt={8}>
+                    Prévisualização indisponível. <br></br> Selecione um Atleta
+                    acima.
                   </Typography>
-                  <Grid container justifyContent={"center"}>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                ) : (
+                  <Grid
+                    container
+                    direction={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    spacing={2}
+                  >
+                    <Avatar
+                      {...stringAvatar(
+                        membersNotInEventData?.data.results.find(
+                          (item: any) => item.id === watch("athlete2")
+                        ).full_name,
+                        128
+                      )}
+                    ></Avatar>
+                    <Typography variant="h4">
+                      {
+                        membersNotInEventData?.data.results.find(
+                          (item: any) => item.id === watch("athlete2")
+                        ).full_name
+                      }
+                    </Typography>
+                    <Grid container justifyContent={"center"}>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete2")
                           ).age
-                        } anos
+                        } anos (calculados)
                       `}
-                    ></Chip>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete2")
                           ).gender
                         }
                       `}
-                    ></Chip>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete2")
                           ).weight
                         } Kg
                       `}
-                    ></Chip>
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`Escalão (previsto): 
+                        ${
+                          membersNotInEventData?.data.results.find(
+                            (item: any) => item.id === watch("athlete2")
+                          ).category
+                        }
+                      `}
+                      ></Chip>
+                    </Grid>
                   </Grid>
-                </Grid>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid container size={4} p={2} pt={0} alignContent={"flex-start"}>
-          <Controller
-            name="athlete3"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Atleta 3"
-                fullWidth
-                select
-                disabled={
-                  watch("gender") === undefined || watch("is_category_visible")
-                }
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.athlete3}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {membersNotInEventData?.data.results.map(
-                  (item: any, index: any) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.full_name}
-                    </MenuItem>
-                  )
                 )}
-              </TextField>
-            )}
-          ></Controller>
-          <Card
-            elevation={watch("athlete3") === "" ? 1 : 3}
-            sx={{
-              width: "100%",
-              minHeight: "30vh",
-              m: 2,
-              mt: 5,
-            }}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid
+            container
+            size={{ xs: 12, md: 6, lg: 4 }}
+            alignContent={"flex-start"}
           >
-            <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
-              {watch("athlete3") === "" ? (
-                <Typography color="textDisabled" mt={8}>
-                  Prévisualização indisponível. <br></br> Selecione um Atleta
-                  acima.
-                </Typography>
-              ) : (
-                <Grid
-                  container
-                  direction={"column"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  spacing={2}
+            <Controller
+              name="athlete3"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Atleta 3"
+                  fullWidth
+                  select
+                  disabled={
+                    watch("gender") === "" || watch("is_category_visible")
+                  }
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.athlete3}
                 >
-                  <Avatar
-                    {...stringAvatar(
-                      membersNotInEventData?.data.results.find(
-                        (item: any) => item.id === watch("athlete3")
-                      ).full_name,
-                      128
-                    )}
-                  ></Avatar>
-                  <Typography variant="h4">
-                    {
-                      membersNotInEventData?.data.results.find(
-                        (item: any) => item.id === watch("athlete3")
-                      ).full_name
-                    }
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {membersNotInEventData?.data.results.map(
+                    (item: any, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.full_name}
+                      </MenuItem>
+                    )
+                  )}
+                </TextField>
+              )}
+            ></Controller>
+            <Card
+              elevation={watch("athlete3") === "" ? 1 : 3}
+              sx={{
+                width: "100%",
+                minHeight: "30vh",
+                m: 2,
+                mt: 3,
+              }}
+            >
+              <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
+                {watch("athlete3") === "" ? (
+                  <Typography color="textDisabled" mt={8}>
+                    Prévisualização indisponível. <br></br> Selecione um Atleta
+                    acima.
                   </Typography>
-                  <Grid container justifyContent={"center"}>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                ) : (
+                  <Grid
+                    container
+                    direction={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    spacing={2}
+                  >
+                    <Avatar
+                      {...stringAvatar(
+                        membersNotInEventData?.data.results.find(
+                          (item: any) => item.id === watch("athlete3")
+                        ).full_name,
+                        128
+                      )}
+                    ></Avatar>
+                    <Typography variant="h4">
+                      {
+                        membersNotInEventData?.data.results.find(
+                          (item: any) => item.id === watch("athlete3")
+                        ).full_name
+                      }
+                    </Typography>
+                    <Grid container justifyContent={"center"}>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete3")
                           ).age
-                        } anos
+                        } anos (calculados)
                       `}
-                    ></Chip>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete3")
                           ).gender
                         }
                       `}
-                    ></Chip>
-                    <Chip
-                      sx={{ p: 1 }}
-                      label={`
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
                         ${
                           membersNotInEventData?.data.results.find(
                             (item: any) => item.id === watch("athlete3")
                           ).weight
                         } Kg
                       `}
-                    ></Chip>
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`Escalão (previsto): 
+                        ${
+                          membersNotInEventData?.data.results.find(
+                            (item: any) => item.id === watch("athlete3")
+                          ).category
+                        }
+                      `}
+                      ></Chip>
+                    </Grid>
                   </Grid>
-                </Grid>
-              )}
-            </CardContent>
-          </Card>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-        <FormHelperText sx={{ p: 2, pt: 0 }}>
+
+        <FormHelperText sx={{ px: 2 }}>
           O escalão será calculado automaticamente de acordo com os Escalões
           disponíveis para esta Modalidade. Também a graduação e pesos (quando
-          obrigatórios) serão verificados.
+          obrigatórios) serão verificados. <br />
+          No caso de haver sobreposição de idades, ser-lhe-á pedido para
+          selecionar o Escalão que pretende, dentro dos possíveis.
         </FormHelperText>
+      </Grid>
+      <Grid container justifyContent={"end"} size={12} mr={7}>
+        <Grid>
+          <Button
+            color="error"
+            sx={{ px: 3, mb: 2 }}
+            onClick={() => {
+              reset();
+            }}
+            variant="contained"
+          >
+            Limpar
+          </Button>
+        </Grid>
       </Grid>
     </Dialog>
   );

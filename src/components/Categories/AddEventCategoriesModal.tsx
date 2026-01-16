@@ -18,6 +18,7 @@ import {
   Box,
   CircularProgress,
   ListItemIcon,
+  Chip,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -108,9 +109,8 @@ export default function AddEventCategoriesModal(
     has_weight: string;
     min_weight: string;
     max_weight: string;
+    max_athletes: number;
   };
-
-  const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [checked, setChecked] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -230,10 +230,10 @@ export default function AddEventCategoriesModal(
           )}
           <span>
             <Button
-              sx={{ ml: 2 }}
+              sx={{ bgcolor: "#2e7d32", ml: 2 }}
               autoFocus
-              size="large"
               color="inherit"
+              size="large"
               onClick={handleSubmit}
               disabled={
                 categoriesNotinDisciplineData?.data.results.length === 0
@@ -289,17 +289,62 @@ export default function AddEventCategoriesModal(
                   <ListItemText
                     primary={`${category.name} ${category.gender}`}
                     secondary={
-                      <>
-                        Idade Min.: {category.min_age ?? "N/A"} / Idade Máx.:{" "}
-                        {category.max_age ?? "N/A"} <br /> Grad Min.:{" "}
-                        {getGraduationFromValue(Number(category.min_grad)) ??
-                          "N/A"}{" "}
-                        / Grad Máx.:{" "}
-                        {getGraduationFromValue(Number(category.max_grad)) ??
-                          "N/A"}
-                        <br /> Peso Min.: {category.min_weight ?? "N/A"} / Peso
-                        Máx.: {category.max_weight ?? "N/A"}
-                      </>
+                      <Grid mt={1} container spacing={1}>
+                        <Grid size={12} container spacing={2}>
+                          <Chip
+                            size="small"
+                            label={`Idade Min.: ${
+                              category.min_age ?? "N/A"
+                            } anos`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Idade Máx.: ${
+                              category.max_age ?? "N/A"
+                            } anos`}
+                          ></Chip>
+                        </Grid>
+                        <Grid size={12} container spacing={2}>
+                          <Chip
+                            size="small"
+                            label={`Graduação Min.: ${
+                              getGraduationFromValue(
+                                Number(category.min_grad)
+                              ) ?? "N/A"
+                            }`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Graduação Máx.: ${
+                              getGraduationFromValue(
+                                Number(category.max_grad)
+                              ) ?? "N/A"
+                            }`}
+                          ></Chip>
+                        </Grid>
+                        <Grid size={12} container spacing={2}>
+                          <Chip
+                            size="small"
+                            label={`Peso Min.: ${
+                              category.min_weight ?? "N/A"
+                            } ${category.min_weight ? "Kg" : ""}`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={`Peso Máx.: ${
+                              category.max_weight ?? "N/A"
+                            } ${category.max_weight ? "Kg" : ""}`}
+                          ></Chip>
+                        </Grid>
+                        {category.max_athletes ? (
+                          <Chip
+                            size="small"
+                            label={`Número Máx. de Atletas (Equipas): ${
+                              category.max_athletes ?? "N/A"
+                            } ${category.max_athletes ? "Atletas" : ""}`}
+                          ></Chip>
+                        ) : null}
+                      </Grid>
                     }
                   />
                 </ListItemButton>

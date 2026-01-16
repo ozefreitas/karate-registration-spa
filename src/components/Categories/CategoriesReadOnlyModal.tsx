@@ -163,7 +163,7 @@ export default function CategoriesReadOnlyModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -205,7 +205,7 @@ export default function CategoriesReadOnlyModal(
                     primary={`${category.name} ${category.gender}`}
                     secondary={
                       <Grid mt={1} container spacing={1}>
-                        <Grid container spacing={1}>
+                        <Grid size={12} container spacing={2}>
                           <Chip
                             size="small"
                             label={`Idade Min.: ${
@@ -219,7 +219,7 @@ export default function CategoriesReadOnlyModal(
                             } anos`}
                           ></Chip>
                         </Grid>
-                        <Grid container spacing={1}>
+                        <Grid size={12} container spacing={2}>
                           <Chip
                             size="small"
                             label={`Graduação Min.: ${
@@ -237,7 +237,7 @@ export default function CategoriesReadOnlyModal(
                             }`}
                           ></Chip>
                         </Grid>
-                        <Grid container spacing={1}>
+                        <Grid size={12} container spacing={2}>
                           <Chip
                             size="small"
                             label={`Peso Min.: ${

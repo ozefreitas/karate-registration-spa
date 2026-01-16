@@ -106,7 +106,7 @@ export default function EditMemberModal(
           backgroundColor: "#e81c24",
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ paddingRight: 0 }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -120,9 +120,10 @@ export default function EditMemberModal(
             {/* {props.control._fields?.firstName?._f?.value} {props.control._fields?.lastName?._f?.value} */}
           </Typography>
           <Button
+            sx={{ bgcolor: "#2e7d32", mr: 2 }}
             autoFocus
-            size="large"
             color="inherit"
+            size="large"
             onClick={() => {
               memberHandleSubmit(onSubmit)();
               props.handleModalClose();
