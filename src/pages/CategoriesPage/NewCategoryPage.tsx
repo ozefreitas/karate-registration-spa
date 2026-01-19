@@ -10,6 +10,8 @@ import {
   Switch,
   Typography,
   Button,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
@@ -19,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { categoriesHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { Clear } from "@mui/icons-material";
 
 export default function NewCategoryPage() {
   const navigate = useNavigate();
@@ -98,7 +101,7 @@ export default function NewCategoryPage() {
           onError: () => {
             // reset();
           },
-        }
+        },
       );
     } else if (data.has_weight && !data.weight_type) {
       const formData1 = {
@@ -124,7 +127,7 @@ export default function NewCategoryPage() {
           onError: () => {
             // reset();
           },
-        }
+        },
       );
     } else {
       createCategory.mutate(
@@ -137,7 +140,7 @@ export default function NewCategoryPage() {
           onError: () => {
             // reset();
           },
-        }
+        },
       );
     }
   };
@@ -189,6 +192,26 @@ export default function NewCategoryPage() {
                     fullWidth
                     required
                     {...field}
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              disabled={watch("name") === ""}
+                              onClick={() => setValue("name", "")}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              <Clear
+                                color={
+                                  watch("name") === "" ? "disabled" : "error"
+                                }
+                              ></Clear>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
                     onChange={(e) => {
                       field.onChange(e);
                     }}
@@ -204,6 +227,15 @@ export default function NewCategoryPage() {
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    sx={{
+                      "& .MuiSelect-icon": {
+                        left: "auto",
+                        right: 40, // move arrow to the left
+                      },
+                      // "& .MuiSelect-select": {
+                      //   paddingLeft: "40px", // avoid text overlapping the icon
+                      // },
+                    }}
                     color="warning"
                     variant={"outlined"}
                     label="Género"
@@ -211,6 +243,26 @@ export default function NewCategoryPage() {
                     required
                     select
                     {...field}
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              disabled={watch("gender") === ""}
+                              onClick={() => setValue("gender", "")}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              <Clear
+                                color={
+                                  watch("gender") === "" ? "disabled" : "error"
+                                }
+                              ></Clear>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
                     onChange={(e) => {
                       field.onChange(e);
                     }}
@@ -425,7 +477,7 @@ export default function NewCategoryPage() {
           tooltipMessage='Apenas poderá abrir esta secção se tiver selecionado "Idades".'
           size="split"
         >
-          <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={6}>
+          <Grid sx={{ p: 2, py: 1 }} size={6}>
             <Controller
               name="min_age"
               control={control}
@@ -439,6 +491,26 @@ export default function NewCategoryPage() {
                   required={isAgeExpanded}
                   disabled={!isAgeExpanded}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("min_age") === ""}
+                            onClick={() => setValue("min_age", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("min_age") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -446,7 +518,7 @@ export default function NewCategoryPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={6}>
+          <Grid sx={{ p: 2, py: 1 }} size={6}>
             <Controller
               name="max_age"
               control={control}
@@ -460,6 +532,26 @@ export default function NewCategoryPage() {
                   required={isAgeExpanded}
                   disabled={!isAgeExpanded}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("max_age") === ""}
+                            onClick={() => setValue("max_age", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("max_age") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -474,22 +566,49 @@ export default function NewCategoryPage() {
           tooltipMessage='Apenas poderá abrir esta secção se tiver selecionado "Graduações".'
           size="split"
         >
-          <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={6}>
+          <Grid sx={{ p: 2, py: 1 }} size={6}>
             <Controller
               name="min_grad"
               control={control}
               render={({ field }) => (
                 <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40, // move arrow to the left
+                    },
+                    // "& .MuiSelect-select": {
+                    //   paddingLeft: "40px", // avoid text overlapping the icon
+                    // },
+                  }}
                   color="warning"
                   variant={"outlined"}
                   label="Graduação Mínima"
                   select
                   fullWidth
-                  multiline
                   required={isGradExpanded}
                   disabled={!isGradExpanded}
-                  maxRows={8}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("min_grad") === ""}
+                            onClick={() => setValue("min_grad", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("min_grad") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -508,22 +627,49 @@ export default function NewCategoryPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 1, pt: 1, pb: 1 }} container size={6}>
+          <Grid sx={{ p: 2, py: 1 }} container size={6}>
             <Controller
               name="max_grad"
               control={control}
               render={({ field }) => (
                 <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40, // move arrow to the left
+                    },
+                    // "& .MuiSelect-select": {
+                    //   paddingLeft: "40px", // avoid text overlapping the icon
+                    // },
+                  }}
                   color="warning"
                   variant={"outlined"}
                   label="Graduação Máxima"
                   select
                   fullWidth
-                  multiline
                   required={isGradExpanded}
                   disabled={!isGradExpanded}
-                  maxRows={8}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("max_grad") === ""}
+                            onClick={() => setValue("max_grad", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("max_grad") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -590,7 +736,7 @@ export default function NewCategoryPage() {
           </Grid>
           {weight_type ? (
             <>
-              <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={3}>
+              <Grid sx={{ p: 2, py: 1 }} size={3}>
                 <Controller
                   name="min_weight"
                   control={control}
@@ -611,7 +757,7 @@ export default function NewCategoryPage() {
                   )}
                 />
               </Grid>
-              <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={3}>
+              <Grid sx={{ p: 2, py: 1 }} size={3}>
                 <Controller
                   name="max_weight"
                   control={control}
@@ -634,7 +780,7 @@ export default function NewCategoryPage() {
               </Grid>
             </>
           ) : (
-            <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={3}>
+            <Grid sx={{ p: 2, py: 2 }} size={3}>
               <Controller
                 name="max_weight"
                 control={control}
@@ -663,7 +809,7 @@ export default function NewCategoryPage() {
           tooltipMessage='Apenas poderá abrir esta secção se tiver selecionado "Graduações".'
           size="split"
         >
-          <Grid sx={{ p: 1, pt: 1, pb: 1 }} size={3}>
+          <Grid sx={{ p: 2, py: 1 }} size={3}>
             <Controller
               name="max_athletes"
               control={control}
@@ -676,6 +822,28 @@ export default function NewCategoryPage() {
                   required={isMaxAthletesExpanded}
                   disabled={!isMaxAthletesExpanded}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("max_athletes") === ""}
+                            onClick={() => setValue("max_athletes", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("max_athletes") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}

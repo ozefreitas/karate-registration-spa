@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -28,7 +28,7 @@ export default function NotificationActionModal(
     id?: string | Array<string>;
     mutation: any;
     setSelected: any;
-  }>
+  }>,
 ) {
   const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -48,8 +48,13 @@ export default function NotificationActionModal(
       <DialogTitle>
         <Typography variant="h5">Apagar Notificação</Typography>
       </DialogTitle>
-      <DialogContent>
-        Tem a certeza que pretende apagar esta Notificação? <br /> O Clube não
+      <DialogContent
+        sx={{
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
+        }}
+      >
+        <p>Tem a certeza que pretende apagar esta Notificação? </p> O Clube não
         voltará a ver a mesma.
       </DialogContent>
       <DialogActions>

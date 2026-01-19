@@ -19,14 +19,14 @@ import {
   CircularProgress,
   Chip,
   ListItemText,
+  InputAdornment,
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { Add, Delete, SportsMartialArts } from "@mui/icons-material";
+import { Add, Clear, Delete, SportsMartialArts } from "@mui/icons-material";
 import { useEffect, useState, useMemo, Fragment } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { EncounterOptions, SeasonOptions } from "../../config";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -79,10 +79,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const handleRemove = (item: string) => {
     const indexToRemove = disciplines.indexOf(item);
     const indexToRemove2 = disciplineCategories.findIndex(
-      (obj: any) => obj.discipline === item
+      (obj: any) => obj.discipline === item,
     );
     const indexToRemove3 = disciplineOptions.findIndex(
-      (obj: any) => obj.discipline === item
+      (obj: any) => obj.discipline === item,
     );
 
     const newDisciplines = [...disciplines];
@@ -124,7 +124,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   // Memoize `rows` to compute only when `members` changes
   const categoryRows = useMemo(() => {
     const currentIds = disciplineCategories.find(
-      (item: any) => item.discipline === selectedDisciplineForCategory
+      (item: any) => item.discipline === selectedDisciplineForCategory,
     );
     return categoriesData?.data.results
       .filter((category: any) => currentIds?.categories.includes(category.id))
@@ -159,7 +159,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       description: "",
       custody: "",
       email_contact: "",
-      contact: undefined,
+      contact: "",
       encounter: false,
       encounter_type: "",
       has_registrations: true,
@@ -262,7 +262,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     const disciplineResponses = await Promise.all(
       disciplines.map((discipline) => {
         const options = disciplineOptions.find(
-          (obj: any) => obj.discipline === discipline
+          (obj: any) => obj.discipline === discipline,
         );
 
         return createDiscipline.mutateAsync(
@@ -281,14 +281,14 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 queryClient.refetchQueries({ queryKey: ["events"] });
               }
             },
-          }
+          },
         );
-      })
+      }),
     );
 
     disciplineResponses.forEach((discipline) => {
       const findDiscipline = disciplineCategories.find(
-        (item: any) => item.discipline === discipline.data.name
+        (item: any) => item.discipline === discipline.data.name,
       );
       const data = {
         disciplineId: discipline.data.id,
@@ -426,6 +426,13 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   variant={"outlined"}
                   label="Tipo de Encontro"
                   sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40, // move arrow to the left
+                    },
+                    // "& .MuiSelect-select": {
+                    //   paddingLeft: "40px", // avoid text overlapping the icon
+                    // },
                     "& .MuiInputBase-root.Mui-disabled": {
                       cursor: "not-allowed",
                     },
@@ -445,6 +452,28 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   select
                   disabled={!isEnabled}
                   required
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("encounter_type") === ""}
+                            onClick={() => setValue("encounter_type", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("encounter_type") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   helperText="Só poderá escolher um tipo de encontro se selecionar o campo anterior."
                   {...field}
                   onChange={(e) => {
@@ -569,6 +598,26 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   fullWidth
                   required
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("name") === ""}
+                            onClick={() => setValue("name", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("name") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -590,6 +639,26 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   fullWidth
                   required
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("location") === ""}
+                            onClick={() => setValue("location", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("location") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -605,18 +674,45 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               control={eventMetadataControl}
               render={({ field }) => (
                 <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40, // move arrow to the left
+                    },
+                    // "& .MuiSelect-select": {
+                    //   paddingLeft: "40px", // avoid text overlapping the icon
+                    // },
+                  }}
                   color="warning"
                   variant={"outlined"}
                   label="Época"
                   type="number"
                   slotProps={{
                     htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("encounter_type") === ""}
+                            onClick={() => setValue("encounter_type", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("encounter_type") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
                   }}
                   fullWidth
-                  multiline
                   select
                   required
-                  maxRows={8}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -636,32 +732,33 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2, pt: 1 }} size={6}>
+          <Grid sx={{ p: 2 }} size={6}>
             <Controller
               name="event_date"
               control={eventMetadataControl}
               render={({ field }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
-                    <DatePicker
-                      {...field}
-                      format="YYYY-MM-DD"
-                      label="Data Evento *"
-                      onChange={(date) => {
-                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
-                      }}
-                      value={field.value ? dayjs(field.value) : null}
-                      enableAccessibleFieldDOMStructure={false}
-                      slots={{ textField: TextField }}
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          error: !!errors?.event_date,
-                          helperText: errors?.event_date?.message || "",
-                        },
-                      }}
-                    />
-                  </DemoContainer>
+                  <DatePicker
+                    {...field}
+                    format="YYYY-MM-DD"
+                    label="Data Evento *"
+                    onChange={(date) => {
+                      field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                    }}
+                    value={field.value ? dayjs(field.value) : null}
+                    enableAccessibleFieldDOMStructure={false}
+                    slots={{ textField: TextField }}
+                    slotProps={{
+                      field: {
+                        clearable: true,
+                      },
+                      textField: {
+                        fullWidth: true,
+                        error: !!errors?.event_date,
+                        helperText: errors?.event_date?.message || "",
+                      },
+                    }}
+                  />
                 </LocalizationProvider>
               )}
             />
@@ -676,8 +773,29 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   variant={"outlined"}
                   label="Descrição"
                   fullWidth
-                  multiline
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("description") === ""}
+                            onClick={() => setValue("description", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("description") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -698,6 +816,26 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   label="Organizador"
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("custody") === ""}
+                            onClick={() => setValue("custody", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("custody") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -718,6 +856,28 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   label="Email de contacto"
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("email_contact") === ""}
+                            onClick={() => setValue("email_contact", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("email_contact") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -735,9 +895,30 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 <TextField
                   color="warning"
                   variant={"outlined"}
+                  type="number"
                   label="Contacto telefónico"
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("contact") === ""}
+                            onClick={() => setValue("contact", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("contact") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -753,13 +934,13 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           expanded={expanded}
           tooltipMessage="Apenas poderá abrir esta secção, se tiver permitido a este Evento ter inscrições."
         >
-          <Grid sx={{ p: 2, pt: 1 }} container justifyContent="center" size={4}>
-            <Controller
-              name="start_registration"
-              control={eventMetadataControl}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
+          <Grid container justifyContent={"space-between"} size={12}>
+            <Grid sx={{ p: 2 }} container justifyContent="center" size={4}>
+              <Controller
+                name="start_registration"
+                control={eventMetadataControl}
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       {...field}
                       format="YYYY-MM-DD"
@@ -771,6 +952,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                       slots={{ textField: TextField }}
                       enableAccessibleFieldDOMStructure={false}
                       slotProps={{
+                        field: {
+                          clearable: true,
+                        },
                         textField: {
                           fullWidth: true,
                           error: !!errors?.start_registration,
@@ -778,18 +962,16 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                         },
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 2, pt: 1 }} container justifyContent="center" size={4}>
-            <Controller
-              name="end_registration"
-              control={eventMetadataControl}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
+                  </LocalizationProvider>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ p: 2 }} container justifyContent="center" size={4}>
+              <Controller
+                name="end_registration"
+                control={eventMetadataControl}
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       {...field}
                       format="YYYY-MM-DD"
@@ -801,6 +983,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                       slots={{ textField: TextField }}
                       enableAccessibleFieldDOMStructure={false}
                       slotProps={{
+                        field: {
+                          clearable: true,
+                        },
                         textField: {
                           fullWidth: true,
                           error: !!errors?.end_registration,
@@ -808,18 +993,16 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                         },
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 2, pt: 1 }} container justifyContent="center" size={4}>
-            <Controller
-              name="retifications_deadline"
-              control={eventMetadataControl}
-              render={({ field }) => (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
+                  </LocalizationProvider>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ p: 2 }} container justifyContent="center" size={4}>
+              <Controller
+                name="retifications_deadline"
+                control={eventMetadataControl}
+                render={({ field }) => (
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       {...field}
                       format="YYYY-MM-DD"
@@ -831,6 +1014,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                       slots={{ textField: TextField }}
                       enableAccessibleFieldDOMStructure={false}
                       slotProps={{
+                        field: {
+                          clearable: true,
+                        },
                         textField: {
                           fullWidth: true,
                           error: !!errors?.retifications_deadline,
@@ -839,10 +1025,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                         },
                       }}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-              )}
-            />
+                  </LocalizationProvider>
+                )}
+              />
+            </Grid>
           </Grid>
           <FormHelperText sx={{ p: 1, pb: 0 }}>
             No caso de não pretender período de retificações, ajuste a "Data
@@ -861,6 +1047,24 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label="Modalidade"
               fullWidth
               value={discipline}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        disabled={discipline === ""}
+                        onClick={() => setDiscipline("")}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        <Clear
+                          color={discipline === "" ? "disabled" : "error"}
+                        ></Clear>
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                },
+              }}
               onChange={(e) => {
                 setDisciplineWarning(false);
                 setDiscipline(e.target.value);
@@ -925,7 +1129,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               <List dense>
                 {disciplines.map((discipline, index) => {
                   const options = disciplineOptions.filter(
-                    (opt) => opt.discipline === discipline
+                    (opt) => opt.discipline === discipline,
                   );
 
                   return (
@@ -1080,7 +1284,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 {disciplines
                   .filter(
                     (discipline: string) =>
-                      discipline.toLowerCase() !== "treinadores"
+                      discipline.toLowerCase() !== "treinadores",
                   )
                   .map((discipline, index) => (
                     <ListItem key={index}>

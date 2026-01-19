@@ -23,7 +23,10 @@ import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Add, NotificationsActive } from "@mui/icons-material";
 import NotificationActionModal from "./NotificationActionModal";
-import { NotificationTypeOptions } from "../../dashboard/config";
+import {
+  getNotificationTypeIcon,
+  NotificationTypeOptions,
+} from "../../dashboard/config";
 import { PaymentTypes } from "../../config";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
@@ -31,7 +34,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
   const { data: clubUserData } = adminHooks.useFetchClubUsersData(
     undefined,
-    props.userRole
+    props.userRole,
   );
   const { data: notificationData, isLoading: isNotificationDataLoading } =
     notificationsHooks.useFetchNotificationsData(1, 100, selectedUserId);
@@ -170,11 +173,11 @@ export default function NotificationManagerPage(props: { userRole: string }) {
                     <Tooltip title="Clique para eliminar esta Notificação">
                       <span>
                         <ListItemButton
-                          sx={{ p: 1 }}
+                          sx={{ pr: 2 }}
                           onClick={() => handleClick(notification.id)}
                         >
                           <ListItemIcon>
-                            <NotificationsActive />
+                            {getNotificationTypeIcon(notification.type)}
                           </ListItemIcon>
                           <Typography
                             sx={{
@@ -188,7 +191,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
                       </span>
                     </Tooltip>
                   </ListItem>
-                )
+                ),
               )
             )}
           </List>
@@ -306,7 +309,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
                 helperText={errors.type?.message}
               >
                 {NotificationTypeOptions.filter(
-                  (item) => !["reset", "member_request"].includes(item.value)
+                  (item) => !["reset", "member_request"].includes(item.value),
                 ).map((item: any, index: any) => (
                   <MenuItem key={index} value={item.value}>
                     {item.label}

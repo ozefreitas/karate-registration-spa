@@ -10,6 +10,8 @@ import {
   FormControlLabel,
   Switch,
   Checkbox,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -21,7 +23,6 @@ import {
   MemberTypes,
 } from "../../config";
 import { useSnackbar } from "notistack";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -31,6 +32,7 @@ import FormCard from "../../dashboard/FormCard";
 import { membersHooks, adminHooks } from "../../hooks";
 import FormAccordion from "../../dashboard/FormAccordion";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { Clear } from "@mui/icons-material";
 
 export default function NewMemberPage() {
   const { enqueueSnackbar } = useSnackbar();
@@ -48,6 +50,7 @@ export default function NewMemberPage() {
     setError,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -122,7 +125,7 @@ export default function NewMemberPage() {
         if (data[key] === "") {
           formData[key] = null;
         }
-      }
+      },
     );
 
     if (data.weight === "") formData.weight = null;
@@ -249,6 +252,28 @@ export default function NewMemberPage() {
                   fullWidth
                   required
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("first_name") === ""}
+                            onClick={() => setValue("first_name", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("first_name") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -270,6 +295,26 @@ export default function NewMemberPage() {
                   fullWidth
                   required
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("last_name") === ""}
+                            onClick={() => setValue("last_name", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("last_name") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -285,15 +330,44 @@ export default function NewMemberPage() {
               control={control}
               render={({ field }) => (
                 <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40, // move arrow to the left
+                    },
+                    // "& .MuiSelect-select": {
+                    //   paddingLeft: "40px", // avoid text overlapping the icon
+                    // },
+                  }}
                   color="warning"
                   variant={"outlined"}
                   label="Graduação"
                   select
                   fullWidth
-                  multiline
                   required
-                  maxRows={8}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("graduation") === ""}
+                            onClick={() => setValue("graduation", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("graduation") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -309,32 +383,33 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2, pt: 1 }} size={6}>
+          <Grid sx={{ p: 2 }} size={6}>
             <Controller
               name="birth_date"
               control={control}
               render={({ field }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
-                    <DatePicker
-                      {...field}
-                      format="YYYY-MM-DD"
-                      label="Data de Nascimento *"
-                      onChange={(date) => {
-                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
-                      }}
-                      value={field.value ? dayjs(field.value) : null}
-                      enableAccessibleFieldDOMStructure={false}
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          error: !!errors?.birth_date,
-                          helperText: errors?.birth_date?.message || "",
-                        },
-                      }}
-                      slots={{ textField: TextField }}
-                    />
-                  </DemoContainer>
+                  <DatePicker
+                    {...field}
+                    format="YYYY-MM-DD"
+                    label="Data de Nascimento *"
+                    onChange={(date) => {
+                      field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                    }}
+                    value={field.value ? dayjs(field.value) : null}
+                    enableAccessibleFieldDOMStructure={false}
+                    slotProps={{
+                      field: {
+                        clearable: true,
+                      },
+                      textField: {
+                        fullWidth: true,
+                        error: !!errors?.birth_date,
+                        helperText: errors?.birth_date?.message || "",
+                      },
+                    }}
+                    slots={{ textField: TextField }}
+                  />
                 </LocalizationProvider>
               )}
             />
@@ -345,15 +420,42 @@ export default function NewMemberPage() {
               control={control}
               render={({ field }) => (
                 <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40, // move arrow to the left
+                    },
+                    // "& .MuiSelect-select": {
+                    //   paddingLeft: "40px", // avoid text overlapping the icon
+                    // },
+                  }}
                   color="warning"
                   variant={"outlined"}
                   label="Género"
                   select
                   fullWidth
-                  multiline
                   required
-                  maxRows={8}
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("gender") === ""}
+                            onClick={() => setValue("gender", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("gender") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -361,7 +463,7 @@ export default function NewMemberPage() {
                   helperText={errors.gender?.message}
                 >
                   {GenderOptions.filter((item) =>
-                    ["Masculino", "Feminino"].includes(item.value)
+                    ["Masculino", "Feminino"].includes(item.value),
                   ).map((item, index) => (
                     <MenuItem key={index} value={item.value}>
                       {item.label}
@@ -412,7 +514,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2, pt: 3 }} size={6}>
+          <Grid sx={{ p: 2, pt: 3 }} container size={6}>
             <Controller
               name="id_number"
               control={control}
@@ -421,14 +523,29 @@ export default function NewMemberPage() {
                   color="warning"
                   variant={"outlined"}
                   label={`Nº ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`}
-                  type="text"
                   slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("id_number") === ""}
+                            onClick={() => setValue("id_number", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("id_number") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
                     htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
                   }}
                   fullWidth
                   disabled={is_force_ident}
-                  multiline
-                  maxRows={8}
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -476,33 +593,34 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2, pt: 1 }} size={6}>
+          <Grid sx={{ p: 2 }} size={6}>
             <Controller
               name="registration_date"
               control={control}
               render={({ field }) => (
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={["DatePicker"]}>
-                    <DatePicker
-                      disabled={is_force_registration_date}
-                      {...field}
-                      format="YYYY-MM-DD"
-                      label="Data de Registo em Clube"
-                      onChange={(date) => {
-                        field.onChange(date ? date.format("YYYY-MM-DD") : "");
-                      }}
-                      value={field.value ? dayjs(field.value) : null}
-                      enableAccessibleFieldDOMStructure={false}
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          error: !!errors?.registration_date,
-                          helperText: errors?.registration_date?.message || "",
-                        },
-                      }}
-                      slots={{ textField: TextField }}
-                    />
-                  </DemoContainer>
+                  <DatePicker
+                    disabled={is_force_registration_date}
+                    {...field}
+                    format="YYYY-MM-DD"
+                    label="Data de Registo em Clube"
+                    onChange={(date) => {
+                      field.onChange(date ? date.format("YYYY-MM-DD") : "");
+                    }}
+                    value={field.value ? dayjs(field.value) : null}
+                    enableAccessibleFieldDOMStructure={false}
+                    slotProps={{
+                      field: {
+                        clearable: true,
+                      },
+                      textField: {
+                        fullWidth: true,
+                        error: !!errors?.registration_date,
+                        helperText: errors?.registration_date?.message || "",
+                      },
+                    }}
+                    slots={{ textField: TextField }}
+                  />
                 </LocalizationProvider>
               )}
             />
@@ -521,6 +639,28 @@ export default function NewMemberPage() {
                   label="Nª C.C./B.I."
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("national_card_number") === ""}
+                            onClick={() => setValue("national_card_number", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("national_card_number") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -542,6 +682,28 @@ export default function NewMemberPage() {
                   label="NIF"
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("taxpayer_number") === ""}
+                            onClick={() => setValue("taxpayer_number", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("taxpayer_number") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -562,6 +724,26 @@ export default function NewMemberPage() {
                   label="Morada"
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("address") === ""}
+                            onClick={() => setValue("address", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("address") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -583,6 +765,26 @@ export default function NewMemberPage() {
                   label="Código Postal"
                   fullWidth
                   {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("post_code") === ""}
+                            onClick={() => setValue("post_code", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("post_code") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   onChange={(e) => {
                     field.onChange(e);
                   }}
@@ -661,15 +863,42 @@ export default function NewMemberPage() {
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    sx={{
+                      "& .MuiSelect-icon": {
+                        left: "auto",
+                        right: 40, // move arrow to the left
+                      },
+                      // "& .MuiSelect-select": {
+                      //   paddingLeft: "40px", // avoid text overlapping the icon
+                      // },
+                    }}
                     color="warning"
                     variant={"outlined"}
                     label="Razão da Prática"
                     select
                     fullWidth
-                    multiline
                     disabled={!watch("member_type").includes("student")}
-                    maxRows={8}
                     {...field}
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              disabled={watch("reason") === ""}
+                              onClick={() => setValue("reason", "")}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              <Clear
+                                color={
+                                  watch("reason") === "" ? "disabled" : "error"
+                                }
+                              ></Clear>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
                     onChange={(e) => {
                       field.onChange(e);
                     }}
@@ -700,12 +929,33 @@ export default function NewMemberPage() {
                   <TextField
                     color="warning"
                     variant={"outlined"}
-                    type="text"
+                    type="number"
                     label="Peso"
-                    multiline
                     required
-                    slotProps={{ input: { inputProps: { min: 0, max: 100 } } }}
-                    maxRows={8}
+                    slotProps={{
+                      input: {
+                        inputProps: {
+                          min: 0,
+                          max: 100,
+                        },
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              disabled={watch("weight") === ""}
+                              onClick={() => setValue("weight", "")}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              <Clear
+                                color={
+                                  watch("weight") === "" ? "disabled" : "error"
+                                }
+                              ></Clear>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
                     {...field}
                     onChange={(e) => {
                       field.onChange(e);
@@ -733,9 +983,7 @@ export default function NewMemberPage() {
                     label="Clube"
                     fullWidth
                     select
-                    multiline
                     required
-                    maxRows={8}
                     {...field}
                     onChange={(e) => {
                       field.onChange(e);
