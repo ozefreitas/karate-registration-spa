@@ -19,6 +19,7 @@ import Badge, { badgeClasses } from "@mui/material/Badge";
 import { MemberTypes, GenderOptions } from "../../config";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks } from "../../hooks";
+import { useWatch } from "react-hook-form";
 
 const FiltersBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -27,15 +28,19 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function MemberFilters(props: Readonly<{
-  isLoading: boolean;
-  control: any;
-  setValue: any;
-  errors: any;
-  reset: any;
-  changedCount: number;
-}>) {
+export default function MemberFilters(
+  props: Readonly<{
+    isLoading: boolean;
+    control: any;
+    setValue: any;
+    errors: any;
+    reset: any;
+    changedCount: number;
+    setSelectedUsers: any;
+  }>,
+) {
   const [open, setOpen] = React.useState(false);
+  const [availableUsers, setAvailableUsers] = React.useState<string[]>([]);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -45,6 +50,42 @@ export default function MemberFilters(props: Readonly<{
 
   const { data: availableUsersData, isLoading: isAvailableUserLoading } =
     adminHooks.useFetchClubUsersData(undefined, userRole);
+
+  React.useEffect(() => {
+    if (!availableUsersData?.data) return;
+
+    const newUsers = availableUsersData.data.map(
+      (user: any) => `${user.username}`,
+    );
+
+    setAvailableUsers(newUsers);
+  }, [availableUsersData]);
+
+  React.useEffect(() => {
+    if (!availableUsersData?.data) return;
+
+    const defaultValues: any = {};
+    availableUsersData?.data.forEach((user: any) => {
+      defaultValues[`${user.username}`] = false;
+    });
+
+    props.reset(defaultValues);
+  }, [availableUsersData]);
+
+  const watchedValues = useWatch({
+    control: props.control,
+  });
+
+  React.useEffect(() => {
+    if (!availableUsersData?.data) return;
+
+    const usersFiltering = availableUsersData.data
+      .filter((item: any) => watchedValues?.[item.username])
+      .map((item: any) => item.id)
+      .join(",");
+
+    props.setSelectedUsers(usersFiltering);
+  }, [watchedValues, availableUsersData]);
 
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
@@ -78,7 +119,7 @@ export default function MemberFilters(props: Readonly<{
         <Grid sx={{ p: 3, py: 2 }} alignItems={"center"} container spacing={2}>
           <Typography fontSize={"1.05rem"}>Género</Typography>
           {GenderOptions.filter(
-            (item: any) => item.label !== "Ambos" && item.label !== "Misto"
+            (item: any) => item.label !== "Ambos" && item.label !== "Misto",
           ).map((item: any, index: any) => (
             <Controller
               key={index}
@@ -98,21 +139,23 @@ export default function MemberFilters(props: Readonly<{
             ></Controller>
           ))}
         </Grid>
-        {["main_admin", "superuser"].includes(userRole) ? (
-          isAvailableUserLoading ? null : (
-            <Grid
-              sx={{ p: 3, py: 1 }}
-              alignItems={"center"}
-              container
-              spacing={1}
-            >
-              <Typography fontSize={"1.05rem"} mr={1}>
-                Clube
-              </Typography>
-              {availableUsersData?.data.map((item: any, index: any) => (
+        {["main_admin", "superuser"].includes(userRole) &&
+        !isAvailableUserLoading ? (
+          Object.keys(props.control._defaultValues)
+            .filter((fieldName) => availableUsers?.includes(fieldName))
+            .map((fieldName) => (
+              <Grid
+                key={fieldName}
+                size={12}
+                container
+                alignItems={"center"}
+                sx={{ p: 3, py: 2 }}
+              >
+                <Typography fontSize={"1.05rem"} mr={1}>
+                  Clube
+                </Typography>
                 <Controller
-                  key={index}
-                  name="isCoach"
+                  name={fieldName}
                   control={props.control}
                   render={({ field }) => (
                     <Chip
@@ -120,13 +163,12 @@ export default function MemberFilters(props: Readonly<{
                       color={field.value ? "success" : "default"}
                       clickable
                       onClick={() => field.onChange(!field.value)}
-                      label={item.username}
+                      label={fieldName}
                     ></Chip>
                   )}
-                ></Controller>
-              ))}
-            </Grid>
-          )
+                />
+              </Grid>
+            ))
         ) : (
           <>
             <Grid sx={{ p: 3, py: 1 }} container>

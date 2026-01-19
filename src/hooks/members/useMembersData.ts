@@ -18,7 +18,8 @@ export const useFetchMembersData = (
   gender?: string,
   quotesLegible?: boolean,
   monthlyPaymentStatus?: string,
-  isValidated?: boolean
+  isValidated?: boolean,
+  users?: string
 ) => {
   return useQuery({
     queryKey: [
@@ -31,6 +32,7 @@ export const useFetchMembersData = (
       quotesLegible,
       monthlyPaymentStatus,
       isValidated,
+      users,
     ],
     queryFn: () =>
       fetchMembers(
@@ -41,10 +43,12 @@ export const useFetchMembersData = (
         gender,
         quotesLegible,
         monthlyPaymentStatus,
-        isValidated
+        isValidated,
+        users,
       ),
     refetchOnWindowFocus: false,
-    // refetchOnMount: false,
+    refetchOnMount: false,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -52,7 +56,6 @@ export const useFetchSingleMemberData = (memberId: any) => {
   return useQuery({
     queryKey: ["single-member", memberId],
     queryFn: () => fetchSingleMember(memberId),
-    staleTime: 0,
     refetchOnWindowFocus: false,
     enabled: !!memberId,
   });
@@ -73,7 +76,7 @@ export const useFetchMembersNotInEvent = (
   gender?: string,
   enabled?: boolean,
   teams?: boolean,
-  disciplineId?: string
+  disciplineId?: string,
 ) => {
   return useQuery({
     queryKey: [
@@ -92,7 +95,7 @@ export const useFetchMembersNotInEvent = (
         pageSize,
         gender,
         teams,
-        disciplineId
+        disciplineId,
       ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -103,7 +106,7 @@ export const useFetchMembersNotInEvent = (
 export const useFetchCoachesNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
 ) => {
   return useQuery({
     queryKey: ["coaches-notin-event", eventId, page, pageSize],
@@ -116,7 +119,7 @@ export const useFetchCoachesNotInEvent = (
 
 export const useFetchMembersInCategoryGender = (
   category: string,
-  gender: string
+  gender: string,
 ) => {
   return useQuery({
     queryKey: ["members-in-category-gender", category, gender],
@@ -129,7 +132,7 @@ export const useFetchMembersInCategoryGender = (
 
 export const useFetchDisciplinesnotInMemberData = (
   memberId: string,
-  eventId: string
+  eventId: string,
 ) => {
   return useQuery({
     queryKey: ["disciplines-not-in-member", memberId, eventId],

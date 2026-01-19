@@ -8,7 +8,8 @@ export const fetchMembers = (
   gender?: string,
   quotesLegible?: boolean,
   monthlyPaymentStatus?: string,
-  isValidated?: boolean
+  isValidated?: boolean,
+  users?: string,
 ) => {
   return authClient.get("/members/", {
     params: {
@@ -20,6 +21,7 @@ export const fetchMembers = (
       is_quotes_legible: quotesLegible,
       monthly_payment_status: monthlyPaymentStatus,
       is_validated: isValidated,
+      in_user: users,
     },
   });
 };
@@ -38,7 +40,7 @@ export const fetchMembersNotInEvent = (
   pageSize: number,
   gender?: string,
   teams?: boolean,
-  disciplineId?: string
+  disciplineId?: string,
 ) => {
   return authClient.get("/members/", {
     params: {
@@ -55,7 +57,7 @@ export const fetchMembersNotInEvent = (
 export const fetchCoachesNotInEvent = (
   eventId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
 ) => {
   return authClient.get("/members/", {
     params: { coach_not_in_event: eventId, page: page, page_size: pageSize },
@@ -64,7 +66,7 @@ export const fetchCoachesNotInEvent = (
 
 export const fetchMembersInCategoryGender = (
   category: string,
-  gender: string
+  gender: string,
 ) => {
   return authClient.get("/members/", {
     params: { in_category: category, in_gender: gender },
@@ -93,10 +95,10 @@ export const deleteAllMembers = () => {
 
 export const fetchDisciplineMemberNotIn = (
   memberId: string,
-  eventId: string
+  eventId: string,
 ) => {
   return authClient.get(
-    `/members/${memberId}/unregistered_modalities/${eventId}/`
+    `/members/${memberId}/unregistered_modalities/${eventId}/`,
   );
 };
 

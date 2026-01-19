@@ -18,7 +18,7 @@ export const useFetchEventsData = (
   hasCategories?: boolean,
   hasRegistrations?: boolean,
   month?: string,
-  day?: string
+  day?: string,
 ) => {
   return useQuery({
     queryKey: [
@@ -45,10 +45,11 @@ export const useFetchEventsData = (
         hasCategories,
         hasRegistrations,
         month,
-        day
+        day,
       ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    staleTime: 5 * 60 * 1000,
     enabled: pageSize !== 100,
   });
 };
@@ -76,7 +77,7 @@ export const useFetchLastEvent = (userRole: string) => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: ["subed_club", "main_admin", "single_admin", "superuser"].includes(
-      userRole
+      userRole,
     ),
   });
 };

@@ -48,6 +48,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const [pageSize, setPageSize] = useState<number>(10);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
   const [actionedMember, setActionedMember] = useState<string>("");
+  const [selectedUsers, setSelectedUsers] = useState<string>("");
 
   const handleModalOpen = (id: string) => {
     setIsRequestModalOpen(true);
@@ -70,7 +71,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       columnMapping.push(
         { key: "age", label: "Idade" },
         { key: "member_type", label: "Tipo" },
-        { key: "verified", label: "Verificado" }
+        { key: "verified", label: "Verificado" },
       );
     }
     columnMapping.push({ key: "updated_by", label: "Ult. Edição" });
@@ -84,8 +85,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     watch: filtersWatch,
     setValue: filtersSetValue,
     reset: filtersReset,
-    formState: { errors: filtersErrors },
-    formState: { dirtyFields: filtersDirtyFields },
+    formState: { errors: filtersErrors, dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
       quotesLegible: false,
@@ -103,8 +103,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     control: orderControl,
     watch: orderWatch,
     reset: orderReset,
-    formState: { errors: orderErrors },
-    formState: { dirtyFields: orderDirtyFields },
+    formState: { errors: orderErrors, dirtyFields: orderDirtyFields },
   } = useForm({
     defaultValues: {
       first_name: "first_name",
@@ -158,10 +157,10 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("isMasculino") && filtersWatch("isFeminino")
       ? undefined
       : filtersWatch("isMasculino")
-      ? "Masculino"
-      : filtersWatch("isFeminino")
-      ? "Feminino"
-      : undefined;
+        ? "Masculino"
+        : filtersWatch("isFeminino")
+          ? "Feminino"
+          : undefined;
 
   const {
     data: membersData,
@@ -175,7 +174,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     selectedGender,
     filtersWatch("quotesLegible") ? filtersWatch("quotesLegible") : undefined,
     filtersWatch("quotesOverdue") ? "unpaid" : undefined,
-    filtersWatch("isValidated") ? true : undefined
+    filtersWatch("isValidated") ? true : undefined,
+    selectedUsers === "" ? undefined : selectedUsers,
   );
 
   // Memoize `rows` to compute only when `members` changes
@@ -294,6 +294,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 reset={filtersReset}
                 errors={filtersErrors}
                 changedCount={filtersChangedCount}
+                setSelectedUsers={setSelectedUsers}
               ></MemberFilters>
             </Grid>
           </Grid>
@@ -316,13 +317,13 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             columnsHeaders={columnMaping}
             actions
             editable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             selection={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             deletable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             page={page}
             setPage={setPage}
