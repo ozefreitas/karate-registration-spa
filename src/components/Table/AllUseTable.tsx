@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Grid,
@@ -44,7 +44,7 @@ interface TablePaginationActionsProps {
   rowsPerPage: number;
   onPageChange: (
     event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number
+    newPage: number,
   ) => void;
 }
 
@@ -53,25 +53,25 @@ function TablePaginationActions(props: Readonly<TablePaginationActionsProps>) {
   const { count, page, rowsPerPage, onPageChange } = props;
 
   const handleFirstPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     onPageChange(event, 0);
   };
 
   const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     onPageChange(event, page - 1);
   };
 
   const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     onPageChange(event, page + 1);
   };
 
   const handleLastPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
@@ -155,16 +155,28 @@ export default function AllUseTable(
     setDisciplineCategories?: any;
     overideInternalPage?: boolean;
     disallowEdit?: boolean;
-  }>
+  }>,
 ) {
-  // type Order = "asc" | "desc";
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const paramPage = searchParams.get("page") || "0";
+
+  useEffect(() => {
+    if (props.setPage && props.page) {
+      if (paramPage === "0") {
+        props.setPage("1");
+      } else props.setPage(paramPage);
+    }
+  }, [paramPage]);
+
+  const changePage = (number: string) => {
+    setSearchParams({ page: number });
+  };
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
   const [internalPageSize, setInternalPageSize] = useState<number>(
-    props.overideInternalPage ? -1 : 10
+    props.overideInternalPage ? -1 : 10,
   );
-  // const [order, setOrder] = useState<Order>("asc");
-  // const [orderBy, setOrderBy] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
 
   const handleSelectionDelete = () => {
@@ -188,19 +200,19 @@ export default function AllUseTable(
     useState<boolean>(false);
 
   const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number
+    _event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
   ) => {
-    console.log(event);
     if (props.setPage) {
-      props.setPage(newPage);
+      // props.setPage(newPage + 1);
+      changePage((newPage + 1).toString());
     } else {
-      setInternalPage(newPage);
+      setInternalPage(newPage + 1);
     }
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const newSize = parseInt(event.target.value, 10);
     if (props.setPage && props.setPageSize) {
@@ -222,7 +234,7 @@ export default function AllUseTable(
 
   const handlePaymentModalOpen = (
     event: React.MouseEvent<HTMLElement>,
-    paymentId: string
+    paymentId: string,
   ) => {
     event.stopPropagation();
     setActionedRow(paymentId);
@@ -235,7 +247,7 @@ export default function AllUseTable(
 
   const handlePaymentPlanModalOpen = (
     event: React.MouseEvent<HTMLElement>,
-    paymentId: string
+    paymentId: string,
   ) => {
     event.stopPropagation();
     setActionedRow(paymentId);
@@ -289,7 +301,7 @@ export default function AllUseTable(
 
   const handleRowEdit = (
     event: React.MouseEvent<HTMLElement>,
-    memberId: string
+    memberId: string,
   ) => {
     event.stopPropagation();
     setActionedRow(memberId);
@@ -298,7 +310,7 @@ export default function AllUseTable(
 
   const handleRowEditFromIndiv = (
     event: React.MouseEvent<HTMLElement>,
-    id: string
+    id: string,
   ) => {
     event.stopPropagation();
     setActionedRow(id);
@@ -312,7 +324,7 @@ export default function AllUseTable(
 
   const handleRowDelete = (
     event: React.MouseEvent<HTMLElement>,
-    id: string
+    id: string,
   ) => {
     event.stopPropagation();
     setActionedRow(id.toString());
@@ -321,12 +333,12 @@ export default function AllUseTable(
 
   const handleCategoryRemove = (
     event: React.MouseEvent<HTMLElement>,
-    id: string
+    id: string,
   ) => {
     event.stopPropagation();
     props.setDisciplineCategories((prev: any[]) => {
       const existingDisicpline = prev.findIndex(
-        (item) => item.discipline === props.selectedDisciplineForCategory
+        (item) => item.discipline === props.selectedDisciplineForCategory,
       );
 
       const categories = prev[existingDisicpline].categories;
@@ -410,7 +422,7 @@ export default function AllUseTable(
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selected.slice(selectedIndex + 1),
       );
     }
     setSelected(newSelected);
@@ -534,7 +546,7 @@ export default function AllUseTable(
                                         handleCategoryInfoModalOpen(e);
                                       } else {
                                         navigate(
-                                          `/members/${row.id}/?section=personal_info`
+                                          `/members/${row.id}/?section=personal_info`,
                                         );
                                       }
                                     }}
@@ -687,7 +699,7 @@ export default function AllUseTable(
                     rowsPerPage={
                       props.pageSize ? props.pageSize : internalPageSize
                     }
-                    page={props.page ? props.page : internalPage}
+                    page={props.page ? props.page - 1 : internalPage}
                     slotProps={{
                       select: {
                         inputProps: {
