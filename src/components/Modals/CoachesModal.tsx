@@ -18,6 +18,7 @@ import {
   Box,
   CircularProgress,
   ListItemIcon,
+  Chip,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -46,6 +47,7 @@ const Search = styled("div")(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
+  marginRight: 20,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
@@ -84,7 +86,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -95,17 +97,13 @@ export default function CoachesModal(
     handleModalClose: any;
     eventData: any;
     disciplineId: string;
-  }>
+  }>,
 ) {
   type Member = {
-    age: any;
     id: string;
-    first_name: string;
-    last_name: string;
     full_name: string;
     graduation: string;
     gender: string;
-    weight: string;
   };
 
   const { id: eventId } = useParams<{ id: string }>();
@@ -248,7 +246,7 @@ export default function CoachesModal(
 
           <Button
             size="large"
-            sx={{ bgcolor: "#2e7d32", ml: 2 }}
+            sx={{ bgcolor: "#2e7d32", mr: 2 }}
             autoFocus
             color="inherit"
             onClick={() => {
@@ -297,7 +295,7 @@ export default function CoachesModal(
                       checked={checked.includes(member.id)}
                       slotProps={{
                         input: {
-                          "aria-labelledby": `checkbox-list-secondary-label-${member.first_name}`,
+                          "aria-labelledby": `checkbox-list-secondary-label-${member.full_name}`,
                         },
                       }}
                     />
@@ -315,12 +313,20 @@ export default function CoachesModal(
                   </ListItemIcon>
                   <ListItemText
                     primary={`${member.full_name}`}
-                    secondary={`${member.gender} | Graduação: ${
-                      GraduationsOptions.find(
-                        (grad: any) =>
-                          grad.value.toString() === member.graduation
-                      )?.label ?? "N/A"
-                    }`}
+                    secondary={
+                      <Grid container spacing={2} mt={1}>
+                        <Chip size="small" label={member.gender}></Chip>
+                        <Chip
+                          size="small"
+                          label={`Graduação: ${
+                            GraduationsOptions.find(
+                              (grad: any) =>
+                                grad.value.toString() === member.graduation,
+                            )?.label ?? "N/A"
+                          }`}
+                        ></Chip>
+                      </Grid>
+                    }
                   />
                 </ListItemButton>
                 <Divider />

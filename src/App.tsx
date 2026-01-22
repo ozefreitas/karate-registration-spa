@@ -15,7 +15,6 @@ import LoginPage from "./pages/auth/LoginPage";
 import NewMemberPage from "./pages/MembersPages/NewMemberPage";
 import SingleMemberPage from "./pages/MembersPages/SingleMemberPage";
 // import TeamsPage from "./pages/TeamsPage/TeamsPage";
-// import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 import IndividualsPage from "./pages/RegistrationPages/IndividualsPage";
 import RegisteredTeamsPage from "./pages/TeamsPage/RegisteredTeamsPage";
 import ProtectedRoute from "./access/ProtectedRoute";
@@ -50,6 +49,7 @@ import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 import PricingPage from "./pages/InformationalPages/PricingPage";
 import ScrollToTop from "./utils/scrollToTop";
 import { ErrorBoundary } from "react-error-boundary";
+import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -157,8 +157,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<WIPPage></WIPPage>}
-                        // element={<SingleTeamPage />}
+                        element={<SingleTeamPage />}
                         allowedRoles={["subed_club", "main_admin"]}
                       />
                     )
