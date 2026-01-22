@@ -148,7 +148,7 @@ export default function NewTeamPageModal(
             Adicionar nova Equipa a {props.disciplineData?.name}
           </Typography>
           <Button
-            sx={{ bgcolor: "#2e7d32" }}
+            sx={{ bgcolor: "#2e7d32", mr: 2 }}
             autoFocus
             color="inherit"
             onClick={() => {

@@ -20,7 +20,7 @@ import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadO
 import NewTeamPageModal from "./NewTeamPageModal";
 
 export default function RegisteredTeamsPage(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
@@ -39,13 +39,13 @@ export default function RegisteredTeamsPage(
     eventId!,
     false,
     false,
-    true
+    true,
   );
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
     : singleEventData?.data.is_retification
-    ? "Período de retificações"
-    : "Inscrições fechadas";
+      ? "Período de retificações"
+      : "Inscrições fechadas";
 
   const handleAddNewTeamModalOpen = (disciplineName: string) => {
     setCurrentDiscipline(disciplineName);
@@ -83,16 +83,6 @@ export default function RegisteredTeamsPage(
       { key: "gender", label: "Género" },
       { key: "category", label: "Escalão" },
     ];
-
-    // Conditionally add category
-    // if (
-    //   disciplinesData?.data.results.length !== 0 &&
-    //   (isCoach === undefined || isCoach === false)
-    // ) {
-    //   baseColumns.push({ key: "category", label: "Escalão" });
-    // }
-
-    // Always add this one last
     baseColumns.push({ key: "added_at", label: "Data Inscrição" });
 
     return baseColumns;
@@ -109,7 +99,7 @@ export default function RegisteredTeamsPage(
           a mesma coisa)."
         title="Página de inscritos em Equipas"
       ></PageInfoCard>
-      <Grid container m={2}>
+      <Grid container mx={4} mb={4}>
         <Grid>
           <Card>
             <CardContent
@@ -133,8 +123,8 @@ export default function RegisteredTeamsPage(
                     color: singleEventData?.data.is_open
                       ? "green"
                       : singleEventData?.data.is_retification
-                      ? "#ffc40c"
-                      : "red",
+                        ? "#ffc40c"
+                        : "red",
                   }}
                 >
                   Estado: {state}
@@ -157,10 +147,10 @@ export default function RegisteredTeamsPage(
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             deletable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             userRole={props.userRole}
           ></AllUseTable>
@@ -171,8 +161,13 @@ export default function RegisteredTeamsPage(
               member1: teamInfo.team.athlete1.full_name,
               member2: teamInfo.team.athlete2.full_name,
               member3: teamInfo.team.athlete3.full_name,
-              gender: teamInfo.team.gender,
-              category: teamInfo.team.category,
+              gender:
+                teamInfo.team.gender === "Masculino"
+                  ? "M"
+                  : teamInfo.team.gender === "Feminino"
+                    ? "F"
+                    : "Misto",
+              category: teamInfo.team.category.name,
               added_at: formatDateTime(teamInfo.added_at, "both"),
             }));
             return (
@@ -180,7 +175,7 @@ export default function RegisteredTeamsPage(
                 <Grid
                   size={12}
                   pr={2}
-                  mt={5}
+                  mt={3}
                   container
                   alignItems="center"
                   justifyContent="space-between"
@@ -255,7 +250,7 @@ export default function RegisteredTeamsPage(
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
         disciplineData={disciplinesData?.data.results.find(
-          (disicpline: any) => disicpline.name === currentDiscipline
+          (disicpline: any) => disicpline.name === currentDiscipline,
         )}
       ></NewTeamPageModal>
       {disciplineToDuplicate === "" ? null : (
@@ -263,7 +258,7 @@ export default function RegisteredTeamsPage(
           handleModalClose={handleDuplicateModalClose}
           isModalOpen={isDuplicateModalOpen}
           disciplineData={disciplinesData?.data.results.find(
-            (disicpline: any) => disicpline.name === disciplineToDuplicate
+            (disicpline: any) => disicpline.name === disciplineToDuplicate,
           )}
           eventName={singleEventData?.data.name}
         ></DuplicateRegistrationsModal>
@@ -272,7 +267,7 @@ export default function RegisteredTeamsPage(
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}
           disciplineData={disciplinesData?.data.results.filter(
-            (disicpline: any) => disicpline.name === currentDiscipline
+            (disicpline: any) => disicpline.name === currentDiscipline,
           )}
           handleModalClose={handleCategoriesListModalClose}
           isModalOpen={isCategoriesListModalOpen}

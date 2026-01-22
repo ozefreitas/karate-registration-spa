@@ -39,8 +39,8 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
     : singleEventData?.data.is_retification
-    ? "Período de retificações"
-    : "Inscrições fechadas";
+      ? "Período de retificações"
+      : "Inscrições fechadas";
 
   // Memoize `rows` to compute only when `members` changes
   const registrationRows = useMemo(() => {
@@ -50,7 +50,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
         full_name: memberInfo.member.full_name,
         gender: memberInfo.member.gender,
         added_at: formatDateTime(memberInfo.added_at, "both"),
-      })
+      }),
     );
   }, [disciplinesData]);
 
@@ -84,7 +84,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
         }
         title={`Treinadores inscritos em ${singleEventData?.data.name}`}
       ></PageInfoCard>
-      <Grid container sx={{ m: 2 }}>
+      <Grid container mx={4} mb={4}>
         <Grid>
           <Card>
             <CardContent
@@ -102,15 +102,14 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
               ) : (
                 <Typography
                   variant="h6"
+                  px={2}
                   sx={{
-                    pl: 2,
-                    pr: 2,
                     fontWeight: "bold",
                     color: singleEventData?.data.is_open
                       ? "green"
                       : singleEventData?.data.is_retification
-                      ? "#ffc40c"
-                      : "red",
+                        ? "#ffc40c"
+                        : "red",
                   }}
                 >
                   Estado: {state}
@@ -147,17 +146,17 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             deletable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             userRole={props.userRole}
           ></AllUseTable>
         )}
       </Grid>
       {singleEventData?.data.is_open ? (
-        <Grid container justifyContent="flex-end" m={3}>
+        <Grid container justifyContent="flex-end" m={4}>
           <Button
             variant="contained"
             size="large"

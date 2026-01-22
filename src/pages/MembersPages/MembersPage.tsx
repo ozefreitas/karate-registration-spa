@@ -44,7 +44,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     request_status: string;
   };
 
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
   const [actionedMember, setActionedMember] = useState<string>("");
@@ -58,7 +58,6 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const handleModalClose = () => {
     setIsRequestModalOpen(false);
   };
-  // const { data: availableUsersData } = adminHooks.useFetchClubUsersData();
 
   const getColumnMaping = () => {
     const columnMapping = [
@@ -167,7 +166,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     isLoading: isMembersDataLoading,
     error: membersError,
   } = membersHooks.useFetchMembersData(
-    page + 1,
+    page,
     pageSize,
     ordering,
     memberTypeFiltering,

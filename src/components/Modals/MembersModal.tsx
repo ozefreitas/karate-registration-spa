@@ -53,6 +53,7 @@ const Search = styled("div")(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
+  marginRight: 20,
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(1),
@@ -344,16 +345,14 @@ export default function MembersModal(
   };
 
   const filteredMembers = React.useMemo(() => {
+    console.log()
     const query = searchQuery.trim().toLowerCase();
 
     if (!query) return membersNotInEventData?.data.results ?? [];
 
     return membersNotInEventData?.data.results.filter((member: any) => {
-      const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
       return (
-        member.first_name.toLowerCase().includes(query) ||
-        member.last_name.toLowerCase().includes(query) ||
-        fullName.includes(query) ||
+        member.full_name.toLowerCase().includes(query) ||
         member.id_number === Number(query)
       );
     });

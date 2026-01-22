@@ -59,14 +59,14 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     eventId!,
     false,
     false,
-    false
+    false,
   );
 
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
     : singleEventData?.data.is_retification
-    ? "Período de retificações"
-    : "Inscrições fechadas";
+      ? "Período de retificações"
+      : "Inscrições fechadas";
 
   const getColumnMapping = (isCoach?: boolean) => {
     // Base columns except the one that must be last
@@ -110,7 +110,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         }
         title={`Inscritos em ${singleEventData?.data.name}`}
       ></PageInfoCard>
-      <Grid container m={2}>
+      <Grid container mx={4}>
         <Grid>
           <Card>
             <CardContent
@@ -134,8 +134,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     color: singleEventData?.data.is_open
                       ? "green"
                       : singleEventData?.data.is_retification
-                      ? "#ffc40c"
-                      : "red",
+                        ? "#ffc40c"
+                        : "red",
                   }}
                 >
                   Estado: {state}
@@ -158,10 +158,10 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             deletable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole
+              props.userRole,
             )}
             userRole={props.userRole}
           ></AllUseTable>
@@ -175,14 +175,14 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 club: memberInfo.member.club,
                 category: memberInfo.member.category,
                 added_at: formatDateTime(memberInfo.added_at, "both"),
-              })
+              }),
             );
             return (
               <span key={index}>
                 <Grid
                   size={12}
                   pr={2}
-                  mt={5}
+                  mt={3}
                   container
                   alignItems="center"
                   justifyContent="space-between"
@@ -240,9 +240,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         )}
       </Grid>
       {singleEventData?.data.is_open ? (
-        <Grid container justifyContent="flex-end" m={3}>
+        <Grid container justifyContent="flex-end" m={4}>
           <Button
-            sx={{ m: 1 }}
             variant="contained"
             size="large"
             color="success"
@@ -263,11 +262,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         <DuplicateRegistrationsModal
           handleModalClose={handleDuplicateModalClose}
           isModalOpen={isDuplicateModalOpen}
-          disciplineData={
-            disciplinesData?.data.results.find(
-              (disicpline: any) => disicpline.name === disciplineToDuplicate
-            )
-          }
+          disciplineData={disciplinesData?.data.results.find(
+            (disicpline: any) => disicpline.name === disciplineToDuplicate,
+          )}
           eventName={singleEventData?.data.name}
         ></DuplicateRegistrationsModal>
       )}
@@ -275,7 +272,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}
           disciplineData={disciplinesData?.data.results.filter(
-            (disicpline: any) => disicpline.name === currentDiscipline
+            (disicpline: any) => disicpline.name === currentDiscipline,
           )}
           handleModalClose={handleCategoriesListModalClose}
           isModalOpen={isCategoriesListModalOpen}

@@ -24,7 +24,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -49,7 +49,7 @@ export default function DeleteMemberModal(
       | "Plano";
     setSelected?: any;
     discipline?: any;
-  }>
+  }>,
 ) {
   const removeDisciplineMember = disciplinesHooks.useDeleteDisciplineMember();
   const removeEventMember = eventsHooks.useRemoveEventMember();
@@ -70,7 +70,7 @@ export default function DeleteMemberModal(
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
-    id: string | Array<string> | undefined
+    id: string | Array<string> | undefined,
   ) => {
     event.stopPropagation();
     if (id !== undefined && typeof id === "string") {
@@ -186,22 +186,26 @@ export default function DeleteMemberModal(
               ? "Tem a certeza que pretende apagar todos os seus Membros? Esta ação irá eliminar também todas as inscrições de todos os Membros em todas as provas"
               : "Tem a certeza que pretende apagar este(s) Membro(s)? Esta ação irá eliminar também todas as inscrições deste(s) Membro(s) em todas as provas."
             : props.from === "Categorias"
-            ? props.id === undefined
-              ? "Tem a certeza que pretende apagar todos os Escalões?"
-              : "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
-            : props.from === "EventCategories"
-            ? props.id === undefined
-              ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
-              : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
-            : props.from === "Individuais" || props.from === "Modalidades"
-            ? props.id === undefined
-              ? "Tem a certeza que pretende apagar todas as Inscrições?"
-              : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
-            : props.from === "Equipas"
-            ? props.id === undefined
-              ? "Tem a certeza que pretende apagar todas as Equipas?"
-              : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
-            : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
+              ? props.id === undefined
+                ? "Tem a certeza que pretende apagar todos os Escalões?"
+                : "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
+              : props.from === "EventCategories"
+                ? props.id === undefined
+                  ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
+                  : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
+                : props.from === "Individuais" || props.from === "Modalidades"
+                  ? props.id === undefined
+                    ? "Tem a certeza que pretende apagar todas as Inscrições?"
+                    : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
+                  : props.from === "Treinadores"
+                    ? props.id === undefined
+                      ? "Tem a certeza que pretende apagar as Inscrições de todos os Treinadores?"
+                      : "Tem a certeza que pretende apagar a Inscrição deste(s) Treinador(es)?"
+                    : props.from === "Equipas"
+                      ? props.id === undefined
+                        ? "Tem a certeza que pretende apagar todas as Equipas?"
+                        : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
+                      : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
         </p>
       </DialogContent>
       <DialogActions>
