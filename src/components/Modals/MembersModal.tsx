@@ -25,6 +25,7 @@ import {
   ListItemIcon,
   TextField,
   Chip,
+  MenuItem,
 } from "@mui/material";
 import { useState } from "react";
 import * as React from "react";
@@ -44,6 +45,7 @@ import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
+import { getGraduationFromValue } from "../../config";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -92,7 +94,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -103,7 +105,7 @@ export default function MembersModal(
     handleModalClose: any;
     eventData: any;
     disciplinesData: any;
-  }>
+  }>,
 ) {
   type Member = {
     age: any;
@@ -147,6 +149,9 @@ export default function MembersModal(
   const [disciplinesFree, setDisciplinesFree] = useState<string[]>([]);
   const [isMutationDelayActive, setIsMutationDelayActive] =
     useState<boolean>(false);
+  const [possibleCategories, setPossibleCategories] = React.useState<string[]>(
+    [],
+  );
 
   const handleBackButtonClick = () => {
     setPage(page - 1);
@@ -166,7 +171,7 @@ export default function MembersModal(
     page + 1,
     10,
     undefined,
-    false
+    false,
   );
 
   React.useEffect(() => {
@@ -178,27 +183,29 @@ export default function MembersModal(
   const { data: disciplinesFreeData } =
     membersHooks.useFetchDisciplinesnotInMemberData(
       currentMemberId,
-      props.eventData?.id
+      props.eventData?.id,
     );
 
   React.useEffect(() => {
     if (!disciplinesFreeData?.data) return;
 
     const newDisciplines = disciplinesFreeData.data.map(
-      (modalities: any) => `${modalities.name}_${modalities.id}`
+      (modalities: any) => `${modalities.name}_${modalities.id}`,
     );
 
     setDisciplinesFree(newDisciplines);
   }, [disciplinesFreeData]);
 
   React.useEffect(() => {
-    const defaultValues: any = {};
+    const defaultValues: any = { category: false, chosen_category: "" };
     props.disciplinesData?.data.results.forEach((discipline: any) => {
       defaultValues[`${discipline.name}_${discipline.id}`] = false;
     });
 
-    reset(defaultValues);
-  }, [props.disciplinesData]);
+    if (!isDisciplineScreenOpen) {
+      reset(defaultValues);
+    }
+  }, [props.disciplinesData, isDisciplineScreenOpen]);
 
   const addEventMember = eventsHooks.useAddEventMember();
 
@@ -249,7 +256,8 @@ export default function MembersModal(
     control,
     handleSubmit,
     reset,
-    // setValue,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>();
 
@@ -278,7 +286,7 @@ export default function MembersModal(
       props.eventData.has_categories
     ) {
       const target = filteredMembers.find(
-        (member: any) => member.id === currentMemberId
+        (member: any) => member.id === currentMemberId,
       );
       const hasWeight = target[0].weight !== null;
       setDoesNotHaveWeight(!hasWeight);
@@ -291,7 +299,7 @@ export default function MembersModal(
     try {
       if (isWeightInputScreenOpen) {
         const target = filteredMembers.find(
-          (member: any) => member.id === currentMemberId
+          (member: any) => member.id === currentMemberId,
         );
         if (target[0].weight !== freeClubWeight) {
           const payload = {
@@ -303,39 +311,52 @@ export default function MembersModal(
       }
 
       const entries = Object.entries(data).filter(([, value]) => value);
+      const disciplinesFiltered = entries.filter(
+        ([item]) => !["category", "chosen_category"].includes(item),
+      );
 
       const results = await Promise.allSettled(
-        entries.map(([discipline]) => {
+        disciplinesFiltered.map(([discipline]) => {
           const payload = {
             disciplineId: discipline.split("_")[1],
             data: {
               member_id: currentMemberId,
               event_id: props.eventData.id,
+              chosen_category: data.chosen_category,
             },
           };
           return addDisciplineMember.mutateAsync(payload);
-        })
+        }),
       );
 
       const hasError = results.some((r) => r.status === "rejected");
-      const hasWarning = results.some(
-        (r: any) => r.value.data.status == "info"
+      const hasWeightWarning = results.some(
+        (r: any) => r.value.data.status == "info" && !r.value.data.category_ids,
       );
 
-      if (hasWarning) {
-        handleWeightInputScreenOpen();
-      } else {
-        if (!hasError) {
-          setDisciplinesFree([]);
-          await refetch();
-          setTimeout(() => {
-            handleDisciplineScreenClose();
-            setIsWeightInputScreenOpen(false);
-          }, 500);
-        } else {
-          handleDisciplineScreenClose();
-          reset();
+      const hasMultipleCategories = results.some((r: any) => {
+        if (r.value.data.status == "info" && r.value.data.category_ids) {
+          setPossibleCategories(r.value.data.category_ids);
+          return true;
         }
+        return false;
+      });
+
+      if (hasMultipleCategories) {
+        setValue("category", true);
+      } else if (hasWeightWarning) {
+        handleWeightInputScreenOpen();
+      } else if (hasError) {
+        console.log("OLA");
+        handleDisciplineScreenClose();
+        reset();
+      } else {
+        setDisciplinesFree([]);
+        await refetch();
+        setTimeout(() => {
+          handleDisciplineScreenClose();
+          setIsWeightInputScreenOpen(false);
+        }, 500);
       }
 
       setIsMutationDelayActive(false);
@@ -345,7 +366,6 @@ export default function MembersModal(
   };
 
   const filteredMembers = React.useMemo(() => {
-    console.log()
     const query = searchQuery.trim().toLowerCase();
 
     if (!query) return membersNotInEventData?.data.results ?? [];
@@ -370,7 +390,7 @@ export default function MembersModal(
         setPage(0);
         props.handleModalClose();
       }}
-      maxWidth="md"
+      maxWidth={possibleCategories.length > 0 ? "lg" : "md"}
       fullWidth
       slots={{
         transition: Transition,
@@ -402,7 +422,7 @@ export default function MembersModal(
               Inscrever{" "}
               {
                 membersNotInEventData?.data.results.find(
-                  (member: Member) => member.id === currentMemberId
+                  (member: Member) => member.id === currentMemberId,
                 )?.full_name
               }{" "}
               em {props.eventData?.name}
@@ -468,7 +488,7 @@ export default function MembersModal(
               </Tooltip>
             </Grid>
             <Grid size={11}>
-              <Typography sx={{ m: 1, mb: 3 }}>
+              <Typography sx={{ m: 1, mb: 2 }}>
                 Estas são as Modalidades disponíveis para este Evento. Selecione
                 {props.eventData.has_categories ? " as tais" : " a tal"} em que
                 este Atleta irá participar.
@@ -541,15 +561,108 @@ export default function MembersModal(
                 <CircularProgress />
               </Grid>
             )}
+
+            {watch("category") ? (
+              <Grid p={2} container size={12}>
+                <FormHelperText sx={{ p: 2, pt: 0 }} error>
+                  Escolha entre os Escalões possíveis para este Membro.
+                </FormHelperText>
+                <Controller
+                  name="chosen_category"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Escalão"
+                      fullWidth
+                      select
+                      required
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      error={true}
+                    >
+                      <MenuItem sx={{ color: "lightgrey" }} value={undefined}>
+                        -- Selecionar --
+                      </MenuItem>
+                      {props.disciplinesData.data.results[0].categories
+                        ?.filter((item: any) =>
+                          possibleCategories.includes(item.id),
+                        )
+                        .map((item: any, index: any) => (
+                          <MenuItem key={index} value={item.id}>
+                            <Grid
+                              container
+                              spacing={2}
+                              py={1}
+                              alignContent={"center"}
+                            >
+                              <Typography mr={2}>
+                                {item.name} {item.gender}
+                              </Typography>
+                              <Chip
+                                size="small"
+                                label={`Idade Min.: ${item.min_age ?? "N/A"} anos`}
+                              ></Chip>
+                              <Chip
+                                size="small"
+                                label={`Idade Máx.: ${item.max_age ?? "N/A"} anos`}
+                              ></Chip>
+                              <Chip
+                                size="small"
+                                label={`Graduação Min.: ${
+                                  getGraduationFromValue(
+                                    Number(item.min_grad),
+                                  ) ?? "N/A"
+                                }`}
+                              ></Chip>
+                              <Chip
+                                size="small"
+                                label={`Graduação Máx.: ${
+                                  getGraduationFromValue(
+                                    Number(item.max_grad),
+                                  ) ?? "N/A"
+                                }`}
+                              ></Chip>
+                              <Chip
+                                size="small"
+                                label={`Peso Min.: ${item.min_weight ?? "N/A"} ${
+                                  item.min_weight ? "Kg" : ""
+                                }`}
+                              ></Chip>
+                              <Chip
+                                size="small"
+                                label={`Peso Máx.: ${item.max_weight ?? "N/A"} ${
+                                  item.max_weight ? "Kg" : ""
+                                }`}
+                              ></Chip>
+                              {item.max_athletes ? (
+                                <Chip
+                                  size="small"
+                                  label={`Número Máx. de Atletas (Equipas): ${
+                                    item.max_athletes ?? "N/A"
+                                  } ${item.max_athletes ? "Atletas" : ""}`}
+                                ></Chip>
+                              ) : null}
+                            </Grid>
+                          </MenuItem>
+                        ))}
+                    </TextField>
+                  )}
+                ></Controller>
+              </Grid>
+            ) : null}
             {props.eventData.has_categories ? (
-              <FormHelperText sx={{ p: 1 }}>
+              <FormHelperText sx={{ p: 1, py: 2 }}>
                 O escalão será calculado automaticamente de acordo com os
                 Escalões disponíveis para cada uma destas Modalidades. <br />
                 Também a graduação e pesos (quando obrigatórios) serão
                 verificados.
               </FormHelperText>
             ) : (
-              <FormHelperText sx={{ pt: 1, pb: 1 }}>
+              <FormHelperText sx={{ p: 1, py: 2 }}>
                 Apenas poderá selecionar uma Modalidade para cada Aluno. Quando
                 inscrito, este Aluno não voltará a aparecer na lista de seleção,
                 para isso terá de o eliminar da Modalidade corrente, e inscrever
@@ -588,7 +701,7 @@ export default function MembersModal(
               </Grid>
               <Grid size={11}>
                 <Typography sx={{ m: 1, mb: 3 }}>
-                  O escalão disponível na Modalidade encontrada requer um peso,
+                  O escalão disponível na Modalidade encontrada requer um peso.
                   {userRole === "free_club"
                     ? doesNotHaveWeight
                       ? " e este Atleta não tem um peso associado."
@@ -633,7 +746,7 @@ export default function MembersModal(
                     variant="contained"
                     onClick={() => {
                       navigate(
-                        `/members/${currentMemberId}/?edit_field=weight&event_id=${props.eventData.id}&section=personal_info`
+                        `/members/${currentMemberId}/?edit_field=weight&event_id=${props.eventData.id}&section=personal_info`,
                       );
                     }}
                   >
