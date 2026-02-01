@@ -65,6 +65,8 @@ export default function DeleteMemberModal(
     disciplinesHooks.useDeleteAllDisciplineMember();
   const removeMonthlyMenberPaymentPlan =
     monthlyPaymentsHooks.useDeleteMonthlyPaymentPlanData();
+  const removeMemberMonthlyPayment =
+    monthlyPaymentsHooks.useDeleteMonthlyMemberSubscription();
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
 
@@ -104,6 +106,8 @@ export default function DeleteMemberModal(
         });
       } else if (props.from === "Plano") {
         removeMonthlyMenberPaymentPlan.mutate(id);
+      } else if (props.from === "Pagamentos") {
+        removeMemberMonthlyPayment.mutate(id);
       } else {
         const data = {
           disciplineId: props.discipline,
@@ -205,7 +209,9 @@ export default function DeleteMemberModal(
                       ? props.id === undefined
                         ? "Tem a certeza que pretende apagar todas as Equipas?"
                         : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
-                      : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
+                      : props.from === "Pagamentos"
+                        ? "Tem a certeza que pretende apagar este Pagamento?"
+                        : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
         </p>
       </DialogContent>
       <DialogActions>
@@ -216,7 +222,7 @@ export default function DeleteMemberModal(
           }}
           sx={{
             p: 2,
-            gap: 4,
+            gap: 3,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },
           }}

@@ -347,8 +347,8 @@ export default function MembersModal(
       } else if (hasWeightWarning) {
         handleWeightInputScreenOpen();
       } else if (hasError) {
-        console.log("OLA");
         handleDisciplineScreenClose();
+        setPossibleCategories([]);
         reset();
       } else {
         setDisciplinesFree([]);
@@ -357,11 +357,13 @@ export default function MembersModal(
           handleDisciplineScreenClose();
           setIsWeightInputScreenOpen(false);
         }, 500);
+        setPossibleCategories([]);
       }
 
       setIsMutationDelayActive(false);
     } catch {
       setIsMutationDelayActive(false);
+      setPossibleCategories([]);
     }
   };
 
@@ -388,6 +390,7 @@ export default function MembersModal(
       onClose={() => {
         setIsDisciplineScreenOpen(false);
         setPage(0);
+        setPossibleCategories([]);
         props.handleModalClose();
       }}
       maxWidth={possibleCategories.length > 0 ? "lg" : "md"}
@@ -472,7 +475,7 @@ export default function MembersModal(
       <DialogContent sx={{ pb: 0 }}>
         {isDisciplineScreenOpen ? (
           <Grid container size={12}>
-            <Grid size={1}>
+            <Grid ml={3} size={1}>
               <Tooltip title="Voltar atrás">
                 <span>
                   <IconButton
@@ -487,7 +490,7 @@ export default function MembersModal(
                 </span>
               </Tooltip>
             </Grid>
-            <Grid size={11}>
+            <Grid size={10}>
               <Typography sx={{ m: 1, mb: 2 }}>
                 Estas são as Modalidades disponíveis para este Evento. Selecione
                 {props.eventData.has_categories ? " as tais" : " a tal"} em que
@@ -562,7 +565,7 @@ export default function MembersModal(
               </Grid>
             )}
 
-            {watch("category") ? (
+            {watch("category") && !isMutationDelayActive ? (
               <Grid p={2} container size={12}>
                 <FormHelperText sx={{ p: 2, pt: 0 }} error>
                   Escolha entre os Escalões possíveis para este Membro.

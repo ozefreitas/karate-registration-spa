@@ -20,6 +20,7 @@ import {
   ListItemButton,
   CircularProgress,
   ListItemIcon,
+  Chip,
 } from "@mui/material";
 import fighttecLogo from "./../../assets/FightTecLogo-white-font-removebg-cropped.png";
 import skipLogo from "./../../assets/skip-logo.png";
@@ -38,7 +39,7 @@ import { adminHooks, notificationsHooks, authHooks } from "../../hooks";
 import { formatTimeDifference } from "../../utils/utils";
 
 export default function Header(
-  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
+  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>,
 ) {
   type Notification = {
     id: string;
@@ -125,7 +126,7 @@ export default function Header(
   };
 
   const shouldRender = breadcrumbs.some(
-    (item) => item.title === "Não permitido" && item.link === "unauthorized/"
+    (item) => item.title === "Não permitido" && item.link === "unauthorized/",
   );
 
   return (
@@ -172,14 +173,16 @@ export default function Header(
               sx={{ flexGrow: 1 }}
             ></Typography>
             <Stack alignItems="center" direction="row" spacing={3}>
-              <Typography variant="body1">
-                Época desportiva: {currentSeason}
-              </Typography>
+              <Chip
+                sx={{ p: 2 }}
+                color="info"
+                label={`Época: ${currentSeason}`}
+              ></Chip>
               {props.me?.data.role === undefined ? null : (
                 <Tooltip
                   title={"Consultar planos"}
                   disableHoverListener={["superuser", "main_admin"].includes(
-                    props.me?.data.role
+                    props.me?.data.role,
                   )}
                 >
                   <span>
@@ -187,7 +190,7 @@ export default function Header(
                       onClick={() => {
                         if (
                           !["superuser", "main_admin"].includes(
-                            props.me?.data.role
+                            props.me?.data.role,
                           )
                         ) {
                           navigate("/pricing/");
@@ -204,12 +207,12 @@ export default function Header(
                       props.me?.data.role === "single_admin"
                         ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
                         : props.me?.data.role === "superuser"
-                        ? "SUPER ADMIN"
-                        : props.me?.data.role === "free_club"
-                        ? "CLUBE - GRÁTIS"
-                        : props.me?.data.role === "subed_club"
-                        ? `CLUBE - PREMIUM - ${props.me.data.tier}`
-                        : "TÉCNICO"}
+                          ? "SUPER ADMIN"
+                          : props.me?.data.role === "free_club"
+                            ? "CLUBE - GRÁTIS"
+                            : props.me?.data.role === "subed_club"
+                              ? `CLUBE - PREMIUM - ${props.me.data.tier}`
+                              : "TÉCNICO"}
                     </Button>
                   </span>
                 </Tooltip>
@@ -253,9 +256,9 @@ export default function Header(
                                 bgcolor: notificationError
                                   ? "red"
                                   : notificationData?.data.total === 0 ||
-                                    notificationData === null
-                                  ? null
-                                  : "green",
+                                      notificationData === null
+                                    ? null
+                                    : "green",
                               }}
                             >
                               <NotificationsActive
@@ -522,7 +525,7 @@ export default function Header(
                             {noti.type === "none"
                               ? "Geral"
                               : NotificationTypeOptions.find(
-                                  (item) => item.value === noti.type
+                                  (item) => item.value === noti.type,
                                 )?.label}
                           </Typography>
                           <Typography variant="caption" color="textDisabled">
@@ -534,7 +537,7 @@ export default function Header(
                     />
                   </ListItem>
                 </MenuItem>
-              )
+              ),
             )}
           </List>
         )}
@@ -579,7 +582,7 @@ export default function Header(
                   </Typography>
                 </Link>
               </Box>
-            )
+            ),
           )}
         </Breadcrumbs>
       )}

@@ -36,7 +36,7 @@ export const getGraduationFromValue = (gradValue: number) => {
   return gradLabel;
 };
 
-const MonthOptions: { label: string; value: number }[] = [
+export const MonthOptions: { label: string; value: number }[] = [
   { label: "janeiro", value: 1 },
   { label: "fevereiro", value: 2 },
   { label: "março", value: 3 },
@@ -49,6 +49,15 @@ const MonthOptions: { label: string; value: number }[] = [
   { label: "outubro", value: 10 },
   { label: "novembro", value: 11 },
   { label: "dezembro", value: 12 },
+];
+
+export const YearOptions: { label: string; value: number }[] = [
+  { label: "2025", value: 2025 },
+  { label: "2026", value: 2026 },
+  { label: "2027", value: 2027 },
+  { label: "2028", value: 2028 },
+  { label: "2029", value: 2029 },
+  { label: "2030", value: 2030 },
 ];
 
 export const getMonthFromValue = (monthValue: number) => {
@@ -81,24 +90,6 @@ export const ReasonOptions: { label: string; value: string }[] = [
   { label: "Defesa Pessoal", value: "defence" },
   { label: "Karate Tradicional", value: "traditional" },
 ];
-
-// export const WeightOptions = {
-//   Juvenil: [
-//     { value: "-47", label: "-47Kg" },
-//     { value: "+47", label: "+47Kg" },
-//   ],
-//   Cadete: [
-//     { value: "-57", label: "-57Kg" },
-//     { value: "+57", label: "+57Kg" },
-//   ],
-//   Júnior: [
-//     { value: "-65", label: "-65Kg" },
-//     { value: "+65", label: "+65Kg" },
-//   ],
-//   Sénior: [{ value: "open", label: "Open" }],
-//   "Veterano +35": [{ value: "open", label: "Open" }],
-//   "Veterano +50": [{ value: "open", label: "Open" }],
-// };
 
 export const EncounterOptions: { label: string; value: string }[] = [
   { label: "Regional", value: "regional" },

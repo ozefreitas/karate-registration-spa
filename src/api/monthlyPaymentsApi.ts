@@ -40,11 +40,19 @@ export const fetchSingleMonthlyMemberSubscription = (paymentId: string) => {
   return authClient.get(`/monthly_payments/${paymentId}/`);
 };
 
+export const createMonthlyMemberSubscription = (data: any) => {
+  return authClient.post("/monthly_payments/", data);
+};
+
 export const patchMonthlyMemberSubscription = (
   monthlySubscriptionId: string,
   data: any
 ) => {
   return authClient.patch(`/monthly_payments/${monthlySubscriptionId}/`, data);
+};
+
+export const deleteMonthlyMemberSubscription = (paymentId: string) => {
+  return authClient.delete(`/monthly_payments/${paymentId}/`);
 };
 
 // member payment config

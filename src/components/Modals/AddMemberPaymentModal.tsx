@@ -11,14 +11,15 @@ import {
   TextField,
   MenuItem,
   FormControl,
+  FormLabel,
   FormControlLabel,
   Switch,
-  FormLabel,
 } from "@mui/material";
 import React from "react";
 import { TransitionProps } from "notistack";
 import { monthlyPaymentsHooks } from "../../hooks";
 import { Controller, useForm } from "react-hook-form";
+import { MonthOptions, YearOptions } from "../../config";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,48 +30,58 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EditMemberPaymentPlan(
+export default function AddMemberPaymentModal(
   props: Readonly<{
     isOpen: boolean;
     handleClose: any;
+    memberId: string;
     currentQuotesConfig: any;
   }>,
 ) {
   const {
-    data: monthlyPaymentPlansData,
-    isLoading: isMonthlyPaymentPlansLoadng,
-  } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
-
-  const patchMemberMonthlyPaymentConfig =
-    monthlyPaymentsHooks.usePatchMemberMonthlyPaymentConfig();
-
-  const {
     control,
     handleSubmit,
-    watch,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: props.currentQuotesConfig.is_current_active
+      month: "",
+      year: "",
+      plan: props.currentQuotesConfig.is_current_active
         ? ""
         : props.currentQuotesConfig.base_plan,
+      is_default: false,
       custom: false,
-      customAmount: null,
+      customAmount: "",
     },
   });
 
+  const {
+    data: monthlyPaymentPlansData,
+    // isLoading: isMonthlyPaymentPlansLoadng,
+  } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
+
+  const createMonthlyMemberSubscription =
+    monthlyPaymentsHooks.useCreateMonthlyMemberSubscription();
+
   const onSubmit = (data: any) => {
     const payload = {
-      base_plan: data.name,
-      custom_amount: data.customAmount,
-      is_custom_active: data.custom,
+      member: props.memberId,
+      year: data.year,
+      month: data.month,
+      is_default: data.is_default,
+      plan: data.plan,
+      customAmount: data.customAmount,
     };
-    patchMemberMonthlyPaymentConfig.mutate({
-      monthlyPaymentConfigId: props.currentQuotesConfig.id,
-      data: payload,
+    if (data.custom) {
+      payload.plan = undefined;
+    }
+    createMonthlyMemberSubscription.mutate(payload, {
+      onSuccess: () => {
+        props.handleClose();
+      },
     });
-    props.handleClose();
   };
 
   return (
@@ -82,7 +93,7 @@ export default function EditMemberPaymentPlan(
       }}
     >
       <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">Alterar montante pré-definido</Typography>
+        <Typography variant="h5">Criar quota</Typography>
       </DialogTitle>
       <DialogContent
         sx={{
@@ -90,15 +101,109 @@ export default function EditMemberPaymentPlan(
           borderTop: "1px solid lightgrey",
         }}
       >
-        <p>
-          Escolha o montante a ser pedido a este Membro. <br /> Este será
-          utilizado para criar novas quotas no primeiro dia de cada mês. <br />{" "}
-          Se quiser alterar uma quota já criada, dirija-se ao icone da linha
-          correspondente dentro da tabela.
-        </p>
+        <p>Insira o mês para o qual quer criar a quota.</p>
         <Grid sx={{ p: 2 }} size={6}>
           <Controller
-            name="name"
+            name="month"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Mês"
+                select
+                fullWidth
+                required
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
+                error={!!errors.month}
+              >
+                <MenuItem sx={{ color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
+                {MonthOptions.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+        </Grid>
+        <Grid sx={{ p: 2 }} size={6}>
+          <Controller
+            name="year"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Ano"
+                select
+                fullWidth
+                required
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
+                error={!!errors.month}
+              >
+                <MenuItem sx={{ color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
+                {YearOptions.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+        </Grid>
+        <Grid mt={2} ml={1} size={6}>
+          <Controller
+            name="is_default"
+            control={control}
+            disabled={watch("custom")}
+            render={({ field }) => (
+              <FormControl
+                sx={{ pb: 2, justifyContent: "center" }}
+                component="fieldset"
+                variant="standard"
+              >
+                <FormLabel sx={{ ml: 2, mb: 1 }}>
+                  Selecione este campo caso deseje que seja utilizado o montante
+                  que definiu como padrão.
+                </FormLabel>
+                <FormControlLabel
+                  sx={{ mr: 2, justifyContent: "flex-end" }}
+                  labelPlacement="start"
+                  label={
+                    <Typography sx={{ fontSize: 18, pr: 2 }}>
+                      Usar padrão:
+                    </Typography>
+                  }
+                  control={
+                    <Switch
+                      {...field}
+                      checked={field.value}
+                      color="warning"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked);
+                      }}
+                    />
+                  }
+                ></FormControlLabel>
+              </FormControl>
+            )}
+          />
+        </Grid>
+        <Grid p={2} pt={0} size={6}>
+          <Controller
+            name="plan"
             control={control}
             render={({ field }) => (
               <TextField
@@ -107,13 +212,13 @@ export default function EditMemberPaymentPlan(
                 label="Plano"
                 fullWidth
                 select
-                disabled={watch("custom")}
+                disabled={watch("is_default") || watch("custom")}
                 required
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
                 }}
-                error={!!errors.name}
+                error={!!errors.plan}
               >
                 <MenuItem value="" sx={{ color: "lightgrey" }}>
                   -- Selecionar --
@@ -130,6 +235,7 @@ export default function EditMemberPaymentPlan(
         <Grid mt={2} ml={1} size={6}>
           <Controller
             name="custom"
+            disabled={watch("is_default")}
             control={control}
             render={({ field }) => (
               <FormControl
@@ -152,6 +258,7 @@ export default function EditMemberPaymentPlan(
                   control={
                     <Switch
                       {...field}
+                      disabled={watch("is_default")}
                       checked={field.value}
                       color="warning"
                       {...field}
@@ -168,6 +275,7 @@ export default function EditMemberPaymentPlan(
         <Grid pl={2}>
           <Controller
             name="customAmount"
+            disabled={!watch("custom") || watch("is_default")}
             control={control}
             render={({ field }) => (
               <TextField

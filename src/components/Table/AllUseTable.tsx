@@ -159,19 +159,30 @@ export default function AllUseTable(
 ) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const paramPage = searchParams.get("page") || "0";
+  const paramPage = searchParams.get("page") ?? "1";
+  const paramPageSize = searchParams.get("page_size") ?? "10";
 
   useEffect(() => {
-    if (props.setPage && props.page) {
-      if (paramPage === "0") {
-        props.setPage("1");
-      } else props.setPage(paramPage);
-    }
-  }, [paramPage]);
+    if (!props.setPage || !props.setPageSize) return;
+
+    props.setPage(Number(paramPage));
+    props.setPageSize(Number(paramPageSize));
+  }, [paramPage, paramPageSize, props.setPage, props.setPageSize]);
 
   const changePage = (number: string) => {
-    setSearchParams({ page: number });
+    setSearchParams((prev) => {
+      prev.set("page", number);
+      return prev;
+    });
   };
+
+  const changePageSize = (number: string) => {
+    setSearchParams((prev) => {
+      prev.set("page_size", number);
+      return prev;
+    });
+  };
+
   const navigate = useNavigate();
   const [internalPage, setInternalPage] = useState<number>(0);
   const [internalPageSize, setInternalPageSize] = useState<number>(
@@ -204,20 +215,22 @@ export default function AllUseTable(
     newPage: number,
   ) => {
     if (props.setPage) {
-      // props.setPage(newPage + 1);
+      props.setPage(newPage + 1);
       changePage((newPage + 1).toString());
+      // changePageSize(props.pageSize.toString());
     } else {
-      setInternalPage(newPage + 1);
+      setInternalPage(newPage);
     }
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newSize = parseInt(event.target.value, 10);
+    const newSize = Number.parseInt(event.target.value, 10);
     if (props.setPage && props.setPageSize) {
       props.setPageSize(newSize);
-      props.setPage(0);
+      changePageSize(newSize.toString());
+      props.setPage(1);
     } else {
       setInternalPageSize(newSize);
       setInternalPage(0);
@@ -438,6 +451,15 @@ export default function AllUseTable(
       return props.data.slice(start, end);
     } else return props.data;
   }, [props.data, props.page, props.pageSize, internalPage, internalPageSize]);
+
+  const paginationObj = () => {
+    const ola: any[] = [5, 10, 25, 100];
+    if (["CategoriasReadOnly", "Pagamentos"].includes(props.type)) {
+      ola.push({ label: "Todas", value: -1 });
+    }
+    return ola;
+  };
+  const paginationObjToAdd = paginationObj();
 
   return (
     <>
@@ -689,12 +711,7 @@ export default function AllUseTable(
                     <StyledTableCell></StyledTableCell>
                   )}
                   <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "Todas", value: -1 },
-                    ]}
+                    rowsPerPageOptions={paginationObjToAdd}
                     count={props.count}
                     rowsPerPage={
                       props.pageSize ? props.pageSize : internalPageSize

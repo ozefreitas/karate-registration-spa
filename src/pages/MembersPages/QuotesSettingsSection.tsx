@@ -1,4 +1,4 @@
-import { Check, Close, Edit } from "@mui/icons-material";
+import { Add, Check, Close, Edit } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -24,10 +24,13 @@ import QuotesOrdering from "../../components/filter_drawers/QuotesOrdering";
 import PatchMemberSubscriptionModal from "../../components/Modals/PatchMemberSubscriptionModal";
 import EditMemberPaymentPlanModal from "../../components/Modals/EditMemberPaymentPlanModal";
 import { useForm } from "react-hook-form";
+import AddButton from "../../components/Buttons/AddButton";
+import AddMemberPaymentModal from "../../components/Modals/AddMemberPaymentModal";
 
 const QuotesSettingsSection = (props: { quotesConfig: any }) => {
   const { id: memberId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [enabled, setEnabled] = useState<boolean>(false);
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] =
     useState<boolean>(false);
@@ -47,6 +50,14 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
     setIsModalOpen(false);
   };
 
+  const handleAddModalOpen = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleAddModalClose = () => {
+    setIsAddModalOpen(false);
+  };
+
   const handleEditPlanModalOpen = () => {
     setEnabled(true);
     setIsEditPlanModalOpen(true);
@@ -58,11 +69,11 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
   };
 
   const preDefined =
-    props.quotesConfig !== undefined
-      ? props.quotesConfig.is_custom_active
+    props.quotesConfig === undefined
+      ? null
+      : props.quotesConfig.is_custom_active
         ? props.quotesConfig.custom_amount
-        : props.quotesConfig.base_plan_amount
-      : null;
+        : props.quotesConfig.base_plan_amount;
 
   const getColumnMaping = () => {
     const columnMapping = [
@@ -124,7 +135,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
   const { data, isLoading, error } =
     monthlyPaymentsHooks.useFetchMonthlyMemberSubscriptionsData(
       ordering,
-      memberId!
+      memberId,
     );
 
   // Memoize `rows` to compute only when `members` changes
@@ -208,11 +219,11 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
             <CircularProgress />
           </Box>
         </Grid>
-      ) : data?.data.length !== 0 ? (
-        <Grid container justifyContent={"flex-end"} spacing={2} mt={3}>
+      ) : data?.data.length === 0 ? null : (
+        <Grid container justifyContent={"flex-end"} p={2} spacing={4}>
           <Grid size={6}>
             <Card
-              elevation={2}
+              elevation={5}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -221,26 +232,32 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               }}
             >
               <CardHeader
-                sx={{ pb: 1 }}
+                sx={{
+                  pb: 1,
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
                 title={"Montante Pré-Definido"}
               ></CardHeader>
-              <CardContent sx={{ pr: 3 }}>
-                <Grid
-                  container
-                  alignContent={"flex-end"}
-                  flexDirection={"column"}
-                >
+              <CardContent sx={{ px: 3 }}>
+                <Grid container flexDirection={"column"}>
                   {isLoading ? (
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
                       <CircularProgress />
                     </Box>
                   ) : (
-                    <Grid container alignItems={"center"} spacing={3}>
+                    <Grid
+                      container
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      spacing={3}
+                    >
                       <Typography
                         color={
-                          props.quotesConfig !== undefined
-                            ? "info"
-                            : "textDisabled"
+                          props.quotesConfig === undefined
+                            ? "textDisabled"
+                            : "info"
                         }
                         variant="h3"
                       >
@@ -264,7 +281,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
 
           <Grid size={6}>
             <Card
-              elevation={2}
+              elevation={5}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -272,10 +289,18 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                 justifyContent: "space-between",
               }}
             >
-              <CardHeader sx={{ pb: 1 }} title="Em pagamento"></CardHeader>
+              <CardHeader
+                sx={{
+                  pb: 1,
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
+                title="Em pagamento"
+              ></CardHeader>
               <CardContent
                 sx={{
-                  pr: 5,
+                  pl: 3,
                   maxHeight: "100%",
                 }}
               >
@@ -284,7 +309,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                     <CircularProgress />
                   </Box>
                 ) : (
-                  <Grid container justifyContent={"flex-end"}>
+                  <Grid container justifyContent={"flex-start"}>
                     <Typography color="info" variant="h3">
                       {getMonthFromValue(Number(month))}
                     </Typography>
@@ -298,7 +323,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           </Grid>
           <Grid size={6}>
             <Card
-              elevation={2}
+              elevation={5}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -307,14 +332,19 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               }}
             >
               <CardHeader
-                sx={{ pb: 1 }}
+                sx={{
+                  pb: 1,
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
                 title={"Situações Irregulares"}
               ></CardHeader>
               <CardContent
                 sx={{
                   display: "flex",
-                  justifyContent: "flex-end",
-                  pr: 5,
+                  justifyContent: "flex-start",
+                  pl: 3,
                 }}
               >
                 {isLoading ? (
@@ -326,19 +356,19 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                     color={
                       data?.data?.filter(
                         (item: any) =>
-                          item.inside_limit === false && item.paid === false
-                      ).length !== 0
-                        ? "error"
-                        : "textDisabled"
+                          item.inside_limit === false && item.paid === false,
+                      ).length === 0
+                        ? "textDisabled"
+                        : "error"
                     }
                     variant="h3"
                   >
-                    {data?.data.length !== 0
-                      ? data?.data?.filter(
+                    {data?.data.length === 0
+                      ? 0
+                      : data?.data?.filter(
                           (item: any) =>
-                            item.inside_limit === false && item.paid === false
-                        ).length
-                      : 0}
+                            item.inside_limit === false && item.paid === false,
+                        ).length}
                   </Typography>
                 )}
               </CardContent>
@@ -346,7 +376,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           </Grid>
           <Grid size={6}>
             <Card
-              elevation={2}
+              elevation={5}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -355,14 +385,19 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               }}
             >
               <CardHeader
-                sx={{ pb: 1 }}
+                sx={{
+                  pb: 1,
+                  "& .MuiCardHeader-title": {
+                    fontWeight: "bold",
+                  },
+                }}
                 title={"Situações Regulares"}
               ></CardHeader>
               <CardContent
                 sx={{
                   display: "flex",
-                  justifyContent: "flex-end",
-                  pr: 5,
+                  justifyContent: "flex-start",
+                  pl: 3,
                 }}
               >
                 {isLoading ? (
@@ -371,42 +406,55 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                   </Box>
                 ) : (
                   <Typography
-                    color={data?.data.length !== 0 ? "info" : "textDisabled"}
+                    color={data?.data.length === 0 ? "textDisabled" : "info"}
                     variant="h3"
                   >
-                    {data?.data.length !== 0
-                      ? data?.data?.filter(
+                    {data?.data.length === 0
+                      ? 0
+                      : data?.data?.filter(
                           (item: any) =>
-                            item.inside_limit === true && item.paid === false
-                        ).length
-                      : 0}
+                            item.inside_limit === true && item.paid === false,
+                        ).length}
                   </Typography>
                 )}
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-      ) : null}
+      )}
       <Grid mt={10}>
         {error ? null : (
           <Grid
             size={12}
             container
-            px={3}
+            px={2}
             mb={3}
             spacing={2}
-            justifyContent={"flex-end"}
+            justifyContent={"space-between"}
             alignItems={"center"}
           >
-            <QuotesOrdering
-              isLoading={isLoading}
-              control={orderControl}
-              reset={orderReset}
-              errors={orderErrors}
-              changedCount={orderChangedCount}
-              orderFields={orderFields}
-              setOrderFields={setOrderFields}
-            ></QuotesOrdering>
+            <Grid>
+              <Button
+                variant="contained"
+                size="large"
+                color="success"
+                onClick={handleAddModalOpen}
+                startIcon={<Add />}
+              >
+                Adicionar
+              </Button>
+            </Grid>
+            {subscriptionRows?.length === 0 ? null : (
+              <QuotesOrdering
+                isLoading={isLoading}
+                control={orderControl}
+                reset={orderReset}
+                errors={orderErrors}
+                changedCount={orderChangedCount}
+                orderFields={orderFields}
+                setOrderFields={setOrderFields}
+              ></QuotesOrdering>
+            )}
           </Grid>
         )}
         {isLoading ? (
@@ -420,6 +468,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
             count={subscriptionRows.length}
             type="Pagamentos"
             actions
+            deletable
             selection={false}
             editable
             notWatchable
@@ -441,6 +490,14 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           isOpen={isModalOpen}
           paymentObj={currentPaymentObj}
         ></PatchMemberSubscriptionModal>
+      )}
+      {memberId === undefined ? null : (
+        <AddMemberPaymentModal
+          isOpen={isAddModalOpen}
+          handleClose={handleAddModalClose}
+          memberId={memberId}
+          currentQuotesConfig={props.quotesConfig}
+        ></AddMemberPaymentModal>
       )}
     </>
   );

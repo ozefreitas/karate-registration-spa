@@ -48,7 +48,6 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
       (memberInfo: any) => ({
         id: memberInfo.member.id,
         full_name: memberInfo.member.full_name,
-        gender: memberInfo.member.gender,
         added_at: formatDateTime(memberInfo.added_at, "both"),
       }),
     );
@@ -57,7 +56,6 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
   const getColumnMaping = () => {
     const columnMapping = [
       { key: "full_name", label: "Nome" },
-      { key: "gender", label: "Género" },
       { key: "added_at", label: "Data Inscrição" },
     ];
     return columnMapping;

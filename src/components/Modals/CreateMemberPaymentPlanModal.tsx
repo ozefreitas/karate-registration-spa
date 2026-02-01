@@ -169,7 +169,7 @@ export default function CreateMemberPaymentPlanModal(
           }}
           sx={{
             p: 2,
-            gap: 4,
+            gap: 3,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },
           }}
