@@ -18,7 +18,7 @@ import {
   monthlyPaymentsHooks,
   teamsHooks,
 } from "../../hooks";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -69,6 +69,9 @@ export default function DeleteMemberModal(
     monthlyPaymentsHooks.useDeleteMonthlyMemberSubscription();
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const paramEvent = searchParams.get("event") || undefined;
 
   const handleDelete = (
     event: React.MouseEvent<HTMLElement>,
@@ -83,10 +86,17 @@ export default function DeleteMemberModal(
           },
         });
       } else if (props.from === "Equipas") {
-        removeDisciplineTeam.mutate({
-          disciplineId: props.discipline,
-          data: { team_id: props.id },
-        });
+        removeDisciplineTeam.mutate(
+          {
+            disciplineId: props.discipline,
+            data: { team_id: props.id },
+          },
+          {
+            onSuccess: () => {
+              navigate(`/events/${paramEvent}/teams/`);
+            },
+          },
+        );
       } else if (props.from === "Individuais") {
         const memberData = { member_id: id };
         const data = {

@@ -19,10 +19,9 @@ import {
   Typography,
   Slide,
 } from "@mui/material";
-import { membersHooks, teamsHooks, disciplinesHooks } from "../../hooks";
+import { membersHooks, disciplinesHooks } from "../../hooks";
 import { GenderOptions, getGraduationFromValue } from "../../config";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../access/GlobalAuthProvider";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 
 const Transition = React.forwardRef(function Transition(

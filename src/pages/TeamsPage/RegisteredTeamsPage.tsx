@@ -41,6 +41,7 @@ export default function RegisteredTeamsPage(
     false,
     true,
   );
+  
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
     : singleEventData?.data.is_retification

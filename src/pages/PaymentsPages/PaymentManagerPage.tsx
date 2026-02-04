@@ -2,7 +2,9 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import AdminPaymentManagerPage from "./AdminPaymentManagerPage";
 import MemberPaymemtManagerPage from "./MemberPaymemtManagerPage";
 
-export default function PaymentManagerPage(props: { userRole: string }) {
+export default function PaymentManagerPage(
+  props: Readonly<{ userRole: string }>,
+) {
   return (
     <>
       <PageInfoCard

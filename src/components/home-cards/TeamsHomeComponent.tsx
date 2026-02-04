@@ -29,13 +29,13 @@ const fetchLastFiveTeams = () => {
 };
 
 export default function TeamsHomeComponent(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
+  type Category = { name: string };
   type Team = {
     id: string;
     team_number: number;
-    category: string;
-    match_type: string;
+    category: Category;
     gender: string;
   };
 
@@ -112,7 +112,7 @@ export default function TeamsHomeComponent(
                         <Groups />
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${team.match_type} ${team.category} ${team.gender} Nº ${team.team_number}`}
+                        primary={`${team.category.name} ${team.gender} Nº ${team.team_number}`}
                       />
                     </ListItemButton>
                   </ListItem>

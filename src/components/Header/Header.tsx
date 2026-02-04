@@ -436,7 +436,7 @@ export default function Header(
             justifyContent: "space-between",
           }}
         >
-          Notificações Recentes dlihasd
+          Notificações Recentes
           {(!isNotificationLoading && notificationData?.data.total === 0) ||
           notificationError ? null : (
             <Typography color="textDisabled">

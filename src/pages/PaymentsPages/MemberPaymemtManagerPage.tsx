@@ -29,7 +29,9 @@ import FormAccordion from "../../dashboard/FormAccordion";
 import CreateMemberPaymentPlanModal from "../../components/Modals/CreateMemberPaymentPlanModal";
 import { Controller, useForm } from "react-hook-form";
 
-export default function MemberPaymemtManagerPage(props: { userRole: string }) {
+export default function MemberPaymemtManagerPage(
+  props: Readonly<{ userRole: string }>,
+) {
   type Plan = {
     id: string;
     is_default: boolean;
@@ -68,7 +70,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
     setIsSelected((prev) =>
       prev.includes(value)
         ? prev.filter((item) => item !== value)
-        : [...prev, value]
+        : [...prev, value],
     );
   };
 
@@ -107,31 +109,23 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
   const columnMaping = getColumnMaping();
 
   const immediateAction = data?.data.filter(
-    (item: any) => item.paid === false && item.inside_limit === false
+    (item: any) => item.paid === false && item.inside_limit === false,
   ).length;
 
   const warnings = data?.data.filter(
-    (item: any) => item.paid === false && item.inside_limit === true
+    (item: any) => item.paid === false && item.inside_limit === true,
   ).length;
 
   const infos = 0;
 
-  useEffect(() => {
-    let count = 0;
-    if (isSelected.includes("error")) {
-      count = count + immediateAction;
-    } else if (isSelected.includes("warning")) {
-      count = count + warnings;
-    } else if (isSelected.includes("info")) {
-      count = count + infos;
-    }
+  const count =
+    (isSelected.includes("error") ? immediateAction : 0) +
+    (isSelected.includes("warning") ? warnings : 0) +
+    (isSelected.includes("info") ? infos : 0);
 
-    if (count === 0) {
-      setIsShowable(false);
-    } else {
-      setIsShowable(true);
-    }
-  }, [isSelected]);
+  useEffect(() => {
+    setIsShowable(count > 0);
+  }, [count]);
 
   const {
     control,
@@ -148,7 +142,7 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
         onChange={handleIsExpandedOpen}
         title="Validação de Pagamentos"
         summary={
-          <Grid container justifyContent={"flex-end"} rowSpacing={1} columnSpacing={2}>
+          <Grid container justifyContent={"flex-end"} spacing={2}>
             <Chip
               sx={{
                 p: 1,
@@ -245,14 +239,14 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
                 data?.data
                   .filter(
                     (item: any) =>
-                      item.paid === false && item.inside_limit === false
+                      item.paid === false && item.inside_limit === false,
                   )
                   .map((payments: any, index: any) => (
                     <ListItem sx={{ m: 0, pb: 0 }} key={index}>
                       <ListItemButton
                         onClick={() =>
                           navigate(
-                            `/members/${payments.member.id}/?section=payments_management`
+                            `/members/${payments.member.id}/?section=payments_management`,
                           )
                         }
                       >
@@ -267,14 +261,14 @@ export default function MemberPaymemtManagerPage(props: { userRole: string }) {
                 data?.data
                   .filter(
                     (item: any) =>
-                      item.paid === false && item.inside_limit === true
+                      item.paid === false && item.inside_limit === true,
                   )
                   .map((payments: any, index: any) => (
                     <ListItem sx={{ m: 0, pb: 0 }} key={index}>
                       <ListItemButton
                         onClick={() =>
                           navigate(
-                            `/members/${payments.member.id}/?section=payments_management`
+                            `/members/${payments.member.id}/?section=payments_management`,
                           )
                         }
                       >

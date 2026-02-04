@@ -20,10 +20,9 @@ import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
 import { MemberTypes } from "../../config";
-import stringAvatar from "../../dashboard/utils/avatarColor";
 
 export default function MembersHomeComponent(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
   type Member = {
     id: string;
@@ -55,47 +54,47 @@ export default function MembersHomeComponent(
             },
           }}
         ></CardHeader>
-        <List>
-          {props.userRole === undefined ? (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0 }}>
-                <ListItemIcon>
-                  <Person />
-                </ListItemIcon>
-                <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
-              </ListItemButton>
-            </ListItem>
-          ) : isLastFiveMembersLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <CircularProgress />
-            </Box>
-          ) : lastFiveMembersError ? (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0 }}>
-                <ListItemIcon>
-                  <Person />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Ocorreu um erro ao carregar os membros."}
-                />
-              </ListItemButton>
-            </ListItem>
-          ) : lastFiveMembersData?.data.length === 0 ? (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0 }}>
-                <ListItemIcon>
-                  <Person />
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Não registou nenhum Membro recentemente."}
-                />
-              </ListItemButton>
-            </ListItem>
-          ) : (
-            lastFiveMembersData?.data.map((member: Member, index: number) => (
+        {props.userRole === undefined ? (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ m: 0 }}>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
+            </ListItemButton>
+          </ListItem>
+        ) : isLastFiveMembersLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : lastFiveMembersError ? (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ m: 0 }}>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Ocorreu um erro ao carregar os membros."}
+              />
+            </ListItemButton>
+          </ListItem>
+        ) : lastFiveMembersData?.data.length === 0 ? (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ m: 0 }}>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Não registou nenhum Membro recentemente."}
+              />
+            </ListItemButton>
+          </ListItem>
+        ) : (
+          <List>
+            {lastFiveMembersData?.data.map((member: Member, index: number) => (
               <ListItem key={index} sx={{ m: 0, pb: 0 }}>
                 <Tooltip title={"Consultar"} placement="right">
-                  <span>
+                  <span style={{ width: "100%" }}>
                     <ListItemButton
                       sx={{
                         minWidth: 0,
@@ -135,14 +134,14 @@ export default function MembersHomeComponent(
                                 member.member_type === "coach"
                                   ? "secondary"
                                   : member.member_type === "student"
-                                  ? "info"
-                                  : "warning"
+                                    ? "info"
+                                    : "warning"
                               }
                               variant="outlined"
                               label={`${
                                 MemberTypes.find(
                                   (item: any) =>
-                                    item.value === member.member_type
+                                    item.value === member.member_type,
                                 )?.label
                               }`}
                             ></Chip>
@@ -161,20 +160,21 @@ export default function MembersHomeComponent(
                   </span>
                 </Tooltip>
               </ListItem>
-            ))
-          )}
-          {props.userRole === "free_club" ? (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemText
-                  primary={
-                    "Comece uma subscrição para ter acesso a esta funcionalidade."
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          ) : null}
-        </List>
+            ))}
+          </List>
+        )}
+        {props.userRole === "free_club" ? (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+              <ListItemText
+                primary={
+                  "Comece uma subscrição para ter acesso a esta funcionalidade."
+                }
+              />
+            </ListItemButton>
+          </ListItem>
+        ) : null}
+
         <CardActions sx={{ justifyContent: "flex-end" }}>
           {props.userRole === "free_club" ? null : props.userRole ===
             "subed_club" ? (

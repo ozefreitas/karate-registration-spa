@@ -1,6 +1,5 @@
 import {
   Card,
-  CardHeader,
   CardContent,
   Grid,
   Box,
@@ -8,15 +7,28 @@ import {
   Chip,
   Avatar,
   Typography,
+  Button,
 } from "@mui/material";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { teamsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import stringAvatar from "../../dashboard/utils/avatarColor";
+import { Delete } from "@mui/icons-material";
+import { useState } from "react";
+import DeleteMemberModal from "../../components/Modals/DeleteMemberModal";
 
 export default function SingleTeamPage() {
-  const navigate = useNavigate();
   const { id: teamId } = useParams<{ id: string }>();
+  const [isDeleteMemberModalOpen, setIsDeleteMemberModalOpen] =
+    useState<boolean>(false);
+
+  const handleModalOpen = () => {
+    setIsDeleteMemberModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsDeleteMemberModalOpen(false);
+  };
 
   const {
     data: singleTeamData,
@@ -43,19 +55,81 @@ export default function SingleTeamPage() {
       ) : singleTeamError ? (
         <Navigate to={"/not_found/"}></Navigate>
       ) : (
-        <Grid container m={2}>
-          <Card
-            sx={{
-              width: "100%",
-              m: 2,
-            }}
-          >
-            <CardContent sx={{ p: 2, width: "100%", display: "flex", gap: 2 }}>
+        <Grid container m={4}>
+          <Card>
+            <Grid container size={12} justifyContent={"flex-end"}>
+              <Button
+                sx={{ m: 2 }}
+                variant="contained"
+                size="small"
+                color="error"
+                startIcon={<Delete />}
+                onClick={handleModalOpen}
+              >
+                Remover
+              </Button>
+            </Grid>
+            <Grid container size={12}>
+              <Grid size={6} p={2}>
+                <Card>
+                  <CardContent
+                    sx={{
+                      "&:last-child": {
+                        paddingBottom: 2,
+                      },
+                    }}
+                  >
+                    {isSingleTeamLoading ? (
+                      <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <CircularProgress />
+                      </Box>
+                    ) : (
+                      <Typography
+                        variant="h6"
+                        px={2}
+                        sx={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Escalão: {singleTeamData?.data.category.name}
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid size={6} p={2}>
+                <Card>
+                  <CardContent
+                    sx={{
+                      "&:last-child": {
+                        paddingBottom: 2,
+                      },
+                    }}
+                  >
+                    {isSingleTeamLoading ? (
+                      <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <CircularProgress />
+                      </Box>
+                    ) : (
+                      <Typography
+                        variant="h6"
+                        px={2}
+                        sx={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Género: {singleTeamData?.data.gender}
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+            <CardContent sx={{ display: "flex", gap: 2 }}>
               <Grid size={4}>
                 <Card
                   elevation={3}
                   sx={{
-                    width: "100%",
                     minHeight: "30vh",
                   }}
                 >
@@ -72,10 +146,14 @@ export default function SingleTeamPage() {
                           128,
                         )}
                       ></Avatar>
-                      <Typography variant="h4">
+                      <Typography
+                        width={"100%"}
+                        textAlign={"center"}
+                        variant="h4"
+                      >
                         {singleTeamData?.data.athlete1.full_name}
                       </Typography>
-                      <Grid container justifyContent={"center"}>
+                      <Grid container justifyContent={"center"} mt={2}>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
@@ -103,7 +181,6 @@ export default function SingleTeamPage() {
                 <Card
                   elevation={3}
                   sx={{
-                    width: "100%",
                     minHeight: "30vh",
                   }}
                 >
@@ -120,10 +197,14 @@ export default function SingleTeamPage() {
                           128,
                         )}
                       ></Avatar>
-                      <Typography variant="h4">
+                      <Typography
+                        width={"100%"}
+                        textAlign={"center"}
+                        variant="h4"
+                      >
                         {singleTeamData?.data.athlete2.full_name}
                       </Typography>
-                      <Grid container justifyContent={"center"}>
+                      <Grid container justifyContent={"center"} mt={2}>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
@@ -151,7 +232,6 @@ export default function SingleTeamPage() {
                 <Card
                   elevation={3}
                   sx={{
-                    width: "100%",
                     minHeight: "30vh",
                   }}
                 >
@@ -168,10 +248,14 @@ export default function SingleTeamPage() {
                           128,
                         )}
                       ></Avatar>
-                      <Typography variant="h4">
+                      <Typography
+                        width={"100%"}
+                        textAlign={"center"}
+                        variant="h4"
+                      >
                         {singleTeamData?.data.athlete3.full_name}
                       </Typography>
-                      <Grid container justifyContent={"center"}>
+                      <Grid container justifyContent={"center"} mt={2}>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
@@ -199,6 +283,13 @@ export default function SingleTeamPage() {
           </Card>
         </Grid>
       )}
+      <DeleteMemberModal
+        from="Equipas"
+        handleModalClose={handleModalClose}
+        handleModalOpen={handleModalOpen}
+        isModalOpen={isDeleteMemberModalOpen}
+        id={teamId}
+      ></DeleteMemberModal>
     </>
   );
 }

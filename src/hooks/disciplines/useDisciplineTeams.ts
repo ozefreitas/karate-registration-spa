@@ -85,9 +85,6 @@ export const useDeleteDisciplineTeam = () => {
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
-      queryClient.invalidateQueries({
-        queryKey: ["disciplines-not-in-member"],
-      });
     },
     onError: (data: any) => {
       enqueueSnackbar(`${data.response.data.error}`, {

@@ -11,7 +11,7 @@ export const useFetchDisciplinesData = (
     queryKey: ["disciplines", eventId, restricted, is_coach, is_team],
     queryFn: () => fetchDisciplines(eventId, restricted, is_coach, is_team),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    // refetchOnMount: false,
     enabled: !!eventId,
   });
 };

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import {
   Grid,
@@ -157,6 +157,7 @@ export default function AllUseTable(
     disallowEdit?: boolean;
   }>,
 ) {
+  const { id: eventId } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const paramPage = searchParams.get("page") ?? "1";
@@ -558,7 +559,7 @@ export default function AllUseTable(
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (props.type === "Equipas") {
-                                        navigate(`/teams/${row.id}/`);
+                                        navigate(`/teams/${row.id}/?event=${eventId}`);
                                       } else if (
                                         props.type === "Categorias" ||
                                         props.type === "CategoriasReadOnly" ||
