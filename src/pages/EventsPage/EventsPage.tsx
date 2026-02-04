@@ -54,11 +54,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [currentView, setCurrentView] = useState(() => {
-    return localStorage.getItem("dashboardView") ?? "list";
+    return localStorage.getItem("eventsView") ?? "list";
   });
 
   useEffect(() => {
-    localStorage.setItem("dashboardView", currentView);
+    localStorage.setItem("eventsView", currentView);
   }, [currentView]);
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
@@ -138,7 +138,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("has_ended"),
     filtersWatch("has_teams"),
     filtersWatch("has_categories"),
-    filtersWatch("has_registrations")
+    filtersWatch("has_registrations"),
   );
 
   const infoCard: ReactNode =
@@ -333,10 +333,10 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                         comp.has_ended
                                           ? "Realizado"
                                           : comp.is_open || comp.is_retification
-                                          ? "Inscrições em Progresso"
-                                          : comp.is_closed
-                                          ? "Inscrições Encerradas"
-                                          : "Por Iniciar"
+                                            ? "Inscrições em Progresso"
+                                            : comp.is_closed
+                                              ? "Inscrições Encerradas"
+                                              : "Por Iniciar"
                                       }
                                       icon={<AccessTime />}
                                     ></CompInfoToolTip>

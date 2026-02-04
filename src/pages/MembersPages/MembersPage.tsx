@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Grid,
   Box,
@@ -8,6 +8,9 @@ import {
   Typography,
   Tooltip,
   IconButton,
+  Pagination,
+  Card,
+  CardContent,
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
@@ -21,10 +24,14 @@ import {
   VerifiedUser,
   AccountCircle,
   HourglassBottom,
+  TableRows,
+  CreditCard,
 } from "@mui/icons-material";
 import RequestValidationModal from "../../components/Modals/RequestValidationModal";
+import { useNavigate } from "react-router-dom";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
+  const navigate = useNavigate();
   type Club = {
     id: string;
     username: string;
@@ -44,8 +51,21 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     request_status: string;
   };
 
+  const [currentView, setCurrentView] = useState(() => {
+    return localStorage.getItem("membersView") ?? "table";
+  });
   const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(
+    currentView === "table" ? 10 : 12,
+  );
+
+  useEffect(() => {
+    localStorage.setItem("membersView", currentView);
+    if (currentView === "table") {
+      setPageSize(10);
+    } else setPageSize(12);
+  }, [currentView]);
+
   const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
   const [actionedMember, setActionedMember] = useState<string>("");
   const [selectedUsers, setSelectedUsers] = useState<string>("");
@@ -295,6 +315,46 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 changedCount={filtersChangedCount}
                 setSelectedUsers={setSelectedUsers}
               ></MemberFilters>
+              <Grid pl={2} container spacing={1} borderRadius={3}>
+                <Tooltip placement="top" title={"Vista de Tabela"}>
+                  <span>
+                    <IconButton
+                      size="large"
+                      onClick={() => setCurrentView("table")}
+                      sx={{
+                        bgcolor:
+                          currentView === "table" ? "#1976d2;" : undefined,
+                      }}
+                      color="info"
+                    >
+                      <TableRows
+                        sx={{
+                          color: currentView === "table" ? "white" : undefined,
+                        }}
+                      ></TableRows>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip placement="top" title={"Vista de Cartas"}>
+                  <span>
+                    <IconButton
+                      size="large"
+                      sx={{
+                        bgcolor:
+                          currentView === "card" ? "#1976d2;" : undefined,
+                      }}
+                      onClick={() => setCurrentView("card")}
+                      color="info"
+                    >
+                      <CreditCard
+                        sx={{
+                          color: currentView === "card" ? "white" : undefined,
+                        }}
+                      ></CreditCard>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </Grid>
             </Grid>
           </Grid>
         )}
@@ -308,7 +368,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               <ListItemText primary="Ocorreu um erro ao encontrar os seus Membros, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
-        ) : membersData?.data === undefined ? null : (
+        ) : membersData?.data === undefined ? null : currentView === "table" ? (
           <AllUseTable
             type="Atletas"
             data={memberRows}
@@ -331,6 +391,38 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             userRole={props.userRole}
             disallowEdit
           ></AllUseTable>
+        ) : (
+          <Grid container spacing={3} m={2} mt={3}>
+            {memberRows.map((member: Member, index: any) => (
+              <Grid key={index} size={3}>
+                <Card
+                  onClick={() => {
+                    navigate(`/members/${member.id}`);
+                  }}
+                  sx={{
+                    minHeight: 350,
+                    p: 2,
+                    width: "100%",
+                    transition: "0.3s",
+                    border: 2,
+                    borderColor: "transparent",
+                    "&:hover": {
+                      transform: "translateY(-3px)",
+                      boxShadow: 6,
+                      borderColor: "red",
+                      cursor: "pointer",
+                    },
+                  }}
+                >
+                  <CardContent sx={{ height: "100%" }}>
+                    <Grid container direction={"column"} size={12}></Grid>
+                    <Grid height={"20%"} width={"100%"} bgcolor={"grey"}></Grid>
+                    <Grid size={10}>{member.full_name}</Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         )}
       </Grid>
       <RequestValidationModal
