@@ -310,6 +310,10 @@ export default function HelpPage() {
           </Grid>
         </Grid>
       </Grid>
+      <Grid size={12} mt={5} container gap={2} justifyContent={"center"}>
+        <Link to={"/contacts/"}>Contactos</Link>.
+        <Link to={"/feedback/"}>Feedback</Link>
+      </Grid>
     </div>
   );
 }

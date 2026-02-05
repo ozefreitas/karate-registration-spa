@@ -18,6 +18,7 @@ import {
   Https,
   MilitaryTech,
 } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 const PricingPage = () => {
   const [selected, setSelected] = useState<string>("mensal");
@@ -522,6 +523,10 @@ const PricingPage = () => {
               </Grid>
             </Grid>
           </Card>
+        </Grid>
+        <Grid size={12} mt={5} container gap={2} justifyContent={"center"}>
+          <Link to={"/contacts/"}>Contactos</Link>.
+          <Link to={"/feedback/"}>Feedback</Link>
         </Grid>
       </Grid>
     </>
