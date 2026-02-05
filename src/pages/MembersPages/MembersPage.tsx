@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Grid,
   Box,
@@ -11,6 +11,9 @@ import {
   Pagination,
   Card,
   CardContent,
+  Avatar,
+  Chip,
+  Button,
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
@@ -28,7 +31,8 @@ import {
   CreditCard,
 } from "@mui/icons-material";
 import RequestValidationModal from "../../components/Modals/RequestValidationModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import stringAvatar from "../../dashboard/utils/avatarColor";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
@@ -50,6 +54,15 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     past_month_payment_status: string;
     request_status: string;
   };
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramPage = searchParams.get("page") ?? "1";
+
+  const changePage = (number: string) => {
+    setSearchParams((prev) => {
+      prev.set("page", number);
+      return prev;
+    });
+  };
 
   const [currentView, setCurrentView] = useState(() => {
     return localStorage.getItem("membersView") ?? "table";
@@ -60,10 +73,38 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   );
 
   useEffect(() => {
+    const newParams = new URLSearchParams(searchParams);
+
+    if (currentView === "card" && paramPage) {
+      newParams.delete("page_size");
+      setSearchParams(newParams);
+      setPage(Number(paramPage));
+    }
+  }, [paramPage, currentView]);
+
+  const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    changePage(value.toString());
+  };
+
+  const prevViewRef = useRef("");
+
+  useEffect(() => {
     localStorage.setItem("membersView", currentView);
+
     if (currentView === "table") {
       setPageSize(10);
-    } else setPageSize(12);
+    } else {
+      setPageSize(12);
+    }
+
+    // Only run if previous value exists AND changed
+    if (prevViewRef.current && prevViewRef.current !== currentView) {
+      changePage("1");
+    }
+
+    // update previous value
+    prevViewRef.current = currentView;
   }, [currentView]);
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
@@ -359,48 +400,57 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         )}
         {isMembersDataLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box mt={5} display={"flex"} justifyContent={"center"}>
             <CircularProgress />
           </Box>
         ) : membersError ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
-            <ListItem>
-              <ListItemText primary="Ocorreu um erro ao encontrar os seus Membros, tente mais tarde ou contacte um administrador."></ListItemText>
+          <Grid my={3} container justifyContent="center" size={12}>
+            <ListItem sx={{ textAlign: "center" }}>
+              <ListItemText primary="Ocorreu um erro ao encontrar os Membros disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
+            <Button
+              onClick={() => {
+                changePage("1");
+                setPage(1);
+              }}
+            >
+              Refrescar
+            </Button>
           </Grid>
         ) : membersData?.data === undefined ? null : currentView === "table" ? (
-          <AllUseTable
-            type="Atletas"
-            data={memberRows}
-            count={membersData?.data.count}
-            columnsHeaders={columnMaping}
-            actions
-            editable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole,
-            )}
-            selection={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole,
-            )}
-            deletable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole,
-            )}
-            page={page}
-            setPage={setPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            userRole={props.userRole}
-            disallowEdit
-          ></AllUseTable>
+          <Grid mt={5}>
+            <AllUseTable
+              type="Atletas"
+              data={memberRows}
+              count={membersData?.data.count}
+              columnsHeaders={columnMaping}
+              actions
+              editable={["main_admin", "superuser", "subed_club"].includes(
+                props.userRole,
+              )}
+              selection={["main_admin", "superuser", "subed_club"].includes(
+                props.userRole,
+              )}
+              deletable={["main_admin", "superuser", "subed_club"].includes(
+                props.userRole,
+              )}
+              page={page}
+              setPage={setPage}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+              userRole={props.userRole}
+              disallowEdit
+            ></AllUseTable>
+          </Grid>
         ) : (
-          <Grid container spacing={3} m={2} mt={3}>
+          <Grid container spacing={3} m={2} mt={5}>
             {memberRows.map((member: Member, index: any) => (
-              <Grid key={index} size={3}>
+              <Grid key={index} size={{ xl: 3, lg: 4, md: 6, xs: 12 }}>
                 <Card
                   onClick={() => {
                     navigate(`/members/${member.id}`);
                   }}
                   sx={{
-                    minHeight: 350,
                     p: 2,
                     width: "100%",
                     transition: "0.3s",
@@ -414,10 +464,48 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                     },
                   }}
                 >
-                  <CardContent sx={{ height: "100%" }}>
-                    <Grid container direction={"column"} size={12}></Grid>
-                    <Grid height={"20%"} width={"100%"} bgcolor={"grey"}></Grid>
-                    <Grid size={10}>{member.full_name}</Grid>
+                  <CardContent sx={{ width: "100%" }}>
+                    <Grid container direction={"column"} size={12} spacing={2}>
+                      <Grid container justifyContent={"center"}>
+                        <Avatar
+                          {...stringAvatar(member.full_name, 128)}
+                        ></Avatar>
+                      </Grid>
+                      <Grid
+                        container
+                        justifyContent={"center"}
+                        size={12}
+                        py={2}
+                        textAlign={"center"}
+                      >
+                        <Typography variant="h4">{member.full_name}</Typography>
+                      </Grid>
+                      <Grid container justifyContent={"center"} size={12}>
+                        <Chip
+                          variant="outlined"
+                          label={`${member.age} anos`}
+                        ></Chip>
+                        <Chip
+                          variant="outlined"
+                          label={
+                            member.gender === "F" ? "Feminino" : "Masculino"
+                          }
+                        ></Chip>
+                      </Grid>
+                      <Grid container justifyContent={"center"} size={12}>
+                        <Chip
+                          color={
+                            member.member_type === "Treinador"
+                              ? "secondary"
+                              : member.member_type === "Aluno"
+                                ? "info"
+                                : "warning"
+                          }
+                          variant="outlined"
+                          label={member.member_type}
+                        ></Chip>
+                      </Grid>
+                    </Grid>
                   </CardContent>
                 </Card>
               </Grid>
@@ -425,6 +513,19 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         )}
       </Grid>
+      {membersData?.data.count === 0 ||
+      isMembersDataLoading ||
+      membersError ||
+      currentView === "table" ? null : (
+        <Grid size={12} mt={3} container justifyContent={"center"}>
+          <Pagination
+            count={Math.ceil(membersData?.data.count / 12)}
+            page={page}
+            onChange={handleChange}
+            color="primary"
+          />
+        </Grid>
+      )}
       <RequestValidationModal
         id={actionedMember}
         isOpen={isRequestModalOpen}
