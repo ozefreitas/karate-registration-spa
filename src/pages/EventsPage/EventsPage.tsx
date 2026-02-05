@@ -247,14 +247,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         )}
         {isEventsDataLoading ? (
-          <Grid my={3} container justifyContent="center" size={12}>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <CircularProgress />
-            </Box>
-          </Grid>
+          <Box mt={3} display={"flex"} justifyContent={"center"}>
+            <CircularProgress />
+          </Box>
         ) : eventsError ? (
           <Grid my={3} container justifyContent="center" size={12}>
-            <ListItem>
+            <ListItem sx={{ textAlign: "center" }}>
               <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
             <Button onClick={() => refetch()}>Refrescar</Button>

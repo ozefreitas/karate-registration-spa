@@ -5,6 +5,8 @@ import {
   CardContent,
   CircularProgress,
   Grid,
+  ListItem,
+  ListItemText,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -32,8 +34,11 @@ export default function RegisteredTeamsPage(
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
   const { id: eventId } = useParams<{ id: string }>();
 
-  const { data: singleEventData, isLoading: isSingleEventLoading } =
-    eventsHooks.useFetchSingleEventData(eventId!);
+  const {
+    data: singleEventData,
+    isLoading: isSingleEventLoading,
+    error: singleEventError,
+  } = eventsHooks.useFetchSingleEventData(eventId!);
 
   const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
     eventId!,
@@ -41,7 +46,7 @@ export default function RegisteredTeamsPage(
     false,
     true,
   );
-  
+
   const state = singleEventData?.data.is_open
     ? "Inscrições abertas"
     : singleEventData?.data.is_retification
@@ -75,7 +80,7 @@ export default function RegisteredTeamsPage(
     setIsCategoriesListModalOpen(true);
   };
 
-  const getColumnMapping = (isCoach?: boolean) => {
+  const getColumnMapping = () => {
     // Base columns except the one that must be last
     const baseColumns = [
       { key: "member1", label: "Atleta 1" },
@@ -83,8 +88,8 @@ export default function RegisteredTeamsPage(
       { key: "member3", label: "Atleta 3" },
       { key: "gender", label: "Género" },
       { key: "category", label: "Escalão" },
+      { key: "added_at", label: "Data Inscrição" },
     ];
-    baseColumns.push({ key: "added_at", label: "Data Inscrição" });
 
     return baseColumns;
   };
@@ -94,10 +99,10 @@ export default function RegisteredTeamsPage(
   return (
     <>
       <PageInfoCard
-        description="Aqui poderá consultar todos os Atletas que estão inscritos para a
-          prova que selecionou (ver abaixo). Alterar informações de um Atleta
-          irá modificar o próprio Atleta, e não apenas a própria inscrição (são
-          a mesma coisa)."
+        description="Aqui poderá consultar todas as Equipas que estão inscritas para a
+          prova que selecionou (ver abaixo). Equipas não são editáveis! Se precisar de 
+          fazer alterções terá que primeiro eliminar essa Equipa e voltar a adicionar 
+          com as informações corretas."
         title="Página de inscritos em Equipas"
       ></PageInfoCard>
       <Grid container mx={4} mb={4}>
@@ -140,6 +145,12 @@ export default function RegisteredTeamsPage(
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
+        ) : singleEventError ? (
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <ListItem>
+              <ListItemText primary="Ocorreu um erro ao encontrar as Equipas para este Evento, tente mais tarde ou contacte um administrador."></ListItemText>
+            </ListItem>
+          </Grid>
         ) : disciplinesData?.data.results.length === 0 ? (
           <AllUseTable
             type="Individuais"

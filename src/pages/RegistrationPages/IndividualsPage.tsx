@@ -173,7 +173,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 full_name: memberInfo.member.full_name,
                 gender: memberInfo.member.gender,
                 club: memberInfo.member.club,
-                category: memberInfo.category.name,
+                category: memberInfo.category.name ?? "N/A",
                 added_at: formatDateTime(memberInfo.added_at, "both"),
               }),
             );
