@@ -227,11 +227,7 @@ export default function MemberPaymemtManagerPage(
             Selecione pelo menos um dos campos em cima para ver as validações de
             pagamentos. {<KeyboardDoubleArrowUp />}
           </Typography>
-        ) : !isShowable ? (
-          <Typography sx={{ color: "gray", my: 2 }}>
-            Não foram encontrados registos para as validações selecionadas.
-          </Typography>
-        ) : (
+        ) : isShowable ? (
           isSelected.length > 0 &&
           isShowable && (
             <Grid borderRadius={5} bgcolor={"#bad7ff63"} p={2} width={"100%"}>
@@ -242,8 +238,9 @@ export default function MemberPaymemtManagerPage(
                       item.paid === false && item.inside_limit === false,
                   )
                   .map((payments: any, index: any) => (
-                    <ListItem sx={{ m: 0, pb: 0 }} key={index}>
+                    <ListItem sx={{ m: 0, p: 0 }} key={index}>
                       <ListItemButton
+                        sx={{ pl: 3 }}
                         onClick={() =>
                           navigate(
                             `/members/${payments.member.id}/?section=payments_management`,
@@ -281,6 +278,10 @@ export default function MemberPaymemtManagerPage(
                   ))}
             </Grid>
           )
+        ) : (
+          <Typography sx={{ color: "gray", my: 2 }}>
+            Não foram encontrados registos para as validações selecionadas.
+          </Typography>
         )}
       </FormAccordion>
       <FormCard title="Gestão de Pagamentos">

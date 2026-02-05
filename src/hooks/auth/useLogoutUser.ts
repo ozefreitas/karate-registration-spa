@@ -21,7 +21,9 @@ export const useLogOutUser = () => {
       });
       localStorage.removeItem("token");
       localStorage.removeItem("dismissedAnnouncementId");
-      window.location.reload();
+      localStorage.removeItem("membersView");
+      localStorage.removeItem("eventsView");
+      globalThis.location.reload();
       navigate("/");
     },
     onError: () => {

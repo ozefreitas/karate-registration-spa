@@ -168,7 +168,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           <Grid
             size={12}
             container
-            px={2}
+            pr={2}
+            pl={1}
             mb={3}
             justifyContent={
               ["superuser", "main_admin"].includes(props.userRole)
@@ -209,8 +210,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                       size="large"
                       onClick={() => setCurrentView("list")}
                       sx={{
+                        borderRadius: 3,
+                        border: 1,
                         bgcolor:
                           currentView === "list" ? "#1976d2;" : undefined,
+                        "&:hover": { bgcolor: "#1976d2" },
                       }}
                       color="info"
                     >
@@ -227,8 +231,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                     <IconButton
                       size="large"
                       sx={{
+                        borderRadius: 3,
+                        border: 1,
                         bgcolor:
                           currentView === "calendar" ? "#1976d2;" : undefined,
+                        "&:hover": { bgcolor: "#1976d2" },
                       }}
                       onClick={() => setCurrentView("calendar")}
                       color="info"

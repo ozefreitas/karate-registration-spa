@@ -9,6 +9,7 @@ import {
   MenuItem,
   IconButton,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { memberOrderingOptions } from "../../dashboard/filters";
@@ -24,15 +25,17 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function MemberOrdering(props: {
-  isLoading: boolean;
-  control: any;
-  errors: any;
-  reset: any;
-  changedCount: number;
-  orderFields: any;
-  setOrderFields: any;
-}) {
+export default function MemberOrdering(
+  props: Readonly<{
+    isLoading: boolean;
+    control: any;
+    errors: any;
+    reset: any;
+    changedCount: number;
+    orderFields: any;
+    setOrderFields: any;
+  }>,
+) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -126,29 +129,54 @@ export default function MemberOrdering(props: {
   );
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent={"flex-end"}
-      alignItems={"center"}
-    >
-      <Button
-        endIcon={<SwapVert sx={{ ml: 1 }}></SwapVert>}
-        size="large"
-        variant="outlined"
-        disabled={props.isLoading}
-        onClick={toggleDrawer(true)}
+    <>
+      <Grid
+        container
+        spacing={2}
+        justifyContent={"flex-end"}
+        alignItems={"center"}
+        sx={{
+          display: { xs: "none", md: "flex" }, // hide on xs, show on sm+
+        }}
       >
-        Ordem
-        <FiltersBadge
-          badgeContent={props.changedCount}
-          color="primary"
-          overlap="circular"
-        />
-      </Button>
-      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
-    </Grid>
+        <Button
+          endIcon={<SwapVert sx={{ ml: 1 }}></SwapVert>}
+          size="large"
+          variant="outlined"
+          disabled={props.isLoading}
+          onClick={toggleDrawer(true)}
+        >
+          Ordem
+          <FiltersBadge
+            badgeContent={props.changedCount}
+            color="primary"
+            overlap="circular"
+          />
+        </Button>
+        <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+          {DrawerList}
+        </Drawer>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        justifyContent={"flex-end"}
+        alignItems={"center"}
+        sx={{
+          display: { sm: "flex", md: "none" },
+        }}
+      >
+        <Tooltip title="Ordem" placement="top">
+          <IconButton
+            sx={{ border: 1, borderRadius: 3 }}
+            size="large"
+            color="primary"
+            aria-label="delete"
+          >
+            <SwapVert></SwapVert>
+          </IconButton>
+        </Tooltip>
+      </Grid>
+    </>
   );
 }

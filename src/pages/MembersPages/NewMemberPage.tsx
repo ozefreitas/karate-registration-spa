@@ -1006,7 +1006,9 @@ export default function NewMemberPage() {
           </FormCard>
         ) : null}
         <Grid
-          sx={{ m: 3, mr: 4 }}
+        m={3}
+        mr={6}
+        mb={0}
           justifyContent="flex-end"
           alignItems="center"
           spacing={2}

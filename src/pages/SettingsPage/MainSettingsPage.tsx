@@ -62,7 +62,7 @@ export default function MainSettingsPage() {
 
   const handleActionValidationModalOpen = (
     id: string,
-    type: "approve" | "reject"
+    type: "approve" | "reject",
   ) => {
     setCurrentValidationId(id);
     setCurrentValidationType(type);
@@ -89,7 +89,7 @@ export default function MainSettingsPage() {
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
     requestId: string,
-    message: string
+    message: string,
   ) => {
     event.preventDefault();
 
@@ -156,7 +156,7 @@ export default function MainSettingsPage() {
   }, [clickedUsername]);
 
   const { data: isTokenAvailable } = authHooks.useFetchToken(
-    acountDetails?.username
+    acountDetails?.username,
   );
 
   useEffect(() => {
@@ -181,7 +181,7 @@ export default function MainSettingsPage() {
   };
 
   const handlePasswordRequestAcountChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setSelectedPasswordRequestId(event.target.value);
   };
@@ -218,7 +218,7 @@ export default function MainSettingsPage() {
         onSuccess: (data: any) => {
           setCreatedPasswordURL(`${baseURL}${data.data.url}`);
         },
-      }
+      },
     );
   };
 
@@ -242,8 +242,7 @@ export default function MainSettingsPage() {
   }
 
   type Member = {
-    first_name: string;
-    last_name: string;
+    full_name: string;
     id: string;
     gender: string;
   };
@@ -294,8 +293,13 @@ export default function MainSettingsPage() {
               Ver
             </Button>
           ),
-        fullName: `${request.member.first_name} ${request.member.last_name}`,
-        reviewed_at: formatDateTime(request.reviewed_at, "both"),
+        fullName: request.member.full_name,
+        reviewed_at:
+          request.reviewed_at === null ? (
+            <Typography color="textDisabled">Por rever</Typography>
+          ) : (
+            formatDateTime(request.reviewed_at, "both")
+          ),
         created_at: formatDateTime(request.created_at, "both"),
         birthDate: request.member_birth_date,
         gender: request.member.gender === "Masculino" ? "M" : "F",
@@ -369,7 +373,7 @@ export default function MainSettingsPage() {
               </Tooltip>
             </Grid>
           ),
-      })
+      }),
     );
   }, [memberValidationRequestData]);
 
@@ -446,7 +450,7 @@ export default function MainSettingsPage() {
                         <MenuItem key={index} value={item.id}>
                           {item.club}
                         </MenuItem>
-                      )
+                      ),
                     )}
                   </TextField>
                 </Grid>
@@ -497,7 +501,7 @@ export default function MainSettingsPage() {
                         <MenuItem key={index} value={item.id}>
                           {item.username}
                         </MenuItem>
-                      )
+                      ),
                     )}
                   </TextField>
 
@@ -720,7 +724,7 @@ export default function MainSettingsPage() {
                                 <Button
                                   onClick={() =>
                                     copyToClipboard(
-                                      `${baseURL}/signup/${createdToken}/`
+                                      `${baseURL}/signup/${createdToken}/`,
                                     )
                                   }
                                 >
@@ -759,7 +763,7 @@ export default function MainSettingsPage() {
                         <MenuItem key={index} value={item.id}>
                           {item.club_user.username}
                         </MenuItem>
-                      )
+                      ),
                     )}
                   </TextField>
 
@@ -920,7 +924,7 @@ export default function MainSettingsPage() {
                                           },
                                           autoHideDuration: 3000,
                                           preventDuplicate: true,
-                                        }
+                                        },
                                       );
                                     }}
                                   >

@@ -29,6 +29,7 @@ import {
   HourglassBottom,
   TableRows,
   CreditCard,
+  Add,
 } from "@mui/icons-material";
 import RequestValidationModal from "../../components/Modals/RequestValidationModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -270,6 +271,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         <Tooltip arrow title="Pendente">
           <span>
             <IconButton
+              disableRipple
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -308,7 +310,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 Pode pedir a validação de um Membro junto da{" "}
                 {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA} através da coluna{" "}
                 <i>Verificado</i>. Apenas membros validados podem integrar
-                Eventos.
+                Eventos. <br /> No caso da vista por cartas, pode clicar no
+                ícone ao lado do nome de cada Membro.
               </p>
               <p></p>
               <strong>Importante</strong>: Estes não servem como inscrição em
@@ -316,6 +319,10 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               referência para as inscrições. Em vez disso, a idade é calculada
               para cada prova de acordo com as regras em vigor e da época
               desportiva corrente.
+              <p>
+                Preste atenção à cor das linhas/cartas para avisos de
+                irregularidades num Membro.
+              </p>
             </>
           )
         }
@@ -333,9 +340,37 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           >
             {props.userRole === "main_admin" ||
             props.userRole === "subed_club" ? (
-              <Grid>
-                <AddButton label="Adicionar" to="new_member/"></AddButton>
-              </Grid>
+              <>
+                <Grid
+                  sx={{
+                    display: { xs: "none", md: "flex" }, // hide on xs, show on sm+
+                  }}
+                >
+                  <AddButton label="Adicionar" to="new_member/"></AddButton>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: { xs: "flex", md: "none" }, // hide on xs, show on sm+
+                  }}
+                >
+                  <Tooltip placement="top" title="Adicionar">
+                    <IconButton
+                      sx={{
+                        border: 1,
+                        borderRadius: 3,
+                        ml: 1,
+                        bgcolor: "#2e7d32",
+                        "&:hover": { bgcolor: "#2e7d32" },
+                      }}
+                      size="large"
+                      color="success"
+                      aria-label="delete"
+                    >
+                      <Add sx={{ color: "white" }}></Add>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </>
             ) : null}
             <Grid container spacing={2}>
               <MemberOrdering
@@ -363,8 +398,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                       size="large"
                       onClick={() => setCurrentView("table")}
                       sx={{
+                        borderRadius: 3,
+                        border: 1,
                         bgcolor:
                           currentView === "table" ? "#1976d2;" : undefined,
+                        "&:hover": { bgcolor: "#1976d2" },
                       }}
                       color="info"
                     >
@@ -381,8 +419,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                     <IconButton
                       size="large"
                       sx={{
+                        borderRadius: 3,
+                        border: 1,
                         bgcolor:
                           currentView === "card" ? "#1976d2;" : undefined,
+                        "&:hover": { bgcolor: "#1976d2" },
                       }}
                       onClick={() => setCurrentView("card")}
                       color="info"
@@ -444,72 +485,151 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         ) : (
           <Grid container spacing={3} m={2} mt={5}>
-            {memberRows.map((member: Member, index: any) => (
-              <Grid key={index} size={{ xl: 3, lg: 4, md: 6, xs: 12 }}>
-                <Card
-                  onClick={() => {
-                    navigate(`/members/${member.id}`);
-                  }}
-                  sx={{
-                    p: 2,
-                    width: "100%",
-                    transition: "0.3s",
-                    border: 2,
-                    borderColor: "transparent",
-                    "&:hover": {
-                      transform: "translateY(-3px)",
-                      boxShadow: 6,
-                      borderColor: "red",
-                      cursor: "pointer",
-                    },
-                  }}
-                >
-                  <CardContent sx={{ width: "100%" }}>
-                    <Grid container direction={"column"} size={12} spacing={2}>
-                      <Grid container justifyContent={"center"}>
-                        <Avatar
-                          {...stringAvatar(member.full_name, 128)}
-                        ></Avatar>
-                      </Grid>
-                      <Grid
-                        container
-                        justifyContent={"center"}
-                        size={12}
-                        py={2}
-                        textAlign={"center"}
-                      >
-                        <Typography variant="h4">{member.full_name}</Typography>
-                      </Grid>
-                      <Grid container justifyContent={"center"} size={12}>
-                        <Chip
-                          variant="outlined"
-                          label={`${member.age} anos`}
-                        ></Chip>
-                        <Chip
-                          variant="outlined"
-                          label={
-                            member.gender === "F" ? "Feminino" : "Masculino"
-                          }
-                        ></Chip>
-                      </Grid>
-                      <Grid container justifyContent={"center"} size={12}>
-                        <Chip
-                          color={
-                            member.member_type === "Treinador"
-                              ? "secondary"
-                              : member.member_type === "Aluno"
-                                ? "info"
-                                : "warning"
-                          }
-                          variant="outlined"
-                          label={member.member_type}
-                        ></Chip>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
+            {memberRows.length === 0 ? (
+              <Grid
+                sx={{ mt: 1, mb: 3 }}
+                container
+                justifyContent="center"
+                size={12}
+              >
+                <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
+                  Não foram encontrados registos.
+                </Typography>
               </Grid>
-            ))}
+            ) : (
+              memberRows.map((member: any, index: any) => (
+                <Grid key={index} size={{ xl: 3, lg: 4, md: 6, xs: 12 }}>
+                  <Tooltip title="Consultar" placement="top">
+                    <Card
+                      onClick={() => {
+                        navigate(`/members/${member.id}`);
+                      }}
+                      sx={{
+                        p: 2,
+                        height: "100%",
+                        width: "100%",
+                        transition: "0.3s",
+                        border: "4px",
+                        borderColor: "transparent",
+                        "&:hover": {
+                          transform: "translateY(-3px)",
+                          boxShadow:
+                            member.past_month_payment_status === "unpaid"
+                              ? undefined
+                              : 6,
+                          borderColor:
+                            member.past_month_payment_status === "unpaid"
+                              ? undefined
+                              : "red",
+                          cursor: "pointer",
+                        },
+                        backgroundColor:
+                          member.past_month_payment_status === "unpaid"
+                            ? "rgba(255, 165, 0, 0.10)"
+                            : undefined,
+                        borderTop:
+                          member.past_month_payment_status === "unpaid"
+                            ? "4px solid rgba(255, 165, 0, 0.7)"
+                            : undefined,
+                        borderBottom:
+                          member.past_month_payment_status === "unpaid"
+                            ? "4px solid rgba(255, 165, 0, 0.7)"
+                            : undefined,
+
+                        animation:
+                          member.past_month_payment_status === "unpaid"
+                            ? "rowWarningPulse 1.5s ease-in-out infinite"
+                            : "none",
+
+                        "@keyframes rowWarningPulse": {
+                          "0%": {
+                            backgroundColor: "rgba(255, 165, 0, 0.08)",
+                            borderTopColor: "rgba(255, 165, 0, 0.45)",
+                          },
+                          "50%": {
+                            backgroundColor: "rgba(255, 165, 0, 0.18)",
+                            borderTopColor: "rgba(255, 165, 0, 0.95)",
+                          },
+                          "100%": {
+                            backgroundColor: "rgba(255, 165, 0, 0.08)",
+                            borderTopColor: "rgba(255, 165, 0, 0.45)",
+                          },
+                        },
+                      }}
+                    >
+                      <CardContent sx={{ width: "100%" }}>
+                        <Grid
+                          container
+                          direction={"column"}
+                          size={12}
+                          spacing={2}
+                        >
+                          <Grid container justifyContent={"center"}>
+                            <Avatar
+                              {...stringAvatar(member.full_name, 128)}
+                            ></Avatar>
+                          </Grid>
+                          <Grid
+                            container
+                            justifyContent={"center"}
+                            size={12}
+                            pt={2}
+                            alignItems={"center"}
+                            textAlign={"center"}
+                          >
+                            <Typography variant="h4">
+                              {member.full_name}
+                            </Typography>
+                          </Grid>
+                          {props.userRole === "main_admin" ? null : (
+                            <Grid
+                              pb={2}
+                              size={12}
+                              container
+                              justifyContent={"center"}
+                            >
+                              {member.verified}
+                            </Grid>
+                          )}
+                          <Grid container justifyContent={"center"} size={12}>
+                            {props.userRole === "main_admin" ? null : (
+                              <Chip
+                                variant="outlined"
+                                label={`${member.age} anos`}
+                              ></Chip>
+                            )}
+                            <Chip
+                              sx={{
+                                mt: props.userRole === "main_admin" ? 2 : 0,
+                              }}
+                              variant="outlined"
+                              label={
+                                member.gender === "F" ? "Feminino" : "Masculino"
+                              }
+                            ></Chip>
+                          </Grid>
+                          {props.userRole === "main_admin" ? null : (
+                            <Grid container justifyContent={"center"} size={12}>
+                              <Chip
+                                color={
+                                  member.member_type === "Treinador"
+                                    ? "secondary"
+                                    : member.member_type === "Aluno"
+                                      ? "info"
+                                      : "warning"
+                                }
+                                variant="outlined"
+                                label={member.member_type}
+                              ></Chip>
+                            </Grid>
+                          )}
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Tooltip>
+                </Grid>
+              ))
+            )}
           </Grid>
         )}
       </Grid>
@@ -517,7 +637,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       isMembersDataLoading ||
       membersError ||
       currentView === "table" ? null : (
-        <Grid size={12} mt={3} container justifyContent={"center"}>
+        <Grid size={12} mt={5} container justifyContent={"center"}>
           <Pagination
             count={Math.ceil(membersData?.data.count / 12)}
             page={page}

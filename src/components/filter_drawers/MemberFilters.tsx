@@ -10,16 +10,17 @@ import {
   FormControlLabel,
   Switch,
   Chip,
+  IconButton,
   Typography,
+  Tooltip,
 } from "@mui/material";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { Tune } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import { MemberTypes, GenderOptions } from "../../config";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks } from "../../hooks";
-import { useWatch } from "react-hook-form";
 
 const FiltersBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -290,29 +291,54 @@ export default function MemberFilters(
   );
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent={"flex-end"}
-      alignItems={"center"}
-    >
-      <Button
-        endIcon={<Tune sx={{ ml: 1 }}></Tune>}
-        size="large"
-        variant="outlined"
-        disabled={props.isLoading}
-        onClick={toggleDrawer(true)}
+    <>
+      <Grid
+        container
+        spacing={2}
+        justifyContent={"flex-end"}
+        alignItems={"center"}
+        sx={{
+          display: { xs: "none", md: "flex" }, // hide on xs, show on sm+
+        }}
       >
-        Filtros
-        <FiltersBadge
-          badgeContent={props.changedCount}
-          color="primary"
-          overlap="circular"
-        />
-      </Button>
-      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
-    </Grid>
+        <Button
+          endIcon={<Tune sx={{ ml: 1 }}></Tune>}
+          size="large"
+          variant="outlined"
+          disabled={props.isLoading}
+          onClick={toggleDrawer(true)}
+        >
+          Filtros
+          <FiltersBadge
+            badgeContent={props.changedCount}
+            color="primary"
+            overlap="circular"
+          />
+        </Button>
+        <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+          {DrawerList}
+        </Drawer>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        justifyContent={"flex-end"}
+        alignItems={"center"}
+        sx={{
+          display: { sm: "flex", md: "none" }, // hide on xs, show on sm+
+        }}
+      >
+        <Tooltip title="Filtros" placement="top">
+          <IconButton
+            sx={{ border: 1, borderRadius: 3 }}
+            size="large"
+            color="primary"
+            aria-label="delete"
+          >
+            <Tune></Tune>
+          </IconButton>
+        </Tooltip>
+      </Grid>
+    </>
   );
 }

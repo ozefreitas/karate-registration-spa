@@ -853,7 +853,8 @@ export default function NewCategoryPage() {
           </Grid>
         </FormAccordion>
         <Grid
-          m={6}
+          m={4}
+          mr={6}
           mb={0}
           justifyContent="flex-end"
           spacing={2}
