@@ -1,3 +1,5 @@
+import { EnqueueSnackbar } from "notistack";
+
 /**
  * Function that returns the current age of an member
  *
@@ -61,7 +63,7 @@ export function formatTimeDifference(isoString: string): string {
 
 export function formatDateTime(
   isoString: string,
-  type: "day" | "hour" | "both"
+  type: "day" | "hour" | "both",
 ): string {
   const date = new Date(isoString);
 
@@ -97,3 +99,18 @@ export function computeExpirationDate(year: number): string {
 
   return expiration.toISOString().split("T")[0]; // "YYYY-MM-DD" format
 }
+
+export const callNotiStack = (
+  enqueueSnackbar: EnqueueSnackbar,
+  message: string,
+  variant: "default" | "error" | "success" | "warning" | "info" | undefined,
+  autoHideDuration: number = 5000,
+  preventDuplicate: boolean = true,
+) => {
+  enqueueSnackbar(message, {
+    variant: variant,
+    anchorOrigin: { vertical: "top", horizontal: "center" },
+    autoHideDuration: autoHideDuration,
+    preventDuplicate: preventDuplicate,
+  });
+};

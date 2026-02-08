@@ -1,40 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { loginUser } from "../../api";
 import { useNavigate } from "react-router-dom";
+import { LoginService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useLogInUser = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
   const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: loginUser,
+    mutationFn: LoginService.loginCreate,
     onSuccess: (data: any) => {
-      localStorage.setItem("token", data.data.token);
-      enqueueSnackbar("Login com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      const token = data.token;
+      localStorage.setItem("token", token);
+
+      callNotiStack(enqueueSnackbar, "Login com sucesso!", "success");
+
       queryClient.invalidateQueries({ queryKey: ["me"] });
       queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
+
       navigate("/");
     },
     onError: () => {
-      enqueueSnackbar("Credenciais inválidas!", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Credenciais inválidas!", "error");
     },
   });
 };

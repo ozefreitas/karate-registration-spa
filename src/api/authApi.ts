@@ -4,10 +4,6 @@ export const fetchMe = () => {
   return authClient.get("/me/");
 };
 
-export const loginUser = (data: any) => {
-  return apiClient.post("/login/", data);
-};
-
 export const logoutUser = () => {
   return authClient.post("/logout/", {});
 };

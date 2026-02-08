@@ -27,7 +27,8 @@ export default function Announcement() {
 
   const activeAnnouncements =
     data?.data?.filter(
-      (announcement: any) => !dismissedIds.includes(announcement.id?.toString())
+      (announcement: any) =>
+        !dismissedIds.includes(announcement.id?.toString()),
     ) || [];
 
   // 🌟 Delayed visibility per banner

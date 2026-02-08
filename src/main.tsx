@@ -19,6 +19,7 @@ import "@fontsource/inter/700-italic.css";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GlobalAuthProvider } from "./access/GlobalAuthProvider.tsx";
+import "./openapi/config";
 
 document.title = import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
   ? `FightTech Platform - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`

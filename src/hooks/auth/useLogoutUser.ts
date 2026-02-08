@@ -1,41 +1,32 @@
 import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { logoutUser } from "../../api";
+import { LogoutService } from "../../openapi";
 import { useNavigate } from "react-router-dom";
+import { callNotiStack } from "../../utils/utils";
 
 export const useLogOutUser = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: logoutUser,
+    mutationFn: LogoutService.logoutCreate,
     onSettled: () => {
-      enqueueSnackbar("Saiu da sua conta!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Saiu da sua conta!", "success");
+
       localStorage.removeItem("token");
-      localStorage.removeItem("dismissedAnnouncementId");
+      localStorage.removeItem("dismissedAnnouncementIds");
       localStorage.removeItem("membersView");
       localStorage.removeItem("eventsView");
       globalThis.location.reload();
       navigate("/");
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro. Tente mais tarde.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 3000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro. Tente mais tarde.",
+        "error",
+        3000,
+      );
     },
   });
 };
