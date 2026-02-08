@@ -56,7 +56,6 @@ export type { MonthlyPaymentPlan } from './models/MonthlyPaymentPlan';
 export type { NameCategory } from './models/NameCategory';
 export type { Notifications } from './models/Notifications';
 export type { PaginatedAllClassificationsList } from './models/PaginatedAllClassificationsList';
-export type { PaginatedAnnouncementList } from './models/PaginatedAnnouncementList';
 export type { PaginatedBracketList } from './models/PaginatedBracketList';
 export type { PaginatedCategoryList } from './models/PaginatedCategoryList';
 export type { PaginatedClubsList } from './models/PaginatedClubsList';
