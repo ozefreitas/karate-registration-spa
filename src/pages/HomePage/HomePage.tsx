@@ -7,15 +7,18 @@ import {
   CircularProgress,
   Box,
   Button,
-  CardActionArea,
   CardActions,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
 } from "@mui/material";
 import MembersHomeComponent from "../../components/home-cards/MembersHomeComponent";
 import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
 import NextEventHomeComponent from "../../components/home-cards/NextEventHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import { membersHooks } from "../../hooks";
-import { PersonSearch } from "@mui/icons-material";
+import { Person, PersonSearch } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage(props: Readonly<{ userRole: string }>) {
@@ -82,20 +85,25 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
                     },
                   }}
                 ></CardHeader>
-                {memberPaymentStatusError ? (
-                  <CardContent
-                    sx={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      p: 0,
-                      "&:last-child": {
-                        paddingBottom: 0,
-                      },
-                    }}
-                  >
-                    Ocorreu um erro ao coletar o número de clubes com quotas em
-                    falta. Tente mais tarde ou contacte um administrador.
-                  </CardContent>
+                {props.userRole === undefined ? (
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemButton disabled sx={{ m: 0 }}>
+                      <ListItemIcon>
+                        <Person />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={"Sem sessão iniciada. Faça Login."}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ) : memberPaymentStatusError ? (
+                  <ListItem sx={{ m: 0 }}>
+                    <ListItemText
+                      primary={
+                        "Ocorreu um erro ao coletar o número de clubes com quotas em falta. Tente mais tarde ou contacte um administrador."
+                      }
+                    />
+                  </ListItem>
                 ) : (
                   <CardContent>
                     {isMemberPaymentStatusLoading ? (

@@ -27,7 +27,7 @@ import { MemberTypes } from "../../config";
 import { OpenInNew, ArrowRight, ArrowLeft } from "@mui/icons-material";
 
 export default function SingleMemberPage(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
   const navigate = useNavigate();
   const { id: memberId } = useParams<{ id: string }>();
@@ -86,7 +86,7 @@ export default function SingleMemberPage(
                   navigate(`/members/${singleMemberData?.data.next_prev.prev}`);
                 }
               }}
-              disabled={singleMemberData?.data.next_prev.prev === null}
+              disabled={singleMemberData?.data.next_prev?.prev === null}
               startIcon={<ArrowLeft></ArrowLeft>}
             >
               Membro Anterior
@@ -97,7 +97,7 @@ export default function SingleMemberPage(
                   navigate(`/members/${singleMemberData?.data.next_prev.next}`);
                 }
               }}
-              disabled={singleMemberData?.data.next_prev.next === null}
+              disabled={singleMemberData?.data.next_prev?.next === null}
               endIcon={<ArrowRight></ArrowRight>}
             >
               Membro Seguinte
@@ -161,7 +161,7 @@ export default function SingleMemberPage(
                       {
                         MemberTypes.find(
                           (item) =>
-                            item.value === singleMemberData?.data.member_type
+                            item.value === singleMemberData?.data.member_type,
                         )?.label
                       }
                     </Typography>
@@ -174,7 +174,7 @@ export default function SingleMemberPage(
                           sx={{ p: 1 }}
                           onClick={() =>
                             navigate(
-                              `/members/${singleMemberData?.data.has_another}/`
+                              `/members/${singleMemberData?.data.has_another}/`,
                             )
                           }
                           clickable
@@ -219,7 +219,7 @@ export default function SingleMemberPage(
                     </Button>
                   </Grid>
                   {["main_admin", "free_club"].includes(
-                    props.userRole
+                    props.userRole,
                   ) ? null : (
                     <Grid container justifyContent="center" size={12} mt={2}>
                       <Button

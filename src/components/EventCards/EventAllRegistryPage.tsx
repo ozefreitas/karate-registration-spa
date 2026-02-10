@@ -6,7 +6,7 @@ import PageInfoCard from "../info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";
 
 export default function EventAllRegistryPage(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
   const { id: eventId } = useParams<{ id: string }>();
 
@@ -18,7 +18,7 @@ export default function EventAllRegistryPage(
 
   const { data: disciplinesData, isLoading: isDisciplinesLoading } = disciplinesHooks.useFetchDisciplinesData(
     eventId!,
-    !["superuser", "main_admin"].includes(props.userRole)
+    !["superuser", "main_admin"].includes(props.userRole),
   );
 
   const getColumnMapping = (isCoach?: boolean) => {
@@ -79,9 +79,9 @@ export default function EventAllRegistryPage(
                 full_name: memberInfo.member.full_name,
                 gender: memberInfo.member.gender,
                 club: memberInfo.member.club,
-                category: memberInfo.member.category,
+                category: memberInfo.category.name,
                 added_at: formatDateTime(memberInfo.added_at, "both"),
-              })
+              }),
             );
             return (
               <>

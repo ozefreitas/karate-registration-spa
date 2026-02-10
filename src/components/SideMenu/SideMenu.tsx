@@ -102,8 +102,6 @@ export default function SideMenu(
   const { data: memberValidationRequestData } =
     membersHooks.useFetchMemberValidationRequestsData(props.me?.data.role);
 
-  console.log(memberValidationRequestData);
-
   return (
     <Box>
       <CssBaseline>
