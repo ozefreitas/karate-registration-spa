@@ -20,7 +20,7 @@ import {
   getAccountSideMenuConfig,
 } from "../../dashboard/config";
 import { AxiosResponse } from "axios";
-import { clubsHooks } from "../../hooks";
+import { clubsHooks, membersHooks } from "../../hooks";
 
 const drawerWidth = 275;
 
@@ -80,7 +80,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function SideMenu(
-  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
+  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>,
 ) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -96,8 +96,13 @@ export default function SideMenu(
 
   const { data: subscriptionsData } = clubsHooks.useFetchClubSubscriptions(
     `${currentYear}`,
-    props.me?.data.role
+    props.me?.data.role,
   );
+
+  const { data: memberValidationRequestData } =
+    membersHooks.useFetchMemberValidationRequestsData(props.me?.data.role);
+
+  console.log(memberValidationRequestData);
 
   return (
     <Box>
@@ -140,8 +145,12 @@ export default function SideMenu(
                           m: 0.5,
                           ...(options.name === "payment_manager" &&
                             subscriptionsData?.data?.some(
-                              (item: any) => item.paid === false
+                              (item: any) => item.paid === false,
                             ) && {
+                              animation: "pulseRed 1.5s infinite",
+                            }),
+                          ...(options.name === "settings" &&
+                            memberValidationRequestData?.data.count !== 0 && {
                               animation: "pulseRed 1.5s infinite",
                             }),
                           "@keyframes pulseRed": {

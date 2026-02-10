@@ -58,7 +58,7 @@ const NotificationsPage = (props: { me: any }) => {
     notificationsHooks.useFetchNotificationsData(
       page,
       pageSize,
-      props.me.data.id
+      props.me.data.id,
     );
 
   return (
@@ -76,7 +76,7 @@ const NotificationsPage = (props: { me: any }) => {
           >
             <CircularProgress />
           </Grid>
-        ) : notificationsData?.data.results.length === 0 ? (
+        ) : notificationsData?.results.length === 0 ? (
           <Grid
             sx={{ mt: 1, mb: 3 }}
             container
@@ -88,7 +88,7 @@ const NotificationsPage = (props: { me: any }) => {
             </Typography>
           </Grid>
         ) : (
-          notificationsData?.data.results.map((item: any, index: any) => (
+          notificationsData?.results.map((item: any, index: any) => (
             <Card
               sx={{
                 width: "100%",
@@ -158,10 +158,10 @@ const NotificationsPage = (props: { me: any }) => {
             </Card>
           ))
         )}
-        {notificationsData?.data.results.length === 0 ? null : (
+        {notificationsData?.results.length === 0 ? null : (
           <Grid size={12} mt={3} container justifyContent={"center"}>
             <Pagination
-              count={Math.ceil(notificationsData?.data.count / pageSize)}
+              count={Math.ceil(notificationsData?.count! / pageSize)}
               page={page}
               onChange={handleChange}
               color="primary"

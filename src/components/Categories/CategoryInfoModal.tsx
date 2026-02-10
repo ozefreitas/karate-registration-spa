@@ -10,6 +10,7 @@ import {
   TextField,
   CircularProgress,
   Grid,
+  DialogTitle,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
@@ -22,7 +23,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -32,7 +33,7 @@ export default function CategoryInfoModal(
     isModalOpen: boolean;
     handleModalClose: any;
     categoryId: any;
-  }>
+  }>,
 ) {
   const { data: singleCategoryData, isLoading: isSingleCategoryDataLoading } =
     categoriesHooks.useFetchSingleCategory(props.categoryId);
@@ -47,43 +48,21 @@ export default function CategoryInfoModal(
         transition: Transition,
       }}
     >
-      <AppBar
+      <DialogTitle variant="h5" sx={{ p: 3 }}>
+        Informações de {singleCategoryData?.data.name}
+      </DialogTitle>
+      <DialogContent
         sx={{
-          position: "relative",
-          width: "99%",
-          margin: "auto",
-          marginTop: "8px",
-          backgroundColor: "#e81c24",
+          borderBottom: "1px solid lightgrey",
+          borderTop: "1px solid lightgrey",
         }}
       >
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={props.handleModalClose}
-            aria-label="close"
-          >
-            <Close />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            {singleCategoryData?.data.name}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <DialogContent>
         {isSingleCategoryDataLoading ? (
-          <Grid
-            height={100}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Grid container justifyContent={"center"} alignItems={"center"}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid>
+          <Grid pt={3}>
             <FormControl
               sx={{ pb: 2, justifyContent: "center" }}
               component="fieldset"
@@ -241,7 +220,7 @@ export default function CategoryInfoModal(
                     label=""
                     value={
                       getGraduationFromValue(
-                        Number(singleCategoryData?.data.min_grad)
+                        Number(singleCategoryData?.data.min_grad),
                       ) ?? "N/A"
                     }
                     slotProps={{
@@ -282,7 +261,7 @@ export default function CategoryInfoModal(
                     label=""
                     value={
                       getGraduationFromValue(
-                        Number(singleCategoryData?.data.max_grad)
+                        Number(singleCategoryData?.data.max_grad),
                       ) ?? "N/A"
                     }
                     slotProps={{

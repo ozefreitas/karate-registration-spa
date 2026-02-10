@@ -2,15 +2,14 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
   Grid,
   Typography,
 } from "@mui/material";
-import { Warning } from "@mui/icons-material";
-import NextCompHomeComponent from "../../components/home-cards/NextCompHomeComponent";
+import { Warning, PersonSearch } from "@mui/icons-material";
+import NextEventHomeComponent from "../../components/home-cards/NextEventHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import ClubStats from "../../components/home-cards/ClubStats";
 import { clubsHooks } from "../../hooks";
@@ -24,12 +23,13 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     isLoading: isSubscriptionsLoading,
     error: subscriptionsError,
   } = clubsHooks.useFetchClubSubscriptions(`${currentYear}`);
+
   return (
     <Grid container size={12}>
       <Grid size={6}>
-        <NextCompHomeComponent
+        <NextEventHomeComponent
           userRole={props.userRole}
-        ></NextCompHomeComponent>
+        ></NextEventHomeComponent>
       </Grid>
       <Grid size={6}>
         <LastCompQualiHomeComponent
@@ -58,48 +58,122 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
               Tente mais tarde ou contacte um administrador.
             </CardContent>
           ) : (
-            <>
-              <CardContent
-                sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
-              >
-                {isSubscriptionsLoading ? (
-                  <Box sx={{ display: "flex", justifyContent: "center" }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  <Typography color="info" variant="h3">
+            <CardContent
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                px: 7,
+                "&:last-child": {
+                  paddingBottom: 0,
+                },
+              }}
+            >
+              {isSubscriptionsLoading ? (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Grid
+                  container
+                  size={12}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Typography color="info" variant="h2" fontWeight={400}>
                     {
                       subscriptionsData?.data?.filter(
-                        (item: any) => item.paid === false
+                        (item: any) => item.paid === false,
                       ).length
                     }
                   </Typography>
-                )}
-              </CardContent>
-              {subscriptionsData?.data?.filter(
-                (item: any) => item.paid === false
-              ).length > 0 ? (
-                <CardActions
-                  sx={{ display: "flex", justifyContent: "flex-end", px: 4 }}
-                >
-                  <Button
-                    color="error"
-                    variant="contained"
-                    startIcon={<Warning></Warning>}
-                    size="large"
-                    onClick={() =>
-                      navigate(`/payment_manager/?year=${currentYear}`)
-                    }
-                  >
-                    Resolver
-                  </Button>
-                </CardActions>
-              ) : null}
-            </>
+                  {subscriptionsData?.data?.filter(
+                    (item: any) => item.paid === false,
+                  ).length > 0 ? (
+                    <Button
+                      color="error"
+                      variant="contained"
+                      startIcon={<Warning></Warning>}
+                      size="large"
+                      onClick={() =>
+                        navigate(`/payment_manager/?year=${currentYear}`)
+                      }
+                    >
+                      Resolver
+                    </Button>
+                  ) : null}
+                </Grid>
+              )}
+            </CardContent>
           )}
         </Card>
       </Grid>
-      {/* Events Registration metrics overtime */}
+      <Grid size={6}>
+        <Card sx={{ height: "100%", m: 2, mb: 0 }}>
+          <CardHeader
+            title="Pedidos de Verificação de Membros"
+            sx={{
+              "& .MuiCardHeader-title": {
+                fontWeight: "bold",
+              },
+            }}
+          ></CardHeader>
+          {subscriptionsError ? (
+            <CardContent
+              sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
+            >
+              Ocorreu um erro ao coletar o número de clubes com quotas em falta.
+              Tente mais tarde ou contacte um administrador.
+            </CardContent>
+          ) : (
+            <CardContent
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                px: 7,
+                "&:last-child": {
+                  paddingBottom: 0,
+                },
+              }}
+            >
+              {isSubscriptionsLoading ? (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Grid
+                  container
+                  size={12}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Typography color="info" variant="h2" fontWeight={400}>
+                    {
+                      subscriptionsData?.data?.filter(
+                        (item: any) => item.paid === false,
+                      ).length
+                    }
+                  </Typography>
+                  {subscriptionsData?.data?.filter(
+                    (item: any) => item.paid === false,
+                  ).length > 0 ? (
+                    <Button
+                      color="warning"
+                      variant="contained"
+                      startIcon={<PersonSearch></PersonSearch>}
+                      size="large"
+                      onClick={() =>
+                        navigate("/settings/?section=members_manager")
+                      }
+                    >
+                      Verificar
+                    </Button>
+                  ) : null}
+                </Grid>
+              )}
+            </CardContent>
+          )}
+        </Card>
+      </Grid>
     </Grid>
   );
 }

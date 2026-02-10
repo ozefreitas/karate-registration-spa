@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-  fetchMembers,
   fetchSingleMember,
   fetchMembersNotInEvent,
   fetchCoachesNotInEvent,
@@ -9,6 +8,7 @@ import {
   fetchLastFiveMembers,
   fetchMemberValidationRequests,
 } from "../../api";
+import { MembersService } from "../../openapi";
 
 export const useFetchMembersData = (
   page: number,
@@ -19,7 +19,7 @@ export const useFetchMembersData = (
   quotesLegible?: boolean,
   monthlyPaymentStatus?: string,
   isValidated?: boolean,
-  users?: string
+  users?: string,
 ) => {
   return useQuery({
     queryKey: [
@@ -35,16 +35,19 @@ export const useFetchMembersData = (
       users,
     ],
     queryFn: () =>
-      fetchMembers(
+      MembersService.membersList(
+        undefined,
+        undefined,
+        gender,
+        memberType,
+        users,
+        quotesLegible,
+        isValidated,
+        monthlyPaymentStatus,
+        undefined,
+        ordering,
         page,
         pageSize,
-        ordering,
-        memberType,
-        gender,
-        quotesLegible,
-        monthlyPaymentStatus,
-        isValidated,
-        users,
       ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -143,10 +146,20 @@ export const useFetchDisciplinesnotInMemberData = (
   });
 };
 
-export const useFetchMemberValidationRequestsData = () => {
+export const useFetchMemberValidationRequestsData = (userRole?: string) => {
   return useQuery({
     queryKey: ["members-validation"],
     queryFn: fetchMemberValidationRequests,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: ["main_admin", "superuser"].includes(userRole!),
+  });
+};
+
+export const useFetchMemberPaymentsStatusData = () => {
+  return useQuery({
+    queryKey: ["members-payment-status"],
+    queryFn: MembersService.membersMembersPaymentsStatusRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

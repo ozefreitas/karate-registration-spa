@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import CategoriesOrdering from "../../components/filter_drawers/CategoriesOrdering";
 
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
 
   type Category = {
@@ -75,9 +75,9 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const columnMaping = [
     { key: "name", label: "Nome" },
     { key: "gender", label: "Género" },
-    { key: "has_age", label: "Limite Idade" },
-    { key: "has_grad", label: "Limite Rank" },
-    { key: "has_weight", label: "Limite Peso" },
+    { key: "has_age", label: "Limite Idades" },
+    { key: "has_grad", label: "Limite Grad" },
+    { key: "has_weight", label: "Limite Pesos" },
     { key: "max_athletes", label: "Limite Atletas (Equipas)" },
   ];
 
@@ -138,7 +138,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     isLoading: isCategoriesLoading,
     error: categoriesError,
   } = categoriesHooks.useFetchCategoriesData(
-    page + 1,
+    page,
     pageSize,
     ordering,
     selectedGender,

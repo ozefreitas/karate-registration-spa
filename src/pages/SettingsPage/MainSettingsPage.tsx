@@ -347,7 +347,7 @@ export default function MainSettingsPage() {
             </Grid>
           ) : (
             <Grid>
-              <Tooltip title="Aceitar">
+              <Tooltip arrow title="Aceitar">
                 <span>
                   <IconButton
                     onClick={() => {
@@ -359,7 +359,7 @@ export default function MainSettingsPage() {
                   </IconButton>
                 </span>
               </Tooltip>
-              <Tooltip title="Rejeitar">
+              <Tooltip arrow title="Rejeitar">
                 <span>
                   <IconButton
                     onClick={() => {

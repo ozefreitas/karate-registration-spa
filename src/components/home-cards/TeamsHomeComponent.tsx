@@ -11,6 +11,7 @@ import {
   Tooltip,
   Box,
   CircularProgress,
+  Chip,
 } from "@mui/material";
 import { Groups } from "@mui/icons-material";
 import axios from "axios";
@@ -37,6 +38,8 @@ export default function TeamsHomeComponent(
     team_number: number;
     category: Category;
     gender: string;
+    events: any;
+    disciplines: any;
   };
 
   const navigate = useNavigate();
@@ -58,9 +61,12 @@ export default function TeamsHomeComponent(
       <Card sx={{ m: 2 }}>
         <CardHeader
           title={"Equipas adicionadas recentemente"}
+          subheader={"A mostrar apenas as 5 últimas Equipas."}
           sx={{
+            pb: 0,
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
+              mb: 1,
             },
           }}
         ></CardHeader>
@@ -103,16 +109,56 @@ export default function TeamsHomeComponent(
           ) : (
             lastFiveTeamsData?.data.map((team: Team, index: string) => (
               <Tooltip key={index} title={"Consultar"}>
-                <span>
+                <span style={{ width: "100%" }}>
                   <ListItem sx={{ m: 0, pb: 0 }}>
                     <ListItemButton
+                      sx={{
+                        minWidth: 0,
+                      }}
                       onClick={() => navigate(`teams/${team.id}/`)}
                     >
                       <ListItemIcon>
                         <Groups />
                       </ListItemIcon>
                       <ListItemText
-                        primary={`${team.category.name} ${team.gender} Nº ${team.team_number}`}
+                        sx={{
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          minWidth: 0,
+                          "&::-webkit-scrollbar": {
+                            height: 0,
+                          },
+                          maskImage:
+                            "linear-gradient(to right, black 85%, transparent 100%)",
+                        }}
+                        primary={
+                          <Grid
+                            container
+                            alignItems="center"
+                            spacing={2}
+                            pr={3}
+                            wrap="nowrap"
+                            sx={{
+                              width: "max-content",
+                            }}
+                          >
+                            <Chip
+                              variant="outlined"
+                              label={team.category.name}
+                            ></Chip>
+                            <Chip variant="outlined" label={team.gender}></Chip>
+                            <Chip
+                              variant="outlined"
+                              color="primary"
+                              label={`Evento: ${team.events}`}
+                            ></Chip>
+                            <Chip
+                              variant="outlined"
+                              color="secondary"
+                              label={`Modalidade: ${team.disciplines}`}
+                            ></Chip>
+                          </Grid>
+                        }
                       />
                     </ListItemButton>
                   </ListItem>

@@ -33,6 +33,7 @@ export default function MembersHomeComponent(
     match_type: string;
     gender: string;
     member_type: string;
+    past_month_payment_status: string;
   };
 
   const navigate = useNavigate();
@@ -48,9 +49,12 @@ export default function MembersHomeComponent(
       <Card sx={{ m: 2 }}>
         <CardHeader
           title={"Membros adicionados recentemente"}
+          subheader={"A mostrar apenas os 5 últimos Membros."}
           sx={{
+            pb: 0,
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
+              mb: 1,
             },
           }}
         ></CardHeader>
@@ -153,6 +157,14 @@ export default function MembersHomeComponent(
                               variant="outlined"
                               label={`${member.age} anos`}
                             ></Chip>
+                            <Chip
+                              color={
+                                member.past_month_payment_status === "unpaid"
+                                  ? "error"
+                                  : "success"
+                              }
+                              label={`Quotas: ${member.past_month_payment_status === "unpaid" ? "Em Falta" : "Pago"}`}
+                            ></Chip>
                           </Grid>
                         }
                       />
@@ -175,13 +187,18 @@ export default function MembersHomeComponent(
           </ListItem>
         ) : null}
 
-        <CardActions sx={{ justifyContent: "flex-end" }}>
+        <CardActions
+          sx={{
+            justifyContent:
+              props.userRole === "subed_club" ? "space-between" : "flex-end",
+          }}
+        >
           {props.userRole === "free_club" ? null : props.userRole ===
             "subed_club" ? (
-            <Grid container size={12} justifyContent={"space-between"}>
+            <>
               <AddButton label="Adicionar" to="members/new_member/"></AddButton>
               <InfoButton label="Ver Todos" to="members/"></InfoButton>
-            </Grid>
+            </>
           ) : (
             <InfoButton label="Ver Todos" to="members/"></InfoButton>
           )}

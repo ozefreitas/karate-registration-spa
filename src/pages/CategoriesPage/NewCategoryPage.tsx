@@ -177,7 +177,7 @@ export default function NewCategoryPage() {
         }
         title="Novo Escalão"
       ></PageInfoCard>
-      <Grid>
+      <Grid container>
         <FormCard title="Informações Gerais">
           <Grid container size={12}>
             <Grid sx={{ p: 2 }} size={6}>

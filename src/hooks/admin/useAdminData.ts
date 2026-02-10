@@ -5,6 +5,7 @@ import {
   fetchCurrentSeason,
   fetchPasswordRequests,
 } from "../../api";
+import { CurrentSeasonService } from "../../openapi";
 
 export const useFetchClubUsersData = (username?: string, userRole?: string) => {
   return useQuery({
@@ -28,7 +29,7 @@ export const useFetchClubMembersData = () => {
 export const useFetchCurrentSeason = () => {
   return useQuery({
     queryKey: ["current-season"],
-    queryFn: fetchCurrentSeason,
+    queryFn: CurrentSeasonService.currentSeasonRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

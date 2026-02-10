@@ -14,6 +14,8 @@ export type PatchedTeams = {
     athlete5?: CompactMembers;
     readonly team_size?: string;
     category?: NameCategory;
+    readonly disciplines?: string;
+    readonly events?: string;
     gender?: GenderEnum;
     team_number?: number;
 };

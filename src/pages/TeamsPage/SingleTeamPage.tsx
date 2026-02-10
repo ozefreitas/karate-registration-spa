@@ -127,12 +127,7 @@ export default function SingleTeamPage() {
             </Grid>
             <CardContent sx={{ display: "flex", gap: 2 }}>
               <Grid size={4}>
-                <Card
-                  elevation={3}
-                  sx={{
-                    minHeight: "30vh",
-                  }}
-                >
+                <Card elevation={3}>
                   <CardContent sx={{ p: 4, width: "100%" }}>
                     <Grid
                       size={12}
@@ -178,12 +173,7 @@ export default function SingleTeamPage() {
                 </Card>
               </Grid>
               <Grid size={4}>
-                <Card
-                  elevation={3}
-                  sx={{
-                    minHeight: "30vh",
-                  }}
-                >
+                <Card elevation={3}>
                   <CardContent sx={{ p: 4, width: "100%" }}>
                     <Grid
                       size={12}
@@ -229,12 +219,7 @@ export default function SingleTeamPage() {
                 </Card>
               </Grid>
               <Grid size={4}>
-                <Card
-                  elevation={3}
-                  sx={{
-                    minHeight: "30vh",
-                  }}
-                >
+                <Card elevation={3}>
                   <CardContent sx={{ p: 4, width: "100%" }}>
                     <Grid
                       size={12}

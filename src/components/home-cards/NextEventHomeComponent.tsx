@@ -20,8 +20,8 @@ import { useNavigate } from "react-router-dom";
 import { eventsHooks } from "../../hooks";
 import AddButton from "../Buttons/AddButton";
 
-export default function NextCompHomeComponent(
-  props: Readonly<{ userRole: string }>
+export default function NextEventHomeComponent(
+  props: Readonly<{ userRole: string }>,
 ) {
   const navigate = useNavigate();
   const {
@@ -36,6 +36,7 @@ export default function NextCompHomeComponent(
         <CardHeader
           title={"Próxima prova"}
           sx={{
+            pb: 0,
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
             },
@@ -64,9 +65,9 @@ export default function NextCompHomeComponent(
           </ListItem>
         ) : (
           <List>
-            <ListItem sx={{ m: 0 }}>
+            <ListItem sx={{ m: 0, pb: 0 }}>
               <Tooltip title={"Consultar"} placement="left">
-                <span>
+                <span style={{ width: "100%" }}>
                   <ListItemButton
                     sx={{
                       minWidth: 0,
@@ -106,15 +107,15 @@ export default function NextCompHomeComponent(
                                 nextCompData?.data.is_open
                                   ? "success"
                                   : nextCompData?.data.is_retification
-                                  ? "warning"
-                                  : "error"
+                                    ? "warning"
+                                    : "error"
                               }
                               label={
                                 nextCompData?.data.is_open
                                   ? "Inscrições Abertas"
                                   : nextCompData?.data.is_retification
-                                  ? "Periodo Retificalções"
-                                  : "Inscrições Fechadas"
+                                    ? "Periodo Retificalções"
+                                    : "Inscrições Fechadas"
                               }
                             ></Chip>
                           ) : null}

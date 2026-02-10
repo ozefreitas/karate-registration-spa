@@ -34,27 +34,10 @@ import {
 import RequestValidationModal from "../../components/Modals/RequestValidationModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import stringAvatar from "../../dashboard/utils/avatarColor";
+import { Members } from "../../openapi";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
-  type Club = {
-    id: string;
-    username: string;
-    role: string;
-  };
-
-  type Member = {
-    id: string;
-    full_name: string;
-    gender: string;
-    club: Club;
-    updated_by: Club;
-    age: string;
-    member_type: string;
-    is_validated: boolean;
-    past_month_payment_status: string;
-    request_status: string;
-  };
   const [searchParams, setSearchParams] = useSearchParams();
   const paramPage = searchParams.get("page") ?? "1";
 
@@ -241,7 +224,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
 
   // Memoize `rows` to compute only when `members` changes
   const memberRows = useMemo(() => {
-    return membersData?.data.results.map((member: Member) => ({
+    return membersData?.results.map((member: Members) => ({
       id: member.id,
       full_name: member.full_name,
       gender: member.gender === "Masculino" ? "M" : "F",
@@ -458,12 +441,12 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               Refrescar
             </Button>
           </Grid>
-        ) : membersData?.data === undefined ? null : currentView === "table" ? (
-          <Grid mt={5}>
+        ) : membersData === undefined ? null : currentView === "table" ? (
+          <Grid mt={3}>
             <AllUseTable
               type="Atletas"
               data={memberRows}
-              count={membersData?.data.count}
+              count={membersData?.count}
               columnsHeaders={columnMaping}
               actions
               editable={["main_admin", "superuser", "subed_club"].includes(
@@ -485,7 +468,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         ) : (
           <Grid container spacing={3} m={2} mt={5}>
-            {memberRows.length === 0 ? (
+            {memberRows?.length === 0 ? (
               <Grid
                 sx={{ mt: 1, mb: 3 }}
                 container
@@ -497,7 +480,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 </Typography>
               </Grid>
             ) : (
-              memberRows.map((member: any, index: any) => (
+              memberRows?.map((member: any, index: any) => (
                 <Grid key={index} size={{ xl: 3, lg: 4, md: 6, xs: 12 }}>
                   <Tooltip title="Consultar" placement="top">
                     <Card
@@ -633,13 +616,13 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         )}
       </Grid>
-      {membersData?.data.count === 0 ||
+      {membersData?.count === 0 ||
       isMembersDataLoading ||
       membersError ||
       currentView === "table" ? null : (
         <Grid size={12} mt={5} container justifyContent={"center"}>
           <Pagination
-            count={Math.ceil(membersData?.data.count / 12)}
+            count={Math.ceil(membersData?.count! / 12)}
             page={page}
             onChange={handleChange}
             color="primary"

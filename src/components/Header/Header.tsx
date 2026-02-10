@@ -26,7 +26,12 @@ import fighttecLogo from "./../../assets/FightTecLogo-white-font-removebg-croppe
 import skipLogo from "./../../assets/skip-logo.png";
 import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import { NotificationsActive, Logout, Refresh } from "@mui/icons-material";
+import {
+  NotificationsActive,
+  Logout,
+  Refresh,
+  Home,
+} from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import {
   breadcrumbsConvertion,
@@ -56,7 +61,7 @@ export default function Header(
   const { user, isAuthenticated } = useAuth();
 
   let shouldStop = false;
-  const paths = window.location.pathname.split("/").slice(1);
+  const paths = globalThis.location.pathname.split("/").slice(1);
   const breadcrumbs: { title: string; link: string }[] = [];
   paths.forEach((p, index) => {
     const routeTo = p;
@@ -85,8 +90,8 @@ export default function Header(
   const { data } = adminHooks.useFetchCurrentSeason();
 
   useEffect(() => {
-    if (data?.data?.season) {
-      setCurrentSeason(data.data.season);
+    if (data?.season) {
+      setCurrentSeason(data.season);
     }
   }, [data]);
 
@@ -238,24 +243,24 @@ export default function Header(
                         <span>
                           <Badge
                             color="error"
-                            badgeContent={notificationData?.data.total}
+                            badgeContent={notificationData?.total}
                             max={9}
                           >
                             <Avatar
                               sx={{
                                 height:
-                                  notificationData?.data.total === 0 ||
+                                  notificationData?.total === 0 ||
                                   notificationData === null
                                     ? null
                                     : 50,
                                 width:
-                                  notificationData?.data.total === 0 ||
+                                  notificationData?.total === 0 ||
                                   notificationData === null
                                     ? null
                                     : 50,
                                 bgcolor: notificationError
                                   ? "red"
-                                  : notificationData?.data.total === 0 ||
+                                  : notificationData?.total === 0 ||
                                       notificationData === null
                                     ? null
                                     : "green",
@@ -264,12 +269,12 @@ export default function Header(
                               <NotificationsActive
                                 sx={{
                                   height:
-                                    notificationData?.data.total === 0 ||
+                                    notificationData?.total === 0 ||
                                     notificationData === null
                                       ? 20
                                       : 25,
                                   width:
-                                    notificationData?.data.total === 0 ||
+                                    notificationData?.total === 0 ||
                                     notificationData === null
                                       ? 20
                                       : 25,
@@ -437,7 +442,7 @@ export default function Header(
           }}
         >
           Notificações Recentes
-          {(!isNotificationLoading && notificationData?.data.total === 0) ||
+          {(!isNotificationLoading && notificationData?.total === 0) ||
           notificationError ? null : (
             <Typography color="textDisabled">
               (a mostrar 5 primeiras)
@@ -481,7 +486,7 @@ export default function Header(
               </ListItemButton>
             </MenuItem>
           )
-        ) : notificationData?.data.total === 0 ? (
+        ) : notificationData?.total === 0 ? (
           <MenuItem divider>
             <ListItemButton disabled sx={{ m: 0, p: 3 }}>
               <ListItemText primary={"De momento não tem notificações."} />
@@ -489,12 +494,12 @@ export default function Header(
           </MenuItem>
         ) : (
           <List sx={{ display: "flex", flexDirection: "column", p: 0 }}>
-            {notificationData?.data.response.map(
+            {notificationData?.response.map(
               (noti: Notification, index: number) => (
                 <MenuItem
                   divider={
                     notificationError !== null ||
-                    notificationData.data.response.length - 1 === index
+                    notificationData.response.length - 1 === index
                   }
                   onClick={(e) => e.stopPropagation()}
                   key={index}
@@ -542,17 +547,15 @@ export default function Header(
           </List>
         )}
         <MenuItem
-          disabled={
-            notificationData?.data.total === 0 || notificationError !== null
-          }
+          disabled={notificationData?.total === 0 || notificationError !== null}
           onClick={() => navigate("/profile/list_notifications/")}
           sx={{ p: 2, display: "flex", justifyContent: "center", gap: 3 }}
         >
           <Typography>Abrir todas as Notificações </Typography>
-          {notificationData?.data.total > 5 ? (
+          {notificationData?.total > 5 ? (
             <Typography color="textDisabled">
-              (+ {notificationData?.data.total - 5}{" "}
-              {notificationData?.data.total - 5 === 1
+              (+ {notificationData?.total - 5}{" "}
+              {notificationData?.total - 5 === 1
                 ? "notificação"
                 : "notificações"}
               )
@@ -566,7 +569,7 @@ export default function Header(
             ""
           ) : (
             <Link to={"/"}>
-              <Typography color="red">Início</Typography>
+              <Home color="error"></Home>
             </Link>
           )}
           {breadcrumbs.map((b, index) =>

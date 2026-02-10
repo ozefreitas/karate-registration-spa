@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Members } from '../models/Members';
+import type { MembersPaymentsStatus } from '../models/MembersPaymentsStatus';
 import type { PaginatedMembersList } from '../models/PaginatedMembersList';
 import type { PatchedMembers } from '../models/PatchedMembers';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -182,6 +183,16 @@ export class MembersService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/members/last_five/',
+        });
+    }
+    /**
+     * @returns MembersPaymentsStatus
+     * @throws ApiError
+     */
+    public static membersMembersPaymentsStatusRetrieve(): CancelablePromise<MembersPaymentsStatus> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/members/members_payments_status/',
         });
     }
 }

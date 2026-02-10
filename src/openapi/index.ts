@@ -47,6 +47,7 @@ export type { GenerateToken } from './models/GenerateToken';
 export type { Match } from './models/Match';
 export { MaxGradEnum } from './models/MaxGradEnum';
 export type { Members } from './models/Members';
+export type { MembersPaymentsStatus } from './models/MembersPaymentsStatus';
 export { MemberTypeEnum } from './models/MemberTypeEnum';
 export type { MemberValidationRequest } from './models/MemberValidationRequest';
 export { MinGradEnum } from './models/MinGradEnum';

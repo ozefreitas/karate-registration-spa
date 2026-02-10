@@ -116,7 +116,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "classifications" &&
         item.name !== "rules" &&
         item.name !== "teams" &&
-        item.name !== "results_display"
+        item.name !== "results_display",
     );
   } else if (userRole === undefined || userRole === "free_club") {
     return baseMenu.filter(
@@ -127,7 +127,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
         item.name !== "payment_manager" &&
-        item.name !== "categories"
+        item.name !== "categories",
     );
   } else if (userRole === "subed_club") {
     return baseMenu.filter(
@@ -135,7 +135,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "notifications_manager" &&
         item.name !== "results_display" &&
         item.name !== "settings" &&
-        item.name !== "categories"
+        item.name !== "categories",
     );
   } else if (userRole === "technician") {
     return baseMenu.filter(
@@ -149,7 +149,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "events" &&
         item.name !== "help" &&
         item.name !== "rules" &&
-        item.name !== "classifications"
+        item.name !== "classifications",
     );
   }
 
@@ -181,7 +181,7 @@ export const getAccountSideMenuConfig = (userRole: string) => {
 
   if (userRole === "main_admin") {
     return baseMenu.filter(
-      (item) => item.name !== "contacts" && item.name !== "pricing"
+      (item) => item.name !== "contacts" && item.name !== "pricing",
     );
   } else if (userRole === undefined) {
     return baseMenu.filter((item) => item.name !== "feedback");
@@ -191,15 +191,15 @@ export const getAccountSideMenuConfig = (userRole: string) => {
         item.name !== "feedback" &&
         item.name !== "contacts" &&
         item.name !== "news" &&
-        item.name !== "pricing"
+        item.name !== "pricing",
     );
   }
 
   return baseMenu;
 };
 
-export const breadcrumbsConvertion: Record<string, string> = {
-  "": "Início",
+export const breadcrumbsConvertion: Record<string, any> = {
+  "": <Home></Home>,
   members: "Membros",
   teams: "Equipas",
   classifications: "Classificações",
@@ -232,7 +232,7 @@ export const breadcrumbsConvertion: Record<string, string> = {
   reset: "Recuperar Password",
   coaches: "Treinadores Registados",
   pricing: "Planos de Subscrição",
-  payment_manager: "Gestor de Pagamentos"
+  payment_manager: "Gestor de Pagamentos",
 };
 
 export const NotificationTypeOptions: {
