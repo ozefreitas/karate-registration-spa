@@ -98,6 +98,8 @@ export default function NotificationManagerPage(props: { userRole: string }) {
       "registrations_closing",
       "registrations_close",
       "open_registrations",
+      "draw_available",
+      "draw_patched",
       "classifications_available",
       "rate_event",
     ].includes(formType);
@@ -373,6 +375,8 @@ export default function NotificationManagerPage(props: { userRole: string }) {
               "registrations_close",
               "open_registrations",
               "classifications_available",
+              "draw_available",
+              "draw_patched",
               "rate_event",
               "member_updated",
             ].includes(watch("type")) ? (

@@ -4,28 +4,24 @@
 /* eslint-disable */
 import type { Bracket } from '../models/Bracket';
 import type { CreateBracket } from '../models/CreateBracket';
-import type { PaginatedBracketList } from '../models/PaginatedBracketList';
 import type { PatchedBracket } from '../models/PatchedBracket';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class BracketService {
     /**
-     * @param page A page number within the paginated result set.
-     * @param pageSize Number of results to return per page.
-     * @returns PaginatedBracketList
+     * @param event
+     * @returns Bracket
      * @throws ApiError
      */
     public static bracketList(
-        page?: number,
-        pageSize?: number,
-    ): CancelablePromise<PaginatedBracketList> {
+        event?: string,
+    ): CancelablePromise<Array<Bracket>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/bracket/',
             query: {
-                'page': page,
-                'page_size': pageSize,
+                'event': event,
             },
         });
     }

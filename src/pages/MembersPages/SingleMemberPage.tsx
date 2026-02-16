@@ -24,7 +24,15 @@ import {
 import RegistryHistorySection from "./RegistryHistorySection";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { MemberTypes } from "../../config";
-import { OpenInNew, ArrowRight, ArrowLeft } from "@mui/icons-material";
+import {
+  OpenInNew,
+  ArrowRight,
+  ArrowLeft,
+  PhotoCamera,
+  Check,
+  Cancel,
+} from "@mui/icons-material";
+import { useRef, useState } from "react";
 
 export default function SingleMemberPage(
   props: Readonly<{ userRole: string }>,
@@ -32,6 +40,9 @@ export default function SingleMemberPage(
   const navigate = useNavigate();
   const { id: memberId } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isHovered, setIsHovered] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const section = searchParams.get("section") || "personal_info";
 
@@ -44,6 +55,27 @@ export default function SingleMemberPage(
     isLoading: isSingleMemberLoading,
     error: singleMemberError,
   } = membersHooks.useFetchSingleMemberData(memberId);
+
+  const avatarData = stringAvatar(singleMemberData?.data.full_name, 256);
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image");
+      return;
+    }
+
+    setSelectedFile(file);
+  };
+
+  const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+  console.log(previewUrl);
 
   return (
     <>
@@ -66,6 +98,11 @@ export default function SingleMemberPage(
               irregularidades nos pagamentos. Para alterar o estado de
               pagamento, clique diretamente no botão informativo do estado
               deste.
+            </p>
+            <p>
+              Ao lado do campo <i>Graduação</i> pode efetuar um{" "}
+              <strong>Pedido de Proposta para Exame</strong>. Apenas Membros
+              Verificados podem ser propostos a exame.
             </p>
           </>
         }
@@ -123,11 +160,53 @@ export default function SingleMemberPage(
                 >
                   {singleMemberData ? (
                     <Avatar
-                      {...stringAvatar(singleMemberData?.data.full_name, 256)}
-                    ></Avatar>
+                      src={
+                        previewUrl ||
+                        singleMemberData?.data.profile_image ||
+                        undefined
+                      }
+                      {...avatarData}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      onClick={() => handleAvatarClick()}
+                    >
+                      {isHovered ? (
+                        <PhotoCamera sx={{ color: "white" }} />
+                      ) : (
+                        !previewUrl &&
+                        !singleMemberData?.data.profile_image &&
+                        avatarData.children
+                      )}
+                    </Avatar>
                   ) : (
                     <Avatar sx={{ width: 256, height: 256, mb: 2 }}></Avatar>
                   )}
+                  {previewUrl !== null && props.userRole !== "main_admin" ? (
+                    <Grid container>
+                      <Chip
+                        color="success"
+                        variant="outlined"
+                        sx={{ p: 1 }}
+                        onClick={() => {}}
+                        clickable
+                        icon={<Check />}
+                        size="small"
+                        label="Confirmar"
+                      ></Chip>
+                      <Chip
+                        color="error"
+                        variant="outlined"
+                        sx={{ p: 1 }}
+                        onClick={() => {
+                          setSelectedFile(null);
+                        }}
+                        clickable
+                        icon={<Cancel />}
+                        size="small"
+                        label="Cancelar"
+                      ></Chip>
+                    </Grid>
+                  ) : null}
                   <Grid
                     container
                     justifyContent="center"
@@ -329,6 +408,14 @@ export default function SingleMemberPage(
           </Card>
         </>
       )}
+      {/* hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
     </>
   );
 }

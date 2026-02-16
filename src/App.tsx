@@ -29,7 +29,6 @@ import ResultsMainPage from "./pages/ResultsMonitorPage/ResultsMainPage";
 import DisplayPage from "./pages/ResultsMonitorPage/DisplayPage";
 import CoachesPage from "./pages/RegistrationPages/CoachesPage";
 import DrawPage from "./pages/DrawPage/DrawPage";
-// import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import NewCategoryPage from "./pages/CategoriesPage/NewCategoryPage";
 import CategoriesPage from "./pages/CategoriesPage/CategoriesPage";
 import KataElim from "./pages/DisplayPanelPages/KataElim";
@@ -50,6 +49,7 @@ import PricingPage from "./pages/InformationalPages/PricingPage";
 import ScrollToTop from "./utils/scrollToTop";
 import { ErrorBoundary } from "react-error-boundary";
 import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
+import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -272,7 +272,7 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<EventAllRegistryPage userRole={userRole} />}
-                        allowedRoles={["main_admin"]} // not allow dojos for now
+                        allowedRoles={["main_admin"]}
                       />
                     )
                   }
@@ -282,7 +282,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<DrawPage />}
+                        element={<DrawPage userRole={userRole} />}
                         allowedRoles={["main_admin", "superuser", "subed_club"]}
                       />
                     )
@@ -293,9 +293,28 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
+                        element={<GenerateDrawPage />}
+                        allowedRoles={[
+                          "main_admin",
+                          "superuser",
+                          "single_admin",
+                        ]}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="events/:id/draw/patch/"
+                  element={
+                    isAuthLoading ? null : (
+                      <ProtectedRoute
                         // element={<GenerateDrawPage />}
                         element={<WIPPage />}
-                        allowedRoles={["main_admin", "superuser"]}
+                        allowedRoles={[
+                          "main_admin",
+                          "superuser",
+                          "single_admin",
+                        ]}
                       />
                     )
                   }

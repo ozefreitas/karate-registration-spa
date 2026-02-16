@@ -81,7 +81,7 @@ export default function TeamsHomeComponent(
               </ListItemButton>
             </ListItem>
           ) : isLastFiveTeamsLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <CircularProgress />
             </Box>
           ) : lastFiveTeamError ? (

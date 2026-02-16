@@ -68,7 +68,7 @@ export default function MembersHomeComponent(
             </ListItemButton>
           </ListItem>
         ) : isLastFiveMembersLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
             <CircularProgress />
           </Box>
         ) : lastFiveMembersError ? (

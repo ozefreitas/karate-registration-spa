@@ -8,6 +8,7 @@ import {
   MenuItem,
   Switch,
   Tooltip,
+  IconButton,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -21,6 +22,7 @@ import {
   ContentCopy,
   AccountCircle,
   VerifiedUser,
+  Upgrade,
 } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
@@ -34,9 +36,10 @@ import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
 import { isFloat } from "../../utils/utils";
 import { useSnackbar } from "notistack";
 import DuplicateMemberModal from "../../components/Modals/DuplicateMemberModal";
+import RequestModal from "../../components/Modals/RequestModal";
 
 export default function PersonalInfoSection(
-  props: Readonly<{ memberData: any }>
+  props: Readonly<{ memberData: any }>,
 ) {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
@@ -46,7 +49,7 @@ export default function PersonalInfoSection(
   const editField = searchParams.get("edit_field");
 
   const isPrivileged = ["main_admin", "superuser", "subed_club"].includes(
-    userRole
+    userRole,
   );
 
   const canUpdateSensitive =
@@ -68,6 +71,15 @@ export default function PersonalInfoSection(
     useState<boolean>(false);
   const [isWeightRedirectionModalOpen, setIsWeightRedirectionModalOpen] =
     useState<boolean>(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState<boolean>(false);
+
+  const handleRequestExamModalOpen = () => {
+    setIsRequestModalOpen(true);
+  };
+
+  const handleRequestExamModalClose = () => {
+    setIsRequestModalOpen(false);
+  };
 
   const handleModalOpen = () => {
     setIsDeleteMemberModalOpen(true);
@@ -215,8 +227,8 @@ export default function PersonalInfoSection(
           props.memberData?.data.member_type === "coach"
             ? "coach"
             : data.competitor
-            ? "athlete"
-            : "student",
+              ? "athlete"
+              : "student",
         quotes_legible: data.quotesLegible,
         birth_date: data.birthDate,
         weight:
@@ -267,17 +279,13 @@ export default function PersonalInfoSection(
           >
             INFORMAÇÕES PESSOAIS
           </Typography>
-          {!props.memberData?.data.is_validated ? (
-            <Tooltip title="Próprio" sx={{ cursor: "pointer" }}>
-              <span>
-                <AccountCircle color="info" fontSize="large" />
-              </span>
+          {props.memberData?.data.is_validated ? (
+            <Tooltip title="Verificado">
+              <VerifiedUser color="info" fontSize="large" />
             </Tooltip>
           ) : (
-            <Tooltip title="Verificado">
-              <span>
-                <VerifiedUser color="info" fontSize="large" />
-              </span>
+            <Tooltip title="Próprio" sx={{ cursor: "pointer" }}>
+              <AccountCircle color="info" fontSize="large" />
             </Tooltip>
           )}
         </Grid>
@@ -638,7 +646,11 @@ export default function PersonalInfoSection(
           ></FormControlLabel>
         </FormControl>
         <FormControl
-          sx={{ pb: 2 }}
+          sx={{
+            pb: 2,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
           component="fieldset"
           // error={!!errors.has_registrations}
         >
@@ -669,7 +681,7 @@ export default function PersonalInfoSection(
                       input: {
                         readOnly: !isEditMode || !canUpdateSensitive,
                         disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
+                        style: { fontSize: 20 },
                       },
                       select: {
                         IconComponent:
@@ -696,6 +708,34 @@ export default function PersonalInfoSection(
               />
             }
           ></FormControlLabel>
+          <Grid container flexDirection={"column"} alignItems={"center"}>
+            <Tooltip
+              arrow
+              placement="top"
+              title={
+                props.memberData?.data.is_validated
+                  ? "Pedir Proposta Exame"
+                  : "Precisa de verificar este Membro para o propor a Exame."
+              }
+            >
+              <span>
+                <IconButton
+                  disabled={!props.memberData?.data.is_validated}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRequestExamModalOpen();
+                  }}
+                >
+                  <Upgrade
+                    fontSize="large"
+                    color={
+                      props.memberData?.data.is_validated ? "info" : "disabled"
+                    }
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Grid>
         </FormControl>
         <FormControl
           sx={{ pb: 2 }}
@@ -747,7 +787,7 @@ export default function PersonalInfoSection(
                     error={!!errors.gender}
                   >
                     {GenderOptions.filter((item) =>
-                      ["Masculino", "Feminino"].includes(item.value)
+                      ["Masculino", "Feminino"].includes(item.value),
                     ).map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
@@ -1265,6 +1305,12 @@ export default function PersonalInfoSection(
         isModalOpen={isWeightRedirectionModalOpen}
         id={searchParams.get("event_id")}
       ></WeightConfirmModal>
+      <RequestModal
+        id={props.memberData?.data.id}
+        isOpen={isRequestModalOpen}
+        handleClose={handleRequestExamModalClose}
+        requestType="exams"
+      ></RequestModal>
     </>
   );
 }

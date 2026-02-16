@@ -118,7 +118,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         onSettled: () => {
           setIsDescriptionEdit(false);
         },
-      }
+      },
     );
   };
 
@@ -510,12 +510,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 <Grid
                   container
                   direction="row"
-                  sx={{
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    gap: 7,
-                    rowGap: 2,
-                  }}
+                  px={5}
+                  gap={5}
+                  rowGap={2}
+                  justifyContent={"space-evenly"}
+                  alignItems={"center"}
                 >
                   {["main_admin", "superuser"].includes(props.userRole) ? (
                     // props.userRole === "subed_club" ? (
@@ -549,7 +548,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       <Button
                         sx={{ m: 1 }}
                         variant="contained"
-                        size="large"
+                        size="medium"
                         color="error"
                         onClick={handleDeleteModalOpen}
                         startIcon={<Delete />}
@@ -557,14 +556,14 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         Eliminar Evento
                       </Button>
                       <SettingsButton
-                        size="large"
+                        size="medium"
                         label="Editar Evento"
                         handleOpen={handleEditModalOpen}
                       ></SettingsButton>
                     </>
                   ) : null}
                   {["main_admin", "superuser"].includes(
-                    props.userRole
+                    props.userRole,
                   ) ? null : singleEventData?.data.has_any_indiv ? (
                     <AddButton
                       label="Adicionar/Consultar Inscrições"
@@ -577,7 +576,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     ></AddButton>
                   ) : null}
                   {["main_admin", "superuser"].includes(
-                    props.userRole
+                    props.userRole,
                   ) ? null : singleEventData?.data.has_coach ? (
                     <AddButton
                       label="Adicionar/Consultar Treinadores"
@@ -590,7 +589,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     ></AddButton>
                   ) : null}
                   {["main_admin", "superuser"].includes(
-                    props.userRole
+                    props.userRole,
                   ) ? null : singleEventData?.data?.has_any_team ? (
                     <AddButton
                       label="Adicionar/Consultar Equipas"
@@ -609,35 +608,29 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     ></InfoButton>
                   ) : null}
                   {singleEventData?.data.has_registrations ? (
-                    <>
-                      <Tooltip
-                        disableHoverListener={[
-                          "main_admin",
-                          "superuser",
-                        ].includes(props.userRole)}
-                        title="Esta funcionalidade ficará disponível em breve"
-                      >
-                        <span>
-                          <InfoButton
-                            disabled={
-                              !["main_admin", "superuser"].includes(
-                                props.userRole
-                              )
-                            }
-                            label="Inscrições completas"
-                            to="all_registry/"
-                          ></InfoButton>
-                        </span>
-                      </Tooltip>
-                      <InfoButton
-                        label="Consultar Sorteios"
-                        to="draw/"
-                      ></InfoButton>
-                    </>
+                    <Tooltip
+                      disableHoverListener={[
+                        "main_admin",
+                        "superuser",
+                      ].includes(props.userRole)}
+                      title="Esta funcionalidade ficará disponível em breve."
+                    >
+                      <span>
+                        <InfoButton
+                          disabled={
+                            !["main_admin", "superuser"].includes(
+                              props.userRole,
+                            )
+                          }
+                          label="Inscrições completas"
+                          to="all_registry/"
+                        ></InfoButton>
+                      </span>
+                    </Tooltip>
                   ) : null}
                   {singleEventData?.data.has_categories ? (
                     <SettingsButton
-                      size="large"
+                      size="medium"
                       label="Consultar Escalões"
                       to={`/events/${eventId!}/categories/`}
                     ></SettingsButton>
@@ -646,8 +639,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   singleEventData?.data.has_registrations ? (
                     <>
                       <GenerateButton
-                        label="Gerar Sorteio"
-                        to="draw/generate/"
+                        label="Sorteios"
+                        to="draw/"
                       ></GenerateButton>
                       <Button
                         sx={{ m: 1 }}
@@ -659,7 +652,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         Descarregar Inscrições
                       </Button>
                     </>
-                  ) : null}
+                  ) : (
+                    <InfoButton
+                      label="Consultar Sorteios"
+                      to="draw/"
+                    ></InfoButton>
+                  )}
                 </Grid>
               </CardContent>
             </Card>

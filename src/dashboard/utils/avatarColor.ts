@@ -3,7 +3,7 @@ export function stringToColor(string: string) {
   let i;
 
   /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
+  for (i = 0; i < string?.length; i += 1) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
 
@@ -13,7 +13,7 @@ export function stringToColor(string: string) {
     const value = (hash >> (i * 8)) & 0xff;
     color += `00${value.toString(16)}`.slice(-2);
   }
-  
+
   return color;
 }
 
@@ -23,8 +23,13 @@ export default function stringAvatar(name: string, size?: number) {
       bgcolor: stringToColor(name),
       width: size,
       height: size,
-      fontSize: size ? size / 3 : undefined
+      fontSize: size ? size / 3 : undefined,
+      cursor: "pointer",
+      transition: "0.2s",
+      "&:hover": {
+        filter: "brightness(0.85)",
+      },
     },
-    children: `${name.replace(/\s+/g, "").slice(0, 3).toUpperCase()}`,
+    children: `${name?.replace(/\s+/g, "").slice(0, 3).toUpperCase()}`,
   };
 }

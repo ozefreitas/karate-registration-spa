@@ -31,7 +31,7 @@ import {
   CreditCard,
   Add,
 } from "@mui/icons-material";
-import RequestValidationModal from "../../components/Modals/RequestValidationModal";
+import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { Members } from "../../openapi";
@@ -233,9 +233,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         ?.label,
       age: member.age,
       verified: member.is_validated ? (
-        <Grid container flexDirection={"column"} alignItems={"center"}>
-          <VerifiedUser color="disabled" />
-        </Grid>
+        <Tooltip arrow title="Verificado">
+          <Grid container flexDirection={"column"} alignItems={"center"}>
+            <VerifiedUser color="disabled" />
+          </Grid>
+        </Tooltip>
       ) : member.request_status === null ||
         member.request_status !== "pending" ? (
         <Tooltip arrow title="Pedir Verificação">
@@ -252,16 +254,9 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         </Tooltip>
       ) : (
         <Tooltip arrow title="Pendente">
-          <span>
-            <IconButton
-              disableRipple
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <HourglassBottom color="primary" />
-            </IconButton>
-          </span>
+          <Grid container flexDirection={"column"} alignItems={"center"}>
+            <HourglassBottom color="primary" />
+          </Grid>
         </Tooltip>
       ),
       can_update_sensitive:
@@ -629,11 +624,12 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           />
         </Grid>
       )}
-      <RequestValidationModal
+      <RequestModal
         id={actionedMember}
         isOpen={isRequestModalOpen}
         handleClose={handleModalClose}
-      ></RequestValidationModal>
+        requestType="verify"
+      ></RequestModal>
     </>
   );
 }

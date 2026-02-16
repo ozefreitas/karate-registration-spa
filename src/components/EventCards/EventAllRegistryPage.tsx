@@ -79,7 +79,7 @@ export default function EventAllRegistryPage(
                 full_name: memberInfo.member.full_name,
                 gender: memberInfo.member.gender,
                 club: memberInfo.member.club,
-                category: memberInfo.category.name,
+                category: memberInfo.category === null ? "N/A" : memberInfo.category.name,
                 added_at: formatDateTime(memberInfo.added_at, "both"),
               }),
             );

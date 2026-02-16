@@ -19,11 +19,10 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
-import { eventsHooks } from "../../hooks";
-import { classificationsHooks } from "../../hooks";
+import { eventsHooks, classificationsHooks } from "../../hooks";
 
 export default function LastCompQualiHomeComponent(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
   type Member = {
     id: string;
@@ -68,10 +67,16 @@ export default function LastCompQualiHomeComponent(
         ></CardHeader>
         <CardContent sx={{ pt: 0, pb: 0 }}>
           {isLastCompQualiLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <CircularProgress />
             </Box>
-          ) : lastCompQualiData?.data.length !== 0 ? (
+          ) : lastCompQualiData?.data.length === 0 ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemText primary={"Classificações não disponíveis."} />
+              </ListItemButton>
+            </ListItem>
+          ) : (
             lastCompQualiData?.data.map(
               (category: CategoryClassification, index: string) => (
                 <Accordion key={index} sx={{ m: 2, mt: 0 }}>
@@ -150,14 +155,8 @@ export default function LastCompQualiHomeComponent(
                     </List>
                   </AccordionDetails>
                 </Accordion>
-              )
+              ),
             )
-          ) : (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemText primary={"Classificações não disponíveis."} />
-              </ListItemButton>
-            </ListItem>
           )}
           {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>

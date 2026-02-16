@@ -8,7 +8,8 @@ export default function SettingsButton(
     to?: string;
     handleOpen?: any;
     size: "small" | "medium" | "large";
-  }>
+    disabled?: boolean;
+  }>,
 ) {
   const navigate = useNavigate();
   return (
@@ -16,13 +17,14 @@ export default function SettingsButton(
       sx={{ m: 1 }}
       variant="contained"
       size={props.size}
+      disabled={props.disabled}
       color="warning"
       onClick={() => {
         if (props.to) {
           navigate(props.to);
         }
         if (props.handleOpen) {
-          props.handleOpen()
+          props.handleOpen();
         }
       }}
       startIcon={<Settings />}

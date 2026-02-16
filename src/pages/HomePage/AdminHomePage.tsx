@@ -12,7 +12,7 @@ import { Warning, PersonSearch } from "@mui/icons-material";
 import NextEventHomeComponent from "../../components/home-cards/NextEventHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import ClubStats from "../../components/home-cards/ClubStats";
-import { clubsHooks } from "../../hooks";
+import { clubsHooks, membersHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
@@ -23,6 +23,12 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
     isLoading: isSubscriptionsLoading,
     error: subscriptionsError,
   } = clubsHooks.useFetchClubSubscriptions(`${currentYear}`);
+
+  const {
+    data: memberValidationRequestsData,
+    isLoading: isMemberValidationRequestsLoading,
+    error: memberValidationRequestsError,
+  } = membersHooks.useFetchMemberValidationRequestsData(props.userRole);
 
   return (
     <Grid container size={12}>
@@ -79,7 +85,17 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                   justifyContent={"space-between"}
                   alignItems={"center"}
                 >
-                  <Typography color="info" variant="h2" fontWeight={400}>
+                  <Typography
+                    color={
+                      subscriptionsData?.data?.filter(
+                        (item: any) => item.paid === false,
+                      ).length > 0
+                        ? "info"
+                        : "textDisabled"
+                    }
+                    variant="h2"
+                    fontWeight={400}
+                  >
                     {
                       subscriptionsData?.data?.filter(
                         (item: any) => item.paid === false,
@@ -117,7 +133,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
               },
             }}
           ></CardHeader>
-          {subscriptionsError ? (
+          {memberValidationRequestsError ? (
             <CardContent
               sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
             >
@@ -135,7 +151,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                 },
               }}
             >
-              {isSubscriptionsLoading ? (
+              {isMemberValidationRequestsLoading ? (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                   <CircularProgress />
                 </Box>
@@ -146,16 +162,18 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                   justifyContent={"space-between"}
                   alignItems={"center"}
                 >
-                  <Typography color="info" variant="h2" fontWeight={400}>
-                    {
-                      subscriptionsData?.data?.filter(
-                        (item: any) => item.paid === false,
-                      ).length
+                  <Typography
+                    color={
+                      memberValidationRequestsData?.data?.count > 0
+                        ? "info"
+                        : "textDisabled"
                     }
+                    variant="h2"
+                    fontWeight={400}
+                  >
+                    {memberValidationRequestsData?.data?.count}
                   </Typography>
-                  {subscriptionsData?.data?.filter(
-                    (item: any) => item.paid === false,
-                  ).length > 0 ? (
+                  {memberValidationRequestsData?.data?.count > 0 ? (
                     <Button
                       color="warning"
                       variant="contained"

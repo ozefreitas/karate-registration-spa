@@ -10,8 +10,6 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { eventsHooks } from "../../hooks";
-import { useNavigate } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -22,26 +20,18 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function DeleteEventModal(
+export default function GenerateDrawModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
-    id?: string | Array<string>;
+    eventId: string;
+    willOverwrite: any;
+    submitFunction: any;
   }>,
 ) {
-  const navigate = useNavigate();
-  const { mutate } = eventsHooks.useRemoveEvent();
-
-  const handleDelete = (
-    event: React.MouseEvent<HTMLElement>,
-    id: string | Array<string> | undefined,
-  ) => {
+  const handleGenerate = async (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    if (id !== undefined && typeof id === "string") {
-      mutate(id);
-      props.handleModalClose();
-      navigate("/events/");
-    }
+    props.submitFunction();
   };
 
   return (
@@ -53,7 +43,7 @@ export default function DeleteEventModal(
       }}
     >
       <DialogTitle>
-        <Typography variant="h5">Apagar Evento</Typography>
+        <Typography variant="h5">Gerar Sorteio</Typography>
       </DialogTitle>
       <DialogContent
         sx={{
@@ -61,10 +51,24 @@ export default function DeleteEventModal(
           borderTop: "1px solid lightgrey",
         }}
       >
-        Tem a certeza que pretende apagar este Evento? Esta ação irá eliminar
-        também todas as inscrições efetuadas até à data, assim como eventuais
-        modalidades associadas e respetivas inscrições em cada. <p></p> NÃO
-        PODERA VOLTAR ATRÁS!
+        {props.willOverwrite ? (
+          <>
+            <p></p>
+            Já existe um sorteio para este Evento.<p></p>
+            Gerar um novo sorteio irá eliminar permanentemente o sorteio
+            anterior. <p></p>
+            Deseja continuar? Esta ação é <strong>IRREVERSÍVEL!</strong>
+          </>
+        ) : (
+          <>
+            <p></p>
+            Esta ação irá criar um novo sorteio para todos os Escalões
+            selecionados para cada uma das Modalidades.<p></p>
+            Mais tarde, e antes do dia de início da prova, poderá apagar ou
+            gerar um novo sorteio nesta página.<p></p>
+            Deseja continuar?
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Stack
@@ -81,8 +85,10 @@ export default function DeleteEventModal(
         >
           <Button
             size="small"
-            onClick={(e) => handleDelete(e, props.id)}
+            onClick={(e) => handleGenerate(e)}
             variant="contained"
+            // loading={generateDrawMutation.isPending}
+            // loadingPosition="start"
           >
             Confirmar
           </Button>

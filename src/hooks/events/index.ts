@@ -5,3 +5,4 @@ export * from "./useDeleteEvent";
 export * from "./useEventsRate";
 export * from "./useEventMembers";
 export * from "./useAnnouncementsData"
+export * from "./useGenerateDrawData"

@@ -6,6 +6,8 @@ import type { CreateMatch } from '../models/CreateMatch';
 import type { Match } from '../models/Match';
 import type { PaginatedMatchList } from '../models/PaginatedMatchList';
 import type { PatchedMatch } from '../models/PatchedMatch';
+import type { PatchedPatchMatchWinner } from '../models/PatchedPatchMatchWinner';
+import type { PatchMatchWinner } from '../models/PatchMatchWinner';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -114,6 +116,26 @@ export class MatchService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this match.
+     * @param requestBody
+     * @returns PatchMatchWinner
+     * @throws ApiError
+     */
+    public static matchSetWinnerPartialUpdate(
+        id: number,
+        requestBody?: PatchedPatchMatchWinner,
+    ): CancelablePromise<PatchMatchWinner> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/match/{id}/set_winner/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 }

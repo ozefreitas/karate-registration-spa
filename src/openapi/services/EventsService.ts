@@ -6,6 +6,8 @@ import type { AddMember } from '../models/AddMember';
 import type { CreateEvent } from '../models/CreateEvent';
 import type { DeleteMember } from '../models/DeleteMember';
 import type { Events } from '../models/Events';
+import type { GenerateDrawRequest } from '../models/GenerateDrawRequest';
+import type { GenerateDrawResponse } from '../models/GenerateDrawResponse';
 import type { PaginatedCompactEventsList } from '../models/PaginatedCompactEventsList';
 import type { PatchedEvents } from '../models/PatchedEvents';
 import type { Rating } from '../models/Rating';
@@ -182,6 +184,22 @@ export class EventsService {
     }
     /**
      * @param id A unique value identifying this event.
+     * @returns void
+     * @throws ApiError
+     */
+    public static eventsDeleteDrawDestroy(
+        id: string,
+    ): CancelablePromise<void> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/events/{id}/delete_draw/',
+            path: {
+                'id': id,
+            },
+        });
+    }
+    /**
+     * @param id A unique value identifying this event.
      * @param requestBody
      * @returns DeleteMember
      * @throws ApiError
@@ -214,6 +232,46 @@ export class EventsService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * @param id A unique value identifying this event.
+     * @param requestBody
+     * @returns GenerateDrawResponse
+     * @throws ApiError
+     */
+    public static eventsGenerateDrawCreate(
+        id: string,
+        requestBody: GenerateDrawRequest,
+    ): CancelablePromise<GenerateDrawResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/events/{id}/generate_draw/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param id A unique value identifying this event.
+     * @param requestBody
+     * @returns Events
+     * @throws ApiError
+     */
+    public static eventsGenerateDrawPdfCreate(
+        id: string,
+        requestBody: Events,
+    ): CancelablePromise<Events> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/events/{id}/generate_draw_pdf/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**

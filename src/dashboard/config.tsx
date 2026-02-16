@@ -23,13 +23,16 @@ import {
   HourglassDisabled,
   Settings,
   RecordVoiceOver,
+  Casino,
   Warning,
+  Brush,
   Report,
   EditNotifications,
   MonetizationOn,
   PointOfSale,
   ManageAccounts,
   QuestionMark,
+  Update,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -233,6 +236,7 @@ export const breadcrumbsConvertion: Record<string, any> = {
   coaches: "Treinadores Registados",
   pricing: "Planos de Subscrição",
   payment_manager: "Gestor de Pagamentos",
+  patch: "Retificar",
 };
 
 export const NotificationTypeOptions: {
@@ -267,6 +271,11 @@ export const NotificationTypeOptions: {
     icon: <QuestionMark fontSize="large" />,
   },
   {
+    value: "exam_prop",
+    label: "Pedido de Proposta para Exame",
+    icon: <Update fontSize="large" />,
+  },
+  {
     value: "rate_event",
     label: "Classificar Evento",
     icon: <StarRate fontSize="large" />,
@@ -285,6 +294,16 @@ export const NotificationTypeOptions: {
     value: "open_registrations",
     label: "Inscrições Abertas",
     icon: <EventAvailable fontSize="large" />,
+  },
+  {
+    value: "draw_available",
+    label: "Sorteio Disponível",
+    icon: <Casino fontSize="large" />,
+  },
+  {
+    value: "draw_patched",
+    label: "Sorteio Alterado",
+    icon: <Brush fontSize="large" />,
   },
   {
     value: "classifications_available",

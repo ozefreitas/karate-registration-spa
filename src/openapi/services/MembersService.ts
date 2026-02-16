@@ -166,6 +166,26 @@ export class MembersService {
         });
     }
     /**
+     * @param id A unique value identifying this member.
+     * @param requestBody
+     * @returns Members
+     * @throws ApiError
+     */
+    public static membersUploadImageCreate(
+        id: string,
+        requestBody: Members,
+    ): CancelablePromise<Members> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/members/{id}/upload-image/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
      * @returns void
      * @throws ApiError
      */

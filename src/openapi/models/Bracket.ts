@@ -2,14 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { GenderEnum } from './GenderEnum';
-import type { Type85fEnum } from './Type85fEnum';
+import type { DrawTypeEnum } from './DrawTypeEnum';
 export type Bracket = {
     readonly id: number;
     name: string;
-    type?: Type85fEnum | null;
-    gender: GenderEnum;
+    draw_type?: DrawTypeEnum | null;
     readonly created_at: string;
+    event: string;
     discipline: number;
     category: number;
 };

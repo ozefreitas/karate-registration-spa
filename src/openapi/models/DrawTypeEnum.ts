@@ -7,7 +7,7 @@
  * * `Torneio/Finais` - Torneio/Finais
  * * `Misto` - Torneio
  */
-export enum Type85fEnum {
+export enum DrawTypeEnum {
     LIGA = 'Liga',
     TORNEIO_FINAIS = 'Torneio/Finais',
     MISTO = 'Misto',

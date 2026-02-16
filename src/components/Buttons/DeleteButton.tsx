@@ -1,31 +1,24 @@
 import { Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { Delete } from "@mui/icons-material";
 
 export default function DeleteButton(
   props: Readonly<{
     label: string;
-    to: string;
+    handleModalOpen: any;
     id: string;
-    mutation: any;
     size: "small" | "medium" | "large";
-  }>
+    disabled?: boolean;
+  }>,
 ) {
-  const navigate = useNavigate();
   return (
     <Button
       sx={{ m: 1 }}
+      disabled={props.disabled}
       variant="contained"
       size={props.size}
       color="error"
       onClick={() => {
-        props.mutation(props.id, {
-          onSuccess: () => {
-            if (props.to) {
-              navigate(props.to);
-            }
-          },
-        });
+        props.handleModalOpen();
       }}
       startIcon={<Delete />}
     >

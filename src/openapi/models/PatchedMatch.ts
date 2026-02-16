@@ -8,8 +8,8 @@ export type PatchedMatch = {
     match_number?: number;
     readonly created_at?: string;
     bracket?: number;
-    athlete_red?: string;
-    athlete_blue?: string;
+    contender_1?: string | null;
+    contender_2?: string | null;
     winner?: string | null;
 };
 

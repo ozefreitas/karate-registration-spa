@@ -462,6 +462,9 @@ export default function NewMemberPage() {
                   error={!!errors.gender}
                   helperText={errors.gender?.message}
                 >
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
                   {GenderOptions.filter((item) =>
                     ["Masculino", "Feminino"].includes(item.value),
                   ).map((item, index) => (
@@ -1006,9 +1009,9 @@ export default function NewMemberPage() {
           </FormCard>
         ) : null}
         <Grid
-        m={3}
-        mr={6}
-        mb={0}
+          m={3}
+          mr={6}
+          mb={0}
           justifyContent="flex-end"
           alignItems="center"
           spacing={2}

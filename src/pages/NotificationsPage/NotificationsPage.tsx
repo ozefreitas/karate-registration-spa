@@ -43,6 +43,10 @@ const NotificationsPage = (props: { me: any }) => {
       navigate("/settings/?section=members_manager");
     } else if (noti_type === "payment_overdue") {
       navigate(`/members/${noti.target_member}/?section=payments_management`);
+    } else if (noti_type === "draw_available") {
+      navigate(`/events/${noti.target_event.id}/draw/`);
+    } else if (noti_type === "draw_patched") {
+      navigate(`/events/${noti.target_event.id}/draw/`);
     } else if (
       [
         "open_registrations",

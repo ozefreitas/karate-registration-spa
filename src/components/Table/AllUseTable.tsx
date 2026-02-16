@@ -464,8 +464,8 @@ export default function AllUseTable(
 
   return (
     <>
-      {props.data.length === 0 ? (
-        <Grid sx={{ mt: 1, mb: 3 }} container justifyContent="center" size={12}>
+      {props.data?.length === 0 ? (
+        <Grid sx={{ my: 5 }} container justifyContent="center" size={12}>
           <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
             Não foram encontrados registos.
           </Typography>
@@ -508,7 +508,7 @@ export default function AllUseTable(
                 </StyledTableRow>
               </TableHead>
               <TableBody>
-                {paginatedData.map((row: any) => {
+                {paginatedData?.map((row: any) => {
                   const isItemSelected = selected.includes(row.id);
                   return (
                     <StyledTableRow
@@ -559,7 +559,9 @@ export default function AllUseTable(
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (props.type === "Equipas") {
-                                        navigate(`/teams/${row.id}/?event=${eventId}`);
+                                        navigate(
+                                          `/teams/${row.id}/?event=${eventId}`,
+                                        );
                                       } else if (
                                         props.type === "Categorias" ||
                                         props.type === "CategoriasReadOnly" ||
@@ -611,12 +613,12 @@ export default function AllUseTable(
                                   >
                                     <Edit
                                       color={
-                                        row.can_update_sensitive !== undefined
-                                          ? props.disallowEdit &&
+                                        row.can_update_sensitive === undefined
+                                          ? "warning"
+                                          : props.disallowEdit &&
                                             row.can_update_sensitive
                                             ? "warning"
                                             : "disabled"
-                                          : "warning"
                                       }
                                     ></Edit>
                                   </IconButton>
@@ -652,12 +654,12 @@ export default function AllUseTable(
                                   >
                                     <Delete
                                       color={
-                                        row.can_update_sensitive !== undefined
-                                          ? props.disallowEdit &&
+                                        row.can_update_sensitive === undefined
+                                          ? "error"
+                                          : props.disallowEdit &&
                                             row.can_update_sensitive
                                             ? "error"
                                             : "disabled"
-                                          : "error"
                                       }
                                     ></Delete>
                                   </IconButton>

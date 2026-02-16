@@ -151,7 +151,7 @@ export default function EventCategoriesPage(
       </Grid>
       <Grid container justifyContent={"flex-end"}>
         <Button
-          sx={{ mr: 4, mt: 1 }}
+          sx={{ mr: 4, mt: 2 }}
           variant="contained"
           size={"medium"}
           type={"submit"}

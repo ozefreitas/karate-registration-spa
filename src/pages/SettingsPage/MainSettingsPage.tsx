@@ -256,6 +256,7 @@ export default function MainSettingsPage() {
     reviewed_at: string;
     created_at: string;
     status: string;
+    request_type: string;
   };
 
   const {
@@ -267,9 +268,10 @@ export default function MainSettingsPage() {
     membersHooks.useDeleteMemberValidationRequest();
 
   // Memoize `rows` to compute only when `members` changes
-  const requestsRows = useMemo(() => {
-    return memberValidationRequestData?.data.results.map(
-      (request: Request) => ({
+  const requestsVerifyRows = useMemo(() => {
+    return memberValidationRequestData?.data.results
+      .filter((request: Request) => request.request_type === "verify")
+      .map((request: Request) => ({
         id: request.id,
         memberId: request.member.id,
         message:
@@ -373,8 +375,118 @@ export default function MainSettingsPage() {
               </Tooltip>
             </Grid>
           ),
-      }),
-    );
+      }));
+  }, [memberValidationRequestData]);
+
+  // Memoize `rows` to compute only when `members` changes
+  const requestsExamsRows = useMemo(() => {
+    return memberValidationRequestData?.data.results
+      .filter((request: Request) => request.request_type === "exams")
+      .map((request: Request) => ({
+        id: request.id,
+        memberId: request.member.id,
+        message:
+          request.message === "" ? (
+            <Typography color="textDisabled">N/A</Typography>
+          ) : (
+            <Button
+              sx={{
+                borderRadius: 10,
+                boxShadow: "none",
+                "&:hover": {
+                  transform: "none",
+                  boxShadow: "none",
+                },
+                textTransform: "none",
+              }}
+              size="small"
+              variant="outlined"
+              onClick={(e) => handleClick(e, request.id, request.message)}
+            >
+              Ver
+            </Button>
+          ),
+        fullName: request.member.full_name,
+        reviewed_at:
+          request.reviewed_at === null ? (
+            <Typography color="textDisabled">Por rever</Typography>
+          ) : (
+            formatDateTime(request.reviewed_at, "both")
+          ),
+        created_at: formatDateTime(request.created_at, "both"),
+        birthDate: request.member_birth_date,
+        gender: request.member.gender === "Masculino" ? "M" : "F",
+        username: request.requested_by.username,
+        actions:
+          request.status === "rejected" ? (
+            <Grid
+              container
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Chip color="error" label="Rejeitado" icon={<Block />}></Chip>
+              <Tooltip title="Remover">
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      deleteMemberValidationRequest.mutate({
+                        validationId: request.id,
+                      });
+                    }}
+                    color="error"
+                  >
+                    <Delete color="error"></Delete>
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+          ) : request.status === "approved" ? (
+            <Grid container alignItems={"center"} justifyContent={"center"}>
+              <Chip color="success" label="Aprovado" icon={<ThumbUp />}></Chip>
+              <Tooltip title="Remover">
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      deleteMemberValidationRequest.mutate({
+                        validationId: request.id,
+                      });
+                    }}
+                    color="error"
+                  >
+                    <Delete color="error"></Delete>
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+          ) : (
+            <Grid>
+              <Tooltip arrow title="Aceitar">
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      handleActionValidationModalOpen(request.id, "approve");
+                    }}
+                    color="success"
+                  >
+                    <Check color="success"></Check>
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip arrow title="Rejeitar">
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      handleActionValidationModalOpen(request.id, "reject");
+                    }}
+                    color="error"
+                  >
+                    <Close color="error"></Close>
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+          ),
+      }));
   }, [memberValidationRequestData]);
 
   const columnMapping = [
@@ -689,7 +801,7 @@ export default function MainSettingsPage() {
                           </Button>
                         </Stack>
                       </CardActions>
-                      {createdToken !== "" ? (
+                      {createdToken === "" ? null : (
                         <CardContent>
                           <Grid container>
                             <FormLabel sx={{ mb: 2 }}>
@@ -734,7 +846,7 @@ export default function MainSettingsPage() {
                             </Tooltip>
                           </Grid>
                         </CardContent>
-                      ) : null}
+                      )}
                     </Card>
                   ) : null}
                 </Grid>
@@ -767,7 +879,7 @@ export default function MainSettingsPage() {
                     )}
                   </TextField>
 
-                  {passwordRequestedDetails !== undefined ? (
+                  {passwordRequestedDetails === undefined ? null : (
                     <Card sx={{ m: 2 }}>
                       <CardContent>
                         <FormControl
@@ -876,7 +988,7 @@ export default function MainSettingsPage() {
                           </Button>
                         </Stack>
                       </CardActions>
-                      {createdPasswordURL !== "" ? (
+                      {createdPasswordURL === "" ? null : (
                         <CardContent>
                           <Grid container>
                             <FormLabel sx={{ mb: 2 }}>
@@ -935,9 +1047,9 @@ export default function MainSettingsPage() {
                             </Grid>
                           </Grid>
                         </CardContent>
-                      ) : null}
+                      )}
                     </Card>
-                  ) : null}
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -952,9 +1064,25 @@ export default function MainSettingsPage() {
             </Grid>
           ) : isMemberValidationRequestsLoading ? null : (
             <Grid mt={5}>
+              <Typography sx={{ m: 3, mt: 5 }} variant="h5">
+                Verificação de Membros
+              </Typography>
               <AllUseTable
-                count={memberValidationRequestData?.data.count}
-                data={requestsRows}
+                count={requestsVerifyRows?.length}
+                data={requestsVerifyRows}
+                actions={false}
+                selection={false}
+                type="Atletas"
+                userRole="main_admin"
+                columnsHeaders={columnMapping}
+                overideInternalPage
+              ></AllUseTable>
+              <Typography sx={{ m: 3, mt: 5 }} variant="h5">
+                Pedidos de Propostas a Exame
+              </Typography>
+              <AllUseTable
+                count={requestsExamsRows?.length}
+                data={requestsExamsRows}
                 actions={false}
                 selection={false}
                 type="Atletas"

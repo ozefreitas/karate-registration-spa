@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { PaymentObjectEnum } from './PaymentObjectEnum';
-import type { Type736Enum } from './Type736Enum';
+import type { TypeEnum } from './TypeEnum';
 export type CreateNotifications = {
     readonly id: number;
     notification: string;
-    type?: Type736Enum;
+    type?: TypeEnum;
     payment_object?: PaymentObjectEnum;
     can_remove?: boolean;
     readonly created_at: string;

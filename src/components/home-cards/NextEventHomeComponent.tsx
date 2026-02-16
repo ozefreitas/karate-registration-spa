@@ -43,7 +43,7 @@ export default function NextEventHomeComponent(
           }}
         ></CardHeader>
         {isNextCompLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
             <CircularProgress />
           </Box>
         ) : nextCompError ? (

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteMonthlyMemberSubscription } from "../../api";
 import { useSnackbar } from "notistack";
+import { callNotiStack } from "../../utils/utils";
 
 export const useDeleteMonthlyMemberSubscription = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -9,29 +10,23 @@ export const useDeleteMonthlyMemberSubscription = () => {
   return useMutation({
     mutationFn: deleteMonthlyMemberSubscription,
     onSuccess: () => {
-      enqueueSnackbar("Pagamento removido com sucesso.", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Pagamento removido com sucesso.",
+        "success",
+        5000,
+      );
       queryClient.invalidateQueries({
         queryKey: ["member-monthly-subscription"],
       });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

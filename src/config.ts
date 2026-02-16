@@ -164,6 +164,12 @@ export const PaymentTypes: { value: string; label: string }[] = [
   { value: "events", label: "Eventos" },
 ];
 
+export const DrawFormatTypes: { value: string; label: string }[] = [
+  { value: "torneio", label: "Torneio" },
+  { value: "groups", label: "Liga" },
+  { value: "misto", label: "Misto" },
+];
+
 export const RulesOptions: {
   image: string;
   file: string;

@@ -167,7 +167,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
                       startIcon={<PersonSearch></PersonSearch>}
                       size="large"
                       onClick={() =>
-                        navigate("/settings/?section=members_manager")
+                        navigate("/members/")
                       }
                     >
                       Verificar

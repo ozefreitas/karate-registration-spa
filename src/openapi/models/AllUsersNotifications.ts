@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { PaymentObjectEnum } from './PaymentObjectEnum';
-import type { Type736Enum } from './Type736Enum';
+import type { TypeEnum } from './TypeEnum';
 export type AllUsersNotifications = {
     readonly id: number;
     notification: string;
-    type?: Type736Enum;
+    type?: TypeEnum;
     request_acount?: string | null;
     payment_object?: PaymentObjectEnum;
     can_remove?: boolean;
