@@ -12,5 +12,6 @@ export type Users = {
     username: string;
     role?: RoleEnum;
     tier?: TierEnum;
+    email?: string;
 };
 

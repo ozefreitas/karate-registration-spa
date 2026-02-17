@@ -21,6 +21,7 @@ export type UpdateEvent = {
     encounter?: boolean;
     encounter_type?: EncounterTypeEnum | null;
     rating?: number;
+    file?: string | null;
     individuals?: Array<string>;
 };
 

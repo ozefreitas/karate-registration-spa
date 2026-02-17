@@ -8,9 +8,10 @@ import {
   fetchLastFiveMembers,
   fetchMemberValidationRequests,
 } from "../../api";
-import { MembersService } from "../../openapi";
+import { PersonsService } from "../../openapi";
 
 export const useFetchMembersData = (
+  userRole: string,
   page: number,
   pageSize: number,
   ordering?: string,
@@ -24,6 +25,7 @@ export const useFetchMembersData = (
   return useQuery({
     queryKey: [
       "members",
+      userRole,
       page,
       pageSize,
       ordering,
@@ -35,7 +37,7 @@ export const useFetchMembersData = (
       users,
     ],
     queryFn: () =>
-      MembersService.membersList(
+      PersonsService.personsList(
         undefined,
         undefined,
         gender,
@@ -52,6 +54,7 @@ export const useFetchMembersData = (
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
+    enabled: ["superuser", "single_admin", "main_admin"].includes(userRole),
   });
 };
 
@@ -159,7 +162,7 @@ export const useFetchMemberValidationRequestsData = (userRole?: string) => {
 export const useFetchMemberPaymentsStatusData = () => {
   return useQuery({
     queryKey: ["members-payment-status"],
-    queryFn: MembersService.membersMembersPaymentsStatusRetrieve,
+    queryFn: PersonsService.personsMembersPaymentsStatusRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

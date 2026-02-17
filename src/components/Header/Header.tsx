@@ -178,11 +178,13 @@ export default function Header(
               sx={{ flexGrow: 1 }}
             ></Typography>
             <Stack alignItems="center" direction="row" spacing={3}>
-              <Chip
-                sx={{ p: 2 }}
-                color="info"
-                label={`Época: ${currentSeason}`}
-              ></Chip>
+              {currentSeason === "" ? null : (
+                <Chip
+                  sx={{ p: 2 }}
+                  color="info"
+                  label={`Época: ${currentSeason}`}
+                ></Chip>
+              )}
               {props.me?.data.role === undefined ? null : (
                 <Tooltip
                   title={"Consultar planos"}

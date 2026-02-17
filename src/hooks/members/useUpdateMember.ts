@@ -111,7 +111,6 @@ export const usePatchMemberValidationRequest = () => {
         preventDuplicate: true,
       });
       queryClient.invalidateQueries({ queryKey: ["members-validation"] });
-      queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
     },
     onError: () => {
       enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
@@ -135,7 +134,7 @@ export const useDeleteMemberValidationRequest = () => {
     mutationFn: ({ validationId }: { validationId: string }) =>
       deleteMemberValidationRequest(validationId),
     onSuccess: () => {
-      enqueueSnackbar("Pedido eliminado", {
+      enqueueSnackbar("Pedido eliminado.", {
         variant: "success",
         anchorOrigin: {
           vertical: "top",

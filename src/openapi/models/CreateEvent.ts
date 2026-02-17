@@ -21,5 +21,6 @@ export type CreateEvent = {
     has_categories?: boolean;
     encounter?: boolean;
     encounter_type?: EncounterTypeEnum | null;
+    file?: string | null;
 };
 

@@ -8,10 +8,12 @@ import {
   Stack,
   TextField,
   Grid,
+  styled,
 } from "@mui/material";
 import React, { useState } from "react";
 import { TransitionProps } from "notistack";
 import { membersHooks } from "../../hooks";
+import { CloudUpload } from "@mui/icons-material";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -21,6 +23,19 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
 export default function RequestModal(
   props: Readonly<{
     isOpen: boolean;
@@ -29,17 +44,22 @@ export default function RequestModal(
     requestType: "general" | "verify" | "exams";
   }>,
 ) {
-  const [requestText, setRequestText] = useState("");
+  const [requestText, setRequestText] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState(undefined);
   const createMemberValidationRequest =
     membersHooks.useCreateMemberValidationRequest();
 
   const onSubmit = () => {
-    const payload = {
-      member: props.id,
-      message: requestText,
-      request_type: props.requestType,
-    };
-    createMemberValidationRequest.mutate(payload);
+    const formData = new FormData();
+    formData.append("member", props.id);
+    formData.append("message", requestText);
+    formData.append("request_type", props.requestType);
+
+    if (selectedFile) {
+      formData.append("file", selectedFile);
+    }
+
+    createMemberValidationRequest.mutate(formData);
     props.handleClose();
   };
 
@@ -88,10 +108,27 @@ export default function RequestModal(
               propor este Membro a exame de graduação.
             </p>
             <p>
-              Terá de anexar o ficheiro assinado pelos responsáveis do clube.
+              Terá de anexar o ficheiro de Proposta de Exame assinado pelos
+              responsáveis do Clube.
             </p>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUpload />}
+            >
+              Escolher Ficheiro
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(event: any) => {
+                  setSelectedFile(event.target.files[0]);
+                }}
+                multiple
+              />
+            </Button>
             <p>
-              Introduza uma memsagem para informar o seu administrador de outras
+              Introduza uma mensagem para informar o seu administrador de outras
               informações que ache relevante para complementar à proposta de
               exame.
             </p>

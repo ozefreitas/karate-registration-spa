@@ -31,18 +31,18 @@ export class MemberValidationService {
         });
     }
     /**
-     * @param requestBody
+     * @param formData
      * @returns CreateMemberValidationRequest
      * @throws ApiError
      */
     public static memberValidationCreate(
-        requestBody: CreateMemberValidationRequest,
+        formData: CreateMemberValidationRequest,
     ): CancelablePromise<CreateMemberValidationRequest> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/member_validation/',
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
@@ -63,13 +63,13 @@ export class MemberValidationService {
     }
     /**
      * @param id A unique integer value identifying this member validation request.
-     * @param requestBody
+     * @param formData
      * @returns MemberValidationRequest
      * @throws ApiError
      */
     public static memberValidationUpdate(
         id: number,
-        requestBody: MemberValidationRequest,
+        formData: MemberValidationRequest,
     ): CancelablePromise<MemberValidationRequest> {
         return __request(OpenAPI, {
             method: 'PUT',
@@ -77,19 +77,19 @@ export class MemberValidationService {
             path: {
                 'id': id,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
      * @param id A unique integer value identifying this member validation request.
-     * @param requestBody
+     * @param formData
      * @returns PatchMemberValidationRequest
      * @throws ApiError
      */
     public static memberValidationPartialUpdate(
         id: number,
-        requestBody?: PatchedPatchMemberValidationRequest,
+        formData?: PatchedPatchMemberValidationRequest,
     ): CancelablePromise<PatchMemberValidationRequest> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -97,8 +97,8 @@ export class MemberValidationService {
             path: {
                 'id': id,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**

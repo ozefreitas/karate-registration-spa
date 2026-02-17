@@ -15,6 +15,7 @@ export type MemberValidationRequest = {
     status?: StatusEnum;
     message?: string;
     admin_comment?: string;
+    file?: string | null;
     readonly created_at: string;
     reviewed_at?: string | null;
 };

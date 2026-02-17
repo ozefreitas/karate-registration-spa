@@ -28,6 +28,7 @@ import {
   Check,
   Block,
   ThumbUp,
+  PictureAsPdf,
 } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import { authHooks, clubsHooks, adminHooks, membersHooks } from "../../hooks";
@@ -59,13 +60,18 @@ export default function MainSettingsPage() {
   const [currentValidationType, setCurrentValidationType] = useState<
     "approve" | "reject" | null
   >(null);
+  const [currentRequestType, setCurrentRequestType] = useState<
+    "general" | "verify" | "exams"
+  >("general");
 
   const handleActionValidationModalOpen = (
     id: string,
     type: "approve" | "reject",
+    request_type: "general" | "verify" | "exams",
   ) => {
     setCurrentValidationId(id);
     setCurrentValidationType(type);
+    setCurrentRequestType(request_type);
     setIsActionValidationModalOpen(true);
   };
 
@@ -257,6 +263,7 @@ export default function MainSettingsPage() {
     created_at: string;
     status: string;
     request_type: string;
+    file: any;
   };
 
   const {
@@ -353,7 +360,11 @@ export default function MainSettingsPage() {
                 <span>
                   <IconButton
                     onClick={() => {
-                      handleActionValidationModalOpen(request.id, "approve");
+                      handleActionValidationModalOpen(
+                        request.id,
+                        "approve",
+                        "verify",
+                      );
                     }}
                     color="success"
                   >
@@ -365,7 +376,11 @@ export default function MainSettingsPage() {
                 <span>
                   <IconButton
                     onClick={() => {
-                      handleActionValidationModalOpen(request.id, "reject");
+                      handleActionValidationModalOpen(
+                        request.id,
+                        "reject",
+                        "verify",
+                      );
                     }}
                     color="error"
                   >
@@ -377,6 +392,10 @@ export default function MainSettingsPage() {
           ),
       }));
   }, [memberValidationRequestData]);
+
+  const openFile = (fileUrl: string) => {
+    window.open(fileUrl, "_blank", "noopener,noreferrer");
+  };
 
   // Memoize `rows` to compute only when `members` changes
   const requestsExamsRows = useMemo(() => {
@@ -417,6 +436,27 @@ export default function MainSettingsPage() {
         birthDate: request.member_birth_date,
         gender: request.member.gender === "Masculino" ? "M" : "F",
         username: request.requested_by.username,
+        file: (
+          <Tooltip
+            arrow
+            title={
+              request.file === null ? "Ficheiro não disponível" : "Ver proposta"
+            }
+          >
+            <span>
+              <IconButton
+                onClick={() => {
+                  openFile(request.file);
+                }}
+                disabled={request.file === null}
+              >
+                <PictureAsPdf
+                  color={request.file === null ? "disabled" : "info"}
+                ></PictureAsPdf>
+              </IconButton>
+            </span>
+          </Tooltip>
+        ),
         actions:
           request.status === "rejected" ? (
             <Grid
@@ -464,7 +504,11 @@ export default function MainSettingsPage() {
                 <span>
                   <IconButton
                     onClick={() => {
-                      handleActionValidationModalOpen(request.id, "approve");
+                      handleActionValidationModalOpen(
+                        request.id,
+                        "approve",
+                        "exams",
+                      );
                     }}
                     color="success"
                   >
@@ -476,7 +520,11 @@ export default function MainSettingsPage() {
                 <span>
                   <IconButton
                     onClick={() => {
-                      handleActionValidationModalOpen(request.id, "reject");
+                      handleActionValidationModalOpen(
+                        request.id,
+                        "reject",
+                        "exams",
+                      );
                     }}
                     color="error"
                   >
@@ -489,16 +537,23 @@ export default function MainSettingsPage() {
       }));
   }, [memberValidationRequestData]);
 
-  const columnMapping = [
-    { key: "fullName", label: "Nome" },
-    { key: "birthDate", label: "Data Nascimento" },
-    { key: "gender", label: "Género" },
-    { key: "username", label: "Clube" },
-    { key: "message", label: "Mensagem" },
-    { key: "created_at", label: "Criado" },
-    { key: "reviewed_at", label: "Revisto" },
-    { key: "actions", label: "Ações" },
-  ];
+  const getColumnMapping = (type: string) => {
+    const columnMapping = [
+      { key: "fullName", label: "Nome" },
+      { key: "birthDate", label: "Data Nascimento" },
+      { key: "gender", label: "Género" },
+      { key: "username", label: "Clube" },
+      { key: "message", label: "Mensagem" },
+      { key: "created_at", label: "Criado" },
+      { key: "reviewed_at", label: "Revisto" },
+    ];
+    if (type === "exams") {
+      columnMapping.push({ key: "file", label: "Ficheiro" });
+    }
+    columnMapping.push({ key: "actions", label: "Ações" });
+
+    return columnMapping;
+  };
 
   return (
     <>
@@ -1074,7 +1129,7 @@ export default function MainSettingsPage() {
                 selection={false}
                 type="Atletas"
                 userRole="main_admin"
-                columnsHeaders={columnMapping}
+                columnsHeaders={getColumnMapping("ola")}
                 overideInternalPage
               ></AllUseTable>
               <Typography sx={{ m: 3, mt: 5 }} variant="h5">
@@ -1087,7 +1142,7 @@ export default function MainSettingsPage() {
                 selection={false}
                 type="Atletas"
                 userRole="main_admin"
-                columnsHeaders={columnMapping}
+                columnsHeaders={getColumnMapping("exams")}
                 overideInternalPage
               ></AllUseTable>
             </Grid>
@@ -1109,6 +1164,12 @@ export default function MainSettingsPage() {
         isOpen={isActionValidationModalOpen}
         id={currentValidationId}
         type={currentValidationType}
+        request_type={currentRequestType}
+        memberData={
+          memberValidationRequestData?.data.results.find(
+            (item: any) => item.id === currentValidationId,
+          )?.member
+        }
       ></ActionValidationModal>
       <Popover
         open={open}

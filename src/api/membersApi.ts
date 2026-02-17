@@ -11,7 +11,7 @@ export const fetchMembers = (
   isValidated?: boolean,
   users?: string,
 ) => {
-  return authClient.get("/members/", {
+  return authClient.get("/persons/", {
     params: {
       page: page,
       page_size: pageSize,
@@ -27,11 +27,11 @@ export const fetchMembers = (
 };
 
 export const fetchSingleMember = (memberId: string) => {
-  return authClient.get(`/members/${memberId}/`);
+  return authClient.get(`/persons/${memberId}/`);
 };
 
 export const fetchLastFiveMembers = () => {
-  return authClient.get("/members/last_five/");
+  return authClient.get("/persons/last_five/");
 };
 
 export const fetchMembersNotInEvent = (
@@ -42,7 +42,7 @@ export const fetchMembersNotInEvent = (
   teams?: boolean,
   disciplineId?: string,
 ) => {
-  return authClient.get("/members/", {
+  return authClient.get("/persons/", {
     params: {
       not_in_event: eventId,
       page: page,
@@ -59,7 +59,7 @@ export const fetchCoachesNotInEvent = (
   page: number,
   pageSize: number,
 ) => {
-  return authClient.get("/members/", {
+  return authClient.get("/persons/", {
     params: { coach_not_in_event: eventId, page: page, page_size: pageSize },
   });
 };
@@ -68,29 +68,29 @@ export const fetchMembersInCategoryGender = (
   category: string,
   gender: string,
 ) => {
-  return authClient.get("/members/", {
+  return authClient.get("/persons/", {
     params: { in_category: category, in_gender: gender },
   });
 };
 
 export const createMember = (data: any) => {
-  return authClient.post("/members/", data);
+  return authClient.post("/persons/", data);
 };
 
 export const updateMember = (memberId: string, data: any) => {
-  return authClient.put(`/members/${memberId}/`, data);
+  return authClient.put(`/persons/${memberId}/`, data);
 };
 
 export const patchMember = (memberId: string, data: any) => {
-  return authClient.patch(`/members/${memberId}/`, data);
+  return authClient.patch(`/persons/${memberId}/`, data);
 };
 
 export const deleteMember = (memberId: string) => {
-  return authClient.delete(`/members/${memberId}/`);
+  return authClient.delete(`/persons/${memberId}/`);
 };
 
 export const deleteAllMembers = () => {
-  return authClient.delete(`/members/delete_all/`);
+  return authClient.delete(`/persons/delete_all/`);
 };
 
 export const fetchDisciplineMemberNotIn = (
@@ -98,7 +98,7 @@ export const fetchDisciplineMemberNotIn = (
   eventId: string,
 ) => {
   return authClient.get(
-    `/members/${memberId}/unregistered_modalities/${eventId}/`,
+    `/persons/${memberId}/unregistered_modalities/${eventId}/`,
   );
 };
 

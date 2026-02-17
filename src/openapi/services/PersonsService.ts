@@ -2,14 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Members } from '../models/Members';
 import type { MembersPaymentsStatus } from '../models/MembersPaymentsStatus';
-import type { PaginatedMembersList } from '../models/PaginatedMembersList';
-import type { PatchedMembers } from '../models/PatchedMembers';
+import type { PaginatedPersonList } from '../models/PaginatedPersonList';
+import type { PatchedPerson } from '../models/PatchedPerson';
+import type { Person } from '../models/Person';
+import type { UploadMemberProfilePicture } from '../models/UploadMemberProfilePicture';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class MembersService {
+export class PersonsService {
     /**
      * @param coachNotInEvent
      * @param inCategory
@@ -23,10 +24,10 @@ export class MembersService {
      * @param ordering Which field to use when ordering the results.
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
-     * @returns PaginatedMembersList
+     * @returns PaginatedPersonList
      * @throws ApiError
      */
-    public static membersList(
+    public static personsList(
         coachNotInEvent?: string,
         inCategory?: string,
         inGender?: string,
@@ -39,10 +40,10 @@ export class MembersService {
         ordering?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<PaginatedMembersList> {
+    ): CancelablePromise<PaginatedPersonList> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/members/',
+            url: '/persons/',
             query: {
                 'coach_not_in_event': coachNotInEvent,
                 'in_category': inCategory,
@@ -61,48 +62,48 @@ export class MembersService {
     }
     /**
      * @param requestBody
-     * @returns Members
+     * @returns Person
      * @throws ApiError
      */
-    public static membersCreate(
-        requestBody: Members,
-    ): CancelablePromise<Members> {
+    public static personsCreate(
+        requestBody: Person,
+    ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/members/',
+            url: '/persons/',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
     /**
-     * @param id A unique value identifying this member.
-     * @returns Members
+     * @param id A unique value identifying this person.
+     * @returns Person
      * @throws ApiError
      */
-    public static membersRetrieve(
+    public static personsRetrieve(
         id: string,
-    ): CancelablePromise<Members> {
+    ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/members/{id}/',
+            url: '/persons/{id}/',
             path: {
                 'id': id,
             },
         });
     }
     /**
-     * @param id A unique value identifying this member.
+     * @param id A unique value identifying this person.
      * @param requestBody
-     * @returns Members
+     * @returns Person
      * @throws ApiError
      */
-    public static membersUpdate(
+    public static personsUpdate(
         id: string,
-        requestBody: Members,
-    ): CancelablePromise<Members> {
+        requestBody: Person,
+    ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/members/{id}/',
+            url: '/persons/{id}/',
             path: {
                 'id': id,
             },
@@ -111,18 +112,18 @@ export class MembersService {
         });
     }
     /**
-     * @param id A unique value identifying this member.
+     * @param id A unique value identifying this person.
      * @param requestBody
-     * @returns Members
+     * @returns Person
      * @throws ApiError
      */
-    public static membersPartialUpdate(
+    public static personsPartialUpdate(
         id: string,
-        requestBody?: PatchedMembers,
-    ): CancelablePromise<Members> {
+        requestBody?: PatchedPerson,
+    ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/members/{id}/',
+            url: '/persons/{id}/',
             path: {
                 'id': id,
             },
@@ -131,16 +132,16 @@ export class MembersService {
         });
     }
     /**
-     * @param id A unique value identifying this member.
+     * @param id A unique value identifying this person.
      * @returns void
      * @throws ApiError
      */
-    public static membersDestroy(
+    public static personsDestroy(
         id: string,
     ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/members/{id}/',
+            url: '/persons/{id}/',
             path: {
                 'id': id,
             },
@@ -148,17 +149,17 @@ export class MembersService {
     }
     /**
      * @param eventId
-     * @param id A unique value identifying this member.
-     * @returns Members
+     * @param id A unique value identifying this person.
+     * @returns Person
      * @throws ApiError
      */
-    public static membersUnregisteredModalitiesRetrieve(
+    public static personsUnregisteredModalitiesRetrieve(
         eventId: string,
         id: string,
-    ): CancelablePromise<Members> {
+    ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/members/{id}/unregistered_modalities/{event_id}/',
+            url: '/persons/{id}/unregistered_modalities/{event_id}/',
             path: {
                 'event_id': eventId,
                 'id': id,
@@ -166,18 +167,18 @@ export class MembersService {
         });
     }
     /**
-     * @param id A unique value identifying this member.
+     * @param id A unique value identifying this person.
      * @param requestBody
-     * @returns Members
+     * @returns Person
      * @throws ApiError
      */
-    public static membersUploadImageCreate(
+    public static personsUploadImageCreate(
         id: string,
-        requestBody: Members,
-    ): CancelablePromise<Members> {
+        requestBody?: UploadMemberProfilePicture,
+    ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/members/{id}/upload-image/',
+            url: '/persons/{id}/upload-image/',
             path: {
                 'id': id,
             },
@@ -189,30 +190,30 @@ export class MembersService {
      * @returns void
      * @throws ApiError
      */
-    public static membersDeleteAllDestroy(): CancelablePromise<void> {
+    public static personsDeleteAllDestroy(): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/members/delete_all/',
+            url: '/persons/delete_all/',
         });
     }
     /**
-     * @returns Members
+     * @returns Person
      * @throws ApiError
      */
-    public static membersLastFiveRetrieve(): CancelablePromise<Members> {
+    public static personsLastFiveRetrieve(): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/members/last_five/',
+            url: '/persons/last_five/',
         });
     }
     /**
      * @returns MembersPaymentsStatus
      * @throws ApiError
      */
-    public static membersMembersPaymentsStatusRetrieve(): CancelablePromise<MembersPaymentsStatus> {
+    public static personsMembersPaymentsStatusRetrieve(): CancelablePromise<MembersPaymentsStatus> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/members/members_payments_status/',
+            url: '/persons/members_payments_status/',
         });
     }
 }

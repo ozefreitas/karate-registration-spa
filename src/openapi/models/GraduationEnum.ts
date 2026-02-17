@@ -25,7 +25,7 @@
  * * `2` - 5º Dan
  * * `1` - 6º Dan
  */
-export enum MaxGradEnum {
+export enum GraduationEnum {
     _15 = '15',
     _14_5 = '14.5',
     _14 = '14',

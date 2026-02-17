@@ -7,5 +7,6 @@ export type CreateMemberValidationRequest = {
     message?: string;
     member: string;
     request_type?: RequestTypeEnum;
+    file?: string | null;
 };
 

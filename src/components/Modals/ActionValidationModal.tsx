@@ -7,17 +7,18 @@ import {
   DialogTitle,
   Stack,
   TextField,
-  Grid,
+  MenuItem,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TransitionProps } from "notistack";
 import { membersHooks } from "../../hooks";
+import { GraduationsOptions } from "../../config";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -26,10 +27,23 @@ export default function ActionValidationModal(
     isOpen: boolean;
     handleClose: any;
     id: string;
+    request_type: "general" | "verify" | "exams";
     type: "approve" | "reject" | null;
-  }>
+    memberData?: any;
+  }>,
 ) {
   const [requestText, setRequestText] = useState("");
+  const [selectedGrad, setSelectedGrad] = useState(
+    props.memberData?.graduation ?? "",
+  );
+
+  const patchMember = membersHooks.usePatchMemberData();
+
+  useEffect(() => {
+    if (props.memberData !== undefined) {
+      setSelectedGrad(props.memberData.graduation);
+    }
+  }, [props.memberData]);
 
   const patchMemberValidationStatus =
     membersHooks.usePatchMemberValidationRequest();
@@ -39,9 +53,22 @@ export default function ActionValidationModal(
       validationId: props.id,
       data: {
         status: props.type === "approve" ? "approved" : "rejected",
+        request_type: props.request_type,
         admin_comment: requestText,
       },
     });
+
+    // only calls the member patch if selected graduation is different from original
+    if (
+      props.request_type === "exams" &&
+      props.memberData.graduation !== selectedGrad
+    ) {
+      const payload = {
+        memberId: props.memberData.id,
+        data: { graduation: selectedGrad },
+      };
+      patchMember.mutate(payload);
+    }
     props.handleClose();
   };
 
@@ -54,7 +81,13 @@ export default function ActionValidationModal(
       }}
     >
       <DialogTitle variant="h5" sx={{ p: 3 }}>
-        {props.type === "approve" ? "Validar Membro" : "Rejeitar Membro"}
+        {props.type === "approve" && props.request_type === "verify"
+          ? "Validar Membro"
+          : props.type === "reject" && props.request_type === "verify"
+            ? "Rejeitar Membro"
+            : props.type === "approve" && props.request_type === "exams"
+              ? "Aprovar Proposta"
+              : "Rejeitar Proposta"}
       </DialogTitle>
       <DialogContent
         sx={{
@@ -62,7 +95,7 @@ export default function ActionValidationModal(
           borderTop: "1px solid lightgrey",
         }}
       >
-        {props.type === "approve" ? (
+        {props.type === "approve" && props.request_type === "verify" ? (
           <>
             <p>
               Está prestes a validar este Membro. Depois disto, este Membro
@@ -70,7 +103,7 @@ export default function ActionValidationModal(
             </p>
             <p>Pode anexar uma mensagem para informar o Clube.</p>
           </>
-        ) : (
+        ) : props.request_type === "verify" && props.type === "reject" ? (
           <>
             <p>
               Está a rejeitar a validação deste Membro. O Clube será notificado
@@ -81,21 +114,60 @@ export default function ActionValidationModal(
               deverá fazer para corrigir a informação deste Membro.
             </p>
           </>
+        ) : props.request_type === "exams" && props.type === "approve" ? (
+          <p>
+            Está prestes a aceitar a Porposta de Exame deste Membro. Depois
+            disto, este Membro transitará de graduação. <br /> Se assim o
+            desejar, pode selecionar a nova graduação deste Membro, atualizando
+            o seu perfil.
+          </p>
+        ) : (
+          <>
+            <p>
+              Está a rejeitar a Proposta de Exame desde Membro. O Clube será
+              notificado de tal, e poderá enviar uma nova Proposta logo a
+              seguir.
+            </p>
+            <p>
+              Anexe uma mensagem para informar o Clube desta decisão, e o que
+              deverá fazer para a corrigir.
+            </p>
+          </>
         )}
-        <Grid container>
+        {props.request_type === "exams" && props.type === "approve" ? (
           <TextField
             color="warning"
             variant={"outlined"}
-            label="Mensagem"
+            label="Graduação"
             fullWidth
-            multiline
-            maxRows={5}
-            value={requestText}
+            select
+            value={selectedGrad}
             onChange={(e) => {
-              setRequestText(e.target.value);
+              setSelectedGrad(e.target.value);
             }}
-          />
-        </Grid>
+          >
+            {GraduationsOptions.map((item, index) => (
+              <MenuItem key={index} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : null}
+        {props.request_type === "exams" && props.type === "approve" ? (
+          <p>Pode anexar uma mensagem para informar o Clube.</p>
+        ) : null}
+        <TextField
+          color="warning"
+          variant={"outlined"}
+          label="Mensagem"
+          fullWidth
+          multiline
+          maxRows={5}
+          value={requestText}
+          onChange={(e) => {
+            setRequestText(e.target.value);
+          }}
+        />
       </DialogContent>
       <DialogActions>
         <Stack

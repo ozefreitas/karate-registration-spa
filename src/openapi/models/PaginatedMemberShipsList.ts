@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Members } from './Members';
-export type PaginatedMembersList = {
+import type { MemberShips } from './MemberShips';
+export type PaginatedMemberShipsList = {
     count: number;
     next?: string | null;
     previous?: string | null;
-    results: Array<Members>;
+    results: Array<MemberShips>;
 };
 

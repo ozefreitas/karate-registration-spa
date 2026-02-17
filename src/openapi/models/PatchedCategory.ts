@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
-import type { MaxGradEnum } from './MaxGradEnum';
-import type { MinGradEnum } from './MinGradEnum';
+import type { GraduationEnum } from './GraduationEnum';
 export type PatchedCategory = {
     readonly id?: number;
     name?: string;
@@ -14,8 +13,8 @@ export type PatchedCategory = {
     readonly has_weight?: string;
     min_age?: number | null;
     max_age?: number | null;
-    min_grad?: MinGradEnum | null;
-    max_grad?: MaxGradEnum | null;
+    min_grad?: GraduationEnum | null;
+    max_grad?: GraduationEnum | null;
     min_weight?: number | null;
     max_weight?: number | null;
     max_athletes?: number | null;

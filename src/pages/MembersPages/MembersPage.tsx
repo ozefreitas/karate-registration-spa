@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
-import { membersHooks } from "../../hooks";
+import { membersHooks, membershipsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { MemberTypes } from "../../config";
 import MemberFilters from "../../components/filter_drawers/MemberFilters";
@@ -34,7 +34,6 @@ import {
 import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { Members } from "../../openapi";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
@@ -211,6 +210,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     isLoading: isMembersDataLoading,
     error: membersError,
   } = membersHooks.useFetchMembersData(
+    props.userRole,
     page,
     pageSize,
     ordering,
@@ -222,9 +222,19 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     selectedUsers === "" ? undefined : selectedUsers,
   );
 
-  // Memoize `rows` to compute only when `members` changes
+  const {
+    data: memberShipsData,
+    isLoading: isMemberShipsDataLoading,
+    error: memberShipsError,
+  } = membershipsHooks.useFetchMemberShipsData(
+    props.userRole,
+    page,
+    pageSize,
+    ordering,
+  );
+
   const memberRows = useMemo(() => {
-    return membersData?.results.map((member: Members) => ({
+    return membersData?.results.map((member: any) => ({
       id: member.id,
       full_name: member.full_name,
       gender: member.gender === "Masculino" ? "M" : "F",
@@ -267,6 +277,52 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       ),
     }));
   }, [membersData]);
+
+  const memberShipRows = useMemo(() => {
+    return memberShipsData?.results.map((memberShip: any) => ({
+      // id of the relation
+      id: memberShip.person.id,
+      full_name: memberShip.person.full_name,
+      gender: memberShip.person.gender === "Masculino" ? "M" : "F",
+      username: memberShip.person.club?.username,
+      member_type: MemberTypes.find((item) => item.value === memberShip.member_type)
+        ?.label,
+      age: memberShip.person.age,
+      verified: memberShip.person.is_validated ? (
+        <Tooltip arrow title="Verificado">
+          <Grid container flexDirection={"column"} alignItems={"center"}>
+            <VerifiedUser color="disabled" />
+          </Grid>
+        </Tooltip>
+      ) : memberShip.person.request_status === null ||
+        memberShip.person.request_status !== "pending" ? (
+        <Tooltip arrow title="Pedir Verificação">
+          <span>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                handleModalOpen(memberShip.id);
+              }}
+            >
+              <AccountCircle color="primary" />
+            </IconButton>
+          </span>
+        </Tooltip>
+      ) : (
+        <Tooltip arrow title="Pendente">
+          <Grid container flexDirection={"column"} alignItems={"center"}>
+            <HourglassBottom color="primary" />
+          </Grid>
+        </Tooltip>
+      ),
+      can_update_sensitive:
+        props.userRole === "main_admin" ? true : !memberShip.is_validated,
+      past_month_payment_status: memberShip.past_month_payment_status,
+      updated_by: memberShip.updated_by?.username ?? (
+        <Typography color="textDisabled">N/A</Typography>
+      ),
+    }));
+  }, [memberShipsData]);
 
   return (
     <>
@@ -321,14 +377,14 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               <>
                 <Grid
                   sx={{
-                    display: { xs: "none", md: "flex" }, // hide on xs, show on sm+
+                    display: { xs: "none", md: "flex" },
                   }}
                 >
                   <AddButton label="Adicionar" to="new_member/"></AddButton>
                 </Grid>
                 <Grid
                   sx={{
-                    display: { xs: "flex", md: "none" }, // hide on xs, show on sm+
+                    display: { xs: "flex", md: "none" },
                   }}
                 >
                   <Tooltip placement="top" title="Adicionar">
@@ -418,7 +474,206 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             </Grid>
           </Grid>
         )}
-        {isMembersDataLoading ? (
+        {props.userRole === "subed_club" ? (
+          isMemberShipsDataLoading ? (
+            <Box mt={5} display={"flex"} justifyContent={"center"}>
+              <CircularProgress />
+            </Box>
+          ) : memberShipsError ? (
+            <Grid my={3} container justifyContent="center" size={12}>
+              <ListItem sx={{ textAlign: "center" }}>
+                <ListItemText primary="Ocorreu um erro ao encontrar os Membros disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
+              </ListItem>
+              <Button
+                onClick={() => {
+                  changePage("1");
+                  setPage(1);
+                }}
+              >
+                Refrescar
+              </Button>
+            </Grid>
+          ) : memberShipsData === undefined ? null : currentView === "table" ? (
+            <Grid mt={3}>
+              <AllUseTable
+                type="Atletas"
+                data={memberShipRows}
+                count={memberShipsData?.count}
+                columnsHeaders={columnMaping}
+                actions
+                editable={["main_admin", "superuser", "subed_club"].includes(
+                  props.userRole,
+                )}
+                selection={["main_admin", "superuser", "subed_club"].includes(
+                  props.userRole,
+                )}
+                deletable={["main_admin", "superuser", "subed_club"].includes(
+                  props.userRole,
+                )}
+                page={page}
+                setPage={setPage}
+                pageSize={pageSize}
+                setPageSize={setPageSize}
+                userRole={props.userRole}
+                disallowEdit
+              ></AllUseTable>
+            </Grid>
+          ) : (
+            <Grid container spacing={3} m={2} mt={5}>
+              {memberRows?.length === 0 ? (
+                <Grid
+                  sx={{ mt: 1, mb: 3 }}
+                  container
+                  justifyContent="center"
+                  size={12}
+                >
+                  <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
+                    Não foram encontrados registos.
+                  </Typography>
+                </Grid>
+              ) : (
+                memberRows?.map((member: any, index: any) => (
+                  <Grid key={index} size={{ xl: 3, lg: 4, md: 6, xs: 12 }}>
+                    <Tooltip title="Consultar" placement="top">
+                      <Card
+                        onClick={() => {
+                          navigate(`/members/${member.id}/`);
+                        }}
+                        sx={{
+                          p: 2,
+                          height: "100%",
+                          width: "100%",
+                          transition: "0.3s",
+                          border: "4px",
+                          borderColor: "transparent",
+                          "&:hover": {
+                            transform: "translateY(-3px)",
+                            boxShadow:
+                              member.past_month_payment_status === "unpaid"
+                                ? undefined
+                                : 6,
+                            borderColor:
+                              member.past_month_payment_status === "unpaid"
+                                ? undefined
+                                : "red",
+                            cursor: "pointer",
+                          },
+                          backgroundColor:
+                            member.past_month_payment_status === "unpaid"
+                              ? "rgba(255, 165, 0, 0.10)"
+                              : undefined,
+                          borderTop:
+                            member.past_month_payment_status === "unpaid"
+                              ? "4px solid rgba(255, 165, 0, 0.7)"
+                              : undefined,
+                          borderBottom:
+                            member.past_month_payment_status === "unpaid"
+                              ? "4px solid rgba(255, 165, 0, 0.7)"
+                              : undefined,
+
+                          animation:
+                            member.past_month_payment_status === "unpaid"
+                              ? "rowWarningPulse 1.5s ease-in-out infinite"
+                              : "none",
+
+                          "@keyframes rowWarningPulse": {
+                            "0%": {
+                              backgroundColor: "rgba(255, 165, 0, 0.08)",
+                              borderTopColor: "rgba(255, 165, 0, 0.45)",
+                            },
+                            "50%": {
+                              backgroundColor: "rgba(255, 165, 0, 0.18)",
+                              borderTopColor: "rgba(255, 165, 0, 0.95)",
+                            },
+                            "100%": {
+                              backgroundColor: "rgba(255, 165, 0, 0.08)",
+                              borderTopColor: "rgba(255, 165, 0, 0.45)",
+                            },
+                          },
+                        }}
+                      >
+                        <CardContent sx={{ width: "100%" }}>
+                          <Grid
+                            container
+                            direction={"column"}
+                            size={12}
+                            spacing={2}
+                          >
+                            <Grid container justifyContent={"center"}>
+                              <Avatar
+                                {...stringAvatar(member.full_name, 128)}
+                              ></Avatar>
+                            </Grid>
+                            <Grid
+                              container
+                              justifyContent={"center"}
+                              size={12}
+                              pt={2}
+                              alignItems={"center"}
+                              textAlign={"center"}
+                            >
+                              <Typography variant="h4">
+                                {member.full_name}
+                              </Typography>
+                            </Grid>
+                            {props.userRole === "main_admin" ? null : (
+                              <Grid
+                                pb={2}
+                                size={12}
+                                container
+                                justifyContent={"center"}
+                              >
+                                {member.verified}
+                              </Grid>
+                            )}
+                            <Grid container justifyContent={"center"} size={12}>
+                              {props.userRole === "main_admin" ? null : (
+                                <Chip
+                                  variant="outlined"
+                                  label={`${member.age} anos`}
+                                ></Chip>
+                              )}
+                              <Chip
+                                sx={{
+                                  mt: props.userRole === "main_admin" ? 2 : 0,
+                                }}
+                                variant="outlined"
+                                label={
+                                  member.gender === "F"
+                                    ? "Feminino"
+                                    : "Masculino"
+                                }
+                              ></Chip>
+                            </Grid>
+                            {props.userRole === "main_admin" ? null : (
+                              <Grid
+                                container
+                                justifyContent={"center"}
+                                size={12}
+                              >
+                                <Chip
+                                  color={
+                                    member.member_type === "Treinador"
+                                      ? "secondary"
+                                      : member.member_type === "Aluno"
+                                        ? "info"
+                                        : "warning"
+                                  }
+                                  variant="outlined"
+                                  label={member.member_type}
+                                ></Chip>
+                              </Grid>
+                            )}
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Tooltip>
+                  </Grid>
+                ))
+              )}
+            </Grid>
+          )
+        ) : isMembersDataLoading ? (
           <Box mt={5} display={"flex"} justifyContent={"center"}>
             <CircularProgress />
           </Box>
@@ -480,7 +735,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                   <Tooltip title="Consultar" placement="top">
                     <Card
                       onClick={() => {
-                        navigate(`/members/${member.id}`);
+                        navigate(`/members/${member.id}/`);
                       }}
                       sx={{
                         p: 2,

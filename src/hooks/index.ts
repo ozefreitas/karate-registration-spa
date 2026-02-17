@@ -10,3 +10,4 @@ export * as classificationsHooks from "./classifications";
 export * as monthlyPaymentsHooks from "./monthlyPayments";
 export * as teamsHooks from "./teams";
 export * as drawsHooks from "./draws"
+export * as membershipsHooks from "./memberships"

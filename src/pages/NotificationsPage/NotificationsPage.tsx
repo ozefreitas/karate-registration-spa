@@ -47,6 +47,8 @@ const NotificationsPage = (props: { me: any }) => {
       navigate(`/events/${noti.target_event.id}/draw/`);
     } else if (noti_type === "draw_patched") {
       navigate(`/events/${noti.target_event.id}/draw/`);
+    } else if (noti_type === "exam_prop") {
+      navigate("/settings/?section=members_manager");
     } else if (
       [
         "open_registrations",
