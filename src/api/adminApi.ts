@@ -24,7 +24,7 @@ export const fetchMemberValidationRequests = () => {
 
 export const patchMemberValidationRequests = (
   validationId: string,
-  data: any
+  data: any,
 ) => {
   return authClient.patch(`/member_validation/${validationId}/`, data);
 };

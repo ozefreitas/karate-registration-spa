@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UploadMemberProfilePicture = {
+export type UploadPersonProfilePicture = {
     profile_image?: string;
 };
 

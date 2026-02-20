@@ -29,21 +29,21 @@ export default function ActionValidationModal(
     id: string;
     request_type: "general" | "verify" | "exams";
     type: "approve" | "reject" | null;
-    memberData?: any;
+    personData?: any;
   }>,
 ) {
   const [requestText, setRequestText] = useState("");
   const [selectedGrad, setSelectedGrad] = useState(
-    props.memberData?.graduation ?? "",
+    props.personData?.graduation ?? "",
   );
 
   const patchMember = membersHooks.usePatchMemberData();
 
   useEffect(() => {
-    if (props.memberData !== undefined) {
-      setSelectedGrad(props.memberData.graduation);
+    if (props.personData !== undefined) {
+      setSelectedGrad(props.personData.graduation);
     }
-  }, [props.memberData]);
+  }, [props.personData]);
 
   const patchMemberValidationStatus =
     membersHooks.usePatchMemberValidationRequest();
@@ -61,10 +61,10 @@ export default function ActionValidationModal(
     // only calls the member patch if selected graduation is different from original
     if (
       props.request_type === "exams" &&
-      props.memberData.graduation !== selectedGrad
+      props.personData.graduation !== selectedGrad
     ) {
       const payload = {
-        memberId: props.memberData.id,
+        personId: props.personData.id,
         data: { graduation: selectedGrad },
       };
       patchMember.mutate(payload);
@@ -136,21 +136,33 @@ export default function ActionValidationModal(
         )}
         {props.request_type === "exams" && props.type === "approve" ? (
           <TextField
+            sx={{ mt: 1 }}
             color="warning"
-            variant={"outlined"}
+            variant="outlined"
             label="Graduação"
             fullWidth
             select
             value={selectedGrad}
+            helperText="Graduações mais baixas que a atual aparecerão a cinzento, mas podem ser selecionadas."
             onChange={(e) => {
               setSelectedGrad(e.target.value);
             }}
           >
-            {GraduationsOptions.map((item, index) => (
-              <MenuItem key={index} value={item.value}>
-                {item.label}
-              </MenuItem>
-            ))}
+            {GraduationsOptions.map((item, index) => {
+              const isLowerOrEqual = item.value >= props.personData.graduation;
+
+              return (
+                <MenuItem
+                  key={index}
+                  value={item.value}
+                  sx={{
+                    color: isLowerOrEqual ? "grey.500" : "text.primary",
+                  }}
+                >
+                  {item.label}
+                </MenuItem>
+              );
+            })}
           </TextField>
         ) : null}
         {props.request_type === "exams" && props.type === "approve" ? (

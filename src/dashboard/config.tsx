@@ -32,7 +32,7 @@ import {
   PointOfSale,
   ManageAccounts,
   QuestionMark,
-  Update,
+  Upgrade,
 } from "@mui/icons-material";
 
 export const getSideMenuConfig = (userRole: string) => {
@@ -273,7 +273,7 @@ export const NotificationTypeOptions: {
   {
     value: "exam_prop",
     label: "Pedido de Proposta para Exame",
-    icon: <Update fontSize="large" />,
+    icon: <Upgrade fontSize="large" />,
   },
   {
     value: "rate_event",

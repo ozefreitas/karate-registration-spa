@@ -11,21 +11,21 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MonthlyPaymentsService {
     /**
-     * @param member
      * @param ordering Which field to use when ordering the results.
+     * @param person
      * @returns MonthlyMemberPayment
      * @throws ApiError
      */
     public static monthlyPaymentsList(
-        member?: string,
         ordering?: string,
+        person?: string,
     ): CancelablePromise<Array<MonthlyMemberPayment>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/monthly_payments/',
             query: {
-                'member': member,
                 'ordering': ordering,
+                'person': person,
             },
         });
     }
@@ -45,7 +45,7 @@ export class MonthlyPaymentsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment.
+     * @param id A unique integer value identifying this monthly person payment.
      * @returns MonthlyMemberPayment
      * @throws ApiError
      */
@@ -61,7 +61,7 @@ export class MonthlyPaymentsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment.
+     * @param id A unique integer value identifying this monthly person payment.
      * @param requestBody
      * @returns MonthlyMemberPayment
      * @throws ApiError
@@ -81,7 +81,7 @@ export class MonthlyPaymentsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment.
+     * @param id A unique integer value identifying this monthly person payment.
      * @param requestBody
      * @returns PatchMonthlyMemberPayment
      * @throws ApiError
@@ -101,7 +101,7 @@ export class MonthlyPaymentsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment.
+     * @param id A unique integer value identifying this monthly person payment.
      * @returns void
      * @throws ApiError
      */

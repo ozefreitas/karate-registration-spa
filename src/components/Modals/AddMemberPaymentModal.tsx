@@ -34,7 +34,7 @@ export default function AddMemberPaymentModal(
   props: Readonly<{
     isOpen: boolean;
     handleClose: any;
-    memberId: string;
+    personId: string;
     currentQuotesConfig: any;
   }>,
 ) {
@@ -67,7 +67,7 @@ export default function AddMemberPaymentModal(
 
   const onSubmit = (data: any) => {
     const payload = {
-      member: props.memberId,
+      person: props.personId,
       year: data.year,
       month: data.month,
       is_default: data.is_default,

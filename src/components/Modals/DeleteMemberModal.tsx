@@ -185,7 +185,22 @@ export default function DeleteMemberModal(
     >
       <DialogTitle sx={{ p: 3 }}>
         <Typography variant="h5">
-          Apagar {props.from === "Atletas" ? "Atleta" : "Inscrição"}
+          Apagar{" "}
+          {props.from === "Atletas"
+            ? "Membro(s)"
+            : props.from === "Categorias"
+              ? "Escalão(ões)"
+              : props.from === "EventCategories"
+                ? "Escalão(ões) de Evento"
+                : props.from === "Individuais" || props.from === "Modalidades"
+                  ? "Inscrição(ões)"
+                  : props.from === "Treinadores"
+                    ? "Treinador(es)?"
+                    : props.from === "Equipas"
+                      ? "Equipa(s)?"
+                      : props.from === "Pagamentos"
+                        ? "Pagamento?"
+                        : "Plano de Pagamento?"}
         </Typography>
       </DialogTitle>
       <DialogContent

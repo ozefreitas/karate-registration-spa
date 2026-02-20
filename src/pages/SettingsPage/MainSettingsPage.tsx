@@ -256,7 +256,7 @@ export default function MainSettingsPage() {
   type Request = {
     id: string;
     message: string;
-    member: Member;
+    person: Member;
     member_birth_date: string;
     requested_by: Club;
     reviewed_at: string;
@@ -271,6 +271,8 @@ export default function MainSettingsPage() {
     isLoading: isMemberValidationRequestsLoading,
   } = membersHooks.useFetchMemberValidationRequestsData();
 
+  console.log(memberValidationRequestData)
+
   const deleteMemberValidationRequest =
     membersHooks.useDeleteMemberValidationRequest();
 
@@ -280,7 +282,7 @@ export default function MainSettingsPage() {
       .filter((request: Request) => request.request_type === "verify")
       .map((request: Request) => ({
         id: request.id,
-        memberId: request.member.id,
+        memberId: request.person.id,
         message:
           request.message === "" ? (
             <Typography color="textDisabled">N/A</Typography>
@@ -302,7 +304,7 @@ export default function MainSettingsPage() {
               Ver
             </Button>
           ),
-        fullName: request.member.full_name,
+        fullName: request.person.full_name,
         reviewed_at:
           request.reviewed_at === null ? (
             <Typography color="textDisabled">Por rever</Typography>
@@ -311,7 +313,7 @@ export default function MainSettingsPage() {
           ),
         created_at: formatDateTime(request.created_at, "both"),
         birthDate: request.member_birth_date,
-        gender: request.member.gender === "Masculino" ? "M" : "F",
+        gender: request.person.gender === "Masculino" ? "M" : "F",
         username: request.requested_by.username,
         actions:
           request.status === "rejected" ? (
@@ -403,7 +405,7 @@ export default function MainSettingsPage() {
       .filter((request: Request) => request.request_type === "exams")
       .map((request: Request) => ({
         id: request.id,
-        memberId: request.member.id,
+        memberId: request.person.id,
         message:
           request.message === "" ? (
             <Typography color="textDisabled">N/A</Typography>
@@ -425,7 +427,7 @@ export default function MainSettingsPage() {
               Ver
             </Button>
           ),
-        fullName: request.member.full_name,
+        fullName: request.person.full_name,
         reviewed_at:
           request.reviewed_at === null ? (
             <Typography color="textDisabled">Por rever</Typography>
@@ -434,7 +436,7 @@ export default function MainSettingsPage() {
           ),
         created_at: formatDateTime(request.created_at, "both"),
         birthDate: request.member_birth_date,
-        gender: request.member.gender === "Masculino" ? "M" : "F",
+        gender: request.person.gender === "Masculino" ? "M" : "F",
         username: request.requested_by.username,
         file: (
           <Tooltip
@@ -538,15 +540,21 @@ export default function MainSettingsPage() {
   }, [memberValidationRequestData]);
 
   const getColumnMapping = (type: string) => {
-    const columnMapping = [
-      { key: "fullName", label: "Nome" },
-      { key: "birthDate", label: "Data Nascimento" },
-      { key: "gender", label: "Género" },
+    const columnMapping = [{ key: "fullName", label: "Nome" }];
+
+    if (type !== "exams") {
+      columnMapping.push(
+        { key: "birthDate", label: "Data Nascimento" },
+        { key: "gender", label: "Género" },
+      );
+    }
+    columnMapping.push(
       { key: "username", label: "Clube" },
       { key: "message", label: "Mensagem" },
       { key: "created_at", label: "Criado" },
       { key: "reviewed_at", label: "Revisto" },
-    ];
+    );
+
     if (type === "exams") {
       columnMapping.push({ key: "file", label: "Ficheiro" });
     }
@@ -1165,10 +1173,10 @@ export default function MainSettingsPage() {
         id={currentValidationId}
         type={currentValidationType}
         request_type={currentRequestType}
-        memberData={
+        personData={
           memberValidationRequestData?.data.results.find(
             (item: any) => item.id === currentValidationId,
-          )?.member
+          )?.person
         }
       ></ActionValidationModal>
       <Popover

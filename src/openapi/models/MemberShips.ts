@@ -2,11 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Members } from './Members';
 import type { MemberTypeEnum } from './MemberTypeEnum';
+import type { Person } from './Person';
 export type MemberShips = {
     readonly id: number;
-    person: Members;
+    person: Person;
     member_type?: MemberTypeEnum;
+    readonly creation_date: string;
+    readonly modified_date: string;
 };
 

@@ -49,7 +49,6 @@ export type { GenerateDrawResponse } from './models/GenerateDrawResponse';
 export type { GenerateToken } from './models/GenerateToken';
 export { GraduationEnum } from './models/GraduationEnum';
 export type { Match } from './models/Match';
-export type { Members } from './models/Members';
 export type { MemberShips } from './models/MemberShips';
 export type { MembersPaymentsStatus } from './models/MembersPaymentsStatus';
 export { MemberTypeEnum } from './models/MemberTypeEnum';
@@ -120,7 +119,7 @@ export type { UpdateClubSubscriptionDueDate } from './models/UpdateClubSubscript
 export type { UpdateDiscipline } from './models/UpdateDiscipline';
 export type { UpdateEvent } from './models/UpdateEvent';
 export type { UpdateTeams } from './models/UpdateTeams';
-export type { UploadMemberProfilePicture } from './models/UploadMemberProfilePicture';
+export type { UploadPersonProfilePicture } from './models/UploadPersonProfilePicture';
 export type { Username } from './models/Username';
 export type { Users } from './models/Users';
 export { WinnerEnum } from './models/WinnerEnum';

@@ -44,7 +44,7 @@ export class MonthlyMemberPaymentConfigsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment config.
+     * @param id A unique integer value identifying this monthly person payment config.
      * @returns MonthlyMemberPaymentConfig
      * @throws ApiError
      */
@@ -60,7 +60,7 @@ export class MonthlyMemberPaymentConfigsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment config.
+     * @param id A unique integer value identifying this monthly person payment config.
      * @param requestBody
      * @returns MonthlyMemberPaymentConfig
      * @throws ApiError
@@ -80,7 +80,7 @@ export class MonthlyMemberPaymentConfigsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment config.
+     * @param id A unique integer value identifying this monthly person payment config.
      * @param requestBody
      * @returns MonthlyMemberPaymentConfig
      * @throws ApiError
@@ -100,7 +100,7 @@ export class MonthlyMemberPaymentConfigsService {
         });
     }
     /**
-     * @param id A unique integer value identifying this monthly member payment config.
+     * @param id A unique integer value identifying this monthly person payment config.
      * @returns void
      * @throws ApiError
      */

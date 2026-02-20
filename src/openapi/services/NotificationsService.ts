@@ -12,26 +12,32 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class NotificationsService {
     /**
+     * @param canRemove
      * @param ordering Which field to use when ordering the results.
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
+     * @param type
      * @param userId
      * @returns PaginatedNotificationsList
      * @throws ApiError
      */
     public static notificationsList(
+        canRemove?: boolean,
         ordering?: string,
         page?: number,
         pageSize?: number,
+        type?: string,
         userId?: string,
     ): CancelablePromise<PaginatedNotificationsList> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/notifications/',
             query: {
+                'can_remove': canRemove,
                 'ordering': ordering,
                 'page': page,
                 'page_size': pageSize,
+                'type': type,
                 'user_id': userId,
             },
         });

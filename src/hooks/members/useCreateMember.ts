@@ -54,19 +54,24 @@ export const useCreateMemberValidationRequest = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createMemberValidationRequest,
-    onSuccess: () => {
+
+    onSuccess: (_data, variables) => {
+      const person = variables.person;
+
       enqueueSnackbar("Pedido para validar membro enviado!", {
         variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
+        anchorOrigin: { vertical: "top", horizontal: "center" },
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
+
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["club-members"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["last-five-members"] });
+      queryClient.invalidateQueries({
+        queryKey: ["single-member", person],
+      });
     },
     onError: (data: any) => {
       const errorData = data.response?.data || {};

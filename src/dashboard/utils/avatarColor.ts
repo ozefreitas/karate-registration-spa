@@ -17,17 +17,27 @@ export function stringToColor(string: string) {
   return color;
 }
 
-export default function stringAvatar(name: string, size?: number) {
+export default function stringAvatar(
+  name: string,
+  size?: number,
+  userRole?: string,
+) {
   return {
     sx: {
       bgcolor: stringToColor(name),
       width: size,
       height: size,
       fontSize: size ? size / 3 : undefined,
-      cursor: "pointer",
+      cursor:
+        userRole === undefined || userRole === "main_admin"
+          ? "default"
+          : "pointer",
       transition: "0.2s",
       "&:hover": {
-        filter: "brightness(0.85)",
+        filter:
+          userRole === undefined || userRole === "main_admin"
+            ? "none"
+            : "brightness(0.35)",
       },
     },
     children: `${name?.replace(/\s+/g, "").slice(0, 3).toUpperCase()}`,

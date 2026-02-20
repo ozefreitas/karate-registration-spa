@@ -5,13 +5,11 @@ import {
   fetchCoachesNotInEvent,
   fetchMembersInCategoryGender,
   fetchDisciplineMemberNotIn,
-  fetchLastFiveMembers,
   fetchMemberValidationRequests,
 } from "../../api";
 import { PersonsService } from "../../openapi";
 
 export const useFetchMembersData = (
-  userRole: string,
   page: number,
   pageSize: number,
   ordering?: string,
@@ -25,7 +23,6 @@ export const useFetchMembersData = (
   return useQuery({
     queryKey: [
       "members",
-      userRole,
       page,
       pageSize,
       ordering,
@@ -54,7 +51,6 @@ export const useFetchMembersData = (
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
-    enabled: ["superuser", "single_admin", "main_admin"].includes(userRole),
   });
 };
 
@@ -69,8 +65,8 @@ export const useFetchSingleMemberData = (memberId: any) => {
 
 export const useFetchLastFiveMembers = () => {
   return useQuery({
-    queryKey: ["lastfive-members"],
-    queryFn: fetchLastFiveMembers,
+    queryKey: ["last-five-members"],
+    queryFn: () => PersonsService.personsLastFiveList(),
     refetchOnWindowFocus: false,
   });
 };

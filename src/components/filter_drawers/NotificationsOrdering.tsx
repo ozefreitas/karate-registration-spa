@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { memberOrderingOptions } from "../../dashboard/filters";
+import { notificationOrderingOptions } from "../../dashboard/filters";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import { ArrowUpward, ArrowDownward, SwapVert } from "@mui/icons-material";
@@ -24,7 +24,7 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function MemberOrdering(
+export default function NotificationsOrdering(
   props: Readonly<{
     isLoading: boolean;
     control: any;
@@ -81,7 +81,7 @@ export default function MemberOrdering(
                       <MenuItem sx={{ color: "lightgrey" }} value="">
                         -- Selecionar --
                       </MenuItem>
-                      {memberOrderingOptions
+                      {notificationOrderingOptions
                         .filter((opt) => item.options.includes(opt.value))
                         .map((opt) => (
                           <MenuItem key={opt.value} value={opt.value}>
@@ -116,6 +116,7 @@ export default function MemberOrdering(
       </List>
       <Grid size={12} mt={5} mx={10} container>
         <Button
+        disabled={props.changedCount === 0}
           color="error"
           sx={{ width: "100%" }}
           onClick={() => props.reset()}

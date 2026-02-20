@@ -171,7 +171,9 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                     variant="h2"
                     fontWeight={400}
                   >
-                    {memberValidationRequestsData?.data?.count}
+                    {memberValidationRequestsData?.data?.results.filter(
+                      (item: any) => item.status === "pending",
+                    )?.length}
                   </Typography>
                   {memberValidationRequestsData?.data?.count > 0 ? (
                     <Button

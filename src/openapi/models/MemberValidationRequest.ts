@@ -8,7 +8,7 @@ import type { RequestTypeEnum } from './RequestTypeEnum';
 import type { StatusEnum } from './StatusEnum';
 export type MemberValidationRequest = {
     readonly id: number;
-    member: CompactMembers;
+    person: CompactMembers;
     requested_by: CompactUser;
     readonly member_birth_date: string;
     request_type?: RequestTypeEnum;

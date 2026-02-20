@@ -81,8 +81,8 @@ export const updateMember = (memberId: string, data: any) => {
   return authClient.put(`/persons/${memberId}/`, data);
 };
 
-export const patchMember = (memberId: string, data: any) => {
-  return authClient.patch(`/persons/${memberId}/`, data);
+export const patchMember = (personId: string, data: any) => {
+  return authClient.patch(`/persons/${personId}/`, data);
 };
 
 export const deleteMember = (memberId: string) => {

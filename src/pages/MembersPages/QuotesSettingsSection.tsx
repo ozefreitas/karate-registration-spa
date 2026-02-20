@@ -28,7 +28,7 @@ import AddButton from "../../components/Buttons/AddButton";
 import AddMemberPaymentModal from "../../components/Modals/AddMemberPaymentModal";
 
 const QuotesSettingsSection = (props: { quotesConfig: any }) => {
-  const { id: memberId } = useParams();
+  const { id: personId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [enabled, setEnabled] = useState<boolean>(false);
@@ -135,7 +135,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
   const { data, isLoading, error } =
     monthlyPaymentsHooks.useFetchMonthlyMemberSubscriptionsData(
       ordering,
-      memberId,
+      personId,
     );
 
   // Memoize `rows` to compute only when `members` changes
@@ -223,7 +223,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
         <Grid container justifyContent={"flex-end"} p={2} spacing={4}>
           <Grid size={6}>
             <Card
-              elevation={5}
+              elevation={4}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -281,7 +281,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
 
           <Grid size={6}>
             <Card
-              elevation={5}
+              elevation={4}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -323,7 +323,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           </Grid>
           <Grid size={6}>
             <Card
-              elevation={5}
+              elevation={4}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -376,7 +376,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           </Grid>
           <Grid size={6}>
             <Card
-              elevation={5}
+              elevation={4}
               sx={{
                 height: "100%",
                 display: "flex",
@@ -491,11 +491,11 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           paymentObj={currentPaymentObj}
         ></PatchMemberSubscriptionModal>
       )}
-      {memberId === undefined ? null : (
+      {personId === undefined ? null : (
         <AddMemberPaymentModal
           isOpen={isAddModalOpen}
           handleClose={handleAddModalClose}
-          memberId={memberId}
+          personId={personId}
           currentQuotesConfig={props.quotesConfig}
         ></AddMemberPaymentModal>
       )}

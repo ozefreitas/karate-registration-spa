@@ -22,7 +22,7 @@ import { notificationsHooks, adminHooks, eventsHooks } from "../../hooks";
 import FormCard from "../../dashboard/FormCard";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Add, NotificationsActive } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import NotificationActionModal from "./NotificationActionModal";
 import {
   getNotificationTypeIcon,
@@ -39,7 +39,13 @@ export default function NotificationManagerPage(props: { userRole: string }) {
     props.userRole,
   );
   const { data: notificationData, isLoading: isNotificationDataLoading } =
-    notificationsHooks.useFetchNotificationsData(1, 100, selectedUserId);
+    notificationsHooks.useFetchNotificationsData(
+      1,
+      100,
+      "",
+      undefined,
+      selectedUserId,
+    );
   const createNotification = notificationsHooks.useCreateNotification();
   const createAllClubsNotification =
     notificationsHooks.useCreateAllClubsNotification();

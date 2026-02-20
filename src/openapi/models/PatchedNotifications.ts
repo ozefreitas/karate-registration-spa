@@ -14,7 +14,7 @@ export type PatchedNotifications = {
     payment_object?: PaymentObjectEnum;
     can_remove?: boolean;
     readonly created_at?: string;
-    target_member?: string | null;
+    target_person?: string | null;
     club_user?: number;
 };
 

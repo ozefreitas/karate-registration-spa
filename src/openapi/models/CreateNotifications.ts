@@ -12,7 +12,7 @@ export type CreateNotifications = {
     can_remove?: boolean;
     readonly created_at: string;
     target_event?: string | null;
-    target_member?: string | null;
+    target_person?: string | null;
     club_user: number;
 };
 

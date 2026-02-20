@@ -23,6 +23,7 @@ import {
   AccountCircle,
   VerifiedUser,
   Upgrade,
+  HourglassBottom,
 } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
@@ -53,7 +54,7 @@ export default function PersonalInfoSection(
   );
 
   const canUpdateSensitive =
-    userRole === "main_admin" || !props.memberData?.data.is_validated;
+    userRole === "main_admin" || !props.memberData?.is_validated;
 
   useEffect(() => {
     if (editField === "weight") {
@@ -118,49 +119,89 @@ export default function PersonalInfoSection(
     formState: { errors, dirtyFields },
   } = useForm({
     defaultValues: {
-      firstName: props.memberData?.data.first_name,
-      lastName: props.memberData?.data.last_name,
-      age: props.memberData?.data.age,
-      graduation: props.memberData?.data.graduation,
+      firstName: props.memberData?.first_name,
+      lastName: props.memberData?.last_name,
+      age: props.memberData?.age,
+      graduation: props.memberData?.graduation,
       id_number:
-        props.memberData?.data.id_number === null
+        props.memberData?.id_number === null
           ? "N/A"
-          : props.memberData?.data.id_number,
-      gender: props.memberData?.data.gender,
+          : props.memberData?.id_number,
+      gender: props.memberData?.gender,
       taxNumber:
-        props.memberData?.data.taxpayer_number === null
+        props.memberData?.taxpayer_number === null
           ? "N/A"
-          : props.memberData?.data.taxpayer_number,
-      postCode: props.memberData?.data.post_code,
-      registrationDate: props.memberData?.data.registration_date,
+          : props.memberData?.taxpayer_number,
+      postCode: props.memberData?.post_code,
+      registrationDate: props.memberData?.registration_date,
       cardNumber:
-        props.memberData?.data.national_card_number === null
+        props.memberData?.national_card_number === null
           ? "N/A"
-          : props.memberData?.data.national_card_number,
+          : props.memberData?.national_card_number,
       address:
-        props.memberData?.data.address === null ||
-        props.memberData?.data.address === ""
+        props.memberData?.address === null || props.memberData?.address === ""
           ? "N/A"
-          : props.memberData?.data.address,
-      competitor: props.memberData?.data.member_type === "athlete",
-      birthDate: props.memberData?.data.birth_date,
-      quotesLegible: props.memberData?.data.quotes_legible,
+          : props.memberData?.address,
+      competitor: props.memberData?.member_types?.includes("athlete"),
+      birthDate: props.memberData?.birth_date,
+      quotesLegible: props.memberData?.quotes_legible,
       weight:
-        props.memberData?.data.weight === null
-          ? "N/A"
-          : props.memberData?.data.weight,
+        props.memberData?.weight === null ? "N/A" : props.memberData?.weight,
       observations:
-        props.memberData?.data.observations === null ||
-        props.memberData?.data.observations === ""
+        props.memberData?.observations === null ||
+        props.memberData?.observations === ""
           ? "N/A"
-          : props.memberData?.data.observations,
+          : props.memberData?.observations,
       conditions:
-        props.memberData?.data.conditions === null ||
-        props.memberData?.data.conditions === ""
+        props.memberData?.conditions === null ||
+        props.memberData?.conditions === ""
           ? "N/A"
-          : props.memberData?.data.conditions,
+          : props.memberData?.conditions,
     },
   });
+
+  useEffect(() => {
+    reset({
+      firstName: props.memberData?.first_name,
+      lastName: props.memberData?.last_name,
+      age: props.memberData?.age,
+      graduation: props.memberData?.graduation,
+      id_number:
+        props.memberData?.id_number === null
+          ? "N/A"
+          : props.memberData?.id_number,
+      gender: props.memberData?.gender,
+      taxNumber:
+        props.memberData?.taxpayer_number === null
+          ? "N/A"
+          : props.memberData?.taxpayer_number,
+      postCode: props.memberData?.post_code,
+      registrationDate: props.memberData?.registration_date,
+      cardNumber:
+        props.memberData?.national_card_number === null
+          ? "N/A"
+          : props.memberData?.national_card_number,
+      address:
+        props.memberData?.address === null || props.memberData?.address === ""
+          ? "N/A"
+          : props.memberData?.address,
+      competitor: props.memberData?.member_types?.includes("athlete"),
+      birthDate: props.memberData?.birth_date,
+      quotesLegible: props.memberData?.quotes_legible,
+      weight:
+        props.memberData?.weight === null ? "N/A" : props.memberData?.weight,
+      observations:
+        props.memberData?.observations === null ||
+        props.memberData?.observations === ""
+          ? "N/A"
+          : props.memberData?.observations,
+      conditions:
+        props.memberData?.conditions === null ||
+        props.memberData?.conditions === ""
+          ? "N/A"
+          : props.memberData?.conditions,
+    });
+  }, [props.memberData]);
 
   const onSubmit = (data: any) => {
     if (isFloat(data.weight)) {
@@ -180,12 +221,12 @@ export default function PersonalInfoSection(
       // || !["main_admin", "superuser"].includes(userRole)
     ) {
       const payload = {
-        memberId: props.memberData?.data.id,
+        personId: props.memberData?.id,
         data: { weight: data.weight },
       };
       patchMember.mutateAsync(payload, {
         onError: () => {
-          setValue("weight", props.memberData?.data.weight);
+          setValue("weight", props.memberData?.weight);
         },
       });
     } else {
@@ -224,7 +265,7 @@ export default function PersonalInfoSection(
             ? null
             : data.observations,
         member_type:
-          props.memberData?.data.member_type === "coach"
+          props.memberData?.member_type === "coach"
             ? "coach"
             : data.competitor
               ? "athlete"
@@ -235,7 +276,7 @@ export default function PersonalInfoSection(
           data.weight === "N/A" || data.weight === "" ? null : data.weight,
       };
       const updateData = {
-        memberId: props.memberData?.data.id,
+        memberId: props.memberData?.id,
         data: formData,
       };
       updateMember.mutate(updateData, {
@@ -279,7 +320,7 @@ export default function PersonalInfoSection(
           >
             INFORMAÇÕES PESSOAIS
           </Typography>
-          {props.memberData?.data.is_validated ? (
+          {props.memberData?.is_validated ? (
             <Tooltip title="Verificado">
               <VerifiedUser color="info" fontSize="large" />
             </Tooltip>
@@ -709,32 +750,43 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
           <Grid container flexDirection={"column"} alignItems={"center"}>
-            <Tooltip
-              arrow
-              placement="top"
-              title={
-                props.memberData?.data.is_validated
-                  ? "Pedir Proposta Exame"
-                  : "Precisa de verificar este Membro para o propor a Exame."
-              }
-            >
-              <span>
-                <IconButton
-                  disabled={!props.memberData?.data.is_validated}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRequestExamModalOpen();
-                  }}
-                >
-                  <Upgrade
-                    fontSize="large"
-                    color={
-                      props.memberData?.data.is_validated ? "info" : "disabled"
-                    }
-                  />
-                </IconButton>
-              </span>
-            </Tooltip>
+            {props.memberData.exam_request_status === "pending" ? (
+              <Tooltip arrow placement="top" title="Pendente">
+                <span>
+                  <HourglassBottom fontSize="medium" color="info" />
+                </span>
+              </Tooltip>
+            ) : (
+              <Tooltip
+                arrow
+                placement="top"
+                title={
+                  props.memberData?.is_validated
+                    ? "Pedir Proposta de Exame"
+                    : "Precisa de verificar este Membro para o propor a Exame."
+                }
+              >
+                <span>
+                  <IconButton
+                    disabled={!props.memberData?.is_validated || isEditMode}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRequestExamModalOpen();
+                    }}
+                    color={"info"}
+                  >
+                    <Upgrade
+                      fontSize="large"
+                      color={
+                        props.memberData?.is_validated && !isEditMode
+                          ? "info"
+                          : "disabled"
+                      }
+                    />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )}
           </Grid>
         </FormControl>
         <FormControl
@@ -857,7 +909,7 @@ export default function PersonalInfoSection(
             }
           ></FormControlLabel>
         </FormControl>
-        {props.memberData?.data.member_type === "coach" ||
+        {props.memberData?.member_type === "coach" ||
         userRole === "main_admin" ? null : (
           <Controller
             name="competitor"
@@ -896,7 +948,7 @@ export default function PersonalInfoSection(
             )}
           />
         )}
-        {!["subed_club", "single_admin"].includes(userRole) ? null : (
+        {["subed_club", "single_admin"].includes(userRole) ? (
           <Controller
             name="quotesLegible"
             control={control}
@@ -933,7 +985,7 @@ export default function PersonalInfoSection(
               </FormControl>
             )}
           />
-        )}
+        ) : null}
         <FormControl
           component="fieldset"
           variant="standard"
@@ -1290,14 +1342,14 @@ export default function PersonalInfoSection(
       <DuplicateMemberModal
         handleModalClose={handleDuplicateModalClose}
         isModalOpen={isDuplicateModalOpen}
-        memberData={props.memberData?.data}
+        memberData={props.memberData}
       ></DuplicateMemberModal>
       <DeleteMemberModal
         from="Atletas"
         handleModalClose={handleModalClose}
         handleModalOpen={handleModalOpen}
         isModalOpen={isDeleteMemberModalOpen}
-        id={props.memberData?.data.id}
+        id={props.memberData?.id}
       ></DeleteMemberModal>
       <WeightConfirmModal
         handleModalClose={handleWeightModalClose}
@@ -1306,7 +1358,7 @@ export default function PersonalInfoSection(
         id={searchParams.get("event_id")}
       ></WeightConfirmModal>
       <RequestModal
-        id={props.memberData?.data.id}
+        id={props.memberData?.id}
         isOpen={isRequestModalOpen}
         handleClose={handleRequestExamModalClose}
         requestType="exams"

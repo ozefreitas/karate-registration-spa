@@ -27,6 +27,15 @@ export const categoryFilteringAgeOptions: { value: string; label: string }[] = [
   { value: "maxWeight", label: "Peso Máximo" },
 ];
 
+export const notificationOrderingOptions: { value: string; label: string }[] = [
+  { value: "notification", label: "Ascendente" },
+  { value: "-notification", label: "Descendente" },
+  { value: "type", label: "Ascendente" },
+  { value: "-type", label: "Descendente" },
+  { value: "created_at", label: "Ascendente" },
+  { value: "-created_at", label: "Descendente (default)" },
+];
+
 export const categoryOrderingOptions: { value: string; label: string }[] = [
   { value: "name", label: "Ascendente" },
   { value: "-name", label: "Descendente" },

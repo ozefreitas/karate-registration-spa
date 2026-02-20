@@ -6,6 +6,7 @@ import {
   patchMemberValidationRequests,
   deleteMemberValidationRequest,
 } from "../../api";
+import { PersonsService } from "../../openapi";
 
 export const useUpdateMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -62,8 +63,8 @@ export const usePatchMemberData = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ memberId, data }: { memberId: string; data: any }) =>
-      patchMember(memberId, data),
+    mutationFn: ({ personId, data }: { personId: string; data: any }) =>
+      patchMember(personId, data),
     onSuccess: () => {
       enqueueSnackbar("Membro atualizado com sucesso!", {
         variant: "success",

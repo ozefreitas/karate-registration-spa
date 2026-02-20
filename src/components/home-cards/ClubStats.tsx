@@ -15,9 +15,10 @@ import {
 import { adminHooks } from "../../hooks";
 
 export default function ClubStats() {
-  const { data: ClubMembersData, isLoading: isClubMembersLoading } =
+  const { data: clubMembersData, isLoading: isClubMembersLoading } =
     adminHooks.useFetchClubMembersData();
 
+  console.log(clubMembersData)
   const CustomTooltip = ({ active, payload }: any) => {
     const isVisible = active && payload && payload.length;
     return (
@@ -35,7 +36,7 @@ export default function ClubStats() {
     );
   };
 
-  const totals = ClubMembersData?.data.reduce(
+  const totals = clubMembersData?.data.reduce(
     (acc: any, user: any) => {
       acc.student += user.student_count || 0;
       acc.coach += user.coach_count || 0;
@@ -82,14 +83,14 @@ export default function ClubStats() {
                     {/* <Legend layout="vertical" align="right" verticalAlign="middle" /> */}
                     <Pie
                       dataKey={`${item}_count`}
-                      data={ClubMembersData?.data}
+                      data={clubMembersData?.data}
                       cx="50%"
                       cy="50%"
                       outerRadius={120}
                       // fill="#8884d8"
                       label
                     >
-                      {ClubMembersData?.data.map(
+                      {clubMembersData?.data.map(
                         (entry: any, index: string) => (
                           <Cell
                             key={`cell-${index}`}

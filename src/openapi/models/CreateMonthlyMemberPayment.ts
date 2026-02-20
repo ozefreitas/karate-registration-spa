@@ -10,6 +10,6 @@ export type CreateMonthlyMemberPayment = {
     is_default?: boolean;
     year: number;
     month: number;
-    member: string;
+    person: string;
 };
 

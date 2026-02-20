@@ -5,7 +5,7 @@
 import type { RequestTypeEnum } from './RequestTypeEnum';
 export type CreateMemberValidationRequest = {
     message?: string;
-    member: string;
+    person: string;
     request_type?: RequestTypeEnum;
     file?: string | null;
 };

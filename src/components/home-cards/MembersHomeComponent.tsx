@@ -19,23 +19,11 @@ import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
-import { MemberTypes } from "../../config";
+import { Person as PersonType } from "../../openapi";
 
 export default function MembersHomeComponent(
   props: Readonly<{ userRole: string }>,
 ) {
-  type Member = {
-    id: string;
-    full_name: string;
-    age: string;
-    graduation: string;
-    category: string;
-    match_type: string;
-    gender: string;
-    member_type: string;
-    past_month_payment_status: string;
-  };
-
   const navigate = useNavigate();
 
   const {
@@ -82,7 +70,7 @@ export default function MembersHomeComponent(
               />
             </ListItemButton>
           </ListItem>
-        ) : lastFiveMembersData?.data.length === 0 ? (
+        ) : lastFiveMembersData?.length === 0 ? (
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ m: 0 }}>
               <ListItemIcon>
@@ -95,7 +83,7 @@ export default function MembersHomeComponent(
           </ListItem>
         ) : (
           <List>
-            {lastFiveMembersData?.data.map((member: Member, index: number) => (
+            {lastFiveMembersData?.map((person: PersonType, index: number) => (
               <ListItem key={index} sx={{ m: 0, pb: 0 }}>
                 <Tooltip title={"Consultar"} placement="right">
                   <span style={{ width: "100%" }}>
@@ -104,7 +92,7 @@ export default function MembersHomeComponent(
                         minWidth: 0,
                       }}
                       onClick={() =>
-                        navigate(`members/${member.id}/?section=personal_info`)
+                        navigate(`members/${person.id}/?section=personal_info`)
                       }
                     >
                       <ListItemIcon>
@@ -132,12 +120,12 @@ export default function MembersHomeComponent(
                               width: "max-content",
                             }}
                           >
-                            <Typography>{member.full_name}</Typography>
-                            <Chip
+                            <Typography>{person.full_name}</Typography>
+                            {/* <Chip
                               color={
-                                member.member_type === "coach"
+                                person.member_type === "coach"
                                   ? "secondary"
-                                  : member.member_type === "student"
+                                  : person.member_type === "student"
                                     ? "info"
                                     : "warning"
                               }
@@ -145,26 +133,29 @@ export default function MembersHomeComponent(
                               label={`${
                                 MemberTypes.find(
                                   (item: any) =>
-                                    item.value === member.member_type,
+                                    item.value === person.member_type,
                                 )?.label
                               }`}
+                            ></Chip> */}
+                            <Chip
+                              variant="outlined"
+                              label={person.gender}
                             ></Chip>
                             <Chip
                               variant="outlined"
-                              label={member.gender}
+                              label={`${person.age} anos`}
                             ></Chip>
-                            <Chip
-                              variant="outlined"
-                              label={`${member.age} anos`}
-                            ></Chip>
-                            <Chip
-                              color={
-                                member.past_month_payment_status === "unpaid"
-                                  ? "error"
-                                  : "success"
-                              }
-                              label={`Quotas: ${member.past_month_payment_status === "unpaid" ? "Em Falta" : "Pago"}`}
-                            ></Chip>
+                            {person.past_month_payment_status ===
+                            null ? null : (
+                              <Chip
+                                color={
+                                  person.past_month_payment_status === "unpaid"
+                                    ? "error"
+                                    : "success"
+                                }
+                                label={`Quotas: ${person.past_month_payment_status === "unpaid" ? "Em Falta" : "Pago"}`}
+                              ></Chip>
+                            )}
                           </Grid>
                         }
                       />

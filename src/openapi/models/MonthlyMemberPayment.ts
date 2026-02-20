@@ -8,7 +8,7 @@ export type MonthlyMemberPayment = {
     readonly inside_limit: string;
     readonly predefined_amount: string;
     readonly is_custom: string;
-    member: CompactMembers;
+    person: CompactMembers;
     year: number;
     month: number;
     amount: string;

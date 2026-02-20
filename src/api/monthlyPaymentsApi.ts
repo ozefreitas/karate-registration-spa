@@ -30,7 +30,7 @@ export const fetchMonthlyMemberSubscriptions = (
 ) => {
   return authClient.get("/monthly_payments/", {
     params: {
-      member: memberId,
+      person: memberId,
       ordering: ordering,
     },
   });

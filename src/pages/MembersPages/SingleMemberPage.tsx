@@ -23,9 +23,7 @@ import {
 } from "react-router-dom";
 import RegistryHistorySection from "./RegistryHistorySection";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import { MemberTypes } from "../../config";
 import {
-  OpenInNew,
   ArrowRight,
   ArrowLeft,
   PhotoCamera,
@@ -33,6 +31,7 @@ import {
   Cancel,
 } from "@mui/icons-material";
 import { useRef, useState } from "react";
+import { MemberTypes } from "../../config";
 
 export default function SingleMemberPage(
   props: Readonly<{ userRole: string }>,
@@ -41,7 +40,7 @@ export default function SingleMemberPage(
   const { id: memberId } = useParams<{ id: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isHovered, setIsHovered] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<any>(undefined);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const section = searchParams.get("section") || "personal_info";
@@ -56,7 +55,13 @@ export default function SingleMemberPage(
     error: singleMemberError,
   } = membersHooks.useFetchSingleMemberData(memberId);
 
-  const avatarData = stringAvatar(singleMemberData?.data.full_name, 256);
+  const uploadPersonProfilePicture = membersHooks.usePatchMemberData();
+
+  const avatarData = stringAvatar(
+    singleMemberData?.data.full_name,
+    256,
+    props.userRole,
+  );
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -66,16 +71,21 @@ export default function SingleMemberPage(
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image");
-      return;
-    }
-
     setSelectedFile(file);
   };
 
+  const onSubmit = () => {
+    const formData = new FormData();
+    if (selectedFile) {
+      formData.append("profile_image", selectedFile);
+    }
+    uploadPersonProfilePicture.mutate({
+      personId: memberId!,
+      data: formData,
+    });
+  };
+
   const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
-  console.log(previewUrl);
 
   return (
     <>
@@ -119,22 +129,22 @@ export default function SingleMemberPage(
           <Grid container justifyContent={"space-between"} m={2}>
             <Button
               onClick={() => {
-                if (singleMemberData?.data.next_prev.prev !== null) {
-                  navigate(`/members/${singleMemberData?.data.next_prev.prev}`);
+                if (singleMemberData?.data.next_prev.next !== null) {
+                  navigate(`/members/${singleMemberData?.data.next_prev.next}`);
                 }
               }}
-              disabled={singleMemberData?.data.next_prev?.prev === null}
+              disabled={singleMemberData?.data.next_prev?.next === null}
               startIcon={<ArrowLeft></ArrowLeft>}
             >
               Membro Anterior
             </Button>
             <Button
               onClick={() => {
-                if (singleMemberData?.data.next_prev.next !== null) {
-                  navigate(`/members/${singleMemberData?.data.next_prev.next}`);
+                if (singleMemberData?.data.next_prev.prev !== null) {
+                  navigate(`/members/${singleMemberData?.data.next_prev.prev}`);
                 }
               }}
-              disabled={singleMemberData?.data.next_prev?.next === null}
+              disabled={singleMemberData?.data.next_prev?.prev === null}
               endIcon={<ArrowRight></ArrowRight>}
             >
               Membro Seguinte
@@ -156,38 +166,68 @@ export default function SingleMemberPage(
                   justifyContent="center"
                   spacing={2}
                   alignContent="flex-start"
-                  sx={{ backgroundColor: "lightgray", p: 4 }}
+                  p={4}
+                  pt={6}
+                  sx={{ backgroundColor: "lightgray" }}
                 >
                   {singleMemberData ? (
-                    <Avatar
-                      src={
-                        previewUrl ||
-                        singleMemberData?.data.profile_image ||
-                        undefined
+                    <Tooltip
+                      placement="top"
+                      disableHoverListener={props.userRole === "main_admin"}
+                      title={
+                        singleMemberData?.data.profile_image || previewUrl
+                          ? "Alterar Foto"
+                          : "Adicionar Foto"
                       }
-                      {...avatarData}
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                      onClick={() => handleAvatarClick()}
                     >
-                      {isHovered ? (
-                        <PhotoCamera sx={{ color: "white" }} />
-                      ) : (
-                        !previewUrl &&
-                        !singleMemberData?.data.profile_image &&
-                        avatarData.children
-                      )}
-                    </Avatar>
+                      <Avatar
+                        src={
+                          previewUrl ||
+                          singleMemberData?.data.profile_image ||
+                          undefined
+                        }
+                        {...avatarData}
+                        onMouseEnter={() => {
+                          if (props.userRole !== "main_admin") {
+                            setIsHovered(true);
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (props.userRole !== "main_admin") {
+                            setIsHovered(false);
+                          }
+                        }}
+                        onClick={() => {
+                          if (props.userRole !== "main_admin") {
+                            handleAvatarClick();
+                          }
+                        }}
+                      >
+                        {isHovered ? (
+                          <PhotoCamera sx={{ color: "white" }} />
+                        ) : (
+                          !previewUrl &&
+                          !singleMemberData?.data.profile_image &&
+                          avatarData.children
+                        )}
+                      </Avatar>
+                    </Tooltip>
                   ) : (
                     <Avatar sx={{ width: 256, height: 256, mb: 2 }}></Avatar>
                   )}
                   {previewUrl !== null && props.userRole !== "main_admin" ? (
-                    <Grid container>
+                    <Grid
+                      container
+                      justifyContent={"center"}
+                      spacing={1}
+                      mt={1}
+                    >
                       <Chip
                         color="success"
-                        variant="outlined"
                         sx={{ p: 1 }}
-                        onClick={() => {}}
+                        onClick={() => {
+                          onSubmit();
+                        }}
                         clickable
                         icon={<Check />}
                         size="small"
@@ -195,10 +235,9 @@ export default function SingleMemberPage(
                       ></Chip>
                       <Chip
                         color="error"
-                        variant="outlined"
                         sx={{ p: 1 }}
                         onClick={() => {
-                          setSelectedFile(null);
+                          setSelectedFile(undefined);
                         }}
                         clickable
                         icon={<Cancel />}
@@ -211,7 +250,9 @@ export default function SingleMemberPage(
                     container
                     justifyContent="center"
                     size={12}
-                    sx={{ m: 3, mb: 1 }}
+                    m={2}
+                    mb={1}
+                    mt={5}
                   >
                     <Typography
                       sx={{ fontWeight: "bold", textAlign: "center" }}
@@ -230,45 +271,34 @@ export default function SingleMemberPage(
                       {singleMemberData?.data.birth_date}
                     </Typography>
                   </Grid>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    size={8}
-                    alignItems={"center"}
-                  >
-                    <Typography variant="h5">
-                      {
-                        MemberTypes.find(
-                          (item) =>
-                            item.value === singleMemberData?.data.member_type,
-                        )?.label
-                      }
-                    </Typography>
-                    {singleMemberData?.data.has_another !== null &&
-                    props.userRole !== "main_admin" ? (
-                      <Tooltip title="Navegar para correspondente" arrow>
-                        <Chip
-                          color="primary"
-                          variant="outlined"
-                          sx={{ p: 1 }}
-                          onClick={() =>
-                            navigate(
-                              `/members/${singleMemberData?.data.has_another}/`,
-                            )
-                          }
-                          clickable
-                          icon={<OpenInNew />}
-                          size="small"
-                          label={
-                            singleMemberData?.data.member_type === "coach"
-                              ? "Aluno/Competidor"
-                              : "Treinador"
-                          }
-                        ></Chip>
-                      </Tooltip>
-                    ) : null}
-                  </Grid>
-
+                  {props.userRole === "main_admin" ? null : (
+                    <Grid
+                      mt={3}
+                      container
+                      spacing={1}
+                      justifyContent={"center"}
+                    >
+                      {singleMemberData?.data.member_types.map(
+                        (types: string, index: any) => (
+                          <Chip
+                            variant="outlined"
+                            color={
+                              types === "coach"
+                                ? "secondary"
+                                : types === "student"
+                                  ? "info"
+                                  : "warning"
+                            }
+                            key={index}
+                            label={
+                              MemberTypes.find((item) => item.value === types)
+                                ?.label
+                            }
+                          ></Chip>
+                        ),
+                      )}
+                    </Grid>
+                  )}
                   <Grid
                     container
                     justifyContent="center"
@@ -389,7 +419,7 @@ export default function SingleMemberPage(
                 <Grid size={9} sx={{ p: 4 }}>
                   {section === "personal_info" ? (
                     <PersonalInfoSection
-                      memberData={singleMemberData}
+                      memberData={singleMemberData?.data}
                     ></PersonalInfoSection>
                   ) : section === "registration_history" ? (
                     <RegistryHistorySection></RegistryHistorySection>

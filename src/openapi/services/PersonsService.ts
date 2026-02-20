@@ -6,7 +6,7 @@ import type { MembersPaymentsStatus } from '../models/MembersPaymentsStatus';
 import type { PaginatedPersonList } from '../models/PaginatedPersonList';
 import type { PatchedPerson } from '../models/PatchedPerson';
 import type { Person } from '../models/Person';
-import type { UploadMemberProfilePicture } from '../models/UploadMemberProfilePicture';
+import type { UploadPersonProfilePicture } from '../models/UploadPersonProfilePicture';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -61,18 +61,18 @@ export class PersonsService {
         });
     }
     /**
-     * @param requestBody
+     * @param formData
      * @returns Person
      * @throws ApiError
      */
     public static personsCreate(
-        requestBody: Person,
+        formData: Person,
     ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/persons/',
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
@@ -93,13 +93,13 @@ export class PersonsService {
     }
     /**
      * @param id A unique value identifying this person.
-     * @param requestBody
+     * @param formData
      * @returns Person
      * @throws ApiError
      */
     public static personsUpdate(
         id: string,
-        requestBody: Person,
+        formData: Person,
     ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'PUT',
@@ -107,19 +107,19 @@ export class PersonsService {
             path: {
                 'id': id,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
      * @param id A unique value identifying this person.
-     * @param requestBody
+     * @param formData
      * @returns Person
      * @throws ApiError
      */
     public static personsPartialUpdate(
         id: string,
-        requestBody?: PatchedPerson,
+        formData?: PatchedPerson,
     ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -127,8 +127,8 @@ export class PersonsService {
             path: {
                 'id': id,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
@@ -168,13 +168,13 @@ export class PersonsService {
     }
     /**
      * @param id A unique value identifying this person.
-     * @param requestBody
+     * @param formData
      * @returns Person
      * @throws ApiError
      */
     public static personsUploadImageCreate(
         id: string,
-        requestBody?: UploadMemberProfilePicture,
+        formData?: UploadPersonProfilePicture,
     ): CancelablePromise<Person> {
         return __request(OpenAPI, {
             method: 'POST',
@@ -182,8 +182,8 @@ export class PersonsService {
             path: {
                 'id': id,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
         });
     }
     /**
@@ -197,13 +197,46 @@ export class PersonsService {
         });
     }
     /**
+     * @param coachNotInEvent
+     * @param inCategory
+     * @param inGender
+     * @param inMemberType
+     * @param inUser
+     * @param isQuotesLegible
+     * @param isValidated
+     * @param monthlyPaymentStatus
+     * @param notInEvent
+     * @param ordering Which field to use when ordering the results.
      * @returns Person
      * @throws ApiError
      */
-    public static personsLastFiveRetrieve(): CancelablePromise<Person> {
+    public static personsLastFiveList(
+        coachNotInEvent?: string,
+        inCategory?: string,
+        inGender?: string,
+        inMemberType?: string,
+        inUser?: string,
+        isQuotesLegible?: boolean,
+        isValidated?: boolean,
+        monthlyPaymentStatus?: string,
+        notInEvent?: string,
+        ordering?: string,
+    ): CancelablePromise<Array<Person>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/last_five/',
+            query: {
+                'coach_not_in_event': coachNotInEvent,
+                'in_category': inCategory,
+                'in_gender': inGender,
+                'in_member_type': inMemberType,
+                'in_user': inUser,
+                'is_quotes_legible': isQuotesLegible,
+                'is_validated': isValidated,
+                'monthly_payment_status': monthlyPaymentStatus,
+                'not_in_event': notInEvent,
+                'ordering': ordering,
+            },
         });
     }
     /**

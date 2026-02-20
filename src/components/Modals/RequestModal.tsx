@@ -51,7 +51,7 @@ export default function RequestModal(
 
   const onSubmit = () => {
     const formData = new FormData();
-    formData.append("member", props.id);
+    formData.append("person", props.id);
     formData.append("message", requestText);
     formData.append("request_type", props.requestType);
 
@@ -124,7 +124,6 @@ export default function RequestModal(
                 onChange={(event: any) => {
                   setSelectedFile(event.target.files[0]);
                 }}
-                multiple
               />
             </Button>
             <p>

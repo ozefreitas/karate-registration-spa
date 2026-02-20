@@ -147,7 +147,11 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
                           </Typography>
 
                           <Typography
-                            color="error"
+                            color={
+                              memberPaymentStatusData?.unpaid_members === 0
+                                ? "textDisabled"
+                                : "error"
+                            }
                             variant="h2"
                             fontWeight={400}
                           >
@@ -166,9 +170,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
                       variant="contained"
                       startIcon={<PersonSearch></PersonSearch>}
                       size="large"
-                      onClick={() =>
-                        navigate("/members/")
-                      }
+                      onClick={() => navigate("/members/")}
                     >
                       Verificar
                     </Button>

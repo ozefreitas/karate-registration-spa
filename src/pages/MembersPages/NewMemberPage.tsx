@@ -41,7 +41,10 @@ export default function NewMemberPage() {
   const userRole = user?.data.role;
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { data: clubUserData } = adminHooks.useFetchClubUsersData();
+  const { data: clubUserData } = adminHooks.useFetchClubUsersData(
+    undefined,
+    userRole,
+  );
   const createMember = membersHooks.useCreateMember();
 
   const {
@@ -88,7 +91,7 @@ export default function NewMemberPage() {
   const is_force_registration_date = watch("force_registration_date");
 
   const onSubmit = async (data: any, mode: "redirect" | "scroll") => {
-    if (data.member_type.length <= 1) {
+    if (data.member_type.length <= 1 && userRole !== "main_admin") {
       enqueueSnackbar("Tem de selecionar um Tipo de Praticante!", {
         variant: "warning",
         anchorOrigin: {
@@ -132,76 +135,145 @@ export default function NewMemberPage() {
     if (data.force_ident) formData.id_number = 0;
     if (data.force_registration_date) formData.registration_date = undefined;
 
-    data.member_type
-      .filter((item: string) => item !== "")
-      .forEach((type: string) => {
-        const payload = { ...formData, member_type: type };
-        createMember.mutate(payload, {
-          onSuccess: () => {
-            setLoading(false);
-            if (mode === "redirect") {
-              navigate("/members/");
-            } else {
-              reset();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          },
-          onError: (data: any) => {
-            setLoading(false);
-            if (data.response?.data.incompatible_member) {
-              setError("member_type", {
-                message: data.response?.data.incompatible_member[0],
-              });
-            } else if (data.response?.data.impossible_gender) {
-              setError("gender", {
-                message: data.response?.data.impossible_gender[0],
-              });
-            } else if (data.response?.data.impossible_age) {
-              setError("birth_date", {
-                message: data.response?.data.impossible_age[0],
-              });
-            }
-
-            const errorData = data.response?.data || {};
-
-            type Fields =
-              | "first_name"
-              | "last_name"
-              | "graduation"
-              | "birth_date"
-              | "gender"
-              | "club"
-              | "id_number"
-              | "registration_date"
-              | "post_code"
-              | "national_card_number"
-              | "taxpayer_number"
-              | "address";
-
-            const fields: Fields[] = [
-              "first_name",
-              "last_name",
-              "graduation",
-              "birth_date",
-              "gender",
-              "club",
-              "id_number",
-              "registration_date",
-              "post_code",
-              "national_card_number",
-              "taxpayer_number",
-              "address",
-            ];
-
-            fields.forEach((field) => {
-              if (errorData[field]?.[0]) {
-                setError(field, { message: errorData[field][0] });
-              }
-            });
+    if (userRole === "main_admin") {
+      // main admins dont need to send a member type (membership defaults to student)
+      createMember.mutate(formData, {
+        onSuccess: () => {
+          setLoading(false);
+          if (mode === "redirect") {
+            navigate("/members/");
+          } else {
+            reset();
             window.scrollTo({ top: 0, behavior: "smooth" });
-          },
-        });
+          }
+        },
+        onError: (data: any) => {
+          setLoading(false);
+          if (data.response?.data.incompatible_member) {
+            setError("member_type", {
+              message: data.response?.data.incompatible_member[0],
+            });
+          } else if (data.response?.data.impossible_gender) {
+            setError("gender", {
+              message: data.response?.data.impossible_gender[0],
+            });
+          } else if (data.response?.data.impossible_age) {
+            setError("birth_date", {
+              message: data.response?.data.impossible_age[0],
+            });
+          }
+
+          const errorData = data.response?.data || {};
+
+          type Fields =
+            | "first_name"
+            | "last_name"
+            | "graduation"
+            | "birth_date"
+            | "gender"
+            | "club"
+            | "id_number"
+            | "registration_date"
+            | "post_code"
+            | "national_card_number"
+            | "taxpayer_number"
+            | "address";
+
+          const fields: Fields[] = [
+            "first_name",
+            "last_name",
+            "graduation",
+            "birth_date",
+            "gender",
+            "club",
+            "id_number",
+            "registration_date",
+            "post_code",
+            "national_card_number",
+            "taxpayer_number",
+            "address",
+          ];
+
+          fields.forEach((field) => {
+            if (errorData[field]?.[0]) {
+              setError(field, { message: errorData[field][0] });
+            }
+          });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        },
       });
+    } else {
+      data.member_type
+        .filter((item: string) => item !== "")
+        .forEach((type: string) => {
+          const payload = { ...formData, member_type: type };
+          createMember.mutate(payload, {
+            onSuccess: () => {
+              setLoading(false);
+              if (mode === "redirect") {
+                navigate("/members/");
+              } else {
+                reset();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            },
+            onError: (data: any) => {
+              setLoading(false);
+              if (data.response?.data.incompatible_member) {
+                setError("member_type", {
+                  message: data.response?.data.incompatible_member[0],
+                });
+              } else if (data.response?.data.impossible_gender) {
+                setError("gender", {
+                  message: data.response?.data.impossible_gender[0],
+                });
+              } else if (data.response?.data.impossible_age) {
+                setError("birth_date", {
+                  message: data.response?.data.impossible_age[0],
+                });
+              }
+
+              const errorData = data.response?.data || {};
+
+              type Fields =
+                | "first_name"
+                | "last_name"
+                | "graduation"
+                | "birth_date"
+                | "gender"
+                | "club"
+                | "id_number"
+                | "registration_date"
+                | "post_code"
+                | "national_card_number"
+                | "taxpayer_number"
+                | "address";
+
+              const fields: Fields[] = [
+                "first_name",
+                "last_name",
+                "graduation",
+                "birth_date",
+                "gender",
+                "club",
+                "id_number",
+                "registration_date",
+                "post_code",
+                "national_card_number",
+                "taxpayer_number",
+                "address",
+              ];
+
+              fields.forEach((field) => {
+                if (errorData[field]?.[0]) {
+                  setError(field, { message: errorData[field][0] });
+                }
+              });
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            },
+          });
+        });
+    }
   };
 
   useEffect(() => {
