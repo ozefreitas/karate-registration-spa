@@ -120,6 +120,7 @@ export default function MemberOrdering(
           sx={{ width: "100%" }}
           onClick={() => props.reset()}
           variant="contained"
+          disabled={props.changedCount === 0}
         >
           Limpar
         </Button>

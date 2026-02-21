@@ -66,7 +66,7 @@ export default function NextEventHomeComponent(
         ) : (
           <List>
             <ListItem sx={{ m: 0, pb: 0 }}>
-              <Tooltip title={"Consultar"} placement="left">
+              <Tooltip title={"Consultar"}>
                 <span style={{ width: "100%" }}>
                   <ListItemButton
                     sx={{

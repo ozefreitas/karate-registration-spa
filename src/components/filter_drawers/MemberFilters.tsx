@@ -110,7 +110,13 @@ export default function MemberFilters(
                   variant={field.value ? "filled" : "outlined"}
                   color={field.value ? "success" : "default"}
                   clickable
-                  onClick={() => field.onChange(!field.value)}
+                  onClick={() => {
+                    if (field.value) {
+                      field.onChange(undefined);
+                    } else {
+                      field.onChange(!field.value);
+                    }
+                  }}
                   label={item.label}
                 ></Chip>
               )}
@@ -133,7 +139,13 @@ export default function MemberFilters(
                   variant={field.value ? "filled" : "outlined"}
                   color={field.value ? "success" : "default"}
                   clickable
-                  onClick={() => field.onChange(!field.value)}
+                  onClick={() => {
+                    if (field.value) {
+                      field.onChange(undefined);
+                    } else {
+                      field.onChange(!field.value);
+                    }
+                  }}
                   label={item.label}
                 ></Chip>
               )}
@@ -152,7 +164,7 @@ export default function MemberFilters(
                 alignItems={"center"}
                 sx={{ p: 3, py: 2 }}
               >
-                <Typography fontSize={"1.05rem"} mr={1}>
+                <Typography fontSize={"1.05rem"} mr={2}>
                   Clube
                 </Typography>
                 <Controller
@@ -280,6 +292,7 @@ export default function MemberFilters(
       <Grid size={12} mt={5} mx={10} container>
         <Button
           color="error"
+          disabled={props.changedCount === 0}
           sx={{ width: "100%" }}
           onClick={() => props.reset()}
           variant="contained"

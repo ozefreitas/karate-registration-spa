@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -47,7 +48,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
       </Grid>
 
       <Grid size={6}>
-        <Card sx={{ height: "100%", m: 2, mb: 0 }}>
+        <Card sx={{ m: 2, mb: 0 }}>
           <CardHeader
             title={`Clubes com quotas em Falta em ${currentYear}`}
             sx={{
@@ -57,9 +58,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
             }}
           ></CardHeader>
           {subscriptionsError ? (
-            <CardContent
-              sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
-            >
+            <CardContent sx={{ display: "flex", justifyContent: "flex-end" }}>
               Ocorreu um erro ao coletar o número de clubes com quotas em falta.
               Tente mais tarde ou contacte um administrador.
             </CardContent>
@@ -79,52 +78,96 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                   <CircularProgress />
                 </Box>
               ) : (
-                <Grid
-                  container
-                  size={12}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                >
-                  <Typography
-                    color={
-                      subscriptionsData?.data?.filter(
-                        (item: any) => item.paid === false,
-                      ).length > 0
-                        ? "info"
-                        : "textDisabled"
-                    }
-                    variant="h2"
-                    fontWeight={400}
+                <Grid container size={12} justifyContent={"flex-end"}>
+                  <Grid
+                    container
+                    size={12}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    px={5}
                   >
-                    {
-                      subscriptionsData?.data?.filter(
-                        (item: any) => item.paid === false,
-                      ).length
-                    }
-                  </Typography>
-                  {subscriptionsData?.data?.filter(
-                    (item: any) => item.paid === false,
-                  ).length > 0 ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      startIcon={<Warning></Warning>}
-                      size="large"
-                      onClick={() =>
-                        navigate(`/payment_manager/?year=${currentYear}`)
+                    <Typography variant="h6">
+                      Número Total de Clubes:
+                    </Typography>
+
+                    <Typography color="info" variant="h2" fontWeight={400}>
+                      {subscriptionsData?.data?.length}
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    container
+                    size={12}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    px={5}
+                  >
+                    <Typography variant="h6">
+                      Pagamentos por efetuar:
+                    </Typography>
+
+                    <Typography
+                      color={
+                        subscriptionsData?.data?.filter(
+                          (item: any) => item.paid === false,
+                        ).length === 0
+                          ? "textDisabled"
+                          : "error"
                       }
+                      variant="h2"
+                      fontWeight={400}
                     >
-                      Resolver
-                    </Button>
-                  ) : null}
+                      {
+                        subscriptionsData?.data?.filter(
+                          (item: any) => item.paid === false,
+                        ).length
+                      }
+                    </Typography>
+                  </Grid>
                 </Grid>
+                // <Grid
+                //   container
+                //   size={12}
+                //   justifyContent={"space-between"}
+                //   alignItems={"center"}
+                // >
+                //   <Typography
+                //     color={
+                //       subscriptionsData?.data?.filter(
+                //         (item: any) => item.paid === false,
+                //       ).length > 0
+                //         ? "info"
+                //         : "textDisabled"
+                //     }
+                //     variant="h2"
+                //     fontWeight={400}
+                //   >
+
+                //   </Typography>
+
+                // </Grid>
               )}
             </CardContent>
           )}
+          <CardActions sx={{ m: 1, mt: 0 }}>
+            {subscriptionsData?.data?.filter((item: any) => item.paid === false)
+              .length > 0 ? (
+              <Button
+                color="error"
+                variant="contained"
+                startIcon={<Warning></Warning>}
+                size="large"
+                onClick={() =>
+                  navigate(`/payment_manager/?year=${currentYear}`)
+                }
+              >
+                Resolver
+              </Button>
+            ) : null}
+          </CardActions>
         </Card>
       </Grid>
       <Grid size={6}>
-        <Card sx={{ height: "100%", m: 2, mb: 0 }}>
+        <Card sx={{ m: 2, mb: 0, pb: 1 }}>
           <CardHeader
             title="Pedidos de Verificação de Membros"
             sx={{
@@ -143,9 +186,8 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
           ) : (
             <CardContent
               sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                px: 7,
+                pl: 7,
+                pr: 3,
                 "&:last-child": {
                   paddingBottom: 0,
                 },
@@ -160,7 +202,7 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                   container
                   size={12}
                   justifyContent={"space-between"}
-                  alignItems={"center"}
+                  alignItems={"flex-end"}
                 >
                   <Typography
                     color={
@@ -171,13 +213,16 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
                     variant="h2"
                     fontWeight={400}
                   >
-                    {memberValidationRequestsData?.data?.results.filter(
-                      (item: any) => item.status === "pending",
-                    )?.length}
+                    {
+                      memberValidationRequestsData?.data?.results.filter(
+                        (item: any) => item.status === "pending",
+                      )?.length
+                    }
                   </Typography>
                   {memberValidationRequestsData?.data?.count > 0 ? (
                     <Button
                       color="warning"
+                      sx={{ mb: 1 }}
                       variant="contained"
                       startIcon={<PersonSearch></PersonSearch>}
                       size="large"

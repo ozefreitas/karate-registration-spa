@@ -36,6 +36,7 @@ export default function NotificationsFilters(
     reset: any;
     changedCount: number;
     setSelectedTypes: any;
+    userRole: string;
   }>,
 ) {
   const [open, setOpen] = React.useState(false);
@@ -45,7 +46,16 @@ export default function NotificationsFilters(
   };
 
   const getNotificationTypeValues = (): string[] => {
-    return NotificationTypeOptions.map((option) => option.value);
+    if (["single_admin", "main_adin", "superuser"].includes(props.userRole)) {
+      return NotificationTypeOptions.map((option) => option.value);
+    } else {
+      return NotificationTypeOptions.filter(
+        (item: { value: string; label: string; icon: any }) =>
+          !["request", "reset", "member_request", "exam_prop"].includes(
+            item.value,
+          ),
+      ).map((option) => option.value);
+    }
   };
 
   const notificationTypeValues = getNotificationTypeValues();

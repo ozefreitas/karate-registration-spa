@@ -306,7 +306,7 @@ export default function Header(
                       <Tooltip title="Conta" placement="top">
                         <span>
                           <Avatar
-                            {...stringAvatar(user?.data.username)}
+                            {...stringAvatar(user?.data.username, undefined, "allow")}
                           ></Avatar>
                         </span>
                       </Tooltip>

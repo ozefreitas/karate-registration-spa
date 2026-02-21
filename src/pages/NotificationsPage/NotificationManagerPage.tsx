@@ -32,7 +32,9 @@ import { PaymentTypes } from "../../config";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { Notifications } from "../../openapi";
 
-export default function NotificationManagerPage(props: { userRole: string }) {
+export default function NotificationManagerPage(
+  props: Readonly<{ userRole: string }>,
+) {
   const [selectedUserId, setSelectedUserId] = useState<string>("0");
   const { data: clubUserData } = adminHooks.useFetchClubUsersData(
     undefined,
@@ -43,6 +45,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
       1,
       100,
       "",
+      undefined,
       undefined,
       selectedUserId,
     );
@@ -188,7 +191,7 @@ export default function NotificationManagerPage(props: { userRole: string }) {
                   {notificationData?.results.map(
                     (notification: Notifications, index: any) => (
                       <ListItem sx={{ m: 0 }} key={index}>
-                        <Tooltip title="Clique para eliminar esta Notificação">
+                        <Tooltip title="Eliminar">
                           <span style={{ width: "100%" }}>
                             <ListItemButton
                               sx={{ pr: 2 }}

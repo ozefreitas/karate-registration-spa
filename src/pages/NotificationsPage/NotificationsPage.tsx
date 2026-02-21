@@ -124,7 +124,9 @@ const NotificationsPage = (props: { me: any }) => {
       ordering,
       selectedTypes,
       filtersWatch("canRemove"),
-      props.me.data.id,
+      ["superuser", "main_admin", "single_admin"].includes(props.me.data.role)
+        ? props.me.data.id
+        : undefined,
     );
 
   return (
@@ -181,6 +183,7 @@ const NotificationsPage = (props: { me: any }) => {
               errors={filtersErrors}
               changedCount={filtersChangedCount}
               setSelectedTypes={setSelectedTypes}
+              userRole={props.me.data.role}
             ></NotificationsFilters>
           </Grid>
         </Grid>
