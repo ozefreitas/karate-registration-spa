@@ -49,7 +49,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
   const open = Boolean(anchorEl);
   const handleClick = (
     event: React.MouseEvent<HTMLElement>,
-    action: string
+    action: string,
   ) => {
     setCurrentAction(action);
     setAnchorEl(event.currentTarget);
@@ -147,7 +147,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
             handleModalOpen(
               subscription.id,
               subscription.club.username,
-              subscription.paid
+              subscription.paid,
             )
           }
         ></Chip>
@@ -161,7 +161,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
             handleModalOpen(
               subscription.id,
               subscription.club.username,
-              subscription.paid
+              subscription.paid,
             )
           }
         ></Chip>
@@ -190,7 +190,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
     <>
       <Grid container m={4} spacing={2} size={12}>
         <Grid size={3}>
-          <Card sx={{ height: "100%" }}>
+          <Card elevation={3} sx={{ height: "100%" }}>
             <CardHeader
               sx={{ pt: 2.5 }}
               title={
@@ -250,7 +250,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
           </Card>
         </Grid>
         <Grid size={2.5}>
-          <Card sx={{ height: "100%" }}>
+          <Card elevation={3} sx={{ height: "100%" }}>
             <CardHeader
               title={
                 <Typography variant="h5" pt={0.5}>
@@ -278,7 +278,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                   {watch("search") === ""
                     ? 0
                     : subscriptionsData?.data?.filter(
-                        (item: any) => item.paid === false
+                        (item: any) => item.paid === false,
                       ).length}
                 </Typography>
               )}
@@ -286,7 +286,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
           </Card>
         </Grid>
         <Grid size={4}>
-          <Card sx={{ height: "100%" }}>
+          <Card elevation={3} sx={{ height: "100%" }}>
             <CardHeader
               title={
                 <Grid
@@ -333,7 +333,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
                     ? 0
                     : formatDateTime(
                         subscriptionsData?.data[0].due_date,
-                        "day"
+                        "day",
                       )}
                 </Typography>
               )}
@@ -341,7 +341,7 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
           </Card>
         </Grid>
         <Grid size={2.5}>
-          <Card sx={{ height: "100%" }}>
+          <Card elevation={3} sx={{ height: "100%" }}>
             <CardHeader
               sx={{ pb: 1 }}
               title={
@@ -464,8 +464,8 @@ export default function AdminPaymentManagerPage(props: { userRole: string }) {
             {currentAction === "amount"
               ? "Alterar montante a pagar"
               : currentAction === "due_date"
-              ? "Alterar data limite"
-              : "Criar Quotas"}
+                ? "Alterar data limite"
+                : "Criar Quotas"}
           </Typography>
         </MenuItem>
         <MenuItem

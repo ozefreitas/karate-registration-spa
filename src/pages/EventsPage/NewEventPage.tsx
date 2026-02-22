@@ -43,9 +43,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
-  const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(true);
   const [isCategoriesExpanded, setIsCategoriesExpanded] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const [discipline, setDiscipline] = useState<string>("");
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [disciplineWarning, setDisciplineWarning] = useState<boolean>(false);
@@ -160,7 +159,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       custody: "",
       email_contact: "",
       contact: "",
-      encounter: false,
       encounter_type: "",
       has_registrations: true,
       has_categories: true,
@@ -304,19 +302,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     });
   };
 
-  const isEncounter = useWatch({
-    control: eventMetadataControl,
-    name: "encounter",
-  });
-
-  const isEnabled = isEncounter === true;
-
-  useEffect(() => {
-    if (!isEncounter) {
-      setIsCategoriesExpanded(true);
-    }
-  }, [isEncounter]);
-
   const hasTegistrations = watch("has_registrations");
 
   useEffect(() => {
@@ -360,62 +345,13 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         description={
           <>
             Aqui poderá registar um Evento.<p></p>
-            Eventos podem ser (para já) Encontros ou Competições
+            Eventos podem ser (para já) Encontros ou Competições.
           </>
         }
         title="Novo Evento"
       ></PageInfoCard>
       <Grid container>
         <FormCard title="Tipo de Evento">
-          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
-            <Controller
-              name="encounter"
-              control={eventMetadataControl}
-              render={({ field }) => (
-                <FormControl
-                  component="fieldset"
-                  variant="standard"
-                  error={!!errors.encounter}
-                >
-                  <FormLabel sx={{ mb: 1 }}>
-                    Selecione este campo se o Evento <strong>NÃO</strong> for
-                    uma competição.
-                  </FormLabel>
-                  <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          sx={{ ml: 2 }}
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                            if (!isRulesExpanded) {
-                              setValue("has_registrations", true);
-                            }
-                            setIsRulesExpanded((prev) => !prev);
-                          }}
-                          name="encounter"
-                        />
-                      }
-                      label="É encontro"
-                      sx={{ justifyContent: "left", marginLeft: 0 }}
-                    />
-                    {!field.value && (
-                      <FormHelperText
-                        variant="filled"
-                        sx={{ fontSize: 12, marginLeft: "14px" }}
-                      >
-                        Sendo uma competição, é obrigatório ter um período de
-                        inscrições.
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
-            />
-          </Grid>
           <Grid sx={{ p: 2 }} size={6}>
             <Controller
               name="encounter_type"
@@ -450,7 +386,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                   }}
                   fullWidth
                   select
-                  disabled={!isEnabled}
+                  // disabled={!isEnabled}
                   required
                   slotProps={{
                     input: {
@@ -474,7 +410,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                       ),
                     },
                   }}
-                  helperText="Só poderá escolher um tipo de encontro se selecionar o campo anterior."
                   {...field}
                   onChange={(e) => {
                     field.onChange(e);
@@ -516,10 +451,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                           {...field}
                           checked={field.value}
                           onChange={(e) => {
-                            if (isEncounter) {
-                              field.onChange(e.target.checked);
-                              setExpanded((prev) => !prev);
-                            }
+                            field.onChange(e.target.checked);
+                            setExpanded((prev) => !prev);
                           }}
                           name="has_registrations"
                         />
@@ -533,7 +466,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                         sx={{ fontSize: 12, marginLeft: "14px" }}
                       >
                         Isto tornará obrigatório o fornecimento de datas para
-                        econtros gerais e de datas e regras para competições.
+                        encontros gerais e de datas e regras para competições.
                       </FormHelperText>
                     )}
                   </Stack>
@@ -1182,7 +1115,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 <FormControl
                   component="fieldset"
                   variant="standard"
-                  error={!!errors.encounter}
+                  error={!!errors.is_coach}
                 >
                   <FormLabel sx={{ mb: 1 }}>
                     Selecione este campo se esta Modalidade for direcionada para
@@ -1227,7 +1160,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 <FormControl
                   component="fieldset"
                   variant="standard"
-                  error={!!errors.encounter}
+                  error={!!errors.is_team}
                 >
                   <FormLabel sx={{ mb: 1 }}>
                     Selecione este campo se esta Modalidade for direcionada para

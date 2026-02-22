@@ -19,7 +19,7 @@ import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
-import { Person as PersonType } from "../../openapi";
+import { Persons as PersonType } from "../../openapi";
 
 export default function MembersHomeComponent(
   props: Readonly<{ userRole: string }>,

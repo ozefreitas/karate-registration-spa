@@ -1,10 +1,10 @@
 import { ListItem, Tooltip, ListItemIcon, ListItemText } from "@mui/material";
 
 export default function CompInfoToolTip(
-  props: Readonly<{ title: string; text: string; icon: any }>
+  props: Readonly<{ title: string; text: string; icon: any }>,
 ) {
   return (
-    <ListItem sx={{ m: 0, pb: 0 }}>
+    <ListItem sx={{ m: 0, pb: 0, display: "flex", alignItems: "flex-end" }}>
       <Tooltip placement="left" sx={{ cursor: "pointer" }} title={props.title}>
         <span>
           <ListItemIcon>{props.icon}</ListItemIcon>

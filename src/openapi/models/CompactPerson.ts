@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
-export type CompactMembers = {
+export type CompactPerson = {
     readonly id: string;
     gender: GenderEnum;
     readonly club: string;

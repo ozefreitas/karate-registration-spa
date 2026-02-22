@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type PatchedPatchMonthlyMemberPayment = {
+export type PatchMonthlyPersonPayment = {
     paid?: boolean;
-    amount?: string;
+    amount: string;
 };
 

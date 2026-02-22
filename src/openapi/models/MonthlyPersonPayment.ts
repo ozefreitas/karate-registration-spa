@@ -2,13 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CompactMembers } from './CompactMembers';
-export type MonthlyMemberPayment = {
+import type { CompactPerson } from './CompactPerson';
+export type MonthlyPersonPayment = {
     readonly id: number;
     readonly inside_limit: string;
     readonly predefined_amount: string;
     readonly is_custom: string;
-    person: CompactMembers;
+    person: CompactPerson;
     year: number;
     month: number;
     amount: string;

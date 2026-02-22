@@ -169,10 +169,10 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           disciplinesData?.data.results.map((discipline: any, index: any) => {
             const disciplineIndividuals = discipline?.individuals.map(
               (memberInfo: any) => ({
-                id: memberInfo.member.id,
-                full_name: memberInfo.member.full_name,
-                gender: memberInfo.member.gender,
-                club: memberInfo.member.club,
+                id: memberInfo.person.id,
+                full_name: memberInfo.person.full_name,
+                gender: memberInfo.person.gender,
+                club: memberInfo.person.club,
                 category: memberInfo.category.name ?? "N/A",
                 added_at: formatDateTime(memberInfo.added_at, "both"),
               }),

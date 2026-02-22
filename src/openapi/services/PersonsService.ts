@@ -2,11 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { MembersPaymentsStatus } from '../models/MembersPaymentsStatus';
-import type { PaginatedPersonList } from '../models/PaginatedPersonList';
-import type { PatchedPerson } from '../models/PatchedPerson';
-import type { Person } from '../models/Person';
-import type { UploadPersonProfilePicture } from '../models/UploadPersonProfilePicture';
+import type { PaginatedPersonsList } from '../models/PaginatedPersonsList';
+import type { PatchedPersons } from '../models/PatchedPersons';
+import type { Persons } from '../models/Persons';
+import type { PersonsPaymentsStatus } from '../models/PersonsPaymentsStatus';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -24,7 +23,7 @@ export class PersonsService {
      * @param ordering Which field to use when ordering the results.
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
-     * @returns PaginatedPersonList
+     * @returns PaginatedPersonsList
      * @throws ApiError
      */
     public static personsList(
@@ -40,7 +39,7 @@ export class PersonsService {
         ordering?: string,
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<PaginatedPersonList> {
+    ): CancelablePromise<PaginatedPersonsList> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/',
@@ -62,12 +61,12 @@ export class PersonsService {
     }
     /**
      * @param formData
-     * @returns Person
+     * @returns Persons
      * @throws ApiError
      */
     public static personsCreate(
-        formData: Person,
-    ): CancelablePromise<Person> {
+        formData: Persons,
+    ): CancelablePromise<Persons> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/persons/',
@@ -77,12 +76,12 @@ export class PersonsService {
     }
     /**
      * @param id A unique value identifying this person.
-     * @returns Person
+     * @returns Persons
      * @throws ApiError
      */
     public static personsRetrieve(
         id: string,
-    ): CancelablePromise<Person> {
+    ): CancelablePromise<Persons> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/{id}/',
@@ -94,13 +93,13 @@ export class PersonsService {
     /**
      * @param id A unique value identifying this person.
      * @param formData
-     * @returns Person
+     * @returns Persons
      * @throws ApiError
      */
     public static personsUpdate(
         id: string,
-        formData: Person,
-    ): CancelablePromise<Person> {
+        formData: Persons,
+    ): CancelablePromise<Persons> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/persons/{id}/',
@@ -114,13 +113,13 @@ export class PersonsService {
     /**
      * @param id A unique value identifying this person.
      * @param formData
-     * @returns Person
+     * @returns Persons
      * @throws ApiError
      */
     public static personsPartialUpdate(
         id: string,
-        formData?: PatchedPerson,
-    ): CancelablePromise<Person> {
+        formData?: PatchedPersons,
+    ): CancelablePromise<Persons> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/persons/{id}/',
@@ -150,13 +149,13 @@ export class PersonsService {
     /**
      * @param eventId
      * @param id A unique value identifying this person.
-     * @returns Person
+     * @returns Persons
      * @throws ApiError
      */
     public static personsUnregisteredModalitiesRetrieve(
         eventId: string,
         id: string,
-    ): CancelablePromise<Person> {
+    ): CancelablePromise<Persons> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/{id}/unregistered_modalities/{event_id}/',
@@ -164,26 +163,6 @@ export class PersonsService {
                 'event_id': eventId,
                 'id': id,
             },
-        });
-    }
-    /**
-     * @param id A unique value identifying this person.
-     * @param formData
-     * @returns Person
-     * @throws ApiError
-     */
-    public static personsUploadImageCreate(
-        id: string,
-        formData?: UploadPersonProfilePicture,
-    ): CancelablePromise<Person> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/persons/{id}/upload-image/',
-            path: {
-                'id': id,
-            },
-            formData: formData,
-            mediaType: 'multipart/form-data',
         });
     }
     /**
@@ -207,7 +186,7 @@ export class PersonsService {
      * @param monthlyPaymentStatus
      * @param notInEvent
      * @param ordering Which field to use when ordering the results.
-     * @returns Person
+     * @returns Persons
      * @throws ApiError
      */
     public static personsLastFiveList(
@@ -221,7 +200,7 @@ export class PersonsService {
         monthlyPaymentStatus?: string,
         notInEvent?: string,
         ordering?: string,
-    ): CancelablePromise<Array<Person>> {
+    ): CancelablePromise<Array<Persons>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/last_five/',
@@ -240,10 +219,10 @@ export class PersonsService {
         });
     }
     /**
-     * @returns MembersPaymentsStatus
+     * @returns PersonsPaymentsStatus
      * @throws ApiError
      */
-    public static personsMembersPaymentsStatusRetrieve(): CancelablePromise<MembersPaymentsStatus> {
+    public static personsMembersPaymentsStatusRetrieve(): CancelablePromise<PersonsPaymentsStatus> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/members_payments_status/',

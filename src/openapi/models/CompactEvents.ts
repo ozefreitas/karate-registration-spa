@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { EncounterTypeEnum } from './EncounterTypeEnum';
 import type { SeasonEnum } from './SeasonEnum';
 export type CompactEvents = {
     id?: string;
@@ -15,5 +16,7 @@ export type CompactEvents = {
     readonly is_retification: string;
     readonly number_registrations: string;
     readonly has_any_team: string;
+    encounter_type?: EncounterTypeEnum | null;
+    description?: string | null;
 };
 

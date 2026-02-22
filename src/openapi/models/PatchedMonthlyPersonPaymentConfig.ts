@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type MonthlyMemberPaymentConfig = {
-    readonly id: number;
-    readonly base_plan_amount: string;
+export type PatchedMonthlyPersonPaymentConfig = {
+    readonly id?: number;
+    readonly base_plan_amount?: string;
     custom_amount?: string | null;
     is_custom_active?: boolean;
-    base_plan: number;
+    base_plan?: number;
 };
 

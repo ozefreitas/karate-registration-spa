@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
 import type { Users } from './Users';
-export type Person = {
+export type Persons = {
     readonly id: string;
     readonly full_name: string;
     gender: GenderEnum;

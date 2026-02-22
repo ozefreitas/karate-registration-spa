@@ -33,7 +33,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useForm } from "react-hook-form";
-import EventCallendar from "../../components/Callendars/EventsCallendar";
+import Calendar from "../../components/Callendars/Calendar";
 import { useNavigate } from "react-router-dom";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
@@ -50,6 +50,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     is_closed: boolean;
     has_ended: boolean;
     has_any_team: boolean;
+    encounter_type: string;
   };
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
@@ -79,7 +80,6 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
       is_open: false,
       is_retification: false,
       is_closed: false,
-      encounter: false,
       has_ended: false,
       has_teams: false,
     },
@@ -187,15 +187,17 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               justifyContent={"space-between"}
               alignItems={"center"}
             >
-              <EventsOrdering
-                isLoading={isEventsDataLoading}
-                control={orderControl}
-                reset={orderReset}
-                errors={orderErrors}
-                changedCount={orderChangedCount}
-                orderFields={orderFields}
-                setOrderFields={setOrderFields}
-              ></EventsOrdering>
+              {currentView === "list" ? (
+                <EventsOrdering
+                  isLoading={isEventsDataLoading}
+                  control={orderControl}
+                  reset={orderReset}
+                  errors={orderErrors}
+                  changedCount={orderChangedCount}
+                  orderFields={orderFields}
+                  setOrderFields={setOrderFields}
+                ></EventsOrdering>
+              ) : null}
               <EventsFilters
                 isLoading={isEventsDataLoading}
                 control={filtersControl}
@@ -226,29 +228,31 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                     </IconButton>
                   </span>
                 </Tooltip>
-                <Tooltip placement="top" title={"Vista de Calendário"}>
-                  <span>
-                    <IconButton
-                      size="large"
-                      sx={{
-                        borderRadius: 3,
-                        border: 1,
-                        bgcolor:
-                          currentView === "calendar" ? "#1976d2;" : undefined,
-                        "&:hover": { bgcolor: "#1976d2" },
-                      }}
-                      onClick={() => setCurrentView("calendar")}
-                      color="info"
-                    >
-                      <CalendarMonth
+                {[undefined, "free_club"].includes(props.userRole) ? null : (
+                  <Tooltip placement="top" title={"Vista de Calendário"}>
+                    <span>
+                      <IconButton
+                        size="large"
                         sx={{
-                          color:
-                            currentView === "calendar" ? "white" : undefined,
+                          borderRadius: 3,
+                          border: 1,
+                          bgcolor:
+                            currentView === "calendar" ? "#1976d2;" : undefined,
+                          "&:hover": { bgcolor: "#1976d2" },
                         }}
-                      ></CalendarMonth>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+                        onClick={() => setCurrentView("calendar")}
+                        color="info"
+                      >
+                        <CalendarMonth
+                          sx={{
+                            color:
+                              currentView === "calendar" ? "white" : undefined,
+                          }}
+                        ></CalendarMonth>
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -297,7 +301,13 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               }}
                             >
                               <Avatar
-                                {...stringAvatar(comp.name, 120)}
+                                {...stringAvatar(
+                                  comp.encounter_type !== "" &&
+                                    comp.encounter_type !== null
+                                    ? comp.encounter_type
+                                    : "Competição",
+                                  120,
+                                )}
                               ></Avatar>
                             </Card>
                           </Grid>
@@ -404,13 +414,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               </CardContent>
             </Card>
           </Grid>
-        ) : (
-          <EventCallendar
-            ordering={ordering}
-            filtersWatch={filtersWatch}
-          ></EventCallendar>
-        )}
-
+        ) : null}
+        {currentView == "calendar" &&
+        ![undefined, "free_club"].includes(props.userRole) ? (
+          <Calendar></Calendar>
+        ) : null}
         <Grid
           sx={{ m: 3, mt: 1 }}
           container

@@ -2,7 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type UploadPersonProfilePicture = {
-    profile_image?: string;
+export type PersonsPaymentsStatus = {
+    number: number;
+    unpaid_members: number;
 };
 

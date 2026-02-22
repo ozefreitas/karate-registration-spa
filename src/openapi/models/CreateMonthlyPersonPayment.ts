@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type CreateMonthlyMemberPayment = {
+export type CreateMonthlyPersonPayment = {
     readonly id: number;
     readonly amount: string;
     customAmount?: string;

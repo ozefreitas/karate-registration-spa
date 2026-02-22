@@ -59,10 +59,12 @@ function ServerDay(props: PickersDayProps & { highlightedDays?: number[] }) {
   );
 }
 
-export default function EventCallendar(props: {
-  ordering: any;
-  filtersWatch: any;
-}) {
+export default function EventCallendar(
+  props: Readonly<{
+    ordering: any;
+    filtersWatch: any;
+  }>,
+) {
   type Event = {
     id: string;
     name: string;
@@ -79,7 +81,7 @@ export default function EventCallendar(props: {
   const navigate = useNavigate();
   const initialValue = dayjs();
   const [month, setMonth] = React.useState<string>(
-    initialValue.format("YYYY-MM")
+    initialValue.format("YYYY-MM"),
   );
   const [day, setDay] = React.useState<string>("");
   const [page, setPage] = React.useState<number>(1);
@@ -100,7 +102,7 @@ export default function EventCallendar(props: {
     props.filtersWatch("has_categories"),
     props.filtersWatch("has_registrations"),
     month,
-    day
+    day,
   );
 
   const [highlightedDays, setHighlightedDays] = React.useState([]);
@@ -123,7 +125,7 @@ export default function EventCallendar(props: {
   const handleDayChange = (
     value: PickerValue,
     _selectionState?: PickerSelectionState,
-    _selectedView?: DateView | undefined
+    _selectedView?: DateView | undefined,
   ) => {
     if (value) {
       setDay(value.format("DD"));
@@ -255,10 +257,10 @@ export default function EventCallendar(props: {
                                         comp.has_ended
                                           ? "Realizado"
                                           : comp.is_open || comp.is_retification
-                                          ? "Inscrições em Progresso"
-                                          : comp.is_closed
-                                          ? "Inscrições Encerradas"
-                                          : "Por Iniciar"
+                                            ? "Inscrições em Progresso"
+                                            : comp.is_closed
+                                              ? "Inscrições Encerradas"
+                                              : "Por Iniciar"
                                       }
                                       icon={<AccessTime />}
                                     ></CompInfoToolTip>
@@ -301,7 +303,7 @@ export default function EventCallendar(props: {
                           </CardContent>
                         </Card>
                       </Grid>
-                    )
+                    ),
                   )
                 )}
               </CardContent>

@@ -45,7 +45,7 @@ import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
-import { getGraduationFromValue } from "../../config";
+import { getGraduationFromValue, GraduationsOptions } from "../../config";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -114,6 +114,7 @@ export default function MembersModal(
     category: string;
     gender: string;
     weight: string;
+    graduation: string;
   };
 
   const navigate = useNavigate();
@@ -303,7 +304,7 @@ export default function MembersModal(
         );
         if (target[0].weight !== freeClubWeight) {
           const payload = {
-            memberId: currentMemberId,
+            personId: currentMemberId,
             data: { weight: freeClubWeight },
           };
           await patchMember.mutateAsync(payload);
@@ -834,6 +835,15 @@ export default function MembersModal(
                           <Chip
                             size="small"
                             label={`${member.age} anos (calculada)`}
+                          ></Chip>
+                          <Chip
+                            size="small"
+                            label={
+                              GraduationsOptions.find(
+                                (item) =>
+                                  item.value === Number(member.graduation),
+                              )?.label
+                            }
                           ></Chip>
                           <Chip
                             size="small"

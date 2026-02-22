@@ -2,10 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CreateMonthlyMemberPayment } from '../models/CreateMonthlyMemberPayment';
-import type { MonthlyMemberPayment } from '../models/MonthlyMemberPayment';
-import type { PatchedPatchMonthlyMemberPayment } from '../models/PatchedPatchMonthlyMemberPayment';
-import type { PatchMonthlyMemberPayment } from '../models/PatchMonthlyMemberPayment';
+import type { CreateMonthlyPersonPayment } from '../models/CreateMonthlyPersonPayment';
+import type { MonthlyPersonPayment } from '../models/MonthlyPersonPayment';
+import type { PatchedPatchMonthlyPersonPayment } from '../models/PatchedPatchMonthlyPersonPayment';
+import type { PatchMonthlyPersonPayment } from '../models/PatchMonthlyPersonPayment';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -13,13 +13,13 @@ export class MonthlyPaymentsService {
     /**
      * @param ordering Which field to use when ordering the results.
      * @param person
-     * @returns MonthlyMemberPayment
+     * @returns MonthlyPersonPayment
      * @throws ApiError
      */
     public static monthlyPaymentsList(
         ordering?: string,
         person?: string,
-    ): CancelablePromise<Array<MonthlyMemberPayment>> {
+    ): CancelablePromise<Array<MonthlyPersonPayment>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/monthly_payments/',
@@ -31,12 +31,12 @@ export class MonthlyPaymentsService {
     }
     /**
      * @param requestBody
-     * @returns CreateMonthlyMemberPayment
+     * @returns CreateMonthlyPersonPayment
      * @throws ApiError
      */
     public static monthlyPaymentsCreate(
-        requestBody: CreateMonthlyMemberPayment,
-    ): CancelablePromise<CreateMonthlyMemberPayment> {
+        requestBody: CreateMonthlyPersonPayment,
+    ): CancelablePromise<CreateMonthlyPersonPayment> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/monthly_payments/',
@@ -46,12 +46,12 @@ export class MonthlyPaymentsService {
     }
     /**
      * @param id A unique integer value identifying this monthly person payment.
-     * @returns MonthlyMemberPayment
+     * @returns MonthlyPersonPayment
      * @throws ApiError
      */
     public static monthlyPaymentsRetrieve(
         id: number,
-    ): CancelablePromise<MonthlyMemberPayment> {
+    ): CancelablePromise<MonthlyPersonPayment> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/monthly_payments/{id}/',
@@ -63,13 +63,13 @@ export class MonthlyPaymentsService {
     /**
      * @param id A unique integer value identifying this monthly person payment.
      * @param requestBody
-     * @returns MonthlyMemberPayment
+     * @returns MonthlyPersonPayment
      * @throws ApiError
      */
     public static monthlyPaymentsUpdate(
         id: number,
-        requestBody: MonthlyMemberPayment,
-    ): CancelablePromise<MonthlyMemberPayment> {
+        requestBody: MonthlyPersonPayment,
+    ): CancelablePromise<MonthlyPersonPayment> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/monthly_payments/{id}/',
@@ -83,13 +83,13 @@ export class MonthlyPaymentsService {
     /**
      * @param id A unique integer value identifying this monthly person payment.
      * @param requestBody
-     * @returns PatchMonthlyMemberPayment
+     * @returns PatchMonthlyPersonPayment
      * @throws ApiError
      */
     public static monthlyPaymentsPartialUpdate(
         id: number,
-        requestBody?: PatchedPatchMonthlyMemberPayment,
-    ): CancelablePromise<PatchMonthlyMemberPayment> {
+        requestBody?: PatchedPatchMonthlyPersonPayment,
+    ): CancelablePromise<PatchMonthlyPersonPayment> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/monthly_payments/{id}/',

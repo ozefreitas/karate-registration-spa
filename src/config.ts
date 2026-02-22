@@ -1,6 +1,7 @@
 import bannerLigaSoshinkai from "./assets/liga_soshinkai_banner.jpg";
 import bannerTorneioSMA from "./assets/torneio_sma_banner.jpg";
 import bannerRegulamentoGeral from "./assets/regulamento_geral_banner.jpg";
+import { stringToColor } from "./dashboard/utils/avatarColor";
 
 export const GraduationsOptions: { label: string; value: number }[] = [
   { label: "9º Kyu", value: 15 },
@@ -91,14 +92,44 @@ export const ReasonOptions: { label: string; value: string }[] = [
   { label: "Karate Tradicional", value: "traditional" },
 ];
 
-export const EncounterOptions: { label: string; value: string }[] = [
-  { label: "Regional", value: "regional" },
-  { label: "Nacional", value: "nacional" },
-  { label: "Internacional", value: "internacional" },
-  { label: "Instrutores", value: "instrutores" },
-  { label: "Formação", value: "formacao" },
-  { label: "Sessão de Exames", value: "exames" },
-  { label: "Seminário", value: "seminario" },
+export const EncounterOptions: {
+  label: string;
+  value: string;
+  color: string;
+}[] = [
+  {
+    label: "Competição/Torneio",
+    value: "comp",
+    color: stringToColor("Competição/Torneio"),
+  },
+  {
+    label: "Encontro Regional",
+    value: "regional",
+    color: stringToColor("Regional"),
+  },
+  {
+    label: "Encontro Nacional",
+    value: "nacional",
+    color: stringToColor("Nacionalskdhsbhi"),
+  },
+  {
+    label: "Encontro Internacional",
+    value: "internacional",
+    color: stringToColor("Internacional"),
+  },
+  {
+    label: "Instrutores",
+    value: "instrutores",
+    color: stringToColor("Instrutores"),
+  },
+  { label: "Formação", value: "formacao", color: stringToColor("Formação") },
+  {
+    label: "Sessão de Exames",
+    value: "exames",
+    color: stringToColor("Exames"),
+  },
+  { label: "Seminário", value: "seminario", color: stringToColor("Seminário") },
+  { label: "Workshop", value: "workshop", color: stringToColor("Workshop") },
 ];
 
 export const SeasonOptions: { label: string; value: string }[] = [

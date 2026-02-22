@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { MonthlyMemberPaymentConfig } from '../models/MonthlyMemberPaymentConfig';
-import type { PaginatedMonthlyMemberPaymentConfigList } from '../models/PaginatedMonthlyMemberPaymentConfigList';
-import type { PatchedMonthlyMemberPaymentConfig } from '../models/PatchedMonthlyMemberPaymentConfig';
+import type { MonthlyPersonPaymentConfig } from '../models/MonthlyPersonPaymentConfig';
+import type { PaginatedMonthlyPersonPaymentConfigList } from '../models/PaginatedMonthlyPersonPaymentConfigList';
+import type { PatchedMonthlyPersonPaymentConfig } from '../models/PatchedMonthlyPersonPaymentConfig';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -12,13 +12,13 @@ export class MonthlyMemberPaymentConfigsService {
     /**
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
-     * @returns PaginatedMonthlyMemberPaymentConfigList
+     * @returns PaginatedMonthlyPersonPaymentConfigList
      * @throws ApiError
      */
     public static monthlyMemberPaymentConfigsList(
         page?: number,
         pageSize?: number,
-    ): CancelablePromise<PaginatedMonthlyMemberPaymentConfigList> {
+    ): CancelablePromise<PaginatedMonthlyPersonPaymentConfigList> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/monthly_member_payment_configs/',
@@ -30,12 +30,12 @@ export class MonthlyMemberPaymentConfigsService {
     }
     /**
      * @param requestBody
-     * @returns MonthlyMemberPaymentConfig
+     * @returns MonthlyPersonPaymentConfig
      * @throws ApiError
      */
     public static monthlyMemberPaymentConfigsCreate(
-        requestBody: MonthlyMemberPaymentConfig,
-    ): CancelablePromise<MonthlyMemberPaymentConfig> {
+        requestBody: MonthlyPersonPaymentConfig,
+    ): CancelablePromise<MonthlyPersonPaymentConfig> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/monthly_member_payment_configs/',
@@ -45,12 +45,12 @@ export class MonthlyMemberPaymentConfigsService {
     }
     /**
      * @param id A unique integer value identifying this monthly person payment config.
-     * @returns MonthlyMemberPaymentConfig
+     * @returns MonthlyPersonPaymentConfig
      * @throws ApiError
      */
     public static monthlyMemberPaymentConfigsRetrieve(
         id: number,
-    ): CancelablePromise<MonthlyMemberPaymentConfig> {
+    ): CancelablePromise<MonthlyPersonPaymentConfig> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/monthly_member_payment_configs/{id}/',
@@ -62,13 +62,13 @@ export class MonthlyMemberPaymentConfigsService {
     /**
      * @param id A unique integer value identifying this monthly person payment config.
      * @param requestBody
-     * @returns MonthlyMemberPaymentConfig
+     * @returns MonthlyPersonPaymentConfig
      * @throws ApiError
      */
     public static monthlyMemberPaymentConfigsUpdate(
         id: number,
-        requestBody: MonthlyMemberPaymentConfig,
-    ): CancelablePromise<MonthlyMemberPaymentConfig> {
+        requestBody: MonthlyPersonPaymentConfig,
+    ): CancelablePromise<MonthlyPersonPaymentConfig> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/monthly_member_payment_configs/{id}/',
@@ -82,13 +82,13 @@ export class MonthlyMemberPaymentConfigsService {
     /**
      * @param id A unique integer value identifying this monthly person payment config.
      * @param requestBody
-     * @returns MonthlyMemberPaymentConfig
+     * @returns MonthlyPersonPaymentConfig
      * @throws ApiError
      */
     public static monthlyMemberPaymentConfigsPartialUpdate(
         id: number,
-        requestBody?: PatchedMonthlyMemberPaymentConfig,
-    ): CancelablePromise<MonthlyMemberPaymentConfig> {
+        requestBody?: PatchedMonthlyPersonPaymentConfig,
+    ): CancelablePromise<MonthlyPersonPaymentConfig> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/monthly_member_payment_configs/{id}/',

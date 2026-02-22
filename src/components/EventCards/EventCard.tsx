@@ -46,6 +46,7 @@ import { Navigate, useParams } from "react-router-dom";
 import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
 import PageInfoCard from "../info-cards/PageInfoCard";
+import { EncounterOptions } from "../../config";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -187,9 +188,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <CompInfoToolTip
                           title="Tipo de Evento"
                           text={
-                            singleEventData?.data.encounter
-                              ? `Encontro/Estágio ${singleEventData?.data.encounter_type}`
-                              : "Competição/Torneio"
+                            EncounterOptions.find(
+                              (item) =>
+                                item.value ===
+                                singleEventData?.data?.encounter_type,
+                            )?.label!
                           }
                           icon={<Info />}
                         ></CompInfoToolTip>
@@ -258,7 +261,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     },
                   }}
                 ></CardHeader>
-                <CardContent sx={{ ml: 2 }}>
+                <CardContent sx={{ ml: 5 }}>
                   <li style={{ color: "grey" }}>
                     Não existem ficheiros para este Evento.
                   </li>
@@ -304,7 +307,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }}
                     />
                   ) : singleEventData?.data?.description === "" ? (
-                    <li style={{ color: "grey" }}>
+                    <li style={{ color: "grey", marginLeft: 30  }}>
                       Não existem informações adicionais para este Evento.
                     </li>
                   ) : (
@@ -356,15 +359,15 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   ) : eventRateError ? (
                     <ListItem disablePadding sx={{ m: 0 }}>
                       <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                        <ListItemText primary={"Um error ocorreu."} />
+                        <ListItemText primary={"Um erro ocorreu."} />
                       </ListItemButton>
                     </ListItem>
                   ) : eventRateData?.data.code === "event_not_ended" ? (
-                    <li style={{ color: "grey" }}>
+                    <li style={{ color: "grey", marginLeft: 30 }}>
                       {eventRateData?.data?.message}
                     </li>
                   ) : eventRateData?.data.code === "already_rated" ? (
-                    <li style={{ color: "grey" }}>
+                    <li style={{ color: "grey", marginLeft: 30 }}>
                       {eventRateData?.data?.message}
                     </li>
                   ) : (
@@ -420,6 +423,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }}
                       sx={{
                         p: 1,
+                        pb: 0,
                         gap: 4,
                         flexShrink: 0,
                         alignSelf: { xs: "flex-end", sm: "center" },

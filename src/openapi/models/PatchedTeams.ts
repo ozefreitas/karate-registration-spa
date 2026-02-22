@@ -2,16 +2,16 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CompactMembers } from './CompactMembers';
+import type { CompactPerson } from './CompactPerson';
 import type { GenderEnum } from './GenderEnum';
 import type { NameCategory } from './NameCategory';
 export type PatchedTeams = {
     readonly id?: string;
-    athlete1?: CompactMembers;
-    athlete2?: CompactMembers;
-    athlete3?: CompactMembers;
-    athlete4?: CompactMembers;
-    athlete5?: CompactMembers;
+    athlete1?: CompactPerson;
+    athlete2?: CompactPerson;
+    athlete3?: CompactPerson;
+    athlete4?: CompactPerson;
+    athlete5?: CompactPerson;
     readonly team_size?: string;
     category?: NameCategory;
     readonly disciplines?: string;

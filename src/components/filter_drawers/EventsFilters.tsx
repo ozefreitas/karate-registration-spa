@@ -26,13 +26,15 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function EventsFilters(props: {
-  isLoading: boolean;
-  control: any;
-  errors: any;
-  reset: any;
-  changedCount: number;
-}) {
+export default function EventsFilters(
+  props: Readonly<{
+    isLoading: boolean;
+    control: any;
+    errors: any;
+    reset: any;
+    changedCount: number;
+  }>,
+) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {

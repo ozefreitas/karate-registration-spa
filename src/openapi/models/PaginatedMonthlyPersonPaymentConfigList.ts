@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Person } from './Person';
-export type PaginatedPersonList = {
+import type { MonthlyPersonPaymentConfig } from './MonthlyPersonPaymentConfig';
+export type PaginatedMonthlyPersonPaymentConfigList = {
     count: number;
     next?: string | null;
     previous?: string | null;
-    results: Array<Person>;
+    results: Array<MonthlyPersonPaymentConfig>;
 };
 
