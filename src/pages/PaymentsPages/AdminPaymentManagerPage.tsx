@@ -29,7 +29,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-export default function AdminPaymentManagerPage(props: { userRole: string }) {
+export default function AdminPaymentManagerPage(
+  props: Readonly<{ userRole: string }>,
+) {
   type Club = { id: string; username: string; role: string; tier: string };
   type Subscriptions = {
     id: string;

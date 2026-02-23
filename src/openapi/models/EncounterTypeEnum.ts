@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * * `none` - None
+ * * `comp` - Competição/Torneio
  * * `regional` - Regional
  * * `nacional` - Nacional
  * * `internacional` - Internacional
@@ -11,9 +11,10 @@
  * * `formacao` - Formação
  * * `exames` - Sessão de Exames
  * * `seminario` - Seminário
+ * * `workshop` - Workshop
  */
 export enum EncounterTypeEnum {
-    NONE = 'none',
+    COMP = 'comp',
     REGIONAL = 'regional',
     NACIONAL = 'nacional',
     INTERNACIONAL = 'internacional',
@@ -21,4 +22,5 @@ export enum EncounterTypeEnum {
     FORMACAO = 'formacao',
     EXAMES = 'exames',
     SEMINARIO = 'seminario',
+    WORKSHOP = 'workshop',
 }

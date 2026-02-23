@@ -37,6 +37,7 @@ import ChooseEditModal from "../TeamModal/ChooseEditModal";
 import CategoryInfoModal from "../Categories/CategoryInfoModal";
 import EditMemberActivePaymentModal from "../Modals/EditMemberActivePaymentModal";
 import EditPaymentPlanModal from "../Modals/EditPaymentPlanModal";
+import CategoryInfoDialog from "../Categories/CategoryInfoDialog";
 
 interface TablePaginationActionsProps {
   count: number;
@@ -781,11 +782,11 @@ export default function AllUseTable(
       {props.type === "Categorias" ||
       props.type === "CategoriasReadOnly" ||
       props.type === "EventCategories" ? (
-        <CategoryInfoModal
+        <CategoryInfoDialog
           isModalOpen={isCategoryInfoModalOpen}
           handleModalClose={handleCategoryInfoModalClose}
           categoryId={actionedRow}
-        ></CategoryInfoModal>
+        ></CategoryInfoDialog>
       ) : null}
       {props.type === "Pagamentos" ? (
         <EditMemberActivePaymentModal

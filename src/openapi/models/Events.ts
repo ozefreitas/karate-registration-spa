@@ -28,8 +28,7 @@ export type Events = {
     has_ended?: boolean;
     has_registrations?: boolean;
     has_categories?: boolean;
-    encounter?: boolean;
-    encounter_type?: EncounterTypeEnum | null;
+    encounter_type?: EncounterTypeEnum;
     rating?: number;
     file?: string | null;
 };

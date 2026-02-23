@@ -276,143 +276,131 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         ) : eventsData?.data.count !== 0 && currentView === "list" ? (
           <Grid size={12}>
-            <Card sx={{ m: 2, mt: 0 }}>
-              <CardContent>
-                {eventsData?.data.results.map((comp: Event, index: string) => (
-                  <Grid size={12} key={index} sx={{ p: 1 }}>
-                    <Card elevation={3}>
-                      <CardContent
-                        sx={{
-                          p: 0,
-                          pl: 1,
-                          "&:last-child": {
-                            paddingBottom: 0,
-                          },
-                        }}
-                      >
-                        <Grid container alignItems="center" size={12}>
-                          <Grid size={4} sx={{ p: 1 }}>
-                            <Card
-                              sx={{
-                                backgroundColor: "lightgray",
-                                display: "flex",
-                                justifyContent: "center",
-                                p: 2,
-                              }}
-                            >
-                              <Avatar
-                                {...stringAvatar(
-                                  comp.encounter_type !== "" &&
-                                    comp.encounter_type !== null
-                                    ? comp.encounter_type
-                                    : "Competição",
-                                  120,
-                                )}
-                              ></Avatar>
-                            </Card>
-                          </Grid>
-                          <Grid container size={8} sx={{ p: 2 }}>
-                            <Grid size={12}>
-                              <Typography
-                                sx={{ pl: 3, fontWeight: "bold" }}
-                                variant="h5"
-                              >
-                                {comp.name}
-                              </Typography>
-                            </Grid>
-                            <Grid size={9}>
-                              <List>
-                                <Grid container size={12}>
-                                  <Grid size={7}>
-                                    <CompInfoToolTip
-                                      title="Dia do Evento"
-                                      text={comp.event_date}
-                                      icon={<Today />}
-                                    ></CompInfoToolTip>
-                                  </Grid>
-                                  <Grid size={5}>
-                                    {comp.has_registrations ? (
-                                      <CompInfoToolTip
-                                        title="Número de Inscritos"
-                                        text={comp.number_registrations.toString()}
-                                        icon={<HowToReg />}
-                                      ></CompInfoToolTip>
-                                    ) : null}
-                                  </Grid>
-                                </Grid>
-                                <Grid container size={12}>
-                                  <Grid size={7}>
-                                    <CompInfoToolTip
-                                      title="Estado"
-                                      text={
-                                        comp.has_ended
-                                          ? "Realizado"
-                                          : comp.is_open || comp.is_retification
-                                            ? "Inscrições em Progresso"
-                                            : comp.is_closed
-                                              ? "Inscrições Encerradas"
-                                              : "Por Iniciar"
-                                      }
-                                      icon={<AccessTime />}
-                                    ></CompInfoToolTip>
-                                  </Grid>
-                                  <Grid size={5}>
-                                    {comp.has_any_team ? (
-                                      <CompInfoToolTip
-                                        title=""
-                                        text="Equipas Disponíveis"
-                                        icon={<Groups />}
-                                      ></CompInfoToolTip>
-                                    ) : null}
-                                  </Grid>
-                                </Grid>
-                                <CompInfoToolTip
-                                  title="Localização"
-                                  text={comp.location}
-                                  icon={<LocationPin />}
-                                ></CompInfoToolTip>
-                              </List>
-                            </Grid>
-                            <Grid
-                              container
-                              justifyContent="flex-end"
-                              alignContent="flex-end"
-                              size={3}
-                            >
-                              <Tooltip arrow placement="top" title="Ir para">
-                                <span>
-                                  <IconButton
-                                    sx={{
-                                      transition: "0.3s",
-                                      borderRadius: 4,
-                                      p: 1.5,
-                                      px: 2,
-                                      border: 2,
-                                      borderColor: "red",
-                                      "&:hover": {
-                                        transform: "translateY(-3px)",
-                                        boxShadow: 6,
-                                        borderColor: "red",
-                                        bgcolor: "red",
-                                      },
-                                    }}
-                                    onClick={() =>
-                                      navigate(`/events/${comp.id}/`)
-                                    }
-                                  >
-                                    <East sx={{ color: "black" }}></East>
-                                  </IconButton>
-                                </span>
-                              </Tooltip>
-                            </Grid>
-                          </Grid>
+            {eventsData?.data.results.map((comp: Event, index: string) => (
+              <Grid size={12} key={index} p={2}>
+                <Card elevation={3}>
+                  <CardContent
+                    sx={{
+                      p: 0,
+                      pl: 1,
+                      "&:last-child": {
+                        paddingBottom: 0,
+                      },
+                    }}
+                  >
+                    <Grid container alignItems="center" size={12}>
+                      <Grid size={4} sx={{ p: 1 }}>
+                        <Card
+                          sx={{
+                            backgroundColor: "lightgray",
+                            display: "flex",
+                            justifyContent: "center",
+                            p: 2,
+                          }}
+                        >
+                          <Avatar
+                            {...stringAvatar(comp.encounter_type, 120)}
+                          ></Avatar>
+                        </Card>
+                      </Grid>
+                      <Grid container size={8} sx={{ p: 2 }}>
+                        <Grid size={12}>
+                          <Typography
+                            sx={{ pl: 3, fontWeight: "bold" }}
+                            variant="h5"
+                          >
+                            {comp.name}
+                          </Typography>
                         </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </CardContent>
-            </Card>
+                        <Grid size={9}>
+                          <List>
+                            <Grid container size={12}>
+                              <Grid size={7}>
+                                <CompInfoToolTip
+                                  title="Dia do Evento"
+                                  text={comp.event_date}
+                                  icon={<Today />}
+                                ></CompInfoToolTip>
+                              </Grid>
+                              <Grid size={5}>
+                                {comp.has_registrations ? (
+                                  <CompInfoToolTip
+                                    title="Número de Inscritos"
+                                    text={comp.number_registrations.toString()}
+                                    icon={<HowToReg />}
+                                  ></CompInfoToolTip>
+                                ) : null}
+                              </Grid>
+                            </Grid>
+                            <Grid container size={12}>
+                              <Grid size={7}>
+                                <CompInfoToolTip
+                                  title="Estado"
+                                  text={
+                                    comp.has_ended
+                                      ? "Realizado"
+                                      : comp.is_open || comp.is_retification
+                                        ? "Inscrições em Progresso"
+                                        : comp.is_closed
+                                          ? "Inscrições Encerradas"
+                                          : "Por Iniciar"
+                                  }
+                                  icon={<AccessTime />}
+                                ></CompInfoToolTip>
+                              </Grid>
+                              <Grid size={5}>
+                                {comp.has_any_team ? (
+                                  <CompInfoToolTip
+                                    title=""
+                                    text="Equipas Disponíveis"
+                                    icon={<Groups />}
+                                  ></CompInfoToolTip>
+                                ) : null}
+                              </Grid>
+                            </Grid>
+                            <CompInfoToolTip
+                              title="Localização"
+                              text={comp.location}
+                              icon={<LocationPin />}
+                            ></CompInfoToolTip>
+                          </List>
+                        </Grid>
+                        <Grid
+                          container
+                          justifyContent="flex-end"
+                          alignContent="flex-end"
+                          size={3}
+                        >
+                          <Tooltip arrow placement="top" title="Ir para">
+                            <span>
+                              <IconButton
+                                sx={{
+                                  transition: "0.3s",
+                                  borderRadius: 4,
+                                  p: 1.5,
+                                  px: 2,
+                                  border: 2,
+                                  borderColor: "red",
+                                  "&:hover": {
+                                    transform: "translateY(-3px)",
+                                    boxShadow: 6,
+                                    borderColor: "red",
+                                    bgcolor: "red",
+                                  },
+                                }}
+                                onClick={() => navigate(`/events/${comp.id}/`)}
+                              >
+                                <East sx={{ color: "black" }}></East>
+                              </IconButton>
+                            </span>
+                          </Tooltip>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         ) : null}
         {currentView == "calendar" &&

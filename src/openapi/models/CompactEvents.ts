@@ -16,7 +16,7 @@ export type CompactEvents = {
     readonly is_retification: string;
     readonly number_registrations: string;
     readonly has_any_team: string;
-    encounter_type?: EncounterTypeEnum | null;
+    encounter_type?: EncounterTypeEnum;
     description?: string | null;
 };
 

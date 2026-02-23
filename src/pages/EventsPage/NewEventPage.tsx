@@ -180,7 +180,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       description: data.description,
       custody: data.custody,
       email_contact: data.email_contact,
-      contact: data.contact,
+      contact: data.contact === "" ? null : data.contact,
       encounter: data.encounter,
       encounter_type: data.encounter_type,
       has_registrations: data.has_registrations,

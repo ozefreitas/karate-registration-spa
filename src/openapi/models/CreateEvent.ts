@@ -19,8 +19,7 @@ export type CreateEvent = {
     contact?: number | null;
     has_registrations?: boolean;
     has_categories?: boolean;
-    encounter?: boolean;
-    encounter_type?: EncounterTypeEnum | null;
+    encounter_type?: EncounterTypeEnum;
     file?: string | null;
 };
 

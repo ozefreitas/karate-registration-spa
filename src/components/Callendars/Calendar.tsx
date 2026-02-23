@@ -104,7 +104,7 @@ export default function Calendar() {
         </IconButton>
         <Typography
           variant="h4"
-          color="info"
+          color="error"
           fontWeight={700}
           sx={{ minWidth: 260, textAlign: "center" }}
         >
@@ -125,14 +125,14 @@ export default function Calendar() {
           {WEEKDAYS.map((day) => (
             <Grid
               justifyContent={"center"}
-              bgcolor={"black"}
+              bgcolor={"#fdecea"}
               container
               key={day}
               sx={{ flex: 1 }}
             >
               <Box
                 sx={{
-                  color: "white",
+                  color: "red",
                   textAlign: "center",
                   py: 2,
                   fontWeight: 700,
@@ -254,7 +254,13 @@ export default function Calendar() {
       </Paper>
 
       {/* Legend */}
-      <Grid container gap={3} justifyContent={"center"} mt={2}>
+      <Grid
+        container
+        spacing={3}
+        rowSpacing={1}
+        justifyContent={"center"}
+        m={2}
+      >
         {Object.entries(EncounterOptions).map(([_, { color, label }]) => (
           <Box
             key={label}

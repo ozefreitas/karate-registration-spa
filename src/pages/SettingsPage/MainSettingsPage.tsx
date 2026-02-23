@@ -29,6 +29,7 @@ import {
   Block,
   ThumbUp,
   PictureAsPdf,
+  Upgrade,
 } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import { authHooks, clubsHooks, adminHooks, membersHooks } from "../../hooks";
@@ -40,6 +41,7 @@ import { useSearchParams } from "react-router-dom";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { formatDateTime } from "../../utils/utils";
 import ActionValidationModal from "../../components/Modals/ActionValidationModal";
+import SectionHeader from "../../components/Header/SectionHeader";
 
 export default function MainSettingsPage() {
   const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
@@ -271,7 +273,7 @@ export default function MainSettingsPage() {
     isLoading: isMemberValidationRequestsLoading,
   } = membersHooks.useFetchMemberValidationRequestsData();
 
-  console.log(memberValidationRequestData)
+  console.log(memberValidationRequestData);
 
   const deleteMemberValidationRequest =
     membersHooks.useDeleteMemberValidationRequest();
@@ -595,14 +597,12 @@ export default function MainSettingsPage() {
             </Tabs>
           </Box>
           {section === "accounts_manager" ? (
-            <Grid p={1}>
-              <Typography variant="h5" sx={{ pl: 4, mt: 3, mb: 2 }}>
-                Adicionar/Remover Clubes
-              </Typography>
+            <Grid mt={3}>
+              <SectionHeader title="Adicionar/Remover Clubes"></SectionHeader>
               <Grid
-                sx={{ m: 4, mb: 0, mt: 1 }}
+                mb={5}
                 container
-                justifyContent="center"
+                justifyContent="space-between"
                 alignItems="center"
               >
                 <Grid size={6} sx={{ p: 2 }}>
@@ -629,7 +629,7 @@ export default function MainSettingsPage() {
                     )}
                   </TextField>
                 </Grid>
-                <Grid size={6} container justifyContent="space-evenly">
+                <Grid size={6} container justifyContent="space-around">
                   <Button
                     variant="contained"
                     size="large"
@@ -652,10 +652,8 @@ export default function MainSettingsPage() {
                   </Button>
                 </Grid>
               </Grid>
-              <Typography variant="h5" sx={{ pl: 4, mt: 5, mb: 2 }}>
-                Pedidos de Conta
-              </Typography>
-              <Grid container justifyContent="center">
+              <SectionHeader title="Pedidos de Conta"></SectionHeader>
+              <Grid mb={5}>
                 <Grid size={6} sx={{ p: 2 }}>
                   <TextField
                     color="warning"
@@ -680,7 +678,7 @@ export default function MainSettingsPage() {
                     )}
                   </TextField>
 
-                  {acountDetails !== undefined ? (
+                  {acountDetails === undefined ? null : (
                     <Card sx={{ m: 2 }}>
                       <CardContent>
                         <FormControl
@@ -911,13 +909,11 @@ export default function MainSettingsPage() {
                         </CardContent>
                       )}
                     </Card>
-                  ) : null}
+                  )}
                 </Grid>
               </Grid>
-              <Typography variant="h5" sx={{ pl: 4, mt: 5, mb: 2 }}>
-                Pedidos de Recuperação de Password
-              </Typography>
-              <Grid container justifyContent="center">
+              <SectionHeader title="Pedidos de Recuperação de Password"></SectionHeader>
+              <Grid>
                 <Grid size={6} sx={{ p: 2 }}>
                   <TextField
                     color="warning"
@@ -1126,10 +1122,8 @@ export default function MainSettingsPage() {
               notificado.
             </Grid>
           ) : isMemberValidationRequestsLoading ? null : (
-            <Grid mt={5}>
-              <Typography sx={{ m: 3, mt: 5 }} variant="h5">
-                Verificação de Membros
-              </Typography>
+            <Grid mt={3}>
+              <SectionHeader title="Verificação de Membros"></SectionHeader>
               <AllUseTable
                 count={requestsVerifyRows?.length}
                 data={requestsVerifyRows}
@@ -1140,9 +1134,10 @@ export default function MainSettingsPage() {
                 columnsHeaders={getColumnMapping("ola")}
                 overideInternalPage
               ></AllUseTable>
-              <Typography sx={{ m: 3, mt: 5 }} variant="h5">
-                Pedidos de Propostas a Exame
-              </Typography>
+              <SectionHeader
+                title="Pedidos de Propostas a Exame"
+                icon={<Upgrade sx={{ fontSize: 22 }} />}
+              ></SectionHeader>
               <AllUseTable
                 count={requestsExamsRows?.length}
                 data={requestsExamsRows}
