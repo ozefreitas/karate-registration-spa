@@ -1,19 +1,58 @@
-import { ListItem, Tooltip, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  ListItem,
+  Tooltip,
+  ListItemIcon,
+  ListItemText,
+  Grid,
+  Typography,
+} from "@mui/material";
+
+function StatRow({
+  icon,
+  label,
+  value,
+}: Readonly<{
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}>) {
+  return (
+    <Grid
+      container
+      alignItems={"center"}
+      justifyContent={"space-between"}
+      py={1}
+    >
+      <Grid container alignItems={"center"} spacing={3}>
+        <Grid
+          width={30}
+          height={30}
+          borderRadius={2}
+          bgcolor={"#fdecea"}
+          container
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          {icon}
+        </Grid>
+        <Typography variant="body1" sx={{ color: "#555", fontWeight: 500 }}>
+          {label}
+        </Typography>
+      </Grid>
+      <Typography
+        variant="body1"
+        fontWeight={700}
+        color={value === null ? "textDisabled" : "error"}
+        sx={{ minWidth: 32, textAlign: "right" }}
+      >
+        {value ?? "N/A"}
+      </Typography>
+    </Grid>
+  );
+}
 
 export default function CompInfoToolTip(
   props: Readonly<{ title: string; text: string; icon: any }>,
 ) {
-  return (
-    <ListItem sx={{ m: 0, pb: 0, display: "flex", alignItems: "flex-end" }}>
-      <Tooltip placement="left" sx={{ cursor: "pointer" }} title={props.title}>
-        <span>
-          <ListItemIcon>{props.icon}</ListItemIcon>
-        </span>
-      </Tooltip>
-      <ListItemText
-        sx={{ color: props.text ? "black" : "GrayText" }}
-        primary={props.text ? props.text : "Não se aplica"}
-      />
-    </ListItem>
-  );
+  return <StatRow icon={props.icon} label={props.title} value={props.text} />;
 }

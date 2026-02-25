@@ -1,12 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import {
-  updateMember,
-  patchMember,
-  patchMemberValidationRequests,
-  deleteMemberValidationRequest,
-} from "../../api";
-import { PersonsService } from "../../openapi";
+import { MemberValidationService, PersonsService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useUpdateMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -14,8 +9,9 @@ export const useUpdateMemberData = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ memberId, data }: { memberId: string; data: any }) =>
-      updateMember(memberId, data),
+      PersonsService.personsUpdate(memberId, data),
     onSuccess: (data: any) => {
+      callNotiStack(enqueueSnackbar, data.data.message, "success");
       enqueueSnackbar(data.data.message, {
         variant: "success",
         anchorOrigin: {
@@ -34,25 +30,19 @@ export const useUpdateMemberData = () => {
     onError: (data: any) => {
       const errorData = data.response?.data || {};
       if (errorData.not_allowed?.[0]) {
-        enqueueSnackbar(errorData.not_allowed?.[0], {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(
+          enqueueSnackbar,
+          errorData.not_allowed?.[0],
+          "error",
+          3000,
+        );
       } else {
-        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(
+          enqueueSnackbar,
+          "Ocorreu um erro! Tente novamente.",
+          "error",
+          3000,
+        );
       }
     },
   });
@@ -64,32 +54,25 @@ export const usePatchMemberData = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ personId, data }: { personId: string; data: any }) =>
-      patchMember(personId, data),
+      PersonsService.personsPartialUpdate(personId, data),
     onSuccess: () => {
-      enqueueSnackbar("Membro atualizado com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Membro atualizado com sucesso!",
+        "success",
+      );
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["single-member"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -100,29 +83,21 @@ export const usePatchMemberValidationRequest = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ validationId, data }: { validationId: string; data: any }) =>
-      patchMemberValidationRequests(validationId, data),
+      MemberValidationService.memberValidationPartialUpdate(
+        Number(validationId),
+        data,
+      ),
     onSuccess: () => {
-      enqueueSnackbar("Estado atualizado!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Estado atualizado!", "success");
       queryClient.invalidateQueries({ queryKey: ["members-validation"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -133,29 +108,18 @@ export const useDeleteMemberValidationRequest = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ validationId }: { validationId: string }) =>
-      deleteMemberValidationRequest(validationId),
+      MemberValidationService.memberValidationDestroy(Number(validationId)),
     onSuccess: () => {
-      enqueueSnackbar("Pedido eliminado.", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Pedido eliminado.", "success");
       queryClient.invalidateQueries({ queryKey: ["members-validation"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

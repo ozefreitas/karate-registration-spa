@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchActiveAnnouncement } from "../../api";
+import { ActiveAnnouncementService } from "../../openapi";
 
 export const useFetchAnnouncementData = () => {
   return useQuery({
     queryKey: ["active-annoucement"],
-    queryFn: fetchActiveAnnouncement,
+    queryFn: ActiveAnnouncementService.activeAnnouncementList,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

@@ -396,7 +396,7 @@ export default function AdminPaymentManagerPage(
           </Card>
         </Grid>
       </Grid>
-      <Grid size={12} sx={{ m: 2 }}>
+      <Grid size={12} m={2} mt={7}>
         {watch("search") === "" ? (
           <ListItem>
             <ListItemText

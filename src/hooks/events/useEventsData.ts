@@ -1,12 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchEvents,
-  fetchSingleEvent,
-  fetchNextEvent,
-  fetchLastEvent,
-  fetchEventRegistrationFile,
-  fetchEventDaysperMonth,
-} from "../../api/";
+import { EventsService } from "../../openapi";
 
 export const useFetchEventsData = (
   page: number,
@@ -35,17 +28,17 @@ export const useFetchEventsData = (
       day,
     ],
     queryFn: () =>
-      fetchEvents(
+      EventsService.eventsList(
+        hasCategories,
+        hasEnded,
+        hasRegistrations,
+        hasTeams,
+        day,
+        month,
+        ordering,
         page,
         pageSize,
-        ordering,
         season,
-        hasEnded,
-        hasTeams,
-        hasCategories,
-        hasRegistrations,
-        month,
-        day,
       ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -57,14 +50,14 @@ export const useFetchEventsData = (
 export const useFetchSingleEventData = (eventId: string) => {
   return useQuery({
     queryKey: ["single-event", eventId],
-    queryFn: () => fetchSingleEvent(eventId),
+    queryFn: () => EventsService.eventsRetrieve(eventId),
   });
 };
 
 export const useFetchNextEventData = () => {
   return useQuery({
     queryKey: ["next-event"],
-    queryFn: fetchNextEvent,
+    queryFn: EventsService.eventsNextEventRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -73,7 +66,7 @@ export const useFetchNextEventData = () => {
 export const useFetchLastEvent = (userRole: string) => {
   return useQuery({
     queryKey: ["last-event"],
-    queryFn: fetchLastEvent,
+    queryFn: EventsService.eventsLastEventRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: ["subed_club", "main_admin", "single_admin", "superuser"].includes(
@@ -85,19 +78,11 @@ export const useFetchLastEvent = (userRole: string) => {
 export const useFetchEventRegistrationFile = (eventId: string) => {
   return useQuery({
     queryKey: ["registration-file", eventId],
-    queryFn: async () => await fetchEventRegistrationFile(eventId),
+    queryFn: async () =>
+      await EventsService.eventsExportMembersExcelRetrieve(eventId),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,
     enabled: false,
-  });
-};
-
-export const useFetchEventDaysperMonth = (month: string) => {
-  return useQuery({
-    queryKey: ["event-days-per-month", month],
-    queryFn: () => fetchEventDaysperMonth(month),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
   });
 };

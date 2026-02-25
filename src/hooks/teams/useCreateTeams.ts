@@ -1,47 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createTeam } from "../../api";
+import { TeamsService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useCreateTeam = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createTeam,
+    mutationFn: TeamsService.teamsCreate,
     onSuccess: () => {
-      enqueueSnackbar("Equipa criada com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Equipa criada com sucesso!", "success");
       queryClient.invalidateQueries({ queryKey: ["teams"] });
     },
     onError: (data: any) => {
       const errorData = data.response?.data || {};
       if (errorData.athletes?.[0]) {
-        enqueueSnackbar(errorData.athletes?.[0], {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(enqueueSnackbar, errorData.athletes?.[0], "error", 5000);
       } else
-        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(
+          enqueueSnackbar,
+          "Ocorreu um erro! Tente novamente.",
+          "error",
+          3000,
+        );
     },
   });
 };

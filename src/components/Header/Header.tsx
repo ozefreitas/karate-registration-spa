@@ -134,6 +134,26 @@ export default function Header(
     (item) => item.title === "Não permitido" && item.link === "unauthorized/",
   );
 
+  function IconBox({ icon }: Readonly<{ icon: React.ReactNode }>) {
+    return (
+      <Box
+        sx={{
+          width: 40,
+          height: 40,
+          borderRadius: 2,
+          bgcolor: "red",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          color: "#fff",
+        }}
+      >
+        {icon}
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -306,7 +326,11 @@ export default function Header(
                       <Tooltip title="Conta" placement="top">
                         <span>
                           <Avatar
-                            {...stringAvatar(user?.data.username, undefined, "allow")}
+                            {...stringAvatar(
+                              user?.data.username,
+                              undefined,
+                              "allow",
+                            )}
                           ></Avatar>
                         </span>
                       </Tooltip>
@@ -508,7 +532,9 @@ export default function Header(
                 >
                   <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
                     <ListItemIcon sx={{ px: 1 }}>
-                      {getNotificationTypeIcon(noti.type)}
+                      <IconBox
+                        icon={getNotificationTypeIcon(noti.type)}
+                      ></IconBox>
                     </ListItemIcon>
                     <ListItemText
                       sx={{

@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import {
-  addDisciplineTeam,
-  removeDisciplineTeam,
-  removeAllDisciplineTeams,
-} from "../../api";
+import { DisciplinesService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useAddDisciplineTeam = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -12,55 +9,32 @@ export const useAddDisciplineTeam = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
-      addDisciplineTeam(disciplineId, data),
+      DisciplinesService.disciplinesAddTeamCreate(Number(disciplineId), data),
     retry: false,
     onSuccess: (data: any) => {
-      enqueueSnackbar(`${data.data.message}`, {
-        variant: data.data.status === "info" ? "warning" : "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        data.data.message,
+        data.data.status === "info" ? "warning" : "success",
+      );
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      console.log(data)
+      // console.log(data);
       const errorData = data.response?.data || {};
       if (errorData.athletes?.[0]) {
-        enqueueSnackbar(errorData.athletes?.[0], {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(enqueueSnackbar, errorData.athletes?.[0], "error");
       } else if (errorData.error) {
-        enqueueSnackbar(errorData.error, {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(enqueueSnackbar, errorData.error, "error");
       } else
-        enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "top",
-            horizontal: "center",
-          },
-          autoHideDuration: 5000,
-          preventDuplicate: true,
-        });
+        callNotiStack(
+          enqueueSnackbar,
+          "Ocorreu um erro! Tente novamente.",
+          "error",
+          3000,
+        );
     },
   });
 };
@@ -71,31 +45,18 @@ export const useDeleteDisciplineTeam = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
-      removeDisciplineTeam(disciplineId, data),
+      DisciplinesService.disciplinesDeleteTeamCreate(
+        Number(disciplineId),
+        data,
+      ),
     onSuccess: (data: any) => {
-      enqueueSnackbar(`${data.data.message}`, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.response.data.error}`, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
     },
   });
 };
@@ -106,31 +67,15 @@ export const useRemoveAllDisciplineTeams = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ disciplineId }: { disciplineId: string }) =>
-      removeAllDisciplineTeams(disciplineId),
+      DisciplinesService.disciplinesDeleteAllTeamsDestroy(Number(disciplineId)),
     onSuccess: (data: any) => {
-      enqueueSnackbar(`${data.data.message}`, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(`${data.response.data.error}`, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
     },
   });
 };

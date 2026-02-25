@@ -1,41 +1,26 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import {
-  patchClubSubscription,
-  patchClubSubscriptionAmountConfig,
-  patchClubSubscriptionAmountbyYear,
-  patchClubSubscriptionDueDatebyYear,
-} from "../../api";
+import { ClubSubscriptionService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const usePatchClubSubscriptionData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ clubId, data }: { clubId: string; data: any }) =>
-      patchClubSubscription(clubId, data),
+    mutationFn: ({ clubId, data }: { clubId: number; data: any }) =>
+      ClubSubscriptionService.clubSubscriptionPartialUpdate(clubId, data),
     onSuccess: () => {
-      enqueueSnackbar("Quotas atualizadas!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Quotas atualizadas!", "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Não foi possível remover este Clube. Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -46,29 +31,20 @@ export const usePatchClubSubscriptionAmountConfig = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ data }: { data: any }) =>
-      patchClubSubscriptionAmountConfig(data),
+      ClubSubscriptionService.clubSubscriptionUpdateSubscriptionAmountPartialUpdate(
+        data,
+      ),
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Não foi possível remover este Clube. Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -78,29 +54,14 @@ export const usePatchClubSubscriptionAmountbyYear = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: patchClubSubscriptionAmountbyYear,
+    mutationFn:
+      ClubSubscriptionService.clubSubscriptionUpdateAllUsersAmountPartialUpdate,
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(data.response.data.error, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 3000);
     },
   });
 };
@@ -110,29 +71,14 @@ export const usePatchClubSubscriptionDueDatebyYear = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: patchClubSubscriptionDueDatebyYear,
+    mutationFn:
+      ClubSubscriptionService.clubSubscriptionUpdateAllUsersDueDatePartialUpdate,
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(data.response.data.error, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 3000);
     },
   });
 };

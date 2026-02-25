@@ -1,37 +1,31 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { deleteMember, deleteAllMembers } from "../../api";
+import { PersonsService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useDeleteMemberData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: deleteMember,
+    mutationFn: PersonsService.personsDestroy,
     onSuccess: () => {
-      enqueueSnackbar("Membro(s) removido(s) da plataforma com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Membro(s) removido(s) da plataforma com sucesso!",
+        "success",
+      );
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -41,31 +35,20 @@ export const useDeleteAllMemberData = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: deleteAllMembers,
+    mutationFn: PersonsService.personsDeleteAllDestroy,
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success");
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

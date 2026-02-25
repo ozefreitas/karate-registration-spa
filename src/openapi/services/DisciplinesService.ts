@@ -23,6 +23,7 @@ export class DisciplinesService {
      * @param isTeam
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
+     * @param restricted
      * @returns PaginatedDisciplinesList
      * @throws ApiError
      */
@@ -32,6 +33,7 @@ export class DisciplinesService {
         isTeam?: boolean,
         page?: number,
         pageSize?: number,
+        restricted?: boolean,
     ): CancelablePromise<PaginatedDisciplinesList> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -42,6 +44,7 @@ export class DisciplinesService {
                 'is_team': isTeam,
                 'page': page,
                 'page_size': pageSize,
+                'restricted': restricted,
             },
         });
     }

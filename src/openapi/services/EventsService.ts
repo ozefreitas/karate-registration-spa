@@ -298,16 +298,6 @@ export class EventsService {
      * @returns Events
      * @throws ApiError
      */
-    public static eventsEventsDaysPerMonthRetrieve(): CancelablePromise<Events> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/events/events_days_per_month/',
-        });
-    }
-    /**
-     * @returns Events
-     * @throws ApiError
-     */
     public static eventsLastEventRetrieve(): CancelablePromise<Events> {
         return __request(OpenAPI, {
             method: 'GET',

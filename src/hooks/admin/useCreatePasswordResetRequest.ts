@@ -1,39 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import {
-  createResetPasswordRequest,
-  createResetPasswordURL,
-  passwordConfirmation,
-} from "../../api";
+import { PasswordRecoveryService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useCreatePasswordResetRequest = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createResetPasswordRequest,
+    mutationFn: PasswordRecoveryService.passwordRecoveryRequestCreate,
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["password-requests"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(data.response.data.error, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
     },
   });
 };
@@ -43,29 +24,23 @@ export const useCreatePasswordRecoveryURL = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createResetPasswordURL,
+    mutationFn: PasswordRecoveryService.passwordRecoveryGenerateUrlCreate,
     onSuccess: () => {
-      enqueueSnackbar("URL criado com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "URL criado com sucesso!",
+        "success",
+        5000,
+      );
       queryClient.invalidateQueries({ queryKey: ["password-requests"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -83,29 +58,19 @@ export const useConfirmPassword = () => {
       uidb: string;
       token: string;
       data: any;
-    }) => passwordConfirmation(uidb, token, data),
+    }) =>
+      PasswordRecoveryService.passwordRecoveryConfirmCreate(uidb, token, data),
     onSuccess: () => {
-      enqueueSnackbar("Password alterada com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Password alterada com sucesso!",
+        "success",
+        5000,
+      );
       queryClient.invalidateQueries({ queryKey: ["password-requests"] });
     },
     onError: (data: any) => {
-      enqueueSnackbar(data.response.data.error, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
     },
   });
 };

@@ -1,35 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createNotification, createAllClubsNotification } from "../../api";
+import { NotificationsService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useCreateNotification = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createNotification,
+    mutationFn: NotificationsService.notificationsCreate,
     onSuccess: () => {
-      enqueueSnackbar("Notificação criada e enviada para a conta remetente!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Notificação criada e enviada para a conta remetente!",
+        "success",
+      );
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -39,30 +33,13 @@ export const useCreateAllClubsNotification = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createAllClubsNotification,
+    mutationFn: NotificationsService.notificationsCreateAllUsersCreate,
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success");
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (data: any) => {
-      console.log(data)
-      enqueueSnackbar(data.response.data.error, {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
     },
   });
 };

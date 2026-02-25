@@ -238,19 +238,18 @@ export default function MemberPaymemtManagerPage(
                       item.paid === false && item.inside_limit === false,
                   )
                   .map((payments: any, index: any) => (
-                    <ListItem sx={{ m: 0, p: 0 }} key={index}>
+                    <ListItem sx={{ m: 0, p: 0, px: 2, pt: 1 }} key={index}>
                       <ListItemButton
-                        sx={{ pl: 3 }}
                         onClick={() =>
                           navigate(
-                            `/members/${payments.member.id}/?section=payments_management`,
+                            `/members/${payments.person.id}/?section=payments_management`,
                           )
                         }
                       >
                         <ListItemIcon>
                           <Error color="error" />
                         </ListItemIcon>
-                        <ListItemText primary={payments.member.full_name} />
+                        <ListItemText primary={payments.person.full_name} />
                       </ListItemButton>
                     </ListItem>
                   ))}
@@ -265,14 +264,14 @@ export default function MemberPaymemtManagerPage(
                       <ListItemButton
                         onClick={() =>
                           navigate(
-                            `/members/${payments.member.id}/?section=payments_management`,
+                            `/members/${payments.person.id}/?section=payments_management`,
                           )
                         }
                       >
                         <ListItemIcon>
                           <Warning color="warning" />
                         </ListItemIcon>
-                        <ListItemText primary={payments.member.full_name} />
+                        <ListItemText primary={payments.person.full_name} />
                       </ListItemButton>
                     </ListItem>
                   ))}

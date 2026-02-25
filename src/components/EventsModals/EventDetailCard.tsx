@@ -1,14 +1,14 @@
 import { Box, Typography, Paper } from "@mui/material";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { EncounterOptions } from "../../config";
 import { stringToColor } from "../../dashboard/utils/avatarColor";
+import { AccessTime, CalendarMonth, LocationOn } from "@mui/icons-material";
 
 interface EventDetailCardProps {
   date: string;
   location: string;
   description: string;
   type: string;
+  registration_state?: string;
 }
 
 function IconBox({
@@ -81,23 +81,27 @@ export default function EventDetailCard({
   location,
   description,
   type,
+  registration_state,
 }: Readonly<EventDetailCardProps>) {
   return (
     <Box
       sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}
     >
+      <InfoRow icon={<CalendarMonth />} label="Data" value={date} type={type} />
       <InfoRow
-        icon={<CalendarMonthIcon />}
-        label="Data"
-        value={date}
-        type={type}
-      />
-      <InfoRow
-        icon={<LocationOnIcon />}
+        icon={<LocationOn />}
         label="Local"
         value={location}
         type={type}
       />
+      {registration_state === undefined ? null : (
+        <InfoRow
+          icon={<AccessTime />}
+          label="Estado Inscrições"
+          value={registration_state}
+          type={type}
+        />
+      )}
 
       {description === undefined || description === "" ? null : (
         <Box

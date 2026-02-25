@@ -4,6 +4,9 @@ import {
   CircularProgress,
   ListItem,
   ListItemText,
+  Tooltip,
+  IconButton,
+  Chip,
 } from "@mui/material";
 import { categoriesHooks } from "../../hooks";
 import AddButton from "../../components/Buttons/AddButton";
@@ -13,6 +16,7 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import CategoriesFilters from "../../components/filter_drawers/CategoriesFilters";
 import { useForm } from "react-hook-form";
 import CategoriesOrdering from "../../components/filter_drawers/CategoriesOrdering";
+import { Check, Close } from "@mui/icons-material";
 
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(1);
@@ -76,7 +80,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     { key: "name", label: "Nome" },
     { key: "gender", label: "Género" },
     { key: "has_age", label: "Limite Idades" },
-    { key: "has_grad", label: "Limite Grad" },
+    { key: "has_grad", label: "Limite Graduações" },
     { key: "has_weight", label: "Limite Pesos" },
     { key: "max_athletes", label: "Limite Atletas (Equipas)" },
   ];
@@ -128,10 +132,10 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("isMasculino") && filtersWatch("isFeminino")
       ? undefined
       : filtersWatch("isMasculino")
-      ? "Masculino"
-      : filtersWatch("isFeminino")
-      ? "Feminino"
-      : undefined;
+        ? "Masculino"
+        : filtersWatch("isFeminino")
+          ? "Feminino"
+          : undefined;
 
   const {
     data: categoriesData,
@@ -147,7 +151,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("hasGrad") ? !!filtersWatch("minGrad") : undefined,
     filtersWatch("hasGrad") ? !!filtersWatch("maxGrad") : undefined,
     filtersWatch("hasWeight") ? !!filtersWatch("minWeight") : undefined,
-    filtersWatch("hasWeight") ? !!filtersWatch("maxWeight") : undefined
+    filtersWatch("hasWeight") ? !!filtersWatch("maxWeight") : undefined,
   );
 
   // Memoize `rows` to compute only when `members` changes
@@ -156,10 +160,118 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
       id: category.id,
       name: category.name,
       gender: category.gender,
-      has_age: category.has_age,
-      has_grad: category.has_grad,
-      has_weight: category.has_weight,
-      max_athletes: category.max_athletes === null ? "Não" : "Sim",
+      has_age:
+        category.has_age === "Sim" ? (
+          <Chip
+            icon={<Check />}
+            label=""
+            color="success"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<Close />}
+            label=""
+            color="error"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ),
+      has_grad:
+        category.has_grad === "Sim" ? (
+          <Chip
+            icon={<Check />}
+            label=""
+            color="success"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<Close />}
+            label=""
+            color="error"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ),
+      has_weight:
+        category.has_weight === "Sim" ? (
+          <Chip
+            icon={<Check />}
+            label=""
+            color="success"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<Close />}
+            label=""
+            color="error"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ),
+      max_athletes:
+        category.max_athletes === null ? (
+          <Chip
+            icon={<Close />}
+            label=""
+            color="error"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ) : (
+          <Chip
+            icon={<Check />}
+            label=""
+            color="success"
+            sx={{
+              "& .MuiChip-label": {
+                display: "none",
+              },
+              pl: 0.5,
+              pr: 2,
+            }}
+          />
+        ),
     }));
   }, [categoriesData]);
 

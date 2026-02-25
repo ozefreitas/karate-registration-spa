@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchPerEventClassification,
-  fetchLastEventClassification,
-} from "../../api";
+import { ClassificationsService } from "../../openapi";
 
 export const useFetchLastEventClassifications = (userRole: string) => {
   return useQuery({
     queryKey: ["last-event-classification"],
-    queryFn: () => fetchLastEventClassification(),
+    queryFn: ClassificationsService.classificationsLastCompQualiRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: userRole !== "free_club",
@@ -17,7 +14,7 @@ export const useFetchLastEventClassifications = (userRole: string) => {
 export const useFetchPerCompClassifications = () => {
   return useQuery({
     queryKey: ["per-event-classification"],
-    queryFn: () => fetchPerEventClassification(),
+    queryFn: ClassificationsService.classificationsPerCompRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

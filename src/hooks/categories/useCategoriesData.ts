@@ -1,9 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchCategories,
-  fetchSingleCategory,
-  fetchCategoriesNotinDiscipline,
-} from "../../api";
+import { CategoriesService } from "../../openapi";
 
 export const useFetchCategoriesData = (
   page?: number,
@@ -15,7 +11,7 @@ export const useFetchCategoriesData = (
   minGrad?: boolean,
   maxGrad?: boolean,
   minWeight?: boolean,
-  maxWeight?: boolean
+  maxWeight?: boolean,
 ) => {
   return useQuery({
     queryKey: [
@@ -32,17 +28,18 @@ export const useFetchCategoriesData = (
       maxWeight,
     ],
     queryFn: () =>
-      fetchCategories(
+      CategoriesService.categoriesList(
+        gender,
+        maxAge,
+        maxGrad,
+        maxWeight,
+        minAge,
+        minGrad,
+        minWeight,
+        undefined,
+        ordering,
         page,
         pageSize,
-        ordering,
-        gender,
-        minAge,
-        maxAge,
-        minGrad,
-        maxGrad,
-        minWeight,
-        maxWeight
       ),
     refetchOnWindowFocus: false,
   });
@@ -51,7 +48,7 @@ export const useFetchCategoriesData = (
 export const useFetchSingleCategory = (categoryId: string) => {
   return useQuery({
     queryKey: ["single-category", categoryId],
-    queryFn: () => fetchSingleCategory(categoryId),
+    queryFn: () => CategoriesService.categoriesRetrieve(Number(categoryId)),
     refetchOnWindowFocus: false,
     enabled: categoryId !== "" && categoryId !== undefined,
   });
@@ -60,7 +57,17 @@ export const useFetchSingleCategory = (categoryId: string) => {
 export const useFetchCategoryNotinDiscipline = (disciplineId: string) => {
   return useQuery({
     queryKey: ["category-not-in-discipline", disciplineId],
-    queryFn: () => fetchCategoriesNotinDiscipline(disciplineId),
+    queryFn: () =>
+      CategoriesService.categoriesList(
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        disciplineId,
+      ),
     refetchOnWindowFocus: false,
     enabled: disciplineId !== "" && disciplineId !== undefined,
   });

@@ -1,14 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchAvailableClubs,
-  fetchClubSubscriptions,
-  fetchAvailableYears,
-} from "../../api";
+import { ClubsService, ClubSubscriptionService } from "../../openapi";
 
 export const useFetchAvailableClubs = () => {
   return useQuery({
     queryKey: ["available-clubs"],
-    queryFn: fetchAvailableClubs,
+    queryFn: () => ClubsService.clubsList,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -16,11 +12,11 @@ export const useFetchAvailableClubs = () => {
 
 export const useFetchClubSubscriptions = (
   search: string,
-  userRole?: string
+  userRole?: string,
 ) => {
   return useQuery({
     queryKey: ["club-subscriptions", search],
-    queryFn: () => fetchClubSubscriptions(search),
+    queryFn: () => ClubSubscriptionService.clubSubscriptionList(search),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!search && ["main_admin", "superuser"].includes(userRole!),
@@ -30,7 +26,8 @@ export const useFetchClubSubscriptions = (
 export const useFetchAvailableYears = () => {
   return useQuery({
     queryKey: ["subscriptions-available-years"],
-    queryFn: fetchAvailableYears,
+    queryFn:
+      ClubSubscriptionService.clubSubscriptionGetAvailableQuoteYearsRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

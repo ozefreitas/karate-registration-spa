@@ -22,7 +22,14 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { Add, Clear, Delete, SportsMartialArts } from "@mui/icons-material";
+import {
+  Add,
+  Check,
+  Clear,
+  Close,
+  Delete,
+  SportsMartialArts,
+} from "@mui/icons-material";
 import { useEffect, useState, useMemo, Fragment } from "react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -131,10 +138,118 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         id: category.id,
         name: category.name,
         gender: category.gender,
-        has_age: category.has_age,
-        has_grad: category.has_grad,
-        has_weight: category.has_weight,
-        max_athletes: category.max_athletes === null ? "Não" : "Sim",
+        has_age:
+          category.has_age === "Sim" ? (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
+        has_grad:
+          category.has_grad === "Sim" ? (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
+        has_weight:
+          category.has_weight === "Sim" ? (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
+        max_athletes:
+          category.max_athletes === null ? (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
       }));
   }, [categoriesData, selectedDisciplineForCategory, disciplineCategories]);
 

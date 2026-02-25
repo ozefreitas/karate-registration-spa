@@ -1,14 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { signUpWithToken } from "../../api";
+import { SignUpService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useSignUpWithToken = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   //   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: signUpWithToken,
+    mutationFn: SignUpService.signUpRegisterUserCreate,
     onSuccess: () => {
+      callNotiStack(
+        enqueueSnackbar,
+        "Conta criada com sucesso!",
+        "success",
+        5000,
+      );
       enqueueSnackbar("Conta criada com sucesso!", {
         variant: "success",
         anchorOrigin: {
@@ -21,15 +28,12 @@ export const useSignUpWithToken = () => {
       //   queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

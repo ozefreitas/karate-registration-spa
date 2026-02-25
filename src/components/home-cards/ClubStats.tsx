@@ -49,7 +49,7 @@ export default function ClubStats() {
   return (
     <>
       {["student", "athlete", "coach"].map((item: string, index: any) => (
-        <Grid key={index} size={4}>
+        <Grid key={index} size={{sm: 12, md: 6, lg: 4}}>
           <Card sx={{ m: 2 }}>
             <CardHeader
               title={

@@ -372,7 +372,7 @@ export default function AllUseTable(
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
       fontSize: 17,
-      // color: theme.palette.common.white,
+      color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 15,
@@ -386,8 +386,8 @@ export default function AllUseTable(
     warning?: boolean;
   }>(({ header, warning }) => ({
     [`&.${tableRowClasses.head}`]: {
-      backgroundColor: "lightgray",
-      border: "4px solid lightgray",
+      backgroundColor: "black",
+      border: "4px solid black",
     },
     textAlign: "center",
     cursor: header ? "default" : "pointer",

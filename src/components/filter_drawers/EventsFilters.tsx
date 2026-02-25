@@ -36,6 +36,9 @@ export default function EventsFilters(
   }>,
 ) {
   const [open, setOpen] = React.useState(false);
+  const [currentView, _] = React.useState(() => {
+    return localStorage.getItem("eventsView") ?? "list";
+  });
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -47,40 +50,42 @@ export default function EventsFilters(
         <Typography variant="h4" pl={2} mb={4}>
           Filtragem
         </Typography>
-        <Grid sx={{ p: 2 }} size={2}>
-          <Controller
-            name="season"
-            control={props.control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Época"
-                type="number"
-                slotProps={{
-                  htmlInput: {
-                    inputMode: "numeric",
-                    pattern: "[0-9]*",
-                  },
-                }}
-                fullWidth
-                select
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!props.errors.season}
-                helperText={props.errors.season?.message}
-              >
-                {SeasonOptions.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
+        {currentView === "list" ? (
+          <Grid sx={{ p: 2 }} size={2}>
+            <Controller
+              name="season"
+              control={props.control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Época"
+                  type="number"
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                    },
+                  }}
+                  fullWidth
+                  select
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!props.errors.season}
+                  helperText={props.errors.season?.message}
+                >
+                  {SeasonOptions.map((item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+        ) : null}
         <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
           <Controller
             name="has_registrations"
@@ -281,39 +286,6 @@ export default function EventsFilters(
         </Grid>
         <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
           <Controller
-            name="encounter"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.encounter}
-              >
-                <Stack>
-                  <FormControlLabel
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        sx={{ ml: 2 }}
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e.target.checked);
-                        }}
-                        name="encounter"
-                      />
-                    }
-                    label="Encontro"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                  />
-                </Stack>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
-          <Controller
             name="has_ended"
             control={props.control}
             render={({ field }) => (
@@ -352,6 +324,7 @@ export default function EventsFilters(
           sx={{ width: "100%" }}
           onClick={() => props.reset()}
           variant="contained"
+          disabled={props.changedCount === 0}
         >
           Limpar
         </Button>

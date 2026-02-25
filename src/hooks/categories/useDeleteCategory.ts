@@ -1,35 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { deleteCategory, deleteAllCategories } from "../../api";
+import { CategoriesService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useDeleteCategory = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: deleteCategory,
+    mutationFn: CategoriesService.categoriesDestroy,
     onSuccess: () => {
-      enqueueSnackbar("Escalão removido da plataforma com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Escalão removido da plataforma com sucesso!",
+        "success",
+        5000,
+      );
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -39,29 +34,19 @@ export const useDeleteAllCategoriesData = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: deleteAllCategories,
+    mutationFn: CategoriesService.categoriesDeleteAllDestroy,
     onSuccess: (data: any) => {
-      enqueueSnackbar(`${data.data.message}!`, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, `${data.data.message}!`, "success", 5000);
+
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

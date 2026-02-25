@@ -1,20 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-  fetchMe,
   fetchTokenUsername,
   fetchToken,
-  fetchRequestingAcounts,
 } from "../../api";
+import { MeService, RequestAcountService } from "../../openapi";
 
 export const useFetchMeData = () => {
   return useQuery({
     queryKey: ["me"],
-    queryFn: fetchMe,
+    queryFn: MeService.meRetrieve,
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
 };
 
+// Leave be for now
 export const useFetchTokenUsername = (token: string) => {
   return useQuery({
     queryKey: ["token_username", token],
@@ -25,6 +25,7 @@ export const useFetchTokenUsername = (token: string) => {
   });
 };
 
+// Leave be for now
 export const useFetchToken = (username: string) => {
   return useQuery({
     queryKey: ["token", username],
@@ -39,7 +40,7 @@ export const useFetchToken = (username: string) => {
 export const useFetchRequestingAccounts = () => {
   return useQuery({
     queryKey: ["request-acount"],
-    queryFn: fetchRequestingAcounts,
+    queryFn: () => RequestAcountService.requestAcountList,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

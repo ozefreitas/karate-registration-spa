@@ -1,35 +1,30 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { createRequestAcount, createSignUpToken } from "../../api";
+import { RequestAcountService, SignUpService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useCreateRequestAcount = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createRequestAcount,
+    mutationFn: RequestAcountService.requestAcountCreate,
     onSuccess: () => {
-      enqueueSnackbar("Pedido de conta enviado! Será contactado em breve.", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Pedido de conta enviado! Será contactado em breve.",
+        "success",
+        5000,
+      );
       queryClient.invalidateQueries({ queryKey: ["request-acount"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -39,29 +34,18 @@ export const useCreateSignUpToken = () => {
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createSignUpToken,
+    mutationFn: SignUpService.signUpGenerateTokenCreate,
     onSuccess: () => {
-      enqueueSnackbar("Token criado!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Token criado!", "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["request-acount"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

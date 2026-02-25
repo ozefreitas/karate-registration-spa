@@ -98,7 +98,7 @@ export default function MissingQuotasCard({
               <WarningAmberIcon sx={{ fontSize: 28 }} />
             </Grid>
             <Typography variant="h5" fontWeight={"bold"}>
-              Clubes com Quotas em Falta em {year}
+              Quotas em Falta em {year}
             </Typography>
           </Grid>
         }

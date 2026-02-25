@@ -1,12 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchClubUsers,
-  fetchClubMembers,
-  fetchCurrentSeason,
-  fetchPasswordRequests,
 } from "../../api";
-import { CurrentSeasonService } from "../../openapi";
+import { CurrentSeasonService, PasswordRecoveryService, UsersService } from "../../openapi";
 
+// Let be for now
 export const useFetchClubUsersData = (username?: string, userRole?: string) => {
   return useQuery({
     queryKey: ["club-users"],
@@ -20,7 +18,7 @@ export const useFetchClubUsersData = (username?: string, userRole?: string) => {
 export const useFetchClubMembersData = () => {
   return useQuery({
     queryKey: ["club-members"],
-    queryFn: fetchClubMembers,
+    queryFn: UsersService.usersMembersList,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
@@ -38,7 +36,7 @@ export const useFetchCurrentSeason = () => {
 export const useFetchPasswordResetRequests = () => {
   return useQuery({
     queryKey: ["password-requests"],
-    queryFn: fetchPasswordRequests,
+    queryFn: PasswordRecoveryService.passwordRecoveryListRequestsRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

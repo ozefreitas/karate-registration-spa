@@ -1,4 +1,4 @@
-import { apiClient, authClient } from "./apiClient";
+import { authClient } from "./apiClient";
 
 export const fetchClubUsers = (username?: string) => {
   let url = "/users/";
@@ -6,29 +6,4 @@ export const fetchClubUsers = (username?: string) => {
     url += `?username=${encodeURIComponent(username)}`;
   }
   return authClient.get(url);
-};
-
-export const fetchClubMembers = () => {
-  return authClient.get("/users/members/");
-};
-
-export const fetchCurrentSeason = () => {
-  return apiClient.get("/current_season/");
-};
-
-// member validation requests
-
-export const fetchMemberValidationRequests = () => {
-  return authClient.get("/member_validation/");
-};
-
-export const patchMemberValidationRequests = (
-  validationId: string,
-  data: any,
-) => {
-  return authClient.patch(`/member_validation/${validationId}/`, data);
-};
-
-export const deleteMemberValidationRequest = (validationId: any) => {
-  return authClient.delete(`/member_validation/${validationId}/`);
 };

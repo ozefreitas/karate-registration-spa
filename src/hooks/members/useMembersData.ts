@@ -1,13 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  fetchSingleMember,
-  fetchMembersNotInEvent,
-  fetchCoachesNotInEvent,
-  fetchMembersInCategoryGender,
-  fetchDisciplineMemberNotIn,
-  fetchMemberValidationRequests,
-} from "../../api";
-import { PersonsService } from "../../openapi";
+import { MemberValidationService, PersonsService } from "../../openapi";
 
 export const useFetchMembersData = (
   page: number,
@@ -37,6 +29,7 @@ export const useFetchMembersData = (
       PersonsService.personsList(
         undefined,
         undefined,
+        undefined,
         gender,
         memberType,
         users,
@@ -57,7 +50,7 @@ export const useFetchMembersData = (
 export const useFetchSingleMemberData = (memberId: any) => {
   return useQuery({
     queryKey: ["single-member", memberId],
-    queryFn: () => fetchSingleMember(memberId),
+    queryFn: () => PersonsService.personsRetrieve(memberId),
     refetchOnWindowFocus: false,
     enabled: !!memberId,
   });
@@ -77,7 +70,6 @@ export const useFetchMembersNotInEvent = (
   pageSize: number,
   gender?: string,
   enabled?: boolean,
-  teams?: boolean,
   disciplineId?: string,
 ) => {
   return useQuery({
@@ -87,17 +79,23 @@ export const useFetchMembersNotInEvent = (
       page,
       pageSize,
       gender,
-      teams,
       disciplineId,
     ],
     queryFn: () =>
-      fetchMembersNotInEvent(
+      PersonsService.personsList(
+        undefined,
+        disciplineId,
+        undefined,
+        gender,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
         eventId,
+        undefined,
         page,
         pageSize,
-        gender,
-        teams,
-        disciplineId,
       ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -112,7 +110,22 @@ export const useFetchCoachesNotInEvent = (
 ) => {
   return useQuery({
     queryKey: ["coaches-notin-event", eventId, page, pageSize],
-    queryFn: () => fetchCoachesNotInEvent(eventId, page, pageSize),
+    queryFn: () =>
+      PersonsService.personsList(
+        eventId,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        page,
+        pageSize,
+      ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!eventId,
@@ -125,7 +138,8 @@ export const useFetchMembersInCategoryGender = (
 ) => {
   return useQuery({
     queryKey: ["members-in-category-gender", category, gender],
-    queryFn: () => fetchMembersInCategoryGender(category, gender),
+    queryFn: () =>
+      PersonsService.personsList(undefined, undefined, category, gender),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: false,
@@ -138,7 +152,8 @@ export const useFetchDisciplinesnotInMemberData = (
 ) => {
   return useQuery({
     queryKey: ["disciplines-not-in-member", memberId, eventId],
-    queryFn: () => fetchDisciplineMemberNotIn(memberId, eventId),
+    queryFn: () =>
+      PersonsService.personsUnregisteredModalitiesRetrieve(eventId, memberId),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
     enabled: memberId !== "",
@@ -148,7 +163,7 @@ export const useFetchDisciplinesnotInMemberData = (
 export const useFetchMemberValidationRequestsData = (userRole?: string) => {
   return useQuery({
     queryKey: ["members-validation"],
-    queryFn: fetchMemberValidationRequests,
+    queryFn: () => MemberValidationService.memberValidationList,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: ["main_admin", "superuser"].includes(userRole!),

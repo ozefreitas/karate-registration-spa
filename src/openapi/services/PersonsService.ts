@@ -12,6 +12,7 @@ import { request as __request } from '../core/request';
 export class PersonsService {
     /**
      * @param coachNotInEvent
+     * @param disciplineId
      * @param inCategory
      * @param inGender
      * @param inMemberType
@@ -28,6 +29,7 @@ export class PersonsService {
      */
     public static personsList(
         coachNotInEvent?: string,
+        disciplineId?: string,
         inCategory?: string,
         inGender?: string,
         inMemberType?: string,
@@ -45,6 +47,7 @@ export class PersonsService {
             url: '/persons/',
             query: {
                 'coach_not_in_event': coachNotInEvent,
+                'discipline_id': disciplineId,
                 'in_category': inCategory,
                 'in_gender': inGender,
                 'in_member_type': inMemberType,
@@ -177,6 +180,7 @@ export class PersonsService {
     }
     /**
      * @param coachNotInEvent
+     * @param disciplineId
      * @param inCategory
      * @param inGender
      * @param inMemberType
@@ -191,6 +195,7 @@ export class PersonsService {
      */
     public static personsLastFiveList(
         coachNotInEvent?: string,
+        disciplineId?: string,
         inCategory?: string,
         inGender?: string,
         inMemberType?: string,
@@ -206,6 +211,7 @@ export class PersonsService {
             url: '/persons/last_five/',
             query: {
                 'coach_not_in_event': coachNotInEvent,
+                'discipline_id': disciplineId,
                 'in_category': inCategory,
                 'in_gender': inGender,
                 'in_member_type': inMemberType,

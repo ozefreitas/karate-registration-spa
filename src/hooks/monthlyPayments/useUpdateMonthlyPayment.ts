@@ -1,10 +1,11 @@
-import {
-  patchMonthlyMemberSubscription,
-  patchMemberMonthlyPaymentConfig,
-  patchMonthlyPaymentPlanData,
-} from "./../../api/monthlyPaymentsApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
+import {
+  MonthlyMemberPaymentConfigsService,
+  MonthlyPaymentPlansService,
+  MonthlyPaymentsService,
+} from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const usePatchMonthlyMemberSubscriptionData = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -17,17 +18,13 @@ export const usePatchMonthlyMemberSubscriptionData = () => {
     }: {
       monthlySubscriptionId: string;
       data: any;
-    }) => patchMonthlyMemberSubscription(monthlySubscriptionId, data),
+    }) =>
+      MonthlyPaymentsService.monthlyPaymentsPartialUpdate(
+        Number(monthlySubscriptionId),
+        data,
+      ),
     onSuccess: (data: any) => {
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.data.message, "success");
       queryClient.invalidateQueries({
         queryKey: ["member-monthly-subscription"],
       });
@@ -36,15 +33,12 @@ export const usePatchMonthlyMemberSubscriptionData = () => {
       });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -60,31 +54,28 @@ export const usePatchMemberMonthlyPaymentConfig = () => {
     }: {
       monthlyPaymentConfigId: string;
       data: any;
-    }) => patchMemberMonthlyPaymentConfig(monthlyPaymentConfigId, data),
+    }) =>
+      MonthlyMemberPaymentConfigsService.monthlyMemberPaymentConfigsPartialUpdate(
+        Number(monthlyPaymentConfigId),
+        data,
+      ),
     onSuccess: () => {
-      enqueueSnackbar("Definições de pagamento atualizadas", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Definições de pagamento atualizadas.",
+        "success",
+      );
       queryClient.invalidateQueries({
         queryKey: ["single-member"],
       });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -95,31 +86,23 @@ export const usePatchMonthlyPaymentPlanData = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ planId, data }: { planId: string; data: any }) =>
-      patchMonthlyPaymentPlanData(planId, data),
+      MonthlyPaymentPlansService.monthlyPaymentPlansPartialUpdate(
+        Number(planId),
+        data,
+      ),
     onSuccess: () => {
-      enqueueSnackbar("Plano atualizado", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, "Plano atualizado.", "success");
       queryClient.invalidateQueries({
         queryKey: ["monthly-subscription-plans"],
       });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };

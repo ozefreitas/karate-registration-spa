@@ -7,6 +7,7 @@ import {
   CardContent,
   IconButton,
   Tooltip,
+  Box,
 } from "@mui/material";
 import { notificationsHooks } from "../../hooks";
 import { useState } from "react";
@@ -129,6 +130,26 @@ const NotificationsPage = (props: { me: any }) => {
         : undefined,
     );
 
+  function IconBox({ icon }: Readonly<{ icon: React.ReactNode }>) {
+    return (
+      <Box
+        sx={{
+          width: 54,
+          height: 54,
+          borderRadius: 2,
+          bgcolor: "red",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          color: "#fff",
+        }}
+      >
+        {icon}
+      </Box>
+    );
+  }
+
   return (
     <>
       <PageInfoCard
@@ -221,7 +242,9 @@ const NotificationsPage = (props: { me: any }) => {
               >
                 <CardContent sx={{ pt: 3, pl: 5, pr: 0, display: "flex" }}>
                   <Grid container alignItems={"center"} pr={1}>
-                    {getNotificationTypeIcon(item.type)}
+                    <IconBox
+                      icon={getNotificationTypeIcon(item.type)}
+                    ></IconBox>
                   </Grid>
                   <Grid container alignItems={"center"} size={12} px={4}>
                     <Typography width={"100%"}>{item.notification}</Typography>

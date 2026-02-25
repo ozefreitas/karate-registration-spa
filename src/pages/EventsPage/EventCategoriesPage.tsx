@@ -1,6 +1,13 @@
 import { useState, useMemo, useEffect } from "react";
-import { Grid, Box, CircularProgress, Typography, Button } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import {
+  Grid,
+  Box,
+  CircularProgress,
+  Typography,
+  Button,
+  Chip,
+} from "@mui/material";
+import { Add, Check, Close } from "@mui/icons-material";
 import { disciplinesHooks } from "../../hooks";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddEventCategoriesModal from "../../components/Categories/AddEventCategoriesModal";
@@ -8,7 +15,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function EventCategoriesPage(
-  props: Readonly<{ userRole: string }>
+  props: Readonly<{ userRole: string }>,
 ) {
   type Category = {
     id: string;
@@ -58,10 +65,91 @@ export default function EventCategoriesPage(
         name: category.name,
         gender: category.gender,
         sort_age: category.min_age,
-        has_age: category.has_age,
-        has_grad: category.has_grad,
-        has_weight: category.has_weight,
-      }))
+        has_age:
+          category.has_age === "Sim" ? (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
+        has_grad:
+          category.has_grad === "Sim" ? (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
+        has_weight:
+          category.has_weight === "Sim" ? (
+            <Chip
+              icon={<Check />}
+              label=""
+              color="success"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ) : (
+            <Chip
+              icon={<Close />}
+              label=""
+              color="error"
+              sx={{
+                "& .MuiChip-label": {
+                  display: "none",
+                },
+                pl: 0.5,
+                pr: 2,
+              }}
+            />
+          ),
+      })),
     );
   }, [disciplinesData]);
 
@@ -70,7 +158,7 @@ export default function EventCategoriesPage(
       { key: "name", label: "Nome" },
       { key: "gender", label: "Género" },
       { key: "has_age", label: "Limite Idades" },
-      { key: "has_grad", label: "Limite Ranks" },
+      { key: "has_grad", label: "Limite Graduações" },
       { key: "has_weight", label: "Limite Pesos" },
     ];
     return columnMapping;
@@ -115,10 +203,10 @@ export default function EventCategoriesPage(
                   columnsHeaders={columnMaping}
                   actions
                   selection={["main_admin", "superuser"].includes(
-                    props.userRole
+                    props.userRole,
                   )}
                   deletable={["main_admin", "superuser"].includes(
-                    props.userRole
+                    props.userRole,
                   )}
                   userRole={props.userRole}
                   discipline={discipline.id}
@@ -145,7 +233,7 @@ export default function EventCategoriesPage(
                   </Grid>
                 ) : null}
               </span>
-            )
+            ),
           )
         )}
       </Grid>

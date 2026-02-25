@@ -162,7 +162,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       <Grid container sx={{ mt: 0 }}>
         <Grid container size={12} sx={{ m: 2 }}>
           <Grid size={6}>
-            <Card sx={{ mr: 2, height: "100%" }}>
+            <Card elevation={4} sx={{ mr: 2, height: "100%" }}>
               <CardHeader
                 title="Informação Geral"
                 sx={{
@@ -183,7 +183,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         {singleEventData?.data.name ?? ""}
                       </Typography>
                     </Stack>
-                    <Stack sx={{ p: 2 }}>
+                    <Stack sx={{ p: 2, pb: 0 }}>
                       <List>
                         <CompInfoToolTip
                           title="Tipo de Evento"
@@ -307,7 +307,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }}
                     />
                   ) : singleEventData?.data?.description === "" ? (
-                    <li style={{ color: "grey", marginLeft: 30  }}>
+                    <li style={{ color: "grey", marginLeft: 30 }}>
                       Não existem informações adicionais para este Evento.
                     </li>
                   ) : (

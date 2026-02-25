@@ -22,20 +22,20 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
           userRole={props.userRole}
         ></LastCompQualiHomeComponent>
       </Grid>
-      <Grid container size={12}>
-        <ClubStats></ClubStats>
-      </Grid>
-      <Grid size={6}>
+      <Grid size={{ xs: 12, lg: 6 }}>
         <MissingQuotasCard
           year={currentYear}
           onResolve={() => navigate(`/payment_manager/?year=${currentYear}`)}
         />
       </Grid>
 
-      <Grid size={6}>
+      <Grid size={{ xs: 12, lg: 6 }}>
         <MemberRequestsCard
           onResolve={() => navigate("/settings/?section=members_manager")}
         ></MemberRequestsCard>
+      </Grid>
+      <Grid container size={12}>
+        <ClubStats></ClubStats>
       </Grid>
     </Grid>
   );

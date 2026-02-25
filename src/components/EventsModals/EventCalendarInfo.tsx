@@ -84,6 +84,15 @@ export default function EventCalendarInfo(
           description={props.eventData?.description}
           location={props.eventData?.location}
           type={props.eventData?.encounter_type}
+          registration_state={
+            props.eventData?.has_ended
+              ? "Realizado"
+              : props.eventData?.is_open || props.eventData?.is_retification
+                ? "Inscrições em Progresso"
+                : props.eventData?.is_closed
+                  ? "Inscrições Encerradas"
+                  : "Por Iniciar"
+          }
         ></EventDetailCard>
       </DialogContent>
       <DialogActions>

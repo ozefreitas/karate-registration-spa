@@ -1,35 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { deleteTeam } from "../../api";
+import { TeamsService } from "../../openapi";
+import { callNotiStack } from "../../utils/utils";
 
 export const useDeleteTeamData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: deleteTeam,
+    mutationFn: TeamsService.teamsDestroy,
     onSuccess: () => {
-      enqueueSnackbar("Equipa(s) removida(s) da plataforma com sucesso!", {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Equipa(s) removida(s) da plataforma com sucesso!",
+        "success",
+      );
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: () => {
-      enqueueSnackbar("Ocorreu um erro! Tente novamente.", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     },
   });
 };
