@@ -43,9 +43,7 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks, notificationsHooks, authHooks } from "../../hooks";
 import { formatTimeDifference } from "../../utils/utils";
 
-export default function Header(
-  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>,
-) {
+export default function Header(props: Readonly<{ me: any }>) {
   type Notification = {
     id: string;
     notification: string;
@@ -205,20 +203,18 @@ export default function Header(
                   label={`Época: ${currentSeason}`}
                 ></Chip>
               )}
-              {props.me?.data.role === undefined ? null : (
+              {props.me?.role === undefined ? null : (
                 <Tooltip
                   title={"Consultar planos"}
                   disableHoverListener={["superuser", "main_admin"].includes(
-                    props.me?.data.role,
+                    props.me?.role,
                   )}
                 >
                   <span>
                     <Button
                       onClick={() => {
                         if (
-                          !["superuser", "main_admin"].includes(
-                            props.me?.data.role,
-                          )
+                          !["superuser", "main_admin"].includes(props.me?.role)
                         ) {
                           navigate("/pricing/");
                         }
@@ -230,15 +226,15 @@ export default function Header(
                       disableElevation
                       size="large"
                     >
-                      {props.me?.data.role === "main_admin" ||
-                      props.me?.data.role === "single_admin"
+                      {props.me?.role === "main_admin" ||
+                      props.me?.role === "single_admin"
                         ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
-                        : props.me?.data.role === "superuser"
+                        : props.me?.role === "superuser"
                           ? "SUPER ADMIN"
-                          : props.me?.data.role === "free_club"
+                          : props.me?.role === "free_club"
                             ? "CLUBE - GRÁTIS"
-                            : props.me?.data.role === "subed_club"
-                              ? `CLUBE - PREMIUM - ${props.me.data.tier}`
+                            : props.me?.role === "subed_club"
+                              ? `CLUBE - PREMIUM - ${props.me.tier}`
                               : "TÉCNICO"}
                     </Button>
                   </span>
@@ -260,7 +256,7 @@ export default function Header(
                     aria-haspopup="true"
                     aria-expanded={openNotifications ? "true" : undefined}
                   >
-                    {isAuthenticated && user?.data.role !== "technician" ? (
+                    {isAuthenticated && user?.role !== "technician" ? (
                       <Tooltip title="Notificações" placement="top">
                         <span>
                           <Badge
@@ -327,7 +323,7 @@ export default function Header(
                         <span>
                           <Avatar
                             {...stringAvatar(
-                              user?.data.username,
+                              user?.username!,
                               undefined,
                               "allow",
                             )}
@@ -400,9 +396,7 @@ export default function Header(
       >
         <MenuItem divider sx={{ p: 2 }}>
           Bem-vindo&nbsp;
-          <Typography style={{ fontWeight: 1000 }}>
-            {user?.data.username}
-          </Typography>
+          <Typography style={{ fontWeight: 1000 }}>{user?.username}</Typography>
         </MenuItem>
         <MenuItem
           selected={location.pathname.startsWith("/profile")}

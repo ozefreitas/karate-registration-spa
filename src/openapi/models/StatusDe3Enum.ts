@@ -7,7 +7,7 @@
  * * `approved` - Approved
  * * `rejected` - Rejected
  */
-export enum StatusEnum {
+export enum StatusDe3Enum {
     PENDING = 'pending',
     APPROVED = 'approved',
     REJECTED = 'rejected',

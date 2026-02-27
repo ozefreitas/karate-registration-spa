@@ -68,7 +68,7 @@ export class ClassificationsService {
      */
     public static classificationsUpdate(
         id: number,
-        requestBody?: AllClassifications,
+        requestBody: AllClassifications,
     ): CancelablePromise<AllClassifications> {
         return __request(OpenAPI, {
             method: 'PUT',

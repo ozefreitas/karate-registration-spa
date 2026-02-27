@@ -127,11 +127,11 @@ export default function MemberRequestsCard({
                 icon={<DoneAll sx={{ fontSize: 22 }} color="warning" />}
                 label="Pedidos de Verificação"
                 value={
-                  memberValidationRequestsData?.data?.results.filter(
+                  memberValidationRequestsData?.results.filter(
                     (item: any) =>
                       item.status === "pending" &&
                       item.request_type === "verify",
-                  )?.length
+                  )?.length!
                 }
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
@@ -139,11 +139,11 @@ export default function MemberRequestsCard({
                 icon={<Upgrade sx={{ fontSize: 22 }} color="warning" />}
                 label="Propostas de exame"
                 value={
-                  memberValidationRequestsData?.data?.results.filter(
+                  memberValidationRequestsData?.results.filter(
                     (item: any) =>
                       item.status === "pending" &&
                       item.request_type === "exams",
-                  )?.length
+                  )?.length!
                 }
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
@@ -151,11 +151,11 @@ export default function MemberRequestsCard({
                 icon={<FrontHand sx={{ fontSize: 22 }} color="warning" />}
                 label="Pedidos Gerais"
                 value={
-                  memberValidationRequestsData?.data?.results.filter(
+                  memberValidationRequestsData?.results.filter(
                     (item: any) =>
                       item.status === "pending" &&
                       item.request_type === "general",
-                  )?.length
+                  )?.length!
                 }
               />
             </Grid>

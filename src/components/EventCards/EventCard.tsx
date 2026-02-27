@@ -107,7 +107,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
-    setDescription(singleEventData?.data.description);
+    setDescription(singleEventData?.description!);
   }, [singleEventData]);
 
   const handleDescriptionSubmit = (description: string) => {
@@ -124,15 +124,18 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
   };
 
   const { refetch: refetchRegistrationsFile } =
-    eventsHooks.useFetchEventRegistrationFile(eventId!);
+    eventsHooks.useExportEventRegistrationFile(eventId!);
 
   const handleDownloadRegistrationsFile = async () => {
     const { data } = await refetchRegistrationsFile();
+    console.log(data);
+    console.log(data instanceof Blob);
+    console.log(typeof data);
     if (data) {
       const url = window.URL.createObjectURL(data.data);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `lista_inscritos_evento_${eventId}_.xlsx`);
+      link.setAttribute("download", `lista_inscritos_evento_${eventId}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -155,9 +158,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         description="Aqui poderá consultar cada cartão de prova, pode observar toda a
           informação relevante sobre essa prova, assim como os passos para
           inscrever os seus Atletas, Equipas e Treinadores."
-        title={
-          isSingleEventLoading ? "" : `Evento - ${singleEventData?.data.name}`
-        }
+        title={isSingleEventLoading ? "" : `Evento - ${singleEventData?.name}`}
       ></PageInfoCard>
       <Grid container sx={{ mt: 0 }}>
         <Grid container size={12} sx={{ m: 2 }}>
@@ -180,7 +181,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   <>
                     <Stack alignItems="center">
                       <Typography variant="h4">
-                        {singleEventData?.data.name ?? ""}
+                        {singleEventData?.name ?? ""}
                       </Typography>
                     </Stack>
                     <Stack sx={{ p: 2, pb: 0 }}>
@@ -190,56 +191,59 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           text={
                             EncounterOptions.find(
                               (item) =>
-                                item.value ===
-                                singleEventData?.data?.encounter_type,
+                                item.value === singleEventData?.encounter_type,
                             )?.label!
                           }
                           icon={<Info />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Localização"
-                          text={singleEventData?.data.location}
+                          text={singleEventData?.location!}
                           icon={<LocationPin />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Início de Inscrições"
-                          text={singleEventData?.data.start_registration}
+                          text={singleEventData?.start_registration!}
                           icon={<Event />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Fim de Inscrições"
-                          text={singleEventData?.data.end_registration}
+                          text={singleEventData?.end_registration!}
                           icon={<EventBusy />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Data limite de Retificações"
-                          text={singleEventData?.data.retifications_deadline}
+                          text={singleEventData?.retifications_deadline!}
                           icon={<EditCalendar />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Data do Evento"
-                          text={singleEventData?.data.event_date}
+                          text={singleEventData?.event_date!}
                           icon={<Today />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Responsável"
-                          text={singleEventData?.data.custody}
+                          text={singleEventData?.custody!}
                           icon={<LocalPolice />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Email"
-                          text={singleEventData?.data.email_contact}
+                          text={singleEventData?.email_contact!}
                           icon={<Email />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Contacto"
-                          text={singleEventData?.data.contact}
+                          text={
+                            singleEventData?.contact === null
+                              ? null
+                              : String(singleEventData?.contact)
+                          }
                           icon={<Tty />}
                         ></CompInfoToolTip>
-                        {singleEventData?.data.has_registrations ? (
+                        {singleEventData?.has_registrations ? (
                           <CompInfoToolTip
                             title="Número de Inscritos"
-                            text={singleEventData?.data.number_registrations.toString()}
+                            text={singleEventData?.number_registrations.toString()}
                             icon={<HowToReg />}
                           ></CompInfoToolTip>
                         ) : null}
@@ -306,13 +310,13 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         setDescription(e.target.value);
                       }}
                     />
-                  ) : singleEventData?.data?.description === "" ? (
+                  ) : singleEventData?.description === "" ? (
                     <li style={{ color: "grey", marginLeft: 30 }}>
                       Não existem informações adicionais para este Evento.
                     </li>
                   ) : (
                     <Typography paddingLeft={1}>
-                      {singleEventData?.data?.description}
+                      {singleEventData?.description}
                     </Typography>
                   )}
                 </CardContent>
@@ -350,7 +354,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 <CardContent sx={{ pt: 0, pb: 0, ml: 2 }}>
                   {props.userRole === "main_admin" ? (
                     <Typography>
-                      Nota geral do Evento: {singleEventData?.data.rating}
+                      Nota geral do Evento: {singleEventData?.rating}
                     </Typography>
                   ) : isEventRateLoading ? (
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -362,13 +366,13 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <ListItemText primary={"Um erro ocorreu."} />
                       </ListItemButton>
                     </ListItem>
-                  ) : eventRateData?.data.code === "event_not_ended" ? (
+                  ) : eventRateData?.code === "event_not_ended" ? (
                     <li style={{ color: "grey", marginLeft: 30 }}>
-                      {eventRateData?.data?.message}
+                      {eventRateData?.message}
                     </li>
-                  ) : eventRateData?.data.code === "already_rated" ? (
+                  ) : eventRateData?.code === "already_rated" ? (
                     <li style={{ color: "grey", marginLeft: 30 }}>
-                      {eventRateData?.data?.message}
+                      {eventRateData?.message}
                     </li>
                   ) : (
                     <Grid justifyContent="center" container spacing={2}>
@@ -451,7 +455,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
             </Grid>
           </Grid>
         </Grid>
-        {singleEventData?.data.has_registrations ? (
+        {singleEventData?.has_registrations ? (
           <Grid container size={12} sx={{ mx: 2 }}>
             <Card
               sx={{
@@ -568,50 +572,50 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   ) : null}
                   {["main_admin", "superuser"].includes(
                     props.userRole,
-                  ) ? null : singleEventData?.data.has_any_indiv ? (
+                  ) ? null : singleEventData?.has_any_indiv ? (
                     <AddButton
                       label="Adicionar/Consultar Inscrições"
                       to="individuals/"
                       disabled={
                         isSingleEventLoading ||
-                        singleEventData?.data.has_ended ||
-                        !singleEventData?.data.has_registrations
+                        singleEventData?.has_ended ||
+                        !singleEventData?.has_registrations
                       }
                     ></AddButton>
                   ) : null}
                   {["main_admin", "superuser"].includes(
                     props.userRole,
-                  ) ? null : singleEventData?.data.has_coach ? (
+                  ) ? null : singleEventData?.has_coach ? (
                     <AddButton
                       label="Adicionar/Consultar Treinadores"
                       to="coaches/"
                       disabled={
                         isSingleEventLoading ||
-                        singleEventData?.data.has_ended ||
-                        !singleEventData?.data.has_registrations
+                        singleEventData?.has_ended ||
+                        !singleEventData?.has_registrations
                       }
                     ></AddButton>
                   ) : null}
                   {["main_admin", "superuser"].includes(
                     props.userRole,
-                  ) ? null : singleEventData?.data?.has_any_team ? (
+                  ) ? null : singleEventData?.has_any_team ? (
                     <AddButton
                       label="Adicionar/Consultar Equipas"
                       to="teams/"
                       disabled={
                         isSingleEventLoading ||
-                        singleEventData?.data.has_ended ||
-                        !singleEventData?.data.has_registrations
+                        singleEventData?.has_ended ||
+                        !singleEventData?.has_registrations
                       }
                     ></AddButton>
                   ) : null}
-                  {singleEventData?.data.has_ended && !isSingleEventLoading ? (
+                  {singleEventData?.has_ended && !isSingleEventLoading ? (
                     <InfoButton
                       label="Consultar Inscrições"
                       to="individuals/"
                     ></InfoButton>
                   ) : null}
-                  {singleEventData?.data.has_registrations ? (
+                  {singleEventData?.has_registrations ? (
                     <Tooltip
                       disableHoverListener={[
                         "main_admin",
@@ -632,7 +636,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       </span>
                     </Tooltip>
                   ) : null}
-                  {singleEventData?.data.has_categories ? (
+                  {singleEventData?.has_categories ? (
                     <SettingsButton
                       size="medium"
                       label="Consultar Escalões"
@@ -640,7 +644,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     ></SettingsButton>
                   ) : null}
                   {["main_admin", "superuser"].includes(props.userRole) &&
-                  singleEventData?.data.has_registrations ? (
+                  singleEventData?.has_registrations ? (
                     <>
                       <GenerateButton
                         label="Sorteios"
@@ -676,7 +680,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       <EditEventModal
         handleClose={handleEditModalClose}
         isOpen={isEditModalOpen}
-        singleEventData={singleEventData?.data}
+        singleEventData={singleEventData}
       ></EditEventModal>
     </>
   );

@@ -38,6 +38,7 @@ export default function MemberFilters(
     reset: any;
     changedCount: number;
     setSelectedUsers: any;
+    userRole: string;
   }>,
 ) {
   const [open, setOpen] = React.useState(false);
@@ -47,7 +48,7 @@ export default function MemberFilters(
     setOpen(newOpen);
   };
   const { user } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role;
 
   const { data: availableUsersData, isLoading: isAvailableUserLoading } =
     adminHooks.useFetchClubUsersData(undefined, userRole);
@@ -96,33 +97,42 @@ export default function MemberFilters(
             Filtragem
           </Typography>
         </Grid>
-        <Grid sx={{ p: 3, py: 1 }} alignItems={"center"} container spacing={2}>
-          <Typography fontSize={"1.05rem"}>Tipo</Typography>
-          {MemberTypes.map((item: any, index: any) => (
-            <Controller
-              key={index}
-              name={`is${
-                item.value.charAt(0).toUpperCase() + item.value.slice(1)
-              }`}
-              control={props.control}
-              render={({ field }) => (
-                <Chip
-                  variant={field.value ? "filled" : "outlined"}
-                  color={field.value ? "success" : "default"}
-                  clickable
-                  onClick={() => {
-                    if (field.value) {
-                      field.onChange(undefined);
-                    } else {
-                      field.onChange(!field.value);
-                    }
-                  }}
-                  label={item.label}
-                ></Chip>
-              )}
-            ></Controller>
-          ))}
-        </Grid>
+        {["subed_club", "superuser", "single_admin"].includes(
+          props.userRole,
+        ) ? (
+          <Grid
+            sx={{ p: 3, py: 1 }}
+            alignItems={"center"}
+            container
+            spacing={2}
+          >
+            <Typography fontSize={"1.05rem"}>Tipo</Typography>
+            {MemberTypes.map((item: any, index: any) => (
+              <Controller
+                key={index}
+                name={`is${
+                  item.value.charAt(0).toUpperCase() + item.value.slice(1)
+                }`}
+                control={props.control}
+                render={({ field }) => (
+                  <Chip
+                    variant={field.value ? "filled" : "outlined"}
+                    color={field.value ? "success" : "default"}
+                    clickable
+                    onClick={() => {
+                      if (field.value) {
+                        field.onChange(undefined);
+                      } else {
+                        field.onChange(!field.value);
+                      }
+                    }}
+                    label={item.label}
+                  ></Chip>
+                )}
+              ></Controller>
+            ))}
+          </Grid>
+        ) : null}
         <Grid sx={{ p: 3, py: 2 }} alignItems={"center"} container spacing={2}>
           <Typography fontSize={"1.05rem"}>Género</Typography>
           {GenderOptions.filter(
@@ -152,7 +162,7 @@ export default function MemberFilters(
             ></Controller>
           ))}
         </Grid>
-        {["main_admin", "superuser"].includes(userRole) &&
+        {["main_admin", "superuser"].includes(userRole!) &&
         !isAvailableUserLoading ? (
           Object.keys(props.control._defaultValues)
             .filter((fieldName) => availableUsers?.includes(fieldName))

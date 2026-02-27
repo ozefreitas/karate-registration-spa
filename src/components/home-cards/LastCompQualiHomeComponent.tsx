@@ -61,8 +61,8 @@ export default function LastCompQualiHomeComponent(
             },
           }}
           title="Últimas Classificações"
-          subheader={`Última prova: ${lastCompData?.data.name ?? "Não"} ${
-            lastCompData?.data.season ?? "disponível"
+          subheader={`Última prova: ${lastCompData?.name ?? "Não"} ${
+            lastCompData?.season ?? "disponível"
           }`}
         ></CardHeader>
         <CardContent sx={{ pt: 0, pb: 0 }}>
@@ -70,93 +70,95 @@ export default function LastCompQualiHomeComponent(
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <CircularProgress />
             </Box>
-          ) : lastCompQualiData?.data.length === 0 ? (
+          ) : lastCompQualiData?.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
                 <ListItemText primary={"Classificações não disponíveis."} />
               </ListItemButton>
             </ListItem>
           ) : (
-            lastCompQualiData?.data.map(
-              (category: CategoryClassification, index: string) => (
-                <Accordion key={index} sx={{ m: 2, mt: 0 }}>
-                  <AccordionSummary sx={{ pl: 4 }} expandIcon={<ExpandMore />}>
-                    <Typography component="span">
-                      {category.full_category}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails sx={{ p: 1, mb: 1 }}>
-                    <List sx={{ m: 0, p: 0 }}>
+            <Accordion sx={{ m: 2, mt: 0 }}>
+              <AccordionSummary sx={{ pl: 4 }} expandIcon={<ExpandMore />}>
+                <Typography component="span">
+                  {lastCompQualiData![0].full_category}
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: 1, mb: 1 }}>
+                <List sx={{ m: 0, p: 0 }}>
+                  <ListItem
+                    sx={{
+                      m: 0,
+                    }}
+                  >
+                    <Tooltip title={"Consultar"}>
+                      <span>
+                        <ListItemButton
+                          onClick={() =>
+                            navigate(
+                              `members/${lastCompQualiData![0].first_place?.id}/`,
+                            )
+                          }
+                          sx={{
+                            m: 0,
+                            pb: 0,
+                          }}
+                        >
+                          <ListItemText
+                            primary={`🥇 ${lastCompQualiData![0].first_place?.full_name}`}
+                          />
+                        </ListItemButton>
+                      </span>
+                    </Tooltip>
+                  </ListItem>
+                  <Tooltip title={"Consultar"}>
+                    <span>
                       <ListItem
-                        sx={{
-                          m: 0,
-                        }}
+                        onClick={() =>
+                          navigate(
+                            `members/${lastCompQualiData![0].second_place?.id}/`,
+                          )
+                        }
+                        sx={{ m: 0 }}
                       >
-                        <Tooltip title={"Consultar"}>
-                          <span>
-                            <ListItemButton
-                              onClick={() =>
-                                navigate(`members/${category.first_place.id}/`)
-                              }
-                              sx={{
-                                m: 0,
-                                pb: 0,
-                              }}
-                            >
-                              <ListItemText
-                                primary={`🥇 ${category.first_place.first_name} ${category.first_place.last_name}`}
-                              />
-                            </ListItemButton>
-                          </span>
-                        </Tooltip>
+                        <ListItemButton
+                          sx={{
+                            m: 0,
+                            pb: 0,
+                            pt: 0,
+                          }}
+                        >
+                          <ListItemText
+                            primary={`🥈 ${lastCompQualiData![0].second_place?.full_name}`}
+                          />
+                        </ListItemButton>
                       </ListItem>
-                      <Tooltip title={"Consultar"}>
-                        <span>
-                          <ListItem
-                            onClick={() =>
-                              navigate(`members/${category.second_place.id}/`)
-                            }
-                            sx={{ m: 0 }}
-                          >
-                            <ListItemButton
-                              sx={{
-                                m: 0,
-                                pb: 0,
-                                pt: 0,
-                              }}
-                            >
-                              <ListItemText
-                                primary={`🥈 ${category.second_place.first_name} ${category.second_place.last_name}`}
-                              />
-                            </ListItemButton>
-                          </ListItem>
-                        </span>
-                      </Tooltip>
-                      <Tooltip title={"Consultar"}>
-                        <span>
-                          <ListItem sx={{ m: 0 }}>
-                            <ListItemButton
-                              onClick={() =>
-                                navigate(`members/${category.third_place.id}/`)
-                              }
-                              sx={{
-                                m: 0,
-                                pb: 0,
-                                pt: 0,
-                              }}
-                            >
-                              <ListItemText
-                                primary={`🥉 ${category.third_place.first_name} ${category.third_place.last_name}`}
-                              />
-                            </ListItemButton>
-                          </ListItem>
-                        </span>
-                      </Tooltip>
-                    </List>
-                  </AccordionDetails>
-                </Accordion>
-              ),
-            )
+                    </span>
+                  </Tooltip>
+                  <Tooltip title={"Consultar"}>
+                    <span>
+                      <ListItem sx={{ m: 0 }}>
+                        <ListItemButton
+                          onClick={() =>
+                            navigate(
+                              `members/${lastCompQualiData![0].third_place?.id}/`,
+                            )
+                          }
+                          sx={{
+                            m: 0,
+                            pb: 0,
+                            pt: 0,
+                          }}
+                        >
+                          <ListItemText
+                            primary={`🥉 ${lastCompQualiData![0].third_place?.full_name}`}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    </span>
+                  </Tooltip>
+                </List>
+              </AccordionDetails>
+            </Accordion>
           )}
           {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>
@@ -171,9 +173,9 @@ export default function LastCompQualiHomeComponent(
           ) : null}
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          {props.userRole !== "free_club" ? (
+          {props.userRole === "free_club" ? null : (
             <InfoButton label="Ver Todas" to="classifications/"></InfoButton>
-          ) : null}
+          )}
         </CardActions>
       </Card>
     </Grid>

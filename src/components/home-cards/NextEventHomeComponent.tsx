@@ -19,6 +19,7 @@ import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import { eventsHooks } from "../../hooks";
 import AddButton from "../Buttons/AddButton";
+import { EncounterOptions } from "../../config";
 
 export default function NextEventHomeComponent(
   props: Readonly<{ userRole: string }>,
@@ -54,7 +55,7 @@ export default function NextEventHomeComponent(
               />
             </ListItemButton>
           </ListItem>
-        ) : nextCompData?.data.length === 0 ? (
+        ) : nextCompData === undefined ? (
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ m: 0 }}>
               <ListItemIcon>
@@ -72,7 +73,7 @@ export default function NextEventHomeComponent(
                     sx={{
                       minWidth: 0,
                     }}
-                    onClick={() => navigate(`events/${nextCompData?.data.id}/`)}
+                    onClick={() => navigate(`events/${nextCompData?.id}/`)}
                   >
                     <ListItemIcon>
                       <SportsMma></SportsMma>
@@ -99,39 +100,40 @@ export default function NextEventHomeComponent(
                             width: "max-content",
                           }}
                         >
-                          <Typography>{nextCompData?.data.name}</Typography>
-                          {nextCompData?.data.has_registrations ? (
+                          <Typography>{nextCompData?.name}</Typography>
+                          {nextCompData?.has_registrations ? (
                             <Chip
                               variant="outlined"
                               color={
-                                nextCompData?.data.is_open
+                                nextCompData?.is_open
                                   ? "success"
-                                  : nextCompData?.data.is_retification
+                                  : nextCompData?.is_retification
                                     ? "warning"
                                     : "error"
                               }
                               label={
-                                nextCompData?.data.is_open
+                                nextCompData?.is_open
                                   ? "Inscrições Abertas"
-                                  : nextCompData?.data.is_retification
+                                  : nextCompData?.is_retification
                                     ? "Periodo Retificalções"
                                     : "Inscrições Fechadas"
                               }
                             ></Chip>
                           ) : null}
                           <Chip
-                            label={nextCompData?.data.season}
+                            label={nextCompData?.season}
                             variant="outlined"
                           ></Chip>
                           <Chip
                             label={
-                              nextCompData?.data.encounter
-                                ? "Encontro"
-                                : "Competição"
+                              EncounterOptions.find(
+                                (item) =>
+                                  item.value === nextCompData?.encounter_type,
+                              )?.label
                             }
                             variant="outlined"
                           ></Chip>
-                          {nextCompData?.data.has_any_team ? (
+                          {nextCompData?.has_any_team ? (
                             <Chip label="Equipas" variant="outlined"></Chip>
                           ) : null}
                         </Grid>

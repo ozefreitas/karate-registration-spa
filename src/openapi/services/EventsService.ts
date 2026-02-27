@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AddMember } from '../models/AddMember';
+import type { CheckEventRate } from '../models/CheckEventRate';
 import type { CreateEvent } from '../models/CreateEvent';
 import type { DeleteMember } from '../models/DeleteMember';
 import type { Events } from '../models/Events';
@@ -168,12 +169,12 @@ export class EventsService {
     }
     /**
      * @param id A unique value identifying this event.
-     * @returns Events
+     * @returns CheckEventRate
      * @throws ApiError
      */
     public static eventsCheckEventRateRetrieve(
         id: string,
-    ): CancelablePromise<Events> {
+    ): CancelablePromise<CheckEventRate> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/events/{id}/check_event_rate/',
@@ -277,13 +278,13 @@ export class EventsService {
     /**
      * @param id A unique value identifying this event.
      * @param requestBody
-     * @returns Rating
+     * @returns CheckEventRate
      * @throws ApiError
      */
     public static eventsRateEventCreate(
         id: string,
         requestBody: Rating,
-    ): CancelablePromise<Rating> {
+    ): CancelablePromise<CheckEventRate> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/events/{id}/rate_event/',

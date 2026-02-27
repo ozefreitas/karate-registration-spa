@@ -2,15 +2,12 @@ import Header from "../components/Header/Header";
 import Announcement from "../components/Announcement/Announcement";
 import SideMenu from "../components/SideMenu/SideMenu";
 import { Outlet } from "react-router-dom";
-import { AxiosResponse } from "axios";
 import { Container } from "@mui/material";
 
-export default function MainAppLayout(
-  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>
-) {
+export default function MainAppLayout(props: Readonly<{ me: any }>) {
   return (
     <>
-      {!["main_admin", "technician"].includes(props.me?.data.role) && (
+      {!["main_admin", "technician"].includes(props.me?.role) && (
         <Announcement></Announcement>
       )}
       <Header me={props.me}></Header>

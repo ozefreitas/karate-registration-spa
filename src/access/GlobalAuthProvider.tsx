@@ -3,13 +3,14 @@ import {
   useContext,
   useEffect,
   useState,
+  useMemo,
   ReactNode,
 } from "react";
 import { authHooks } from "../hooks";
-import { AxiosResponse } from "axios";
+import { Users } from "../openapi";
 
 interface AuthContextType {
-  user: AxiosResponse<any, any> | undefined;
+  user: Users | undefined;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
 }
@@ -22,9 +23,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export const GlobalAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<AxiosResponse<any, any> | undefined>(
-    undefined
-  );
+  const [user, setUser] = useState<Users | undefined>(undefined); // ✅ Correct type
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
   const {
     data: meData,
@@ -34,7 +33,7 @@ export const GlobalAuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!isMeLoading) {
-      if (meData && meData?.data.username) {
+      if (meData?.username) {
         setUser(meData);
         setIsAuthenticated(true);
         setIsAuthLoading(false);
@@ -48,12 +47,15 @@ export const GlobalAuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthLoading(false);
       }
     }
-  }, [meData, isMeLoading]);
+  }, [meData, isMeLoading, meError]);
+
+  const contextValue = useMemo(
+    () => ({ isAuthenticated, user, isAuthLoading }),
+    [isAuthenticated, user, isAuthLoading],
+  );
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, isAuthLoading }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

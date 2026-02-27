@@ -7,3 +7,7 @@ export const fetchClubUsers = (username?: string) => {
   }
   return authClient.get(url);
 };
+
+export const eventsExportMembersExcelRetrieve = (eventId: string) => {
+  return authClient.get(`/events/${eventId}/export_members_excel/`);
+};

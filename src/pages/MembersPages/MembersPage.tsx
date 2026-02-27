@@ -384,6 +384,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 errors={filtersErrors}
                 changedCount={filtersChangedCount}
                 setSelectedUsers={setSelectedUsers}
+                userRole={props.userRole}
               ></MemberFilters>
               <Grid pl={2} container spacing={1} borderRadius={3}>
                 <Tooltip placement="top" title={"Vista de Tabela"}>

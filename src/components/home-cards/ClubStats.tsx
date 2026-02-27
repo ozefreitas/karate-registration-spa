@@ -18,7 +18,6 @@ export default function ClubStats() {
   const { data: clubMembersData, isLoading: isClubMembersLoading } =
     adminHooks.useFetchClubMembersData();
 
-  console.log(clubMembersData)
   const CustomTooltip = ({ active, payload }: any) => {
     const isVisible = active && payload && payload.length;
     return (
@@ -36,28 +35,28 @@ export default function ClubStats() {
     );
   };
 
-  const totals = clubMembersData?.data.reduce(
+  const totals = clubMembersData?.reduce(
     (acc: any, user: any) => {
       acc.student += user.student_count || 0;
       acc.coach += user.coach_count || 0;
       acc.athlete += user.athlete_count || 0;
       return acc;
     },
-    { student: 0, coach: 0, athlete: 0 }
+    { student: 0, coach: 0, athlete: 0 },
   );
 
   return (
     <>
       {["student", "athlete", "coach"].map((item: string, index: any) => (
-        <Grid key={index} size={{sm: 12, md: 6, lg: 4}}>
+        <Grid key={index} size={{ sm: 12, md: 6, lg: 4 }}>
           <Card sx={{ m: 2 }}>
             <CardHeader
               title={
                 item === "student"
                   ? "Alunos por Clube"
                   : item === "athlete"
-                  ? "Atletas por Clube"
-                  : "Treinadores por Clube"
+                    ? "Atletas por Clube"
+                    : "Treinadores por Clube"
               }
               sx={{
                 "& .MuiCardHeader-title": {
@@ -83,21 +82,19 @@ export default function ClubStats() {
                     {/* <Legend layout="vertical" align="right" verticalAlign="middle" /> */}
                     <Pie
                       dataKey={`${item}_count`}
-                      data={clubMembersData?.data}
+                      data={clubMembersData}
                       cx="50%"
                       cy="50%"
                       outerRadius={120}
                       // fill="#8884d8"
                       label
                     >
-                      {clubMembersData?.data.map(
-                        (entry: any, index: string) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={stringToColor(entry.username)}
-                          />
-                        )
-                      )}
+                      {clubMembersData?.map((entry: any, index: number) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={stringToColor(entry.username)}
+                        />
+                      ))}
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
@@ -114,8 +111,8 @@ export default function ClubStats() {
                     {item === "student"
                       ? "Alunos"
                       : item === "athlete"
-                      ? "Atletas"
-                      : "Treinadores"}{" "}
+                        ? "Atletas"
+                        : "Treinadores"}{" "}
                     inscritos
                   </Typography>
                 </Grid>

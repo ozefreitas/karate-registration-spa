@@ -58,7 +58,7 @@ export default function SingleMemberPage(
   const uploadPersonProfilePicture = membersHooks.usePatchMemberData();
 
   const avatarData = stringAvatar(
-    singleMemberData?.data.full_name,
+    singleMemberData?.full_name!,
     256,
     props.userRole,
   );
@@ -129,22 +129,22 @@ export default function SingleMemberPage(
           <Grid container justifyContent={"space-between"} m={2}>
             <Button
               onClick={() => {
-                if (singleMemberData?.data.next_prev.next !== null) {
-                  navigate(`/members/${singleMemberData?.data.next_prev.next}`);
+                if (singleMemberData?.next_prev.next !== null) {
+                  navigate(`/members/${singleMemberData?.next_prev.next}`);
                 }
               }}
-              disabled={singleMemberData?.data.next_prev?.next === null}
+              disabled={singleMemberData?.next_prev?.next === null}
               startIcon={<ArrowLeft></ArrowLeft>}
             >
               Membro Anterior
             </Button>
             <Button
               onClick={() => {
-                if (singleMemberData?.data.next_prev.prev !== null) {
-                  navigate(`/members/${singleMemberData?.data.next_prev.prev}`);
+                if (singleMemberData?.next_prev.prev !== null) {
+                  navigate(`/members/${singleMemberData?.next_prev.prev}`);
                 }
               }}
-              disabled={singleMemberData?.data.next_prev?.prev === null}
+              disabled={singleMemberData?.next_prev?.prev === null}
               endIcon={<ArrowRight></ArrowRight>}
             >
               Membro Seguinte
@@ -175,7 +175,7 @@ export default function SingleMemberPage(
                       placement="top"
                       disableHoverListener={props.userRole === "main_admin"}
                       title={
-                        singleMemberData?.data.profile_image || previewUrl
+                        singleMemberData?.profile_image || previewUrl
                           ? "Alterar Foto"
                           : "Adicionar Foto"
                       }
@@ -183,7 +183,7 @@ export default function SingleMemberPage(
                       <Avatar
                         src={
                           previewUrl ||
-                          singleMemberData?.data.profile_image ||
+                          singleMemberData?.profile_image ||
                           undefined
                         }
                         {...avatarData}
@@ -207,7 +207,7 @@ export default function SingleMemberPage(
                           <PhotoCamera sx={{ color: "white" }} />
                         ) : (
                           !previewUrl &&
-                          !singleMemberData?.data.profile_image &&
+                          !singleMemberData?.profile_image &&
                           avatarData.children
                         )}
                       </Avatar>
@@ -258,17 +258,17 @@ export default function SingleMemberPage(
                       sx={{ fontWeight: "bold", textAlign: "center" }}
                       variant="h5"
                     >
-                      {singleMemberData?.data.full_name}
+                      {singleMemberData?.full_name}
                     </Typography>
                   </Grid>
                   <Grid container justifyContent="center" size={6}>
                     <Typography variant="h6">
-                      {singleMemberData?.data.gender}
+                      {singleMemberData?.gender}
                     </Typography>
                   </Grid>
                   <Grid container justifyContent="center" size={6}>
                     <Typography variant="h6">
-                      {singleMemberData?.data.birth_date}
+                      {singleMemberData?.birth_date}
                     </Typography>
                   </Grid>
                   {props.userRole === "main_admin" ? null : (
@@ -278,7 +278,7 @@ export default function SingleMemberPage(
                       spacing={1}
                       justifyContent={"center"}
                     >
-                      {singleMemberData?.data.member_types.map(
+                      {singleMemberData?.member_types.map(
                         (types: string, index: any) => (
                           <Chip
                             variant="outlined"
@@ -338,7 +338,7 @@ export default function SingleMemberPage(
                             : "text"
                         }
                         fullWidth
-                        disabled={!singleMemberData?.data.quotes_legible}
+                        disabled={!singleMemberData?.quotes_legible}
                         sx={{
                           backgroundColor:
                             section === "payments_management"
@@ -419,7 +419,7 @@ export default function SingleMemberPage(
                 <Grid size={9} sx={{ p: 4 }}>
                   {section === "personal_info" ? (
                     <PersonalInfoSection
-                      memberData={singleMemberData?.data}
+                      memberData={singleMemberData}
                     ></PersonalInfoSection>
                   ) : section === "registration_history" ? (
                     <RegistryHistorySection></RegistryHistorySection>
@@ -427,9 +427,7 @@ export default function SingleMemberPage(
                     <ResultsHistorySection></ResultsHistorySection>
                   ) : section === "payments_management" ? (
                     <QuotesSettingsSection
-                      quotesConfig={
-                        singleMemberData?.data.monthly_payment_config
-                      }
+                      quotesConfig={singleMemberData?.monthly_payment_config}
                     ></QuotesSettingsSection>
                   ) : null}
                 </Grid>

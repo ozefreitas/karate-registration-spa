@@ -6,6 +6,7 @@ export const useFetchLastEventClassifications = (userRole: string) => {
     queryKey: ["last-event-classification"],
     queryFn: ClassificationsService.classificationsLastCompQualiRetrieve,
     refetchOnWindowFocus: false,
+    select: (data) => (Array.isArray(data) ? data : []),
     refetchOnMount: false,
     enabled: userRole !== "free_club",
   });

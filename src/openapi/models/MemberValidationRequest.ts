@@ -5,14 +5,14 @@
 import type { CompactPerson } from './CompactPerson';
 import type { CompactUser } from './CompactUser';
 import type { RequestTypeEnum } from './RequestTypeEnum';
-import type { StatusEnum } from './StatusEnum';
+import type { StatusDe3Enum } from './StatusDe3Enum';
 export type MemberValidationRequest = {
     readonly id: number;
     person: CompactPerson;
     requested_by: CompactUser;
     readonly member_birth_date: string;
     request_type?: RequestTypeEnum;
-    status?: StatusEnum;
+    status?: StatusDe3Enum;
     message?: string;
     admin_comment?: string;
     file?: string | null;

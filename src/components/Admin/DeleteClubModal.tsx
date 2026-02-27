@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -27,13 +27,13 @@ export default function DeleteClubModal(
     handleModalClose: any;
     id?: string;
     setSelectedUserId: any;
-  }>
+  }>,
 ) {
   const removeClub = clubsHooks.useRemoveClub();
 
   const handleDelete = () => {
     if (props.id) {
-      removeClub.mutate(props.id, {
+      removeClub.mutate(Number(props.id), {
         onSuccess: () => {
           props.handleModalClose();
           props.setSelectedUserId("");
@@ -51,7 +51,7 @@ export default function DeleteClubModal(
       }}
     >
       <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">Apagar Evento</Typography>
+        <Typography variant="h5">Apagar Clube</Typography>
       </DialogTitle>
       <DialogContent
         sx={{

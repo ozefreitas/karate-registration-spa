@@ -53,7 +53,7 @@ import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role!;
 
   useEffect(() => {
     if (location.pathname.split("/").includes("display_panel")) {

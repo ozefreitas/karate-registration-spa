@@ -44,13 +44,13 @@ export default function PersonalInfoSection(
 ) {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role;
 
   const [searchParams] = useSearchParams();
   const editField = searchParams.get("edit_field");
 
   const isPrivileged = ["main_admin", "superuser", "subed_club"].includes(
-    userRole,
+    userRole!,
   );
 
   const canUpdateSensitive =
@@ -330,7 +330,7 @@ export default function PersonalInfoSection(
             </Tooltip>
           )}
         </Grid>
-        {["superuser", "subed_club"].includes(userRole) ? (
+        {["superuser", "subed_club"].includes(userRole!) ? (
           <Grid size={1}>
             <Tooltip title="Duplicar Membro">
               <span>
@@ -343,7 +343,7 @@ export default function PersonalInfoSection(
         ) : null}
       </Grid>
       <Grid mb={5} mt={2}>
-        {["main_admin", "superuser", "subed_club"].includes(userRole) ? (
+        {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
           <Button
             sx={{ m: 1, mr: 4 }}
             variant="contained"
@@ -948,7 +948,7 @@ export default function PersonalInfoSection(
             )}
           />
         )}
-        {["subed_club", "single_admin"].includes(userRole) ? (
+        {["subed_club", "single_admin"].includes(userRole!) ? (
           <Controller
             name="quotesLegible"
             control={control}

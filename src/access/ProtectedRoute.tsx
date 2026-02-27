@@ -15,19 +15,19 @@ export default function ProtectedRoute({
   const { user, isAuthLoading } = useAuth();
 
   if (!isAuthLoading) {
-    if (user?.data.role === "superuser") {
+    if (user?.role === "superuser") {
       return element;
     }
 
-    if (!user?.data.role && allowUnauthenticated) {
+    if (!user?.role && allowUnauthenticated) {
       return element;
     }
 
-    if (!user?.data.role) {
+    if (!user?.role) {
       return <Navigate to="/login/" />;
     }
 
-    if (!allowedRoles.includes(user?.data.role)) {
+    if (!allowedRoles.includes(user?.role)) {
       return <Navigate to="/unauthorized/" />;
     }
 

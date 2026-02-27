@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { RequestTypeEnum } from './RequestTypeEnum';
-import type { StatusEnum } from './StatusEnum';
+import type { StatusDe3Enum } from './StatusDe3Enum';
 export type PatchMemberValidationRequest = {
-    status?: StatusEnum;
+    status?: StatusDe3Enum;
     admin_comment?: string;
     request_type?: RequestTypeEnum;
 };

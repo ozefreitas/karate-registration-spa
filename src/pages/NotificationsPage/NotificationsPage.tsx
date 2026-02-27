@@ -77,8 +77,6 @@ const NotificationsPage = (props: { me: any }) => {
     },
   });
 
-  console.log(filtersWatch("canRemove"));
-
   const {
     control: orderControl,
     watch: orderWatch,
@@ -125,8 +123,8 @@ const NotificationsPage = (props: { me: any }) => {
       ordering,
       selectedTypes,
       filtersWatch("canRemove"),
-      ["superuser", "main_admin", "single_admin"].includes(props.me.data.role)
-        ? props.me.data.id
+      ["superuser", "main_admin", "single_admin"].includes(props.me.role)
+        ? props.me.id
         : undefined,
     );
 
@@ -204,7 +202,7 @@ const NotificationsPage = (props: { me: any }) => {
               errors={filtersErrors}
               changedCount={filtersChangedCount}
               setSelectedTypes={setSelectedTypes}
-              userRole={props.me.data.role}
+              userRole={props.me.role}
             ></NotificationsFilters>
           </Grid>
         </Grid>

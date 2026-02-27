@@ -224,7 +224,7 @@ export default function Calendar() {
                   .map((day: any, colIdx: any) => {
                     const key = day ? getEventKey(year, month, day) : null;
                     const dayEvents = key
-                      ? eventsData?.data.results.filter(
+                      ? eventsData?.results.filter(
                           (event: any) => event.event_date === key,
                         ) || []
                       : [];

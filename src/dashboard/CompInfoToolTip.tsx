@@ -1,11 +1,4 @@
-import {
-  ListItem,
-  Tooltip,
-  ListItemIcon,
-  ListItemText,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 function StatRow({
   icon,
@@ -14,7 +7,7 @@ function StatRow({
 }: Readonly<{
   icon: React.ReactNode;
   label: string;
-  value: string;
+  value: string | null;
 }>) {
   return (
     <Grid
@@ -52,7 +45,7 @@ function StatRow({
 }
 
 export default function CompInfoToolTip(
-  props: Readonly<{ title: string; text: string; icon: any }>,
+  props: Readonly<{ title: string; text: string | null; icon: any }>,
 ) {
   return <StatRow icon={props.icon} label={props.title} value={props.text} />;
 }

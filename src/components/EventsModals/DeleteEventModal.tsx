@@ -61,6 +61,7 @@ export default function DeleteEventModal(
           borderTop: "1px solid lightgrey",
         }}
       >
+        <p></p>
         Tem a certeza que pretende apagar este Evento? Esta ação irá eliminar
         também todas as inscrições efetuadas até à data, assim como eventuais
         modalidades associadas e respetivas inscrições em cada. <p></p> NÃO

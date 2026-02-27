@@ -129,16 +129,15 @@ export default function MissingQuotasCard({
               <StatRow
                 icon={<Groups sx={{ fontSize: 22 }} color="error" />}
                 label="Número Total de Clubes"
-                value={subscriptionsData?.data?.length}
+                value={subscriptionsData?.length!}
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
               <StatRow
                 icon={<Payments sx={{ fontSize: 22 }} color="error" />}
                 label="Pagamentos por efetuar"
                 value={
-                  subscriptionsData?.data?.filter(
-                    (item: any) => item.paid === false,
-                  ).length
+                  subscriptionsData?.filter((item: any) => item.paid === false)
+                    .length!
                 }
               />
             </Grid>

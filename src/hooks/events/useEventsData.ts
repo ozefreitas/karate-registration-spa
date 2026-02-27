@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { EventsService } from "../../openapi";
+import { eventsExportMembersExcelRetrieve } from "../../api";
 
 export const useFetchEventsData = (
   page: number,
@@ -75,11 +76,10 @@ export const useFetchLastEvent = (userRole: string) => {
   });
 };
 
-export const useFetchEventRegistrationFile = (eventId: string) => {
+export const useExportEventRegistrationFile = (eventId: string) => {
   return useQuery({
     queryKey: ["registration-file", eventId],
-    queryFn: async () =>
-      await EventsService.eventsExportMembersExcelRetrieve(eventId),
+    queryFn: async () => await eventsExportMembersExcelRetrieve(eventId),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     retry: false,

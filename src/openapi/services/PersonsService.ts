@@ -2,10 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { NotAdminLikeTypePersons } from '../models/NotAdminLikeTypePersons';
 import type { PaginatedPersonsList } from '../models/PaginatedPersonsList';
 import type { PatchedPersons } from '../models/PatchedPersons';
 import type { Persons } from '../models/Persons';
 import type { PersonsPaymentsStatus } from '../models/PersonsPaymentsStatus';
+import type { UpdatePerson } from '../models/UpdatePerson';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -79,12 +81,12 @@ export class PersonsService {
     }
     /**
      * @param id A unique value identifying this person.
-     * @returns Persons
+     * @returns NotAdminLikeTypePersons
      * @throws ApiError
      */
     public static personsRetrieve(
         id: string,
-    ): CancelablePromise<Persons> {
+    ): CancelablePromise<NotAdminLikeTypePersons> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/{id}/',
@@ -96,13 +98,13 @@ export class PersonsService {
     /**
      * @param id A unique value identifying this person.
      * @param formData
-     * @returns Persons
+     * @returns UpdatePerson
      * @throws ApiError
      */
     public static personsUpdate(
         id: string,
         formData: Persons,
-    ): CancelablePromise<Persons> {
+    ): CancelablePromise<UpdatePerson> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/persons/{id}/',
@@ -116,13 +118,13 @@ export class PersonsService {
     /**
      * @param id A unique value identifying this person.
      * @param formData
-     * @returns Persons
+     * @returns UpdatePerson
      * @throws ApiError
      */
     public static personsPartialUpdate(
         id: string,
         formData?: PatchedPersons,
-    ): CancelablePromise<Persons> {
+    ): CancelablePromise<UpdatePerson> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/persons/{id}/',

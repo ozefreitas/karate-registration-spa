@@ -80,7 +80,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function SideMenu(
-  props: Readonly<{ me: AxiosResponse<any, any> | undefined }>,
+  props: Readonly<{ me: any }>,
 ) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -90,17 +90,17 @@ export default function SideMenu(
     setIsMenuOpen((prev) => !prev);
   };
 
-  const sideMenuConfig = getSideMenuConfig(props.me?.data.role);
-  const accountSideMenuConfig = getAccountSideMenuConfig(props.me?.data.role);
+  const sideMenuConfig = getSideMenuConfig(props.me?.role);
+  const accountSideMenuConfig = getAccountSideMenuConfig(props.me?.role);
   const currentYear = new Date().getFullYear();
 
   const { data: subscriptionsData } = clubsHooks.useFetchClubSubscriptions(
     `${currentYear}`,
-    props.me?.data.role,
+    props.me?.role,
   );
 
   const { data: memberValidationRequestData } =
-    membersHooks.useFetchMemberValidationRequestsData(props.me?.data.role);
+    membersHooks.useFetchMemberValidationRequestsData(props.me?.role);
 
   return (
     <Box>
@@ -142,13 +142,13 @@ export default function SideMenu(
                         {
                           m: 0.5,
                           ...(options.name === "payment_manager" &&
-                            subscriptionsData?.data?.some(
+                            subscriptionsData?.some(
                               (item: any) => item.paid === false,
                             ) && {
                               animation: "pulseRed 1.5s infinite",
                             }),
                           ...(options.name === "settings" &&
-                            memberValidationRequestData?.data.count !== 0 && {
+                            memberValidationRequestData !== undefined && {
                               animation: "pulseRed 1.5s infinite",
                             }),
                           "@keyframes pulseRed": {

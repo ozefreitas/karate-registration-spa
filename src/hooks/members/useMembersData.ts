@@ -163,7 +163,7 @@ export const useFetchDisciplinesnotInMemberData = (
 export const useFetchMemberValidationRequestsData = (userRole?: string) => {
   return useQuery({
     queryKey: ["members-validation"],
-    queryFn: () => MemberValidationService.memberValidationList,
+    queryFn: () => MemberValidationService.memberValidationList(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: ["main_admin", "superuser"].includes(userRole!),
