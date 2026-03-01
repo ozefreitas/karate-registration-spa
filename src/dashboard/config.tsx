@@ -237,6 +237,7 @@ export const breadcrumbsConvertion: Record<string, any> = {
   pricing: "Planos de Subscrição",
   payment_manager: "Gestor de Pagamentos",
   patch: "Retificar",
+  dynamic_view: "Vista Dinâmica"
 };
 
 export const NotificationTypeOptions: {

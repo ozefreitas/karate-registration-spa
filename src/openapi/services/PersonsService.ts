@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { ClubsCreatePerson } from '../models/ClubsCreatePerson';
 import type { NotAdminLikeTypePersons } from '../models/NotAdminLikeTypePersons';
+import type { PaginatedDisciplinesCompactList } from '../models/PaginatedDisciplinesCompactList';
 import type { PaginatedPersonsList } from '../models/PaginatedPersonsList';
 import type { PatchedPersons } from '../models/PatchedPersons';
 import type { Persons } from '../models/Persons';
@@ -155,19 +156,60 @@ export class PersonsService {
     /**
      * @param eventId
      * @param id A unique value identifying this person.
-     * @returns Persons
+     * @param coachNotInEvent
+     * @param disciplineId
+     * @param inCategory
+     * @param inGender
+     * @param inMemberType
+     * @param inUser
+     * @param isQuotesLegible
+     * @param isValidated
+     * @param monthlyPaymentStatus
+     * @param notInEvent
+     * @param ordering Which field to use when ordering the results.
+     * @param page A page number within the paginated result set.
+     * @param pageSize Number of results to return per page.
+     * @returns PaginatedDisciplinesCompactList
      * @throws ApiError
      */
-    public static personsUnregisteredModalitiesRetrieve(
+    public static personsUnregisteredModalitiesList(
         eventId: string,
         id: string,
-    ): CancelablePromise<Persons> {
+        coachNotInEvent?: string,
+        disciplineId?: string,
+        inCategory?: string,
+        inGender?: string,
+        inMemberType?: string,
+        inUser?: string,
+        isQuotesLegible?: boolean,
+        isValidated?: boolean,
+        monthlyPaymentStatus?: string,
+        notInEvent?: string,
+        ordering?: string,
+        page?: number,
+        pageSize?: number,
+    ): CancelablePromise<PaginatedDisciplinesCompactList> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/persons/{id}/unregistered_modalities/{event_id}/',
             path: {
                 'event_id': eventId,
                 'id': id,
+            },
+            query: {
+                'coach_not_in_event': coachNotInEvent,
+                'discipline_id': disciplineId,
+                'in_category': inCategory,
+                'in_gender': inGender,
+                'in_member_type': inMemberType,
+                'in_user': inUser,
+                'is_quotes_legible': isQuotesLegible,
+                'is_validated': isValidated,
+                'monthly_payment_status': monthlyPaymentStatus,
+                'not_in_event': notInEvent,
+                'ordering': ordering,
+                'page': page,
+                'page_size': pageSize,
             },
         });
     }

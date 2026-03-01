@@ -6,7 +6,6 @@ import {
   Feedback,
 } from "@mui/icons-material";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import bannerLigaSoshinkai from "./../../assets/sorteios_1_Jornadaa_liga_2526.jpg";
 import SettingsButton from "../../components/Buttons/SettingsButton";
 import DeleteButton from "../../components/Buttons/DeleteButton";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,24 +26,27 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
     setIsDeleteModalOpen(false);
   };
   const navigate = useNavigate();
-  const DrawSettings: {
-    image: string;
-    file: string;
-    rename: string;
-  } = {
-    image: bannerLigaSoshinkai,
-    file: "/files/Sorteios_1_Jornada_Liga_Soshinkai_22_11_25.pdf",
-    rename: "Sorteios_1_Jornada_Liga_Soshinkai_22_11_25",
-  };
 
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
   const generateDrawPDF = eventsHooks.useGenerateDrawPDF();
 
-  const handleDownloadPdf = () => {
-    generateDrawPDF.mutate({
+  const handleDownloadPdf = async () => {
+    const { data } = await generateDrawPDF.mutateAsync({
       eventId: eventId!,
       data: {},
     });
+    console.log(data);
+    console.log(data instanceof Blob);
+    console.log(typeof data);
+    if (data) {
+      const url = globalThis.URL.createObjectURL(data.data);
+      const link = document.createElement("a");
+      link.href = url;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      globalThis.URL.revokeObjectURL(url);
+    }
   };
 
   return (
@@ -107,6 +109,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
               variant="contained"
               disabled={bracketsData?.length === 0}
               startIcon={<DynamicForm></DynamicForm>}
+              onClick={() => navigate("dynamic_view/")}
             >
               Vista Dinâmica
             </Button>

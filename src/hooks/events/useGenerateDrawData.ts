@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { callNotiStack } from "../../utils/utils";
 import { EventsService } from "../../openapi";
+import { eventsExportDrawPdf } from "../../api";
 
 export const useGenerateDraw = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -29,7 +30,7 @@ export const useGenerateDrawPDF = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
-      EventsService.eventsGenerateDrawPdfCreate(eventId, data),
+      eventsExportDrawPdf(eventId, data),
     onSuccess: (data: any) => {
       callNotiStack(enqueueSnackbar, data.message, "success", 5000);
     },

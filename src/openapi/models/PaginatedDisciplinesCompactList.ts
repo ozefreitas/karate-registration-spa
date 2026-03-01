@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Match } from './Match';
-export type PaginatedMatchList = {
+import type { DisciplinesCompact } from './DisciplinesCompact';
+export type PaginatedDisciplinesCompactList = {
     count: number;
     next?: string | null;
     previous?: string | null;
-    results: Array<Match>;
+    results: Array<DisciplinesCompact>;
 };
 

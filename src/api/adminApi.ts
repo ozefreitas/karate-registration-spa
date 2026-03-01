@@ -13,3 +13,10 @@ export const eventsExportMembersExcelRetrieve = (eventId: string) => {
     responseType: "blob",
   });
 };
+
+export const eventsExportDrawPdf = (eventId: string, data: any) => {
+  return authClient.post(`/events/${eventId}/generate_draw_pdf/`, {
+    data,
+    responseType: "blob",
+  });
+};

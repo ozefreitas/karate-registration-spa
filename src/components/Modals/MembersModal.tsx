@@ -46,6 +46,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { getGraduationFromValue, GraduationsOptions } from "../../config";
+import { Persons } from "../../openapi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -120,7 +121,7 @@ export default function MembersModal(
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role;
 
   const [page, setPage] = useState<number>(0);
   const [checked, setChecked] = React.useState<string[]>([]);
@@ -188,9 +189,9 @@ export default function MembersModal(
     );
 
   React.useEffect(() => {
-    if (!disciplinesFreeData?.data) return;
+    if (!disciplinesFreeData) return;
 
-    const newDisciplines = disciplinesFreeData.data.map(
+    const newDisciplines = disciplinesFreeData.map(
       (modalities: any) => `${modalities.name}_${modalities.id}`,
     );
 
@@ -199,7 +200,7 @@ export default function MembersModal(
 
   React.useEffect(() => {
     const defaultValues: any = { category: false, chosen_category: "" };
-    props.disciplinesData?.data.results.forEach((discipline: any) => {
+    props.disciplinesData?.results.forEach((discipline: any) => {
       defaultValues[`${discipline.name}_${discipline.id}`] = false;
     });
 
@@ -286,10 +287,10 @@ export default function MembersModal(
       userRole === "free_club" &&
       props.eventData.has_categories
     ) {
-      const target = filteredMembers.find(
-        (member: any) => member.id === currentMemberId,
+      const target: any = filteredMembers?.find(
+        (member: Persons) => member.id === currentMemberId,
       );
-      const hasWeight = target[0].weight !== null;
+      const hasWeight = target?.weight !== null;
       setDoesNotHaveWeight(!hasWeight);
       setFreeClubWeight(target[0].weight ?? "");
       handleWeightInputScreenOpen();
@@ -299,8 +300,8 @@ export default function MembersModal(
 
     try {
       if (isWeightInputScreenOpen) {
-        const target = filteredMembers.find(
-          (member: any) => member.id === currentMemberId,
+        const target: any = filteredMembers?.find(
+          (member: Persons) => member.id === currentMemberId,
         );
         if (target[0].weight !== freeClubWeight) {
           const payload = {
@@ -371,9 +372,9 @@ export default function MembersModal(
   const filteredMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return membersNotInEventData?.data.results ?? [];
+    if (!query) return membersNotInEventData?.results ?? [];
 
-    return membersNotInEventData?.data.results.filter((member: any) => {
+    return membersNotInEventData?.results.filter((member: any) => {
       return (
         member.full_name.toLowerCase().includes(query) ||
         member.id_number === Number(query)
@@ -425,8 +426,8 @@ export default function MembersModal(
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Inscrever{" "}
               {
-                membersNotInEventData?.data.results.find(
-                  (member: Member) => member.id === currentMemberId,
+                membersNotInEventData?.results.find(
+                  (member) => member.id === currentMemberId,
                 )?.full_name
               }{" "}
               em {props.eventData?.name}
@@ -436,7 +437,7 @@ export default function MembersModal(
               Inscrever em {props.eventData?.name}
             </Typography>
           )}
-          {membersNotInEventData?.data.results.length !== 0 &&
+          {membersNotInEventData?.results.length !== 0 &&
           !isDisciplineScreenOpen &&
           !isWeightInputScreenOpen ? (
             <Search>
@@ -452,7 +453,7 @@ export default function MembersModal(
             </Search>
           ) : null}
           {isDisciplineScreenOpen ||
-          props.disciplinesData?.data.results.length === 0 ||
+          props.disciplinesData?.results.length === 0 ||
           (isWeightInputScreenOpen && userRole !== "free_club") ? (
             <Button
               sx={{ bgcolor: "#2e7d32", mx: 2 }}
@@ -466,7 +467,7 @@ export default function MembersModal(
                   handleIndividualsSubmit(checked);
                 }
               }}
-              disabled={membersNotInEventData?.data.results.length === 0}
+              disabled={membersNotInEventData?.results.length === 0}
             >
               Adicionar
             </Button>
@@ -768,7 +769,7 @@ export default function MembersModal(
               </Grid>
             ) : membersNotInEventError ? (
               <div>Ocorreu um erro</div>
-            ) : filteredMembers.length === 0 ? (
+            ) : filteredMembers?.length === 0 ? (
               <ListItem>
                 <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
               </ListItem>
@@ -777,12 +778,12 @@ export default function MembersModal(
                 <ListItemText primary="O seu plano não concede acesso à listagem de Atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
-              filteredMembers.map((member: Member, index: string) => (
+              filteredMembers?.map((member, index: number) => (
                 <ListItem
                   key={index}
                   disablePadding
                   secondaryAction={
-                    props.disciplinesData?.data.count === 0 ? (
+                    props.disciplinesData?.count === 0 ? (
                       <label>
                         <Checkbox
                           sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
@@ -864,7 +865,7 @@ export default function MembersModal(
       </DialogContent>
       {isDisciplineScreenOpen ||
       isWeightInputScreenOpen ||
-      !membersNotInEventData?.data?.count ? null : (
+      !membersNotInEventData?.count ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
@@ -875,7 +876,7 @@ export default function MembersModal(
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(membersNotInEventData?.data.count / 10)}
+              {Math.ceil(membersNotInEventData?.count / 10)}
             </Typography>
             <Tooltip title="Página anterior">
               <span>
@@ -893,8 +894,8 @@ export default function MembersModal(
                 <IconButton
                   onClick={handleNextButtonClick}
                   disabled={
-                    !membersNotInEventData?.data?.count ||
-                    membersNotInEventData?.data.count <= (page + 1) * 10
+                    !membersNotInEventData?.count ||
+                    membersNotInEventData?.count <= (page + 1) * 10
                   }
                   aria-label="next page"
                 >

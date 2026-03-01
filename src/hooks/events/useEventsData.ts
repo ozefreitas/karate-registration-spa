@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { EventsService } from "../../openapi";
+import { EventsService, MatchService } from "../../openapi";
 import { eventsExportMembersExcelRetrieve } from "../../api";
 
 export const useFetchEventsData = (
@@ -84,5 +84,15 @@ export const useExportEventRegistrationFile = (eventId: string) => {
     refetchOnMount: false,
     retry: false,
     enabled: false,
+  });
+};
+
+export const useEventMatchesData = (bracketId: string, eventId: string) => {
+  return useQuery({
+    queryKey: ["event-matches", bracketId, eventId],
+    queryFn: () => MatchService.matchList(bracketId, eventId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    enabled: !!bracketId,
   });
 };

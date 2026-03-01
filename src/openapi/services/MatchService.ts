@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { CreateMatch } from '../models/CreateMatch';
 import type { Match } from '../models/Match';
-import type { PaginatedMatchList } from '../models/PaginatedMatchList';
 import type { PatchedMatch } from '../models/PatchedMatch';
 import type { PatchedPatchMatchWinner } from '../models/PatchedPatchMatchWinner';
 import type { PatchMatchWinner } from '../models/PatchMatchWinner';
@@ -13,21 +12,21 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class MatchService {
     /**
-     * @param page A page number within the paginated result set.
-     * @param pageSize Number of results to return per page.
-     * @returns PaginatedMatchList
+     * @param bracket
+     * @param event
+     * @returns Match
      * @throws ApiError
      */
     public static matchList(
-        page?: number,
-        pageSize?: number,
-    ): CancelablePromise<PaginatedMatchList> {
+        bracket?: string,
+        event?: string,
+    ): CancelablePromise<Array<Match>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/match/',
             query: {
-                'page': page,
-                'page_size': pageSize,
+                'bracket': bracket,
+                'event': event,
             },
         });
     }

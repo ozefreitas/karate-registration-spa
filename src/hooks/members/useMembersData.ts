@@ -153,7 +153,7 @@ export const useFetchDisciplinesnotInMemberData = (
   return useQuery({
     queryKey: ["disciplines-not-in-member", memberId, eventId],
     queryFn: () =>
-      PersonsService.personsUnregisteredModalitiesRetrieve(eventId, memberId),
+      PersonsService.personsUnregisteredModalitiesList(eventId, memberId),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
     enabled: memberId !== "",

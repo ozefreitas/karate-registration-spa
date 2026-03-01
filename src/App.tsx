@@ -50,6 +50,7 @@ import ScrollToTop from "./utils/scrollToTop";
 import { ErrorBoundary } from "react-error-boundary";
 import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
+import DynamicViewPage from "./pages/DrawPage/DynamicViewPage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -314,6 +315,23 @@ function App() {
                           "main_admin",
                           "superuser",
                           "single_admin",
+                        ]}
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="events/:id/draw/dynamic_view/"
+                  element={
+                    isAuthLoading ? null : (
+                      <ProtectedRoute
+                        element={<DynamicViewPage />}
+                        allowedRoles={[
+                          "main_admin",
+                          "superuser",
+                          "single_admin",
+                          "subed_club",
+                          "technician"
                         ]}
                       />
                     )

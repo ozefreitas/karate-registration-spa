@@ -644,23 +644,23 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       to={`/events/${eventId!}/categories/`}
                     ></SettingsButton>
                   ) : null}
+                  {singleEventData?.encounter_type === "comp" ? (
+                    <GenerateButton
+                      label="Sorteios"
+                      to="draw/"
+                    ></GenerateButton>
+                  ) : null}
                   {["main_admin", "superuser"].includes(props.userRole) &&
                   singleEventData?.has_registrations ? (
-                    <>
-                      <GenerateButton
-                        label="Sorteios"
-                        to="draw/"
-                      ></GenerateButton>
-                      <Button
-                        sx={{ m: 1 }}
-                        variant="contained"
-                        color="success"
-                        onClick={handleDownloadRegistrationsFile}
-                        startIcon={<FileDownload />}
-                      >
-                        Descarregar Inscrições
-                      </Button>
-                    </>
+                    <Button
+                      sx={{ m: 1 }}
+                      variant="contained"
+                      color="success"
+                      onClick={handleDownloadRegistrationsFile}
+                      startIcon={<FileDownload />}
+                    >
+                      Descarregar Inscrições
+                    </Button>
                   ) : (
                     <InfoButton
                       label="Consultar Sorteios"

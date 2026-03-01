@@ -123,7 +123,7 @@ export default function EditMemberModal(
               memberHandleSubmit(onSubmit)();
               props.handleModalClose();
             }}
-            // disabled={membersNotInEventData?.data.length === 0}
+            // disabled={membersNotInEventData?.length === 0}
           >
             Guardar
           </Button>

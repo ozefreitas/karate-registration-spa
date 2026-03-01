@@ -62,9 +62,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     false,
   );
 
-  const state = singleEventData?.data.is_open
+  const state = singleEventData?.is_open
     ? "Inscrições abertas"
-    : singleEventData?.data.is_retification
+    : singleEventData?.is_retification
       ? "Período de retificações"
       : "Inscrições fechadas";
 
@@ -77,7 +77,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
 
     // Conditionally add category
     if (
-      disciplinesData?.data.results.length !== 0 &&
+      disciplinesData?.results.length !== 0 &&
       (isCoach === undefined || isCoach === false)
     ) {
       baseColumns.push({ key: "category", label: "Escalão" });
@@ -108,7 +108,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             subscrição, contacte um administrador de imediato.
           </>
         }
-        title={`Inscritos em ${singleEventData?.data.name}`}
+        title={`Inscritos em ${singleEventData?.name}`}
       ></PageInfoCard>
       <Grid container mx={4}>
         <Grid>
@@ -131,9 +131,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                   px={2}
                   sx={{
                     fontWeight: "bold",
-                    color: singleEventData?.data.is_open
+                    color: singleEventData?.is_open
                       ? "green"
-                      : singleEventData?.data.is_retification
+                      : singleEventData?.is_retification
                         ? "#ffc40c"
                         : "red",
                   }}
@@ -150,11 +150,11 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : disciplinesData?.data.results.length === 0 ? (
+        ) : disciplinesData?.results.length === 0 ? (
           <AllUseTable
             type="Individuais"
-            data={singleEventData?.data.individuals}
-            count={singleEventData?.data.individuals.length}
+            data={singleEventData?.individuals}
+            count={singleEventData?.individuals.length!}
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
@@ -166,7 +166,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             userRole={props.userRole}
           ></AllUseTable>
         ) : (
-          disciplinesData?.data.results.map((discipline: any, index: any) => {
+          disciplinesData?.results.map((discipline: any, index: any) => {
             const disciplineIndividuals = discipline?.individuals.map(
               (memberInfo: any) => ({
                 id: memberInfo.person.id,
@@ -191,7 +191,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     {discipline.name}
                   </Typography>
                   <Grid container spacing={2}>
-                    {singleEventData?.data.has_categories ? (
+                    {singleEventData?.has_categories ? (
                       <Button
                         startIcon={<Visibility />}
                         variant="contained"
@@ -202,7 +202,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                         Escalões
                       </Button>
                     ) : null}
-                    {singleEventData?.data.has_ended &&
+                    {singleEventData?.has_ended &&
                     ["superuser", "subed_club"].includes(props.userRole) &&
                     disciplineIndividuals.length !== 0 ? (
                       <Grid size={1}>
@@ -239,7 +239,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           })
         )}
       </Grid>
-      {singleEventData?.data.is_open ? (
+      {singleEventData?.is_open ? (
         <Grid container justifyContent="flex-end" m={4}>
           <Button
             variant="contained"
@@ -255,23 +255,23 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       <MembersModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
-        eventData={singleEventData?.data}
+        eventData={singleEventData}
         disciplinesData={disciplinesData}
       ></MembersModal>
       {disciplineToDuplicate === "" ? null : (
         <DuplicateRegistrationsModal
           handleModalClose={handleDuplicateModalClose}
           isModalOpen={isDuplicateModalOpen}
-          disciplineData={disciplinesData?.data.results.find(
+          disciplineData={disciplinesData?.results.find(
             (disicpline: any) => disicpline.name === disciplineToDuplicate,
           )}
-          eventName={singleEventData?.data.name}
+          eventName={singleEventData?.name!}
         ></DuplicateRegistrationsModal>
       )}
       {currentDiscipline === "" ? null : (
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}
-          disciplineData={disciplinesData?.data.results.filter(
+          disciplineData={disciplinesData?.results.filter(
             (disicpline: any) => disicpline.name === currentDiscipline,
           )}
           handleModalClose={handleCategoriesListModalClose}

@@ -14,8 +14,8 @@ export const useAddDisciplineMember = () => {
     onSuccess: (data: any) => {
       callNotiStack(
         enqueueSnackbar,
-        data.data.message,
-        data.data.status === "info" ? "warning" : "success",
+        data.message,
+        data?.status === "info" ? "warning" : "success",
         5000,
       );
       queryClient.invalidateQueries({ queryKey: ["events"] });
@@ -24,8 +24,14 @@ export const useAddDisciplineMember = () => {
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
       queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
     },
-    onError: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
+    onError: async (error: any) => {
+      const body = await error.body; 
+      callNotiStack(
+        enqueueSnackbar,
+        body?.error || body?.detail || "Ocorreu um erro! Tente novamente.",
+        "error",
+        5000,
+      );
     },
   });
 };
@@ -41,7 +47,7 @@ export const useDeleteDisciplineMember = () => {
         data,
       ),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
