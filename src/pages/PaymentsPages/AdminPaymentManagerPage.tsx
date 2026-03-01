@@ -136,7 +136,7 @@ export default function AdminPaymentManagerPage(
 
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
-    return subscriptionsData?.data.map((subscription: Subscriptions) => ({
+    return subscriptionsData?.map((subscription) => ({
       id: subscription.id,
       username: subscription.club.username,
       paid: subscription.paid ? (
@@ -147,9 +147,9 @@ export default function AdminPaymentManagerPage(
           clickable
           onClick={() =>
             handleModalOpen(
-              subscription.id,
+              String(subscription.id),
               subscription.club.username,
-              subscription.paid,
+              subscription.paid!,
             )
           }
         ></Chip>
@@ -161,9 +161,9 @@ export default function AdminPaymentManagerPage(
           clickable
           onClick={() =>
             handleModalOpen(
-              subscription.id,
+              String(subscription.id),
               subscription.club.username,
-              subscription.paid,
+              subscription.paid!,
             )
           }
         ></Chip>
@@ -172,7 +172,7 @@ export default function AdminPaymentManagerPage(
         subscription.paid_at === null ? (
           <span style={{ color: "lightgray" }}>N/A</span>
         ) : (
-          formatDateTime(subscription.paid_at, "both")
+          formatDateTime(subscription.paid_at!, "both")
         ),
     }));
   }, [subscriptionsData]);
@@ -240,7 +240,7 @@ export default function AdminPaymentManagerPage(
                     <MenuItem sx={{ color: "lightgrey" }} value="">
                       -- Selecionar --
                     </MenuItem>
-                    {data?.data.years.map((item: any, index: any) => (
+                    {data?.years.map((item: any, index: any) => (
                       <MenuItem key={index} value={item}>
                         {item}
                       </MenuItem>
@@ -279,7 +279,7 @@ export default function AdminPaymentManagerPage(
                 >
                   {watch("search") === ""
                     ? 0
-                    : subscriptionsData?.data?.filter(
+                    : subscriptionsData?.filter(
                         (item: any) => item.paid === false,
                       ).length}
                 </Typography>
@@ -333,10 +333,7 @@ export default function AdminPaymentManagerPage(
                 >
                   {watch("search") === ""
                     ? 0
-                    : formatDateTime(
-                        subscriptionsData?.data[0].due_date,
-                        "day",
-                      )}
+                    : formatDateTime(subscriptionsData?.due_date, "day")}
                 </Typography>
               )}
             </CardContent>
@@ -415,11 +412,11 @@ export default function AdminPaymentManagerPage(
               primary="Ocorreu um erro ao encontrar a informação do pagamento de quotas. Tente mais tarde ou contacte um administrador."
             ></ListItemText>
           </ListItem>
-        ) : subscriptionsData?.data === undefined ? null : (
+        ) : subscriptionsData === undefined ? null : (
           <AllUseTable
             type="PagamentosAnuais"
             data={subscriptionRows}
-            count={subscriptionRows.length}
+            count={subscriptionRows?.length!}
             columnsHeaders={columnMaping}
             actions
             editable

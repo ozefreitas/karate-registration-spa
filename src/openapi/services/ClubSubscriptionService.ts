@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AvailableQuoteYears } from '../models/AvailableQuoteYears';
 import type { ClubSubscriptions } from '../models/ClubSubscriptions';
 import type { CreateAllClubsSubscription } from '../models/CreateAllClubsSubscription';
 import type { CreateClubSubscription } from '../models/CreateClubSubscription';
@@ -137,10 +138,10 @@ export class ClubSubscriptionService {
         });
     }
     /**
-     * @returns ClubSubscriptions
+     * @returns AvailableQuoteYears
      * @throws ApiError
      */
-    public static clubSubscriptionGetAvailableQuoteYearsRetrieve(): CancelablePromise<ClubSubscriptions> {
+    public static clubSubscriptionGetAvailableQuoteYearsRetrieve(): CancelablePromise<AvailableQuoteYears> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/club_subscription/get_available_quote_years/',

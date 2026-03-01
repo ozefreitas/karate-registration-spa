@@ -1,22 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { ClubsService } from "../../openapi";
+import { ClubSettingsService } from "../../openapi";
 import { callNotiStack } from "../../utils/utils";
 
-export const useRemoveClub = () => {
+export const usePatchClubSettingsData = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ClubsService.clubsDestroy,
+    mutationFn: ({ settingId, data }: { settingId: number; data: any }) =>
+      ClubSettingsService.clubSettingsPartialUpdate(settingId, data),
     onSuccess: () => {
-      callNotiStack(
-        enqueueSnackbar,
-        "Clube removido com sucesso.",
-        "success",
-        5000,
-      );
-      queryClient.invalidateQueries({ queryKey: ["available-clubs"] });
+      callNotiStack(enqueueSnackbar, "Dia atualizado!", "success", 5000);
+      queryClient.invalidateQueries({ queryKey: ["club-settings"] });
     },
     onError: () => {
       callNotiStack(

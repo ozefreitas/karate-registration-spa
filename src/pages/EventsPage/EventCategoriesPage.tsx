@@ -59,8 +59,8 @@ export default function EventCategoriesPage(
 
   // Memoize `rows` to compute only when `members` changes
   const categoriesRows = useMemo(() => {
-    return disciplinesData?.data.results.map((discipline: Discipline) =>
-      discipline.categories.map((category: Category) => ({
+    return disciplinesData?.results.map((discipline) =>
+      discipline.categories.map((category) => ({
         id: category.id,
         name: category.name,
         gender: category.gender,
@@ -189,52 +189,47 @@ export default function EventCategoriesPage(
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : disciplinesData?.data === undefined ? null : (
-          disciplinesData.data.results.map(
-            (discipline: Discipline, index: any) => (
-              <span key={index}>
-                <Typography sx={{ m: 3 }} variant="h5">
-                  {discipline.name}
-                </Typography>
-                <AllUseTable
-                  type="EventCategories"
-                  data={categoriesRows[index]}
-                  count={categoriesRows[index].length}
-                  columnsHeaders={columnMaping}
-                  actions
-                  selection={["main_admin", "superuser"].includes(
-                    props.userRole,
-                  )}
-                  deletable={["main_admin", "superuser"].includes(
-                    props.userRole,
-                  )}
-                  userRole={props.userRole}
-                  discipline={discipline.id}
-                ></AllUseTable>
-                {["main_admin", "superuser"].includes(props.userRole) &&
-                !discipline.is_coach ? (
-                  <Grid container size={0.5}>
-                    <Button
-                      sx={{ m: 2 }}
-                      variant="contained"
-                      size="large"
-                      color="success"
-                      onClick={() => {
-                        setCurrentDiscipline({
-                          name: discipline.name,
-                          id: discipline.id,
-                        });
-                        handleCategoriesModalOpen();
-                      }}
-                      startIcon={<Add />}
-                    >
-                      Adicionar
-                    </Button>
-                  </Grid>
-                ) : null}
-              </span>
-            ),
-          )
+        ) : disciplinesData === undefined ||
+          categoriesRows === undefined ? null : (
+          disciplinesData.results.map((discipline, index: any) => (
+            <span key={index}>
+              <Typography sx={{ m: 3 }} variant="h5">
+                {discipline.name}
+              </Typography>
+              <AllUseTable
+                type="EventCategories"
+                data={categoriesRows[index]}
+                count={categoriesRows[index].length}
+                columnsHeaders={columnMaping}
+                actions
+                selection={["main_admin", "superuser"].includes(props.userRole)}
+                deletable={["main_admin", "superuser"].includes(props.userRole)}
+                userRole={props.userRole}
+                discipline={discipline.id}
+              ></AllUseTable>
+              {["main_admin", "superuser"].includes(props.userRole) &&
+              !discipline.is_coach ? (
+                <Grid container size={0.5}>
+                  <Button
+                    sx={{ m: 2 }}
+                    variant="contained"
+                    size="large"
+                    color="success"
+                    onClick={() => {
+                      setCurrentDiscipline({
+                        name: discipline.name,
+                        id: String(discipline.id),
+                      });
+                      handleCategoriesModalOpen();
+                    }}
+                    startIcon={<Add />}
+                  >
+                    Adicionar
+                  </Button>
+                </Grid>
+              ) : null}
+            </span>
+          ))
         )}
       </Grid>
       <Grid container justifyContent={"flex-end"}>

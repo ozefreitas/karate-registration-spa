@@ -128,18 +128,15 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
 
   const handleDownloadRegistrationsFile = async () => {
     const { data } = await refetchRegistrationsFile();
-    console.log(data);
-    console.log(data instanceof Blob);
-    console.log(typeof data);
     if (data) {
-      const url = window.URL.createObjectURL(data.data);
+      const url = globalThis.URL.createObjectURL(data.data);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `lista_inscritos_evento_${eventId}.xlsx`);
+      link.setAttribute("download", `lista_inscritos_evento_${eventId}_.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
-      window.URL.revokeObjectURL(url);
+      globalThis.URL.revokeObjectURL(url);
     }
   };
 
@@ -266,9 +263,10 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                   }}
                 ></CardHeader>
                 <CardContent sx={{ ml: 5 }}>
-                  <li style={{ color: "grey" }}>
-                    Não existem ficheiros para este Evento.
-                  </li>
+                  <ListItemText
+                    primary={"Não existem ficheiros para este Evento."}
+                    sx={{ color: "GrayText" }}
+                  />
                 </CardContent>
               </Card>
             </Grid>
@@ -311,9 +309,10 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }}
                     />
                   ) : singleEventData?.description === "" ? (
-                    <li style={{ color: "grey", marginLeft: 30 }}>
-                      Não existem informações adicionais para este Evento.
-                    </li>
+                    <ListItemText
+                      primary={"Não existem informações adicionais para este Evento."}
+                      sx={{ color: "GrayText" }}
+                    />
                   ) : (
                     <Typography paddingLeft={1}>
                       {singleEventData?.description}

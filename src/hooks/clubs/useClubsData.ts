@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { ClubsService, ClubSubscriptionService } from "../../openapi";
+import {
+  ClubSettingsService,
+  ClubsService,
+  ClubSubscriptionService,
+} from "../../openapi";
 
 export const useFetchAvailableClubs = () => {
   return useQuery({
@@ -28,6 +32,15 @@ export const useFetchAvailableYears = () => {
     queryKey: ["subscriptions-available-years"],
     queryFn:
       ClubSubscriptionService.clubSubscriptionGetAvailableQuoteYearsRetrieve,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
+
+export const useFetchClubSettingsData = () => {
+  return useQuery({
+    queryKey: ["club-setting"],
+    queryFn: ClubSettingsService.clubSettingsList,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

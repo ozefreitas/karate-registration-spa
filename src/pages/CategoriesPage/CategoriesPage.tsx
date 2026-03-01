@@ -4,8 +4,6 @@ import {
   CircularProgress,
   ListItem,
   ListItemText,
-  Tooltip,
-  IconButton,
   Chip,
 } from "@mui/material";
 import { categoriesHooks } from "../../hooks";
@@ -21,16 +19,6 @@ import { Check, Close } from "@mui/icons-material";
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-
-  type Category = {
-    id: string;
-    name: string;
-    gender: string;
-    has_age: string;
-    has_grad: string;
-    has_weight: string;
-    max_athletes: number;
-  };
 
   const {
     control: filtersControl,
@@ -156,7 +144,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
 
   // Memoize `rows` to compute only when `members` changes
   const categoryRows = useMemo(() => {
-    return categoriesData?.data.results.map((category: Category) => ({
+    return categoriesData?.results.map((category) => ({
       id: category.id,
       name: category.name,
       gender: category.gender,
@@ -335,11 +323,11 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
               <ListItemText primary="Ocorreu um erro ao encontrar os Escalões, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
-        ) : categoriesData?.data === undefined ? null : (
+        ) : categoriesData === undefined ? null : (
           <AllUseTable
             type="Categorias"
             data={categoryRows}
-            count={categoriesData?.data.count}
+            count={categoriesData?.count}
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser"].includes(props.userRole)}

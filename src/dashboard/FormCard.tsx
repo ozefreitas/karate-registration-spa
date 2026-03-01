@@ -23,7 +23,13 @@ export default function FormCard(
             },
           }}
         ></CardHeader>
-        <CardContent>
+        <CardContent
+          sx={{
+            "&:last-child": {
+              paddingBottom: 1,
+            },
+          }}
+        >
           <Grid container>{props.children}</Grid>
         </CardContent>
       </Card>

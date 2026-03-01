@@ -417,7 +417,7 @@ export default function NotificationManagerPage(
                         <CircularProgress />
                       </Grid>
                     ) : (
-                      eventsData?.data.results.map((item: any, index: any) => (
+                      eventsData?.results.map((item: any, index: any) => (
                         <MenuItem key={index} value={item.id}>
                           {item.name} {item.season}
                         </MenuItem>

@@ -12,7 +12,7 @@ import {
   TextField,
   FormHelperText,
 } from "@mui/material";
-import { monthlyPaymentsHooks } from "../../hooks";
+import { clubsHooks, monthlyPaymentsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import AllUseTable from "../../components/Table/AllUseTable";
@@ -32,12 +32,6 @@ import { Controller, useForm } from "react-hook-form";
 export default function MemberPaymemtManagerPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  type Plan = {
-    id: string;
-    is_default: boolean;
-    name: string;
-    amount: string;
-  };
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isShowable, setIsShowable] = useState<boolean>(true);
@@ -75,7 +69,7 @@ export default function MemberPaymemtManagerPage(
   };
 
   const { data, isLoading, error } =
-    monthlyPaymentsHooks.useFetchMonthlyMemberSubscriptionsData("", undefined);
+    monthlyPaymentsHooks.useFetchMonthlyMemberSubscriptionsData("");
 
   const {
     data: plansData,
@@ -83,9 +77,13 @@ export default function MemberPaymemtManagerPage(
     error: plansError,
   } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
 
+  const { data: currentSettingData } = clubsHooks.useFetchClubSettingsData();
+
+  const patchBillingDay = clubsHooks.usePatchClubSettingsData();
+
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
-    return plansData?.data.map((plan: Plan) => ({
+    return plansData?.map((plan) => ({
       id: plan.id,
       amount: `${plan.amount}€`,
       is_default: plan.is_default ? (
@@ -108,19 +106,19 @@ export default function MemberPaymemtManagerPage(
 
   const columnMaping = getColumnMaping();
 
-  const immediateAction = data?.data.filter(
+  const immediateAction = data?.filter(
     (item: any) => item.paid === false && item.inside_limit === false,
   ).length;
 
-  const warnings = data?.data.filter(
+  const warnings = data?.filter(
     (item: any) => item.paid === false && item.inside_limit === true,
   ).length;
 
   const infos = 0;
 
   const count =
-    (isSelected.includes("error") ? immediateAction : 0) +
-    (isSelected.includes("warning") ? warnings : 0) +
+    (isSelected.includes("error") ? (immediateAction ?? 0) : 0) +
+    (isSelected.includes("warning") ? (warnings ?? 0) : 0) +
     (isSelected.includes("info") ? infos : 0);
 
   useEffect(() => {
@@ -130,13 +128,25 @@ export default function MemberPaymemtManagerPage(
   const {
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: { day: "" },
+    defaultValues: {
+      day:
+        currentSettingData === undefined
+          ? ""
+          : currentSettingData[0].billing_day,
+    },
   });
 
+  useEffect(() => {
+    if (currentSettingData !== undefined) {
+      setValue("day", currentSettingData[0].billing_day);
+    }
+  }, [currentSettingData]);
+
   return (
-    <>
+    <Grid container>
       <FormAccordion
         expanded={isExpanded}
         onChange={handleIsExpandedOpen}
@@ -232,8 +242,8 @@ export default function MemberPaymemtManagerPage(
           isShowable && (
             <Grid borderRadius={5} bgcolor={"#bad7ff63"} p={2} width={"100%"}>
               {isSelected.includes("error") &&
-                data?.data
-                  .filter(
+                data
+                  ?.filter(
                     (item: any) =>
                       item.paid === false && item.inside_limit === false,
                   )
@@ -254,8 +264,8 @@ export default function MemberPaymemtManagerPage(
                     </ListItem>
                   ))}
               {isSelected.includes("warning") &&
-                data?.data
-                  .filter(
+                data
+                  ?.filter(
                     (item: any) =>
                       item.paid === false && item.inside_limit === true,
                   )
@@ -284,45 +294,59 @@ export default function MemberPaymemtManagerPage(
         )}
       </FormAccordion>
       <FormCard title="Gestão de Pagamentos">
-        <Grid sx={{ p: 2, pt: 3 }} size={6}>
-          <Controller
-            name="day"
-            control={control}
-            render={({ field }: any) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Dia"
-                type="number"
-                slotProps={{
-                  htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
-                }}
-                fullWidth
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.day}
-                helperText={errors.day?.message}
-              ></TextField>
-            )}
-          />
+        <Grid container p={2} size={12} alignItems={"center"} spacing={4}>
+          <Grid size={6}>
+            <Controller
+              name="day"
+              control={control}
+              render={({ field }: any) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Dia"
+                  type="number"
+                  slotProps={{
+                    htmlInput: { inputMode: "numeric", pattern: "[0-9]*" },
+                  }}
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.day}
+                  helperText={errors.day?.message}
+                ></TextField>
+              )}
+            />
+          </Grid>
+          <Grid size={6}>
+            <FormHelperText>
+              Selecione um dia do mês entre 1 e 28 para criar as quotas mensais.
+              Caso altere o dia, e as quotas do presente mês já tiverem sido
+              criadas, apenas serão criadas novas no mês seguinte.
+            </FormHelperText>
+          </Grid>
         </Grid>
-        <Grid sx={{ p: 2, pt: 3 }} size={6}>
-          <FormHelperText>
-            Selecione um dia do mês entre 1 e 28 para criar as quotas mensais.
-            Caso altere o dia, e as quotas do presente mês já tiverem sido
-            criadas, apenas serão criadas novas no mês seguinte.
-          </FormHelperText>
-        </Grid>
-        {watch("day") === "" ? null : (
-          <Button sx={{ ml: 2 }} variant="contained" endIcon={<Save></Save>}>
+        <Grid container size={12} justifyContent={"flex-end"} mr={2} mb={2}>
+          <Button
+            variant="contained"
+            endIcon={<Save></Save>}
+            disabled={watch("day") === ""}
+            onClick={() => {
+              if (currentSettingData !== undefined) {
+                patchBillingDay.mutate({
+                  settingId: currentSettingData[0].id,
+                  data: { day: watch("day") },
+                });
+              }
+            }}
+          >
             Guardar
           </Button>
-        )}
+        </Grid>
       </FormCard>
       <FormCard title="Planos de Pagamento">
-        <Grid size={12} m={2} mb={0}>
+        <Grid size={12} mb={0}>
           {isPlansLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
@@ -333,7 +357,8 @@ export default function MemberPaymemtManagerPage(
                 <ListItemText primary="Ocorreu um erro ao encontrar a listagem de Planos de Pagamento. Tente mais tarde ou contacte um administrador."></ListItemText>
               </ListItem>
             </Grid>
-          ) : plansData?.data === undefined ? null : (
+          ) : plansData === undefined ||
+            subscriptionRows === undefined ? null : (
             <AllUseTable
               type="Plano"
               data={subscriptionRows}
@@ -366,6 +391,6 @@ export default function MemberPaymemtManagerPage(
         handleClose={handleCreatePlanModalClose}
         isOpen={isCreatePlanModalOpen}
       ></CreateMemberPaymentPlanModal>
-    </>
+    </Grid>
   );
 }

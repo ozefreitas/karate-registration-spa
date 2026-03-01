@@ -9,5 +9,7 @@ export const fetchClubUsers = (username?: string) => {
 };
 
 export const eventsExportMembersExcelRetrieve = (eventId: string) => {
-  return authClient.get(`/events/${eventId}/export_members_excel/`);
+  return authClient.get(`/events/${eventId}/export_members_excel/`, {
+    responseType: "blob",
+  });
 };
