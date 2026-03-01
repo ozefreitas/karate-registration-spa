@@ -31,7 +31,7 @@ import {
   SportsMartialArts,
 } from "@mui/icons-material";
 import { useEffect, useState, useMemo, Fragment } from "react";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { EncounterOptions, SeasonOptions } from "../../config";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -132,9 +132,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     const currentIds = disciplineCategories.find(
       (item: any) => item.discipline === selectedDisciplineForCategory,
     );
-    return categoriesData?.data.results
-      .filter((category: any) => currentIds?.categories.includes(category.id))
-      .map((category: Category) => ({
+    return categoriesData?.results
+      .filter((category) => currentIds?.categories.includes(category.id))
+      .map((category) => ({
         id: category.id,
         name: category.name,
         gender: category.gender,
@@ -370,7 +370,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       },
     });
 
-    const eventId = eventResponse.data.id;
+    const eventId = eventResponse.id;
 
     const disciplineResponses = await Promise.all(
       disciplines.map((discipline) => {
@@ -401,10 +401,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
 
     disciplineResponses.forEach((discipline) => {
       const findDiscipline = disciplineCategories.find(
-        (item: any) => item.discipline === discipline.data.name,
+        (item: any) => item.discipline === discipline.name,
       );
       const data = {
-        disciplineId: discipline.data.id,
+        disciplineId: String(discipline.id),
         data: { category_ids: findDiscipline.categories },
       };
       addDisciplineCategory.mutate(data, {
@@ -1384,7 +1384,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               <AllUseTable
                 type="CategoriasReadOnly"
                 data={categoryRows}
-                count={categoryRows.length}
+                count={categoryRows?.length!}
                 columnsHeaders={columnMaping}
                 actions
                 selection={false}

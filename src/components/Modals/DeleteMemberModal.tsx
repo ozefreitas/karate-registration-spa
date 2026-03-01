@@ -69,7 +69,7 @@ export default function DeleteMemberModal(
     monthlyPaymentsHooks.useDeleteMonthlyMemberSubscription();
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams();
 
   const paramEvent = searchParams.get("event") || undefined;
 
@@ -105,7 +105,7 @@ export default function DeleteMemberModal(
         };
         removeEventMember.mutate(data);
       } else if (props.from === "Categorias") {
-        removeCategory.mutate(id);
+        removeCategory.mutate(Number(id));
       } else if (props.from === "EventCategories") {
         const data = {
           category_ids: [props.id],
@@ -115,9 +115,9 @@ export default function DeleteMemberModal(
           data: data,
         });
       } else if (props.from === "Plano") {
-        removeMonthlyMenberPaymentPlan.mutate(id);
+        removeMonthlyMenberPaymentPlan.mutate(Number(id));
       } else if (props.from === "Pagamentos") {
-        removeMemberMonthlyPayment.mutate(id);
+        removeMemberMonthlyPayment.mutate(Number(id));
       } else {
         const data = {
           disciplineId: props.discipline,
@@ -148,7 +148,7 @@ export default function DeleteMemberModal(
         });
       } else if (props.from === "Categorias") {
         id.forEach((categoryId) => {
-          removeCategory.mutate(categoryId);
+          removeCategory.mutate(Number(categoryId));
         });
       } else {
         id.forEach((memberId) => {
@@ -209,35 +209,34 @@ export default function DeleteMemberModal(
           borderTop: "1px solid lightgrey",
         }}
       >
-        <p>
-          {props.from === "Atletas"
+        <p></p>
+        {props.from === "Atletas"
+          ? props.id === undefined
+            ? "Tem a certeza que pretende apagar todos os seus Membros? Esta ação irá eliminar também todas as inscrições de todos os Membros em todas as provas"
+            : "Tem a certeza que pretende apagar este(s) Membro(s)? Esta ação irá eliminar também todas as inscrições deste(s) Membro(s) em todas as provas."
+          : props.from === "Categorias"
             ? props.id === undefined
-              ? "Tem a certeza que pretende apagar todos os seus Membros? Esta ação irá eliminar também todas as inscrições de todos os Membros em todas as provas"
-              : "Tem a certeza que pretende apagar este(s) Membro(s)? Esta ação irá eliminar também todas as inscrições deste(s) Membro(s) em todas as provas."
-            : props.from === "Categorias"
+              ? "Tem a certeza que pretende apagar todos os Escalões?"
+              : "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
+            : props.from === "EventCategories"
               ? props.id === undefined
-                ? "Tem a certeza que pretende apagar todos os Escalões?"
-                : "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
-              : props.from === "EventCategories"
+                ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
+                : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
+              : props.from === "Individuais" || props.from === "Modalidades"
                 ? props.id === undefined
-                  ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
-                  : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
-                : props.from === "Individuais" || props.from === "Modalidades"
+                  ? "Tem a certeza que pretende apagar todas as Inscrições?"
+                  : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
+                : props.from === "Treinadores"
                   ? props.id === undefined
-                    ? "Tem a certeza que pretende apagar todas as Inscrições?"
-                    : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
-                  : props.from === "Treinadores"
+                    ? "Tem a certeza que pretende apagar as Inscrições de todos os Treinadores?"
+                    : "Tem a certeza que pretende apagar a Inscrição deste(s) Treinador(es)?"
+                  : props.from === "Equipas"
                     ? props.id === undefined
-                      ? "Tem a certeza que pretende apagar as Inscrições de todos os Treinadores?"
-                      : "Tem a certeza que pretende apagar a Inscrição deste(s) Treinador(es)?"
-                    : props.from === "Equipas"
-                      ? props.id === undefined
-                        ? "Tem a certeza que pretende apagar todas as Equipas?"
-                        : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
-                      : props.from === "Pagamentos"
-                        ? "Tem a certeza que pretende apagar este Pagamento?"
-                        : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
-        </p>
+                      ? "Tem a certeza que pretende apagar todas as Equipas?"
+                      : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
+                    : props.from === "Pagamentos"
+                      ? "Tem a certeza que pretende apagar este Pagamento?"
+                      : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
       </DialogContent>
       <DialogActions>
         <Stack

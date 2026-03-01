@@ -78,7 +78,7 @@ export default function MonthYearPicker({
             borderBottom: "1px solid #eeeeee",
           }}
         >
-          <Grid container alignItems={"center"} spacing={2}>
+          <Grid container alignItems={"center"} spacing={2} p={1}>
             <Box
               sx={{
                 width: 50,
@@ -94,7 +94,7 @@ export default function MonthYearPicker({
             >
               <CalendarMonth sx={{ fontSize: 25 }} />
             </Box>
-            <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
+            <Typography variant="h5" fontWeight={700} sx={{ color: "#1a1a1a" }}>
               Selecionar Mês e Ano
             </Typography>
           </Grid>
@@ -126,7 +126,7 @@ export default function MonthYearPicker({
             <ChevronLeft fontSize="small" />
           </IconButton>
 
-          <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
+          <Typography variant="h5" fontWeight={700} sx={{ color: "#1a1a1a" }}>
             {selectedYear}
           </Typography>
 
@@ -150,7 +150,12 @@ export default function MonthYearPicker({
           {MonthOptions.map((month, i) => {
             const isSelected = i + 1 === selectedMonth;
             return (
-              <Grid size={2} container key={month.value} justifyContent={"center"}>
+              <Grid
+                size={2}
+                container
+                key={month.value}
+                justifyContent={"center"}
+              >
                 <Box
                   onClick={() => setSelectedMonth(month.value)}
                   sx={{
@@ -161,7 +166,6 @@ export default function MonthYearPicker({
                     bgcolor: isSelected ? "#d32f2f" : "#f5f5f5",
                     color: isSelected ? "#fff" : "#1a1a1a",
                     fontWeight: isSelected ? 700 : 500,
-                    fontSize: "0.9rem",
                     transition: "all 0.15s ease",
                     "&:hover": {
                       bgcolor: isSelected ? "#b71c1c" : "#eeeeee",
@@ -176,13 +180,8 @@ export default function MonthYearPicker({
         </Grid>
       </DialogContent>
 
-      <DialogActions sx={{ px: 2.5, p: 2.5, gap: 2 }}>
-        <Button
-          onClick={handleClose}
-          disableElevation
-          sx={{
-          }}
-        >
+      <DialogActions sx={{ px: 2.5, p: 2.5, gap: 3 }}>
+        <Button onClick={handleClose} disableElevation sx={{}}>
           Cancelar
         </Button>
         <Button

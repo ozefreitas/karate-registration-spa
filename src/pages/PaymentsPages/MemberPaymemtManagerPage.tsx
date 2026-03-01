@@ -28,6 +28,7 @@ import {
 import FormAccordion from "../../dashboard/FormAccordion";
 import CreateMemberPaymentPlanModal from "../../components/Modals/CreateMemberPaymentPlanModal";
 import { Controller, useForm } from "react-hook-form";
+import { MonthOptions } from "../../config";
 
 export default function MemberPaymemtManagerPage(
   props: Readonly<{ userRole: string }>,
@@ -259,7 +260,14 @@ export default function MemberPaymemtManagerPage(
                         <ListItemIcon>
                           <Error color="error" />
                         </ListItemIcon>
-                        <ListItemText primary={payments.person.full_name} />
+                        <ListItemText
+                          primary={payments.person.full_name}
+                          secondary={`Pagamento de ${
+                            MonthOptions.find(
+                              (item) => item.value === payments.month,
+                            )?.label
+                          } expirado`}
+                        />
                       </ListItemButton>
                     </ListItem>
                   ))}

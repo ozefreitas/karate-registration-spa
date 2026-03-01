@@ -47,9 +47,9 @@ export default function RegisteredTeamsPage(
     true,
   );
 
-  const state = singleEventData?.data.is_open
+  const state = singleEventData?.is_open
     ? "Inscrições abertas"
-    : singleEventData?.data.is_retification
+    : singleEventData?.is_retification
       ? "Período de retificações"
       : "Inscrições fechadas";
 
@@ -126,9 +126,9 @@ export default function RegisteredTeamsPage(
                   px={2}
                   sx={{
                     fontWeight: "bold",
-                    color: singleEventData?.data.is_open
+                    color: singleEventData?.is_open
                       ? "green"
-                      : singleEventData?.data.is_retification
+                      : singleEventData?.is_retification
                         ? "#ffc40c"
                         : "red",
                   }}
@@ -151,11 +151,11 @@ export default function RegisteredTeamsPage(
               <ListItemText primary="Ocorreu um erro ao encontrar as Equipas para este Evento, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
-        ) : disciplinesData?.data.results.length === 0 ? (
+        ) : disciplinesData?.results.length === 0 ? (
           <AllUseTable
             type="Individuais"
-            data={singleEventData?.data.individuals}
-            count={singleEventData?.data.individuals.length}
+            data={singleEventData?.individuals}
+            count={singleEventData?.individuals.length!}
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
@@ -167,7 +167,7 @@ export default function RegisteredTeamsPage(
             userRole={props.userRole}
           ></AllUseTable>
         ) : (
-          disciplinesData?.data.results.map((discipline: any, index: any) => {
+          disciplinesData?.results.map((discipline: any, index: any) => {
             const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
               id: teamInfo.team.id,
               member1: teamInfo.team.athlete1.full_name,
@@ -196,7 +196,7 @@ export default function RegisteredTeamsPage(
                     {discipline.name}
                   </Typography>
                   <Grid container spacing={2}>
-                    {singleEventData?.data.has_categories ? (
+                    {singleEventData?.has_categories ? (
                       <Button
                         startIcon={<Visibility />}
                         variant="contained"
@@ -207,7 +207,7 @@ export default function RegisteredTeamsPage(
                         Escalões
                       </Button>
                     ) : null}
-                    {singleEventData?.data.has_ended &&
+                    {singleEventData?.has_ended &&
                     ["superuser", "subed_club"].includes(props.userRole) &&
                     disciplineTeams.length !== 0 ? (
                       <Grid size={1}>
@@ -261,7 +261,7 @@ export default function RegisteredTeamsPage(
       <NewTeamPageModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
-        disciplineData={disciplinesData?.data.results.find(
+        disciplineData={disciplinesData?.results.find(
           (disicpline: any) => disicpline.name === currentDiscipline,
         )}
       ></NewTeamPageModal>
@@ -269,16 +269,16 @@ export default function RegisteredTeamsPage(
         <DuplicateRegistrationsModal
           handleModalClose={handleDuplicateModalClose}
           isModalOpen={isDuplicateModalOpen}
-          disciplineData={disciplinesData?.data.results.find(
+          disciplineData={disciplinesData?.results.find(
             (disicpline: any) => disicpline.name === disciplineToDuplicate,
           )}
-          eventName={singleEventData?.data.name}
+          eventName={singleEventData?.name!}
         ></DuplicateRegistrationsModal>
       )}
       {currentDiscipline === "" ? null : (
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}
-          disciplineData={disciplinesData?.data.results.filter(
+          disciplineData={disciplinesData?.results.filter(
             (disicpline: any) => disicpline.name === currentDiscipline,
           )}
           handleModalClose={handleCategoriesListModalClose}

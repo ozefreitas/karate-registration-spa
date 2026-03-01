@@ -91,7 +91,7 @@ export default function SingleTeamPage() {
                           fontWeight: "bold",
                         }}
                       >
-                        Escalão: {singleTeamData?.data.category.name}
+                        Escalão: {singleTeamData?.category.name}
                       </Typography>
                     )}
                   </CardContent>
@@ -118,7 +118,7 @@ export default function SingleTeamPage() {
                           fontWeight: "bold",
                         }}
                       >
-                        Género: {singleTeamData?.data.gender}
+                        Género: {singleTeamData?.gender}
                       </Typography>
                     )}
                   </CardContent>
@@ -137,7 +137,7 @@ export default function SingleTeamPage() {
                     >
                       <Avatar
                         {...stringAvatar(
-                          singleTeamData?.data.athlete1.full_name,
+                          singleTeamData?.athlete1.full_name!,
                           128,
                         )}
                       ></Avatar>
@@ -146,25 +146,25 @@ export default function SingleTeamPage() {
                         textAlign={"center"}
                         variant="h4"
                       >
-                        {singleTeamData?.data.athlete1.full_name}
+                        {singleTeamData?.athlete1.full_name}
                       </Typography>
                       <Grid container justifyContent={"center"} mt={2}>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete1.age} anos
+                        ${singleTeamData?.athlete1.age} anos
                       `}
                         ></Chip>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete1.gender}
+                        ${singleTeamData?.athlete1.gender}
                       `}
                         ></Chip>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete1.weight} Kg
+                        ${singleTeamData?.athlete1.weight} Kg
                       `}
                         ></Chip>
                       </Grid>
@@ -183,7 +183,7 @@ export default function SingleTeamPage() {
                     >
                       <Avatar
                         {...stringAvatar(
-                          singleTeamData?.data.athlete2.full_name,
+                          singleTeamData?.athlete2.full_name!,
                           128,
                         )}
                       ></Avatar>
@@ -192,25 +192,25 @@ export default function SingleTeamPage() {
                         textAlign={"center"}
                         variant="h4"
                       >
-                        {singleTeamData?.data.athlete2.full_name}
+                        {singleTeamData?.athlete2.full_name}
                       </Typography>
                       <Grid container justifyContent={"center"} mt={2}>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete2.age} anos
+                        ${singleTeamData?.athlete2.age} anos
                       `}
                         ></Chip>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete2.gender}
+                        ${singleTeamData?.athlete2.gender}
                       `}
                         ></Chip>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete2.weight} Kg
+                        ${singleTeamData?.athlete2.weight} Kg
                       `}
                         ></Chip>
                       </Grid>
@@ -229,7 +229,7 @@ export default function SingleTeamPage() {
                     >
                       <Avatar
                         {...stringAvatar(
-                          singleTeamData?.data.athlete3.full_name,
+                          singleTeamData?.athlete3.full_name!,
                           128,
                         )}
                       ></Avatar>
@@ -238,25 +238,25 @@ export default function SingleTeamPage() {
                         textAlign={"center"}
                         variant="h4"
                       >
-                        {singleTeamData?.data.athlete3.full_name}
+                        {singleTeamData?.athlete3.full_name}
                       </Typography>
                       <Grid container justifyContent={"center"} mt={2}>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete3.age} anos
+                        ${singleTeamData?.athlete3.age} anos
                       `}
                         ></Chip>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete3.gender}
+                        ${singleTeamData?.athlete3.gender}
                       `}
                         ></Chip>
                         <Chip
                           sx={{ p: 1 }}
                           label={`
-                        ${singleTeamData?.data.athlete3.weight} Kg
+                        ${singleTeamData?.athlete3.weight} Kg
                       `}
                         ></Chip>
                       </Grid>

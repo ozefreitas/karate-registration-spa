@@ -157,10 +157,10 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
           inscrever os seus Atletas, Equipas e Treinadores."
         title={isSingleEventLoading ? "" : `Evento - ${singleEventData?.name}`}
       ></PageInfoCard>
-      <Grid container sx={{ mt: 0 }}>
-        <Grid container size={12} sx={{ m: 2 }}>
+      <Grid container spacing={1}>
+        <Grid container size={12} m={2}>
           <Grid size={6}>
-            <Card elevation={4} sx={{ mr: 2, height: "100%" }}>
+            <Card elevation={4} sx={{ mr: 2 }}>
               <CardHeader
                 title="Informação Geral"
                 sx={{
@@ -251,7 +251,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={6} container>
+          <Grid size={6} container alignContent={"space-between"}>
             <Grid size={12}>
               <Card>
                 <CardHeader
@@ -310,7 +310,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     />
                   ) : singleEventData?.description === "" ? (
                     <ListItemText
-                      primary={"Não existem informações adicionais para este Evento."}
+                      primary={
+                        "Não existem informações adicionais para este Evento."
+                      }
                       sx={{ color: "GrayText" }}
                     />
                   ) : (
@@ -334,7 +336,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 ) : null}
               </Card>
             </Grid>
-            <Grid size={12} container>
+            <Grid size={12}>
               <Card sx={{ width: "100%" }}>
                 <CardHeader
                   title="Avaliação"
@@ -425,8 +427,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         sm: "row",
                       }}
                       sx={{
-                        p: 1,
-                        pb: 0,
+                        p: 2,
+                        pt: 1,
                         gap: 4,
                         flexShrink: 0,
                         alignSelf: { xs: "flex-end", sm: "center" },

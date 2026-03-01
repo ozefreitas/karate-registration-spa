@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ClubsCreatePerson } from '../models/ClubsCreatePerson';
 import type { NotAdminLikeTypePersons } from '../models/NotAdminLikeTypePersons';
 import type { PaginatedPersonsList } from '../models/PaginatedPersonsList';
 import type { PatchedPersons } from '../models/PatchedPersons';
@@ -70,7 +71,7 @@ export class PersonsService {
      * @throws ApiError
      */
     public static personsCreate(
-        formData: Persons,
+        formData: ClubsCreatePerson,
     ): CancelablePromise<Persons> {
         return __request(OpenAPI, {
             method: 'POST',

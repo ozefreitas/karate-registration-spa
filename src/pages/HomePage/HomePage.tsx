@@ -17,17 +17,12 @@ import MembersHomeComponent from "../../components/home-cards/MembersHomeCompone
 import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
 import NextEventHomeComponent from "../../components/home-cards/NextEventHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
-import { membersHooks } from "../../hooks";
 import { Person, PersonSearch } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import MissingMemberQuotasCard from "../../components/home-cards/MissingMemberQuotasCard";
 
 export default function HomePage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
-  const {
-    data: memberPaymentStatusData,
-    isLoading: isMemberPaymentStatusLoading,
-    error: memberPaymentStatusError,
-  } = membersHooks.useFetchMemberPaymentsStatusData();
 
   return (
     <>
@@ -75,108 +70,9 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
               userRole={props.userRole}
             ></LastCompQualiHomeComponent>
             <Grid size={12}>
-              <Card sx={{ height: "100%", m: 2, mb: 0 }}>
-                <CardHeader
-                  title="Resumo de pagamentos mensais"
-                  sx={{
-                    pb: 0,
-                    "& .MuiCardHeader-title": {
-                      fontWeight: "bold",
-                    },
-                  }}
-                ></CardHeader>
-                {props.userRole === undefined ? (
-                  <ListItem sx={{ m: 0 }}>
-                    <ListItemButton disabled sx={{ m: 0 }}>
-                      <ListItemIcon>
-                        <Person />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={"Sem sessão iniciada. Faça Login."}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ) : memberPaymentStatusError ? (
-                  <ListItem sx={{ m: 0 }}>
-                    <ListItemText
-                      primary={
-                        "Ocorreu um erro ao coletar o número de clubes com quotas em falta. Tente mais tarde ou contacte um administrador."
-                      }
-                    />
-                  </ListItem>
-                ) : (
-                  <CardContent>
-                    {isMemberPaymentStatusLoading ? (
-                      <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <CircularProgress />
-                      </Box>
-                    ) : (
-                      <Grid
-                        container
-                        size={12}
-                        justifyContent={"space-between"}
-                        alignItems={"center"}
-                        px={7}
-                      >
-                        <Grid
-                          container
-                          size={12}
-                          justifyContent={"space-between"}
-                          alignItems={"center"}
-                        >
-                          <Typography variant="h6">
-                            Número Total de Membros:
-                          </Typography>
-
-                          <Typography
-                            color="info"
-                            variant="h2"
-                            fontWeight={400}
-                          >
-                            {memberPaymentStatusData?.number}
-                          </Typography>
-                        </Grid>
-                        <Grid
-                          container
-                          size={12}
-                          justifyContent={"space-between"}
-                          alignItems={"center"}
-                        >
-                          <Typography variant="h6">
-                            Pagamentos por efetuar:
-                          </Typography>
-
-                          <Typography
-                            color={
-                              memberPaymentStatusData?.unpaid_members === 0
-                                ? "textDisabled"
-                                : "error"
-                            }
-                            variant="h2"
-                            fontWeight={400}
-                          >
-                            {memberPaymentStatusData?.unpaid_members}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    )}
-                  </CardContent>
-                )}
-                <CardActions sx={{ m: 1, mt: 0 }}>
-                  {memberPaymentStatusData?.unpaid_members !== undefined &&
-                  memberPaymentStatusData?.unpaid_members > 0 ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      startIcon={<PersonSearch></PersonSearch>}
-                      size="large"
-                      onClick={() => navigate("/members/")}
-                    >
-                      Verificar
-                    </Button>
-                  ) : null}
-                </CardActions>
-              </Card>
+              <MissingMemberQuotasCard
+                onResolve={() => navigate("/members/")}
+              />
             </Grid>
           </Grid>
         </Grid>

@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -33,7 +33,7 @@ export default function EditMemberModal(
     isModalOpen: boolean;
     handleModalClose: any;
     id: string;
-  }>
+  }>,
 ) {
   const { data: singleMemberData, isLoading: isSingleMemberLoading } =
     membersHooks.useFetchSingleMemberData(props.id);
@@ -59,13 +59,11 @@ export default function EditMemberModal(
   React.useEffect(() => {
     // update the form with that member info
     const formData = {
-      firstName: singleMemberData?.data.first_name,
-      lastName: singleMemberData?.data.last_name,
-      graduation: singleMemberData?.data.graduation ?? "",
-      category: singleMemberData?.data.category ?? "",
-      gender: singleMemberData?.data.gender ?? "",
-      is_student: singleMemberData?.data.is_student,
-      birthDate: singleMemberData?.data.birth_date,
+      firstName: singleMemberData?.first_name,
+      lastName: singleMemberData?.last_name,
+      graduation: singleMemberData?.graduation ?? "",
+      gender: singleMemberData?.gender ?? "",
+      birthDate: singleMemberData?.birth_date,
     };
     memberReset(formData);
   }, [singleMemberData]);
@@ -77,10 +75,8 @@ export default function EditMemberModal(
       first_name: data?.firstName,
       last_name: data?.lastName,
       graduation: data?.graduation,
-      category: data?.category,
       gender: data?.gender,
       id_number: data?.id_number,
-      is_student: data?.is_student ?? false,
       birth_date: data?.birthDate ?? null,
     };
     updateMemberData.mutate({ memberId: props.id, data: formData });
@@ -117,7 +113,6 @@ export default function EditMemberModal(
           </IconButton>
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Editar Atleta
-            {/* {props.control._fields?.firstName?._f?.value} {props.control._fields?.lastName?._f?.value} */}
           </Typography>
           <Button
             sx={{ bgcolor: "#2e7d32", mr: 2 }}
@@ -233,7 +228,7 @@ export default function EditMemberModal(
                     helperText={memberErrors.graduation?.message}
                   >
                     {GenderOptions.filter((item) =>
-                      ["Masculino", "Feminino"].includes(item.label)
+                      ["Masculino", "Feminino"].includes(item.label),
                     ).map((item, index) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}

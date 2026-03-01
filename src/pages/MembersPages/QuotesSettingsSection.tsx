@@ -24,7 +24,6 @@ import QuotesOrdering from "../../components/filter_drawers/QuotesOrdering";
 import PatchMemberSubscriptionModal from "../../components/Modals/PatchMemberSubscriptionModal";
 import EditMemberPaymentPlanModal from "../../components/Modals/EditMemberPaymentPlanModal";
 import { useForm } from "react-hook-form";
-import AddButton from "../../components/Buttons/AddButton";
 import AddMemberPaymentModal from "../../components/Modals/AddMemberPaymentModal";
 
 const QuotesSettingsSection = (props: { quotesConfig: any }) => {
@@ -140,7 +139,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
 
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
-    return data?.data.map((subscription: any) => ({
+    return data?.map((subscription: any) => ({
       id: subscription.id,
       date: `${getMonthFromValue(subscription.month)}-${subscription.year}`,
       amount: `${subscription.amount}€`,
@@ -219,7 +218,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
             <CircularProgress />
           </Box>
         </Grid>
-      ) : data?.data.length === 0 ? null : (
+      ) : data?.length === 0 ? null : (
         <Grid container justifyContent={"flex-end"} p={2} spacing={4}>
           <Grid size={6}>
             <Card
@@ -354,7 +353,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                 ) : (
                   <Typography
                     color={
-                      data?.data?.filter(
+                      data?.filter(
                         (item: any) =>
                           item.inside_limit === false && item.paid === false,
                       ).length === 0
@@ -363,9 +362,9 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                     }
                     variant="h3"
                   >
-                    {data?.data.length === 0
+                    {data?.length === 0
                       ? 0
-                      : data?.data?.filter(
+                      : data?.filter(
                           (item: any) =>
                             item.inside_limit === false && item.paid === false,
                         ).length}
@@ -406,12 +405,12 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                   </Box>
                 ) : (
                   <Typography
-                    color={data?.data.length === 0 ? "textDisabled" : "info"}
+                    color={data?.length === 0 ? "textDisabled" : "info"}
                     variant="h3"
                   >
-                    {data?.data.length === 0
+                    {data?.length === 0
                       ? 0
-                      : data?.data?.filter(
+                      : data?.filter(
                           (item: any) =>
                             item.inside_limit === true && item.paid === false,
                         ).length}
@@ -461,7 +460,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : (
+        ) : subscriptionRows === undefined ? null : (
           <AllUseTable
             columnsHeaders={columnMaping}
             data={subscriptionRows}

@@ -38,7 +38,7 @@ export default function NewMemberPage() {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role;
   const [loading, setLoading] = useState<boolean>(false);
 
   const { data: clubUserData } = adminHooks.useFetchClubUsersData(
@@ -77,15 +77,6 @@ export default function NewMemberPage() {
       club: "",
     },
   });
-
-  // const hasOptionals = [
-  //   "national_card_number",
-  //   "taxpayer_number",
-  //   "post_code",
-  //   "address",
-  // ]
-  //   .map((item: any) => watch(item))
-  //   .some((value) => value !== "");
 
   const is_force_ident = watch("force_ident");
   const is_force_registration_date = watch("force_registration_date");

@@ -264,7 +264,7 @@ export default function Calendar() {
                                   // bgcolor: todayCell ? "#e53935" : "transparent",
                                   // color: todayCell ? "#fff" : "inherit",
                                   fontWeight: todayCell ? 700 : 400,
-                                  fontSize: "0.95rem",
+                                  fontSize: todayCell ?  "1.2rem" : "0.95rem",
                                 }}
                               >
                                 {day}

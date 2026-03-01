@@ -21,6 +21,7 @@ export type { CheckEventRate } from './models/CheckEventRate';
 export { CheckEventRateStatusEnum } from './models/CheckEventRateStatusEnum';
 export type { ClubMemberStats } from './models/ClubMemberStats';
 export type { Clubs } from './models/Clubs';
+export type { ClubsCreatePerson } from './models/ClubsCreatePerson';
 export type { ClubSettings } from './models/ClubSettings';
 export type { ClubSubscriptions } from './models/ClubSubscriptions';
 export { CodeEnum } from './models/CodeEnum';
