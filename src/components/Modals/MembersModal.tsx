@@ -46,7 +46,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { getGraduationFromValue, GraduationsOptions } from "../../config";
-import { Persons } from "../../openapi";
+import { Disciplines, Persons } from "../../openapi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -108,16 +108,6 @@ export default function MembersModal(
     disciplinesData: any;
   }>,
 ) {
-  type Member = {
-    age: any;
-    id: string;
-    full_name: string;
-    category: string;
-    gender: string;
-    weight: string;
-    graduation: string;
-  };
-
   const navigate = useNavigate();
   const { id: eventId } = useParams<{ id: string }>();
   const { user } = useAuth();
@@ -191,9 +181,11 @@ export default function MembersModal(
   React.useEffect(() => {
     if (!disciplinesFreeData) return;
 
-    const newDisciplines = disciplinesFreeData.map(
-      (modalities: any) => `${modalities.name}_${modalities.id}`,
-    );
+    type UnregisteredModalitiesResponse = Disciplines[];
+
+    const newDisciplines = (
+      disciplinesFreeData as unknown as UnregisteredModalitiesResponse
+    ).map((modalities) => `${modalities.name}_${modalities.id}`);
 
     setDisciplinesFree(newDisciplines);
   }, [disciplinesFreeData]);
@@ -267,8 +259,11 @@ export default function MembersModal(
   const patchMember = membersHooks.usePatchMemberData();
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     if (
-      Object.values(data).every((value) => value === false) &&
+      Object.entries(data)
+        .filter(([key]) => key !== "chosen_category")
+        .every(([, value]) => value === false) &&
       !isWeightInputScreenOpen
     ) {
       enqueueSnackbar("Tem de selecionar pelo menos uma modalidade.", {
@@ -333,12 +328,12 @@ export default function MembersModal(
 
       const hasError = results.some((r) => r.status === "rejected");
       const hasWeightWarning = results.some(
-        (r: any) => r.value.data.status == "info" && !r.value.data.category_ids,
+        (r: any) => r.value.status == "info" && !r.value.category_ids,
       );
 
       const hasMultipleCategories = results.some((r: any) => {
-        if (r.value.data.status == "info" && r.value.data.category_ids) {
-          setPossibleCategories(r.value.data.category_ids);
+        if (r.value.status == "info" && r.value.category_ids) {
+          setPossibleCategories(r.value.category_ids);
           return true;
         }
         return false;
@@ -589,10 +584,13 @@ export default function MembersModal(
                       }}
                       error={true}
                     >
-                      <MenuItem sx={{ color: "lightgrey" }} value={undefined}>
+                      <MenuItem
+                        sx={{ px: 3, py: 1, color: "lightgrey" }}
+                        value={undefined}
+                      >
                         -- Selecionar --
                       </MenuItem>
-                      {props.disciplinesData.data.results[0].categories
+                      {props.disciplinesData.results[0].categories
                         ?.filter((item: any) =>
                           possibleCategories.includes(item.id),
                         )
@@ -602,6 +600,7 @@ export default function MembersModal(
                               container
                               spacing={2}
                               py={1}
+                              px={3}
                               alignContent={"center"}
                             >
                               <Typography mr={2}>
@@ -817,7 +816,7 @@ export default function MembersModal(
                   <ListItemButton
                     key={index}
                     onClick={() => {
-                      if (props.disciplinesData?.data.count === 0) {
+                      if (props.disciplinesData?.count === 0) {
                         handleToggle(member.id);
                       } else {
                         setCurrentMemberId(member.id);

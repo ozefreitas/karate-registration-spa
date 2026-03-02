@@ -11,16 +11,7 @@ export const useUpdateMemberData = () => {
     mutationFn: ({ memberId, data }: { memberId: string; data: any }) =>
       PersonsService.personsUpdate(memberId, data),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success");
-      enqueueSnackbar(data.data.message, {
-        variant: "success",
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "center",
-        },
-        autoHideDuration: 5000,
-        preventDuplicate: true,
-      });
+      callNotiStack(enqueueSnackbar, data.message, "success");
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
       queryClient.invalidateQueries({ queryKey: ["single-member"] });

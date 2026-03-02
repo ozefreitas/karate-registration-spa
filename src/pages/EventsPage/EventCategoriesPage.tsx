@@ -209,7 +209,7 @@ export default function EventCategoriesPage(
               ></AllUseTable>
               {["main_admin", "superuser"].includes(props.userRole) &&
               !discipline.is_coach ? (
-                <Grid container size={0.5}>
+                <Grid container size={12} justifyContent={"flex-end"}>
                   <Button
                     sx={{ m: 2 }}
                     variant="contained"

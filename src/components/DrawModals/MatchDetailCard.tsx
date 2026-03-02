@@ -1,31 +1,31 @@
 import { Box, Typography, Paper, Grid, Chip } from "@mui/material";
-import {
-  Person,
-  LocationOn,
-  SportsMartialArts,
-  Flag,
-} from "@mui/icons-material";
+import { Person, SportsMartialArts, Flag } from "@mui/icons-material";
 
 interface MatchDetailCardProps {
   color: string;
-  type: string;
   contenderInfo: any;
+  matchInfo: number;
+  kataInfo: string;
   reverse?: boolean;
 }
 
-function IconBox({ icon }: Readonly<{ icon: React.ReactNode }>) {
+function IconBox({
+  icon,
+  color,
+}: Readonly<{ icon: React.ReactNode; color: string }>) {
   return (
     <Box
       sx={{
         width: 48,
         height: 48,
         borderRadius: 2,
-        bgcolor: "red",
+        bgcolor: color === "Aka" ? "red" : "transparent",
+        border: color === "Aka" ? "1px solid red" : "1px solid black",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         flexShrink: 0,
-        color: "#fff",
+        color: color === "Aka" ? "#fff" : "black",
       }}
     >
       {icon}
@@ -34,10 +34,12 @@ function IconBox({ icon }: Readonly<{ icon: React.ReactNode }>) {
 }
 
 function InfoRow({
+  color,
   icon,
   value,
   reverse,
 }: Readonly<{
+  color: string;
   icon: React.ReactNode;
   value: React.ReactNode;
   reverse?: boolean;
@@ -58,25 +60,13 @@ function InfoRow({
     >
       {reverse ? (
         <>
-          <Typography
-            variant="body1"
-            fontWeight={700}
-            sx={{ color: "#1a1a1a" }}
-          >
-            {value}
-          </Typography>
-          <IconBox icon={icon} />
+          {value}
+          <IconBox color={color} icon={icon} />
         </>
       ) : (
         <>
-          <IconBox icon={icon} />
-          <Typography
-            variant="body1"
-            fontWeight={700}
-            sx={{ color: "#1a1a1a" }}
-          >
-            {value}
-          </Typography>
+          <IconBox color={color} icon={icon} />
+          {value}
         </>
       )}
     </Paper>
@@ -85,13 +75,16 @@ function InfoRow({
 
 export default function MatchDetailCard({
   color,
-  type,
   contenderInfo,
+  matchInfo,
+  kataInfo,
   reverse,
 }: Readonly<MatchDetailCardProps>) {
+  console.log(matchInfo);
   return (
     <Grid container direction={"column"} gap={2} width={"100%"}>
       <InfoRow
+        color={color}
         icon={<Person />}
         value={
           <Grid
@@ -101,7 +94,7 @@ export default function MatchDetailCard({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>{contenderInfo.full_name}</Typography>
+            <Typography fontWeight={700}>{contenderInfo.full_name}</Typography>
             <Chip size="small" label={`${contenderInfo.age} anos`}></Chip>
             <Chip size="small" label={contenderInfo.club}></Chip>
           </Grid>
@@ -109,34 +102,39 @@ export default function MatchDetailCard({
         reverse={reverse}
       />
       <InfoRow
+        color={color}
         icon={<SportsMartialArts />}
         value={
           <Grid
             container
             columnGap={2}
             rowGap={1}
+            size={12}
+            textAlign={"center"}
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>Kata: </Typography>
+            <Typography>Kata:</Typography>
+            <Typography fontWeight={700}>{kataInfo}</Typography>
           </Grid>
         }
         reverse={reverse}
       />
       <InfoRow
+        color={color}
         icon={<Flag />}
         value={
           <Grid
             container
             columnGap={2}
             rowGap={1}
+            size={12}
+            textAlign={"center"}
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>Número de Bandeira: </Typography>
-            <Typography>
-              {contenderInfo.kataresult.flags_contender_1}
-            </Typography>
+            <Typography>Número de Bandeiras:</Typography>
+            <Typography fontWeight={700}>{matchInfo}</Typography>
           </Grid>
         }
         reverse={reverse}

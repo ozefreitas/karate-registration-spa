@@ -9,15 +9,13 @@ import {
   Chip,
   Grid,
   IconButton,
-  Box,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { EncounterOptions } from "../../config";
-import EventDetailCard from "../EventsModals/EventDetailCard";
 import { Close } from "@mui/icons-material";
 import MatchDetailCard from "./MatchDetailCard";
+import MatchDetailEditCard from "./MatchDetailEditCard";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -33,9 +31,9 @@ export default function MatchInfoModal(
     isModalOpen: boolean;
     handleModalClose: any;
     matchData?: any;
+    edit: boolean;
   }>,
 ) {
-  console.log(props.matchData);
   return (
     <Dialog
       fullWidth
@@ -70,19 +68,40 @@ export default function MatchInfoModal(
       <DialogContent>
         <Grid container columnSpacing={5} rowSpacing={2} size={12}>
           <Grid size={6}>
-            <MatchDetailCard
-              color="Shiro"
-              type="Kata"
-              contenderInfo={props.matchData?.contender_1}
-            ></MatchDetailCard>
+            {props.edit ? (
+              <MatchDetailEditCard
+                color="Shiro"
+                contenderInfo={props.matchData?.contender_1}
+                matchInfo={props.matchData?.kataresult?.flags_contender_1}
+                kataInfo={props.matchData?.kataresult?.kata_contender_1}
+              ></MatchDetailEditCard>
+            ) : (
+              <MatchDetailCard
+                color="Shiro"
+                contenderInfo={props.matchData?.contender_1}
+                matchInfo={props.matchData?.kataresult?.flags_contender_1}
+                kataInfo={props.matchData?.kataresult?.kata_contender_1}
+              ></MatchDetailCard>
+            )}
           </Grid>
           <Grid size={6}>
-            <MatchDetailCard
-              color="Aka"
-              type="Kata"
-              contenderInfo={props.matchData?.contender_2}
-              reverse
-            ></MatchDetailCard>
+            {props.edit ? (
+              <MatchDetailEditCard
+                color="Aka"
+                contenderInfo={props.matchData?.contender_2}
+                matchInfo={props.matchData?.kataresult?.flags_contender_2}
+                kataInfo={props.matchData?.kataresult?.kata_contender_2}
+                reverse
+              ></MatchDetailEditCard>
+            ) : (
+              <MatchDetailCard
+                color="Aka"
+                contenderInfo={props.matchData?.contender_2}
+                matchInfo={props.matchData?.kataresult?.flags_contender_2}
+                kataInfo={props.matchData?.kataresult?.kata_contender_2}
+                reverse
+              ></MatchDetailCard>
+            )}
           </Grid>
           {props.matchData?.winner === null ? null : (
             <Grid
@@ -91,6 +110,7 @@ export default function MatchInfoModal(
               alignItems={"center"}
               width={"100%"}
               p={2.5}
+              mt={3}
               borderRadius={3}
               bgcolor={"#fffff5"}
               border={"1px solid #ffcdd2"}
@@ -99,7 +119,11 @@ export default function MatchInfoModal(
               <Typography variant="h6" sx={{ color: "#555", lineHeight: 1.7 }}>
                 Vencedor:
               </Typography>
-              <Typography variant="h5" fontWeight={"bold"} sx={{ color: "#555" }}>
+              <Typography
+                variant="h5"
+                fontWeight={"bold"}
+                sx={{ color: "#555" }}
+              >
                 {props.matchData?.winner.full_name}
               </Typography>
             </Grid>
