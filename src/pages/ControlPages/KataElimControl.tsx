@@ -32,28 +32,28 @@ export default function KataElimControl() {
     }
   };
 
-  const sendPlayer1Name = () => {
-    if (watch("player1Name") === "") {
-      setError("player1Name", { message: "Este campo é obrigatório" });
+  const sendPlayer1Kata = () => {
+    if (watch("player1Kata") === "") {
+      setError("player1Kata", { message: "Este campo é obrigatório" });
     } else if (
       socketRef.current &&
       socketRef.current.readyState === WebSocket.OPEN
     ) {
       socketRef.current.send(
-        JSON.stringify({ player1Name: watch("player1Name") })
+        JSON.stringify({ player1Kata: watch("player1Kata") }),
       );
     }
   };
 
-  const sendPlayer2Name = () => {
-    if (watch("player2Name") === "") {
-      setError("player2Name", { message: "Este campo é obrigatório" });
+  const sendPlayer2Kata = () => {
+    if (watch("player2Kata") === "") {
+      setError("player2Kata", { message: "Este campo é obrigatório" });
     } else if (
       socketRef.current &&
       socketRef.current.readyState === WebSocket.OPEN
     ) {
       socketRef.current.send(
-        JSON.stringify({ player2Name: watch("player2Name") })
+        JSON.stringify({ player2Kata: watch("player2Kata") }),
       );
     }
   };
@@ -66,29 +66,30 @@ export default function KataElimControl() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      player1Name: "",
-      player2Name: "",
+      player1Kata: "",
+      player2Kata: "",
     },
   });
   return (
     <FormCard title="Controles de Kata Individual">
-      <Grid sx={{ p: 2 }} size={10}>
+      <Grid p={2} size={10}>
         <Controller
-          name="player1Name"
+          name="player1Kata"
           control={control}
           render={({ field }) => (
             <TextField
               color="warning"
               variant={"outlined"}
-              label="Nome Competidor 1"
+              label="Kata Competidor 1"
               fullWidth
+              select
               {...field}
               onChange={(e) => {
                 field.onChange(e);
                 clearErrors();
               }}
-              error={!!errors.player1Name}
-              helperText={errors.player1Name?.message}
+              error={!!errors.player1Kata}
+              helperText={errors.player1Kata?.message}
             />
           )}
         />
@@ -100,30 +101,30 @@ export default function KataElimControl() {
           size="large"
           color="success"
           onClick={() => {
-            sendPlayer1Name();
+            sendPlayer1Kata();
           }}
           startIcon={<Add />}
         >
           Enviar
         </Button>
       </Grid>
-      <Grid sx={{ p: 2 }} size={10}>
+      <Grid p={2} size={10}>
         <Controller
-          name="player2Name"
+          name="player2Kata"
           control={control}
           render={({ field }) => (
             <TextField
               color="warning"
               variant={"outlined"}
-              label="Nome Competidor 2"
+              label="Kata Competidor 2"
               fullWidth
               {...field}
               onChange={(e) => {
                 field.onChange(e);
                 clearErrors();
               }}
-              error={!!errors.player2Name}
-              helperText={errors.player2Name?.message}
+              error={!!errors.player2Kata}
+              helperText={errors.player2Kata?.message}
             />
           )}
         />
@@ -135,7 +136,7 @@ export default function KataElimControl() {
           size="large"
           color="success"
           onClick={() => {
-            sendPlayer2Name();
+            sendPlayer2Kata();
           }}
           startIcon={<Add />}
         >
@@ -143,8 +144,8 @@ export default function KataElimControl() {
         </Button>
       </Grid>
       <Grid
-        sx={{ m: 3 }}
-        spacing={3}
+      m={3}
+        spacing={5}
         container
         alignItems="center"
         justifyContent="space-around"

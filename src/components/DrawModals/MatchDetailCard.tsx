@@ -1,5 +1,6 @@
 import { Box, Typography, Paper, Grid, Chip } from "@mui/material";
 import { Person, SportsMartialArts, Flag } from "@mui/icons-material";
+import { KataOptions } from "../../config";
 
 interface MatchDetailCardProps {
   color: string;
@@ -115,7 +116,9 @@ export default function MatchDetailCard({
             alignItems={"center"}
           >
             <Typography>Kata:</Typography>
-            <Typography fontWeight={700}>{kataInfo}</Typography>
+            <Typography fontWeight={700}>
+              {KataOptions.find((item) => item.value === kataInfo)?.label}
+            </Typography>
           </Grid>
         }
         reverse={reverse}

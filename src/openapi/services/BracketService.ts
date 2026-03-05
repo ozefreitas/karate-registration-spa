@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Bracket } from '../models/Bracket';
+import type { CompactPerson } from '../models/CompactPerson';
 import type { CreateBracket } from '../models/CreateBracket';
 import type { PatchedBracket } from '../models/PatchedBracket';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -109,6 +110,27 @@ export class BracketService {
             url: '/bracket/{id}/',
             path: {
                 'id': id,
+            },
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this bracket.
+     * @param event
+     * @returns CompactPerson
+     * @throws ApiError
+     */
+    public static bracketPersonsList(
+        id: number,
+        event?: string,
+    ): CancelablePromise<Array<CompactPerson>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/bracket/{id}/persons/',
+            path: {
+                'id': id,
+            },
+            query: {
+                'event': event,
             },
         });
     }

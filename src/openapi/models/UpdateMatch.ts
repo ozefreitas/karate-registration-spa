@@ -2,13 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type CreateMatch = {
+import type { KataResult } from './KataResult';
+export type UpdateMatch = {
     readonly id: number;
-    round_number: number;
-    match_number: number;
+    kataresult?: KataResult;
     ongoing?: boolean;
     readonly created_at: string;
-    bracket: number;
     contender_1?: string | null;
     contender_2?: string | null;
     winner?: string | null;

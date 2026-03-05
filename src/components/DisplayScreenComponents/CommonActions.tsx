@@ -4,7 +4,7 @@ import FormCard from "../../dashboard/FormCard";
 
 export default function CommonActions() {
   return (
-    <FormCard title="Ações Comuns">
+    <FormCard title="Ações">
       <Grid size={12} container justifyContent="space-evenly">
         <Button
           sx={{ m: 1 }}

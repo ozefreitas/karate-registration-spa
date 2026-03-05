@@ -7,6 +7,7 @@ import type { Match } from '../models/Match';
 import type { PatchedMatch } from '../models/PatchedMatch';
 import type { PatchedPatchMatchWinner } from '../models/PatchedPatchMatchWinner';
 import type { PatchMatchWinner } from '../models/PatchMatchWinner';
+import type { UpdateMatch } from '../models/UpdateMatch';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -64,13 +65,13 @@ export class MatchService {
     /**
      * @param id A unique integer value identifying this match.
      * @param requestBody
-     * @returns Match
+     * @returns UpdateMatch
      * @throws ApiError
      */
     public static matchUpdate(
         id: number,
-        requestBody: Match,
-    ): CancelablePromise<Match> {
+        requestBody?: UpdateMatch,
+    ): CancelablePromise<UpdateMatch> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/match/{id}/',

@@ -40,7 +40,7 @@ export const useFetchToken = (username: string) => {
 export const useFetchRequestingAccounts = () => {
   return useQuery({
     queryKey: ["request-acount"],
-    queryFn: () => RequestAcountService.requestAcountList,
+    queryFn: () => RequestAcountService.requestAcountList(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

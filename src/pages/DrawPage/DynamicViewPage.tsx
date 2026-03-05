@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { drawsHooks, eventsHooks } from "../../hooks";
+import { useParams, useSearchParams } from "react-router-dom";
+import { drawsHooks } from "../../hooks";
 import {
   Box,
   Button,
@@ -15,30 +15,38 @@ import {
   Typography,
 } from "@mui/material";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import { Clear, Settings, Visibility } from "@mui/icons-material";
+import {
+  Clear,
+  EmojiEvents,
+  Settings,
+  Sports,
+  Visibility,
+} from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MatchInfoModal from "../../components/DrawModals/MatchInfoModal";
 import SingleContenderCard from "../../components/DynamicView/SingleContenderCard";
+import { RoundsOptions } from "../../config";
+import SectionHeader from "../../components/Header/SectionHeader";
 
 export default function DynamicViewPage() {
   const { id: eventId } = useParams();
   const [isMatchInfoModalOpen, setIsMatchInfoModalOpen] =
     useState<boolean>(false);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false)
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [selectedForInfo, setSelectedForInfo] = useState<number | undefined>(
     undefined,
   );
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleModalOpen = (matchId: number, isEdit: boolean) => {
-    setSelectedForInfo(matchId);
-    setIsEditMode(isEdit)
-    setIsMatchInfoModalOpen(true);
-  };
+  const paramBracket = searchParams.get("bracket") ?? "";
 
-  const handleModalClose = () => {
-    setIsMatchInfoModalOpen(false);
+  const changeBracket = (bracket: string) => {
+    setSearchParams((prev) => {
+      prev.set("bracket", bracket);
+      return prev;
+    });
   };
 
   const {
@@ -52,18 +60,36 @@ export default function DynamicViewPage() {
     },
   });
 
+  useEffect(() => {
+    const newParams = new URLSearchParams(searchParams);
+    if (paramBracket === "" || watch("bracket") === "") {
+      newParams.delete("bracket");
+      setSearchParams(newParams);
+    } else {
+      setValue("bracket", paramBracket);
+    }
+  }, [paramBracket, watch("bracket")]);
+
+  const handleModalOpen = (matchId: number, isEdit: boolean) => {
+    setSelectedForInfo(matchId);
+    setIsEditMode(isEdit);
+    setIsMatchInfoModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsMatchInfoModalOpen(false);
+  };
+
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
   const {
     data: matchesData,
     isLoading: isMatchesLoading,
     error: matchesError,
     refetch,
-  } = eventsHooks.useEventMatchesData(watch("bracket"), eventId!);
-
-  console.log(watch("bracket"));
+  } = drawsHooks.useEventMatchesData(watch("bracket"), eventId!);
 
   const rounds = [...new Set(matchesData?.map((m) => m.round_number))].sort(
-    (a, b) => a - b,
+    (a, b) => b - a,
   );
   return (
     <>
@@ -75,7 +101,7 @@ export default function DynamicViewPage() {
         title="Selecionar Escalão"
         subheader="Selecione o Escalão para visualizar o Sorteio"
       >
-        <Grid sx={{ p: 2 }} size={12}>
+        <Grid p={2} size={12}>
           <Controller
             name="bracket"
             control={eventMetadataControl}
@@ -116,6 +142,7 @@ export default function DynamicViewPage() {
                 {...field}
                 onChange={(e) => {
                   field.onChange(e);
+                  changeBracket(e.target.value);
                 }}
                 error={!!errors.bracket}
                 helperText={errors.bracket?.message}
@@ -162,9 +189,6 @@ export default function DynamicViewPage() {
                 container
                 sx={{ minWidth: 420 }}
               >
-                {/* <Grid size={1} container alignItems={"center"}>
-              {roundNumber}
-            </Grid> */}
                 <Grid
                   size={10}
                   sx={{ minWidth: 300 }}
@@ -172,123 +196,123 @@ export default function DynamicViewPage() {
                   spacing={5}
                   direction={"column"}
                 >
+                  <Grid px={2} size={12} container alignItems={"center"}>
+                    <SectionHeader
+                      title={
+                        RoundsOptions.find(
+                          (item) => Number(item.value) === roundNumber,
+                        )?.label!
+                      }
+                      icon={<Sports sx={{ fontSize: 22 }} />}
+                    ></SectionHeader>
+                  </Grid>
                   {matchesData
                     ?.filter((item) => item.round_number === roundNumber)
-                    .map((match, index: number) => (
-                      <Grid size={12} spacing={1} key={index} container>
-                        <Grid
-                          size={10}
-                          container
-                          direction={"column"}
-                          spacing={2}
-                        >
-                          <SingleContenderCard
-                            match={match}
-                            roundNumber={roundNumber}
-                          ></SingleContenderCard>
-                          <Card>
-                            <Grid
-                              container
-                              alignItems={"center"}
-                              justifyContent={"space-between"}
-                              p={2}
+                    .map((match, index: number) => {
+                      const is2Winner =
+                        match.winner?.id === match.contender_2?.id &&
+                        match.kataresult?.flags_contender_2! >
+                          match.kataresult?.flags_contender_1!;
+                      const matchFinished =
+                        match.kataresult?.flags_contender_2 != null &&
+                        match.kataresult?.flags_contender_1 != null &&
+                        match.winner !== null;
+                      console.log(is2Winner);
+                      return (
+                        <Grid size={12} spacing={1} key={index} container>
+                          <Grid
+                            size={10}
+                            container
+                            direction={"column"}
+                            spacing={2}
+                          >
+                            <SingleContenderCard
+                              roundNumber={roundNumber}
+                              contenderNumber={1}
+                              isWinner={!is2Winner}
+                              points={
+                                match.kataresult?.flags_contender_1 === 0 ||
+                                match.kataresult === null
+                                  ? 0
+                                  : match.kataresult?.flags_contender_1
+                              }
+                              fullName={match.contender_1?.full_name}
+                              isMatchFinished={matchFinished}
+                            ></SingleContenderCard>
+                            <SingleContenderCard
+                              roundNumber={roundNumber}
+                              contenderNumber={2}
+                              isWinner={is2Winner}
+                              points={
+                                match.kataresult?.flags_contender_2 === 0 ||
+                                match.kataresult === null
+                                  ? 0
+                                  : match.kataresult?.flags_contender_2
+                              }
+                              fullName={match.contender_2?.full_name}
+                              isMatchFinished={matchFinished}
+                            ></SingleContenderCard>
+                          </Grid>
+                          <Grid
+                            size={2}
+                            px={2}
+                            borderRadius={4}
+                            height={"100%"}
+                            bgcolor={"#fdecea"}
+                            container
+                            alignItems={"center"}
+                            border={"0.2px solid red"}
+                            justifyContent={"center"}
+                            alignContent={"center"}
+                            gap={3}
+                            minWidth={50}
+                          >
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                handleModalOpen(match.id, true);
+                              }}
                             >
-                              <Grid container gap={2}>
-                                <Box
-                                  sx={{
-                                    border: "1px solid red",
-                                    borderRadius: "50%",
-                                    width: 25,
-                                    height: 25,
-                                    bgcolor: "red",
-                                  }}
-                                ></Box>
-                                <Typography
-                                  fontWeight={
-                                    match.kataresult?.flags_contender_2! >
-                                    match.kataresult?.flags_contender_1!
-                                      ? 700
-                                      : undefined
-                                  }
-                                >
-                                  {match.contender_2?.full_name === undefined &&
-                                  roundNumber !== 0
-                                    ? "TBD"
-                                    : match.contender_2?.full_name ===
-                                          undefined && roundNumber === 0
-                                      ? "bye"
-                                      : match.contender_2?.full_name}
-                                </Typography>
-                              </Grid>
-                              <Grid container alignItems={"center"} gap={2}>
-                                <Typography
-                                  variant="h6"
-                                  fontWeight={
-                                    match.kataresult?.flags_contender_2! >
-                                    match.kataresult?.flags_contender_1!
-                                      ? 900
-                                      : undefined
-                                  }
-                                >
-                                  {match.kataresult?.flags_contender_2 ?? "-"}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                          </Card>
+                              <Settings />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              disabled={
+                                match.kataresult === null ||
+                                match.winner === null
+                              }
+                              onClick={() => {
+                                handleModalOpen(match.id, false);
+                              }}
+                            >
+                              <Visibility />
+                            </IconButton>
+                          </Grid>
                         </Grid>
-                        <Grid
-                          size={2}
-                          px={2}
-                          borderRadius={4}
-                          height={"100%"}
-                          bgcolor={"#fdecea"}
-                          container
-                          alignItems={"center"}
-                          border={"0.2px solid red"}
-                          justifyContent={"center"}
-                          alignContent={"center"}
-                          gap={3}
-                          minWidth={50}
-                        >
-                          <IconButton
-                            size="small"
-                            onClick={() => {
-                              handleModalOpen(match.id, true);
-                            }}
-                          >
-                            <Settings />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            disabled={match.kataresult === null}
-                            onClick={() => {
-                              handleModalOpen(match.id, false);
-                            }}
-                          >
-                            <Visibility />
-                          </IconButton>
-                        </Grid>
-                      </Grid>
-                    ))}
+                      );
+                    })}
                 </Grid>
               </Grid>
             ))}
           </Grid>
         </Box>
       )}
-      <Grid size={12} container spacing={3} pl={7} mt={3} gap={5}>
-        <Typography variant="body2" fontWeight={500}>
-          bye - Não tem registo
-        </Typography>
-        <Typography variant="body2" fontWeight={500}>
-          TBD - A aguardar resultado
-        </Typography>
-      </Grid>
+      {rounds.length === 0 ? null : (
+        <Grid size={12} container spacing={3} pl={7} mt={3} gap={5}>
+          <Typography variant="body2" fontWeight={500}>
+            bye - Não tem registo
+          </Typography>
+          <Typography variant="body2" fontWeight={500}>
+            TBD - A aguardar resultado da ronda anterior
+          </Typography>
+        </Grid>
+      )}
       <MatchInfoModal
         handleModalClose={handleModalClose}
         isModalOpen={isMatchInfoModalOpen}
         edit={isEditMode}
         matchData={matchesData?.find((item) => item.id === selectedForInfo)}
+        brackedId={Number(watch("bracket"))}
       ></MatchInfoModal>
     </>
   );

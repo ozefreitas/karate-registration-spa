@@ -136,7 +136,7 @@ export default function MainSettingsPage() {
   const rejectAcount = authHooks.useRemoveRequestAcount();
 
   const acountDetails = useMemo(() => {
-    return requestAccountData?.data.results
+    return requestAccountData?.results
       .filter((acount: any) => acount.id === selectedRequestId)
       .map((acount: any) => ({
         id: acount.id,
@@ -150,8 +150,8 @@ export default function MainSettingsPage() {
 
   const passwordRequestedDetails = useMemo(() => {
     return requestingPasswordsData?.data
-      .filter((acount: any) => acount.id === selectedPasswordRequestId)
-      .map((acount: any) => ({
+      ?.filter((acount: any) => acount.id === selectedPasswordRequestId)
+      ?.map((acount: any) => ({
         id: acount.club_user.id,
         email: acount.club_user.email,
         username: acount.club_user.username,
@@ -212,7 +212,7 @@ export default function MainSettingsPage() {
   };
 
   const handleTokenCreation = () => {
-    const data = { username: acountDetails.username, alive_time: 3 };
+    const data = { username: acountDetails?.username, alive_time: 3 };
     createSignUpToken.mutate(data, {
       onSuccess: (data: any) => {
         setCreatedToken(data.data.token);
@@ -232,7 +232,7 @@ export default function MainSettingsPage() {
   };
 
   const handleAcountRejection = () => {
-    rejectAcount.mutate(acountDetails.id, {
+    rejectAcount.mutate(acountDetails?.id, {
       onSuccess: () => {
         setSelectedRequestId("");
       },
@@ -281,9 +281,9 @@ export default function MainSettingsPage() {
 
   // Memoize `rows` to compute only when `members` changes
   const requestsVerifyRows = useMemo(() => {
-    return memberValidationRequestData?.data.results
-      .filter((request: Request) => request.request_type === "verify")
-      .map((request: Request) => ({
+    return memberValidationRequestData?.results
+      .filter((request) => request.request_type === "verify")
+      .map((request) => ({
         id: request.id,
         memberId: request.person.id,
         message:
@@ -302,7 +302,9 @@ export default function MainSettingsPage() {
               }}
               size="small"
               variant="outlined"
-              onClick={(e) => handleClick(e, request.id, request.message)}
+              onClick={(e) =>
+                handleClick(e, String(request.id), request.message!)
+              }
             >
               Ver
             </Button>
@@ -312,7 +314,7 @@ export default function MainSettingsPage() {
           request.reviewed_at === null ? (
             <Typography color="textDisabled">Por rever</Typography>
           ) : (
-            formatDateTime(request.reviewed_at, "both")
+            formatDateTime(request.reviewed_at!, "both")
           ),
         created_at: formatDateTime(request.created_at, "both"),
         birthDate: request.member_birth_date,
@@ -331,7 +333,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       deleteMemberValidationRequest.mutate({
-                        validationId: request.id,
+                        validationId: String(request.id),
                       });
                     }}
                     color="error"
@@ -349,7 +351,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       deleteMemberValidationRequest.mutate({
-                        validationId: request.id,
+                        validationId: String(request.id),
                       });
                     }}
                     color="error"
@@ -366,7 +368,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       handleActionValidationModalOpen(
-                        request.id,
+                        String(request.id),
                         "approve",
                         "verify",
                       );
@@ -382,7 +384,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       handleActionValidationModalOpen(
-                        request.id,
+                        String(request.id),
                         "reject",
                         "verify",
                       );
@@ -404,9 +406,9 @@ export default function MainSettingsPage() {
 
   // Memoize `rows` to compute only when `members` changes
   const requestsExamsRows = useMemo(() => {
-    return memberValidationRequestData?.data.results
-      .filter((request: Request) => request.request_type === "exams")
-      .map((request: Request) => ({
+    return memberValidationRequestData?.results
+      .filter((request) => request.request_type === "exams")
+      .map((request) => ({
         id: request.id,
         memberId: request.person.id,
         message:
@@ -425,7 +427,9 @@ export default function MainSettingsPage() {
               }}
               size="small"
               variant="outlined"
-              onClick={(e) => handleClick(e, request.id, request.message)}
+              onClick={(e) =>
+                handleClick(e, String(request.id), request.message!)
+              }
             >
               Ver
             </Button>
@@ -435,7 +439,7 @@ export default function MainSettingsPage() {
           request.reviewed_at === null ? (
             <Typography color="textDisabled">Por rever</Typography>
           ) : (
-            formatDateTime(request.reviewed_at, "both")
+            formatDateTime(request.reviewed_at!, "both")
           ),
         created_at: formatDateTime(request.created_at, "both"),
         birthDate: request.member_birth_date,
@@ -451,7 +455,7 @@ export default function MainSettingsPage() {
             <span>
               <IconButton
                 onClick={() => {
-                  openFile(request.file);
+                  openFile(request.file!);
                 }}
                 disabled={request.file === null}
               >
@@ -475,7 +479,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       deleteMemberValidationRequest.mutate({
-                        validationId: request.id,
+                        validationId: String(request.id),
                       });
                     }}
                     color="error"
@@ -493,7 +497,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       deleteMemberValidationRequest.mutate({
-                        validationId: request.id,
+                        validationId: String(request.id),
                       });
                     }}
                     color="error"
@@ -510,7 +514,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       handleActionValidationModalOpen(
-                        request.id,
+                        String(request.id),
                         "approve",
                         "exams",
                       );
@@ -526,7 +530,7 @@ export default function MainSettingsPage() {
                   <IconButton
                     onClick={() => {
                       handleActionValidationModalOpen(
-                        request.id,
+                        String(request.id),
                         "reject",
                         "exams",
                       );
@@ -619,13 +623,11 @@ export default function MainSettingsPage() {
                 <MenuItem sx={{ color: "lightgrey" }} value="">
                   -- Selecionar --
                 </MenuItem>
-                {availableClubsData?.data.results.map(
-                  (item: any, index: string) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.club}
-                    </MenuItem>
-                  ),
-                )}
+                {availableClubsData?.results.map((item, index: number) => (
+                  <MenuItem key={index} value={item.id}>
+                    {item.club}
+                  </MenuItem>
+                ))}
               </TextField>
             </Grid>
             <Grid size={6} container justifyContent="space-around">
@@ -668,13 +670,11 @@ export default function MainSettingsPage() {
                 <MenuItem sx={{ color: "lightgrey" }} value="">
                   -- Selecionar --
                 </MenuItem>
-                {requestAccountData?.data.results.map(
-                  (item: any, index: string) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.username}
-                    </MenuItem>
-                  ),
-                )}
+                {requestAccountData?.results.map((item, index: number) => (
+                  <MenuItem key={index} value={item.id}>
+                    {item.username}
+                  </MenuItem>
+                ))}
               </TextField>
 
               {acountDetails === undefined ? null : (
@@ -928,7 +928,7 @@ export default function MainSettingsPage() {
                 <MenuItem sx={{ color: "lightgrey" }} value="">
                   -- Selecionar --
                 </MenuItem>
-                {requestingPasswordsData?.data.map(
+                {requestingPasswordsData?.data?.map(
                   (item: any, index: string) => (
                     <MenuItem key={index} value={item.id}>
                       {item.club_user.username}
@@ -1126,7 +1126,7 @@ export default function MainSettingsPage() {
               icon={<Person sx={{ fontSize: 22 }} />}
             ></SectionHeader>
             <AllUseTable
-              count={requestsVerifyRows?.length}
+              count={requestsVerifyRows?.length!}
               data={requestsVerifyRows}
               actions={false}
               selection={false}
@@ -1142,7 +1142,7 @@ export default function MainSettingsPage() {
               icon={<Upgrade sx={{ fontSize: 22 }} />}
             ></SectionHeader>
             <AllUseTable
-              count={requestsExamsRows?.length}
+              count={requestsExamsRows?.length!}
               data={requestsExamsRows}
               actions={false}
               selection={false}
@@ -1171,7 +1171,7 @@ export default function MainSettingsPage() {
         type={currentValidationType}
         request_type={currentRequestType}
         personData={
-          memberValidationRequestData?.data.results.find(
+          memberValidationRequestData?.results.find(
             (item: any) => item.id === currentValidationId,
           )?.person
         }

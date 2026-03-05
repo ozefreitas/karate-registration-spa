@@ -14,6 +14,7 @@ export type PatchedMatch = {
     readonly kumiteresult?: KumiteResult | null;
     round_number?: number;
     match_number?: number;
+    ongoing?: boolean;
     readonly created_at?: string;
     bracket?: number;
 };

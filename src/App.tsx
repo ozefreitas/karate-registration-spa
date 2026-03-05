@@ -305,22 +305,6 @@ function App() {
                   }
                 />
                 <Route
-                  path="events/:id/draw/patch/"
-                  element={
-                    isAuthLoading ? null : (
-                      <ProtectedRoute
-                        // element={<GenerateDrawPage />}
-                        element={<WIPPage />}
-                        allowedRoles={[
-                          "main_admin",
-                          "superuser",
-                          "single_admin",
-                        ]}
-                      />
-                    )
-                  }
-                />
-                <Route
                   path="events/:id/draw/dynamic_view/"
                   element={
                     isAuthLoading ? null : (
@@ -331,7 +315,7 @@ function App() {
                           "superuser",
                           "single_admin",
                           "subed_club",
-                          "technician"
+                          "technician",
                         ]}
                       />
                     )

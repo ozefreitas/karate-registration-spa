@@ -56,6 +56,8 @@ export type { GenerateDrawRequest } from './models/GenerateDrawRequest';
 export type { GenerateDrawResponse } from './models/GenerateDrawResponse';
 export type { GenerateToken } from './models/GenerateToken';
 export { GraduationEnum } from './models/GraduationEnum';
+export { KataContender1Enum } from './models/KataContender1Enum';
+export { KataContender2Enum } from './models/KataContender2Enum';
 export type { KataResult } from './models/KataResult';
 export type { KumiteResult } from './models/KumiteResult';
 export type { Match } from './models/Match';
@@ -131,6 +133,7 @@ export type { UpdateClubSubscriptionConfigAmount } from './models/UpdateClubSubs
 export type { UpdateClubSubscriptionDueDate } from './models/UpdateClubSubscriptionDueDate';
 export type { UpdateDiscipline } from './models/UpdateDiscipline';
 export type { UpdateEvent } from './models/UpdateEvent';
+export type { UpdateMatch } from './models/UpdateMatch';
 export type { UpdatePerson } from './models/UpdatePerson';
 export type { UpdateTeams } from './models/UpdateTeams';
 export type { Username } from './models/Username';

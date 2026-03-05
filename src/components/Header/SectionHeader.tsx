@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { PeopleAlt } from "@mui/icons-material";
 
 export default function SectionHeader(
@@ -9,19 +9,18 @@ export default function SectionHeader(
   }>,
 ) {
   return (
-    <Box
+    <Grid
+      size={12}
+      container
+      mb={2}
+      alignItems={"center"}
+      borderBottom={"2px solid #d32f2f"}
+      py={1.5}
       sx={{
-        m: 2,
-        mb: 3,
-        display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
-        px: 3,
-        py: 1.5,
-        borderBottom: "2px solid #d32f2f",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
         <Box
           sx={{
             width: 34,
@@ -38,15 +37,15 @@ export default function SectionHeader(
           {props.icon ?? <PeopleAlt sx={{ fontSize: 18 }} />}
         </Box>
         <Typography
-          variant="subtitle1"
+          variant="h6"
           fontWeight={700}
-          sx={{ color: "#1a1a1a", letterSpacing: 0.2 }}
+          sx={{ color: "#1a1a1a", letterSpacing: 0.5 }}
         >
           {props.title}
         </Typography>
       </Box>
 
       {props.action && <Box>{props.action}</Box>}
-    </Box>
+    </Grid>
   );
 }

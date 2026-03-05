@@ -5,19 +5,61 @@ import {
   Button,
   Grid,
   TextField,
+  MenuItem,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { OpenInNew, CloseFullscreen, Add } from "@mui/icons-material";
+import {
+  OpenInNew,
+  CloseFullscreen,
+  Add,
+  Clear,
+  AdsClick,
+} from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
 import FormAccordion from "../../dashboard/FormAccordion";
 import { Controller, useForm } from "react-hook-form";
 import { MatchTypeOptions } from "../../config";
+import { drawsHooks } from "../../hooks";
+import FormCard from "../../dashboard/FormCard";
+import { useSearchParams } from "react-router-dom";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import MatchPickerModal from "../../components/DrawModals/MatchPickerModal";
 
 export default function ResultsMainPage() {
   const [isDisplayOpen, setIsDisplayOpen] = useState<boolean>(false);
+  const [isBracketModalOpen, setIsBracketModalOpen] = useState<boolean>(false);
   const [currentScreen, setCurrentScreen] = useState<string>("");
   const displayWindowRef = useRef<Window | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const paramBracket = searchParams.get("bracket") ?? "";
+  const paramMatch = searchParams.get("match") ?? "";
+
+  const changeBracket = (bracket: string) => {
+    setSearchParams((prev) => {
+      prev.set("bracket", bracket);
+      return prev;
+    });
+  };
+
+  const changeMatch = (match: string) => {
+    setSearchParams((prev) => {
+      prev.set("match", match);
+      return prev;
+    });
+  };
+  const testEventId = "3-jornada-liga-soshinkai-20252026";
+
+  const handleBracketModalOpen = () => {
+    setIsBracketModalOpen(true);
+  };
+
+  const handleBracketModalClose = () => {
+    setIsBracketModalOpen(false);
+  };
 
   useEffect(() => {
     let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
@@ -26,7 +68,7 @@ export default function ResultsMainPage() {
     baseURL = baseURL.replace(/^https?:\/\//, "");
 
     // Detect the correct protocol
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const protocol = globalThis.location.protocol === "https:" ? "wss" : "ws";
 
     // Construct the full WebSocket URL
     socketRef.current = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);
@@ -41,22 +83,41 @@ export default function ResultsMainPage() {
     watch,
     setError,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
+      bracket: "",
+      match: "",
       tatami: "",
       restTime: "",
-      player1Designation: "",
-      player2Designation: "",
     },
   });
+
+  useEffect(() => {
+    const newParams = new URLSearchParams(searchParams);
+    if (paramBracket === "" || watch("bracket") === "") {
+      newParams.delete("bracket");
+      setSearchParams(newParams);
+    } else {
+      setValue("bracket", paramBracket);
+    }
+  }, [paramBracket, watch("bracket")]);
+
+  const { data: bracketsData } = drawsHooks.useBracketsData(testEventId);
+  const {
+    data: matchesData,
+    isLoading: isMatchesLoading,
+    error: matchesError,
+    refetch,
+  } = drawsHooks.useEventMatchesData(watch("bracket"), testEventId);
 
   const openDisplay = () => {
     if (!displayWindowRef.current || displayWindowRef.current.closed) {
       displayWindowRef.current = window.open(
         "/display_panel/",
         "_blank",
-        "width=1000,height=800"
+        "width=1000,height=800",
       );
       setIsDisplayOpen(true);
     } else {
@@ -101,24 +162,15 @@ export default function ResultsMainPage() {
   }, []);
 
   return (
-    <div>
-      <Card sx={{ m: 2, mt: 0 }}>
-        <CardHeader
-          title="Página de Monitorização e Mostragem de Resultados ao Vivo"
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
-        ></CardHeader>
-        <CardContent>
-          Aqui poderá iniciar o sistema de monitorização de resultados de cada
+    <Grid container>
+      <PageInfoCard
+        description="Aqui poderá iniciar o sistema de monitorização de resultados de cada
           prova. Poderá controlar todos os aspetos, como inserir sorteios,
-          definir diferentes parametros, entre outros.
-        </CardContent>
-      </Card>
+          definir diferentes parametros, entre outros."
+        title="Monitorização e Mostragem de Resultados ao Vivo"
+      ></PageInfoCard>
       <FormAccordion expanded title="Configurações de Monitor">
-        <Grid sx={{ p: 2 }} size={3}>
+        <Grid p={2} size={3}>
           <Controller
             name="restTime"
             control={control}
@@ -141,50 +193,7 @@ export default function ResultsMainPage() {
             )}
           />
         </Grid>
-        <Grid sx={{ p: 2 }} size={4}>
-          <Controller
-            name="player1Designation"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Designação Competidor 1"
-                disabled={isDisplayOpen}
-                fullWidth
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                  clearErrors();
-                }}
-                error={!!errors.player1Designation}
-                helperText={errors.player1Designation?.message}
-              />
-            )}
-          />
-        </Grid>
-        <Grid sx={{ p: 2 }} size={4}>
-          <Controller
-            name="player2Designation"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Designação Competidor 2"
-                disabled={isDisplayOpen}
-                fullWidth
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                  clearErrors();
-                }}
-                error={!!errors.player2Designation}
-                helperText={errors.player2Designation?.message}
-              />
-            )}
-          />
-        </Grid>
+
         <Grid size={12}>
           <Button
             sx={{ m: 2 }}
@@ -192,10 +201,10 @@ export default function ResultsMainPage() {
             color={isDisplayOpen ? "error" : "success"}
             startIcon={isDisplayOpen ? <CloseFullscreen /> : <OpenInNew />}
             onClick={() => {
-              if (!isDisplayOpen) {
-                openDisplay();
-              } else {
+              if (isDisplayOpen) {
                 closeDisplay();
+              } else {
+                openDisplay();
               }
             }}
           >
@@ -248,10 +257,16 @@ export default function ResultsMainPage() {
             </Button>
           </Grid>
         </Grid>
-        <Grid size={12} container alignContent="center">
-          <Grid size={2}>
+        <Grid
+          size={12}
+          container
+          // alignItems={"center"}
+          justifyContent={"space-evenly"}
+          spacing={3}
+          m={2}
+        >
+          <Grid container justifyContent={"center"} size={3}>
             <Button
-              sx={{ m: 2 }}
               variant="contained"
               disabled={!isDisplayOpen}
               color="primary"
@@ -267,9 +282,8 @@ export default function ResultsMainPage() {
           </Grid>
           {MatchTypeOptions.map(
             (match: { label: string; value: string }, index: any) => (
-              <Grid size={2} key={index}>
+              <Grid container size={3} key={index} justifyContent={"center"}>
                 <Button
-                  sx={{ m: 2 }}
                   variant="contained"
                   disabled={!isDisplayOpen}
                   color="primary"
@@ -286,13 +300,106 @@ export default function ResultsMainPage() {
                   Abrir {match.label}
                 </Button>
               </Grid>
-            )
+            ),
           )}
         </Grid>
       </FormAccordion>
       {isDisplayOpen ? (
-        <ControlPage currentScreen={currentScreen}></ControlPage>
+        <>
+          <FormCard
+            title="Selecionar Escalão"
+            subheader="Selecione o Escalão para escolher a Partida a ser iniciada"
+          >
+            <Grid p={2} size={9}>
+              <Controller
+                name="bracket"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    sx={{
+                      "& .MuiSelect-icon": {
+                        left: "auto",
+                        right: 40,
+                      },
+                    }}
+                    color="warning"
+                    variant={"outlined"}
+                    label="Escalão"
+                    slotProps={{
+                      input: {
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              disabled={watch("bracket") === ""}
+                              onClick={() => setValue("bracket", "")}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              <Clear
+                                color={
+                                  watch("bracket") === "" ? "disabled" : "error"
+                                }
+                              ></Clear>
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                    fullWidth
+                    select
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      changeBracket(e.target.value);
+                    }}
+                    error={!!errors.bracket}
+                    helperText={errors.bracket?.message}
+                  >
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                    {bracketsData?.map((item, index) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid p={2} size={3} container alignItems={"center"}>
+              <Button
+                variant="contained"
+                disabled={watch("bracket") === ""}
+                color="primary"
+                startIcon={<AdsClick></AdsClick>}
+                onClick={handleBracketModalOpen}
+              >
+                Selecionar Partida
+              </Button>
+            </Grid>
+          </FormCard>
+          <FormCard
+            title="A decorrer"
+            subheader="Selecione o Escalão para escolher a Partida a ser iniciada"
+          >
+            {watch("match")}
+          </FormCard>
+          <ControlPage currentScreen={currentScreen}></ControlPage>
+        </>
       ) : null}
-    </div>
+      <MatchPickerModal
+        handleModalClose={handleBracketModalClose}
+        isModalOpen={isBracketModalOpen}
+        matchesData={matchesData}
+        setValue={setValue}
+        bracketName={
+          bracketsData?.find((item) => String(item.id) === watch("bracket"))
+            ?.name!
+        }
+        changeMatch={changeMatch}
+      ></MatchPickerModal>
+    </Grid>
   );
 }

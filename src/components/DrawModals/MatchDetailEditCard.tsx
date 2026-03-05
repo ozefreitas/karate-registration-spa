@@ -3,21 +3,21 @@ import {
   Typography,
   Paper,
   Grid,
-  Chip,
   TextField,
   MenuItem,
+  CircularProgress,
+  Chip,
 } from "@mui/material";
 import { Person, SportsMartialArts, Flag } from "@mui/icons-material";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { KataOptions } from "../../config";
-import { membersHooks } from "../../hooks";
+import { drawsHooks } from "../../hooks";
 
 interface MatchDetailEditCardProps {
   color: string;
-  contenderInfo: any;
-  matchInfo: number;
-  kataInfo: string;
+  control: any;
   reverse?: boolean;
+  bracketId: number;
 }
 
 function IconBox({
@@ -86,26 +86,14 @@ function InfoRow({
 
 export default function MatchDetailEditCard({
   color,
-  contenderInfo,
-  matchInfo,
-  kataInfo,
+  control,
   reverse,
+  bracketId,
 }: Readonly<MatchDetailEditCardProps>) {
-  const {
-    control,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      contender: contenderInfo?.id,
-      flags_contender: 0,
-      kata_contender: "",
-      winner: "",
-    },
-  });
+  // Retrieve all members inside a given bracked
+  const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
+    drawsHooks.useMembersPerBracketData(bracketId);
+
   return (
     <Grid container direction={"column"} gap={2} width={"100%"}>
       <InfoRow
@@ -120,33 +108,61 @@ export default function MatchDetailEditCard({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>{color}:</Typography>
-            <Controller
-              name="contender"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  type="text"
-                  variant={"outlined"}
-                  label=""
-                  fullWidth
-                  select
-                  required
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.contender}
-                >
-                  {KataOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
+            <Grid container size={10}>
+              <Controller
+                name={`contender_${color === "Shiro" ? 1 : 2}`}
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    type="text"
+                    variant="outlined"
+                    fullWidth
+                    label="Atleta"
+                    select
+                    required
+                    {...field}
+                    slotProps={{
+                      select: {
+                        renderValue: (selected) => {
+                          const selectedMember = bracketMembersData?.find(
+                            (m: any) => m.id === selected,
+                          );
+                          return selectedMember?.full_name || "";
+                        },
+                      },
+                    }}
+                    onChange={(e) => field.onChange(e)}
+                  >
+                    <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                      -- Selecionar --
                     </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
+                    {isBracketMembersLoading ? (
+                      <Grid
+                        mt={3}
+                        container
+                        size={12}
+                        justifyContent={"center"}
+                      >
+                        <CircularProgress />
+                      </Grid>
+                    ) : (
+                      bracketMembersData?.map((item: any, index: number) => (
+                        <MenuItem
+                          sx={{ display: "flex", gap: 2, p: 2 }}
+                          key={index}
+                          value={item.id}
+                        >
+                          {item.full_name}
+                          <Chip size="small" label={item.club} />
+                          <Chip size="small" label={`${item.age} anos`} />
+                        </MenuItem>
+                      ))
+                    )}
+                  </TextField>
+                )}
+              />
+            </Grid>
           </Grid>
         }
         reverse={reverse}
@@ -157,40 +173,43 @@ export default function MatchDetailEditCard({
         value={
           <Grid
             container
-            columnGap={2}
             rowGap={1}
             size={12}
-            textAlign={"center"}
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>Kata:</Typography>
-            <Controller
-              name="kata_contender"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  type="text"
-                  variant={"outlined"}
-                  label=""
-                  fullWidth
-                  select
-                  required
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.kata_contender}
-                >
-                  {KataOptions.map((item, index) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
+            <Grid container size={10}>
+              <Controller
+                name={`kata_contender_${color === "Shiro" ? 1 : 2}`}
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    type="text"
+                    variant={"outlined"}
+                    label="Kata"
+                    fullWidth
+                    select
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    // error={!!errors.kata_contender}
+                  >
+                    <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                      -- Selecionar --
                     </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
+                    {KataOptions.filter((item) => item.value !== "none").map(
+                      (item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ),
+                    )}
+                  </TextField>
+                )}
+              />
+            </Grid>
           </Grid>
         }
         reverse={reverse}
@@ -201,33 +220,31 @@ export default function MatchDetailEditCard({
         value={
           <Grid
             container
-            columnGap={2}
             rowGap={1}
             size={12}
-            textAlign={"center"}
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>Número de Bandeiras:</Typography>
-            <Controller
-              name="flags_contender"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  type="text"
-                  variant={"outlined"}
-                  label=""
-                  fullWidth
-                  required
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.flags_contender}
-                ></TextField>
-              )}
-            />
+            <Grid container size={10}>
+              <Controller
+                name={`flags_contender_${color === "Shiro" ? 1 : 2}`}
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    type="number"
+                    variant={"outlined"}
+                    label="Número de Bandeiras"
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    // error={!!errors.flags_contender}
+                  ></TextField>
+                )}
+              />
+            </Grid>
           </Grid>
         }
         reverse={reverse}

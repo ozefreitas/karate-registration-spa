@@ -155,6 +155,7 @@ export const QuotesOptions: { label: string; value: string }[] = [
 ];
 
 export const KataOptions: { label: string; value: string }[] = [
+  { value: "none", label: "N/A" },
   { value: "heianshodan", label: "Heian Shodan" },
   { value: "heiannidan", label: "Heian Nidan" },
   { value: "heiansandan", label: "Heian Sandan" },
@@ -199,6 +200,14 @@ export const DrawFormatTypes: { value: string; label: string }[] = [
   { value: "torneio", label: "Torneio" },
   { value: "groups", label: "Liga" },
   { value: "misto", label: "Misto" },
+];
+
+export const RoundsOptions: { value: string; label: string }[] = [
+  { value: "0", label: "Final" },
+  { value: "1", label: "Semi-Final" },
+  { value: "2", label: "Quartos-Final" },
+  { value: "3", label: "Oitavos-Final" },
+  { value: "4", label: "16-Avos-Final" },
 ];
 
 export const RulesOptions: {

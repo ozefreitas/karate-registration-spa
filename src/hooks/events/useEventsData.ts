@@ -86,13 +86,3 @@ export const useExportEventRegistrationFile = (eventId: string) => {
     enabled: false,
   });
 };
-
-export const useEventMatchesData = (bracketId: string, eventId: string) => {
-  return useQuery({
-    queryKey: ["event-matches", bracketId, eventId],
-    queryFn: () => MatchService.matchList(bracketId, eventId),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: !!bracketId,
-  });
-};

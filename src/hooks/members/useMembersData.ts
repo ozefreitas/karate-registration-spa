@@ -133,8 +133,8 @@ export const useFetchCoachesNotInEvent = (
 };
 
 export const useFetchMembersInCategoryGender = (
-  category: string,
-  gender: string,
+  category?: string,
+  gender?: string,
 ) => {
   return useQuery({
     queryKey: ["members-in-category-gender", category, gender],

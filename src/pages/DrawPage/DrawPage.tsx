@@ -79,7 +79,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
             container
             justifyContent={"center"}
             alignItems={"center"}
-            pt={1}
+            pb={1}
             px={2}
             size={12}
           >
@@ -96,7 +96,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
         <FormCard title="Ações">
           <Grid
             container
-            pt={1}
+            pb={1}
             px={2}
             size={12}
             spacing={5}
@@ -123,12 +123,6 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
                 >
                   Gerar Novo Sorteio
                 </Button>
-                <SettingsButton
-                  label="Alterar Sorteio"
-                  disabled={bracketsData?.length === 0}
-                  size="medium"
-                  to="patch/"
-                ></SettingsButton>
                 <DeleteButton
                   label="Eliminar Sorteio"
                   disabled={bracketsData?.length === 0}

@@ -8,7 +8,7 @@ import {
 export const useFetchAvailableClubs = () => {
   return useQuery({
     queryKey: ["available-clubs"],
-    queryFn: () => ClubsService.clubsList,
+    queryFn: () => ClubsService.clubsList(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
