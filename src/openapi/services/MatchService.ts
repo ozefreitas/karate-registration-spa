@@ -2,8 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AdvanceMatch } from '../models/AdvanceMatch';
 import type { CreateMatch } from '../models/CreateMatch';
 import type { Match } from '../models/Match';
+import type { PatchedAdvanceMatch } from '../models/PatchedAdvanceMatch';
 import type { PatchedMatch } from '../models/PatchedMatch';
 import type { PatchedPatchMatchWinner } from '../models/PatchedPatchMatchWinner';
 import type { PatchMatchWinner } from '../models/PatchMatchWinner';
@@ -116,6 +118,26 @@ export class MatchService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this match.
+     * @param requestBody
+     * @returns AdvanceMatch
+     * @throws ApiError
+     */
+    public static matchAdvanceMatchPartialUpdate(
+        id: number,
+        requestBody?: PatchedAdvanceMatch,
+    ): CancelablePromise<AdvanceMatch> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/match/{id}/advance_match/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**

@@ -68,7 +68,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -80,7 +80,7 @@ export default function PickOneMemberModal(
     setValue: any;
     control: any;
     number: number | null;
-  }>
+  }>,
 ) {
   type Member = {
     id: string;
@@ -97,14 +97,12 @@ export default function PickOneMemberModal(
     error: athleteInCategoryGenderError,
   } = membersHooks.useFetchMembersInCategoryGender(
     props.control._formValues.category,
-    props.control._formValues.gender
+    props.control._formValues.gender,
   );
 
   const handleAthletePick = (athleteData: any) => {
-    console.log(athleteData.full_name);
     const athelete = `athlete${props.number}`;
     const atheleteId = `athlete${props.number}Id`;
-    console.log(atheleteId);
     props.setValue(athelete, athleteData.full_name);
     props.setValue(atheleteId, athleteData.id);
   };
@@ -141,7 +139,7 @@ export default function PickOneMemberModal(
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Escolher Atleta para Atleta {props.number}
           </Typography>
-          {athleteInCategoryGenderData?.data.length !== 0 ? (
+          {athleteInCategoryGenderData?.count === 0 ? null : (
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -151,7 +149,7 @@ export default function PickOneMemberModal(
                 inputProps={{ "aria-label": "procurar" }}
               />
             </Search>
-          ) : null}
+          )}
         </Toolbar>
       </AppBar>
       <DialogContent>
@@ -160,9 +158,9 @@ export default function PickOneMemberModal(
             <div>Is Loading</div>
           ) : athleteInCategoryGenderError ? (
             <div>Ocorreu um erro</div>
-          ) : athleteInCategoryGenderData?.data.length !== 0 ? (
-            athleteInCategoryGenderData?.data.results.map(
-              (athlete: Member, index: string) => (
+          ) : athleteInCategoryGenderData?.count !== 0 ? (
+            athleteInCategoryGenderData?.results.map(
+              (athlete, index: number) => (
                 <ListItem
                   key={index}
                   disablePadding
@@ -189,13 +187,13 @@ export default function PickOneMemberModal(
                     }}
                   >
                     <ListItemText
-                      primary={`${athlete.first_name} ${athlete.last_name}`}
-                      secondary={`${athlete.match_type} ${athlete.category} ${athlete.gender}`}
+                      primary={`${athlete.full_name}`}
+                      // secondary={`${athlete.match_type} ${athlete.category} ${athlete.gender}`}
                     />
                   </ListItemButton>
                   <Divider />
                 </ListItem>
-              )
+              ),
             )
           ) : (
             <ListItem>

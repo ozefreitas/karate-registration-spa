@@ -228,7 +228,6 @@ export default function Calendar() {
                           (event: any) => event.event_date === key,
                         ) || []
                       : [];
-                    console.log(today.getDay());
                     const todayCell = isToday(day);
 
                     return (

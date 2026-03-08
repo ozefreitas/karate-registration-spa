@@ -30,6 +30,33 @@ export const useUpdateMatch = () => {
   });
 };
 
+export const useAdvanceMatch = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ matchId, data }: { matchId: number; data: any }) =>
+      MatchService.matchAdvanceMatchPartialUpdate(matchId, data),
+    onSuccess: () => {
+      callNotiStack(
+        enqueueSnackbar,
+        "Próxima partida!",
+        "success",
+      );
+      queryClient.invalidateQueries({ queryKey: ["brackets"] });
+      queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+    },
+    onError: () => {
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
+    },
+  });
+};
+
 export const usePatchMatchWinner = () => {
   const { enqueueSnackbar } = useSnackbar();
 

@@ -72,8 +72,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     DisciplineOption[]
   >([]);
 
-  console.log(disciplineOptions);
-
   const handleCategoriesModalOpen = () => {
     setIsCategoriesModalOpen(true);
   };

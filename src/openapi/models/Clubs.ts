@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Clubs = {
+    club: ReactNode;
     readonly id: number;
     name: string;
     is_registered?: boolean;

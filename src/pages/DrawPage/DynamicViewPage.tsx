@@ -187,7 +187,7 @@ export default function DynamicViewPage() {
                 height={"100%"}
                 size={5}
                 container
-                sx={{ minWidth: 420 }}
+                sx={{ minWidth: 450 }}
               >
                 <Grid
                   size={10}
@@ -213,80 +213,100 @@ export default function DynamicViewPage() {
                         match.winner?.id === match.contender_2?.id &&
                         match.kataresult?.flags_contender_2! >
                           match.kataresult?.flags_contender_1!;
+                      const isOngoing = match.ongoing;
                       const matchFinished =
+                        !match.ongoing &&
                         match.kataresult?.flags_contender_2 != null &&
                         match.kataresult?.flags_contender_1 != null &&
                         match.winner !== null;
-                      console.log(is2Winner);
                       return (
-                        <Grid size={12} spacing={1} key={index} container>
-                          <Grid
-                            size={10}
-                            container
-                            direction={"column"}
-                            spacing={2}
-                          >
-                            <SingleContenderCard
-                              roundNumber={roundNumber}
-                              contenderNumber={1}
-                              isWinner={!is2Winner}
-                              points={
-                                match.kataresult?.flags_contender_1 === 0 ||
-                                match.kataresult === null
-                                  ? 0
-                                  : match.kataresult?.flags_contender_1
-                              }
-                              fullName={match.contender_1?.full_name}
-                              isMatchFinished={matchFinished}
-                            ></SingleContenderCard>
-                            <SingleContenderCard
-                              roundNumber={roundNumber}
-                              contenderNumber={2}
-                              isWinner={is2Winner}
-                              points={
-                                match.kataresult?.flags_contender_2 === 0 ||
-                                match.kataresult === null
-                                  ? 0
-                                  : match.kataresult?.flags_contender_2
-                              }
-                              fullName={match.contender_2?.full_name}
-                              isMatchFinished={matchFinished}
-                            ></SingleContenderCard>
-                          </Grid>
-                          <Grid
-                            size={2}
-                            px={2}
-                            borderRadius={4}
-                            height={"100%"}
-                            bgcolor={"#fdecea"}
-                            container
-                            alignItems={"center"}
-                            border={"0.2px solid red"}
-                            justifyContent={"center"}
-                            alignContent={"center"}
-                            gap={3}
-                            minWidth={50}
-                          >
-                            <IconButton
-                              size="small"
-                              onClick={() => {
-                                handleModalOpen(match.id, true);
+                        <Grid container size={12} spacing={2} key={index}>
+                          {isOngoing && (
+                            <Box
+                              sx={{
+                                width: "fit-content",
+                                bgcolor: "#f59e0b",
+                                color: "white",
+                                fontSize: 12,
+                                fontWeight: 700,
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: 1,
+                                letterSpacing: 1,
                               }}
                             >
-                              <Settings />
-                            </IconButton>
-                            <IconButton
-                              size="small"
-                              disabled={
-                                match.kataresult === null ||
-                                match.winner === null
-                              }
-                              onClick={() => {
-                                handleModalOpen(match.id, false);
-                              }}
+                              LIVE
+                            </Box>
+                          )}
+                          <Grid size={12} spacing={1} container>
+                            <Grid
+                              size={10}
+                              container
+                              direction={"column"}
+                              spacing={2}
                             >
-                              <Visibility />
-                            </IconButton>
+                              <SingleContenderCard
+                                roundNumber={roundNumber}
+                                contenderNumber={1}
+                                isWinner={!is2Winner}
+                                points={
+                                  match.kataresult === null
+                                    ? 99
+                                    : match.kataresult?.flags_contender_1
+                                }
+                                fullName={match.contender_1?.full_name}
+                                club={match.contender_1?.club}
+                                isMatchFinished={matchFinished}
+                                ongoing={isOngoing!}
+                              ></SingleContenderCard>
+                              <SingleContenderCard
+                                roundNumber={roundNumber}
+                                contenderNumber={2}
+                                isWinner={is2Winner}
+                                points={
+                                  match.kataresult === null
+                                    ? 99
+                                    : match.kataresult?.flags_contender_2
+                                }
+                                fullName={match.contender_2?.full_name}
+                                club={match.contender_2?.club}
+                                isMatchFinished={matchFinished}
+                                ongoing={isOngoing!}
+                              ></SingleContenderCard>
+                            </Grid>
+                            <Grid
+                              size={2}
+                              px={2}
+                              borderRadius={4}
+                              bgcolor={"#fdecea"}
+                              container
+                              alignItems={"center"}
+                              border={"0.2px solid red"}
+                              justifyContent={"center"}
+                              alignContent={"space-evenly"}
+                              minWidth={50}
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={() => {
+                                  handleModalOpen(match.id, true);
+                                }}
+                              >
+                                <Settings />
+                              </IconButton>
+                              <IconButton
+                                size="small"
+                                // disabled={
+                                //   match.kataresult === null ||
+                                //   match.winner === null
+                                // }
+                                onClick={() => {
+                                  handleModalOpen(match.id, false);
+                                }}
+                              >
+                                <Visibility />
+                              </IconButton>
+                            </Grid>
                           </Grid>
                         </Grid>
                       );

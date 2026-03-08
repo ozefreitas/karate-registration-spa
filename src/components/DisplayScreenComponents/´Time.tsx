@@ -19,9 +19,8 @@ export default function Time(
   const [minutes, setMinutes] = useState<number>(2);
   const [isRunning, setIsRunning] = useState<boolean | null>(null);
   const [timeLow, setTimeLow] = useState<boolean>(false);
-  const [ended, setEnded] = useState<boolean>(false);
+  const [_, setEnded] = useState<boolean>(false);
 
-  console.log(ended);
 
   useEffect(() => {
     let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
@@ -30,7 +29,7 @@ export default function Time(
     baseURL = baseURL.replace(/^https?:\/\//, "");
 
     // Detect the correct protocol
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const protocol = globalThis.location.protocol === "https:" ? "wss" : "ws";
 
     // Construct the full WebSocket URL
     socketRef.current = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);

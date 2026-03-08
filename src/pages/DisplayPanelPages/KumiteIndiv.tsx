@@ -26,9 +26,7 @@ export default function KumiteIndiv() {
   const [minutes, setMinutes] = useState<number>(2);
   const [isRunning, setIsRunning] = useState<boolean | null>(null);
   const [timeLow, setTimeLow] = useState<boolean>(false);
-  const [ended, setEnded] = useState<boolean>(false);
-
-  console.log(ended);
+  const [_, setEnded] = useState<boolean>(false);
 
   useEffect(() => {
     let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
@@ -37,15 +35,15 @@ export default function KumiteIndiv() {
     baseURL = baseURL.replace(/^https?:\/\//, "");
 
     // Detect the correct protocol
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const protocol = globalThis.location.protocol === "https:" ? "wss" : "ws";
 
-    // Construct the full WebSocket URL
+    // Construct the globalThisebSocket URL
     const socket = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);
 
     const handleFoulUpdate = (
       type: "add_foul" | "remove_foul",
       player: number,
-      code: string
+      code: string,
     ) => {
       const sign = type === "add_foul" ? 1 : -1;
       const prefix = player === 1 ? "aka" : "shiro";
@@ -67,7 +65,7 @@ export default function KumiteIndiv() {
     const handleScoreUpdate = (
       operation: string,
       player: number,
-      points: number | string
+      points: number | string,
     ) => {
       const isAdd = operation === "add";
       const sign = isAdd ? 1 : -1;

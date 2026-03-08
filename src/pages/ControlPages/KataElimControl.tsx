@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { Add } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
+import { KataOptions } from "../../config";
 
 export default function KataElimControl() {
   const socketRef = useRef<WebSocket | null>(null);
@@ -90,7 +91,18 @@ export default function KataElimControl() {
               }}
               error={!!errors.player1Kata}
               helperText={errors.player1Kata?.message}
-            />
+            >
+              <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                -- Selecionar --
+              </MenuItem>
+              {KataOptions.filter((item) => item.value !== "none").map(
+                (item, index) => (
+                  <MenuItem key={index} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ),
+              )}
+            </TextField>
           )}
         />
       </Grid>
@@ -118,6 +130,7 @@ export default function KataElimControl() {
               variant={"outlined"}
               label="Kata Competidor 2"
               fullWidth
+              select
               {...field}
               onChange={(e) => {
                 field.onChange(e);
@@ -125,7 +138,18 @@ export default function KataElimControl() {
               }}
               error={!!errors.player2Kata}
               helperText={errors.player2Kata?.message}
-            />
+            >
+              <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                -- Selecionar --
+              </MenuItem>
+              {KataOptions.filter((item) => item.value !== "none").map(
+                (item, index) => (
+                  <MenuItem key={index} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ),
+              )}
+            </TextField>
           )}
         />
       </Grid>
@@ -144,7 +168,7 @@ export default function KataElimControl() {
         </Button>
       </Grid>
       <Grid
-      m={3}
+        m={3}
         spacing={5}
         container
         alignItems="center"

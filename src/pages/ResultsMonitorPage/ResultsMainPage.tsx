@@ -1,13 +1,14 @@
 import {
-  Card,
-  CardHeader,
-  CardContent,
   Button,
   Grid,
   TextField,
   MenuItem,
   InputAdornment,
   IconButton,
+  Paper,
+  Box,
+  Typography,
+  Chip,
 } from "@mui/material";
 import {
   OpenInNew,
@@ -15,6 +16,7 @@ import {
   Add,
   Clear,
   AdsClick,
+  Person,
 } from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
@@ -26,6 +28,8 @@ import FormCard from "../../dashboard/FormCard";
 import { useSearchParams } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import MatchPickerModal from "../../components/DrawModals/MatchPickerModal";
+import CommonActions from "../../components/DisplayScreenComponents/CommonActions";
+import InfoRow from "../../components/General/InfoRow";
 
 export default function ResultsMainPage() {
   const [isDisplayOpen, setIsDisplayOpen] = useState<boolean>(false);
@@ -51,7 +55,7 @@ export default function ResultsMainPage() {
       return prev;
     });
   };
-  const testEventId = "3-jornada-liga-soshinkai-20252026";
+  const testEventId = "test-20252026";
 
   const handleBracketModalOpen = () => {
     setIsBracketModalOpen(true);
@@ -84,6 +88,7 @@ export default function ResultsMainPage() {
     setError,
     clearErrors,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -102,7 +107,13 @@ export default function ResultsMainPage() {
     } else {
       setValue("bracket", paramBracket);
     }
-  }, [paramBracket, watch("bracket")]);
+    if (paramMatch === "" || watch("match") === "") {
+      newParams.delete("match");
+      setSearchParams(newParams);
+    } else {
+      setValue("match", paramMatch);
+    }
+  }, [paramBracket, paramMatch]);
 
   const { data: bracketsData } = drawsHooks.useBracketsData(testEventId);
   const {
@@ -160,6 +171,39 @@ export default function ResultsMainPage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  const rounds = [
+    ...new Set(matchesData?.map((m: any) => m.round_number)),
+  ].sort((a: any, b: any) => b - a);
+
+  const getNextMatchId = (currentMatchId: number) => {
+    // Build the ordered list exactly as rendered in the UI
+    const orderedMatches = rounds.flatMap(
+      (roundNumber: any) =>
+        matchesData?.filter((m: any) => m.round_number === roundNumber) ?? [],
+    );
+
+    const currentIndex = orderedMatches.findIndex(
+      (m: any) => m.id === currentMatchId,
+    );
+
+    if (currentIndex === -1 || currentIndex === orderedMatches.length - 1) {
+      return null; // not found, or already at the last match
+    }
+
+    return orderedMatches[currentIndex + 1].id;
+  };
+
+  const handleNextMatch = () => {
+    const currentMatchId = getValues("match");
+    const nextId = getNextMatchId(Number(currentMatchId));
+    if (nextId !== null) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("match", String(nextId));
+      setSearchParams(newParams);
+      setValue("match", String(nextId));
+    }
+  };
 
   return (
     <Grid container>
@@ -260,7 +304,6 @@ export default function ResultsMainPage() {
         <Grid
           size={12}
           container
-          // alignItems={"center"}
           justifyContent={"space-evenly"}
           spacing={3}
           m={2}
@@ -308,70 +351,78 @@ export default function ResultsMainPage() {
         <>
           <FormCard
             title="Selecionar Escalão"
-            subheader="Selecione o Escalão para escolher a Partida a ser iniciada"
+            subheader="Selecione o Escalão para escolher a Partida a ser iniciada."
           >
-            <Grid p={2} size={9}>
-              <Controller
-                name="bracket"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    sx={{
-                      "& .MuiSelect-icon": {
-                        left: "auto",
-                        right: 40,
-                      },
-                    }}
-                    color="warning"
-                    variant={"outlined"}
-                    label="Escalão"
-                    slotProps={{
-                      input: {
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              disabled={watch("bracket") === ""}
-                              onClick={() => setValue("bracket", "")}
-                              edge="end"
-                              aria-label="toggle password visibility"
-                            >
-                              <Clear
-                                color={
-                                  watch("bracket") === "" ? "disabled" : "error"
-                                }
-                              ></Clear>
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      },
-                    }}
-                    fullWidth
-                    select
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      changeBracket(e.target.value);
-                    }}
-                    error={!!errors.bracket}
-                    helperText={errors.bracket?.message}
-                  >
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
-                    {bracketsData?.map((item, index) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.name}
+            <Grid
+              p={2}
+              size={12}
+              container
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Grid size={9}>
+                <Controller
+                  name="bracket"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      sx={{
+                        "& .MuiSelect-icon": {
+                          left: "auto",
+                          right: 40,
+                        },
+                      }}
+                      color="warning"
+                      variant={"outlined"}
+                      label="Escalão"
+                      slotProps={{
+                        input: {
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                disabled={watch("bracket") === ""}
+                                onClick={() => setValue("bracket", "")}
+                                edge="end"
+                                aria-label="toggle password visibility"
+                              >
+                                <Clear
+                                  color={
+                                    watch("bracket") === ""
+                                      ? "disabled"
+                                      : "error"
+                                  }
+                                ></Clear>
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                      fullWidth
+                      select
+                      required
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        changeBracket(e.target.value);
+                      }}
+                      error={!!errors.bracket}
+                      helperText={errors.bracket?.message}
+                    >
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
                       </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid p={2} size={3} container alignItems={"center"}>
+                      {bracketsData?.map((item, index) => (
+                        <MenuItem key={index} value={item.id}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
               <Button
                 variant="contained"
-                disabled={watch("bracket") === ""}
+                disabled={watch("bracket") === "" || isMatchesLoading}
                 color="primary"
                 startIcon={<AdsClick></AdsClick>}
                 onClick={handleBracketModalOpen}
@@ -382,17 +433,114 @@ export default function ResultsMainPage() {
           </FormCard>
           <FormCard
             title="A decorrer"
-            subheader="Selecione o Escalão para escolher a Partida a ser iniciada"
+            subheader="Veja a partida que está a decorrer neste momento."
           >
-            {watch("match")}
+            {matchesData?.find((item) => String(item.id) === watch("match"))
+              ?.contender_1 !== null &&
+            matchesData?.find((item) => String(item.id) === watch("match"))
+              ?.contender_2 !== null &&
+            watch("bracket") !== "" &&
+            watch("match") !== "" ? (
+              <Grid p={2} container size={12} spacing={5}>
+                <Grid container size={6}>
+                  <InfoRow
+                    color={"Shiro"}
+                    icon={<Person />}
+                    value={
+                      <Grid
+                        container
+                        columnGap={2}
+                        rowGap={1}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                      >
+                        <Typography fontWeight={700}>
+                          {matchesData?.find(
+                            (item) => String(item.id) === watch("match"),
+                          )?.contender_1?.full_name ?? "N/A"}
+                        </Typography>
+                        <Chip
+                          size="small"
+                          label={`${
+                            matchesData?.find(
+                              (item) => String(item.id) === watch("match"),
+                            )?.contender_1?.age ?? "N/A"
+                          } anos`}
+                        ></Chip>
+                        <Chip
+                          size="small"
+                          label={
+                            matchesData?.find(
+                              (item) => String(item.id) === watch("match"),
+                            )?.contender_1?.club ?? "N/A"
+                          }
+                        ></Chip>
+                      </Grid>
+                    }
+                  />
+                </Grid>
+                <Grid container size={6}>
+                  <InfoRow
+                    color={"Aka"}
+                    icon={<Person />}
+                    value={
+                      <Grid
+                        container
+                        columnGap={2}
+                        rowGap={1}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                      >
+                        <Typography fontWeight={700}>
+                          {matchesData?.find(
+                            (item) => String(item.id) === watch("match"),
+                          )?.contender_2?.full_name ?? "N/A"}
+                        </Typography>
+                        <Chip
+                          size="small"
+                          label={`${
+                            matchesData?.find(
+                              (item) => String(item.id) === watch("match"),
+                            )?.contender_2?.age ?? "N/A"
+                          } anos`}
+                        ></Chip>
+                        <Chip
+                          size="small"
+                          label={
+                            matchesData?.find(
+                              (item) => String(item.id) === watch("match"),
+                            )?.contender_2?.club ?? "N/A"
+                          }
+                        ></Chip>
+                      </Grid>
+                    }
+                    reverse={true}
+                  />
+                </Grid>
+              </Grid>
+            ) : (
+              <Grid container p={2}>
+                <Typography color="textDisabled">
+                  Sem partidas a decorrer.
+                </Typography>
+              </Grid>
+            )}
           </FormCard>
           <ControlPage currentScreen={currentScreen}></ControlPage>
+
+          <CommonActions
+            handleNextMatch={handleNextMatch}
+            currentMatchId={getValues("match")}
+            nextMatchId={String(getNextMatchId(Number(getValues("match"))))}
+          ></CommonActions>
         </>
       ) : null}
       <MatchPickerModal
         handleModalClose={handleBracketModalClose}
         isModalOpen={isBracketModalOpen}
         matchesData={matchesData}
+        rounds={rounds}
+        watch={watch}
         setValue={setValue}
         bracketName={
           bracketsData?.find((item) => String(item.id) === watch("bracket"))

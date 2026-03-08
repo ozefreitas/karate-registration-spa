@@ -1,11 +1,34 @@
 import { Button, Grid } from "@mui/material";
-import { Send, Delete, NavigateNext } from "@mui/icons-material";
+import {
+  Send,
+  Delete,
+  NavigateNext,
+  NavigateBefore,
+} from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
+import { drawsHooks } from "../../hooks";
 
-export default function CommonActions() {
+export default function CommonActions(
+  props: Readonly<{
+    handleNextMatch: any;
+    currentMatchId: any;
+    nextMatchId: any;
+  }>,
+) {
+  const advanceMatch = drawsHooks.useAdvanceMatch();
   return (
     <FormCard title="Ações">
       <Grid size={12} container justifyContent="space-evenly">
+        <Button
+          sx={{ m: 1 }}
+          variant="contained"
+          size="large"
+          color="primary"
+          // onClick={() => props.handleNextMatch()}
+          startIcon={<NavigateBefore />}
+        >
+          Partida Anterior
+        </Button>
         <Button
           sx={{ m: 1 }}
           variant="contained"
@@ -35,10 +58,14 @@ export default function CommonActions() {
           variant="contained"
           size="large"
           color="primary"
-          //   onClick={() => {
-          //     sendPlayer2Name();
-          //   }}
-          startIcon={<NavigateNext />}
+          onClick={() => {
+            advanceMatch.mutate({
+              matchId: props.currentMatchId,
+              data: { next_match_id: props.nextMatchId },
+            });
+            props.handleNextMatch();
+          }}
+          endIcon={<NavigateNext />}
         >
           Próxima Partida
         </Button>

@@ -35,9 +35,6 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
       eventId: eventId!,
       data: {},
     });
-    console.log(data);
-    console.log(data instanceof Blob);
-    console.log(typeof data);
     if (data) {
       const url = globalThis.URL.createObjectURL(data.data);
       const link = document.createElement("a");

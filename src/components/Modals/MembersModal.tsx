@@ -259,7 +259,6 @@ export default function MembersModal(
   const patchMember = membersHooks.usePatchMemberData();
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     if (
       Object.entries(data)
         .filter(([key]) => key !== "chosen_category")

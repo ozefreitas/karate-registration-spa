@@ -1,4 +1,3 @@
-import CommonActions from "../../components/DisplayScreenComponents/CommonActions";
 import KataElimControl from "../ControlPages/KataElimControl";
 import KataFinalControl from "../ControlPages/KataFinalControl";
 import KataTeamControl from "../ControlPages/KataTeamControl";
@@ -25,7 +24,6 @@ export default function ControlPage(
       {props.currentScreen === "Kumite Equipa" ? (
         <KumiteTeamControl></KumiteTeamControl>
       ) : null}
-      <CommonActions></CommonActions>
     </>
   );
 }

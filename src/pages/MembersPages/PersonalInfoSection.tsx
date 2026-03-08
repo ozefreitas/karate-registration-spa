@@ -281,7 +281,6 @@ export default function PersonalInfoSection(
       };
       updateMember.mutate(updateData, {
         onSuccess: (data: any) => {
-          console.log(data);
           setValue("age", data.data.age);
           if (editField === "weight") {
             handleWeightModalOpen();

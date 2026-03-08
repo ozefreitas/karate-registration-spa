@@ -81,7 +81,6 @@ export default function MatchDetailCard({
   kataInfo,
   reverse,
 }: Readonly<MatchDetailCardProps>) {
-  console.log(matchInfo);
   return (
     <Grid container direction={"column"} gap={2} width={"100%"}>
       <InfoRow

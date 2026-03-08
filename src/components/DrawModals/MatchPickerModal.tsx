@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SectionHeader from "../Header/SectionHeader";
 import { RoundsOptions } from "../../config";
 import {
@@ -36,20 +36,25 @@ export default function MatchPickerModal(
     isModalOpen: boolean;
     handleModalClose: any;
     matchesData: any;
+    rounds: any;
     setValue: any;
+    watch: any;
     bracketName: string;
     changeMatch: any;
   }>,
 ) {
-  const [selectedMatchId, setSelectedMatchId] = useState<string>("");
-  const rounds = [
-    ...new Set(props.matchesData?.map((m: any) => m.round_number)),
-  ].sort((a: any, b: any) => b - a);
+  const [selectedMatchId, setSelectedMatchId] = useState<string>(
+    props.watch("match"),
+  );
+
+  useEffect(() => {
+    setSelectedMatchId(props.watch("match"));
+  }, [props.watch("match")]);
 
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       open={props.isModalOpen}
       onClose={props.handleModalClose}
       slots={{
@@ -83,21 +88,15 @@ export default function MatchPickerModal(
         <Grid
           container
           alignItems={"center"}
-          m={4}
+          m={6}
           mt={1}
           size={12}
           spacing={1}
           wrap="nowrap"
         >
-          {rounds.map((roundNumber: any, index: number) => (
+          {props.rounds.map((roundNumber: any, index: number) => (
             <Grid key={index} size={6} container sx={{ minWidth: 400 }}>
-              <Grid
-                size={10}
-                // sx={{ minWidth: 350 }}
-                container
-                spacing={4}
-                direction={"column"}
-              >
+              <Grid size={10} container spacing={4} direction={"column"}>
                 <Grid px={2} size={12} container alignItems={"center"}>
                   <SectionHeader
                     title={
@@ -115,11 +114,12 @@ export default function MatchPickerModal(
                       match.winner?.id === match.contender_2?.id &&
                       match.kataresult?.flags_contender_2! >
                         match.kataresult?.flags_contender_1!;
+                    const isOngoing = match.ongoing;
                     const matchFinished =
+                      !match.ongoing &&
                       match.kataresult?.flags_contender_2 != null &&
                       match.kataresult?.flags_contender_1 != null &&
                       match.winner !== null;
-                    console.log(is2Winner);
                     return (
                       <Grid
                         size={12}
@@ -132,13 +132,23 @@ export default function MatchPickerModal(
                         borderRadius={4}
                         bgcolor={"#d7ecfc"}
                         border={"1px solid #9dd3fc"}
+                        onClick={() => {
+                          if (match.id === selectedMatchId) {
+                            setSelectedMatchId("");
+                          } else {
+                            setSelectedMatchId(String(match.id));
+                          }
+                        }}
                         sx={{
                           transition: "0.3s",
+                          opacity: matchFinished ? "0.4" : 1,
                           "&:hover": {
-                            cursor: "pointer",
-                            transform: "translateY(-3px)",
-                            boxShadow: 6,
-                            borderColor: "#88cafc",
+                            cursor: matchFinished ? "default" : "pointer",
+                            transform: matchFinished
+                              ? "none"
+                              : "translateY(-3px)",
+                            boxShadow: matchFinished ? 0 : 6,
+                            borderColor: matchFinished ? "#9dd3fc" : "#88cafc",
                           },
                         }}
                       >
@@ -153,40 +163,42 @@ export default function MatchPickerModal(
                             contenderNumber={1}
                             isWinner={!is2Winner}
                             points={
-                              match.kataresult?.flags_contender_1 === 0 ||
                               match.kataresult === null
-                                ? 0
+                                ? 99
                                 : match.kataresult?.flags_contender_1
                             }
                             fullName={match.contender_1?.full_name}
+                            club={match.contender_1?.club}
                             isMatchFinished={matchFinished}
+                            ongoing={isOngoing}
                           ></SingleContenderCard>
                           <SingleContenderCard
                             roundNumber={roundNumber}
                             contenderNumber={2}
                             isWinner={is2Winner}
                             points={
-                              match.kataresult?.flags_contender_2 === 0 ||
                               match.kataresult === null
-                                ? 0
+                                ? 99
                                 : match.kataresult?.flags_contender_2
                             }
                             fullName={match.contender_2?.full_name}
+                            club={match.contender_2?.club}
                             isMatchFinished={matchFinished}
+                            ongoing={isOngoing}
                           ></SingleContenderCard>
                         </Grid>
                         <Grid size={2}>
                           <IconButton
+                            disabled={matchFinished}
                             onClick={() => {
                               if (match.id === selectedMatchId) {
                                 setSelectedMatchId("");
                               } else {
-                                setSelectedMatchId(match.id);
-                                props.setValue("match", match.id);
+                                setSelectedMatchId(String(match.id));
                               }
                             }}
                           >
-                            {selectedMatchId === match.id ? (
+                            {selectedMatchId === String(match.id) ? (
                               <CheckBox />
                             ) : (
                               <CheckBoxOutlineBlank />
@@ -230,6 +242,7 @@ export default function MatchPickerModal(
             variant="contained"
             onClick={() => {
               props.changeMatch(selectedMatchId);
+              props.setValue("match", selectedMatchId);
               props.handleModalClose();
             }}
           >

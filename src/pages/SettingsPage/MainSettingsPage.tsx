@@ -274,8 +274,6 @@ export default function MainSettingsPage() {
     isLoading: isMemberValidationRequestsLoading,
   } = membersHooks.useFetchMemberValidationRequestsData();
 
-  console.log(memberValidationRequestData);
-
   const deleteMemberValidationRequest =
     membersHooks.useDeleteMemberValidationRequest();
 

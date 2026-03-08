@@ -22,7 +22,6 @@ export const useAddDisciplineTeam = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (data: any) => {
-      // console.log(data);
       const errorData = data.response?.data || {};
       if (errorData.athletes?.[0]) {
         callNotiStack(enqueueSnackbar, errorData.athletes?.[0], "error");

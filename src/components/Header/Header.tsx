@@ -110,7 +110,7 @@ export default function Header(props: Readonly<{ me: any }>) {
     isLoading: isNotificationLoading,
     error: notificationError,
     refetch,
-  } = notificationsHooks.useFetchHomeClubNotifications();
+  } = notificationsHooks.useFetchHomeClubNotifications(props.me?.role);
 
   const [anchorElNotifications, setAnchorElNotifications] =
     React.useState<null | HTMLElement>(null);
