@@ -15,13 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import {
-  Clear,
-  EmojiEvents,
-  Settings,
-  Sports,
-  Visibility,
-} from "@mui/icons-material";
+import { Clear, Settings, Sports, Visibility } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -29,8 +23,23 @@ import MatchInfoModal from "../../components/DrawModals/MatchInfoModal";
 import SingleContenderCard from "../../components/DynamicView/SingleContenderCard";
 import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function DynamicViewPage() {
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const channel = new BroadcastChannel("match_updates");
+
+    channel.onmessage = (event) => {
+      if (event.data.type === "MATCH_UPDATED") {
+        queryClient.invalidateQueries({ queryKey: ["brackets"] });
+        queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      }
+    };
+
+    return () => channel.close();
+  }, []);
+
   const { id: eventId } = useParams();
   const [isMatchInfoModalOpen, setIsMatchInfoModalOpen] =
     useState<boolean>(false);
@@ -62,13 +71,15 @@ export default function DynamicViewPage() {
 
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
-    if (paramBracket === "" || watch("bracket") === "") {
+
+    console.log(paramBracket);
+    if (paramBracket === "" && watch("bracket") === "") {
       newParams.delete("bracket");
       setSearchParams(newParams);
     } else {
       setValue("bracket", paramBracket);
     }
-  }, [paramBracket, watch("bracket")]);
+  }, [paramBracket]);
 
   const handleModalOpen = (matchId: number, isEdit: boolean) => {
     setSelectedForInfo(matchId);

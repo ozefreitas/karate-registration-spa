@@ -30,12 +30,16 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import MatchPickerModal from "../../components/DrawModals/MatchPickerModal";
 import CommonActions from "../../components/DisplayScreenComponents/CommonActions";
 import InfoRow from "../../components/General/InfoRow";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function ResultsMainPage() {
+  const { enqueueSnackbar } = useSnackbar();
   const [isDisplayOpen, setIsDisplayOpen] = useState<boolean>(false);
   const [isBracketModalOpen, setIsBracketModalOpen] = useState<boolean>(false);
   const [currentScreen, setCurrentScreen] = useState<string>("");
   const displayWindowRef = useRef<Window | null>(null);
+  const dynamicWindowRef = useRef<Window | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -55,7 +59,7 @@ export default function ResultsMainPage() {
       return prev;
     });
   };
-  const testEventId = "test-20252026";
+  const testEventId = "3-jornada-liga-soshinkai-20252026";
 
   const handleBracketModalOpen = () => {
     setIsBracketModalOpen(true);
@@ -116,12 +120,30 @@ export default function ResultsMainPage() {
   }, [paramBracket, paramMatch]);
 
   const { data: bracketsData } = drawsHooks.useBracketsData(testEventId);
-  const {
-    data: matchesData,
-    isLoading: isMatchesLoading,
-    error: matchesError,
-    refetch,
-  } = drawsHooks.useEventMatchesData(watch("bracket"), testEventId);
+  const { data: matchesData, isLoading: isMatchesLoading } =
+    drawsHooks.useEventMatchesData(watch("bracket"), testEventId);
+
+  const hasSetOngoing = useRef(false);
+
+  // at first fetch, checks if there's any ongoing match for the selected bracket. If so, gets the id and set
+  // its value to the control, warning the user
+  useEffect(() => {
+    if (!matchesData || hasSetOngoing.current) return;
+
+    const ongoingMatch = matchesData.find((match) => match.ongoing);
+    const ongoingMatchId = ongoingMatch?.id ?? null;
+
+    if (ongoingMatchId !== null) {
+      setValue("match", String(ongoingMatchId));
+      callNotiStack(
+        enqueueSnackbar,
+        "Uma partida já estava a decorrer! Altere se necessário.",
+        "warning",
+      );
+    }
+
+    hasSetOngoing.current = true;
+  }, [matchesData]);
 
   const openDisplay = () => {
     if (!displayWindowRef.current || displayWindowRef.current.closed) {
@@ -203,6 +225,45 @@ export default function ResultsMainPage() {
       setSearchParams(newParams);
       setValue("match", String(nextId));
     }
+  };
+
+  const getPrevMatchId = (currentMatchId: number) => {
+    const orderedMatches = rounds.flatMap(
+      (roundNumber: any) =>
+        matchesData?.filter((m: any) => m.round_number === roundNumber) ?? [],
+    );
+
+    const currentIndex = orderedMatches.findIndex(
+      (m: any) => m.id === currentMatchId,
+    );
+
+    if (currentIndex <= 0) {
+      return null; // not found, or already at the first match
+    }
+
+    return orderedMatches[currentIndex - 1].id;
+  };
+
+  const openDynamicDrawPage = () => {
+    if (!dynamicWindowRef.current || dynamicWindowRef.current.closed) {
+      dynamicWindowRef.current = window.open(
+        `/events/${testEventId}/draw/dynamic_view/?bracket=${getValues("bracket")}`,
+        "_blank",
+        "width=1000,height=800",
+      );
+    } else {
+      dynamicWindowRef.current.focus();
+    }
+  };
+
+  const handlePrevMatch = () => {
+    const currentMatchId = getValues("match");
+    const prevId = getPrevMatchId(Number(currentMatchId));
+    if (prevId === null) return;
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("match", String(prevId));
+    setSearchParams(newParams);
+    setValue("match", String(prevId));
   };
 
   return (
@@ -356,6 +417,7 @@ export default function ResultsMainPage() {
             <Grid
               p={2}
               size={12}
+              spacing={2}
               container
               justifyContent={"space-between"}
               alignItems={"center"}
@@ -426,8 +488,19 @@ export default function ResultsMainPage() {
                 color="primary"
                 startIcon={<AdsClick></AdsClick>}
                 onClick={handleBracketModalOpen}
+                loading={isMatchesLoading}
               >
                 Selecionar Partida
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<OpenInNew />}
+                onClick={() => {
+                  openDynamicDrawPage();
+                }}
+              >
+                Abrir Sorteio completo
               </Button>
             </Grid>
           </FormCard>
@@ -530,8 +603,10 @@ export default function ResultsMainPage() {
 
           <CommonActions
             handleNextMatch={handleNextMatch}
+            handlePrevMatch={handlePrevMatch}
             currentMatchId={getValues("match")}
             nextMatchId={String(getNextMatchId(Number(getValues("match"))))}
+            prevMatchId={String(getPrevMatchId(Number(getValues("match"))))}
           ></CommonActions>
         </>
       ) : null}
@@ -542,6 +617,7 @@ export default function ResultsMainPage() {
         rounds={rounds}
         watch={watch}
         setValue={setValue}
+        getValues={getValues}
         bracketName={
           bracketsData?.find((item) => String(item.id) === watch("bracket"))
             ?.name!

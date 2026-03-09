@@ -24,7 +24,7 @@ import {
 } from "@mui/material";
 import fighttecLogo from "./../../assets/FightTecLogo-white-font-removebg-cropped.png";
 import skipLogo from "./../../assets/skip-logo.png";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import {
   NotificationsActive,

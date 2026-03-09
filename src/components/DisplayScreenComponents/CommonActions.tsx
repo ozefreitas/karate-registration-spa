@@ -11,11 +11,14 @@ import { drawsHooks } from "../../hooks";
 export default function CommonActions(
   props: Readonly<{
     handleNextMatch: any;
+    handlePrevMatch: any;
     currentMatchId: any;
     nextMatchId: any;
+    prevMatchId: any;
   }>,
 ) {
   const advanceMatch = drawsHooks.useAdvanceMatch();
+  const trackBackMatch = drawsHooks.useTrackBackMatch();
   return (
     <FormCard title="Ações">
       <Grid size={12} container justifyContent="space-evenly">
@@ -24,7 +27,20 @@ export default function CommonActions(
           variant="contained"
           size="large"
           color="primary"
-          // onClick={() => props.handleNextMatch()}
+          disabled={props.prevMatchId === "null"}
+          onClick={() => {
+            trackBackMatch.mutate(
+              {
+                matchId: props.currentMatchId,
+                data: { prev_match_id: props.prevMatchId },
+              },
+              {
+                onSuccess: () => {
+                  props.handlePrevMatch();
+                },
+              },
+            );
+          }}
           startIcon={<NavigateBefore />}
         >
           Partida Anterior
@@ -58,12 +74,19 @@ export default function CommonActions(
           variant="contained"
           size="large"
           color="primary"
+          // disabled={!props.hasNextMatch}
           onClick={() => {
-            advanceMatch.mutate({
-              matchId: props.currentMatchId,
-              data: { next_match_id: props.nextMatchId },
-            });
-            props.handleNextMatch();
+            advanceMatch.mutate(
+              {
+                matchId: props.currentMatchId,
+                data: { next_match_id: props.nextMatchId },
+              },
+              {
+                onSuccess: () => {
+                  props.handleNextMatch();
+                },
+              },
+            );
           }}
           endIcon={<NavigateNext />}
         >

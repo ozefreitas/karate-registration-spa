@@ -21,6 +21,7 @@ import {
   Sports,
 } from "@mui/icons-material";
 import SingleContenderCard from "../DynamicView/SingleContenderCard";
+import { drawsHooks } from "../../hooks";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -39,6 +40,7 @@ export default function MatchPickerModal(
     rounds: any;
     setValue: any;
     watch: any;
+    getValues: any;
     bracketName: string;
     changeMatch: any;
   }>,
@@ -50,6 +52,8 @@ export default function MatchPickerModal(
   useEffect(() => {
     setSelectedMatchId(props.watch("match"));
   }, [props.watch("match")]);
+
+  const patchOngoingMatch = drawsHooks.usePatchMatch();
 
   return (
     <Dialog
@@ -72,9 +76,15 @@ export default function MatchPickerModal(
             borderBottom: "1px solid #eeeeee",
           }}
         >
-          <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
-            Selecionar Partida de {props.bracketName}
-          </Typography>
+          <Grid>
+            <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
+              Selecionar Partida de {props.bracketName}
+            </Typography>
+            <Typography variant="body2">
+              Partida a amarelo é a que está a ser apresentada no ecrã num dado
+              momento.
+            </Typography>
+          </Grid>
           <IconButton
             size="small"
             onClick={props.handleModalClose}
@@ -110,6 +120,8 @@ export default function MatchPickerModal(
                 {props.matchesData
                   ?.filter((item: any) => item.round_number === roundNumber)
                   .map((match: any, index: number) => {
+                    const hasBothContenders =
+                      match.contender_1 !== null && match.contender_2 !== null;
                     const is2Winner =
                       match.winner?.id === match.contender_2?.id &&
                       match.kataresult?.flags_contender_2! >
@@ -133,7 +145,7 @@ export default function MatchPickerModal(
                         bgcolor={"#d7ecfc"}
                         border={"1px solid #9dd3fc"}
                         onClick={() => {
-                          if (match.id === selectedMatchId) {
+                          if (String(match.id) === selectedMatchId) {
                             setSelectedMatchId("");
                           } else {
                             setSelectedMatchId(String(match.id));
@@ -141,14 +153,23 @@ export default function MatchPickerModal(
                         }}
                         sx={{
                           transition: "0.3s",
-                          opacity: matchFinished ? "0.4" : 1,
+                          opacity:
+                            matchFinished || !hasBothContenders ? "0.4" : 1,
                           "&:hover": {
-                            cursor: matchFinished ? "default" : "pointer",
-                            transform: matchFinished
-                              ? "none"
-                              : "translateY(-3px)",
-                            boxShadow: matchFinished ? 0 : 6,
-                            borderColor: matchFinished ? "#9dd3fc" : "#88cafc",
+                            cursor:
+                              matchFinished || !hasBothContenders
+                                ? "default"
+                                : "pointer",
+                            transform:
+                              matchFinished || !hasBothContenders
+                                ? "none"
+                                : "translateY(-3px)",
+                            boxShadow:
+                              matchFinished || !hasBothContenders ? 0 : 6,
+                            borderColor:
+                              matchFinished || !hasBothContenders
+                                ? "#9dd3fc"
+                                : "#88cafc",
                           },
                         }}
                       >
@@ -189,9 +210,9 @@ export default function MatchPickerModal(
                         </Grid>
                         <Grid size={2}>
                           <IconButton
-                            disabled={matchFinished}
+                            disabled={matchFinished || !hasBothContenders}
                             onClick={() => {
-                              if (match.id === selectedMatchId) {
+                              if (String(match.id) === selectedMatchId) {
                                 setSelectedMatchId("");
                               } else {
                                 setSelectedMatchId(String(match.id));
@@ -241,8 +262,18 @@ export default function MatchPickerModal(
             color="info"
             variant="contained"
             onClick={() => {
-              props.changeMatch(selectedMatchId);
-              props.setValue("match", selectedMatchId);
+              patchOngoingMatch.mutate(
+                {
+                  matchId: Number(selectedMatchId),
+                  data: { ongoing: true },
+                },
+                {
+                  onSuccess: () => {
+                    props.changeMatch(selectedMatchId);
+                    props.setValue("match", selectedMatchId);
+                  },
+                },
+              );
               props.handleModalClose();
             }}
           >
@@ -252,7 +283,7 @@ export default function MatchPickerModal(
             sx={{ p: 1 }}
             size="small"
             onClick={() => {
-              props.setValue("match", "");
+              setSelectedMatchId(props.getValues("match"));
               props.handleModalClose();
             }}
           >

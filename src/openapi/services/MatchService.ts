@@ -8,7 +8,9 @@ import type { Match } from '../models/Match';
 import type { PatchedAdvanceMatch } from '../models/PatchedAdvanceMatch';
 import type { PatchedMatch } from '../models/PatchedMatch';
 import type { PatchedPatchMatchWinner } from '../models/PatchedPatchMatchWinner';
+import type { PatchedPreviousMatch } from '../models/PatchedPreviousMatch';
 import type { PatchMatchWinner } from '../models/PatchMatchWinner';
+import type { PreviousMatch } from '../models/PreviousMatch';
 import type { UpdateMatch } from '../models/UpdateMatch';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -153,6 +155,26 @@ export class MatchService {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/match/{id}/set_winner/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this match.
+     * @param requestBody
+     * @returns PreviousMatch
+     * @throws ApiError
+     */
+    public static matchTrackBackMatchPartialUpdate(
+        id: number,
+        requestBody?: PatchedPreviousMatch,
+    ): CancelablePromise<PreviousMatch> {
+        return __request(OpenAPI, {
+            method: 'PATCH',
+            url: '/match/{id}/track_back_match/',
             path: {
                 'id': id,
             },

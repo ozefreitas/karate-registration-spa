@@ -106,6 +106,7 @@ export type { PatchedPatchMatchWinner } from './models/PatchedPatchMatchWinner';
 export type { PatchedPatchMemberValidationRequest } from './models/PatchedPatchMemberValidationRequest';
 export type { PatchedPatchMonthlyPersonPayment } from './models/PatchedPatchMonthlyPersonPayment';
 export type { PatchedPersons } from './models/PatchedPersons';
+export type { PatchedPreviousMatch } from './models/PatchedPreviousMatch';
 export type { PatchedRequestedAcount } from './models/PatchedRequestedAcount';
 export type { PatchedTeams } from './models/PatchedTeams';
 export type { PatchedUpdateClubSubscriptionAmount } from './models/PatchedUpdateClubSubscriptionAmount';
@@ -117,6 +118,7 @@ export type { PatchMonthlyPersonPayment } from './models/PatchMonthlyPersonPayme
 export { PaymentObjectEnum } from './models/PaymentObjectEnum';
 export type { Persons } from './models/Persons';
 export type { PersonsPaymentsStatus } from './models/PersonsPaymentsStatus';
+export type { PreviousMatch } from './models/PreviousMatch';
 export type { Rating } from './models/Rating';
 export type { RegisterUser } from './models/RegisterUser';
 export type { RequestedAcount } from './models/RequestedAcount';
