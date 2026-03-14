@@ -1,9 +1,10 @@
 import { Controller, useForm } from "react-hook-form";
 import FormCard from "../../dashboard/FormCard";
-import { Grid, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField, MenuItem } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useEffect, useRef } from "react";
 import { useSnackbar } from "notistack";
+import { KataOptions } from "../../config";
 
 export default function KataFinalControl() {
   const socketRef = useRef<WebSocket | null>(null);
@@ -36,7 +37,7 @@ export default function KataFinalControl() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      player1Name: "",
+      playerKata: "",
       points1: undefined,
       points2: undefined,
       points3: undefined,
@@ -45,15 +46,15 @@ export default function KataFinalControl() {
     },
   });
 
-  const sendPlayer1Name = () => {
-    if (watch("player1Name") === "") {
-      setError("player1Name", { message: "Este campo é obrigatório" });
+  const sendPlayerKata = () => {
+    if (watch("playerKata") === "") {
+      setError("playerKata", { message: "Este campo é obrigatório" });
     } else if (
       socketRef.current &&
       socketRef.current.readyState === WebSocket.OPEN
     ) {
       socketRef.current.send(
-        JSON.stringify({ player1Name: watch("player1Name") }),
+        JSON.stringify({ playerKata: watch("playerKata") }),
       );
     }
   };
@@ -112,25 +113,37 @@ export default function KataFinalControl() {
   };
 
   return (
-    <FormCard title="Controles de Final Kata Individual">
-      <Grid sx={{ p: 2 }} size={10}>
+    <Grid container>
+      <Grid p={2} size={10}>
         <Controller
-          name="player1Name"
+          name="playerKata"
           control={control}
           render={({ field }) => (
             <TextField
               color="warning"
               variant={"outlined"}
-              label="Nome Competidor"
+              label="Kata Competidor 1"
               fullWidth
+              select
               {...field}
               onChange={(e) => {
                 field.onChange(e);
                 clearErrors();
               }}
-              error={!!errors.player1Name}
-              helperText={errors.player1Name?.message}
-            />
+              error={!!errors.playerKata}
+              helperText={errors.playerKata?.message}
+            >
+              <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                -- Selecionar --
+              </MenuItem>
+              {KataOptions.filter((item) => item.value !== "none").map(
+                (item, index) => (
+                  <MenuItem key={index} value={item.label}>
+                    {item.label}
+                  </MenuItem>
+                ),
+              )}
+            </TextField>
           )}
         />
       </Grid>
@@ -141,14 +154,20 @@ export default function KataFinalControl() {
           size="large"
           color="success"
           onClick={() => {
-            sendPlayer1Name();
+            sendPlayerKata();
           }}
           startIcon={<Add />}
         >
           Enviar
         </Button>
       </Grid>
-      <Grid container p={2} spacing={2} alignItems={"center"} justifyContent={"space-between"}>
+      <Grid
+        container
+        p={2}
+        spacing={2}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+      >
         <Grid size={1.5}>
           <Controller
             name="points1"
@@ -287,6 +306,6 @@ export default function KataFinalControl() {
           </Button>
         </Grid>
       </Grid>
-    </FormCard>
+    </Grid>
   );
 }

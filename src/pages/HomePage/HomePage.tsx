@@ -41,8 +41,9 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           {props.userRole === "technician" ? (
             <>
               Contas técnicas apenas têm acesso ao monitor de resultados.
-              Carregue <a href="/results_display/">aqui</a> ou remeta à barra
-              lateral para aceder a esse ecrã.
+              Carregue <a href="/events/">aqui</a> ou remeta à barra lateral
+              para aceder à listagem de Eventos. Apenas o Evento que estiver a
+              decorrer no dia de hoje irão aparecer na lista.
             </>
           ) : (
             <>

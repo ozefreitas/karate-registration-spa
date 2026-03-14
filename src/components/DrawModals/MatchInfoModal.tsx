@@ -282,7 +282,19 @@ export default function MatchInfoModal(
                 size="small"
                 color="warning"
                 variant="contained"
-                // onClick={() => handleSubmit(onSubmit)()}
+                onClick={() => {
+                  reset();
+                  if (props.matchData.winner === null) {
+                    setSelectedWinner("");
+                  } else {
+                    setSelectedWinner(
+                      props.matchData.winner.id ===
+                        props.matchData.contender_1.id
+                        ? "SHIRO"
+                        : "AKA",
+                    );
+                  }
+                }}
               >
                 Reverter
               </Button>

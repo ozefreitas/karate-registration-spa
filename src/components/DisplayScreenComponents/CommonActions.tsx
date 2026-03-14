@@ -21,9 +21,14 @@ export default function CommonActions(
   const trackBackMatch = drawsHooks.useTrackBackMatch();
   return (
     <FormCard title="Ações">
-      <Grid size={12} container justifyContent="space-evenly">
+      <Grid
+        size={12}
+        container
+        justifyContent="space-evenly"
+        mb={1}
+        alignItems={"center"}
+      >
         <Button
-          sx={{ m: 1 }}
           variant="contained"
           size="large"
           color="primary"
@@ -74,7 +79,7 @@ export default function CommonActions(
           variant="contained"
           size="large"
           color="primary"
-          // disabled={!props.hasNextMatch}
+          disabled={props.nextMatchId === "null"}
           onClick={() => {
             advanceMatch.mutate(
               {

@@ -13,7 +13,7 @@ export default function KataFinal(props: Readonly<{ matchType: string }>) {
   });
   const [minIndex, setMinIndex] = useState<string>("");
   const [maxIndex, setMaxIndex] = useState<string>("");
-  const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
+  const [playerKata, setPlayerKata] = useState<string>("KATA NAME");
   const [tatami, setTatami] = useState<string>("");
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export default function KataFinal(props: Readonly<{ matchType: string }>) {
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.player1Name) {
-        setPlayer1Name(data.player1Name);
+      if (data.playerKata) {
+        setPlayerKata(data.playerKata);
       }
       if (data.ponctuation) {
         setPonctuation(data.ponctuation);
@@ -86,7 +86,7 @@ export default function KataFinal(props: Readonly<{ matchType: string }>) {
           >
             <Grid>
               <Typography sx={{ m: 3, mb: 0, ml: 5 }} variant="h3">
-                {player1Name}
+                NOEM HUAIHB UGUVI
               </Typography>
             </Grid>
             {props.matchType !== "team" ? (
@@ -101,7 +101,7 @@ export default function KataFinal(props: Readonly<{ matchType: string }>) {
             ) : null}
             <Grid>
               <Typography sx={{ mt: 4, ml: 5 }} variant="h3">
-                NOME DO KATA
+                {playerKata}
               </Typography>
             </Grid>
           </Grid>

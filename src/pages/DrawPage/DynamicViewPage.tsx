@@ -12,10 +12,17 @@ import {
   ListItemText,
   MenuItem,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import { Clear, Settings, Sports, Visibility } from "@mui/icons-material";
+import {
+  Clear,
+  LiveTv,
+  Settings,
+  Sports,
+  Visibility,
+} from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -25,7 +32,7 @@ import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function DynamicViewPage() {
+export default function DynamicViewPage(props: { userRole: string }) {
   const queryClient = useQueryClient();
   useEffect(() => {
     const channel = new BroadcastChannel("match_updates");
@@ -102,6 +109,8 @@ export default function DynamicViewPage() {
   const rounds = [...new Set(matchesData?.map((m) => m.round_number))].sort(
     (a, b) => b - a,
   );
+
+  const patchOngoingMatch = drawsHooks.usePatchMatch();
   return (
     <>
       <PageInfoCard
@@ -172,7 +181,7 @@ export default function DynamicViewPage() {
         </Grid>
       </FormCard>
       {isMatchesLoading ? (
-        <Grid mt={3} container size={12} justifyContent={"center"}>
+        <Grid mt={5} container size={12} justifyContent={"center"}>
           <CircularProgress />
         </Grid>
       ) : matchesError ? (
@@ -187,7 +196,7 @@ export default function DynamicViewPage() {
           <Grid
             container
             alignItems={"center"}
-            m={6}
+            m={7}
             size={12}
             spacing={2}
             wrap="nowrap"
@@ -261,7 +270,8 @@ export default function DynamicViewPage() {
                                 contenderNumber={1}
                                 isWinner={!is2Winner}
                                 points={
-                                  match.kataresult === null
+                                  match.kataresult === null ||
+                                  match.kataresult?.flags_contender_1 === 0
                                     ? 99
                                     : match.kataresult?.flags_contender_1
                                 }
@@ -275,7 +285,8 @@ export default function DynamicViewPage() {
                                 contenderNumber={2}
                                 isWinner={is2Winner}
                                 points={
-                                  match.kataresult === null
+                                  match.kataresult === null ||
+                                  match.kataresult?.flags_contender_2 === 0
                                     ? 99
                                     : match.kataresult?.flags_contender_2
                                 }
@@ -297,26 +308,67 @@ export default function DynamicViewPage() {
                               alignContent={"space-evenly"}
                               minWidth={50}
                             >
-                              <IconButton
-                                size="small"
-                                onClick={() => {
-                                  handleModalOpen(match.id, true);
-                                }}
-                              >
-                                <Settings />
-                              </IconButton>
-                              <IconButton
-                                size="small"
-                                // disabled={
-                                //   match.kataresult === null ||
-                                //   match.winner === null
-                                // }
-                                onClick={() => {
-                                  handleModalOpen(match.id, false);
-                                }}
-                              >
-                                <Visibility />
-                              </IconButton>
+                              {["subed_club", "free_club"].includes(
+                                props.userRole,
+                              ) ? null : (
+                                <>
+                                  <Tooltip
+                                    title="Fazer Alterações"
+                                    placement="top"
+                                  >
+                                    <span>
+                                      <IconButton
+                                        size="small"
+                                        onClick={() => {
+                                          handleModalOpen(match.id, true);
+                                        }}
+                                      >
+                                        <Settings />
+                                      </IconButton>
+                                    </span>
+                                  </Tooltip>
+                                  <Tooltip
+                                    title={
+                                      match.ongoing
+                                        ? "Já está em Direto"
+                                        : "Pôr em Direto"
+                                    }
+                                    placement="right"
+                                  >
+                                    <span>
+                                      <IconButton
+                                        size="small"
+                                        disabled={match.ongoing}
+                                        onClick={() => {
+                                          patchOngoingMatch.mutate({
+                                            matchId: Number(match.id),
+                                            data: { ongoing: true },
+                                          });
+                                        }}
+                                      >
+                                        <LiveTv />
+                                      </IconButton>
+                                    </span>
+                                  </Tooltip>
+                                </>
+                              )}
+
+                              <Tooltip title="Consultar">
+                                <span>
+                                  <IconButton
+                                    size="small"
+                                    // disabled={
+                                    //   match.kataresult === null ||
+                                    //   match.winner === null
+                                    // }
+                                    onClick={() => {
+                                      handleModalOpen(match.id, false);
+                                    }}
+                                  >
+                                    <Visibility />
+                                  </IconButton>
+                                </span>
+                              </Tooltip>
                             </Grid>
                           </Grid>
                         </Grid>

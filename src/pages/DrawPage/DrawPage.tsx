@@ -136,7 +136,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
               </>
             ) : (
               <Button
-                color="primary"
+                color="secondary"
                 variant="contained"
                 disabled={bracketsData?.length === 0}
                 startIcon={<Feedback></Feedback>}

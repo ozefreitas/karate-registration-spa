@@ -3,40 +3,30 @@ import Comp1Score from "../../components/DisplayScreenComponents/Scores/Comp1Sco
 import Comp2Score from "../../components/DisplayScreenComponents/Scores/Comp2Score";
 import MatchTypeInfo from "../../components/DisplayScreenComponents/MatchTypeInfo";
 import { useState, useEffect } from "react";
+import { KataOptions } from "../../config";
+import { useDisplaySocket } from "./useDisplaySocket";
 
 export default function CompetitorCard(props: Readonly<{ match: string }>) {
   const [akaScore, setAkaScore] = useState<number | undefined>(undefined);
   const [winner, setWinner] = useState({ aka: false, shiro: false });
-
-  console.log(winner, setAkaScore, props.match);
-  
   const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
+  const [player1Club, setPlayer1Club] = useState<string>("CLUBE COMPETIDOR 1");
+  const [player2Club, setPlayer2Club] = useState<string>("CLUBE COMPETIDOR 2");
+  const [player1Kata, setPlayer1Kata] = useState<string>("KATA COMPETIDOR 1");
+  const [player2Kata, setPlayer2Kata] = useState<string>("KATA COMPETIDOR 2");
+  const [tatami, setTatami] = useState<string>("0");
 
-  useEffect(() => {
-    let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
-
-    // Remove protocol prefix (http:// or https://)
-    baseURL = baseURL.replace(/^https?:\/\//, "");
-
-    // Detect the correct protocol
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-
-    // Construct the full WebSocket URL
-    const socket = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.player1Name) {
-        setPlayer1Name(data.player1Name);
-      }
-      if (data.player2Name) {
-        setPlayer2Name(data.player2Name);
-      }
-    };
-
-    return () => socket.close();
-  }, []);
+  useDisplaySocket((data) => {
+    console.log(data);
+    if (data.player1Name) setPlayer1Name(data.player1Name);
+    if (data.player2Name) setPlayer2Name(data.player2Name);
+    if (data.player1Club) setPlayer1Club(data.player1Club);
+    if (data.player2Club) setPlayer2Club(data.player2Club);
+    if (data.player1Kata) setPlayer1Kata(data.player1Kata);
+    if (data.player2Kata) setPlayer2Kata(data.player2Kata);
+    if (data.tatami) setTatami(data.tatami);
+  });
 
   useEffect(() => {
     if (akaScore !== undefined && akaScore < 3) {
@@ -58,7 +48,10 @@ export default function CompetitorCard(props: Readonly<{ match: string }>) {
 
   return (
     <>
-      <MatchTypeInfo matchType="Kata Individual" tatami="1"></MatchTypeInfo>
+      <MatchTypeInfo
+        matchType="Kata Individual"
+        tatami={tatami}
+      ></MatchTypeInfo>
       <Grid
         container
         size={12}
@@ -92,12 +85,13 @@ export default function CompetitorCard(props: Readonly<{ match: string }>) {
               001
             </Typography>
             <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-              <i>AKFAFE</i>
+              <i>{player1Club}</i>
             </Typography>
           </Grid>
           <Grid>
             <Typography sx={{ mt: 1, ml: 5 }} variant="h4">
-              NOME DO KATA
+              {KataOptions.find((item) => item.value === player1Kata)?.label ??
+                "KATA COMPETIDOR 1"}
             </Typography>
           </Grid>
           <Comp1Score id="aka" winner={true}></Comp1Score>
@@ -121,7 +115,7 @@ export default function CompetitorCard(props: Readonly<{ match: string }>) {
           </Grid>
           <Grid container justifyContent="flex-end">
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
-              <i>AKFAFE</i>
+              <i>{player2Club}</i>
             </Typography>
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
               002
@@ -129,7 +123,8 @@ export default function CompetitorCard(props: Readonly<{ match: string }>) {
           </Grid>
           <Grid container justifyContent="flex-end">
             <Typography sx={{ mt: 1, mr: 5, color: "black" }} variant="h4">
-              NOME DO KATA
+              {KataOptions.find((item) => item.value === player2Kata)?.label ??
+                "KATA COMPETIDOR 2"}
             </Typography>
           </Grid>
           <Comp2Score id="shiro" winner={false}></Comp2Score>

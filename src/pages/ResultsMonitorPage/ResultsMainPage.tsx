@@ -5,8 +5,6 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
-  Paper,
-  Box,
   Typography,
   Chip,
 } from "@mui/material";
@@ -17,6 +15,7 @@ import {
   Clear,
   AdsClick,
   Person,
+  Send,
 } from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
@@ -25,16 +24,18 @@ import { Controller, useForm } from "react-hook-form";
 import { MatchTypeOptions } from "../../config";
 import { drawsHooks } from "../../hooks";
 import FormCard from "../../dashboard/FormCard";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import MatchPickerModal from "../../components/DrawModals/MatchPickerModal";
 import CommonActions from "../../components/DisplayScreenComponents/CommonActions";
 import InfoRow from "../../components/General/InfoRow";
 import { callNotiStack } from "../../utils/utils";
 import { useSnackbar } from "notistack";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ResultsMainPage() {
   const { enqueueSnackbar } = useSnackbar();
+  const { id: eventId } = useParams();
   const [isDisplayOpen, setIsDisplayOpen] = useState<boolean>(false);
   const [isBracketModalOpen, setIsBracketModalOpen] = useState<boolean>(false);
   const [currentScreen, setCurrentScreen] = useState<string>("");
@@ -59,7 +60,6 @@ export default function ResultsMainPage() {
       return prev;
     });
   };
-  const testEventId = "3-jornada-liga-soshinkai-20252026";
 
   const handleBracketModalOpen = () => {
     setIsBracketModalOpen(true);
@@ -69,20 +69,47 @@ export default function ResultsMainPage() {
     setIsBracketModalOpen(false);
   };
 
+  const queryClient = useQueryClient();
   useEffect(() => {
+    const channel = new BroadcastChannel("match_updates");
+
+    channel.onmessage = (event) => {
+      if (event.data.type === "MATCH_UPDATED") {
+        queryClient.invalidateQueries({ queryKey: ["brackets"] });
+        queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      }
+    };
+
+    return () => channel.close();
+  }, []);
+
+  useEffect(() => {
+    if (
+      socketRef.current?.readyState === WebSocket.OPEN ||
+      socketRef.current?.readyState === WebSocket.CONNECTING
+    ) {
+      return;
+    }
+
     let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
-
-    // Remove protocol prefix (http:// or https://)
     baseURL = baseURL.replace(/^https?:\/\//, "");
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 
-    // Detect the correct protocol
-    const protocol = globalThis.location.protocol === "https:" ? "wss" : "ws";
-
-    // Construct the full WebSocket URL
     socketRef.current = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);
+
+    socketRef.current.onopen = () => console.log("WS connected");
+    socketRef.current.onerror = (e) => console.error("WS error", e);
+
+    socketRef.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "DISPLAY_READY") {
+        sendMatchState();
+      }
+    };
 
     return () => {
       socketRef.current?.close();
+      socketRef.current = null;
     };
   }, []);
 
@@ -103,6 +130,8 @@ export default function ResultsMainPage() {
     },
   });
 
+  const selectedMatchRef = useRef(watch("match"));
+
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
     if (paramBracket === "" || watch("bracket") === "") {
@@ -119,9 +148,15 @@ export default function ResultsMainPage() {
     }
   }, [paramBracket, paramMatch]);
 
-  const { data: bracketsData } = drawsHooks.useBracketsData(testEventId);
+  const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
   const { data: matchesData, isLoading: isMatchesLoading } =
-    drawsHooks.useEventMatchesData(watch("bracket"), testEventId);
+    drawsHooks.useEventMatchesData(watch("bracket"), eventId!);
+
+  const matchesDataRef = useRef(matchesData);
+
+  useEffect(() => {
+    matchesDataRef.current = matchesData;
+  }, [matchesData]);
 
   const hasSetOngoing = useRef(false);
 
@@ -150,7 +185,7 @@ export default function ResultsMainPage() {
       displayWindowRef.current = window.open(
         "/display_panel/",
         "_blank",
-        "width=1000,height=800",
+        "width=800,height=600",
       );
       setIsDisplayOpen(true);
     } else {
@@ -180,6 +215,34 @@ export default function ResultsMainPage() {
     ) {
       socketRef.current.send(JSON.stringify({ tatami: tatami }));
     }
+  };
+
+  useEffect(() => {
+    matchesDataRef.current = matchesData;
+  }, [matchesData]);
+
+  useEffect(() => {
+    selectedMatchRef.current = watch("match");
+  }, [watch("match")]);
+
+  const sendMatchState = () => {
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
+      return;
+
+    const currentMatch = matchesDataRef.current?.find(
+      (item) => String(item.id) === selectedMatchRef.current,
+    );
+
+    socketRef.current.send(
+      JSON.stringify({
+        player1Name: currentMatch?.contender_1?.full_name,
+        player2Name: currentMatch?.contender_2?.full_name,
+        player1Club: currentMatch?.contender_1?.club,
+        player2Club: currentMatch?.contender_2?.club,
+        player1Kata: currentMatch?.kataresult?.kata_contender_1,
+        player2Kata: currentMatch?.kataresult?.kata_contender_2,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -247,7 +310,7 @@ export default function ResultsMainPage() {
   const openDynamicDrawPage = () => {
     if (!dynamicWindowRef.current || dynamicWindowRef.current.closed) {
       dynamicWindowRef.current = window.open(
-        `/events/${testEventId}/draw/dynamic_view/?bracket=${getValues("bracket")}`,
+        `/events/${eventId!}/draw/dynamic_view/?bracket=${getValues("bracket")}`,
         "_blank",
         "width=1000,height=800",
       );
@@ -298,7 +361,6 @@ export default function ResultsMainPage() {
             )}
           />
         </Grid>
-
         <Grid size={12}>
           <Button
             sx={{ m: 2 }}
@@ -328,7 +390,7 @@ export default function ResultsMainPage() {
                   label="Tatami"
                   type="number"
                   required={isDisplayOpen}
-                  disabled={!isDisplayOpen}
+                  disabled={!isDisplayOpen || currentScreen === ""}
                   fullWidth
                   {...field}
                   onChange={(e) => {
@@ -352,7 +414,7 @@ export default function ResultsMainPage() {
               variant="contained"
               size="large"
               color="success"
-              disabled={!isDisplayOpen}
+              disabled={!isDisplayOpen || currentScreen === ""}
               onClick={() => {
                 sendTatami();
               }}
@@ -361,51 +423,6 @@ export default function ResultsMainPage() {
               Enviar
             </Button>
           </Grid>
-        </Grid>
-        <Grid
-          size={12}
-          container
-          justifyContent={"space-evenly"}
-          spacing={3}
-          m={2}
-        >
-          <Grid container justifyContent={"center"} size={3}>
-            <Button
-              variant="contained"
-              disabled={!isDisplayOpen}
-              color="primary"
-              startIcon={isDisplayOpen ? <CloseFullscreen /> : <OpenInNew />}
-              onClick={() => {
-                if (isDisplayOpen) {
-                  navigateDisplay("");
-                }
-              }}
-            >
-              Abrir Screen Saver
-            </Button>
-          </Grid>
-          {MatchTypeOptions.map(
-            (match: { label: string; value: string }, index: any) => (
-              <Grid container size={3} key={index} justifyContent={"center"}>
-                <Button
-                  variant="contained"
-                  disabled={!isDisplayOpen}
-                  color="primary"
-                  startIcon={
-                    isDisplayOpen ? <CloseFullscreen /> : <OpenInNew />
-                  }
-                  onClick={() => {
-                    if (isDisplayOpen) {
-                      setCurrentScreen(match.label);
-                      navigateDisplay(match.value);
-                    }
-                  }}
-                >
-                  Abrir {match.label}
-                </Button>
-              </Grid>
-            ),
-          )}
         </Grid>
       </FormAccordion>
       {isDisplayOpen ? (
@@ -422,7 +439,7 @@ export default function ResultsMainPage() {
               justifyContent={"space-between"}
               alignItems={"center"}
             >
-              <Grid size={9}>
+              <Grid size={6}>
                 <Controller
                   name="bracket"
                   control={control}
@@ -482,125 +499,101 @@ export default function ResultsMainPage() {
                   )}
                 />
               </Grid>
-              <Button
-                variant="contained"
-                disabled={watch("bracket") === "" || isMatchesLoading}
-                color="primary"
-                startIcon={<AdsClick></AdsClick>}
-                onClick={handleBracketModalOpen}
-                loading={isMatchesLoading}
-              >
-                Selecionar Partida
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<OpenInNew />}
-                onClick={() => {
-                  openDynamicDrawPage();
-                }}
-              >
-                Abrir Sorteio completo
-              </Button>
+              <Grid container size={6} gap={5} justifyContent={"flex-end"}>
+                <Button
+                  variant="contained"
+                  disabled={watch("bracket") === "" || isMatchesLoading}
+                  color="primary"
+                  startIcon={<AdsClick></AdsClick>}
+                  onClick={handleBracketModalOpen}
+                  loading={isMatchesLoading}
+                >
+                  Selecionar Partida
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  startIcon={<OpenInNew />}
+                  onClick={() => {
+                    openDynamicDrawPage();
+                  }}
+                >
+                  Abrir Sorteio completo
+                </Button>
+              </Grid>
             </Grid>
           </FormCard>
           <FormCard
-            title="A decorrer"
-            subheader="Veja a partida que está a decorrer neste momento."
+            title="Selecionar Ecrã"
+            subheader="Selecione um Escalão para poder selecionar o ecrã respetivo."
           >
-            {matchesData?.find((item) => String(item.id) === watch("match"))
-              ?.contender_1 !== null &&
-            matchesData?.find((item) => String(item.id) === watch("match"))
-              ?.contender_2 !== null &&
-            watch("bracket") !== "" &&
-            watch("match") !== "" ? (
-              <Grid p={2} container size={12} spacing={5}>
-                <Grid container size={6}>
-                  <InfoRow
-                    color={"Shiro"}
-                    icon={<Person />}
-                    value={
-                      <Grid
-                        container
-                        columnGap={2}
-                        rowGap={1}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                      >
-                        <Typography fontWeight={700}>
-                          {matchesData?.find(
-                            (item) => String(item.id) === watch("match"),
-                          )?.contender_1?.full_name ?? "N/A"}
-                        </Typography>
-                        <Chip
-                          size="small"
-                          label={`${
-                            matchesData?.find(
-                              (item) => String(item.id) === watch("match"),
-                            )?.contender_1?.age ?? "N/A"
-                          } anos`}
-                        ></Chip>
-                        <Chip
-                          size="small"
-                          label={
-                            matchesData?.find(
-                              (item) => String(item.id) === watch("match"),
-                            )?.contender_1?.club ?? "N/A"
-                          }
-                        ></Chip>
-                      </Grid>
+            <Grid
+              size={12}
+              container
+              justifyContent={"space-between"}
+              columnSpacing={5}
+              rowSpacing={3}
+              m={2}
+              mb={3}
+            >
+              <Grid container justifyContent={"center"}>
+                <Button
+                  variant={currentScreen === "" ? "contained" : "outlined"}
+                  color="primary"
+                  startIcon={
+                    currentScreen === "" ? <CloseFullscreen /> : <OpenInNew />
+                  }
+                  onClick={() => {
+                    if (isDisplayOpen) {
+                      navigateDisplay("");
+                      setCurrentScreen("");
                     }
-                  />
-                </Grid>
-                <Grid container size={6}>
-                  <InfoRow
-                    color={"Aka"}
-                    icon={<Person />}
-                    value={
-                      <Grid
-                        container
-                        columnGap={2}
-                        rowGap={1}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                      >
-                        <Typography fontWeight={700}>
-                          {matchesData?.find(
-                            (item) => String(item.id) === watch("match"),
-                          )?.contender_2?.full_name ?? "N/A"}
-                        </Typography>
-                        <Chip
-                          size="small"
-                          label={`${
-                            matchesData?.find(
-                              (item) => String(item.id) === watch("match"),
-                            )?.contender_2?.age ?? "N/A"
-                          } anos`}
-                        ></Chip>
-                        <Chip
-                          size="small"
-                          label={
-                            matchesData?.find(
-                              (item) => String(item.id) === watch("match"),
-                            )?.contender_2?.club ?? "N/A"
-                          }
-                        ></Chip>
-                      </Grid>
-                    }
-                    reverse={true}
-                  />
-                </Grid>
+                  }}
+                >
+                  Screen Saver
+                </Button>
               </Grid>
-            ) : (
-              <Grid container p={2}>
-                <Typography color="textDisabled">
-                  Sem partidas a decorrer.
-                </Typography>
-              </Grid>
-            )}
+              {MatchTypeOptions.map(
+                (match: { label: string; value: string }, index: any) => (
+                  <Grid container key={index} justifyContent={"center"}>
+                    <Button
+                      variant={
+                        currentScreen === match.label ? "contained" : "outlined"
+                      }
+                      disabled={watch("bracket") === ""}
+                      color="primary"
+                      startIcon={
+                        currentScreen === match.label ? (
+                          <CloseFullscreen />
+                        ) : (
+                          <OpenInNew />
+                        )
+                      }
+                      onClick={() => {
+                        if (isDisplayOpen) {
+                          setCurrentScreen(match.label);
+                          navigateDisplay(match.value);
+                        }
+                      }}
+                    >
+                      {match.label}
+                    </Button>
+                  </Grid>
+                ),
+              )}
+            </Grid>
           </FormCard>
-          <ControlPage currentScreen={currentScreen}></ControlPage>
-
+          <ControlPage
+            currentScreen={currentScreen}
+            currentMatch={matchesData?.find(
+              (item) => String(item.id) === watch("match"),
+            )}
+            matchesData={matchesData}
+            handleBracketModalOpen={handleBracketModalOpen}
+            isMatchesLoading={isMatchesLoading}
+            sendMatchState={sendMatchState}
+            watch={watch}
+          ></ControlPage>
           <CommonActions
             handleNextMatch={handleNextMatch}
             handlePrevMatch={handlePrevMatch}

@@ -7,7 +7,7 @@ export const useFetchHomeClubNotifications = (userRole: string) => {
     queryFn: ClubNotificationsService.clubNotificationsRetrieve,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !["technician", "free_club"].includes(userRole),
+    enabled: !!userRole && !["technician", "free_club"].includes(userRole),
   });
 };
 

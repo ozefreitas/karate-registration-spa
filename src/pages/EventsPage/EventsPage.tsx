@@ -124,6 +124,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("has_teams"),
     filtersWatch("has_categories"),
     filtersWatch("has_registrations"),
+    undefined,
+    undefined,
+    // props.userRole === "technician" ? true : undefined,
   );
 
   const infoCard: ReactNode =
@@ -135,6 +138,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         informação relevante sobre esse Evento, assim como os passos para
         inscrever os seus Membros.
       </>
+    ) : props.userRole === "technician" ? (
+      <>A lista de Eventos que estão a decorrer neste momento (hoje).</>
     ) : (
       <>
         Aqui poderá consultar todos os Eventos disponíveis no momento. Mais
@@ -173,7 +178,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
               alignItems={"center"}
               pl={1}
             >
-              {currentView === "list" ? (
+              {props.userRole === "technician" ? null : currentView ===
+                "list" ? (
                 <EventsOrdering
                   isLoading={isEventsDataLoading}
                   control={orderControl}
@@ -184,69 +190,77 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                   setOrderFields={setOrderFields}
                 ></EventsOrdering>
               ) : null}
-              <EventsFilters
-                isLoading={isEventsDataLoading}
-                control={filtersControl}
-                reset={filtersReset}
-                errors={filtersErrors}
-                changedCount={filtersChangedCount}
-              ></EventsFilters>
-              <Grid pl={2} container spacing={1} borderRadius={3}>
-                <Tooltip placement="top" title={"Vista de Lista"}>
-                  <span>
-                    <IconButton
-                      size="large"
-                      onClick={() => setCurrentView("list")}
-                      sx={{
-                        borderRadius: 3,
-                        border: 1,
-                        bgcolor:
-                          currentView === "list" ? "#1976d2;" : undefined,
-                        "&:hover": { bgcolor: "#1976d2" },
-                      }}
-                      color="info"
-                    >
-                      <Subject
-                        sx={{
-                          color: currentView === "list" ? "white" : undefined,
-                        }}
-                      ></Subject>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                {[undefined, "free_club"].includes(props.userRole) ? null : (
-                  <Tooltip placement="top" title={"Vista de Calendário"}>
+              {props.userRole === "technician" ? null : (
+                <EventsFilters
+                  isLoading={isEventsDataLoading}
+                  control={filtersControl}
+                  reset={filtersReset}
+                  errors={filtersErrors}
+                  changedCount={filtersChangedCount}
+                ></EventsFilters>
+              )}
+              {props.userRole === "technician" ? null : (
+                <Grid pl={2} container spacing={1} borderRadius={3}>
+                  <Tooltip placement="top" title={"Vista de Lista"}>
                     <span>
                       <IconButton
                         size="large"
+                        onClick={() => setCurrentView("list")}
                         sx={{
                           borderRadius: 3,
                           border: 1,
                           bgcolor:
-                            currentView === "calendar" ? "#1976d2;" : undefined,
+                            currentView === "list" ? "#1976d2;" : undefined,
                           "&:hover": { bgcolor: "#1976d2" },
                         }}
-                        onClick={() => setCurrentView("calendar")}
                         color="info"
                       >
-                        <CalendarMonth
+                        <Subject
                           sx={{
-                            color:
-                              currentView === "calendar" ? "white" : undefined,
+                            color: currentView === "list" ? "white" : undefined,
                           }}
-                        ></CalendarMonth>
+                        ></Subject>
                       </IconButton>
                     </span>
                   </Tooltip>
-                )}
-              </Grid>
+                  {[undefined, "free_club"].includes(props.userRole) ? null : (
+                    <Tooltip placement="top" title={"Vista de Calendário"}>
+                      <span>
+                        <IconButton
+                          size="large"
+                          sx={{
+                            borderRadius: 3,
+                            border: 1,
+                            bgcolor:
+                              currentView === "calendar"
+                                ? "#1976d2;"
+                                : undefined,
+                            "&:hover": { bgcolor: "#1976d2" },
+                          }}
+                          onClick={() => setCurrentView("calendar")}
+                          color="info"
+                        >
+                          <CalendarMonth
+                            sx={{
+                              color:
+                                currentView === "calendar"
+                                  ? "white"
+                                  : undefined,
+                            }}
+                          ></CalendarMonth>
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  )}
+                </Grid>
+              )}
             </Grid>
           </Grid>
         )}
         {isEventsDataLoading ? (
-          <Box mt={3} display={"flex"} justifyContent={"center"}>
+          <Grid mt={3} container justifyContent={"center"} size={12}>
             <CircularProgress />
-          </Box>
+          </Grid>
         ) : eventsError ? (
           <Grid my={3} container justifyContent="center" size={12}>
             <ListItem sx={{ textAlign: "center" }}>

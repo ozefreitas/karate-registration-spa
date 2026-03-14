@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import styles from "./comp2score.module.css";
 
 export default function Comp2Score(
-  props: Readonly<{ id: string; winner: any }>
+  props: Readonly<{ id: string; winner: any }>,
 ) {
   // const [shiroScore, setShiroScore] = useState(0);
 
@@ -21,6 +22,21 @@ export default function Comp2Score(
   //     }
   //   }, [akaScore]);
 
+  const [player2Score, setPlayer2Score] = useState<number>(0);
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://127.0.0.1:8000/ws/match/123/");
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.player1) {
+        setPlayer2Score((prev) => prev + 5 - data.player1);
+      }
+    };
+
+    return () => socket.close();
+  }, []);
+
   return (
     <div
       className={`${styles.bigNumberContainer} ${
@@ -34,6 +50,7 @@ export default function Comp2Score(
         className={`${styles.bigNumber} ${
           props.id === "aka" ? styles.white : styles.black
         }`}
+        value={player2Score}
         type="number"
         readOnly
       />

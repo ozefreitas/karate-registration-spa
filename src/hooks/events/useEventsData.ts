@@ -13,6 +13,7 @@ export const useFetchEventsData = (
   hasRegistrations?: boolean,
   month?: string,
   day?: string,
+  isOngoing?: boolean
 ) => {
   return useQuery({
     queryKey: [
@@ -27,6 +28,7 @@ export const useFetchEventsData = (
       hasRegistrations,
       month,
       day,
+      isOngoing,
     ],
     queryFn: () =>
       EventsService.eventsList(
@@ -36,6 +38,7 @@ export const useFetchEventsData = (
         hasTeams,
         day,
         month,
+        isOngoing,
         ordering,
         page,
         pageSize,

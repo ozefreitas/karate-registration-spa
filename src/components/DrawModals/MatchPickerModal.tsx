@@ -184,7 +184,8 @@ export default function MatchPickerModal(
                             contenderNumber={1}
                             isWinner={!is2Winner}
                             points={
-                              match.kataresult === null
+                              match.kataresult === null ||
+                              match.kataresult?.flags_contender_1 === 0
                                 ? 99
                                 : match.kataresult?.flags_contender_1
                             }
@@ -198,7 +199,8 @@ export default function MatchPickerModal(
                             contenderNumber={2}
                             isWinner={is2Winner}
                             points={
-                              match.kataresult === null
+                              match.kataresult === null ||
+                              match.kataresult?.flags_contender_2 === 0
                                 ? 99
                                 : match.kataresult?.flags_contender_2
                             }

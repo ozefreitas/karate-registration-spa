@@ -90,6 +90,7 @@ export default function MatchDetailCard({
           <Grid
             container
             columnGap={2}
+            size={12}
             rowGap={1}
             justifyContent={"center"}
             alignItems={"center"}
@@ -115,8 +116,12 @@ export default function MatchDetailCard({
             alignItems={"center"}
           >
             <Typography>Kata:</Typography>
-            <Typography fontWeight={700}>
-              {KataOptions.find((item) => item.value === kataInfo)?.label}
+            <Typography
+              fontWeight={700}
+              color={kataInfo === undefined ? "textDisabled" : undefined}
+            >
+              {KataOptions.find((item) => item.value === kataInfo)?.label ??
+                "N/A"}
             </Typography>
           </Grid>
         }
@@ -136,7 +141,12 @@ export default function MatchDetailCard({
             alignItems={"center"}
           >
             <Typography>Número de Bandeiras:</Typography>
-            <Typography fontWeight={700}>{matchInfo}</Typography>
+            <Typography
+              color={matchInfo === undefined ? "textDisabled" : undefined}
+              fontWeight={700}
+            >
+              {matchInfo ?? "N/A"}
+            </Typography>
           </Grid>
         }
         reverse={reverse}

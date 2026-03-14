@@ -39,10 +39,11 @@ import {
   FileDownload,
   Edit,
   HowToReg,
+  DeveloperBoard,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
 import PageInfoCard from "../info-cards/PageInfoCard";
@@ -50,6 +51,7 @@ import { EncounterOptions } from "../../config";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -571,7 +573,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       ></SettingsButton>
                     </>
                   ) : null}
-                  {["main_admin", "superuser"].includes(
+                  {["main_admin", "superuser", "technician"].includes(
                     props.userRole,
                   ) ? null : singleEventData?.has_any_indiv ? (
                     <AddButton
@@ -584,7 +586,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }
                     ></AddButton>
                   ) : null}
-                  {["main_admin", "superuser"].includes(
+                  {["main_admin", "superuser", "technician"].includes(
                     props.userRole,
                   ) ? null : singleEventData?.has_coach ? (
                     <AddButton
@@ -597,7 +599,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       }
                     ></AddButton>
                   ) : null}
-                  {["main_admin", "superuser"].includes(
+                  {["main_admin", "superuser", "technician"].includes(
                     props.userRole,
                   ) ? null : singleEventData?.has_any_team ? (
                     <AddButton
@@ -616,7 +618,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       to="individuals/"
                     ></InfoButton>
                   ) : null}
-                  {singleEventData?.has_registrations ? (
+                  {singleEventData?.has_registrations &&
+                  props.userRole !== "technician" ? (
                     <Tooltip
                       disableHoverListener={[
                         "main_admin",
@@ -637,7 +640,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       </span>
                     </Tooltip>
                   ) : null}
-                  {singleEventData?.has_categories ? (
+                  {singleEventData?.has_categories &&
+                  props.userRole !== "technician" ? (
                     <SettingsButton
                       size="medium"
                       label="Consultar Escalões"
@@ -661,12 +665,20 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     >
                       Descarregar Inscrições
                     </Button>
-                  ) : (
-                    <InfoButton
-                      label="Consultar Sorteios"
-                      to="draw/"
-                    ></InfoButton>
-                  )}
+                  ) : null}
+                  {["main_admin", "superuser", "technician"].includes(
+                    props.userRole,
+                  ) && singleEventData?.encounter_type === "comp" ? (
+                    <Button
+                      onClick={() => {
+                        navigate("results_display/");
+                      }}
+                      variant="contained"
+                      startIcon={<DeveloperBoard />}
+                    >
+                      Ecrã de resultados e Monitorização
+                    </Button>
+                  ) : null}
                 </Grid>
               </CardContent>
             </Card>

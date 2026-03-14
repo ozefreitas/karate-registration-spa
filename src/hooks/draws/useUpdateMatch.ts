@@ -18,6 +18,7 @@ export const useUpdateMatch = () => {
         "Partida atualizada com sucesso!",
         "success",
       );
+      channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
     },
@@ -49,10 +50,10 @@ export const usePatchMatch = () => {
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
     },
-    onError: () => {
+    onError: (data: any) => {
       callNotiStack(
         enqueueSnackbar,
-        "Ocorreu um erro! Tente novamente.",
+        data.body.non_field_errors[0] ?? "Ocorreu um erro! Tente novamente.",
         "error",
         3000,
       );

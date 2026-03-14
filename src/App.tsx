@@ -170,7 +170,12 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<EventsPage userRole={userRole} />}
-                        allowedRoles={["free_club", "subed_club", "main_admin"]}
+                        allowedRoles={[
+                          "free_club",
+                          "subed_club",
+                          "main_admin",
+                          "technician",
+                        ]}
                         allowUnauthenticated
                       />
                     )
@@ -261,7 +266,12 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<EventCard userRole={userRole} />}
-                        allowedRoles={["free_club", "subed_club", "main_admin"]}
+                        allowedRoles={[
+                          "free_club",
+                          "subed_club",
+                          "main_admin",
+                          "technician",
+                        ]}
                         allowUnauthenticated
                       />
                     )
@@ -284,7 +294,12 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<DrawPage userRole={userRole} />}
-                        allowedRoles={["main_admin", "superuser", "subed_club"]}
+                        allowedRoles={[
+                          "main_admin",
+                          "superuser",
+                          "subed_club",
+                          "technician",
+                        ]}
                       />
                     )
                   }
@@ -309,7 +324,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<DynamicViewPage />}
+                        element={<DynamicViewPage userRole={userRole} />}
                         allowedRoles={[
                           "main_admin",
                           "superuser",
@@ -355,6 +370,17 @@ function App() {
                   }
                 />
                 <Route
+                  path="events/:id/results_display/"
+                  element={
+                    isAuthLoading ? null : (
+                      <ProtectedRoute
+                        element={<ResultsMainPage />}
+                        allowedRoles={["main_admin", "technician", "superuser"]}
+                      />
+                    )
+                  }
+                />
+                <Route
                   path="rules/"
                   element={
                     isAuthLoading ? null : (
@@ -386,17 +412,6 @@ function App() {
                         element={<HelpPage />}
                         allowedRoles={["free_club", "subed_club"]}
                         allowUnauthenticated
-                      />
-                    )
-                  }
-                />
-                <Route
-                  path="results_display/"
-                  element={
-                    isAuthLoading ? null : (
-                      <ProtectedRoute
-                        element={<ResultsMainPage />}
-                        allowedRoles={["main_admin", "technician"]}
                       />
                     )
                   }

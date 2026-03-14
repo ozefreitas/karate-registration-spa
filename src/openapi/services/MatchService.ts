@@ -6,9 +6,9 @@ import type { AdvanceMatch } from '../models/AdvanceMatch';
 import type { CreateMatch } from '../models/CreateMatch';
 import type { Match } from '../models/Match';
 import type { PatchedAdvanceMatch } from '../models/PatchedAdvanceMatch';
-import type { PatchedMatch } from '../models/PatchedMatch';
 import type { PatchedPatchMatchWinner } from '../models/PatchedPatchMatchWinner';
 import type { PatchedPreviousMatch } from '../models/PatchedPreviousMatch';
+import type { PatchedUpdateMatch } from '../models/PatchedUpdateMatch';
 import type { PatchMatchWinner } from '../models/PatchMatchWinner';
 import type { PreviousMatch } from '../models/PreviousMatch';
 import type { UpdateMatch } from '../models/UpdateMatch';
@@ -89,13 +89,13 @@ export class MatchService {
     /**
      * @param id A unique integer value identifying this match.
      * @param requestBody
-     * @returns Match
+     * @returns UpdateMatch
      * @throws ApiError
      */
     public static matchPartialUpdate(
         id: number,
-        requestBody?: PatchedMatch,
-    ): CancelablePromise<Match> {
+        requestBody?: PatchedUpdateMatch,
+    ): CancelablePromise<UpdateMatch> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/match/{id}/',

@@ -4,10 +4,17 @@ import { Controller, useForm } from "react-hook-form";
 import { Add } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 import { KataOptions } from "../../config";
+import { drawsHooks } from "../../hooks";
 
-export default function KataElimControl() {
+export default function KataElimControl(
+  props: Readonly<{ currentMatchData: any }>,
+) {
   const socketRef = useRef<WebSocket | null>(null);
   const [points, setPoints] = useState<number | undefined>(undefined);
+
+  const updateMatch = drawsHooks.useUpdateMatch();
+  const patchMatch = drawsHooks.usePatchMatch();
+  const patchMatchWinner = drawsHooks.usePatchMatchWinner();
 
   useEffect(() => {
     let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
@@ -30,6 +37,20 @@ export default function KataElimControl() {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({ player1: points }));
       setPoints(undefined);
+      // stil need to send the points
+      const flags_contender_2 = 5 - points!;
+      const payload = {
+        kataresult: {
+          flags_contender_1: points ?? 0,
+          flags_contender_2: flags_contender_2 ?? 0,
+        },
+      };
+      patchMatch.mutate({ matchId: props.currentMatchData.id, data: payload });
+      const winner = { winner: points! > flags_contender_2 ? 1 : 2 };
+      patchMatchWinner.mutate({
+        matchId: props.currentMatchData.id,
+        data: winner,
+      });
     }
   };
 
@@ -64,6 +85,8 @@ export default function KataElimControl() {
     watch,
     setError,
     clearErrors,
+    handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -71,108 +94,172 @@ export default function KataElimControl() {
       player2Kata: "",
     },
   });
+
+  useEffect(() => {
+    if (props.currentMatchData !== undefined) {
+      reset({
+        player1Kata:
+          props.currentMatchData.kataresult?.kata_contender_1 === "none"
+            ? ""
+            : props.currentMatchData.kataresult?.kata_contender_1,
+        player2Kata:
+          props.currentMatchData.kataresult?.kata_contender_2 === "none"
+            ? ""
+            : props.currentMatchData.kataresult?.kata_contender_2,
+      });
+    }
+  }, [props.currentMatchData]);
+
+  const onSubmitKatas = (data: any) => {
+    let flags_contender_2 = undefined;
+    if (points !== undefined) {
+      flags_contender_2 = 5 - points;
+    }
+    const payload = {
+      kataresult: {
+        flags_contender_1: points ?? 0,
+        flags_contender_2: flags_contender_2 ?? 0,
+        kata_contender_1: data.player1Kata,
+        kata_contender_2: data.player2Kata,
+      },
+      contender_1: data.contender_1,
+      contender_2: data.contender_2,
+      winner: null,
+    };
+    updateMatch.mutate(
+      { matchId: props.currentMatchData.id, data: payload },
+      // {
+      //   onSuccess: () => {
+      //     props.handleModalClose();
+      //     setSelectedWinner("");
+      //   },
+      // },
+    );
+  };
+
   return (
-    <FormCard title="Controles de Kata Individual">
-      <Grid p={2} size={10}>
-        <Controller
-          name="player1Kata"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Kata Competidor 1"
-              fullWidth
-              select
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-                clearErrors();
-              }}
-              error={!!errors.player1Kata}
-              helperText={errors.player1Kata?.message}
-            >
-              <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
-                -- Selecionar --
-              </MenuItem>
-              {KataOptions.filter((item) => item.value !== "none").map(
-                (item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ),
-              )}
-            </TextField>
-          )}
-        />
-      </Grid>
-      <Grid size={2} container justifyContent={"center"} alignContent="center">
-        <Button
-          sx={{ m: 1 }}
-          variant="contained"
-          size="large"
-          color="success"
-          onClick={() => {
-            sendPlayer1Kata();
-          }}
-          startIcon={<Add />}
+    <Grid
+      container
+      size={12}
+      spacing={3}
+      mt={3}
+      p={2}
+      justifyContent={"space-between"}
+    >
+      <Grid size={6} container>
+        <Grid size={8}>
+          <Controller
+            name="player1Kata"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Kata Competidor 1"
+                fullWidth
+                select
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  clearErrors();
+                }}
+                error={!!errors.player1Kata}
+                helperText={errors.player1Kata?.message}
+              >
+                <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
+                {KataOptions.filter((item) => item.value !== "none").map(
+                  (item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ),
+                )}
+              </TextField>
+            )}
+          />
+        </Grid>
+        <Grid
+          container
+          // justifyContent={"center"}
+          alignContent="center"
         >
-          Enviar
-        </Button>
+          <Button
+            variant="contained"
+            size="large"
+            color="success"
+            onClick={() => {
+              sendPlayer1Kata();
+              handleSubmit(onSubmitKatas)();
+            }}
+            startIcon={<Add />}
+          >
+            Enviar
+          </Button>
+        </Grid>
       </Grid>
-      <Grid p={2} size={10}>
-        <Controller
-          name="player2Kata"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Kata Competidor 2"
-              fullWidth
-              select
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-                clearErrors();
-              }}
-              error={!!errors.player2Kata}
-              helperText={errors.player2Kata?.message}
-            >
-              <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
-                -- Selecionar --
-              </MenuItem>
-              {KataOptions.filter((item) => item.value !== "none").map(
-                (item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ),
-              )}
-            </TextField>
-          )}
-        />
-      </Grid>
-      <Grid size={2} container justifyContent={"center"} alignContent="center">
-        <Button
-          sx={{ m: 1 }}
-          variant="contained"
-          size="large"
-          color="success"
-          onClick={() => {
-            sendPlayer2Kata();
-          }}
-          startIcon={<Add />}
+      <Grid size={6} container justifyContent={"flex-end"}>
+        <Grid size={8}>
+          <Controller
+            name="player2Kata"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Kata Competidor 2"
+                fullWidth
+                select
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  clearErrors();
+                }}
+                error={!!errors.player2Kata}
+                helperText={errors.player2Kata?.message}
+              >
+                <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
+                {KataOptions.filter((item) => item.value !== "none").map(
+                  (item, index) => (
+                    <MenuItem key={index} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ),
+                )}
+              </TextField>
+            )}
+          />
+        </Grid>
+        <Grid
+          container
+          // justifyContent={"center"}
+          alignContent="center"
         >
-          Enviar
-        </Button>
+          <Button
+            variant="contained"
+            size="large"
+            color="success"
+            onClick={() => {
+              sendPlayer2Kata();
+              handleSubmit(onSubmitKatas)();
+            }}
+            startIcon={<Add />}
+          >
+            Enviar
+          </Button>
+        </Grid>
       </Grid>
+
       <Grid
-        m={3}
+        mt={5}
         spacing={5}
         container
         alignItems="center"
-        justifyContent="space-around"
+        size={12}
+        justifyContent={"space-between"}
       >
         <Typography>Número de Bandeiras AKA</Typography>
         <Button
@@ -242,6 +329,6 @@ export default function KataElimControl() {
           </Button>
         </Grid>
       </Grid>
-    </FormCard>
+    </Grid>
   );
 }

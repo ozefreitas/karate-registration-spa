@@ -97,12 +97,12 @@ export const getSideMenuConfig = (userRole: string) => {
       icon: <HelpCenter sx={{ color: "#e81c24" }} />,
       to: "/help/",
     },
-    {
-      name: "results_display",
-      label: "Mostrador",
-      icon: <DeveloperBoard sx={{ color: "#e81c24" }} />,
-      to: "/results_display/",
-    },
+    // {
+    //   name: "results_display",
+    //   label: "Mostrador",
+    //   icon: <DeveloperBoard sx={{ color: "#e81c24" }} />,
+    //   to: "/results_display/",
+    // },
     {
       name: "settings",
       label: "Definições",
@@ -118,15 +118,13 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "help" &&
         item.name !== "classifications" &&
         item.name !== "rules" &&
-        item.name !== "teams" &&
-        item.name !== "results_display",
+        item.name !== "teams" 
     );
   } else if (userRole === undefined || userRole === "free_club") {
     return baseMenu.filter(
       (item) =>
         item.name !== "members" &&
         item.name !== "teams" &&
-        item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "notifications_manager" &&
         item.name !== "payment_manager" &&
@@ -136,7 +134,6 @@ export const getSideMenuConfig = (userRole: string) => {
     return baseMenu.filter(
       (item) =>
         item.name !== "notifications_manager" &&
-        item.name !== "results_display" &&
         item.name !== "settings" &&
         item.name !== "categories",
     );
@@ -149,7 +146,6 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "notifications_manager" &&
         item.name !== "payment_manager" &&
         item.name !== "categories" &&
-        item.name !== "events" &&
         item.name !== "help" &&
         item.name !== "rules" &&
         item.name !== "classifications",

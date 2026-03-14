@@ -24,6 +24,7 @@ export class EventsService {
      * @param hasTeams
      * @param inDay
      * @param inMonth
+     * @param isOngoing
      * @param ordering Which field to use when ordering the results.
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
@@ -38,6 +39,7 @@ export class EventsService {
         hasTeams?: boolean,
         inDay?: string,
         inMonth?: string,
+        isOngoing?: boolean,
         ordering?: string,
         page?: number,
         pageSize?: number,
@@ -53,6 +55,7 @@ export class EventsService {
                 'has_teams': hasTeams,
                 'in_day': inDay,
                 'in_month': inMonth,
+                'is_ongoing': isOngoing,
                 'ordering': ordering,
                 'page': page,
                 'page_size': pageSize,
