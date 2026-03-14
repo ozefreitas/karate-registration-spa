@@ -5,12 +5,14 @@
 export type CreateMatch = {
     readonly id: number;
     round_number: number;
+    is_third_place?: boolean;
     match_number: number;
     ongoing?: boolean;
     readonly created_at: string;
     bracket: number;
     contender_1?: string | null;
     contender_2?: string | null;
+    loser_goes_to?: number | null;
     winner?: string | null;
 };
 

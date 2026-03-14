@@ -13,9 +13,11 @@ export type Match = {
     readonly kataresult: KataResult | null;
     readonly kumiteresult: KumiteResult | null;
     round_number: number;
+    is_third_place?: boolean;
     match_number: number;
     ongoing?: boolean;
     readonly created_at: string;
     bracket: number;
+    loser_goes_to?: number | null;
 };
 

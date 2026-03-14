@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -11,20 +12,37 @@ import {
   Stack,
   Switch,
   TextField,
+  Typography,
 } from "@mui/material";
 import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { DrawFormatTypes } from "../../config";
-import { Casino, Clear } from "@mui/icons-material";
-import { drawsHooks, eventsHooks } from "../../hooks";
+import { ArrowForward, Casino, Clear, Send } from "@mui/icons-material";
+import { drawsHooks, eventsHooks, disciplinesHooks } from "../../hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import GenerateDrawModal from "../../components/Modals/GenerateDrawModal";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function GenerateDrawPage() {
   const { id: eventId } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  type SelectionConfig = {
+    disciplineId: string;
+    disciplineName: string;
+    formatValue: string;
+    formatLabel: string;
+    splitClubs: boolean;
+    splitFavourites: boolean;
+    maxMembersPerGroup?: string;
+    minMembersPerGroup?: string;
+  };
+
+  // Confirmed selections
+  const [selections, setSelections] = useState<SelectionConfig[]>([]);
 
   const handleModalOpen = () => {
     setIsModalOpen(true);
@@ -37,12 +55,16 @@ export default function GenerateDrawPage() {
     control,
     formState: { errors },
     watch,
+    setError,
     setValue,
+    reset,
+    getValues,
     handleSubmit,
   } = useForm({
     defaultValues: {
       splitClubs: false,
       splitFavourites: false,
+      discipline: "",
       format: "",
       maxMembersPerGroup: "",
       minMembersPerGroup: "",
@@ -51,75 +73,249 @@ export default function GenerateDrawPage() {
   });
 
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
+  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
+    eventId!,
+  );
 
   const generateDrawMutation = eventsHooks.useGenerateDraw();
 
   const onSubmit = (data: any) => {
-    const payload = { eventId: eventId!, data: data };
+    const payload = {
+      eventId: eventId!,
+      data: {
+        disciplines: selections.map((s) => ({
+          disciplineId: s.disciplineId,
+          format: s.formatValue,
+          splitClubs: s.splitClubs,
+          splitFavourites: s.splitFavourites,
+          maxMembersPerGroup: s.maxMembersPerGroup,
+          minMembersPerGroup: s.minMembersPerGroup,
+        })),
+        notificate: data.notificate,
+      },
+    };
     generateDrawMutation.mutate(payload, {
-      onSuccess: () => navigate(`/events/${eventId!}/draw/`),
+      onSuccess: () => {
+        navigate(`/events/${eventId!}/draw/`);
+      },
     });
   };
 
+  const handleOk = () => {
+    const disciplineId = getValues("discipline");
+    const formatValue = getValues("format");
+
+    const alreadyExists = selections.some(
+      (s) => s.disciplineId === disciplineId,
+    );
+    if (alreadyExists) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Essa Modalidade já tem um Sorteio atribuído!",
+        "error",
+      );
+      setError("discipline", { message: "Altere para uma Modalidade livre." });
+      reset(
+        {
+          format: "",
+          maxMembersPerGroup: "",
+          minMembersPerGroup: "",
+          notificate: false,
+          splitClubs: false,
+          splitFavourites: false,
+        },
+        { keepErrors: true },
+      );
+      return;
+    }
+
+    setSelections((prev) => [
+      ...prev,
+      {
+        disciplineId,
+        disciplineName:
+          disciplinesData?.results.find(
+            (item) => item.id === Number(disciplineId),
+          )?.name || "",
+        formatValue,
+        formatLabel:
+          DrawFormatTypes.find((item) => item.value === formatValue)?.label ||
+          "",
+        splitClubs: getValues("splitClubs"),
+        splitFavourites: getValues("splitFavourites"),
+        maxMembersPerGroup: getValues("maxMembersPerGroup"),
+        minMembersPerGroup: getValues("minMembersPerGroup"),
+      },
+    ]);
+
+    reset();
+    callNotiStack(
+      enqueueSnackbar,
+      "Sorteio configurado! Dirija-se à secção de resumo para confirmar.",
+      "success",
+    );
+  };
+
   return (
-    <>
-      <FormCard title="Configurar Sorteio">
-        <Grid sx={{ p: 2 }} size={6}>
-          <Controller
-            name="format"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                sx={{
-                  "& .MuiSelect-icon": {
-                    left: "auto",
-                    right: 40,
-                  },
-                }}
-                color="warning"
-                variant={"outlined"}
-                label="Formato"
-                select
-                fullWidth
-                required
-                {...field}
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          disabled={watch("format") === ""}
-                          onClick={() => setValue("format", "")}
-                          edge="end"
-                          aria-label="toggle password visibility"
-                        >
-                          <Clear
-                            color={
-                              watch("format") === "" ? "disabled" : "error"
-                            }
-                          ></Clear>
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.format}
-                helperText={errors.format?.message}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {DrawFormatTypes.map((item, index) => (
-                  <MenuItem key={index} value={item.value}>
-                    {item.label}
+    <Grid container>
+      <FormCard
+        title="Configurar Sorteio"
+        subheader="Altere as confugurações do Sorteios de cada Modalidade."
+      >
+        <Grid size={12} p={2} container>
+          <FormLabel>
+            Atribua um formato a cada Modalidade desta Competição.
+          </FormLabel>
+        </Grid>
+        <Grid
+          size={12}
+          container
+          spacing={2}
+          p={2}
+          pt={0}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <Grid size={4.5}>
+            <Controller
+              name="discipline"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40,
+                    },
+                  }}
+                  color="warning"
+                  variant={"outlined"}
+                  label="Modalidade"
+                  select
+                  fullWidth
+                  required
+                  {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("discipline") === ""}
+                            onClick={() => setValue("discipline", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("discipline") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.discipline}
+                  helperText={errors.discipline?.message}
+                >
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
                   </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
+                  {disciplinesData?.results
+                    .filter((item) => !item.is_coach)
+                    .map((item, index) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid>
+            <ArrowForward fontSize="large" color="error"></ArrowForward>
+          </Grid>
+          <Grid size={4.5}>
+            <Controller
+              name="format"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  sx={{
+                    "& .MuiSelect-icon": {
+                      left: "auto",
+                      right: 40,
+                    },
+                  }}
+                  color="warning"
+                  variant={"outlined"}
+                  label="Formato"
+                  select
+                  fullWidth
+                  required
+                  {...field}
+                  slotProps={{
+                    select: {
+                      renderValue: (selected) => {
+                        const selectedFromat = DrawFormatTypes?.find(
+                          (m: any) => m.value === selected,
+                        );
+                        return selectedFromat?.label || "";
+                      },
+                    },
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("format") === ""}
+                            onClick={() => setValue("format", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("format") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.format}
+                  helperText={errors.format?.message}
+                >
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {DrawFormatTypes.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      value={item.value}
+                      sx={{ maxWidth: 500, whiteSpace: "normal" }}
+                    >
+                      <Grid>
+                        <Typography>{item.label}</Typography>
+                        <Typography
+                          sx={{ fontSize: "0.8rem", color: "text.secondary" }}
+                        >
+                          {item.description}
+                        </Typography>
+                      </Grid>
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
         </Grid>
         <Grid size={12} p={2} container>
           <FormLabel>
@@ -128,7 +324,7 @@ export default function GenerateDrawPage() {
           </FormLabel>
         </Grid>
         <Grid size={12} container>
-          <Grid sx={{ p: 2, pt: 0 }} size={6}>
+          <Grid p={2} pt={0} size={6}>
             <Controller
               name="minMembersPerGroup"
               control={control}
@@ -138,7 +334,7 @@ export default function GenerateDrawPage() {
                   variant={"outlined"}
                   type="number"
                   fullWidth
-                  disabled={watch("format") !== "groups"}
+                  disabled={watch("format") === "torneio"}
                   label="Número Mínimo p/ Grupo"
                   required
                   slotProps={{
@@ -186,7 +382,7 @@ export default function GenerateDrawPage() {
                   variant={"outlined"}
                   type="number"
                   fullWidth
-                  disabled={watch("format") !== "groups"}
+                  disabled={watch("format") === "torneio"}
                   label="Número Máximo p/ Grupo"
                   required
                   slotProps={{
@@ -299,6 +495,79 @@ export default function GenerateDrawPage() {
             )}
           />
         </Grid>
+        <Grid
+          container
+          size={12}
+          alignItems={"center"}
+          justifyContent={"flex-end"}
+        >
+          <Button
+            sx={{ m: 1 }}
+            variant="contained"
+            size="large"
+            color="success"
+            disabled={watch("discipline") === "" || watch("format") === ""}
+            onClick={() => handleOk()}
+          >
+            OK
+          </Button>
+        </Grid>
+      </FormCard>
+      <FormCard title="Resumo">
+        <Grid
+          borderRadius={5}
+          bgcolor={"#bad7ff63"}
+          spacing={5}
+          p={2}
+          m={2}
+          size={12}
+          container
+          justifyContent={"space-around"}
+          alignItems={"center"}
+        >
+          {selections.length > 0 ? (
+            selections.map((s, index) => (
+              <Chip
+                key={index}
+                label={
+                  <Grid>
+                    <Grid container columnSpacing={2}>
+                      <Typography variant="h6">{s.disciplineName}</Typography>
+                      <Typography variant="h6">→</Typography>
+                      <Typography variant="h6">{s.formatLabel}</Typography>
+                    </Grid>
+                    <Grid mt={1}>
+                      {s.minMembersPerGroup !== "" && (
+                        <Grid>- Mínimo de {s.minMembersPerGroup} Atletas</Grid>
+                      )}
+                      {s.maxMembersPerGroup !== "" && (
+                        <Grid>- Máximo de {s.maxMembersPerGroup} Atletas</Grid>
+                      )}
+                      {s.splitClubs && <Grid>- Separar Clubes</Grid>}
+                      {s.splitFavourites && <Grid>- Separar Favoritos</Grid>}
+                    </Grid>
+                  </Grid>
+                }
+                onDelete={() =>
+                  setSelections((prev) => prev.filter((_, i) => i !== index))
+                }
+                color="warning"
+                sx={{
+                  fontSize: "1rem",
+                  height: "auto",
+                  py: 1,
+                  "& .MuiChip-label": {
+                    px: 3,
+                  },
+                }}
+              />
+            ))
+          ) : (
+            <Typography color="textDisabled">
+              Sem Sorteios registados para gerar.
+            </Typography>
+          )}
+        </Grid>
         <Grid sx={{ p: 2 }} container size={12}>
           <Controller
             name="notificate"
@@ -346,7 +615,7 @@ export default function GenerateDrawPage() {
             sx={{ m: 1 }}
             variant="contained"
             size="large"
-            disabled={watch("format") === ""}
+            disabled={selections.length === 0}
             color="secondary"
             onClick={handleModalOpen}
             startIcon={<Casino />}
@@ -362,6 +631,6 @@ export default function GenerateDrawPage() {
         willOverwrite={bracketsData?.length! > 0}
         submitFunction={handleSubmit(onSubmit)}
       ></GenerateDrawModal>
-    </>
+    </Grid>
   );
 }

@@ -319,6 +319,12 @@ export default function ResultsMainPage() {
     }
   };
 
+  useEffect(() => {
+    if (dynamicWindowRef.current && !dynamicWindowRef.current.closed) {
+      dynamicWindowRef.current.location.href = `/events/${eventId!}/draw/dynamic_view/?bracket=${watch("bracket")}`;
+    }
+  }, [watch("bracket")]);
+
   const handlePrevMatch = () => {
     const currentMatchId = getValues("match");
     const prevId = getPrevMatchId(Number(currentMatchId));

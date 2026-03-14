@@ -4,6 +4,7 @@ import { Box, Card, Grid, Typography } from "@mui/material";
 const SingleContenderCard = (props: {
   contenderNumber: number;
   roundNumber: number;
+  matchNumber: number;
   isWinner: boolean;
   points: number;
   fullName: string;
@@ -87,7 +88,8 @@ const SingleContenderCard = (props: {
           </Grid>
           {props.isMatchFinished &&
             props.isWinner &&
-            props.roundNumber === 0 && (
+            props.roundNumber === 0 &&
+            props.matchNumber === 1 && (
               <EmojiEvents sx={{ color: "#16a34a" }} />
             )}
         </Grid>

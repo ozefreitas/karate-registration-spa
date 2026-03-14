@@ -196,10 +196,29 @@ export const PaymentTypes: { value: string; label: string }[] = [
   { value: "events", label: "Eventos" },
 ];
 
-export const DrawFormatTypes: { value: string; label: string }[] = [
-  { value: "torneio", label: "Torneio" },
-  { value: "groups", label: "Liga" },
-  { value: "misto", label: "Misto" },
+export const DrawFormatTypes: {
+  value: string;
+  label: string;
+  description: string;
+}[] = [
+  {
+    value: "torneio",
+    label: "Torneio",
+    description:
+      "Rondas de eliminação, sem repescagem, até apuramento do pódio.",
+  },
+  {
+    value: "grupos",
+    label: "Liga",
+    description:
+      "Formação de grupos por Escalão. Pódio interno dentro de cada grupo.",
+  },
+  {
+    value: "misto",
+    label: "Misto",
+    description:
+      "Rondas de eliminação até apuramento de 8 Atletas. Seguem para pontuações em pretações individuais.",
+  },
 ];
 
 export const RoundsOptions: { value: string; label: string }[] = [

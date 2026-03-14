@@ -198,7 +198,7 @@ export default function DynamicViewPage(props: { userRole: string }) {
             alignItems={"center"}
             m={7}
             size={12}
-            spacing={2}
+            spacing={5}
             wrap="nowrap"
           >
             {rounds.map((roundNumber, index: number) => (
@@ -241,6 +241,28 @@ export default function DynamicViewPage(props: { userRole: string }) {
                         match.winner !== null;
                       return (
                         <Grid container size={12} spacing={2} key={index}>
+                          {roundNumber === 0 && (
+                            <Grid
+                              container
+                              size={12}
+                              justifyContent={"flex-end"}
+                            >
+                              <Box
+                                sx={{
+                                  width: "fit-content",
+                                  border: "1px solid #1976d2",
+                                  fontSize: 14,
+                                  px: 1,
+                                  py: 0.5,
+                                  borderRadius: 3,
+                                }}
+                              >
+                                {match.match_number === 1
+                                  ? "1º e 2º Lugares"
+                                  : "3º e 4º Lugares"}
+                              </Box>
+                            </Grid>
+                          )}
                           {isOngoing && (
                             <Box
                               sx={{
@@ -267,6 +289,7 @@ export default function DynamicViewPage(props: { userRole: string }) {
                             >
                               <SingleContenderCard
                                 roundNumber={roundNumber}
+                                matchNumber={match.match_number}
                                 contenderNumber={1}
                                 isWinner={!is2Winner}
                                 points={
@@ -282,6 +305,7 @@ export default function DynamicViewPage(props: { userRole: string }) {
                               ></SingleContenderCard>
                               <SingleContenderCard
                                 roundNumber={roundNumber}
+                                matchNumber={match.match_number}
                                 contenderNumber={2}
                                 isWinner={is2Winner}
                                 points={

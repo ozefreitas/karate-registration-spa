@@ -47,6 +47,7 @@ export type { CreateNotifications } from './models/CreateNotifications';
 export type { CreateTeam } from './models/CreateTeam';
 export type { DeleteMember } from './models/DeleteMember';
 export type { DeleteTeam } from './models/DeleteTeam';
+export type { DisciplineDraw } from './models/DisciplineDraw';
 export type { Disciplines } from './models/Disciplines';
 export type { DisciplinesCompact } from './models/DisciplinesCompact';
 export { DrawTypeEnum } from './models/DrawTypeEnum';

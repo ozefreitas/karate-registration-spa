@@ -2,12 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { DisciplineDraw } from './DisciplineDraw';
 export type GenerateDrawRequest = {
-    splitClubs: boolean;
-    splitFavourites: boolean;
-    format: string;
-    maxMembersPerGroup?: string;
-    minMembersPerGroup?: string;
+    disciplines: Array<DisciplineDraw>;
     notificate: boolean;
 };
 

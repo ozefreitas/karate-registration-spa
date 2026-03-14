@@ -5,7 +5,7 @@
 /**
  * * `Liga` - Liga
  * * `Torneio/Finais` - Torneio/Finais
- * * `Misto` - Torneio
+ * * `Misto` - Torneio + Final de 8
  */
 export enum DrawTypeEnum {
     LIGA = 'Liga',
