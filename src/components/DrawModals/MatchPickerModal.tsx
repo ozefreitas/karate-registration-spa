@@ -12,10 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SectionHeader from "../Header/SectionHeader";
 import { RoundsOptions } from "../../config";
 import {
+  ArrowBackIos,
+  ArrowForwardIos,
   CheckBox,
   CheckBoxOutlineBlank,
   Close,
@@ -59,6 +61,21 @@ export default function MatchPickerModal(
 
   const patchOngoingMatch = drawsHooks.usePatchMatch(user?.role!);
 
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    const el = gridRef.current;
+    if (!el) return;
+
+    setCanScrollLeft(el.scrollLeft > 15);
+    setCanScrollRight(el.scrollLeft + 35 + el.clientWidth < el.scrollWidth - 1);
+  };
+
+  console.log(canScrollLeft);
+  console.log(canScrollRight);
+
   return (
     <Dialog
       fullWidth
@@ -98,18 +115,138 @@ export default function MatchPickerModal(
           </IconButton>
         </Grid>
       </DialogTitle>
-      <Grid overflow={"auto"} width={"100%"}>
+
+      <Grid
+        ref={gridRef}
+        overflow={"auto"}
+        onScroll={handleScroll}
+        sx={{
+          "&::-webkit-scrollbar": {
+            height: 5,
+            width: 5,
+          },
+          "&::-webkit-scrollbar-track": {
+            background: "#f1f1f1",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#888",
+            borderRadius: 10,
+          },
+        }}
+      >
         <Grid
           container
           alignItems={"center"}
-          m={2}
-          mx={4}
+          my={3}
+          width={"fit-content"}
+          pl={10}
           size={12}
-          spacing={1}
           wrap="nowrap"
+          // sx={{
+          //   maskImage:
+          //     "linear-gradient(to left, transparent 0%, black 5%, black 95%, transparent 100%)",
+          // }}
         >
+          <Box
+            onClick={() =>
+              gridRef.current?.scrollBy({ left: -300, behavior: "smooth" })
+            }
+            sx={{
+              position: "absolute",
+              left: 0,
+              top: 95,
+              bottom: 95,
+              zIndex: 1,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              px: 5,
+              background:
+                "linear-gradient(to right, rgba(255,255,255,0.9) 45%, transparent 100%)",
+            }}
+          >
+            {canScrollLeft && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  zIndex: 1,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 38,
+                  height: 38,
+                  borderRadius: "50%",
+                  bgcolor: "error.main",
+                  boxShadow: 3,
+                  color: "white",
+                  transition: "0.2s",
+                  "&:hover": {
+                    bgcolor: "error.dark",
+                    boxShadow: 6,
+                    transform: "scale(1.1)",
+                  },
+                }}
+              >
+                <ArrowBackIos
+                  fontSize="small"
+                  sx={{ color: "text.secondary", ml: 0.8 }}
+                />
+              </Box>
+            )}
+          </Box>
+
+          <Box
+            onClick={() =>
+              gridRef.current?.scrollBy({ left: 300, behavior: "smooth" })
+            }
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: 95,
+              bottom: 95,
+              zIndex: 1,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              px: 10,
+              background:
+                "linear-gradient(to left, rgba(255,255,255,0.9) 45%, transparent 100%)",
+            }}
+          >
+            {canScrollRight && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  zIndex: 1,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 38,
+                  height: 38,
+                  borderRadius: "50%",
+                  bgcolor: "error.main",
+                  boxShadow: 3,
+                  color: "white",
+                  transition: "0.2s",
+                  "&:hover": {
+                    bgcolor: "error.dark",
+                    boxShadow: 6,
+                    transform: "scale(1.1)",
+                  },
+                }}
+              >
+                <ArrowForwardIos
+                  fontSize="small"
+                  sx={{ color: "text.secondary" }}
+                />
+              </Box>
+            )}
+          </Box>
+
           {props.rounds.map((roundNumber: any, index: number) => (
-            <Grid key={index} size={6} container sx={{ minWidth: 470 }}>
+            <Grid key={index} container sx={{ minWidth: 550 }}>
               <Grid size={10} container spacing={6} direction={"column"}>
                 <Grid px={2} size={12} container alignItems={"center"}>
                   <SectionHeader
@@ -278,7 +415,6 @@ export default function MatchPickerModal(
           }}
           sx={{
             p: 2,
-            pt: 0,
             gap: 2,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },

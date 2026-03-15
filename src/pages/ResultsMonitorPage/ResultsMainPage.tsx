@@ -182,11 +182,29 @@ export default function ResultsMainPage() {
     hasSetOngoing.current = true;
   }, [matchesData]);
 
+  // On mount, check if the named window is already open
+  useEffect(() => {
+    const existingWindow = window.open("", "displayPanel");
+
+    // If the window exists and has a location (is actually open), update state
+    if (
+      existingWindow &&
+      !existingWindow.closed &&
+      existingWindow.location.href !== "about:blank"
+    ) {
+      displayWindowRef.current = existingWindow;
+      setIsDisplayOpen(true);
+    } else {
+      // accidentally opened a blank window, close it
+      existingWindow?.close();
+    }
+  }, []);
+
   const openDisplay = () => {
     if (!displayWindowRef.current || displayWindowRef.current.closed) {
       displayWindowRef.current = window.open(
         "/display_panel/",
-        "_blank",
+        "displayPanel",
         "width=800,height=600",
       );
       setIsDisplayOpen(true);

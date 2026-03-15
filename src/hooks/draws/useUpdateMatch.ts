@@ -34,7 +34,6 @@ export const useUpdateMatch = () => {
 };
 
 export const usePatchMatch = (userRole: string) => {
-  console.log(userRole);
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -123,7 +122,7 @@ export const usePatchMatchWinner = () => {
       callNotiStack(
         enqueueSnackbar,
         data.is_final
-          ? `VENCEDOR de ${data.discipline} de ${data.category} encontrado! Conclua o Escalão para consumar o pódio.`
+          ? `VENCEDOR de ${data.discipline} de ${data.category} encontrado! Conclua o Escalão para oficializar o pódio.`
           : data.is_third_place
             ? "3º Lugar encontrado!"
             : "Vencedor atualizado e movido para ronda seguinte!",
