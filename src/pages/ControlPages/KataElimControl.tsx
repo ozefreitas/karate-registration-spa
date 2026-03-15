@@ -5,6 +5,7 @@ import { Add } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 import { KataOptions } from "../../config";
 import { drawsHooks } from "../../hooks";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
 export default function KataElimControl(
   props: Readonly<{ currentMatchData: any }>,
@@ -12,8 +13,10 @@ export default function KataElimControl(
   const socketRef = useRef<WebSocket | null>(null);
   const [points, setPoints] = useState<number | undefined>(undefined);
 
+  const { user } = useAuth();
+
   const updateMatch = drawsHooks.useUpdateMatch();
-  const patchMatch = drawsHooks.usePatchMatch();
+  const patchMatch = drawsHooks.usePatchMatch(user?.role!);
   const patchMatchWinner = drawsHooks.usePatchMatchWinner();
 
   useEffect(() => {

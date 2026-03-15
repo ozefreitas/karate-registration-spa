@@ -19,6 +19,8 @@ import MatchDetailEditCard from "./MatchDetailEditCard";
 import { useForm } from "react-hook-form";
 import { drawsHooks } from "../../hooks";
 import { RoundsOptions } from "../../config";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -38,6 +40,7 @@ export default function MatchInfoModal(
     edit: boolean;
   }>,
 ) {
+  const { enqueueSnackbar } = useSnackbar();
   const [selectedWinner, setSelectedWinner] = React.useState<string>("");
   const updateMatch = drawsHooks.useUpdateMatch();
   const patchMatchWinner = drawsHooks.usePatchMatchWinner();
@@ -75,7 +78,10 @@ export default function MatchInfoModal(
         kata_contender_2: props.matchData.kataresult?.kata_contender_2 ?? "",
         flags_contender_2: props.matchData.kataresult?.flags_contender_2 ?? 0,
       });
-      if (props.matchData.winner !== null) {
+
+      if (props.matchData.winner === null) {
+        setSelectedWinner("");
+      } else {
         setSelectedWinner(
           props.matchData.winner.id === props.matchData.contender_1.id
             ? "SHIRO"
@@ -86,6 +92,59 @@ export default function MatchInfoModal(
   }, [props.matchData]);
 
   const onSubmit = (data: any) => {
+    console.log(data)
+    // check if contender with most flags is the one selected as winner
+    if (
+      data.flags_contender_1 > data.flags_contender_2 &&
+      selectedWinner === "AKA"
+    ) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Vencedor selecionado não é o que tem mais bandeiras! Verifique o resultado.",
+        "error",
+      );
+      return;
+    }
+    if (
+      data.flags_contender_2 > data.flags_contender_1 &&
+      selectedWinner === "SHIRO"
+    ) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Vencedor selecionado não é o que tem mais bandeiras! Verifique o resultado.",
+        "error",
+      );
+      return;
+    }
+
+    // veriry if sum equals 5 when flags are not 0
+    if (
+      Number(data.flags_contender_1) !== 0 &&
+      Number(data.flags_contender_2) !== 0 &&
+      Number(data.flags_contender_1) + Number(data.flags_contender_2) !== 5
+    ) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Soma de bandeira não resulta em 5. Retifique!",
+        "error",
+      );
+      return;
+    }
+
+    // if flags are 0, cannot submit a winner
+    if (
+      data.flags_contender_1 === 0 &&
+      data.flags_contender_2 === 0 &&
+      selectedWinner !== ""
+    ) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Atribua as bandeiras da partida para submeter um vencedor.",
+        "error",
+      );
+      return;
+    }
+
     const payload = {
       kataresult: {
         flags_contender_1: data.flags_contender_1,
@@ -102,6 +161,10 @@ export default function MatchInfoModal(
             ? data.contender_2
             : null,
     };
+    if (selectedWinner !== "") {
+      const winner = { winner: selectedWinner === "SHIRO" ? 1 : 2 };
+      patchMatchWinner.mutate({ matchId: props.matchData.id, data: winner });
+    }
     updateMatch.mutate(
       { matchId: props.matchData.id, data: payload },
       {
@@ -111,10 +174,6 @@ export default function MatchInfoModal(
         },
       },
     );
-    if (selectedWinner !== "") {
-      const winner = { winner: selectedWinner === "SHIRO" ? 1 : 2 };
-      patchMatchWinner.mutate({ matchId: props.matchData.id, data: winner });
-    }
   };
 
   return (
@@ -122,7 +181,12 @@ export default function MatchInfoModal(
       fullWidth
       maxWidth="md"
       open={props.isModalOpen}
-      onClose={props.handleModalClose}
+      onClose={() => {
+        props.handleModalClose();
+        if (props.matchData.winner === null) {
+          setSelectedWinner("");
+        }
+      }}
       slots={{
         transition: Transition,
       }}
@@ -236,14 +300,22 @@ export default function MatchInfoModal(
                 <Chip
                   sx={{ p: 3, fontSize: 20 }}
                   clickable
-                  onClick={() => setSelectedWinner("SHIRO")}
+                  onClick={() => {
+                    if (selectedWinner === "SHIRO") {
+                      setSelectedWinner("");
+                    } else setSelectedWinner("SHIRO");
+                  }}
                   variant={selectedWinner === "SHIRO" ? "filled" : "outlined"}
                   label={"SHIRO"}
                 ></Chip>
                 <Chip
                   sx={{ p: 3, fontSize: 20 }}
                   clickable
-                  onClick={() => setSelectedWinner("AKA")}
+                  onClick={() => {
+                    if (selectedWinner === "AKA") {
+                      setSelectedWinner("");
+                    } else setSelectedWinner("AKA");
+                  }}
                   color="error"
                   variant={selectedWinner === "AKA" ? "filled" : "outlined"}
                   label={"AKA"}

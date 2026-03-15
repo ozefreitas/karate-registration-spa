@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -21,7 +22,8 @@ import {
   Sports,
 } from "@mui/icons-material";
 import SingleContenderCard from "../DynamicView/SingleContenderCard";
-import { drawsHooks } from "../../hooks";
+import { authHooks, drawsHooks } from "../../hooks";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -53,7 +55,9 @@ export default function MatchPickerModal(
     setSelectedMatchId(props.watch("match"));
   }, [props.watch("match")]);
 
-  const patchOngoingMatch = drawsHooks.usePatchMatch();
+  const { user } = useAuth();
+
+  const patchOngoingMatch = drawsHooks.usePatchMatch(user?.role!);
 
   return (
     <Dialog
@@ -98,15 +102,15 @@ export default function MatchPickerModal(
         <Grid
           container
           alignItems={"center"}
-          m={6}
-          mt={1}
+          m={2}
+          mx={4}
           size={12}
           spacing={1}
           wrap="nowrap"
         >
           {props.rounds.map((roundNumber: any, index: number) => (
-            <Grid key={index} size={6} container sx={{ minWidth: 400 }}>
-              <Grid size={10} container spacing={4} direction={"column"}>
+            <Grid key={index} size={6} container sx={{ minWidth: 470 }}>
+              <Grid size={10} container spacing={6} direction={"column"}>
                 <Grid px={2} size={12} container alignItems={"center"}>
                   <SectionHeader
                     title={
@@ -173,6 +177,24 @@ export default function MatchPickerModal(
                           },
                         }}
                       >
+                        {roundNumber === 0 && (
+                          <Grid container size={12} justifyContent={"flex-end"}>
+                            <Box
+                              sx={{
+                                width: "fit-content",
+                                border: "1px solid red",
+                                fontSize: 14,
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: 2,
+                              }}
+                            >
+                              {match.match_number === 1
+                                ? "1º e 2º Lugares"
+                                : "3º e 4º Lugares"}
+                            </Box>
+                          </Grid>
+                        )}
                         <Grid
                           size={10}
                           container
@@ -181,11 +203,13 @@ export default function MatchPickerModal(
                         >
                           <SingleContenderCard
                             roundNumber={roundNumber}
+                            matchNumber={match.match_number}
                             contenderNumber={1}
                             isWinner={!is2Winner}
                             points={
                               match.kataresult === null ||
-                              match.kataresult?.flags_contender_1 === 0
+                              (match.kataresult?.flags_contender_1 === 0 &&
+                                match.kataresult?.flags_contender_2 === 0)
                                 ? 99
                                 : match.kataresult?.flags_contender_1
                             }
@@ -196,11 +220,13 @@ export default function MatchPickerModal(
                           ></SingleContenderCard>
                           <SingleContenderCard
                             roundNumber={roundNumber}
+                            matchNumber={match.match_number}
                             contenderNumber={2}
                             isWinner={is2Winner}
                             points={
                               match.kataresult === null ||
-                              match.kataresult?.flags_contender_2 === 0
+                              (match.kataresult?.flags_contender_1 === 0 &&
+                                match.kataresult?.flags_contender_2 === 0)
                                 ? 99
                                 : match.kataresult?.flags_contender_2
                             }

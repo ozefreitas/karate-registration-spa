@@ -33,7 +33,8 @@ export const useUpdateMatch = () => {
   });
 };
 
-export const usePatchMatch = () => {
+export const usePatchMatch = (userRole: string) => {
+  console.log(userRole);
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -43,7 +44,9 @@ export const usePatchMatch = () => {
     onSuccess: () => {
       callNotiStack(
         enqueueSnackbar,
-        "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!",
+        userRole === "technician"
+          ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
+          : "Partida selecionada com sucesso!",
         "success",
       );
       channel.postMessage({ type: "MATCH_UPDATED" });
@@ -120,8 +123,10 @@ export const usePatchMatchWinner = () => {
       callNotiStack(
         enqueueSnackbar,
         data.is_final
-          ? `VENCEDOR de ${data.discipline} de ${data.category} encontrado!`
-          : "Vencedor atualizado e movido para ronda seguinte!",
+          ? `VENCEDOR de ${data.discipline} de ${data.category} encontrado! Conclua o Escalão para consumar o pódio.`
+          : data.is_third_place
+            ? "3º Lugar encontrado!"
+            : "Vencedor atualizado e movido para ronda seguinte!",
         "success",
       );
       channel.postMessage({ type: "MATCH_UPDATED" });

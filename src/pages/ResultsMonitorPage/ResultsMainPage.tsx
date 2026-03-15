@@ -104,6 +104,7 @@ export default function ResultsMainPage() {
       const data = JSON.parse(event.data);
       if (data.type === "DISPLAY_READY") {
         sendMatchState();
+        sendTatami();
       }
     };
 
@@ -131,6 +132,7 @@ export default function ResultsMainPage() {
   });
 
   const selectedMatchRef = useRef(watch("match"));
+  const inputedTatamiRef = useRef(watch("tatami"));
 
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
@@ -204,16 +206,16 @@ export default function ResultsMainPage() {
     }
   };
 
-  const tatami = watch("tatami");
-
   const sendTatami = () => {
-    if (tatami === "" || Number(tatami) > 3 || Number(tatami) <= 0) {
+    if (inputedTatamiRef.current === "") {
       setError("tatami", { message: "Este campo é obrigatório" });
     } else if (
       socketRef.current &&
       socketRef.current.readyState === WebSocket.OPEN
     ) {
-      socketRef.current.send(JSON.stringify({ tatami: tatami }));
+      socketRef.current.send(
+        JSON.stringify({ tatami: inputedTatamiRef.current }),
+      );
     }
   };
 
@@ -224,6 +226,10 @@ export default function ResultsMainPage() {
   useEffect(() => {
     selectedMatchRef.current = watch("match");
   }, [watch("match")]);
+
+  useEffect(() => {
+    inputedTatamiRef.current = watch("tatami");
+  }, [watch("tatami")]);
 
   const sendMatchState = () => {
     if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
@@ -241,6 +247,7 @@ export default function ResultsMainPage() {
         player2Club: currentMatch?.contender_2?.club,
         player1Kata: currentMatch?.kataresult?.kata_contender_1,
         player2Kata: currentMatch?.kataresult?.kata_contender_2,
+        tatami: inputedTatamiRef.current,
       }),
     );
   };
@@ -261,21 +268,30 @@ export default function ResultsMainPage() {
     ...new Set(matchesData?.map((m: any) => m.round_number)),
   ].sort((a: any, b: any) => b - a);
 
-  const getNextMatchId = (currentMatchId: number) => {
-    // Build the ordered list exactly as rendered in the UI
-    const orderedMatches = rounds.flatMap(
-      (roundNumber: any) =>
-        matchesData?.filter((m: any) => m.round_number === roundNumber) ?? [],
-    );
+  const getOrderedMatches = () => {
+    return rounds.flatMap((roundNumber: any) => {
+      const roundMatches =
+        matchesData?.filter((m: any) => m.round_number === roundNumber) ?? [];
 
+      if (roundNumber === 0) {
+        // 3rd/4th place (match_number 2) should come before finals (match_number 1)
+        return [...roundMatches].sort(
+          (a: any, b: any) => b.match_number - a.match_number,
+        );
+      }
+
+      return roundMatches;
+    });
+  };
+
+  const getNextMatchId = (currentMatchId: number) => {
+    const orderedMatches = getOrderedMatches();
     const currentIndex = orderedMatches.findIndex(
       (m: any) => m.id === currentMatchId,
     );
 
-    if (currentIndex === -1 || currentIndex === orderedMatches.length - 1) {
-      return null; // not found, or already at the last match
-    }
-
+    if (currentIndex === -1 || currentIndex === orderedMatches.length - 1)
+      return null;
     return orderedMatches[currentIndex + 1].id;
   };
 
@@ -291,20 +307,23 @@ export default function ResultsMainPage() {
   };
 
   const getPrevMatchId = (currentMatchId: number) => {
-    const orderedMatches = rounds.flatMap(
-      (roundNumber: any) =>
-        matchesData?.filter((m: any) => m.round_number === roundNumber) ?? [],
-    );
-
+    const orderedMatches = getOrderedMatches();
     const currentIndex = orderedMatches.findIndex(
       (m: any) => m.id === currentMatchId,
     );
 
-    if (currentIndex <= 0) {
-      return null; // not found, or already at the first match
-    }
-
+    if (currentIndex <= 0) return null;
     return orderedMatches[currentIndex - 1].id;
+  };
+
+  const handlePrevMatch = () => {
+    const currentMatchId = getValues("match");
+    const prevId = getPrevMatchId(Number(currentMatchId));
+    if (prevId === null) return;
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("match", String(prevId));
+    setSearchParams(newParams);
+    setValue("match", String(prevId));
   };
 
   const openDynamicDrawPage = () => {
@@ -324,16 +343,6 @@ export default function ResultsMainPage() {
       dynamicWindowRef.current.location.href = `/events/${eventId!}/draw/dynamic_view/?bracket=${watch("bracket")}`;
     }
   }, [watch("bracket")]);
-
-  const handlePrevMatch = () => {
-    const currentMatchId = getValues("match");
-    const prevId = getPrevMatchId(Number(currentMatchId));
-    if (prevId === null) return;
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("match", String(prevId));
-    setSearchParams(newParams);
-    setValue("match", String(prevId));
-  };
 
   return (
     <Grid container>
@@ -383,52 +392,6 @@ export default function ResultsMainPage() {
           >
             {isDisplayOpen ? "Fechar Monitor" : "Inicializar Monitor"}
           </Button>
-        </Grid>
-        <Grid container sx={{ mt: 3 }} size={12} alignContent="center">
-          <Grid sx={{ p: 2 }} size={3}>
-            <Controller
-              name="tatami"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Tatami"
-                  type="number"
-                  required={isDisplayOpen}
-                  disabled={!isDisplayOpen || currentScreen === ""}
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    clearErrors();
-                  }}
-                  error={!!errors.tatami}
-                  helperText={errors.tatami?.message}
-                />
-              )}
-            />
-          </Grid>
-          <Grid
-            size={2}
-            container
-            justifyContent={"center"}
-            alignContent="center"
-          >
-            <Button
-              sx={{ m: 1 }}
-              variant="contained"
-              size="large"
-              color="success"
-              disabled={!isDisplayOpen || currentScreen === ""}
-              onClick={() => {
-                sendTatami();
-              }}
-              startIcon={<Add />}
-            >
-              Enviar
-            </Button>
-          </Grid>
         </Grid>
       </FormAccordion>
       {isDisplayOpen ? (
@@ -533,6 +496,52 @@ export default function ResultsMainPage() {
             title="Selecionar Ecrã"
             subheader="Selecione um Escalão para poder selecionar o ecrã respetivo."
           >
+            <Grid container size={12} alignContent="center">
+              <Grid p={2} size={3}>
+                <Controller
+                  name="tatami"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Tatami"
+                      type="number"
+                      required={isDisplayOpen}
+                      disabled={!isDisplayOpen || currentScreen === ""}
+                      fullWidth
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        clearErrors();
+                      }}
+                      error={!!errors.tatami}
+                      helperText={errors.tatami?.message}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid
+                size={2}
+                container
+                justifyContent={"center"}
+                alignContent="center"
+              >
+                <Button
+                  sx={{ m: 1 }}
+                  variant="contained"
+                  size="large"
+                  color="success"
+                  disabled={!isDisplayOpen || currentScreen === ""}
+                  onClick={() => {
+                    sendTatami();
+                  }}
+                  startIcon={<Add />}
+                >
+                  Enviar
+                </Button>
+              </Grid>
+            </Grid>
             <Grid
               size={12}
               container

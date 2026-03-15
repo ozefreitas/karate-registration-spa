@@ -90,7 +90,7 @@ const SingleContenderCard = (props: {
             props.isWinner &&
             props.roundNumber === 0 &&
             props.matchNumber === 1 && (
-              <EmojiEvents sx={{ color: "#16a34a" }} />
+              <EmojiEvents sx={{ color: "#16a34a" }} fontSize="large" />
             )}
         </Grid>
         <Grid container alignItems={"center"} gap={2}>

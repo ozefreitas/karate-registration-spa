@@ -24,6 +24,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import GenerateDrawModal from "../../components/Modals/GenerateDrawModal";
 import { callNotiStack } from "../../utils/utils";
 import { useSnackbar } from "notistack";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function GenerateDrawPage() {
   const { id: eventId } = useParams();
@@ -158,6 +159,10 @@ export default function GenerateDrawPage() {
 
   return (
     <Grid container>
+      <PageInfoCard
+        title="Gerar Novo Sorteio"
+        description="Altere as definições relativas aos Sorteios a ser gerados. Pode atribuir a cada Modalidade um tipo de Sorteio específico de forma a satisfazer as regras de cada prova."
+      ></PageInfoCard>
       <FormCard
         title="Configurar Sorteio"
         subheader="Altere as confugurações do Sorteios de cada Modalidade."

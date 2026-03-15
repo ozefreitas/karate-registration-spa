@@ -21,6 +21,7 @@ import {
   LiveTv,
   Settings,
   Sports,
+  SportsScore,
   Visibility,
 } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
@@ -32,7 +33,7 @@ import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function DynamicViewPage(props: { userRole: string }) {
+export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const queryClient = useQueryClient();
   useEffect(() => {
     const channel = new BroadcastChannel("match_updates");
@@ -110,7 +111,7 @@ export default function DynamicViewPage(props: { userRole: string }) {
     (a, b) => b - a,
   );
 
-  const patchOngoingMatch = drawsHooks.usePatchMatch();
+  const patchOngoingMatch = drawsHooks.usePatchMatch(props.userRole);
   return (
     <>
       <PageInfoCard
@@ -179,6 +180,15 @@ export default function DynamicViewPage(props: { userRole: string }) {
             )}
           />
         </Grid>
+        <Grid size={12} container justifyContent={"flex-end"} m={2}>
+          <Button
+            startIcon={<SportsScore> </SportsScore>}
+            variant="contained"
+            disabled={watch("bracket") === ""}
+          >
+            Concluir Escalão
+          </Button>
+        </Grid>
       </FormCard>
       {isMatchesLoading ? (
         <Grid mt={5} container size={12} justifyContent={"center"}>
@@ -192,11 +202,29 @@ export default function DynamicViewPage(props: { userRole: string }) {
           <Button onClick={() => refetch()}>Refrescar</Button>
         </Grid>
       ) : rounds.length === 0 ? null : (
-        <Box sx={{ overflowX: "auto", width: "100%" }}>
+        <Box
+          sx={{
+            overflowX: "auto",
+            m: 6,
+            px: 6,
+            pb: 3,
+            maskImage:
+              "linear-gradient(to left, transparent 0%, black 5%, black 95%, transparent 100%)",
+            "&::-webkit-scrollbar": {
+              height: 5,
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#888",
+              borderRadius: 10,
+            },
+          }}
+        >
           <Grid
             container
             alignItems={"center"}
-            m={7}
             size={12}
             spacing={5}
             wrap="nowrap"
@@ -213,7 +241,7 @@ export default function DynamicViewPage(props: { userRole: string }) {
                   size={10}
                   sx={{ minWidth: 300 }}
                   container
-                  spacing={5}
+                  spacing={8}
                   direction={"column"}
                 >
                   <Grid px={2} size={12} container alignItems={"center"}>
@@ -294,7 +322,8 @@ export default function DynamicViewPage(props: { userRole: string }) {
                                 isWinner={!is2Winner}
                                 points={
                                   match.kataresult === null ||
-                                  match.kataresult?.flags_contender_1 === 0
+                                  (match.kataresult?.flags_contender_1 === 0 &&
+                                    match.kataresult?.flags_contender_2 === 0)
                                     ? 99
                                     : match.kataresult?.flags_contender_1
                                 }
@@ -310,7 +339,8 @@ export default function DynamicViewPage(props: { userRole: string }) {
                                 isWinner={is2Winner}
                                 points={
                                   match.kataresult === null ||
-                                  match.kataresult?.flags_contender_2 === 0
+                                  (match.kataresult?.flags_contender_1 === 0 &&
+                                    match.kataresult?.flags_contender_2 === 0)
                                     ? 99
                                     : match.kataresult?.flags_contender_2
                                 }
