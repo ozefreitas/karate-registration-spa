@@ -332,6 +332,7 @@ function App() {
                           "subed_club",
                           "technician",
                         ]}
+                        allowUnauthenticated
                       />
                     )
                   }

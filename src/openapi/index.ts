@@ -119,6 +119,7 @@ export type { PatchMonthlyPersonPayment } from './models/PatchMonthlyPersonPayme
 export { PaymentObjectEnum } from './models/PaymentObjectEnum';
 export type { Persons } from './models/Persons';
 export type { PersonsPaymentsStatus } from './models/PersonsPaymentsStatus';
+export { PlaceEnum } from './models/PlaceEnum';
 export type { PreviousMatch } from './models/PreviousMatch';
 export type { Rating } from './models/Rating';
 export type { RegisterUser } from './models/RegisterUser';

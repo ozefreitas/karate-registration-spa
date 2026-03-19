@@ -199,7 +199,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                   changedCount={filtersChangedCount}
                 ></EventsFilters>
               )}
-              {props.userRole === "technician" ? null : (
+              {["technician", undefined].includes(props.userRole) ? null : (
                 <Grid pl={2} container spacing={1} borderRadius={3}>
                   <Tooltip placement="top" title={"Vista de Lista"}>
                     <span>

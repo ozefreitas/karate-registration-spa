@@ -161,8 +161,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       ></PageInfoCard>
       <Grid container spacing={1}>
         <Grid container size={12} m={2}>
-          <Grid size={6}>
-            <Card elevation={4} sx={{ mr: 2 }}>
+          <Grid size={props.userRole === undefined ? 12 : 6}>
+            <Card elevation={4}>
               <CardHeader
                 title="Informação Geral"
                 sx={{
@@ -250,215 +250,230 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     </Stack>
                   </>
                 )}
+                {props.userRole === undefined ? (
+                  <Grid
+                    container
+                    size={12}
+                    justifyContent={"flex-end"}
+                    alignItems={"center"}
+                  >
+                    <GenerateButton
+                      label="Consultar Sorteios"
+                      to="draw/dynamic_view/"
+                    ></GenerateButton>
+                  </Grid>
+                ) : null}
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={6} container alignContent={"space-between"}>
-            <Grid size={12}>
-              <Card>
-                <CardHeader
-                  title="Ficheiros"
-                  sx={{
-                    "& .MuiCardHeader-title": {
-                      fontWeight: "bold",
-                    },
-                  }}
-                ></CardHeader>
-                <CardContent sx={{ ml: 5 }}>
-                  <ListItemText
-                    primary={"Não existem ficheiros para este Evento."}
-                    sx={{ color: "GrayText" }}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid size={12}>
-              <Card sx={{ mt: 2, mb: 2 }}>
-                <CardHeader
-                  title="Notas Importantes"
-                  subheader={
-                    props.userRole === "main_admin" ? (
-                      <Button
-                        sx={{ m: 2, ml: 0 }}
-                        variant="contained"
-                        size="small"
-                        color="warning"
-                        onClick={() => setIsDescriptionEdit((prev) => !prev)}
-                        startIcon={<Edit />}
-                      >
-                        Editar
-                      </Button>
-                    ) : null
-                  }
-                  sx={{
-                    "& .MuiCardHeader-title": {
-                      fontWeight: "bold",
-                    },
-                  }}
-                ></CardHeader>
-                <CardContent sx={{ pt: 0, ml: 2 }}>
-                  {isDescriptionEdit ? (
-                    <TextField
-                      color="warning"
-                      variant={"outlined"}
-                      label="Descrição"
-                      fullWidth
-                      required
-                      multiline
-                      value={description}
-                      onChange={(e) => {
-                        setDescription(e.target.value);
-                      }}
-                    />
-                  ) : singleEventData?.description === "" ? (
+          {props.userRole === undefined ? null : (
+            <Grid size={6} container alignContent={"space-between"}>
+              <Grid size={12}>
+                <Card>
+                  <CardHeader
+                    title="Ficheiros"
+                    sx={{
+                      "& .MuiCardHeader-title": {
+                        fontWeight: "bold",
+                      },
+                    }}
+                  ></CardHeader>
+                  <CardContent sx={{ ml: 5 }}>
                     <ListItemText
-                      primary={
-                        "Não existem informações adicionais para este Evento."
-                      }
+                      primary={"Não existem ficheiros para este Evento."}
                       sx={{ color: "GrayText" }}
                     />
-                  ) : (
-                    <Typography paddingLeft={1}>
-                      {singleEventData?.description}
-                    </Typography>
-                  )}
-                </CardContent>
-                {isDescriptionEdit ? (
-                  <CardActions
-                    sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}
-                  >
-                    <Button
-                      size="small"
-                      onClick={() => handleDescriptionSubmit(description)}
-                      variant="contained"
-                    >
-                      Enviar
-                    </Button>
-                  </CardActions>
-                ) : null}
-              </Card>
-            </Grid>
-            <Grid size={12}>
-              <Card sx={{ width: "100%" }}>
-                <CardHeader
-                  title="Avaliação"
-                  subheader={
-                    props.userRole === "main_admin"
-                      ? "Depois da realização da prova, os Clubes poderão avaliar o Evento."
-                      : "Depois da realização da prova, poderá deixar uma avaliação"
-                  }
-                  sx={{
-                    "& .MuiCardHeader-title": {
-                      fontWeight: "bold",
-                      marginBottom: 1,
-                    },
-                  }}
-                ></CardHeader>
-                <CardContent sx={{ pt: 0, pb: 0, ml: 2 }}>
-                  {props.userRole === "main_admin" ? (
-                    <Typography>
-                      Nota geral do Evento: {singleEventData?.rating}
-                    </Typography>
-                  ) : isEventRateLoading ? (
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
-                      <CircularProgress />
-                    </Box>
-                  ) : eventRateError ? (
-                    <ListItem disablePadding sx={{ m: 0 }}>
-                      <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                        <ListItemText primary={"Um erro ocorreu."} />
-                      </ListItemButton>
-                    </ListItem>
-                  ) : eventRateData?.code === "event_not_ended" ? (
-                    <li style={{ color: "grey", marginLeft: 30 }}>
-                      {eventRateData?.message}
-                    </li>
-                  ) : eventRateData?.code === "already_rated" ? (
-                    <li style={{ color: "grey", marginLeft: 30 }}>
-                      {eventRateData?.message}
-                    </li>
-                  ) : (
-                    <Grid justifyContent="center" container spacing={2}>
-                      <ListItemButton
-                        selected={selected === 5}
-                        onClick={() => handleClick(5)}
-                      >
-                        <ListItemIcon>
-                          <ThumbUp
-                            color="success"
-                            fontSize="large"
-                            sx={{ cursor: "pointer" }}
-                          />
-                        </ListItemIcon>
-                        <ListItemText>Muito boa</ListItemText>
-                      </ListItemButton>
-                      <ListItemButton
-                        selected={selected === 2}
-                        onClick={() => handleClick(2)}
-                      >
-                        <ListItemIcon>
-                          <ThumbsUpDown
-                            color="warning"
-                            fontSize="large"
-                            sx={{ cursor: "pointer" }}
-                          />
-                        </ListItemIcon>
-                        <ListItemText>Assim-Assim</ListItemText>
-                      </ListItemButton>
-                      <ListItemButton
-                        selected={selected === 0}
-                        onClick={() => handleClick(0)}
-                      >
-                        <ListItemIcon>
-                          <ThumbDown
-                            color="error"
-                            fontSize="large"
-                            sx={{ cursor: "pointer" }}
-                          />
-                        </ListItemIcon>
-                        <ListItemText>Muito má</ListItemText>
-                      </ListItemButton>
-                    </Grid>
-                  )}
-                </CardContent>
-                {props.userRole === "main_admin" ? null : (
-                  <CardActions sx={{ justifyContent: "flex-end" }}>
-                    <Stack
-                      direction={{
-                        xs: "row-reverse",
-                        sm: "row",
-                      }}
-                      sx={{
-                        p: 2,
-                        pt: 1,
-                        gap: 4,
-                        flexShrink: 0,
-                        alignSelf: { xs: "flex-end", sm: "center" },
-                      }}
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid size={12}>
+                <Card sx={{ mt: 2, mb: 2 }}>
+                  <CardHeader
+                    title="Notas Importantes"
+                    subheader={
+                      props.userRole === "main_admin" ? (
+                        <Button
+                          sx={{ m: 2, ml: 0 }}
+                          variant="contained"
+                          size="small"
+                          color="warning"
+                          onClick={() => setIsDescriptionEdit((prev) => !prev)}
+                          startIcon={<Edit />}
+                        >
+                          Editar
+                        </Button>
+                      ) : null
+                    }
+                    sx={{
+                      "& .MuiCardHeader-title": {
+                        fontWeight: "bold",
+                      },
+                    }}
+                  ></CardHeader>
+                  <CardContent sx={{ pt: 0, ml: 2 }}>
+                    {isDescriptionEdit ? (
+                      <TextField
+                        color="warning"
+                        variant={"outlined"}
+                        label="Descrição"
+                        fullWidth
+                        required
+                        multiline
+                        value={description}
+                        onChange={(e) => {
+                          setDescription(e.target.value);
+                        }}
+                      />
+                    ) : singleEventData?.description === "" ? (
+                      <ListItemText
+                        primary={
+                          "Não existem informações adicionais para este Evento."
+                        }
+                        sx={{ color: "GrayText" }}
+                      />
+                    ) : (
+                      <Typography paddingLeft={1}>
+                        {singleEventData?.description}
+                      </Typography>
+                    )}
+                  </CardContent>
+                  {isDescriptionEdit ? (
+                    <CardActions
+                      sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}
                     >
                       <Button
                         size="small"
-                        disabled={selected === -1}
-                        onClick={handleEventRating}
+                        onClick={() => handleDescriptionSubmit(description)}
                         variant="contained"
                       >
                         Enviar
                       </Button>
-                      <Button
-                        size="small"
-                        disabled={selected === -1}
-                        onClick={() => setSelected(-1)}
+                    </CardActions>
+                  ) : null}
+                </Card>
+              </Grid>
+              <Grid size={12}>
+                <Card sx={{ width: "100%" }}>
+                  <CardHeader
+                    title="Avaliação"
+                    subheader={
+                      props.userRole === "main_admin"
+                        ? "Depois da realização da prova, os Clubes poderão avaliar o Evento."
+                        : "Depois da realização da prova, poderá deixar uma avaliação"
+                    }
+                    sx={{
+                      "& .MuiCardHeader-title": {
+                        fontWeight: "bold",
+                        marginBottom: 1,
+                      },
+                    }}
+                  ></CardHeader>
+                  <CardContent sx={{ pt: 0, pb: 0, ml: 2 }}>
+                    {props.userRole === "main_admin" ? (
+                      <Typography>
+                        Nota geral do Evento: {singleEventData?.rating}
+                      </Typography>
+                    ) : isEventRateLoading ? (
+                      <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        <CircularProgress />
+                      </Box>
+                    ) : eventRateError ? (
+                      <ListItem disablePadding sx={{ m: 0 }}>
+                        <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                          <ListItemText primary={"Um erro ocorreu."} />
+                        </ListItemButton>
+                      </ListItem>
+                    ) : eventRateData?.code === "event_not_ended" ? (
+                      <li style={{ color: "grey", marginLeft: 30 }}>
+                        {eventRateData?.message}
+                      </li>
+                    ) : eventRateData?.code === "already_rated" ? (
+                      <li style={{ color: "grey", marginLeft: 30 }}>
+                        {eventRateData?.message}
+                      </li>
+                    ) : (
+                      <Grid justifyContent="center" container spacing={2}>
+                        <ListItemButton
+                          selected={selected === 5}
+                          onClick={() => handleClick(5)}
+                        >
+                          <ListItemIcon>
+                            <ThumbUp
+                              color="success"
+                              fontSize="large"
+                              sx={{ cursor: "pointer" }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText>Muito boa</ListItemText>
+                        </ListItemButton>
+                        <ListItemButton
+                          selected={selected === 2}
+                          onClick={() => handleClick(2)}
+                        >
+                          <ListItemIcon>
+                            <ThumbsUpDown
+                              color="warning"
+                              fontSize="large"
+                              sx={{ cursor: "pointer" }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText>Assim-Assim</ListItemText>
+                        </ListItemButton>
+                        <ListItemButton
+                          selected={selected === 0}
+                          onClick={() => handleClick(0)}
+                        >
+                          <ListItemIcon>
+                            <ThumbDown
+                              color="error"
+                              fontSize="large"
+                              sx={{ cursor: "pointer" }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText>Muito má</ListItemText>
+                        </ListItemButton>
+                      </Grid>
+                    )}
+                  </CardContent>
+                  {props.userRole === "main_admin" ? null : (
+                    <CardActions sx={{ justifyContent: "flex-end" }}>
+                      <Stack
+                        direction={{
+                          xs: "row-reverse",
+                          sm: "row",
+                        }}
+                        sx={{
+                          p: 2,
+                          pt: 1,
+                          gap: 4,
+                          flexShrink: 0,
+                          alignSelf: { xs: "flex-end", sm: "center" },
+                        }}
                       >
-                        Remover seleção
-                      </Button>
-                    </Stack>
-                  </CardActions>
-                )}
-              </Card>
+                        <Button
+                          size="small"
+                          disabled={selected === -1}
+                          onClick={handleEventRating}
+                          variant="contained"
+                        >
+                          Enviar
+                        </Button>
+                        <Button
+                          size="small"
+                          disabled={selected === -1}
+                          onClick={() => setSelected(-1)}
+                        >
+                          Remover seleção
+                        </Button>
+                      </Stack>
+                    </CardActions>
+                  )}
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
-        {singleEventData?.has_registrations ? (
+        {singleEventData?.has_registrations && props.userRole !== undefined ? (
           <Grid container size={12} sx={{ mx: 2 }}>
             <Card
               sx={{

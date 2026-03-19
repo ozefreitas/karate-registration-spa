@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   CircularProgress,
   Grid,
   IconButton,
@@ -111,6 +112,8 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     (a, b) => b - a,
   );
 
+  const endBracket = drawsHooks.useOfficializeBracket();
+
   const patchOngoingMatch = drawsHooks.usePatchMatch(props.userRole);
   return (
     <>
@@ -173,22 +176,41 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                 </MenuItem>
                 {bracketsData?.map((item, index) => (
                   <MenuItem key={index} value={item.id}>
-                    {item.name}
+                    <Grid px={1} container spacing={3} alignItems={"center"}>
+                      <Typography>{item.name}</Typography>
+                      {item.officialized_at === null ? null : (
+                        <Chip
+                          color="warning"
+                          variant="outlined"
+                          label="Realizado"
+                        ></Chip>
+                      )}
+                    </Grid>
                   </MenuItem>
                 ))}
               </TextField>
             )}
           />
         </Grid>
-        <Grid size={12} container justifyContent={"flex-end"} m={2}>
-          <Button
-            startIcon={<SportsScore> </SportsScore>}
-            variant="contained"
-            disabled={watch("bracket") === ""}
-          >
-            Concluir Escalão
-          </Button>
-        </Grid>
+        {[undefined, "subed_club", "free_club"].includes(
+          props.userRole,
+        ) ? null : (
+          <Grid size={12} container justifyContent={"flex-end"} m={2}>
+            <Button
+              startIcon={<SportsScore> </SportsScore>}
+              variant="contained"
+              disabled={watch("bracket") === ""}
+              onClick={() => {
+                endBracket.mutate({
+                  bracketId: Number(watch("bracket")),
+                  data: {},
+                });
+              }}
+            >
+              Concluir Escalão
+            </Button>
+          </Grid>
+        )}
       </FormCard>
       {isMatchesLoading ? (
         <Grid mt={5} container size={12} justifyContent={"center"}>

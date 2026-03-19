@@ -115,6 +115,26 @@ export class BracketService {
     }
     /**
      * @param id A unique integer value identifying this bracket.
+     * @param requestBody
+     * @returns Bracket
+     * @throws ApiError
+     */
+    public static bracketOfficializeCreate(
+        id: number,
+        requestBody: Bracket,
+    ): CancelablePromise<Bracket> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/bracket/{id}/officialize/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this bracket.
      * @param event
      * @returns CompactPerson
      * @throws ApiError

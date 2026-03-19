@@ -2,13 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CompactPerson } from './CompactPerson';
+import type { PlaceEnum } from './PlaceEnum';
 export type AllClassifications = {
     readonly id: number;
-    readonly competition: string;
-    readonly full_category: string;
-    first_place: CompactPerson;
-    second_place: CompactPerson;
-    third_place: CompactPerson;
+    place: PlaceEnum;
+    readonly created_at: string;
+    bracket: number;
+    person: string;
 };
 

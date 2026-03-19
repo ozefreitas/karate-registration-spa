@@ -2,11 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { PlaceEnum } from './PlaceEnum';
 export type CreateClassifications = {
     readonly id: number;
-    competition: string;
-    first_place: string;
-    second_place?: string | null;
-    third_place?: string | null;
+    place: PlaceEnum;
+    readonly created_at: string;
+    bracket: number;
+    person: string;
 };
 

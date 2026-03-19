@@ -8,6 +8,7 @@ export type PatchedBracket = {
     name?: string;
     draw_type?: DrawTypeEnum | null;
     readonly created_at?: string;
+    officialized_at?: string | null;
     event?: string;
     discipline?: number;
     category?: number;
