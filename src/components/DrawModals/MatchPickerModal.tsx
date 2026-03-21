@@ -73,9 +73,6 @@ export default function MatchPickerModal(
     setCanScrollRight(el.scrollLeft + 35 + el.clientWidth < el.scrollWidth - 1);
   };
 
-  console.log(canScrollLeft);
-  console.log(canScrollRight);
-
   return (
     <Dialog
       fullWidth

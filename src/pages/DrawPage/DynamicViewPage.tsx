@@ -18,6 +18,8 @@ import {
 } from "@mui/material";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import {
+  ArrowBackIos,
+  ArrowForwardIos,
   Clear,
   LiveTv,
   Settings,
@@ -27,7 +29,7 @@ import {
 } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import MatchInfoModal from "../../components/DrawModals/MatchInfoModal";
 import SingleContenderCard from "../../components/DynamicView/SingleContenderCard";
 import { RoundsOptions } from "../../config";
@@ -115,6 +117,19 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const endBracket = drawsHooks.useOfficializeBracket();
 
   const patchOngoingMatch = drawsHooks.usePatchMatch(props.userRole);
+
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    const el = gridRef.current;
+    if (!el) return;
+
+    setCanScrollLeft(el.scrollLeft > 25);
+    setCanScrollRight(el.scrollLeft + 45 + el.clientWidth < el.scrollWidth - 1);
+  };
+
   return (
     <>
       <PageInfoCard
@@ -224,12 +239,14 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
           <Button onClick={() => refetch()}>Refrescar</Button>
         </Grid>
       ) : rounds.length === 0 ? null : (
-        <Box
+        <Grid
+          ref={gridRef}
+          overflow={"auto"}
+          onScroll={handleScroll}
+          m={6}
+          px={6}
+          py={3}
           sx={{
-            overflowX: "auto",
-            m: 6,
-            px: 6,
-            pb: 3,
             maskImage:
               "linear-gradient(to left, transparent 0%, black 5%, black 95%, transparent 100%)",
             "&::-webkit-scrollbar": {
@@ -244,217 +261,411 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             },
           }}
         >
+          <Box sx={{ width: "80%", position: "absolute" }}>
+            <Box
+              onClick={() =>
+                gridRef.current?.scrollBy({ left: -300, behavior: "smooth" })
+              }
+              sx={{
+                position: "fixed",
+                left: 200,
+                top: 300,
+                zIndex: 1,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                background:
+                  "linear-gradient(to right, rgba(255,255,255,0.9) 45%, transparent 100%)",
+              }}
+            >
+              {canScrollLeft && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    zIndex: 1,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 38,
+                    height: 38,
+                    borderRadius: "50%",
+                    bgcolor: "error.main",
+                    boxShadow: 3,
+                    color: "white",
+                    transition: "0.2s",
+                    "&:hover": {
+                      bgcolor: "error.dark",
+                      boxShadow: 6,
+                      transform: "scale(1.1)",
+                    },
+                  }}
+                >
+                  <ArrowBackIos
+                    fontSize="small"
+                    sx={{ color: "text.secondary", ml: 0.8 }}
+                  />
+                </Box>
+              )}
+            </Box>
+
+            <Box
+              onClick={() =>
+                gridRef.current?.scrollBy({ left: 300, behavior: "smooth" })
+              }
+              sx={{
+                position: "fixed",
+                top: 300,
+                right: 150,
+                zIndex: 1,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                background:
+                  "linear-gradient(to left, rgba(255,255,255,0.9) 45%, transparent 100%)",
+              }}
+            >
+              {canScrollRight && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    zIndex: 1,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 38,
+                    height: 38,
+                    borderRadius: "50%",
+                    bgcolor: "error.main",
+                    boxShadow: 3,
+                    color: "white",
+                    transition: "0.2s",
+                    "&:hover": {
+                      bgcolor: "error.dark",
+                      boxShadow: 6,
+                      transform: "scale(1.1)",
+                    },
+                  }}
+                >
+                  <ArrowForwardIos
+                    fontSize="small"
+                    sx={{ color: "text.secondary" }}
+                  />
+                </Box>
+              )}
+            </Box>
+          </Box>
+
           <Grid
             container
             alignItems={"center"}
             size={12}
             spacing={5}
+            width={"fit-content"}
             wrap="nowrap"
           >
             {rounds.map((roundNumber, index: number) => (
-              <Grid
-                key={index}
-                height={"100%"}
-                size={5}
-                container
-                sx={{ minWidth: 450 }}
-              >
-                <Grid
-                  size={10}
-                  sx={{ minWidth: 300 }}
-                  container
-                  spacing={8}
-                  direction={"column"}
-                >
-                  <Grid px={2} size={12} container alignItems={"center"}>
-                    <SectionHeader
-                      title={
-                        RoundsOptions.find(
-                          (item) => Number(item.value) === roundNumber,
-                        )?.label!
-                      }
-                      icon={<Sports sx={{ fontSize: 22 }} />}
-                    ></SectionHeader>
-                  </Grid>
-                  {matchesData
-                    ?.filter((item) => item.round_number === roundNumber)
-                    .map((match, index: number) => {
-                      const is2Winner =
-                        match.winner?.id === match.contender_2?.id &&
-                        match.kataresult?.flags_contender_2! >
-                          match.kataresult?.flags_contender_1!;
-                      const isOngoing = match.ongoing;
-                      const matchFinished =
-                        !match.ongoing &&
-                        match.kataresult?.flags_contender_2 != null &&
-                        match.kataresult?.flags_contender_1 != null &&
-                        match.winner !== null;
-                      return (
-                        <Grid container size={12} spacing={2} key={index}>
-                          {roundNumber === 0 && (
-                            <Grid
-                              container
-                              size={12}
-                              justifyContent={"flex-end"}
-                            >
+              <Fragment key={index}>
+                <Grid height={"100%"} size={5} container sx={{ minWidth: 450 }}>
+                  <Grid
+                    size={12}
+                    sx={{ minWidth: 300 }}
+                    container
+                    spacing={8}
+                    direction={"column"}
+                  >
+                    <Grid px={2} size={12} container alignItems={"center"}>
+                      <SectionHeader
+                        title={
+                          RoundsOptions.find(
+                            (item) => Number(item.value) === roundNumber,
+                          )?.label!
+                        }
+                        icon={<Sports sx={{ fontSize: 22 }} />}
+                      ></SectionHeader>
+                    </Grid>
+                    {matchesData
+                      ?.filter((item) => item.round_number === roundNumber)
+                      .map((match, index: number) => {
+                        const is2Winner =
+                          match.winner?.id === match.contender_2?.id &&
+                          match.kataresult?.flags_contender_2! >
+                            match.kataresult?.flags_contender_1!;
+                        const isOngoing = match.ongoing;
+                        const matchFinished =
+                          !match.ongoing &&
+                          match.kataresult?.flags_contender_2 != null &&
+                          match.kataresult?.flags_contender_1 != null &&
+                          match.winner !== null;
+                        return (
+                          <Grid container size={12} spacing={2} key={index}>
+                            {roundNumber === 0 && (
+                              <Grid
+                                container
+                                size={12}
+                                justifyContent={"flex-end"}
+                              >
+                                <Box
+                                  sx={{
+                                    width: "fit-content",
+                                    border: "1px solid #1976d2",
+                                    fontSize: 14,
+                                    px: 1,
+                                    py: 0.5,
+                                    borderRadius: 3,
+                                  }}
+                                >
+                                  {match.match_number === 1
+                                    ? "1º e 2º Lugares"
+                                    : "3º e 4º Lugares"}
+                                </Box>
+                              </Grid>
+                            )}
+                            {isOngoing && (
                               <Box
                                 sx={{
                                   width: "fit-content",
-                                  border: "1px solid #1976d2",
-                                  fontSize: 14,
+                                  bgcolor: "#f59e0b",
+                                  color: "white",
+                                  fontSize: 12,
+                                  fontWeight: 700,
                                   px: 1,
                                   py: 0.5,
-                                  borderRadius: 3,
+                                  borderRadius: 1,
+                                  letterSpacing: 1,
                                 }}
                               >
-                                {match.match_number === 1
-                                  ? "1º e 2º Lugares"
-                                  : "3º e 4º Lugares"}
+                                LIVE
                               </Box>
-                            </Grid>
-                          )}
-                          {isOngoing && (
-                            <Box
-                              sx={{
-                                width: "fit-content",
-                                bgcolor: "#f59e0b",
-                                color: "white",
-                                fontSize: 12,
-                                fontWeight: 700,
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 1,
-                                letterSpacing: 1,
-                              }}
-                            >
-                              LIVE
-                            </Box>
-                          )}
-                          <Grid size={12} spacing={1} container>
-                            <Grid
-                              size={10}
-                              container
-                              direction={"column"}
-                              spacing={2}
-                            >
-                              <SingleContenderCard
-                                roundNumber={roundNumber}
-                                matchNumber={match.match_number}
-                                contenderNumber={1}
-                                isWinner={!is2Winner}
-                                points={
-                                  match.kataresult === null ||
-                                  (match.kataresult?.flags_contender_1 === 0 &&
-                                    match.kataresult?.flags_contender_2 === 0)
-                                    ? 99
-                                    : match.kataresult?.flags_contender_1
-                                }
-                                fullName={match.contender_1?.full_name}
-                                club={match.contender_1?.club}
-                                isMatchFinished={matchFinished}
-                                ongoing={isOngoing!}
-                              ></SingleContenderCard>
-                              <SingleContenderCard
-                                roundNumber={roundNumber}
-                                matchNumber={match.match_number}
-                                contenderNumber={2}
-                                isWinner={is2Winner}
-                                points={
-                                  match.kataresult === null ||
-                                  (match.kataresult?.flags_contender_1 === 0 &&
-                                    match.kataresult?.flags_contender_2 === 0)
-                                    ? 99
-                                    : match.kataresult?.flags_contender_2
-                                }
-                                fullName={match.contender_2?.full_name}
-                                club={match.contender_2?.club}
-                                isMatchFinished={matchFinished}
-                                ongoing={isOngoing!}
-                              ></SingleContenderCard>
-                            </Grid>
-                            <Grid
-                              size={2}
-                              px={2}
-                              borderRadius={4}
-                              bgcolor={"#fdecea"}
-                              container
-                              alignItems={"center"}
-                              border={"0.2px solid red"}
-                              justifyContent={"center"}
-                              alignContent={"space-evenly"}
-                              minWidth={50}
-                            >
-                              {["subed_club", "free_club"].includes(
-                                props.userRole,
-                              ) ? null : (
-                                <>
-                                  <Tooltip
-                                    title="Fazer Alterações"
-                                    placement="top"
-                                  >
-                                    <span>
-                                      <IconButton
-                                        size="small"
-                                        onClick={() => {
-                                          handleModalOpen(match.id, true);
-                                        }}
-                                      >
-                                        <Settings />
-                                      </IconButton>
-                                    </span>
-                                  </Tooltip>
-                                  <Tooltip
-                                    title={
-                                      match.ongoing
-                                        ? "Já está em Direto"
-                                        : "Pôr em Direto"
-                                    }
-                                    placement="right"
-                                  >
-                                    <span>
-                                      <IconButton
-                                        size="small"
-                                        disabled={match.ongoing}
-                                        onClick={() => {
-                                          patchOngoingMatch.mutate({
-                                            matchId: Number(match.id),
-                                            data: { ongoing: true },
-                                          });
-                                        }}
-                                      >
-                                        <LiveTv />
-                                      </IconButton>
-                                    </span>
-                                  </Tooltip>
-                                </>
-                              )}
+                            )}
+                            <Grid size={12} spacing={1} container>
+                              <Grid
+                                size={10}
+                                container
+                                direction={"column"}
+                                spacing={2}
+                              >
+                                <SingleContenderCard
+                                  roundNumber={roundNumber}
+                                  matchNumber={match.match_number}
+                                  contenderNumber={1}
+                                  isWinner={!is2Winner}
+                                  points={
+                                    match.kataresult === null ||
+                                    (match.kataresult?.flags_contender_1 ===
+                                      0 &&
+                                      match.kataresult?.flags_contender_2 === 0)
+                                      ? 99
+                                      : match.kataresult?.flags_contender_1
+                                  }
+                                  fullName={match.contender_1?.full_name}
+                                  club={match.contender_1?.club}
+                                  isMatchFinished={matchFinished}
+                                  ongoing={isOngoing!}
+                                ></SingleContenderCard>
+                                <SingleContenderCard
+                                  roundNumber={roundNumber}
+                                  matchNumber={match.match_number}
+                                  contenderNumber={2}
+                                  isWinner={is2Winner}
+                                  points={
+                                    match.kataresult === null ||
+                                    (match.kataresult?.flags_contender_1 ===
+                                      0 &&
+                                      match.kataresult?.flags_contender_2 === 0)
+                                      ? 99
+                                      : match.kataresult?.flags_contender_2
+                                  }
+                                  fullName={match.contender_2?.full_name}
+                                  club={match.contender_2?.club}
+                                  isMatchFinished={matchFinished}
+                                  ongoing={isOngoing!}
+                                ></SingleContenderCard>
+                              </Grid>
+                              <Grid
+                                size={2}
+                                px={2}
+                                borderRadius={4}
+                                bgcolor={"#fdecea"}
+                                container
+                                alignItems={"center"}
+                                border={"0.2px solid red"}
+                                justifyContent={"center"}
+                                alignContent={"space-evenly"}
+                                minWidth={50}
+                              >
+                                {["subed_club", "free_club"].includes(
+                                  props.userRole,
+                                ) ? null : (
+                                  <>
+                                    <Tooltip
+                                      title="Fazer Alterações"
+                                      placement="top"
+                                    >
+                                      <span>
+                                        <IconButton
+                                          size="small"
+                                          onClick={() => {
+                                            handleModalOpen(match.id, true);
+                                          }}
+                                        >
+                                          <Settings />
+                                        </IconButton>
+                                      </span>
+                                    </Tooltip>
+                                    <Tooltip
+                                      title={
+                                        match.ongoing
+                                          ? "Já está em Direto"
+                                          : "Pôr em Direto"
+                                      }
+                                      placement="right"
+                                    >
+                                      <span>
+                                        <IconButton
+                                          size="small"
+                                          disabled={match.ongoing}
+                                          onClick={() => {
+                                            patchOngoingMatch.mutate({
+                                              matchId: Number(match.id),
+                                              data: { ongoing: true },
+                                            });
+                                          }}
+                                        >
+                                          <LiveTv />
+                                        </IconButton>
+                                      </span>
+                                    </Tooltip>
+                                  </>
+                                )}
 
-                              <Tooltip title="Consultar">
-                                <span>
-                                  <IconButton
-                                    size="small"
-                                    // disabled={
-                                    //   match.kataresult === null ||
-                                    //   match.winner === null
-                                    // }
-                                    onClick={() => {
-                                      handleModalOpen(match.id, false);
-                                    }}
-                                  >
-                                    <Visibility />
-                                  </IconButton>
-                                </span>
-                              </Tooltip>
+                                <Tooltip title="Consultar">
+                                  <span>
+                                    <IconButton
+                                      size="small"
+                                      // disabled={
+                                      //   match.kataresult === null ||
+                                      //   match.winner === null
+                                      // }
+                                      onClick={() => {
+                                        handleModalOpen(match.id, false);
+                                      }}
+                                    >
+                                      <Visibility />
+                                    </IconButton>
+                                  </span>
+                                </Tooltip>
+                              </Grid>
                             </Grid>
                           </Grid>
-                        </Grid>
-                      );
-                    })}
+                        );
+                      })}
+                  </Grid>
                 </Grid>
-              </Grid>
+                {/* Connector column — render between rounds, not after the last */}
+                {index < rounds.length - 1 &&
+                  (() => {
+                    const currentRoundMatches =
+                      matchesData?.filter(
+                        (item) => item.round_number === roundNumber,
+                      ) ?? [];
+                    const nextRoundMatches =
+                      matchesData?.filter(
+                        (item) => item.round_number === rounds[index + 1],
+                      ) ?? [];
+
+                    // Each pair of current matches feeds one next-round match
+                    // Matches are grouped in pairs: [0,1] → nextMatch[0], [2,3] → nextMatch[1], etc.
+                    const CARD_HEIGHT = 95; // height of one SingleContenderCard (px)
+                    const CARD_GAP = 16; // spacing={2} between the two cards
+                    const MATCH_GAP = 64; // spacing={8} between matches
+                    const HEADER_OFFSET = roundNumber === 1 ? -120 : -380; // SectionHeader height
+                    const SVG_HEIGHT = 600; // tall enough to cover all matches
+
+                    return (
+                      <Grid
+                        size="auto"
+                        sx={{ width: 40, position: "relative" }}
+                      >
+                        <svg
+                          width="40"
+                          height="10dvh"
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            overflow: "visible",
+                          }}
+                        >
+                          {nextRoundMatches.map((_, nextIdx) => {
+                            // The two R1 matches that feed this R2 match
+                            const matchA = currentRoundMatches[nextIdx * 2];
+                            const matchB = currentRoundMatches[nextIdx * 2 + 1];
+                            if (!matchA || !matchB) return null;
+
+                            // Y center of winner card (contender_1 = top card) for each match
+                            const matchAY =
+                              HEADER_OFFSET +
+                              nextIdx *
+                                2 *
+                                (CARD_HEIGHT * 2 + CARD_GAP + MATCH_GAP) +
+                              CARD_HEIGHT / 2;
+
+                            const matchBY =
+                              HEADER_OFFSET +
+                              (nextIdx * 2 + 1) *
+                                (CARD_HEIGHT * 2 + CARD_GAP + MATCH_GAP) +
+                              CARD_HEIGHT / 2;
+
+                            // Y of top and bottom cards in the next round match
+                            const nextTopY =
+                              HEADER_OFFSET +
+                              nextIdx *
+                                (CARD_HEIGHT * 2 + CARD_GAP + MATCH_GAP) +
+                              CARD_HEIGHT / 2 +
+                              (roundNumber === 1 ? -30 : 210);
+
+                            const nextBottomY =
+                              nextTopY + CARD_HEIGHT + CARD_GAP;
+
+                            return (
+                              <g key={nextIdx}>
+                                {/* Match A winner → next round top card */}
+                                <path
+                                  d={`M0 ${matchAY} H20 V${nextTopY} H40`}
+                                  fill="none"
+                                  stroke="#d1d5db"
+                                  strokeWidth={2}
+                                  strokeDasharray={
+                                    nextRoundMatches[nextIdx]
+                                      ? undefined
+                                      : "5 3"
+                                  }
+                                />
+                                {/* Match B winner → next round bottom card */}
+                                <path
+                                  d={`M0 ${matchBY} H20 V${nextBottomY} H40`}
+                                  fill="none"
+                                  stroke="#d1d5db"
+                                  strokeWidth={2}
+                                  strokeDasharray={
+                                    nextRoundMatches[nextIdx]
+                                      ? undefined
+                                      : "5 3"
+                                  }
+                                />
+                              </g>
+                            );
+                          })}
+                        </svg>
+                      </Grid>
+                    );
+                  })()}
+              </Fragment>
             ))}
           </Grid>
-        </Box>
+        </Grid>
       )}
       {rounds.length === 0 ? null : (
         <Grid size={12} container spacing={3} pl={7} mt={3} gap={5}>
