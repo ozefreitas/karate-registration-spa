@@ -12,11 +12,16 @@ export const useFetchLastEventClassifications = (userRole: string) => {
   });
 };
 
-export const useFetchPerCompClassifications = () => {
+export const useFetchClassificationsData = (
+  eventId?: string,
+  bracketId?: string,
+) => {
   return useQuery({
-    queryKey: ["per-event-classification"],
-    queryFn: ClassificationsService.classificationsPerCompRetrieve,
+    queryKey: ["classification"],
+    queryFn: () =>
+      ClassificationsService.classificationsList(eventId, bracketId),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: bracketId !== undefined,
   });
 };

@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AllClassifications } from './AllClassifications';
-export type PaginatedAllClassificationsList = {
+import type { Classifications } from './Classifications';
+export type PaginatedClassificationsList = {
     count: number;
     next?: string | null;
     previous?: string | null;
-    results: Array<AllClassifications>;
+    results: Array<Classifications>;
 };
 

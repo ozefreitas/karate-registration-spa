@@ -48,7 +48,7 @@ export default function EventCalendarInfo(
     >
       <DialogTitle
         sx={{
-          borderTop: `5px solid ${EncounterOptions.find((item) => item.value === props.eventData?.encounter_type)?.color ?? stringToColor("Competição/Torneio")}`,
+          borderTop: `5px solid ${EncounterOptions.find((item) => item.value === props.eventData?.encounter_type)?.color}`,
           width: "100%",
         }}
       >

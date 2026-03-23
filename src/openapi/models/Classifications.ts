@@ -2,12 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Bracket } from './Bracket';
+import type { CompactPerson } from './CompactPerson';
 import type { PlaceEnum } from './PlaceEnum';
-export type AllClassifications = {
-    readonly id: number;
+export type Classifications = {
+    bracket: Bracket;
+    readonly event: string;
+    person: CompactPerson;
     place: PlaceEnum;
     readonly created_at: string;
-    bracket: number;
-    person: string;
 };
 

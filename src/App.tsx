@@ -51,6 +51,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import DynamicViewPage from "./pages/DrawPage/DynamicViewPage";
+import EventClassificationDetailsPage from "./pages/ClassificationsPage/EventClassificationDetailsPage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -399,6 +400,18 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<ClassificationsPage />}
+                        allowedRoles={["free_club", "subed_club"]}
+                        allowUnauthenticated
+                      />
+                    )
+                  }
+                />
+                <Route
+                  path="classifications/:id/"
+                  element={
+                    isAuthLoading ? null : (
+                      <ProtectedRoute
+                        element={<EventClassificationDetailsPage />}
                         allowedRoles={["free_club", "subed_club"]}
                         allowUnauthenticated
                       />
