@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
   Grid,
   Tooltip,
@@ -63,11 +64,11 @@ const EventClassificationDetailsPage = () => {
                     handleModalOpen(String(bracket.id));
                   }}
                   sx={{
-                    p: 2,
+                    // p: 2,
                     height: "100%",
                     width: "100%",
                     transition: "0.3s",
-                    border: "4px",
+                    border: 1,
                     borderColor: "transparent",
                     "&:hover": {
                       transform: "translateY(-3px)",
@@ -77,17 +78,44 @@ const EventClassificationDetailsPage = () => {
                     },
                   }}
                 >
-                  <CardContent sx={{ width: "100%" }}>
-                    <Grid container direction={"column"} size={12} spacing={2}>
-                      <Grid
-                        container
-                        justifyContent={"center"}
-                        size={12}
-                        pt={2}
-                        alignItems={"center"}
-                        textAlign={"center"}
-                      >
-                        <Typography variant="h5">{bracket.name}</Typography>
+                  <CardContent sx={{ width: "100%", p: 3 }}>
+                    <Grid
+                      container
+                      size={12}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      p={2}
+                      spacing={2}
+                      textAlign={"center"}
+                    >
+                      <Typography variant="h5" mb={2}>{bracket.name}</Typography>
+                      <Grid size={12} container justifyContent={"center"}>
+                        <Chip
+                          size="small"
+                          label={`Idade Min.: ${
+                            bracket.category.min_age ?? "N/A"
+                          } anos`}
+                        ></Chip>
+                        <Chip
+                          size="small"
+                          label={`Idade Máx.: ${
+                            bracket.category.max_age ?? "N/A"
+                          } anos`}
+                        ></Chip>
+                      </Grid>
+                      <Grid size={12} container justifyContent={"center"}>
+                        <Chip
+                          size="small"
+                          label={`Peso Min.: ${
+                            bracket.category.min_weight ?? "N/A"
+                          } ${bracket.category.min_weight ? "Kg" : ""}`}
+                        ></Chip>
+                        <Chip
+                          size="small"
+                          label={`Peso Máx.: ${
+                            bracket.category.max_weight ?? "N/A"
+                          } ${bracket.category.max_weight ? "Kg" : ""}`}
+                        ></Chip>
                       </Grid>
                     </Grid>
                   </CardContent>

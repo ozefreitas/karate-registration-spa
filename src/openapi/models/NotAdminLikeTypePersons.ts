@@ -16,6 +16,7 @@ export type NotAdminLikeTypePersons = {
     };
     readonly member_types: Array<string>;
     readonly exam_request_status: string;
+    readonly classifications: string;
     profile_image?: string | null;
     first_name: string;
     last_name: string;

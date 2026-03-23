@@ -85,7 +85,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -95,7 +95,7 @@ export default function AddEventCategoriesModal(
     isModalOpen: boolean;
     handleModalClose: any;
     disciplineData: any;
-  }>
+  }>,
 ) {
   type Category = {
     id: string;
@@ -158,13 +158,11 @@ export default function AddEventCategoriesModal(
   const categoryMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return categoriesNotinDisciplineData?.data.results ?? [];
+    if (!query) return categoriesNotinDisciplineData?.results ?? [];
 
-    return categoriesNotinDisciplineData?.data.results.filter(
-      (category: Category) => {
-        return category.name.toLowerCase().includes(query);
-      }
-    );
+    return categoriesNotinDisciplineData?.results.filter((category) => {
+      return category.name.toLowerCase().includes(query);
+    });
   }, [searchQuery, categoriesNotinDisciplineData]);
 
   const itemsPerPage = 10;
@@ -172,7 +170,7 @@ export default function AddEventCategoriesModal(
   const paginatedCategories = React.useMemo(() => {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    return categoryMembers.slice(start, end);
+    return categoryMembers?.slice(start, end);
   }, [categoryMembers, page]);
 
   const handleSubmit = () => {
@@ -216,7 +214,7 @@ export default function AddEventCategoriesModal(
           <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
             Selecionar Escalões para {props.disciplineData.name}
           </Typography>
-          {categoriesNotinDisciplineData?.data.results.length === 0 ? null : (
+          {categoriesNotinDisciplineData?.results.length === 0 ? null : (
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -236,9 +234,7 @@ export default function AddEventCategoriesModal(
               color="inherit"
               size="large"
               onClick={handleSubmit}
-              disabled={
-                categoriesNotinDisciplineData?.data.results.length === 0
-              }
+              disabled={categoriesNotinDisciplineData?.results.length === 0}
             >
               Adicionar
             </Button>
@@ -255,12 +251,12 @@ export default function AddEventCategoriesModal(
             </Grid>
           ) : categoriesNotinDisciplineError ? (
             <div>Ocorreu um erro</div>
-          ) : categoriesNotinDisciplineData?.data.results.length === 0 ? (
+          ) : categoriesNotinDisciplineData?.results.length === 0 ? (
             <ListItem>
               <ListItemText primary="Não tem Escalões que ainda não tenham sido adicionados a esta Modalidade."></ListItemText>
             </ListItem>
           ) : (
-            paginatedCategories.map((category: Category, index: string) => (
+            paginatedCategories?.map((category, index: number) => (
               <ListItem
                 key={index}
                 disablePadding
@@ -269,8 +265,8 @@ export default function AddEventCategoriesModal(
                     <Checkbox
                       // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                       edge="end"
-                      onChange={() => handleToggle(category.id)}
-                      checked={checked.includes(category.id)}
+                      onChange={() => handleToggle(String(category.id))}
+                      checked={checked.includes(String(category.id))}
                       slotProps={{
                         input: {
                           "aria-labelledby": `checkbox-list-secondary-label-${category.name}`,
@@ -282,7 +278,7 @@ export default function AddEventCategoriesModal(
               >
                 <ListItemButton
                   key={index}
-                  onClick={() => handleToggle(category.id)}
+                  onClick={() => handleToggle(String(category.id))}
                 >
                   <ListItemIcon>
                     <Category />
@@ -310,7 +306,7 @@ export default function AddEventCategoriesModal(
                             size="small"
                             label={`Graduação Min.: ${
                               getGraduationFromValue(
-                                Number(category.min_grad)
+                                Number(category.min_grad),
                               ) ?? "N/A"
                             }`}
                           ></Chip>
@@ -318,7 +314,7 @@ export default function AddEventCategoriesModal(
                             size="small"
                             label={`Graduação Máx.: ${
                               getGraduationFromValue(
-                                Number(category.max_grad)
+                                Number(category.max_grad),
                               ) ?? "N/A"
                             }`}
                           ></Chip>
@@ -355,7 +351,7 @@ export default function AddEventCategoriesModal(
           )}
         </List>
       </DialogContent>
-      {categoriesNotinDisciplineData?.data.count === 0 ? null : (
+      {categoriesNotinDisciplineData?.count === 0 ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
@@ -366,9 +362,7 @@ export default function AddEventCategoriesModal(
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(
-                categoriesNotinDisciplineData?.data.count / itemsPerPage
-              )}
+              {Math.ceil(categoriesNotinDisciplineData?.count! / itemsPerPage)}
             </Typography>
             <Tooltip title="Página anterior">
               <span>
@@ -386,9 +380,8 @@ export default function AddEventCategoriesModal(
                 <IconButton
                   onClick={handleNextButtonClick}
                   disabled={
-                    !categoriesNotinDisciplineData?.data.count ||
-                    page * itemsPerPage >=
-                      categoriesNotinDisciplineData?.data.count
+                    !categoriesNotinDisciplineData?.count ||
+                    page * itemsPerPage >= categoriesNotinDisciplineData?.count
                   }
                   aria-label="next page"
                 >
