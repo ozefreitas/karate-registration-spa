@@ -85,7 +85,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -97,7 +97,7 @@ export default function CategoriesModal(
     disciplineData: any;
     disciplineCategories: any;
     setDisciplineCategories: any;
-  }>
+  }>,
 ) {
   type Category = {
     max_athletes: number;
@@ -159,9 +159,9 @@ export default function CategoriesModal(
   const categoryMembers = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return categoriesData?.data.results ?? [];
+    if (!query) return categoriesData?.results ?? [];
 
-    return categoriesData?.data.results.filter((category: Category) => {
+    return categoriesData?.results.filter((category) => {
       return category.name.toLowerCase().includes(query);
     });
   }, [searchQuery, categoriesData]);
@@ -171,14 +171,14 @@ export default function CategoriesModal(
   const paginatedCategories = React.useMemo(() => {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    return categoryMembers.slice(start, end);
+    return categoryMembers?.slice(start, end);
   }, [categoryMembers, page]);
 
   const handleSubmit = () => {
     const data = { discipline: props.disciplineData, categories: checked };
     props.setDisciplineCategories((prev: any[]) => {
       const existingIndex = prev.findIndex(
-        (item) => item.discipline === props.disciplineData
+        (item) => item.discipline === props.disciplineData,
       );
 
       if (existingIndex === -1) {
@@ -186,7 +186,7 @@ export default function CategoriesModal(
       } else {
         // Merge categories without duplicates
         const updatedCategories = Array.from(
-          new Set([...prev[existingIndex].categories, ...checked])
+          new Set([...prev[existingIndex].categories, ...checked]),
         );
         const updated = [...prev];
         updated[existingIndex] = {
@@ -250,7 +250,7 @@ export default function CategoriesModal(
               color="inherit"
               size="large"
               onClick={handleSubmit}
-              disabled={categoriesData?.data.results.length === 0}
+              disabled={categoriesData?.results.length === 0}
             >
               Adicionar
             </Button>
@@ -267,7 +267,7 @@ export default function CategoriesModal(
             </Grid>
           ) : categoriesError ? (
             <div>Ocorreu um erro</div>
-          ) : categoriesData?.data.results.length === 0 ? (
+          ) : categoriesData?.results.length === 0 ? (
             <>
               <ListItem>
                 <ListItemText primary="Não tem Escalões adiconados na plataforma. Adicione um novo Escalão para o poder associar a esta Modalidade."></ListItemText>
@@ -282,18 +282,18 @@ export default function CategoriesModal(
                 Adicionar Escalão
               </Button>
             </>
-          ) : paginatedCategories.length === 0 ? (
+          ) : paginatedCategories?.length === 0 ? (
             <ListItem>
               <ListItemText primary="Não tem Escalões que ainda não estejam associadas a esta Modalidade."></ListItemText>
             </ListItem>
           ) : (
             paginatedCategories
-              .filter((category: Category) => {
+              ?.filter((category) => {
                 if (props.disciplineCategories.length === 0) {
                   return category;
                 } else {
                   const found = props.disciplineCategories.find(
-                    (item: any) => item.discipline === props.disciplineData
+                    (item: any) => item.discipline === props.disciplineData,
                   );
                   const addedCategories = found ? found.categories : [];
                   // something goes wrong, just return all
@@ -303,7 +303,7 @@ export default function CategoriesModal(
                   return !addedCategories.includes(category.id);
                 }
               })
-              .map((category: Category, index: string) => (
+              .map((category, index: any) => (
                 <ListItem
                   key={index}
                   disablePadding
@@ -312,8 +312,8 @@ export default function CategoriesModal(
                       <Checkbox
                         // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                         edge="end"
-                        onChange={() => handleToggle(category.id)}
-                        checked={checked.includes(category.id)}
+                        onChange={() => handleToggle(String(category.id))}
+                        checked={checked.includes(String(category.id))}
                         slotProps={{
                           input: {
                             "aria-labelledby": `checkbox-list-secondary-label-${category.name}`,
@@ -325,7 +325,7 @@ export default function CategoriesModal(
                 >
                   <ListItemButton
                     key={index}
-                    onClick={() => handleToggle(category.id)}
+                    onClick={() => handleToggle(String(category.id))}
                   >
                     <ListItemIcon>
                       <Category />
@@ -353,7 +353,7 @@ export default function CategoriesModal(
                               size="small"
                               label={`Graduação Min.: ${
                                 getGraduationFromValue(
-                                  Number(category.min_grad)
+                                  Number(category.min_grad),
                                 ) ?? "N/A"
                               }`}
                             ></Chip>
@@ -361,7 +361,7 @@ export default function CategoriesModal(
                               size="small"
                               label={`Graduação Máx.: ${
                                 getGraduationFromValue(
-                                  Number(category.max_grad)
+                                  Number(category.max_grad),
                                 ) ?? "N/A"
                               }`}
                             ></Chip>
@@ -398,7 +398,7 @@ export default function CategoriesModal(
           )}
         </List>
       </DialogContent>
-      {categoriesData?.data.count === 0 ? null : (
+      {categoriesData?.count === 0 ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
@@ -409,7 +409,7 @@ export default function CategoriesModal(
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(categoriesData?.data.count / itemsPerPage)}
+              {Math.ceil(categoriesData?.count! / itemsPerPage)}
             </Typography>
             <Tooltip title="Página anterior">
               <span>
@@ -427,8 +427,8 @@ export default function CategoriesModal(
                 <IconButton
                   onClick={handleNextButtonClick}
                   disabled={
-                    !categoriesData?.data.count ||
-                    page * itemsPerPage >= categoriesData?.data.count
+                    !categoriesData?.count ||
+                    page * itemsPerPage >= categoriesData?.count
                   }
                   aria-label="next page"
                 >

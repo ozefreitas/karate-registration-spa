@@ -100,36 +100,36 @@ export const EncounterOptions: {
   {
     label: "Competição/Torneio",
     value: "comp",
-    color: stringToColor("Competição/Torneio"),
+    color: stringToColor("comp"),
   },
   {
     label: "Encontro Regional",
     value: "regional",
-    color: stringToColor("Regional"),
+    color: stringToColor("regional"),
   },
   {
     label: "Encontro Nacional",
     value: "nacional",
-    color: stringToColor("Nacionalskdhsbhi"),
+    color: stringToColor("nacionalasFAWSE"),
   },
   {
     label: "Encontro Internacional",
     value: "internacional",
-    color: stringToColor("Internacional"),
+    color: stringToColor("internacional"),
   },
   {
     label: "Instrutores",
     value: "instrutores",
-    color: stringToColor("Instrutores"),
+    color: stringToColor("instrutores"),
   },
-  { label: "Formação", value: "formacao", color: stringToColor("Formação") },
+  { label: "Formação", value: "formacao", color: stringToColor("formacao") },
   {
     label: "Sessão de Exames",
     value: "exames",
-    color: stringToColor("Exames"),
+    color: stringToColor("exames"),
   },
-  { label: "Seminário", value: "seminario", color: stringToColor("Seminário") },
-  { label: "Workshop", value: "workshop", color: stringToColor("Workshop") },
+  { label: "Seminário", value: "seminario", color: stringToColor("seminario") },
+  { label: "Workshop", value: "workshop", color: stringToColor("workshop") },
 ];
 
 export const SeasonOptions: { label: string; value: string }[] = [

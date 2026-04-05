@@ -32,7 +32,7 @@ import {
 } from "@mui/icons-material";
 import { useEffect, useState, useMemo, Fragment } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { EncounterOptions, SeasonOptions } from "../../config";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -44,9 +44,12 @@ import { eventsHooks, disciplinesHooks, categoriesHooks } from "../../hooks";
 import AllUseTable from "../../components/Table/AllUseTable";
 import CategoriesModal from "../../components/Categories/CategoriesModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -57,6 +60,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const [disciplineWarning, setDisciplineWarning] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [searchParams, _] = useSearchParams();
+
+  const predifinedDate = searchParams.get("date") || "";
+
   const [selectedDisciplineForCategory, setSelectedDisciplineForCategory] =
     useState<string>("");
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
@@ -114,16 +121,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     categoriesHooks.useFetchCategoriesData();
   const addDisciplineCategory = disciplinesHooks.useAddDisciplineCategory();
-
-  type Category = {
-    id: string;
-    name: string;
-    gender: string;
-    has_age: string;
-    has_grad: string;
-    has_weight: string;
-    max_athletes: number;
-  };
 
   // Memoize `rows` to compute only when `members` changes
   const categoryRows = useMemo(() => {
@@ -251,6 +248,25 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       }));
   }, [categoriesData, selectedDisciplineForCategory, disciplineCategories]);
 
+  type EventMetadataForm = {
+    name: string;
+    location: string;
+    season: string;
+    start_registration: undefined;
+    end_registration: undefined;
+    retifications_deadline: undefined;
+    description: string;
+    custody: string;
+    email_contact: string;
+    contact: string;
+    encounter_type: string;
+    has_registrations: boolean;
+    has_categories: boolean;
+    is_team: boolean;
+    is_coach: boolean;
+    event_date: string | undefined;
+  };
+
   const {
     control: eventMetadataControl,
     handleSubmit,
@@ -259,7 +275,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
     watch,
     getValues,
     formState: { errors },
-  } = useForm({
+  } = useForm<EventMetadataForm>({
     defaultValues: {
       name: "",
       location: "",
@@ -279,6 +295,18 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       is_coach: false,
     },
   });
+
+  useEffect(() => {
+    if (predifinedDate !== "") {
+      setValue("event_date", predifinedDate);
+      callNotiStack(
+        enqueueSnackbar,
+        "Data do Evento predefinida com sucesso!",
+        "success",
+        3000,
+      );
+    }
+  }, [predifinedDate]);
 
   const onSubmit = async (data: any) => {
     setLoading(true);

@@ -10,13 +10,13 @@ import {
   ListItem,
   ListItemText,
   Button,
+  Tooltip,
 } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { EncounterOptions, MonthOptions } from "../../config";
-import { stringToColor } from "../../dashboard/utils/avatarColor";
 import EventCalendarInfo from "../EventsModals/EventCalendarInfo";
 import { adminHooks, eventsHooks } from "../../hooks";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MonthYearPicker from "./MonthYearPicker";
 
 const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
@@ -34,6 +34,7 @@ function getFirstDayOfMonth(year: number, month: number) {
 }
 
 export default function Calendar() {
+  const navigate = useNavigate();
   const [isEventInfoModalOpen, setIsEventInfoModalOpen] =
     useState<boolean>(false);
 
@@ -49,6 +50,7 @@ export default function Calendar() {
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [currentSeason, setCurrentSeason] = useState<string>("");
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [hoveredDay, setHoveredDay] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const paramMonth = searchParams.get("month") ?? String(today.getMonth());
 
@@ -132,41 +134,45 @@ export default function Calendar() {
         >
           <ChevronLeft />
         </IconButton>
-        <Typography
-          variant="h4"
-          color="info"
-          fontWeight={700}
-          onClick={() => setPickerOpen(true)}
-          sx={{
-            minWidth: 260,
-            textAlign: "center",
-            cursor: "pointer",
-            userSelect: "none",
-            "&:hover": { color: "#d32f2f" },
-            transition: "color 0.15s ease",
-          }}
-        >
-          {MonthOptions.find((item) => item.value === month)?.label} {year}
-        </Typography>
+        <Tooltip title={"Selecionar Mês e Ano"} placement="top">
+          <Typography
+            variant="h4"
+            color="info"
+            fontWeight={700}
+            onClick={() => setPickerOpen(true)}
+            sx={{
+              minWidth: 260,
+              textAlign: "center",
+              cursor: "pointer",
+              userSelect: "none",
+              "&:hover": { color: "#d32f2f", transform: "translateY(-3px)" },
+              transition: "0.15s ease",
+            }}
+          >
+            {MonthOptions.find((item) => item.value === month)?.label} {year}
+          </Typography>
+        </Tooltip>
         <IconButton
           onClick={handleNext}
           sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
         >
           <ChevronRight />
         </IconButton>
-        <Button
-          onClick={() => {
-            setMonth(today.getMonth() + 1);
-            setYear(today.getFullYear());
-          }}
-          color="info"
-          variant="contained"
-          disabled={
-            today.getMonth() + 1 === month && today.getFullYear() === year
-          }
-        >
-          Hoje
-        </Button>
+        <Tooltip title={"Voltar ao mês atual"} placement="top">
+          <Button
+            onClick={() => {
+              setMonth(today.getMonth() + 1);
+              setYear(today.getFullYear());
+            }}
+            color="info"
+            variant="contained"
+            disabled={
+              today.getMonth() + 1 === month && today.getFullYear() === year
+            }
+          >
+            Hoje
+          </Button>
+        </Tooltip>
       </Grid>
       {isEventsDataLoading ? (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -187,7 +193,7 @@ export default function Calendar() {
         </Grid>
       ) : (
         <>
-          <Card elevation={2}>
+          <Card elevation={2} sx={{ p: 3 }}>
             <Grid container>
               {WEEKDAYS.map((day) => (
                 <Grid
@@ -195,7 +201,10 @@ export default function Calendar() {
                   bgcolor={"black"}
                   container
                   key={day}
+                  borderRadius={3}
                   sx={{ flex: 1 }}
+                  mx={0.5}
+                  mb={5}
                 >
                   <Box
                     sx={{
@@ -217,12 +226,13 @@ export default function Calendar() {
               <Grid
                 container
                 key={rowIdx}
-                sx={{ borderTop: "1px solid #e0e0e0" }}
+                sx={{ borderTop: rowIdx === 0 ? "none" : "1px solid #e0e0e0" }}
               >
                 {cells
                   .slice(rowIdx * 7, rowIdx * 7 + 7)
                   .map((day: any, colIdx: any) => {
                     const key = day ? getEventKey(year, month, day) : null;
+
                     const dayEvents = key
                       ? eventsData?.results.filter(
                           (event: any) => event.event_date === key,
@@ -233,10 +243,31 @@ export default function Calendar() {
                     return (
                       <Grid
                         container
-                        key={colIdx}
+                        key={`${rowIdx}|${colIdx}`}
+                        onMouseEnter={() =>
+                          day !== null && setHoveredDay(`${rowIdx}|${colIdx}`)
+                        }
+                        onMouseLeave={() => setHoveredDay(null)}
+                        onClick={() => {
+                          const formattedDay = day < 10 ? `0${day}` : day;
+                          const formattedMonth =
+                            month < 10 ? `0${month}` : month;
+                          navigate(
+                            `new_event/?date=${year}-${formattedMonth}-${formattedDay}`,
+                          );
+                        }}
                         sx={{
                           flex: 1,
                           minHeight: 125,
+                          transition: "0.15s ease",
+                          "&:hover": {
+                            bgcolor: day === null ? null : "#fdecea",
+                            transform: day === null ? null : "scale(1.2)",
+                            borderLeft: day === null ? null : "transparent",
+                            cursor: day === null ? null : "pointer",
+                            zIndex: 99,
+                            borderRadius: day === null ? null : 4,
+                          },
                           borderLeft: colIdx > 0 ? "1px solid #e0e0e0" : "none",
                           bgcolor: todayCell ? "#fffde7" : "transparent",
                           p: 1,
@@ -262,15 +293,16 @@ export default function Calendar() {
                                   justifyContent: "center",
                                   // bgcolor: todayCell ? "#e53935" : "transparent",
                                   // color: todayCell ? "#fff" : "inherit",
-                                  fontWeight: todayCell ? 700 : 400,
-                                  fontSize: todayCell ?  "1.2rem" : "0.95rem",
+                                  fontWeight: todayCell ? 800 : 400,
+                                  fontSize: todayCell ? "1.5rem" : "0.95rem",
                                 }}
                               >
                                 {day}
                               </Box>
                               {/* Dot indicator for event type of the first event */}
                               {dayEvents.length > 0 &&
-                                day >= today.getDate() && (
+                                new Date(year, month - 1, day) >
+                                  new Date(new Date().setHours(0, 0, 0, 0)) && (
                                   <Box
                                     mr={0.5}
                                     sx={{
@@ -294,7 +326,9 @@ export default function Calendar() {
                                 label={evt.name}
                                 size="small"
                                 clickable
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
                                   setClickedEventData(evt);
                                   handleModalOpen();
                                 }}
@@ -307,15 +341,32 @@ export default function Calendar() {
                                   fontSize: "0.72rem",
                                   height: 22,
                                   textDecoration:
-                                    day >= today.getDate()
-                                      ? "none"
-                                      : "line-through",
+                                    new Date(year, month - 1, day) <
+                                    new Date(new Date().setHours(0, 0, 0, 0))
+                                      ? "line-through"
+                                      : "none",
                                   cursor: "pointer",
                                   "& .MuiChip-label": { px: 1 },
                                   "&:hover": { opacity: 0.95 },
                                 }}
                               />
                             ))}
+                            {hoveredDay === `${rowIdx}|${colIdx}` &&
+                              day !== null &&
+                              dayEvents.length === 0 && (
+                                <Chip
+                                  label="Clique para ad. Evento"
+                                  size="small"
+                                  sx={{
+                                    color: "#fff",
+                                    fontWeight: 600,
+                                    fontSize: "0.72rem",
+                                    height: 22,
+                                    cursor: "pointer",
+                                    "& .MuiChip-label": { px: 1 },
+                                  }}
+                                />
+                              )}
                           </>
                         )}
                       </Grid>
@@ -331,6 +382,7 @@ export default function Calendar() {
             rowSpacing={1}
             justifyContent={"center"}
             m={2}
+            mt={5}
           >
             {Object.entries(EncounterOptions).map(([_, { color, label }]) => (
               <Box
