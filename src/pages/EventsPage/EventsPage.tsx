@@ -38,6 +38,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
+  const today = new Date();
+  const getFullDate = () => {
+    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  };
+
   const [page, setPage] = useState<number>(1);
   const [currentView, setCurrentView] = useState(() => {
     return localStorage.getItem("eventsView") ?? "list";
@@ -65,7 +70,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
       is_open: false,
       is_retification: false,
       is_closed: false,
-      has_ended: false,
+      // has_ended: false,
       has_teams: false,
     },
   });
@@ -120,7 +125,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     5,
     ordering,
     filtersWatch("season"),
-    filtersWatch("has_ended"),
+    // filtersWatch("has_ended"),
     filtersWatch("has_teams"),
     filtersWatch("has_categories"),
     filtersWatch("has_registrations"),
@@ -337,7 +342,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               <CompInfoToolTip
                                 title="Estado"
                                 text={
-                                  comp.has_ended
+                                  comp.event_date < getFullDate()
                                     ? "Realizado"
                                     : comp.is_open || comp.is_retification
                                       ? "Inscrições em Progresso"

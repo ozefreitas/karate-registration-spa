@@ -34,6 +34,10 @@ export default function EventCalendarInfo(
     eventData?: any;
   }>,
 ) {
+  const today = new Date();
+  const getFullDate = () => {
+    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  };
   const navigate = useNavigate();
   return (
     <Dialog
@@ -84,7 +88,7 @@ export default function EventCalendarInfo(
           location={props.eventData?.location}
           type={props.eventData?.encounter_type}
           registration_state={
-            props.eventData?.has_ended
+            props.eventData?.event_date < getFullDate()
               ? "Realizado"
               : props.eventData?.is_open || props.eventData?.is_retification
                 ? "Inscrições em Progresso"

@@ -21,6 +21,10 @@ import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegist
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
+  const today = new Date();
+  const getFullDate = () => {
+    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
@@ -202,7 +206,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                         Escalões
                       </Button>
                     ) : null}
-                    {singleEventData?.has_ended &&
+                    {singleEventData !== undefined &&
+                    singleEventData.event_date < getFullDate() &&
                     ["superuser", "subed_club"].includes(props.userRole) &&
                     disciplineIndividuals.length !== 0 ? (
                       <Grid size={1}>

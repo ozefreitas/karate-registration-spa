@@ -24,6 +24,10 @@ import NewTeamPageModal from "./NewTeamPageModal";
 export default function RegisteredTeamsPage(
   props: Readonly<{ userRole: string }>,
 ) {
+  const today = new Date();
+  const getFullDate = () => {
+    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
     useState<string>("");
@@ -207,7 +211,8 @@ export default function RegisteredTeamsPage(
                         Escalões
                       </Button>
                     ) : null}
-                    {singleEventData?.has_ended &&
+                    {singleEventData !== undefined &&
+                    singleEventData.event_date < getFullDate() &&
                     ["superuser", "subed_club"].includes(props.userRole) &&
                     disciplineTeams.length !== 0 ? (
                       <Grid size={1}>

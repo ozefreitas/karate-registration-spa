@@ -142,7 +142,7 @@ export default function Calendar() {
       >
         <IconButton
           onClick={handlePrev}
-          sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
+          sx={{ bgcolor: "#ffffff", "&:hover": { bgcolor: "#e0e0e0" } }}
         >
           <ChevronLeft />
         </IconButton>
@@ -166,7 +166,7 @@ export default function Calendar() {
         </Tooltip>
         <IconButton
           onClick={handleNext}
-          sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
+          sx={{ bgcolor: "#ffffff", "&:hover": { bgcolor: "#e0e0e0" } }}
         >
           <ChevronRight />
         </IconButton>
@@ -440,6 +440,9 @@ export default function Calendar() {
             justifyContent={"center"}
             m={2}
             mt={5}
+            py={2}
+            borderRadius={2}
+            bgcolor={"#ffffff"}
           >
             {Object.entries(EncounterOptions).map(([_, { color, label }]) => (
               <Box

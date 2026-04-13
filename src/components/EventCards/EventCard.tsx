@@ -52,6 +52,10 @@ import { EncounterOptions } from "../../config";
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const today = new Date();
+  const getFullDate = () => {
+    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  };
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -159,7 +163,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
           inscrever os seus Atletas, Equipas e Treinadores."
         title={isSingleEventLoading ? "" : `Evento - ${singleEventData?.name}`}
       ></PageInfoCard>
-      <Grid container spacing={1}>
+      <Grid container columnSpacing={3}>
         <Grid container size={12} m={2}>
           <Grid size={props.userRole === undefined ? 12 : 6}>
             <Card elevation={4}>
@@ -596,7 +600,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       to="individuals/"
                       disabled={
                         isSingleEventLoading ||
-                        singleEventData?.has_ended ||
+                        singleEventData.event_date < getFullDate() ||
                         !singleEventData?.has_registrations
                       }
                     ></AddButton>
@@ -609,7 +613,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       to="coaches/"
                       disabled={
                         isSingleEventLoading ||
-                        singleEventData?.has_ended ||
+                        singleEventData.event_date < getFullDate() ||
                         !singleEventData?.has_registrations
                       }
                     ></AddButton>
@@ -622,12 +626,14 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       to="teams/"
                       disabled={
                         isSingleEventLoading ||
-                        singleEventData?.has_ended ||
+                        singleEventData.event_date < getFullDate() ||
                         !singleEventData?.has_registrations
                       }
                     ></AddButton>
                   ) : null}
-                  {singleEventData?.has_ended && !isSingleEventLoading ? (
+                  {singleEventData !== undefined &&
+                  singleEventData.event_date < getFullDate() &&
+                  !isSingleEventLoading ? (
                     <InfoButton
                       label="Consultar Inscrições"
                       to="individuals/"
