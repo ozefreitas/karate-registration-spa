@@ -18,6 +18,7 @@ import EventCalendarInfo from "../EventsModals/EventCalendarInfo";
 import { adminHooks, eventsHooks } from "../../hooks";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import MonthYearPicker from "./MonthYearPicker";
+import ListDayEventsModal from "../EventsModals/ListDayEventsModal";
 
 const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
 
@@ -44,12 +45,23 @@ export default function Calendar() {
   const handleModalClose = () => {
     setIsEventInfoModalOpen(false);
   };
+
   const today = new Date();
   const [clickedEventData, setClickedEventData] = useState(undefined);
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [currentSeason, setCurrentSeason] = useState<string>("");
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [listModalOpen, setListModalOpen] = useState(false);
+
+  const handleListModalOpen = () => {
+    setListModalOpen(true);
+  };
+  const handleListModalClose = () => {
+    setListModalOpen(false);
+  };
+
+  const [clickedDay, setClickedDay] = useState<string>("");
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const paramMonth = searchParams.get("month") ?? String(today.getMonth());
@@ -110,7 +122,7 @@ export default function Calendar() {
     1,
     20,
     undefined,
-    currentSeason,
+    "",
     false,
     false,
     false,
@@ -235,7 +247,7 @@ export default function Calendar() {
 
                     const dayEvents = key
                       ? eventsData?.results.filter(
-                          (event: any) => event.event_date === key,
+                          (event) => event.event_date === key,
                         ) || []
                       : [];
                     const todayCell = isToday(day);
@@ -252,9 +264,14 @@ export default function Calendar() {
                           const formattedDay = day < 10 ? `0${day}` : day;
                           const formattedMonth =
                             month < 10 ? `0${month}` : month;
-                          navigate(
-                            `new_event/?date=${year}-${formattedMonth}-${formattedDay}`,
-                          );
+                          if (dayEvents.length <= 1) {
+                            navigate(
+                              `new_event/?date=${year}-${formattedMonth}-${formattedDay}`,
+                            );
+                          } else {
+                            setClickedDay(day);
+                            setListModalOpen(true);
+                          }
                         }}
                         sx={{
                           flex: 1,
@@ -291,8 +308,6 @@ export default function Calendar() {
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  // bgcolor: todayCell ? "#e53935" : "transparent",
-                                  // color: todayCell ? "#fff" : "inherit",
                                   fontWeight: todayCell ? 800 : 400,
                                   fontSize: todayCell ? "1.5rem" : "0.95rem",
                                 }}
@@ -320,53 +335,95 @@ export default function Calendar() {
                             </Grid>
 
                             {/* Event chips */}
-                            {dayEvents.map((evt: any, i: any) => (
+                            {(() => {
+                              const visibleEvents = dayEvents.slice(0, 2);
+                              const hiddenCount = dayEvents.length - 2;
+                              const dayKey = `${year}-${month}-${day}`;
+                              const isHovered = hoveredDay === dayKey;
+                              return (
+                                <>
+                                  {visibleEvents.map((evt: any, i: any) => (
+                                    <Chip
+                                      key={i}
+                                      label={evt.name}
+                                      size="small"
+                                      clickable
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setClickedEventData(evt);
+                                        handleModalOpen();
+                                      }}
+                                      sx={{
+                                        bgcolor: EncounterOptions.find(
+                                          (item) =>
+                                            item.value === evt.encounter_type,
+                                        )?.color,
+                                        color: "#fff",
+                                        fontWeight: 600,
+                                        fontSize: "0.72rem",
+                                        height: 22,
+                                        textDecoration:
+                                          new Date(year, month - 1, day) <
+                                          new Date(
+                                            new Date().setHours(0, 0, 0, 0),
+                                          )
+                                            ? "line-through"
+                                            : "none",
+                                        cursor: "pointer",
+                                        "& .MuiChip-label": { px: 1 },
+                                        "&:hover": { opacity: 0.95 },
+                                      }}
+                                    />
+                                  ))}
+
+                                  {hiddenCount > 0 && (
+                                    <Chip
+                                      label={
+                                        hoveredDay === `${rowIdx}|${colIdx}`
+                                          ? "Clique p. ver Todos"
+                                          : `+${hiddenCount}`
+                                      }
+                                      size="small"
+                                      clickable
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleListModalOpen();
+                                      }}
+                                      sx={{
+                                        bgcolor: "grey.300",
+                                        color: "#fff",
+                                        fontWeight: 700,
+                                        fontSize: "0.72rem",
+                                        height: 22,
+                                        cursor: "pointer",
+                                        letterSpacing: isHovered ? 0 : "0.05em",
+                                        transition: "all 0.2s ease",
+                                        "& .MuiChip-label": { px: 1 },
+                                        "&:hover": { opacity: 0.95 },
+                                      }}
+                                    />
+                                  )}
+                                </>
+                              );
+                            })()}
+                            {hoveredDay === `${rowIdx}|${colIdx}` &&
+                            day !== null &&
+                            dayEvents.length <= 1 ? (
                               <Chip
-                                key={i}
-                                label={evt.name}
+                                label="Clique para ad. Evento"
                                 size="small"
-                                clickable
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setClickedEventData(evt);
-                                  handleModalOpen();
-                                }}
                                 sx={{
-                                  bgcolor: EncounterOptions.find(
-                                    (item) => item.value === evt.encounter_type,
-                                  )?.color,
                                   color: "#fff",
                                   fontWeight: 600,
                                   fontSize: "0.72rem",
                                   height: 22,
-                                  textDecoration:
-                                    new Date(year, month - 1, day) <
-                                    new Date(new Date().setHours(0, 0, 0, 0))
-                                      ? "line-through"
-                                      : "none",
                                   cursor: "pointer",
                                   "& .MuiChip-label": { px: 1 },
-                                  "&:hover": { opacity: 0.95 },
                                 }}
                               />
-                            ))}
-                            {hoveredDay === `${rowIdx}|${colIdx}` &&
-                              day !== null &&
-                              dayEvents.length === 0 && (
-                                <Chip
-                                  label="Clique para ad. Evento"
-                                  size="small"
-                                  sx={{
-                                    color: "#fff",
-                                    fontWeight: 600,
-                                    fontSize: "0.72rem",
-                                    height: 22,
-                                    cursor: "pointer",
-                                    "& .MuiChip-label": { px: 1 },
-                                  }}
-                                />
-                              )}
+                            ) : null}
                           </>
                         )}
                       </Grid>
@@ -420,6 +477,15 @@ export default function Calendar() {
           setYear(y);
         }}
       />
+      <ListDayEventsModal
+        date={getEventKey(year, month, Number(clickedDay))}
+        handleModalClose={handleListModalClose}
+        isModalOpen={listModalOpen}
+        eventsData={eventsData?.results.filter(
+          (event) =>
+            event.event_date === getEventKey(year, month, Number(clickedDay)),
+        )}
+      ></ListDayEventsModal>
     </Grid>
   );
 }

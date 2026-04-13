@@ -17,7 +17,6 @@ import { EncounterOptions } from "../../config";
 import EventDetailCard from "./EventDetailCard";
 import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { stringToColor } from "../../dashboard/utils/avatarColor";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

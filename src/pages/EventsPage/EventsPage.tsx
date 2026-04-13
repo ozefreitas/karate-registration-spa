@@ -402,7 +402,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             ))}
           </Grid>
         ) : null}
-        {currentView == "calendar" &&
+        {currentView === "calendar" &&
         ![undefined, "free_club"].includes(props.userRole) ? (
           <Calendar></Calendar>
         ) : null}

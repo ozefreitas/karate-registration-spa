@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import IconBox from "./IconBox";
 
 export default function InfoRow({
@@ -6,11 +6,13 @@ export default function InfoRow({
   icon,
   value,
   reverse,
+  clickable,
 }: Readonly<{
   color: string;
   icon: React.ReactNode;
   value: React.ReactNode;
   reverse?: boolean;
+  clickable?: boolean;
 }>) {
   return (
     <Paper
@@ -23,19 +25,26 @@ export default function InfoRow({
         p: 2,
         borderRadius: 3,
         border: "1px solid #eeeeee",
-        bgcolor: "#fff",
         width: "100%",
+        transition: "0.3s",
+        "&:hover": {
+          bgcolor: clickable ? "#fff" : "none",
+          cursor: clickable ? "pointer" : "none",
+          transform: clickable ? "translateY(-3px)" : "none",
+          boxShadow: clickable ? 4 : "none",
+          borderColor: clickable ? "red" : "none",
+        },
       }}
     >
       {reverse ? (
         <>
-          {value}
+          <Typography>{value}</Typography>
           <IconBox color={color} icon={icon} />
         </>
       ) : (
         <>
           <IconBox color={color} icon={icon} />
-          {value}
+          <Typography>{value}</Typography>
         </>
       )}
     </Paper>
