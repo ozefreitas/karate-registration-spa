@@ -1,7 +1,22 @@
-import { Grid, Card, CardHeader, CardContent } from "@mui/material";
+import {
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Stack,
+  Button,
+} from "@mui/material";
 
 export default function FormCard(
-  props: Readonly<{ title: string; subheader?: string; children: any }>,
+  props: Readonly<{
+    title: string;
+    subheader?: string;
+    children: any;
+    actions?: boolean;
+    handleSubmit?: any;
+    handleClose?: any;
+  }>,
 ) {
   return (
     <Grid m={6} my={2} size={12}>
@@ -32,6 +47,39 @@ export default function FormCard(
         >
           <Grid container>{props.children}</Grid>
         </CardContent>
+        {props.actions !== undefined || props.actions ? (
+          <CardActions
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              borderTop: "1px solid lightgrey",
+            }}
+          >
+            <Stack
+              direction={{
+                xs: "row-reverse",
+                sm: "row",
+              }}
+              sx={{
+                p: 2,
+                gap: 3,
+                flexShrink: 0,
+                alignSelf: { xs: "flex-end", sm: "center" },
+              }}
+            >
+              <Button
+                size="small"
+                onClick={props.handleSubmit}
+                variant="contained"
+              >
+                Confirmar
+              </Button>
+              <Button size="small" onClick={props.handleClose}>
+                Cancelar
+              </Button>
+            </Stack>
+          </CardActions>
+        ) : null}
       </Card>
     </Grid>
   );

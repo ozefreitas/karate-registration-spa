@@ -52,6 +52,7 @@ import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
 import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import DynamicViewPage from "./pages/DrawPage/DynamicViewPage";
 import EventClassificationDetailsPage from "./pages/ClassificationsPage/EventClassificationDetailsPage";
+import MainProfilePage from "./pages/ProfilePages/MainProfilePage";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -188,7 +189,11 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<NewEventPage userRole={userRole} />}
-                        allowedRoles={["main_admin", "single_admin", "subed_club"]}
+                        allowedRoles={[
+                          "main_admin",
+                          "single_admin",
+                          "subed_club",
+                        ]}
                       />
                     )
                   }
@@ -443,12 +448,26 @@ function App() {
                 />
                 <Route
                   path="profile/"
-                  element={isAuthLoading ? null : <WIPPage></WIPPage>}
+                  element={
+                    isAuthLoading ? null : (
+                      <ProtectedRoute
+                        element={
+                          <MainProfilePage user={user}></MainProfilePage>
+                        }
+                        allowedRoles={[
+                          "main_admin",
+                          "subed_club",
+                          "superuser",
+                          "single_admin",
+                        ]}
+                      />
+                    )
+                  }
                 />
-                <Route
+                {/* <Route
                   path="profile//"
                   element={isAuthLoading ? null : <WIPPage></WIPPage>}
-                />
+                /> */}
                 <Route
                   path="pricing/"
                   element={

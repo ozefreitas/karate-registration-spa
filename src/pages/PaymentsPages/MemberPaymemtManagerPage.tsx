@@ -384,7 +384,6 @@ export default function MemberPaymemtManagerPage(
           <Grid p={2} container justifyContent={"flex-end"}>
             <Button
               variant="contained"
-              size={"large"}
               color={"success"}
               type={"submit"}
               startIcon={<Add></Add>}
