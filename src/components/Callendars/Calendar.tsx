@@ -126,12 +126,11 @@ export default function Calendar() {
     false,
     false,
     false,
-    false,
     `${year}-${month < 9 ? "0" : ""}${month.toString()}`,
   );
 
   return (
-    <Grid size={12} sx={{ p: 2, fontFamily: "inherit" }}>
+    <Grid size={12} p={2} pb={0} sx={{ fontFamily: "inherit" }}>
       {/* Header */}
       <Grid
         container
@@ -439,6 +438,7 @@ export default function Calendar() {
             rowSpacing={1}
             justifyContent={"center"}
             m={2}
+            mb={0}
             mt={5}
             py={2}
             borderRadius={2}

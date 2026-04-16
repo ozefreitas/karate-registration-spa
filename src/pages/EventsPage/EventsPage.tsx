@@ -167,13 +167,20 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             pl={1}
             mb={3}
             justifyContent={
-              ["superuser", "main_admin"].includes(props.userRole)
+              [
+                "superuser",
+                "main_admin",
+                "single_admin",
+                "subed_club",
+              ].includes(props.userRole)
                 ? "space-between"
                 : "flex-end"
             }
             alignItems={"center"}
           >
-            {props.userRole === "main_admin" ? (
+            {["main_admin", "superuser", "single_admin", "subed_club"].includes(
+              props.userRole,
+            ) ? (
               <AddButton label="Adicionar" to="new_event/"></AddButton>
             ) : null}
             <Grid

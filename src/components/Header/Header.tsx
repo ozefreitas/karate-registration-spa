@@ -586,7 +586,15 @@ export default function Header(props: Readonly<{ me: any }>) {
         </MenuItem>
       </Menu>
       {!shouldRender && (
-        <Breadcrumbs sx={{ p: 3, pb: 1 }}>
+        <Breadcrumbs
+          sx={{
+            p: 3,
+            pb: 1,
+            display: "flex",
+            alignItems: "stretch",
+            height: 80,
+          }}
+        >
           {breadcrumbs.length === 0 ? (
             ""
           ) : (

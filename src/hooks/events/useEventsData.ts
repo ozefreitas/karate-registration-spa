@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { EventsService, MatchService } from "../../openapi";
+import { EventsService } from "../../openapi";
 import { eventsExportMembersExcelRetrieve } from "../../api";
 
 export const useFetchEventsData = (
@@ -7,7 +7,7 @@ export const useFetchEventsData = (
   pageSize: number,
   ordering?: string,
   season?: string,
-  hasEnded?: boolean,
+  // hasEnded?: boolean,
   hasTeams?: boolean,
   hasCategories?: boolean,
   hasRegistrations?: boolean,
@@ -22,7 +22,7 @@ export const useFetchEventsData = (
       pageSize,
       ordering,
       season,
-      hasEnded,
+      // hasEnded,
       hasTeams,
       hasCategories,
       hasRegistrations,
@@ -33,7 +33,7 @@ export const useFetchEventsData = (
     queryFn: () =>
       EventsService.eventsList(
         hasCategories,
-        hasEnded,
+        // hasEnded,
         hasRegistrations,
         hasTeams,
         day,

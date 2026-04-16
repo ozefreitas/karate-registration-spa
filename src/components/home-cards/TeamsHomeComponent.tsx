@@ -181,7 +181,11 @@ export default function TeamsHomeComponent(
         <CardActions sx={{ justifyContent: "space-between" }}>
           {props.userRole === "free_club" ? null : (
             <>
-              <AddButton label="Adicionar" to="teams/new_team/"></AddButton>
+              <AddButton
+                label="Adicionar"
+                to="teams/new_team/"
+                size="medium"
+              ></AddButton>
               <InfoButton label="Ver Todas" to="teams/"></InfoButton>
             </>
           )}

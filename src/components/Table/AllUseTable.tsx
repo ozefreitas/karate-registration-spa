@@ -367,16 +367,20 @@ export default function AllUseTable(
     });
   };
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  const StyledTableCell = styled(TableCell)<{
+    selection?: boolean;
+  }>(({ theme, selection }) => ({
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
       fontSize: 17,
-      color: theme.palette.common.white,
+      paddingTop: selection ? 0 : 10,
+      paddingBottom: selection ? 0 : 10,
+      color: theme.palette.common.black,
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 15,
-      paddingTop: 8,
-      paddingBottom: 8,
+      paddingTop: 10,
+      paddingBottom: 10,
     },
   }));
 
@@ -385,12 +389,11 @@ export default function AllUseTable(
     warning?: boolean;
   }>(({ header, warning }) => ({
     [`&.${tableRowClasses.head}`]: {
-      backgroundColor: "black",
-      border: "4px solid black",
+      backgroundColor: "lightgrey",
+      border: "4px solid lightgrey",
     },
     textAlign: "center",
     cursor: header ? "default" : "pointer",
-
     backgroundColor: warning ? "rgba(255, 165, 0, 0.10)" : undefined,
     borderLeft: warning ? "4px solid rgba(255, 165, 0, 0.7)" : undefined,
     borderRight: warning ? "4px solid rgba(255, 165, 0, 0.7)" : undefined,
@@ -477,7 +480,7 @@ export default function AllUseTable(
               <TableHead>
                 <StyledTableRow header>
                   {props.selection ? (
-                    <StyledTableCell>
+                    <StyledTableCell selection>
                       <label>
                         <Checkbox
                           color="primary"
@@ -526,7 +529,7 @@ export default function AllUseTable(
                       key={row.id}
                     >
                       {props.selection ? (
-                        <StyledTableCell>
+                        <StyledTableCell selection>
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
@@ -616,7 +619,7 @@ export default function AllUseTable(
                                         row.can_update_sensitive === undefined
                                           ? "warning"
                                           : props.disallowEdit &&
-                                            row.can_update_sensitive
+                                              row.can_update_sensitive
                                             ? "warning"
                                             : "disabled"
                                       }
@@ -657,7 +660,7 @@ export default function AllUseTable(
                                         row.can_update_sensitive === undefined
                                           ? "error"
                                           : props.disallowEdit &&
-                                            row.can_update_sensitive
+                                              row.can_update_sensitive
                                             ? "error"
                                             : "disabled"
                                       }
@@ -692,7 +695,7 @@ export default function AllUseTable(
               <TableFooter>
                 <TableRow>
                   {props.selection ? (
-                    <StyledTableCell>
+                    <StyledTableCell selection>
                       <Tooltip arrow title="Remover Selecionados">
                         <span>
                           <IconButton

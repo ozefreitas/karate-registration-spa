@@ -52,10 +52,12 @@ const MainProfilePage = (props: { user: any }) => {
       last_name: "",
       email_contact: "",
       contact: "",
+      cellphone_number: "",
       username: "",
       location: "",
       password: "",
       password2: "",
+      bio: "",
     },
   });
 
@@ -367,6 +369,47 @@ const MainProfilePage = (props: { user: any }) => {
           </Grid>
           <Grid size={6}>
             <Controller
+              name="cellphone_number"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  type="number"
+                  label="Contacto Pessoal"
+                  fullWidth
+                  {...field}
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("cellphone_number") === ""}
+                            onClick={() => setValue("cellphone_number", "")}
+                            edge="end"
+                            aria-label="toggle password visibility"
+                          >
+                            <Clear
+                              color={
+                                watch("cellphone_number") === "" ? "disabled" : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.cellphone_number}
+                  helperText={errors.cellphone_number?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid size={6}>
+            <Controller
               name="location"
               control={control}
               render={({ field }) => (
@@ -409,8 +452,56 @@ const MainProfilePage = (props: { user: any }) => {
         </Grid>
       </FormCard>
       <FormCard
+        title="Bio"
+        subheader="Escreva algo sobre o seu Clube"
+        actions
+      >
+        <Grid size={12}>
+          <Controller
+            name="bio"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Bio"
+                placeholder="Primeiro Clube de Karate em ... fundado em ..."
+                fullWidth
+                multiline
+                minRows={4}
+                maxRows={8}
+                {...field}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          disabled={watch("bio") === ""}
+                          onClick={() => setValue("bio", "")}
+                          edge="end"
+                          aria-label="toggle password visibility"
+                        >
+                          <Clear
+                            color={watch("bio") === "" ? "disabled" : "error"}
+                          ></Clear>
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
+                error={!!errors.bio}
+                helperText={errors.bio?.message}
+              />
+            )}
+          />
+        </Grid>
+      </FormCard>
+      <FormCard
         title="Definições de Autenticação"
-        subheader="Altere a forma como inicia sessão nesta conta"
+        subheader="Escreva algo sobre o seu Clube"
         actions
       >
         <Grid p={2} size={6}>

@@ -155,6 +155,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="success"
             sx={{
+              bgcolor: "#d9ffe7",
+              color: "#004d1f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -168,6 +170,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="error"
             sx={{
+              bgcolor: "#ff8fa3",
+              color: "#800f2f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -183,6 +187,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="success"
             sx={{
+              bgcolor: "#d9ffe7",
+              color: "#004d1f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -196,6 +202,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="error"
             sx={{
+              bgcolor: "#ff8fa3",
+              color: "#800f2f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -211,6 +219,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="success"
             sx={{
+              bgcolor: "#d9ffe7",
+              color: "#004d1f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -224,6 +234,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="error"
             sx={{
+              bgcolor: "#ff8fa3",
+              color: "#800f2f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -239,6 +251,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="error"
             sx={{
+              bgcolor: "#ff8fa3",
+              color: "#800f2f",
               "& .MuiChip-label": {
                 display: "none",
               },
@@ -252,6 +266,8 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             label=""
             color="success"
             sx={{
+              bgcolor: "#d9ffe7",
+              color: "#004d1f",
               "& .MuiChip-label": {
                 display: "none",
               },

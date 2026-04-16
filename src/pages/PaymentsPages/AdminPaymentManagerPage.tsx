@@ -103,19 +103,31 @@ export default function AdminPaymentManagerPage(
     error: subscriptionsError,
   } = clubsHooks.useFetchClubSubscriptions(watch("search"), props.userRole);
 
+  const {
+    data: subscriptionConfigData,
+    isLoading: isSubscriptionConfigLoading,
+    error: subscriptionConfigError,
+  } = clubsHooks.useFetchClubSubscriptionConfig();
+
   const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();
-  const patchConfigSubscriptionAmount =
+  const patchClubSubscriptionsAmount =
     clubsHooks.usePatchClubSubscriptionAmountbyYear();
+  const patchSubscriptionConfigAmount =
+    clubsHooks.usePatchClubSubscriptionConfigData();
   const patchSubscriptionDueDate =
     clubsHooks.usePatchClubSubscriptionDueDatebyYear();
 
   const onSubmit = (data: any) => {
     if (currentAction === "amount") {
       const formData = { year: data.search, amount: data.amount };
-      patchConfigSubscriptionAmount.mutate(formData, {
+      patchClubSubscriptionsAmount.mutate(formData, {
         onSuccess: () => {
           handleClose();
         },
+      });
+      patchSubscriptionConfigAmount.mutate({
+        configId: String(subscriptionConfigData?.id),
+        data: { amount: data.amount },
       });
     } else if (currentAction === "due_date") {
       const formData = { year: data.search, due_date: data.overdueDate };
@@ -145,6 +157,10 @@ export default function AdminPaymentManagerPage(
           label="Pago"
           icon={<Check />}
           clickable
+          sx={{
+            bgcolor: "#d9ffe7",
+            color: "#004d1f",
+          }}
           onClick={() =>
             handleModalOpen(
               String(subscription.id),
@@ -159,6 +175,10 @@ export default function AdminPaymentManagerPage(
           label="Em Falta"
           icon={<Close />}
           clickable
+          sx={{
+            bgcolor: "#ff8fa3",
+            color: "#800f2f",
+          }}
           onClick={() =>
             handleModalOpen(
               String(subscription.id),
@@ -333,7 +353,9 @@ export default function AdminPaymentManagerPage(
                 >
                   {watch("search") === ""
                     ? 0
-                    : formatDateTime(subscriptionsData?.due_date, "day")}
+                    : subscriptionsData === undefined
+                      ? null
+                      : formatDateTime(subscriptionsData[0].due_date, "day")}
                 </Typography>
               )}
             </CardContent>
@@ -342,7 +364,6 @@ export default function AdminPaymentManagerPage(
         <Grid size={2.5}>
           <Card elevation={3} sx={{ height: "100%" }}>
             <CardHeader
-              sx={{ pb: 1 }}
               title={
                 <Grid
                   container
@@ -353,14 +374,10 @@ export default function AdminPaymentManagerPage(
                   <Tooltip arrow title="Editar Montante">
                     <span>
                       <IconButton
-                        disabled={watch("search") === ""}
+                        // disabled={watch("search") === ""}
                         onClick={(e) => handleClick(e, "amount")}
                       >
-                        <Edit
-                          color={
-                            watch("search") === "" ? "disabled" : "warning"
-                          }
-                        ></Edit>
+                        <Edit color={"warning"}></Edit>
                       </IconButton>
                     </span>
                   </Tooltip>
@@ -380,13 +397,8 @@ export default function AdminPaymentManagerPage(
                   <CircularProgress />
                 </Box>
               ) : (
-                <Typography
-                  color={watch("search") === "" ? "textDisabled" : "info"}
-                  variant="h3"
-                >
-                  {watch("search") === ""
-                    ? 0
-                    : subscriptionsData?.data[0].amount}
+                <Typography color={"info"} variant="h3">
+                  {subscriptionConfigData?.amount}
                 </Typography>
               )}
             </CardContent>

@@ -61,22 +61,16 @@ export default function FormCard(
                 sm: "row",
               }}
               sx={{
-                p: 2,
+                p: 1,
                 gap: 3,
                 flexShrink: 0,
                 alignSelf: { xs: "flex-end", sm: "center" },
               }}
             >
-              <Button
-                size="small"
-                onClick={props.handleSubmit}
-                variant="contained"
-              >
+              <Button onClick={props.handleSubmit} variant="contained">
                 Confirmar
               </Button>
-              <Button size="small" onClick={props.handleClose}>
-                Cancelar
-              </Button>
+              <Button onClick={props.handleClose}>Cancelar</Button>
             </Stack>
           </CardActions>
         ) : null}

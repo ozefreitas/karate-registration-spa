@@ -55,16 +55,7 @@ export default function NextEventHomeComponent(
               />
             </ListItemButton>
           </ListItem>
-        ) : nextCompData === undefined ? (
-          <ListItem sx={{ m: 0 }}>
-            <ListItemButton disabled sx={{ m: 0 }}>
-              <ListItemIcon>
-                <SportsMma></SportsMma>
-              </ListItemIcon>
-              <ListItemText primary={"Não há Eventos disponíveis."} />
-            </ListItemButton>
-          </ListItem>
-        ) : (
+        ) : nextCompData ? (
           <List>
             <ListItem sx={{ m: 0, pb: 0 }}>
               <Tooltip title={"Consultar"}>
@@ -144,6 +135,15 @@ export default function NextEventHomeComponent(
               </Tooltip>
             </ListItem>
           </List>
+        ) : (
+          <ListItem sx={{ m: 0 }}>
+            <ListItemButton disabled sx={{ mt: 2 }}>
+              <ListItemIcon>
+                <SportsMma></SportsMma>
+              </ListItemIcon>
+              <ListItemText primary={"Não há Eventos disponíveis."} />
+            </ListItemButton>
+          </ListItem>
         )}
         <CardActions
           sx={{
@@ -152,7 +152,11 @@ export default function NextEventHomeComponent(
           }}
         >
           {props.userRole === "main_admin" ? (
-            <AddButton label="Adicionar" to="events/new_event/"></AddButton>
+            <AddButton
+              label="Adicionar"
+              to="events/new_event/"
+              size="medium"
+            ></AddButton>
           ) : null}
           <InfoButton label="Ver Todas" to="events/"></InfoButton>
         </CardActions>

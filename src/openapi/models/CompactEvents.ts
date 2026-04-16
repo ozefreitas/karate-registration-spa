@@ -11,7 +11,6 @@ export type CompactEvents = {
     season: SeasonEnum;
     location: string;
     has_registrations?: boolean;
-    has_ended?: boolean;
     readonly is_open: string;
     readonly is_closed: string;
     readonly is_retification: string;

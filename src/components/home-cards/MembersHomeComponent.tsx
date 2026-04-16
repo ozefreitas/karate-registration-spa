@@ -187,7 +187,11 @@ export default function MembersHomeComponent(
           {props.userRole === "free_club" ? null : props.userRole ===
             "subed_club" ? (
             <>
-              <AddButton label="Adicionar" to="members/new_member/"></AddButton>
+              <AddButton
+                label="Adicionar"
+                to="members/new_member/"
+                size={"medium"}
+              ></AddButton>
               <InfoButton label="Ver Todos" to="members/"></InfoButton>
             </>
           ) : (

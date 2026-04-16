@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ClubSettingsService,
   ClubsService,
+  ClubSubscriptionConfigService,
   ClubSubscriptionService,
 } from "../../openapi";
 
@@ -41,6 +42,15 @@ export const useFetchClubSettingsData = () => {
   return useQuery({
     queryKey: ["club-setting"],
     queryFn: ClubSettingsService.clubSettingsList,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};
+
+export const useFetchClubSubscriptionConfig = () => {
+  return useQuery({
+    queryKey: ["club-subscription-config"],
+    queryFn: () => ClubSubscriptionConfigService.clubSubscriptionConfigMeRetrieve(),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

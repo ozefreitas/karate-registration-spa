@@ -25,11 +25,11 @@ export type Events = {
     custody?: string | null;
     email_contact?: string | null;
     contact?: number | null;
-    has_ended?: boolean;
     has_registrations?: boolean;
     has_categories?: boolean;
     encounter_type?: EncounterTypeEnum;
     rating?: number;
     file?: string | null;
+    created_by?: number | null;
 };
 
