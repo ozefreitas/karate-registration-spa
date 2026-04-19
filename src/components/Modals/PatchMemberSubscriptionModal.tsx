@@ -16,7 +16,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -26,7 +26,7 @@ export default function PatchMemberSubscriptionModal(
     isOpen: boolean;
     handleClose: any;
     paymentObj: any;
-  }>
+  }>,
 ) {
   const patchClubSubscription =
     monthlyPaymentsHooks.usePatchMonthlyMemberSubscriptionData();

@@ -223,7 +223,7 @@ export default function AddMemberPaymentModal(
                 <MenuItem value="" sx={{ color: "lightgrey" }}>
                   -- Selecionar --
                 </MenuItem>
-                {monthlyPaymentPlansData?.data.map((item: any, index: any) => (
+                {monthlyPaymentPlansData?.map((item: any, index: any) => (
                   <MenuItem key={index} value={item.id}>
                     {item.name} ({item.amount}€)
                   </MenuItem>

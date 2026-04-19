@@ -24,7 +24,7 @@ export const usePatchMonthlyMemberSubscriptionData = () => {
         data,
       ),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success");
+      callNotiStack(enqueueSnackbar, data.message, "success");
       queryClient.invalidateQueries({
         queryKey: ["member-monthly-subscription"],
       });

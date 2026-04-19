@@ -21,7 +21,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -31,13 +31,13 @@ export default function EditMemberActivePaymentModal(
     isOpen: boolean;
     handleClose: any;
     paymentId: string;
-  }>
+  }>,
 ) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: singleMonthlyMemberPayment } =
     monthlyPaymentsHooks.useFetchSingleMonthlyMemberSubscriptionData(
-      props.paymentId
+      props.paymentId,
     );
 
   const patchCurrentPaymentAmount =
@@ -56,7 +56,7 @@ export default function EditMemberActivePaymentModal(
   });
 
   useEffect(() => {
-    setValue("customAmount", singleMonthlyMemberPayment?.data.amount);
+    setValue("customAmount", singleMonthlyMemberPayment?.amount!);
   }, [singleMonthlyMemberPayment]);
 
   const onSubmit = (data: any) => {
@@ -70,7 +70,7 @@ export default function EditMemberActivePaymentModal(
         autoHideDuration: 5000,
         preventDuplicate: true,
       });
-      setValue("customAmount", singleMonthlyMemberPayment?.data.amount);
+      setValue("customAmount", singleMonthlyMemberPayment?.amount!);
     } else {
       const payload = { amount: data.customAmount };
       patchCurrentPaymentAmount.mutate({
@@ -90,13 +90,13 @@ export default function EditMemberActivePaymentModal(
       }}
     >
       <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">
-          Alterar montante corrente para{" "}
-          {getMonthFromValue(singleMonthlyMemberPayment?.data.month)} de{" "}
-          {singleMonthlyMemberPayment?.data.year}
+        <Typography variant="h5">Alterar montante corrente para</Typography>
+        <Typography variant="h5" fontWeight={700}>
+          {getMonthFromValue(singleMonthlyMemberPayment?.month!)} de{" "}
+          {singleMonthlyMemberPayment?.year}
         </Typography>
       </DialogTitle>
-      {singleMonthlyMemberPayment?.data.paid ? (
+      {singleMonthlyMemberPayment?.paid ? (
         <DialogContent
           sx={{
             borderBottom: "1px solid lightgrey",
@@ -107,10 +107,8 @@ export default function EditMemberActivePaymentModal(
             De forma a evitar equivocos no valor pago pelo Membro, a opção de
             editar o montante a pagar para uma quota já criada está desativado.
           </p>
-          <p>
-            Para alterar o montante a pagar/pago, reverta o estado de pagamento
-            na tabela, e tente editar novamente.
-          </p>
+          Para alterar o montante a pagar/pago, reverta o estado de pagamento na
+          tabela, e tente editar novamente.
         </DialogContent>
       ) : (
         <DialogContent
@@ -169,7 +167,7 @@ export default function EditMemberActivePaymentModal(
             size="small"
             onClick={() => handleSubmit(onSubmit)()}
             variant="contained"
-            disabled={singleMonthlyMemberPayment?.data.paid}
+            disabled={singleMonthlyMemberPayment?.paid}
           >
             Confirmar
           </Button>

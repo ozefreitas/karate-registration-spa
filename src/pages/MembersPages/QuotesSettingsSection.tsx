@@ -148,6 +148,14 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           color="success"
           label="Pago"
           icon={<Check />}
+          sx={{
+            bgcolor: "#d9ffe7",
+            color: "#004d1f",
+            p: 1,
+            "&:hover": {
+              color: "white",
+            },
+          }}
           clickable
           onClick={() => {
             setCurrentPaymentObj({
@@ -165,6 +173,14 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           label="Em Falta"
           icon={<Close />}
           clickable
+          sx={{
+            bgcolor: "#ff8fa3",
+            color: "#800f2f",
+            p: 1,
+            "&:hover": {
+              color: "white",
+            },
+          }}
           onClick={() => {
             setCurrentPaymentObj({
               id: subscription.id,
@@ -186,15 +202,20 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
         <Chip
           color="success"
           variant="outlined"
+          sx={{ cursor: "default", bgcolor: "#d9ffe7", color: "#004d1f", p: 1 }}
           label="Sim"
-          sx={{ cursor: "default" }}
         ></Chip>
       ) : (
         <Chip
           color="error"
           variant="outlined"
+          sx={{
+            bgcolor: "#ff8fa3",
+            color: "#800f2f",
+            p: 1,
+            cursor: "default",
+          }}
           label="Não"
-          sx={{ cursor: "default" }}
         ></Chip>
       ),
     }));

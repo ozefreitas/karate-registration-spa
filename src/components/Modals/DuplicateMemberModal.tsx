@@ -10,7 +10,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { membersHooks } from "../../hooks";
+import { membershipsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
@@ -18,7 +18,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -28,19 +28,18 @@ export default function DuplicateMemberModal(
     isModalOpen: boolean;
     handleModalClose: any;
     memberData?: any;
-  }>
+  }>,
 ) {
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const createMember = membersHooks.useCreateMember();
+
+  const createMembership = membershipsHooks.useCreateMemberShip();
   const handleSubmit = () => {
-    const formData = { ...props.memberData };
-    formData.member_type =
-      props.memberData?.member_type === "coach" ? "student" : "coach";
-    createMember.mutate(formData, {
-      onSuccess: (data) => {
-        navigate(`/members/${data.data.id}/?section=personal_info`);
-      },
+    const formData: { member_type: any; person: string } = {
+      member_type:
+        props.memberData?.member_type === "coach" ? "student" : "coach",
+      person: props.memberData?.id,
+    };
+    createMembership.mutate(formData, {
       onError: (data: any) => {
         const errorData = data.response?.data || {};
         if (errorData.non_field_errors?.[0]) {
@@ -79,7 +78,8 @@ export default function DuplicateMemberModal(
           }}
         >
           <p>
-            Esta ação irá duplicar este Membro para <strong>Treinador</strong>.{" "}
+            Esta ação irá duplicar este Membro para <strong>Treinador</strong>
+            .{" "}
           </p>
           <p>Deseja prosseguir?</p>
         </DialogContent>

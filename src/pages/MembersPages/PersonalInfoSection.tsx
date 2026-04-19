@@ -24,6 +24,8 @@ import {
   VerifiedUser,
   Upgrade,
   HourglassBottom,
+  Person,
+  InfoOutlined,
 } from "@mui/icons-material";
 import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
@@ -38,6 +40,11 @@ import { isFloat } from "../../utils/utils";
 import { useSnackbar } from "notistack";
 import DuplicateMemberModal from "../../components/Modals/DuplicateMemberModal";
 import RequestModal from "../../components/Modals/RequestModal";
+import {
+  FieldBox,
+  FieldRow,
+  SectionBlock,
+} from "../../components/Members/MemberInfoSection";
 
 export default function PersonalInfoSection(
   props: Readonly<{ memberData: any }>,
@@ -311,1034 +318,309 @@ export default function PersonalInfoSection(
   }, []);
 
   return (
-    <>
-      <Grid container alignItems={"center"} size={12}>
-        <Grid size={11} container gap={3} alignItems={"center"}>
-          <Typography
-            sx={{ color: "#e81c24", fontWeight: "bold", ml: 1 }}
-            variant="h4"
-          >
-            INFORMAÇÕES PESSOAIS
-          </Typography>
-          {props.memberData?.is_validated ? (
-            <Tooltip title="Verificado">
-              <VerifiedUser color="info" fontSize="large" />
-            </Tooltip>
-          ) : (
-            <Tooltip title="Próprio" sx={{ cursor: "pointer" }}>
-              <AccountCircle color="info" fontSize="large" />
-            </Tooltip>
-          )}
-        </Grid>
-        {["superuser", "subed_club"].includes(userRole!) ? (
-          <Grid size={1}>
-            <Tooltip title="Duplicar Membro">
-              <span>
-                <Button onClick={() => handleDuplicateModalOpen()}>
-                  <ContentCopy></ContentCopy>
-                </Button>
-              </span>
-            </Tooltip>
-          </Grid>
-        ) : null}
-      </Grid>
-      <Grid mb={5} mt={2}>
-        {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
-          <Button
-            sx={{ m: 1, mr: 4 }}
-            variant="contained"
-            size="small"
-            color="error"
-            startIcon={<Delete />}
-            disabled={!canUpdateSensitive}
-            onClick={handleModalOpen}
-          >
-            Remover
-          </Button>
-        ) : null}
-        {isEditMode ? (
-          <>
-            <Button
-              id="update_button"
-              sx={{ m: 1 }}
-              variant="contained"
-              size="small"
-              color="success"
-              onClick={() => {
-                handleSubmit(onSubmit)();
-                setIsEditMode(false);
-              }}
-              startIcon={<Update />}
-            >
-              Atualizar
-            </Button>
-            <Button
-              id="escape_button"
-              sx={{ m: 1 }}
-              variant="contained"
-              size="small"
-              color="inherit"
-              onClick={() => {
-                reset();
-                setIsEditMode(false);
-              }}
-              startIcon={<Clear />}
-            >
-              Cancelar
-            </Button>
-          </>
-        ) : (
-          <Button
-            sx={{ m: 1 }}
-            variant="contained"
-            size="small"
-            color="warning"
-            onClick={() => {
-              if (isEditMode === false) {
-                if (getValues("address") === "N/A") {
-                  setValue("address", "");
-                }
-                if (getValues("conditions") === "N/A") {
-                  setValue("conditions", "");
-                }
-                if (getValues("observations") === "N/A") {
-                  setValue("observations", "");
-                }
-              }
-              setIsEditMode(true);
-            }}
-            startIcon={<Edit />}
-          >
-            Editar
-          </Button>
-        )}
-      </Grid>
+    <Grid>
       <Grid
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          rowGap: "30px",
-          justifyItems: "start",
-          alignItems: "center",
-        }}
+        size={12}
+        container
+        justifyContent={"space-between"}
+        mb={3}
+        spacing={2}
       >
-        <FormControl component="fieldset" variant="standard">
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Primeiro Nome:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="firstName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      canUpdateSensitive && isPrivileged && isEditMode
-                        ? "outlined"
-                        : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                        disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.firstName}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Último Nome:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="lastName"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      canUpdateSensitive && isPrivileged && isEditMode
-                        ? "outlined"
-                        : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    multiline
-                    maxRows={2}
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                        disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.firstName}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Data de Nascimento:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="birthDate"
-                control={control}
-                render={({ field }) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      {...field}
-                      format="YYYY-MM-DD"
-                      label=""
-                      onChange={(date) => {
-                        if (isEditMode && canUpdateSensitive) {
-                          field.onChange(date ? date.format("YYYY-MM-DD") : "");
-                        }
-                      }}
-                      value={field.value ? dayjs(field.value) : null}
-                      enableAccessibleFieldDOMStructure={false}
-                      slotProps={{
-                        textField:
-                          isPrivileged && isEditMode && canUpdateSensitive
-                            ? {}
-                            : {
-                                variant: "standard",
-                                InputProps: {
-                                  disableUnderline: true,
-                                  sx: {
-                                    border: "none",
-                                    padding: 0,
-                                    fontSize: 20,
-                                  },
-                                },
-                                sx: {
-                                  // width: "100px",
-                                  "& .MuiInputBase-root": {
-                                    border: "none",
-                                    padding: 0,
-                                  },
-                                  "& .MuiInputBase-input": {
-                                    textAlign: "left",
-                                    padding: 0,
-                                  },
-                                },
-                              },
-                      }}
-                      slots={
-                        isPrivileged && isEditMode && canUpdateSensitive
-                          ? undefined
-                          : {
-                              openPickerIcon: () => null,
-                              textField: TextField,
-                            }
-                      }
-                    />
-                  </LocalizationProvider>
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2, justifyContent: "center" }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  pr: 2,
-                  width: "fit-content",
-                }}
-              >
-                Idade (real):
-              </Typography>
-            }
-            control={
-              <Controller
-                name="age"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant="standard"
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: true,
-                        disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
-                      },
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.age}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Número {import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="id_number"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    type={isEditMode && canUpdateSensitive ? "number" : "text"}
-                    variant={
-                      canUpdateSensitive && isPrivileged && isEditMode
-                        ? "outlined"
-                        : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.id_number}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{
-            pb: 2,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-          component="fieldset"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Graduação:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="graduation"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    select
-                    variant={
-                      canUpdateSensitive && isPrivileged && isEditMode
-                        ? "outlined"
-                        : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                        disableUnderline: true,
-                        style: { fontSize: 20 },
-                      },
-                      select: {
-                        IconComponent:
-                          isEditMode && canUpdateSensitive
-                            ? ArrowDropDown
-                            : () => null,
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.gender}
-                  >
-                    {GraduationsOptions.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            }
-          ></FormControlLabel>
-          <Grid container flexDirection={"column"} alignItems={"center"}>
-            {props.memberData.exam_request_status === "pending" ? (
-              <Tooltip arrow placement="top" title="Pendente">
-                <span>
-                  <HourglassBottom fontSize="medium" color="info" />
-                </span>
-              </Tooltip>
-            ) : (
+        <Grid>
+          {["superuser", "subed_club"].includes(userRole!) ? (
+            <Grid size={1}>
               <Tooltip
-                arrow
-                placement="top"
                 title={
-                  props.memberData?.is_validated
-                    ? "Pedir Proposta de Exame"
-                    : "Precisa de verificar este Membro para o propor a Exame."
+                  props.memberData?.member_types.length === 2
+                    ? "Este Membro já tem 2 tipos de praticante"
+                    : "Duplicar Membro"
                 }
+                placement="right"
+                arrow
               >
                 <span>
-                  <IconButton
-                    disabled={!props.memberData?.is_validated || isEditMode}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRequestExamModalOpen();
-                    }}
-                    color={"info"}
+                  <Button
+                    disabled={props.memberData?.member_types.length === 2}
+                    onClick={() => handleDuplicateModalOpen()}
                   >
-                    <Upgrade
-                      fontSize="large"
-                      color={
-                        props.memberData?.is_validated && !isEditMode
-                          ? "info"
-                          : "disabled"
-                      }
-                    />
-                  </IconButton>
+                    <ContentCopy></ContentCopy>
+                  </Button>
                 </span>
               </Tooltip>
-            )}
-          </Grid>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Género:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="gender"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    select
-                    variant={
-                      canUpdateSensitive && isPrivileged && isEditMode
-                        ? "outlined"
-                        : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                        disableUnderline: true,
-                        style: { fontSize: 20, marginRight: 10 },
-                      },
-                      select: {
-                        IconComponent:
-                          isEditMode && canUpdateSensitive
-                            ? ArrowDropDown
-                            : () => null,
-                        readOnly: !isEditMode || !canUpdateSensitive,
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.gender}
-                  >
-                    {GenderOptions.filter((item) =>
-                      ["Masculino", "Feminino"].includes(item.value),
-                    ).map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl sx={{ pb: 2 }} component="fieldset">
-          <FormControlLabel
-            labelPlacement="start"
-            label={
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  pr: 2,
-                  color: editField === "weight" ? "red" : "black",
+            </Grid>
+          ) : null}
+        </Grid>
+        <Grid container>
+          {isEditMode ? (
+            <>
+              <Button
+                id="update_button"
+                variant="contained"
+                color="success"
+                onClick={() => {
+                  handleSubmit(onSubmit)();
+                  setIsEditMode(false);
                 }}
+                startIcon={<Update />}
               >
-                Peso (kg):
-              </Typography>
-            }
-            control={
-              <Controller
-                name="weight"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && editField) {
-                        e.preventDefault();
-                        handleSubmit(onSubmit)();
-                        setIsEditMode(false);
-                      }
-                    }}
-                    color="warning"
-                    variant={isEditMode ? "outlined" : "standard"}
-                    label=""
-                    type={isEditMode ? "number" : "text"}
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          width: 200,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.weight || editField === "weight"}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        {props.memberData?.member_type === "coach" ||
-        userRole === "main_admin" ? null : (
-          <Controller
-            name="competitor"
-            control={control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ pb: 2, justifyContent: "center" }}
-                component="fieldset"
-                variant="standard"
+                Atualizar
+              </Button>
+              <Button
+                id="escape_button"
+                variant="contained"
+                color="inherit"
+                onClick={() => {
+                  reset();
+                  setIsEditMode(false);
+                }}
+                startIcon={<Clear />}
               >
-                <FormControlLabel
-                  sx={{ mr: 2 }}
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                    >
-                      É competidor:
-                    </Typography>
+                Cancelar
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="contained"
+              size="small"
+              color="warning"
+              onClick={() => {
+                if (isEditMode === false) {
+                  if (getValues("address") === "N/A") {
+                    setValue("address", "");
                   }
-                  control={
-                    <Switch
-                      disabled={!isEditMode}
-                      sx={{ ml: 2 }}
-                      {...field}
-                      checked={field.value}
-                      color="warning"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                      }}
-                    />
+                  if (getValues("conditions") === "N/A") {
+                    setValue("conditions", "");
                   }
-                ></FormControlLabel>
-              </FormControl>
-            )}
-          />
-        )}
-        {["subed_club", "single_admin"].includes(userRole!) ? (
-          <Controller
-            name="quotesLegible"
-            control={control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ pb: 2, justifyContent: "center" }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormControlLabel
-                  sx={{ mr: 2 }}
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                    >
-                      Paga quotas:
-                    </Typography>
+                  if (getValues("observations") === "N/A") {
+                    setValue("observations", "");
                   }
-                  control={
-                    <Switch
-                      disabled={!isEditMode}
-                      sx={{ ml: 2 }}
-                      {...field}
-                      checked={field.value}
-                      color="warning"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                      }}
-                    />
-                  }
-                ></FormControlLabel>
-              </FormControl>
-            )}
-          />
-        ) : null}
-        <FormControl
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Data de Inscrição:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="registrationDate"
-                control={control}
-                render={({ field }) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      {...field}
-                      format="YYYY-MM-DD"
-                      label=""
-                      onChange={(date) => {
-                        if (isEditMode && canUpdateSensitive) {
-                          field.onChange(date ? date.format("YYYY-MM-DD") : "");
-                        }
-                      }}
-                      value={field.value ? dayjs(field.value) : null}
-                      enableAccessibleFieldDOMStructure={false}
-                      slotProps={{
-                        textField:
-                          isPrivileged && isEditMode && canUpdateSensitive
-                            ? {}
-                            : {
-                                variant: "standard",
-                                InputProps: {
-                                  disableUnderline: true,
-                                  sx: {
-                                    border: "none",
-                                    padding: 0,
-                                    fontSize: 20,
-                                  },
-                                },
-                                sx: {
-                                  // width: "100px",
-                                  "& .MuiInputBase-root": {
-                                    border: "none",
-                                    padding: 0,
-                                  },
-                                  "& .MuiInputBase-input": {
-                                    textAlign: "left",
-                                    padding: 0,
-                                  },
-                                },
-                              },
-                      }}
-                      slots={
-                        isPrivileged && isEditMode && canUpdateSensitive
-                          ? undefined
-                          : {
-                              openPickerIcon: () => null,
-                              textField: TextField,
-                            }
-                      }
-                    />
-                  </LocalizationProvider>
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
+                }
+                setIsEditMode(true);
+              }}
+              startIcon={<Edit />}
+            >
+              Editar
+            </Button>
+          )}
+          {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<Delete />}
+              disabled={!canUpdateSensitive}
+              onClick={handleModalOpen}
+            >
+              Remover
+            </Button>
+          ) : null}
+        </Grid>
       </Grid>
-      <Grid size={11}>
-        <Typography
-          sx={{ color: "#e81c24", fontWeight: "bold", ml: 1, mt: 8, mb: 4 }}
-          variant="h5"
-        >
-          Detalhes Adicionais
-        </Typography>
-      </Grid>
-      <Grid
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          rowGap: "30px",
-          justifyItems: "start",
-          alignItems: "center",
-        }}
+      {/* Main Info Section */}
+      <SectionBlock
+        icon={<Person sx={{ fontSize: 18 }} />}
+        title="Informações Pessoais"
+        status={true}
+        verified={props.memberData?.is_validated}
       >
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Morada:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="address"
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Primeiro Nome"
+              control={control}
+              name="firstName"
+              type="text"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+          <Grid container size={6}>
+            <FieldBox
+              label="Último Nome"
+              control={control}
+              name="lastName"
+              type="text"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+        </FieldRow>
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Data de Nascimento"
+              control={control}
+              name="birthDate"
+              type="date"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+          <Grid container size={6}>
+            <FieldBox
+              label="Idade (real)"
+              control={control}
+              name="age"
+              type="number"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+        </FieldRow>
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label={`Número ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`}
+              control={control}
+              name="id_number"
+              type="number"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+          <Grid container size={6}>
+            <FieldBox
+              label="Graduação"
+              control={control}
+              name="graduation"
+              type="dropdown"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+              hasRequest
+              is_validated={props.memberData?.is_validated}
+              exam_request_status={props.memberData?.exam_request_status}
+              handleOpen={handleRequestExamModalOpen}
+            />
+          </Grid>
+        </FieldRow>
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Género"
+              control={control}
+              name="gender"
+              type="text"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+          <Grid container size={6}>
+            <FieldBox
+              label="Peso"
+              control={control}
+              name="weight"
+              type="number"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+        </FieldRow>
+        <Grid container size={12} spacing={5} py={1.5}>
+          <Grid container size={6}>
+            <FieldBox
+              label="Data de Inscrição"
+              control={control}
+              name="registrationDate"
+              type="date"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+          {["subed_club", "single_admin"].includes(userRole!) ? (
+            <Grid container size={6}>
+              <FieldBox
+                label="Paga Quotas"
                 control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.address}
-                  />
-                )}
+                name="quotesLegible"
+                type="switch"
+                isEditMode={isEditMode}
+                isPrivileged={isPrivileged}
+                canUpdateSensitive={canUpdateSensitive}
               />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                NIF:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="taxNumber"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    type={isEditMode ? "number" : "text"}
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.taxNumber}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-        <FormControl
-          sx={{ pb: 2 }}
-          component="fieldset"
-          variant="standard"
-          // error={!!errors.has_registrations}
-        >
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Número C.C./B.I.:
-              </Typography>
-            }
-            control={
-              <Controller
-                name="cardNumber"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    type={isEditMode ? "number" : "text"}
-                    variant={
-                      isPrivileged && isEditMode ? "outlined" : "standard"
-                    }
-                    label=""
-                    fullWidth
-                    slotProps={{
-                      input: {
-                        readOnly: !isEditMode,
-                        disableUnderline: true,
-                        style: {
-                          fontSize: 20,
-                          marginRight: 10,
-                          color:
-                            field.value === "N/A" ? "lightgray" : "inherit",
-                        },
-                      },
-                    }}
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.cardNumber}
-                  />
-                )}
-              />
-            }
-          ></FormControlLabel>
-        </FormControl>
-      </Grid>
-      <Grid mt={"30px"} container rowSpacing={"30px"}>
-        <Grid size={12}>
-          <FormControl
-            sx={{ width: "100%" }}
-            component="fieldset"
-            variant="standard"
-            // error={!!errors.has_registrations}
-          >
-            <FormControlLabel
-              sx={{ mr: 2 }}
-              labelPlacement="start"
-              label={
-                <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                  Condições Médicas/ Alergias/Medicações:
-                </Typography>
-              }
-              control={
-                <Controller
-                  name="conditions"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      color="warning"
-                      variant={
-                        isPrivileged && isEditMode ? "outlined" : "standard"
-                      }
-                      label=""
-                      fullWidth
-                      multiline
-                      maxRows={4}
-                      slotProps={{
-                        input: {
-                          readOnly: !isEditMode,
-                          disableUnderline: true,
-                          style: {
-                            fontSize: 20,
-                            marginRight: 10,
-                            color:
-                              field.value === "N/A" ? "lightgray" : "inherit",
-                          },
-                        },
-                      }}
-                      required
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                      error={!!errors.firstName}
-                    />
-                  )}
-                />
-              }
-            ></FormControlLabel>
-          </FormControl>
+            </Grid>
+          ) : null}
         </Grid>
-        <Grid size={12} mt={2} container>
-          <FormControl
-            sx={{ width: "100%" }}
-            component="fieldset"
-            variant="standard"
-            // error={!!errors.has_registrations}
-          >
-            <FormControlLabel
-              sx={{ mr: 2 }}
-              labelPlacement="start"
-              label={
-                <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                  Observações:
-                </Typography>
-              }
-              control={
-                <Controller
-                  name="observations"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      color="warning"
-                      variant={
-                        isPrivileged && isEditMode ? "outlined" : "standard"
-                      }
-                      label=""
-                      fullWidth
-                      multiline
-                      maxRows={4}
-                      slotProps={{
-                        input: {
-                          readOnly: !isEditMode,
-                          disableUnderline: true,
-                          style: {
-                            fontSize: 20,
-                            marginRight: 10,
-                            color:
-                              field.value === "N/A" ? "lightgray" : "inherit",
-                          },
-                        },
-                      }}
-                      required
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                      error={!!errors.firstName}
-                    />
-                  )}
-                />
-              }
-            ></FormControlLabel>
-          </FormControl>
+      </SectionBlock>
+      <Grid m={5}></Grid>
+      {/* Additional Info Section */}
+      <SectionBlock
+        icon={<InfoOutlined sx={{ fontSize: 18 }} />}
+        title="Detalhes Adicionais"
+        status={false}
+        verified={false}
+      >
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Morada"
+              control={control}
+              name="address"
+              type="text"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+          <Grid container size={6}>
+            <FieldBox
+              label="NIF"
+              control={control}
+              name="taxNumber"
+              type="number"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+        </FieldRow>
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Número C.C./B.I."
+              control={control}
+              name="cardNumber"
+              type="number"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+        </FieldRow>
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Condições Médicas/ Alergias/Medicações"
+              control={control}
+              name="conditions"
+              type="text"
+              isEditMode={isEditMode}
+              isPrivileged={isPrivileged}
+              canUpdateSensitive={canUpdateSensitive}
+            />
+          </Grid>
+        </FieldRow>
+
+        <Grid container py={1.5} size={6}>
+          <FieldBox
+            label="Observações"
+            control={control}
+            name="observations"
+            type="text"
+            isEditMode={isEditMode}
+            isPrivileged={isPrivileged}
+            canUpdateSensitive={canUpdateSensitive}
+          />
         </Grid>
-      </Grid>
+      </SectionBlock>
+
       <DuplicateMemberModal
         handleModalClose={handleDuplicateModalClose}
         isModalOpen={isDuplicateModalOpen}
@@ -1363,6 +645,6 @@ export default function PersonalInfoSection(
         handleClose={handleRequestExamModalClose}
         requestType="exams"
       ></RequestModal>
-    </>
+    </Grid>
   );
 }

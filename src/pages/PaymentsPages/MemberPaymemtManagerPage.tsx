@@ -88,9 +88,27 @@ export default function MemberPaymemtManagerPage(
       id: plan.id,
       amount: `${plan.amount}€`,
       is_default: plan.is_default ? (
-        <Chip variant="outlined" label="Sim" color="success"></Chip>
+        <Chip
+          variant="outlined"
+          label="Sim"
+          color="success"
+          sx={{
+            bgcolor: "#d9ffe7",
+            color: "#004d1f",
+            p: 1,
+          }}
+        ></Chip>
       ) : (
-        <Chip variant="outlined" label="Não" color="error"></Chip>
+        <Chip
+          variant="outlined"
+          label="Não"
+          color="error"
+          sx={{
+            bgcolor: "#ff8fa3",
+            color: "#800f2f",
+            p: 1,
+          }}
+        ></Chip>
       ),
       name: plan.name,
     }));

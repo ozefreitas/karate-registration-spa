@@ -128,6 +128,7 @@ export default function SingleMemberPage(
         <>
           <Grid container justifyContent={"space-between"} m={2}>
             <Button
+              sx={{ px: 2 }}
               onClick={() => {
                 if (singleMemberData?.next_prev.next !== null) {
                   navigate(`/members/${singleMemberData?.next_prev.next}`);
@@ -139,6 +140,7 @@ export default function SingleMemberPage(
               Membro Anterior
             </Button>
             <Button
+              sx={{ px: 2 }}
               onClick={() => {
                 if (singleMemberData?.next_prev.prev !== null) {
                   navigate(`/members/${singleMemberData?.next_prev.prev}`);

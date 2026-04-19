@@ -148,7 +148,7 @@ export class ClubSubscriptionService {
         });
     }
     /**
-     * An endpoint that targets all children accounts of an admin, in order to, update all subscription object if the given year,with a new amount
+     * An endpoint that targets all children accounts of an admin, in order to update all subscription object if the given year,with a new amount
      * @param requestBody
      * @returns UpdateClubSubscriptionAmount
      * @throws ApiError

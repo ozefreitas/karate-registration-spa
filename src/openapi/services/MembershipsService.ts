@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CreateMemberShips } from '../models/CreateMemberShips';
 import type { MemberShips } from '../models/MemberShips';
 import type { PaginatedMemberShipsList } from '../models/PaginatedMemberShipsList';
 import type { PatchedMemberShips } from '../models/PatchedMemberShips';
@@ -33,12 +34,12 @@ export class MembershipsService {
     }
     /**
      * @param requestBody
-     * @returns MemberShips
+     * @returns CreateMemberShips
      * @throws ApiError
      */
     public static membershipsCreate(
-        requestBody: MemberShips,
-    ): CancelablePromise<MemberShips> {
+        requestBody: CreateMemberShips,
+    ): CancelablePromise<CreateMemberShips> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/memberships/',

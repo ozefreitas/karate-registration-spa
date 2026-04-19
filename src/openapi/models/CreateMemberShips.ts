@@ -2,12 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type CreateMonthlyPersonPayment = {
-    customAmount?: string;
-    plan?: string;
-    is_default?: boolean;
-    year: number;
-    month: number;
+import type { MemberTypeEnum } from './MemberTypeEnum';
+export type CreateMemberShips = {
+    member_type?: MemberTypeEnum;
     person: string;
 };
 

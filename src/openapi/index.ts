@@ -41,6 +41,7 @@ export type { CreateClubSubscription } from './models/CreateClubSubscription';
 export type { CreateDiscipline } from './models/CreateDiscipline';
 export type { CreateEvent } from './models/CreateEvent';
 export type { CreateMatch } from './models/CreateMatch';
+export type { CreateMemberShips } from './models/CreateMemberShips';
 export type { CreateMemberValidationRequest } from './models/CreateMemberValidationRequest';
 export type { CreateMonthlyPaymentPlan } from './models/CreateMonthlyPaymentPlan';
 export type { CreateMonthlyPersonPayment } from './models/CreateMonthlyPersonPayment';
