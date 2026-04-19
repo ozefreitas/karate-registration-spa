@@ -65,6 +65,12 @@ export default function Calendar() {
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const paramMonth = searchParams.get("month") ?? String(today.getMonth());
+  const paramYear = searchParams.get("year") ?? String(today.getFullYear());
+
+  useEffect(() => {
+    setMonth(Number(paramMonth));
+    setYear(Number(paramYear));
+  }, [paramMonth, paramYear]);
 
   const changeMonth = (number: string) => {
     setSearchParams((prev) => {
@@ -73,20 +79,42 @@ export default function Calendar() {
     });
   };
 
+  const changeYear = (number: string) => {
+    setSearchParams((prev) => {
+      prev.set("year", number);
+      return prev;
+    });
+  };
+
   const handlePrev = () => {
     if (month === 1) {
       setMonth(12);
-      // changeMonth("12");
+      changeMonth("12");
       setYear((y) => y - 1);
-    } else setMonth((m) => m - 1);
+      changeYear(String(year - 1));
+    } else {
+      changeMonth(String(month - 1));
+      setMonth((m) => m - 1);
+    }
   };
 
   const handleNext = () => {
     if (month === 12) {
       setMonth(1);
-      // changeMonth("1");
+      changeMonth("1");
       setYear((y) => y + 1);
-    } else setMonth((m) => m + 1);
+      changeYear(String(year + 1));
+    } else {
+      changeMonth(String(month + 1));
+      setMonth((m) => m + 1);
+    }
+  };
+
+  const handleHoje = () => {
+    setMonth(today.getMonth() + 1);
+    setYear(today.getFullYear());
+    changeMonth(String(today.getMonth() + 1));
+    changeYear(String(today.getFullYear()));
   };
 
   const daysInMonth = getDaysInMonth(year, month);
@@ -172,8 +200,7 @@ export default function Calendar() {
         <Tooltip title={"Voltar ao mês atual"} placement="top">
           <Button
             onClick={() => {
-              setMonth(today.getMonth() + 1);
-              setYear(today.getFullYear());
+              handleHoje();
             }}
             color="info"
             variant="contained"
@@ -269,7 +296,7 @@ export default function Calendar() {
                             );
                           } else {
                             setClickedDay(day);
-                            setListModalOpen(true);
+                            handleListModalOpen();
                           }
                         }}
                         sx={{
@@ -350,6 +377,7 @@ export default function Calendar() {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        setClickedDay(day);
                                         setClickedEventData(evt);
                                         handleModalOpen();
                                       }}
@@ -388,6 +416,7 @@ export default function Calendar() {
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
+                                        setClickedDay(day);
                                         handleListModalOpen();
                                       }}
                                       sx={{
@@ -437,10 +466,11 @@ export default function Calendar() {
             spacing={3}
             rowSpacing={1}
             justifyContent={"center"}
-            m={2}
+            m={5}
             mb={0}
             mt={5}
             py={2}
+            px={1}
             borderRadius={2}
             bgcolor={"#ffffff"}
           >

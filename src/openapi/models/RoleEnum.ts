@@ -9,7 +9,6 @@
  * * `single_admin` - Single Admin
  * * `free_club` - Club Free
  * * `subed_club` - Club Subscription
- * * `person` - Person
  */
 export enum RoleEnum {
     SUPERUSER = 'superuser',
@@ -18,5 +17,4 @@ export enum RoleEnum {
     SINGLE_ADMIN = 'single_admin',
     FREE_CLUB = 'free_club',
     SUBED_CLUB = 'subed_club',
-    PERSON = 'person',
 }

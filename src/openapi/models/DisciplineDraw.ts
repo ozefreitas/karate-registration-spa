@@ -9,5 +9,6 @@ export type DisciplineDraw = {
     format: string;
     maxMembersPerGroup?: string;
     minMembersPerGroup?: string;
+    finalsSize?: string;
 };
 

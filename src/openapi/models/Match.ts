@@ -19,5 +19,6 @@ export type Match = {
     readonly created_at: string;
     bracket: number;
     loser_goes_to?: number | null;
+    feeds_into_scoring?: number | null;
 };
 

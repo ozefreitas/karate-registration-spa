@@ -12,6 +12,7 @@ export type PatchedUpdateMatch = {
     contender_1?: string | null;
     contender_2?: string | null;
     loser_goes_to?: number | null;
+    feeds_into_scoring?: number | null;
     winner?: string | null;
 };
 

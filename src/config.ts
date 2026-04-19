@@ -217,7 +217,7 @@ export const DrawFormatTypes: {
     value: "misto",
     label: "Misto",
     description:
-      "Rondas de eliminação até apuramento de 8 Atletas. Seguem para pontuações em pretações individuais.",
+      "Rondas de eliminação até apuramento de uma Final. Seguem para pontuações em prestações individuais.",
   },
 ];
 

@@ -40,6 +40,7 @@ export default function GenerateDrawPage() {
     splitFavourites: boolean;
     maxMembersPerGroup?: string;
     minMembersPerGroup?: string;
+    finalsSize?: string;
   };
 
   // Confirmed selections
@@ -69,6 +70,7 @@ export default function GenerateDrawPage() {
       format: "",
       maxMembersPerGroup: "",
       minMembersPerGroup: "",
+      finalsSize: "",
       notificate: false,
     },
   });
@@ -91,6 +93,7 @@ export default function GenerateDrawPage() {
           splitFavourites: s.splitFavourites,
           maxMembersPerGroup: s.maxMembersPerGroup,
           minMembersPerGroup: s.minMembersPerGroup,
+          finalsSize: s.finalsSize,
         })),
         notificate: data.notificate,
       },
@@ -121,6 +124,7 @@ export default function GenerateDrawPage() {
           format: "",
           maxMembersPerGroup: "",
           minMembersPerGroup: "",
+          finalsSize: "",
           notificate: false,
           splitClubs: false,
           splitFavourites: false,
@@ -146,6 +150,7 @@ export default function GenerateDrawPage() {
         splitFavourites: getValues("splitFavourites"),
         maxMembersPerGroup: getValues("maxMembersPerGroup"),
         minMembersPerGroup: getValues("minMembersPerGroup"),
+        finalsSize: getValues("finalsSize"),
       },
     ]);
 
@@ -339,9 +344,11 @@ export default function GenerateDrawPage() {
                   variant={"outlined"}
                   type="number"
                   fullWidth
-                  disabled={watch("format") === "torneio"}
+                  disabled={
+                    watch("format") === "torneio" || watch("format") === "misto"
+                  }
                   label="Número Mínimo p/ Grupo"
-                  required
+                  required={watch("format") === "grupos"}
                   slotProps={{
                     input: {
                       inputProps: {
@@ -387,9 +394,11 @@ export default function GenerateDrawPage() {
                   variant={"outlined"}
                   type="number"
                   fullWidth
-                  disabled={watch("format") === "torneio"}
+                  disabled={
+                    watch("format") === "torneio" || watch("format") === "misto"
+                  }
                   label="Número Máximo p/ Grupo"
-                  required
+                  required={watch("format") === "grupos"}
                   slotProps={{
                     input: {
                       inputProps: {
@@ -421,6 +430,62 @@ export default function GenerateDrawPage() {
                   }}
                   error={!!errors.minMembersPerGroup}
                   helperText={errors.minMembersPerGroup?.message}
+                ></TextField>
+              )}
+            />
+          </Grid>
+          <Grid size={12} p={2} container>
+            <FormLabel>
+              Selecione o formato "Misto" para alterar o número de Atletas em cada final.
+            </FormLabel>
+          </Grid>
+          <Grid p={2} pt={0} size={6}>
+            <Controller
+              name="finalsSize"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  type="number"
+                  fullWidth
+                  disabled={
+                    watch("format") === "torneio" ||
+                    watch("format") === "grupos"
+                  }
+                  label="Número de Atletas na final"
+                  required={watch("format") === "misto"}
+                  slotProps={{
+                    input: {
+                      inputProps: {
+                        min: 0,
+                        max: 100,
+                      },
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disabled={watch("finalsSize") === ""}
+                            onClick={() => setValue("finalsSize", "")}
+                            edge="end"
+                          >
+                            <Clear
+                              color={
+                                watch("finalsSize") === ""
+                                  ? "disabled"
+                                  : "error"
+                              }
+                            ></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.finalsSize}
+                  helperText={errors.finalsSize?.message}
                 ></TextField>
               )}
             />
@@ -548,6 +613,7 @@ export default function GenerateDrawPage() {
                       {s.maxMembersPerGroup !== "" && (
                         <Grid>- Máximo de {s.maxMembersPerGroup} Atletas</Grid>
                       )}
+                      {s.finalsSize !== "" && <Grid>- Máximo de {s.finalsSize} Atletas na Final</Grid>}
                       {s.splitClubs && <Grid>- Separar Clubes</Grid>}
                       {s.splitFavourites && <Grid>- Separar Favoritos</Grid>}
                     </Grid>
