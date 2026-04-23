@@ -289,7 +289,11 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={<EventAllRegistryPage userRole={userRole} />}
-                        allowedRoles={["main_admin"]}
+                        allowedRoles={[
+                          "main_admin",
+                          "single_admin",
+                          "subed_club",
+                        ]}
                       />
                     )
                   }

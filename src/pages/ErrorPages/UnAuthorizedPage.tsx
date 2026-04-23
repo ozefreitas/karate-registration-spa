@@ -5,7 +5,7 @@ export default function UnAuthorizedPage() {
   const navigate = useNavigate();
   return (
     <>
-      <Grid sx={{ mt: 10 }} container size={10} justifyContent="center">
+      <Grid sx={{ my: 10 }} container size={10} justifyContent="center">
         <Typography variant="h3">Acesso negado</Typography>
       </Grid>
       <Grid container justifyContent="center" sx={{ m: 2 }}>

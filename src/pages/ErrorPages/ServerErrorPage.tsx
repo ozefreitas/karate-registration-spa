@@ -4,7 +4,7 @@ export default function ServerErrorPage({ error, resetErrorBoundary }: any) {
   return (
     <>
       <Grid
-        sx={{ mt: 10 }}
+        sx={{ my: 10 }}
         container
         size={10}
         direction={"column"}

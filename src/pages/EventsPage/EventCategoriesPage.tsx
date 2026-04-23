@@ -17,23 +17,6 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  type Category = {
-    id: string;
-    name: string;
-    gender: string;
-    min_age: string;
-    has_age: string;
-    has_grad: string;
-    has_weight: string;
-  };
-
-  type Discipline = {
-    id: string;
-    name: string;
-    is_coach: boolean;
-    categories: Category[];
-  };
-
   const navigate = useNavigate();
 
   const { id: eventId } = useParams<{ id: string }>();
@@ -72,6 +55,8 @@ export default function EventCategoriesPage(
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -85,6 +70,8 @@ export default function EventCategoriesPage(
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -100,6 +87,8 @@ export default function EventCategoriesPage(
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -113,6 +102,8 @@ export default function EventCategoriesPage(
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -128,6 +119,8 @@ export default function EventCategoriesPage(
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -141,6 +134,8 @@ export default function EventCategoriesPage(
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },

@@ -31,7 +31,7 @@ export default function EventAllRegistryPage(
 
     // Conditionally add category
     if (
-      disciplinesData?.data.results.length !== 0 &&
+      disciplinesData?.results.length !== 0 &&
       (isCoach === undefined || isCoach === false)
     ) {
       baseColumns.push({ key: "category", label: "Escalão" });
@@ -61,26 +61,29 @@ export default function EventAllRegistryPage(
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
-        ) : disciplinesData?.data.results.length === 0 ? (
+        ) : disciplinesData?.results.length === 0 ? (
           <AllUseTable
-            count={singleEventData?.data.individuals.length}
+            count={singleEventData?.individuals.length!}
             type="Individuais"
-            data={singleEventData?.data.individuals}
+            data={singleEventData?.individuals}
             columnsHeaders={columnMaping}
             actions={false}
             selection={false}
             userRole={props.userRole}
           ></AllUseTable>
         ) : (
-          disciplinesData?.data.results.map((discipline: any) => {
+          disciplinesData?.results.map((discipline: any) => {
             const disciplineIndividuals = discipline?.individuals.map(
-              (memberInfo: any) => ({
-                id: memberInfo.member.id,
-                full_name: memberInfo.member.full_name,
-                gender: memberInfo.member.gender,
-                club: memberInfo.member.club,
-                category: memberInfo.category === null ? "N/A" : memberInfo.category.name,
-                added_at: formatDateTime(memberInfo.added_at, "both"),
+              (personInfo: any) => ({
+                id: personInfo.person.id,
+                full_name: personInfo.person.full_name,
+                gender: personInfo.person.gender,
+                club: personInfo.person.club,
+                category:
+                  personInfo.category === null
+                    ? "N/A"
+                    : personInfo.category.name,
+                added_at: formatDateTime(personInfo.added_at, "both"),
               }),
             );
             return (

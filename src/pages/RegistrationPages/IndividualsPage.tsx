@@ -18,12 +18,13 @@ import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadO
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";
 import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
+import UnAuthorizedPage from "../ErrorPages/UnAuthorizedPage";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
   const today = new Date();
   const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
@@ -70,7 +71,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     ? "Inscrições abertas"
     : singleEventData?.is_retification
       ? "Período de retificações"
-      : "Inscrições fechadas";
+      : "Inscrições Encerradas";
 
   const getColumnMapping = (isCoach?: boolean) => {
     // Base columns except the one that must be last
@@ -86,7 +87,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     ) {
       baseColumns.push({ key: "category", label: "Escalão" });
     }
-
+    if (["main_admin", "single_admin", "superuser"].includes(props.userRole)) {
+      baseColumns.push({ key: "club", label: "Clube" });
+    }
     // Always add this one last
     baseColumns.push({ key: "added_at", label: "Data Inscrição" });
 
@@ -94,6 +97,13 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   };
 
   const columnMaping = getColumnMapping();
+
+  if (
+    singleEventData?.event_date! < getFullDate() &&
+    !["main_admin", "single_admin"].includes(props.userRole)
+  ) {
+    return <UnAuthorizedPage></UnAuthorizedPage>;
+  }
 
   return (
     <>

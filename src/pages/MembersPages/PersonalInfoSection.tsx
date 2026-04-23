@@ -1,16 +1,5 @@
-import {
-  Typography,
-  Grid,
-  FormControl,
-  FormControlLabel,
-  TextField,
-  Button,
-  MenuItem,
-  Switch,
-  Tooltip,
-  IconButton,
-} from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
+import { Grid, Button, Tooltip } from "@mui/material";
+import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import DeleteMemberModal from "../../components/Modals/DeleteMemberModal";
 import {
@@ -18,21 +7,11 @@ import {
   Edit,
   Update,
   Clear,
-  ArrowDropDown,
   ContentCopy,
-  AccountCircle,
-  VerifiedUser,
-  Upgrade,
-  HourglassBottom,
   Person,
   InfoOutlined,
 } from "@mui/icons-material";
-import { GenderOptions, GraduationsOptions } from "../../config";
 import { membersHooks } from "../../hooks";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { useSearchParams } from "react-router-dom";
 import WeightConfirmModal from "../../components/Modals/WeightConfirmModal";
@@ -56,12 +35,7 @@ export default function PersonalInfoSection(
   const [searchParams] = useSearchParams();
   const editField = searchParams.get("edit_field");
 
-  const isPrivileged = ["main_admin", "superuser", "subed_club"].includes(
-    userRole!,
-  );
-
-  const canUpdateSensitive =
-    userRole === "main_admin" || !props.memberData?.is_validated;
+  const isValidated = props.memberData?.is_validated;
 
   useEffect(() => {
     if (editField === "weight") {
@@ -243,50 +217,99 @@ export default function PersonalInfoSection(
         return;
       }
       const formData = {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        graduation: data.graduation,
+        first_name:
+          data.firstName === props.memberData?.first_name
+            ? null
+            : data.firstName,
+        last_name:
+          data.lastName === props.memberData?.last_name ? null : data.lastName,
+        graduation:
+          data.graduation === props.memberData?.graduation
+            ? null
+            : data.graduation,
         id_number:
-          data.id_number === "N/A" || data.id_number === ""
+          data.id_number === "N/A" ||
+          data.id_number === "" ||
+          data.id_number === props.memberData?.id_number
             ? null
             : data.id_number,
-        gender: data.gender,
+        gender: data.gender === props.memberData?.gender ? null : data.gender,
         taxpayer_number:
-          data.taxNumber === "N/A" || data.taxNumber === ""
+          data.taxNumber === "N/A" ||
+          data.taxNumber === "" ||
+          data.taxNumber === props.memberData?.taxpayer_number
             ? null
             : data.taxNumber,
-        post_code: data.postCode,
-        registration_date: data.registrationDate,
+        post_code:
+          data.postCode === "N/A" ||
+          data.postCode === "" ||
+          data.postCode === props.memberData?.post_code
+            ? null
+            : data.postCode,
+        registration_date:
+          data.registrationDate === props.memberData?.registration_date
+            ? null
+            : data.registrationDate,
         national_card_number:
-          data.cardNumber === "N/A" || data.cardNumber === ""
+          data.cardNumber === "N/A" ||
+          data.cardNumber === "" ||
+          data.cardNumber === props.memberData?.national_card_number
             ? null
             : data.cardNumber,
         address:
-          data.address === "N/A" || data.address === "" ? null : data.address,
+          data.address === "N/A" ||
+          data.address === "" ||
+          data.address === props.memberData?.address
+            ? null
+            : data.address,
         conditions:
-          data.conditions === "N/A" || data.conditions === ""
+          data.conditions === "N/A" ||
+          data.conditions === "" ||
+          data.conditions === props.memberData?.conditions
             ? null
             : data.conditions,
         observations:
-          data.observations === "N/A" || data.observations === ""
+          data.observations === "N/A" ||
+          data.observations === "" ||
+          data.observations === props.memberData?.observations
             ? null
             : data.observations,
         member_type:
           props.memberData?.member_type === "coach"
             ? "coach"
-            : data.competitor
-              ? "athlete"
-              : "student",
-        quotes_legible: data.quotesLegible,
-        birth_date: data.birthDate,
+            : data.competitor &&
+                ["athlete"].includes(props.memberData?.member_type)
+              ? null
+              : !data.competitor &&
+                  ["student"].includes(props.memberData?.member_type)
+                ? null
+                : data.competitor &&
+                    ["student"].includes(props.memberData?.member_type)
+                  ? "athlete"
+                  : !data.competitor &&
+                      ["athlete"].includes(props.memberData?.member_type)
+                    ? "student"
+                    : null,
+        quotes_legible:
+          data.quotesLegible === props.memberData?.quotes_legible
+            ? null
+            : data.quotesLegible,
+        birth_date:
+          data.birthDate === props.memberData?.birth_date
+            ? null
+            : data.birthDate,
         weight:
-          data.weight === "N/A" || data.weight === "" ? null : data.weight,
+          data.weight === "N/A" ||
+          data.weight === "" ||
+          data.weight === props.memberData?.weight
+            ? null
+            : data.weight,
       };
       const updateData = {
-        memberId: props.memberData?.id,
+        personId: props.memberData?.id,
         data: formData,
       };
-      updateMember.mutate(updateData, {
+      patchMember.mutate(updateData, {
         onSuccess: (data: any) => {
           setValue("age", data.data.age);
           if (editField === "weight") {
@@ -407,7 +430,7 @@ export default function PersonalInfoSection(
               variant="contained"
               color="error"
               startIcon={<Delete />}
-              disabled={!canUpdateSensitive}
+              disabled={!isValidated}
               onClick={handleModalOpen}
             >
               Remover
@@ -430,8 +453,8 @@ export default function PersonalInfoSection(
               name="firstName"
               type="text"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
           <Grid container size={6}>
@@ -441,8 +464,8 @@ export default function PersonalInfoSection(
               name="lastName"
               type="text"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
         </FieldRow>
@@ -454,8 +477,8 @@ export default function PersonalInfoSection(
               name="birthDate"
               type="date"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
           <Grid container size={6}>
@@ -465,8 +488,8 @@ export default function PersonalInfoSection(
               name="age"
               type="number"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
         </FieldRow>
@@ -478,8 +501,8 @@ export default function PersonalInfoSection(
               name="id_number"
               type="number"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
           <Grid container size={6}>
@@ -489,8 +512,8 @@ export default function PersonalInfoSection(
               name="graduation"
               type="dropdown"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
               hasRequest
               is_validated={props.memberData?.is_validated}
               exam_request_status={props.memberData?.exam_request_status}
@@ -504,37 +527,28 @@ export default function PersonalInfoSection(
               label="Género"
               control={control}
               name="gender"
-              type="text"
+              type="dropdown"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
-            />
-          </Grid>
-          <Grid container size={6}>
-            <FieldBox
-              label="Peso"
-              control={control}
-              name="weight"
-              type="number"
-              isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
-            />
-          </Grid>
-        </FieldRow>
-        <Grid container size={12} spacing={5} py={1.5}>
-          <Grid container size={6}>
-            <FieldBox
-              label="Data de Inscrição"
-              control={control}
-              name="registrationDate"
-              type="date"
-              isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
           {["subed_club", "single_admin"].includes(userRole!) ? (
+            <Grid container size={6}>
+              <FieldBox
+                label="Peso"
+                control={control}
+                name="weight"
+                type="number"
+                isEditMode={isEditMode}
+                userRole={userRole}
+                isValidated={isValidated}
+              />
+            </Grid>
+          ) : null}
+        </FieldRow>
+        {["subed_club", "single_admin"].includes(userRole!) ? (
+          <FieldRow>
             <Grid container size={6}>
               <FieldBox
                 label="Paga Quotas"
@@ -542,12 +556,36 @@ export default function PersonalInfoSection(
                 name="quotesLegible"
                 type="switch"
                 isEditMode={isEditMode}
-                isPrivileged={isPrivileged}
-                canUpdateSensitive={canUpdateSensitive}
+                userRole={userRole}
+                isValidated={isValidated}
               />
             </Grid>
-          ) : null}
-        </Grid>
+            <Grid container size={6}>
+              <FieldBox
+                label="É Competidor"
+                control={control}
+                name="competitor"
+                type="switch"
+                isEditMode={isEditMode}
+                userRole={userRole}
+                isValidated={isValidated}
+              />
+            </Grid>
+          </FieldRow>
+        ) : null}
+        <FieldRow>
+          <Grid container size={6}>
+            <FieldBox
+              label="Data de Inscrição"
+              control={control}
+              name="registrationDate"
+              type="date"
+              isEditMode={isEditMode}
+              userRole={userRole}
+              isValidated={isValidated}
+            />
+          </Grid>
+        </FieldRow>
       </SectionBlock>
       <Grid m={5}></Grid>
       {/* Additional Info Section */}
@@ -565,8 +603,8 @@ export default function PersonalInfoSection(
               name="address"
               type="text"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
           <Grid container size={6}>
@@ -576,8 +614,8 @@ export default function PersonalInfoSection(
               name="taxNumber"
               type="number"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
         </FieldRow>
@@ -589,36 +627,39 @@ export default function PersonalInfoSection(
               name="cardNumber"
               type="number"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
         </FieldRow>
-        <FieldRow>
-          <Grid container size={6}>
+        {["subed_club", "single_admin"].includes(userRole!) ? (
+          <FieldRow>
+            <Grid container size={12}>
+              <FieldBox
+                label="Condições Médicas/Alergias/Medicações"
+                control={control}
+                name="conditions"
+                type="text"
+                isEditMode={isEditMode}
+                userRole={userRole}
+                isValidated={isValidated}
+              />
+            </Grid>
+          </FieldRow>
+        ) : null}
+        {["subed_club", "single_admin"].includes(userRole!) ? (
+          <Grid container py={1.5} size={12}>
             <FieldBox
-              label="Condições Médicas/ Alergias/Medicações"
+              label="Observações"
               control={control}
-              name="conditions"
+              name="observations"
               type="text"
               isEditMode={isEditMode}
-              isPrivileged={isPrivileged}
-              canUpdateSensitive={canUpdateSensitive}
+              userRole={userRole}
+              isValidated={isValidated}
             />
           </Grid>
-        </FieldRow>
-
-        <Grid container py={1.5} size={6}>
-          <FieldBox
-            label="Observações"
-            control={control}
-            name="observations"
-            type="text"
-            isEditMode={isEditMode}
-            isPrivileged={isPrivileged}
-            canUpdateSensitive={canUpdateSensitive}
-          />
-        </Grid>
+        ) : null}
       </SectionBlock>
 
       <DuplicateMemberModal

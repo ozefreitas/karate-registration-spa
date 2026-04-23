@@ -11,7 +11,6 @@ import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { membershipsHooks } from "../../hooks";
-import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 const Transition = React.forwardRef(function Transition(
@@ -40,6 +39,9 @@ export default function DuplicateMemberModal(
       person: props.memberData?.id,
     };
     createMembership.mutate(formData, {
+      onSuccess: () => {
+        props.handleModalClose();
+      },
       onError: (data: any) => {
         const errorData = data.response?.data || {};
         if (errorData.non_field_errors?.[0]) {
@@ -70,7 +72,7 @@ export default function DuplicateMemberModal(
           Duplicar {props.memberData?.full_name}
         </Typography>
       </DialogTitle>
-      {props.memberData?.member_type !== "coach" ? (
+      {props.memberData?.member_types?.includes("coach") ? (
         <DialogContent
           sx={{
             borderBottom: "1px solid lightgrey",
@@ -78,10 +80,9 @@ export default function DuplicateMemberModal(
           }}
         >
           <p>
-            Esta ação irá duplicar este Membro para <strong>Treinador</strong>
-            .{" "}
+            Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>.
           </p>
-          <p>Deseja prosseguir?</p>
+          Deseja prosseguir?
         </DialogContent>
       ) : (
         <DialogContent
@@ -91,10 +92,9 @@ export default function DuplicateMemberModal(
           }}
         >
           <p>
-            Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>.
-            Caso já exista como Aluno, dirija-se à página do mesmo diretamente e
-            altere o campo "É Competidor".<p></p>Deseja prosseguir?
+            Esta ação irá duplicar este Membro para <strong>Treinador</strong>.
           </p>
+          Deseja prosseguir?
         </DialogContent>
       )}
       <DialogActions>

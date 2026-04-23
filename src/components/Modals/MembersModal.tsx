@@ -46,7 +46,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { getGraduationFromValue, GraduationsOptions } from "../../config";
-import { Disciplines, Persons } from "../../openapi";
+import { Disciplines, Persons, NotAdminLikeTypePersons } from "../../openapi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -776,7 +776,7 @@ export default function MembersModal(
                 <ListItemText primary="O seu plano não concede acesso à listagem de Atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
               </ListItem>
             ) : (
-              filteredMembers?.map((member, index: number) => (
+              filteredMembers?.map((member: any, index: number) => (
                 <ListItem
                   key={index}
                   disablePadding

@@ -40,7 +40,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
     ? "Inscrições abertas"
     : singleEventData?.data.is_retification
       ? "Período de retificações"
-      : "Inscrições fechadas";
+      : "Inscrições Encerradas";
 
   // Memoize `rows` to compute only when `members` changes
   const registrationRows = useMemo(() => {

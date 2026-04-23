@@ -7,7 +7,7 @@
  * * `athlete` - Athlete
  * * `coach` - Coach
  */
-export enum MemberTypeEnum {
+export enum MemberTypeEe9Enum {
     STUDENT = 'student',
     ATHLETE = 'athlete',
     COACH = 'coach',

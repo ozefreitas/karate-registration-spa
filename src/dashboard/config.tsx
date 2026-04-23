@@ -118,7 +118,7 @@ export const getSideMenuConfig = (userRole: string) => {
         item.name !== "help" &&
         item.name !== "classifications" &&
         item.name !== "rules" &&
-        item.name !== "teams" 
+        item.name !== "teams",
     );
   } else if (userRole === undefined || userRole === "free_club") {
     return baseMenu.filter(
@@ -233,7 +233,7 @@ export const breadcrumbsConvertion: Record<string, any> = {
   pricing: "Planos de Subscrição",
   payment_manager: "Gestor de Pagamentos",
   patch: "Retificar",
-  dynamic_view: "Vista Dinâmica"
+  dynamic_view: "Vista Dinâmica",
 };
 
 export const NotificationTypeOptions: {
@@ -284,7 +284,7 @@ export const NotificationTypeOptions: {
   },
   {
     value: "registrations_close",
-    label: "Inscrições Fechadas",
+    label: "Inscrições Encerradas",
     icon: <EventBusy fontSize="large" />,
   },
   {

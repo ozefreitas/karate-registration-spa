@@ -20,7 +20,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 import { Controller } from "react-hook-form";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { GraduationsOptions } from "../../config";
+import { GraduationsOptions, GenderOptions } from "../../config";
+import { arEG } from "@mui/material/locale";
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
@@ -30,8 +31,8 @@ export function FieldBox({
   control,
   type,
   isEditMode,
-  canUpdateSensitive,
-  isPrivileged,
+  isValidated,
+  userRole,
   hasRequest,
   exam_request_status,
   is_validated,
@@ -42,13 +43,21 @@ export function FieldBox({
   control: any;
   type: "text" | "number" | "date" | "dropdown" | "switch";
   isEditMode: boolean;
-  canUpdateSensitive: boolean;
-  isPrivileged: boolean;
+  isValidated: boolean;
+  userRole?: string;
   hasRequest?: boolean;
   exam_request_status?: string;
   is_validated?: boolean;
   handleOpen?: any;
 }>) {
+  const sensitiveFields = [
+    "firstName",
+    "lastName",
+    "birthDate",
+    "id_number",
+    "graduation",
+    "gender",
+  ];
   return (
     <Grid container alignItems={"center"} columnSpacing={5}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -76,7 +85,18 @@ export function FieldBox({
                   format="YYYY-MM-DD"
                   label=""
                   onChange={(date) => {
-                    if (isEditMode && canUpdateSensitive) {
+                    const isAdmin = ["main_admin", "single_admin"].includes(
+                      userRole!,
+                    );
+                    const isSubedClub = userRole === "subed_club";
+
+                    const canChange =
+                      isEditMode &&
+                      ((isAdmin && name === "birthDate") ||
+                        (isSubedClub && !isValidated) ||
+                        (isSubedClub && isValidated && name !== "birthDate"));
+
+                    if (canChange) {
                       field.onChange(date ? date.format("YYYY-MM-DD") : "");
                     }
                   }}
@@ -84,7 +104,16 @@ export function FieldBox({
                   enableAccessibleFieldDOMStructure={false}
                   slotProps={{
                     textField:
-                      isPrivileged && isEditMode && canUpdateSensitive
+                      (isEditMode &&
+                        ["main_admin", "single_admin"].includes(userRole!) &&
+                        name === "birthDate") ||
+                      (isEditMode &&
+                        isValidated &&
+                        ["subed_club"].includes(userRole!) &&
+                        name !== "birthDate") ||
+                      (isEditMode &&
+                        !isValidated &&
+                        ["subed_club"].includes(userRole!))
                         ? {}
                         : {
                             variant: "standard",
@@ -110,7 +139,16 @@ export function FieldBox({
                           },
                   }}
                   slots={
-                    isPrivileged && isEditMode && canUpdateSensitive
+                    (isEditMode &&
+                      ["main_admin", "single_admin"].includes(userRole!) &&
+                      name === "birthDate") ||
+                    (isEditMode &&
+                      isValidated &&
+                      ["subed_club"].includes(userRole!) &&
+                      name !== "birthDate") ||
+                    (isEditMode &&
+                      !isValidated &&
+                      ["subed_club"].includes(userRole!))
                       ? undefined
                       : {
                           openPickerIcon: () => null,
@@ -135,15 +173,43 @@ export function FieldBox({
                 color="warning"
                 type={field.value === "N/A" && !isEditMode ? "text" : type}
                 variant={
-                  canUpdateSensitive && isPrivileged && isEditMode
+                  isEditMode &&
+                  name !== "age" &&
+                  isValidated &&
+                  ["main_admin", "single_admin"].includes(userRole!)
                     ? "outlined"
-                    : "standard"
+                    : isEditMode &&
+                        name !== "age" &&
+                        isValidated &&
+                        !sensitiveFields.includes(name) &&
+                        ["subed_club"].includes(userRole!)
+                      ? "outlined"
+                      : isEditMode &&
+                          name !== "age" &&
+                          !isValidated &&
+                          ["subed_club"].includes(userRole!)
+                        ? "outlined"
+                        : "standard"
                 }
                 label=""
                 fullWidth
                 slotProps={{
                   input: {
-                    readOnly: !isEditMode || !canUpdateSensitive,
+                    readOnly:
+                      name === "age"
+                        ? true
+                        : ["main_admin", "single_admin"].includes(userRole!) &&
+                            isEditMode
+                          ? false
+                          : ["subed_club"].includes(userRole!) &&
+                              isEditMode &&
+                              !sensitiveFields.includes(name)
+                            ? false
+                            : !(
+                                ["subed_club"].includes(userRole!) &&
+                                isEditMode &&
+                                !isValidated
+                              ),
                     disableUnderline: true,
                     style: {
                       fontSize: 22,
@@ -166,13 +232,21 @@ export function FieldBox({
                         {item.label}
                       </MenuItem>
                     ))
-                  : null}
+                  : type === "dropdown" && name === "gender"
+                    ? GenderOptions.filter((item) =>
+                        ["Feminino", "Masculino"].includes(item.value),
+                      ).map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))
+                    : null}
               </TextField>
             );
           }}
         />
       </Box>
-      {hasRequest ? (
+      {hasRequest && !["main_admin", "single_admin"].includes(userRole!) ? (
         <Grid container flexDirection={"column"} alignItems={"center"}>
           {exam_request_status === "pending" ? (
             <Tooltip arrow placement="top" title="Pendente">
@@ -229,10 +303,11 @@ export function SectionBlock({
   return (
     <Box
       sx={{
-        border: "1px solid #eeeeee",
+        border: "1px solid lightgray",
         borderRadius: 3,
         overflow: "hidden",
         bgcolor: "#fff",
+        boxShadow: 2,
       }}
     >
       {/* Block header */}

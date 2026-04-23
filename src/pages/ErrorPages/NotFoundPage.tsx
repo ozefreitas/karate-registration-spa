@@ -5,7 +5,7 @@ export default function NotFoundPage() {
   const navigate = useNavigate();
   return (
     <>
-      <Grid sx={{ mt: 10 }} container size={10} justifyContent="center">
+      <Grid sx={{ my: 10 }} container size={10} justifyContent="center">
         <Typography variant="h3">Recurso não encontrado</Typography>
       </Grid>
       <Grid container justifyContent="center" sx={{ m: 2, mt: 5 }}>

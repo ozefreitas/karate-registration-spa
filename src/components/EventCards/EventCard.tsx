@@ -48,13 +48,15 @@ import EditEventModal from "../EventsModals/EditEventModal";
 import DeleteEventModal from "../EventsModals/DeleteEventModal";
 import PageInfoCard from "../info-cards/PageInfoCard";
 import { EncounterOptions } from "../../config";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
+  const { user: meData } = useAuth();
   const { id: eventId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const today = new Date();
   const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   };
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -147,11 +149,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
   };
 
   const state =
-    singleEventData?.data.is_open && !singleEventData.data.is_retification
+    singleEventData?.is_open && !singleEventData?.is_retification
       ? "Inscrições abertas"
-      : singleEventData?.data.is_open && singleEventData?.data.is_retification
-      ? "Período de retificações"
-      : "Inscrições fechadas";
+      : singleEventData?.is_retification
+        ? "Período de retificações"
+        : "Inscrições Encerradas";
 
   if (singleEventError) return <Navigate to="/not_found/" />;
 
@@ -231,7 +233,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Email"
-                          text={singleEventData?.email_contact!}
+                          text={
+                            singleEventData?.email_contact === null
+                              ? null
+                              : String(singleEventData?.email_contact)
+                          }
                           icon={<Email />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
@@ -477,19 +483,19 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
             </Grid>
           )}
         </Grid>
-        {singleEventData?.has_registrations && props.userRole !== undefined ? (
+        {singleEventData?.has_registrations &&
+        props.userRole !== undefined &&
+        singleEventData?.event_date > getFullDate() ? (
           <Grid container size={12} sx={{ mx: 2 }}>
             <Card
               sx={{
                 width: "100%",
                 bgcolor:
-                  singleEventData?.data.is_open &&
-                  !singleEventData.data.is_retification
+                  singleEventData?.is_open && !singleEventData?.is_retification
                     ? "green"
-                    : singleEventData.data.is_open &&
-                      singleEventData?.data.is_retification
-                    ? "#ffc40c"
-                    : "red",
+                    : singleEventData?.is_retification
+                      ? "#ffc40c"
+                      : "red",
               }}
             >
               <CardContent
@@ -511,11 +517,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     variant="h5"
                     sx={{
                       fontWeight: "bold",
-                      color:
-                        singleEventData.data.is_open &&
-                        singleEventData?.data.is_retification
-                          ? "black"
-                          : "white",
+                      color: singleEventData?.is_retification
+                        ? "grey"
+                        : "white",
                     }}
                   >
                     Estado: {state}
@@ -537,170 +541,132 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                 }}
               ></CardHeader>
               <CardContent>
-                <Grid
-                  container
-                  direction="row"
-                  px={5}
-                  gap={5}
-                  rowGap={2}
-                  justifyContent={"space-evenly"}
-                  alignItems={"center"}
-                >
-                  {["main_admin", "superuser"].includes(props.userRole) ? (
-                    // props.userRole === "subed_club" ? (
-                    //   <Tooltip
-                    //     disableHoverListener={!singleEventData?.data.has_ended}
-                    //     title="Este evento já foi realizado. Poderá visualizar os atletas que participaram numa próxima versão"
-                    //   >
-                    //     <span>
-                    //       <AddButton
-                    //         label="Adicionar/Consultar Inscrições"
-                    //         to="individuals/"
-                    //         disabled={singleEventData?.data.has_ended}
-                    //       ></AddButton>
-                    //     </span>
-                    //   </Tooltip>
-                    // ) : (
-                    //   <Tooltip
-                    //     disableHoverListener={props.userRole === "subed_club"}
-                    //     title="Comece uma subscrição para ter acesso a esta funcionalidade"
-                    //   >
-                    //     <span>
-                    //       <AddButton
-                    //         label="Adicionar/Consultar Inscrições"
-                    //         to="individuals/"
-                    //         disabled={props.userRole === "free_club"}
-                    //       ></AddButton>
-                    //     </span>
-                    //   </Tooltip>
-                    // )
-                    <>
-                      <Button
-                        sx={{ m: 1 }}
-                        variant="contained"
-                        size="medium"
-                        color="error"
-                        onClick={handleDeleteModalOpen}
-                        startIcon={<Delete />}
-                      >
-                        Eliminar Evento
-                      </Button>
-                      <SettingsButton
-                        size="medium"
-                        label="Editar Evento"
-                        handleOpen={handleEditModalOpen}
-                      ></SettingsButton>
-                    </>
-                  ) : null}
-                  {["main_admin", "superuser", "technician"].includes(
-                    props.userRole,
-                  ) ? null : singleEventData?.has_any_indiv ? (
-                    <AddButton
-                      label="Adicionar/Consultar Inscrições"
-                      to="individuals/"
-                      disabled={
-                        isSingleEventLoading ||
-                        singleEventData.event_date < getFullDate() ||
-                        !singleEventData?.has_registrations
-                      }
-                    ></AddButton>
-                  ) : null}
-                  {["main_admin", "superuser", "technician"].includes(
-                    props.userRole,
-                  ) ? null : singleEventData?.has_coach ? (
-                    <AddButton
-                      label="Adicionar/Consultar Treinadores"
-                      to="coaches/"
-                      disabled={
-                        isSingleEventLoading ||
-                        singleEventData.event_date < getFullDate() ||
-                        !singleEventData?.has_registrations
-                      }
-                    ></AddButton>
-                  ) : null}
-                  {["main_admin", "superuser", "technician"].includes(
-                    props.userRole,
-                  ) ? null : singleEventData?.has_any_team ? (
-                    <AddButton
-                      label="Adicionar/Consultar Equipas"
-                      to="teams/"
-                      disabled={
-                        isSingleEventLoading ||
-                        singleEventData.event_date < getFullDate() ||
-                        !singleEventData?.has_registrations
-                      }
-                    ></AddButton>
-                  ) : null}
-                  {singleEventData !== undefined &&
-                  singleEventData.event_date < getFullDate() &&
-                  !isSingleEventLoading ? (
-                    <InfoButton
-                      label="Consultar Inscrições"
-                      to="individuals/"
-                    ></InfoButton>
-                  ) : null}
-                  {singleEventData?.has_registrations &&
-                  props.userRole !== "technician" ? (
-                    <Tooltip
-                      disableHoverListener={[
-                        "main_admin",
-                        "superuser",
-                      ].includes(props.userRole)}
-                      title="Esta funcionalidade ficará disponível em breve."
+                {isSingleEventLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  singleEventData !== undefined && (
+                    <Grid
+                      container
+                      direction="row"
+                      px={5}
+                      gap={5}
+                      rowGap={2}
+                      justifyContent={"space-evenly"}
+                      alignItems={"center"}
                     >
-                      <span>
-                        <InfoButton
+                      {["main_admin", "superuser"].includes(props.userRole) ||
+                      meData?.id === singleEventData?.created_by ? (
+                        <>
+                          <Button
+                            sx={{ m: 1 }}
+                            variant="contained"
+                            size="medium"
+                            color="error"
+                            onClick={handleDeleteModalOpen}
+                            startIcon={<Delete />}
+                          >
+                            Eliminar Evento
+                          </Button>
+                          <SettingsButton
+                            size="medium"
+                            label="Editar Evento"
+                            handleOpen={handleEditModalOpen}
+                          ></SettingsButton>
+                        </>
+                      ) : null}
+                      {["main_admin", "superuser", "technician"].includes(
+                        props.userRole,
+                      ) ||
+                      singleEventData?.event_date < getFullDate() ||
+                      !singleEventData?.has_registrations ? null : singleEventData?.has_any_indiv ? (
+                        <AddButton
+                          label="Adicionar/Consultar Inscrições"
+                          to="individuals/"
+                        ></AddButton>
+                      ) : null}
+                      {["main_admin", "superuser", "technician"].includes(
+                        props.userRole,
+                      ) ? null : singleEventData?.has_coach ? (
+                        <AddButton
+                          label="Adicionar/Consultar Treinadores"
+                          to="coaches/"
                           disabled={
-                            !["main_admin", "superuser"].includes(
-                              props.userRole,
-                            )
+                            singleEventData.event_date < getFullDate() ||
+                            !singleEventData?.has_registrations
                           }
+                        ></AddButton>
+                      ) : null}
+                      {["main_admin", "superuser", "technician"].includes(
+                        props.userRole,
+                      ) ? null : singleEventData?.has_any_team ? (
+                        <AddButton
+                          label="Adicionar/Consultar Equipas"
+                          to="teams/"
+                          disabled={
+                            isSingleEventLoading ||
+                            singleEventData.event_date < getFullDate() ||
+                            !singleEventData?.has_registrations
+                          }
+                        ></AddButton>
+                      ) : null}
+                      {props.userRole === "main_admin" ? (
+                        <InfoButton
+                          label="Consultar Inscrições"
+                          to="individuals/"
+                        ></InfoButton>
+                      ) : null}
+                      {singleEventData?.has_registrations &&
+                      !["technician", "main_admin"].includes(props.userRole) ? (
+                        <InfoButton
                           label="Inscrições completas"
                           to="all_registry/"
                         ></InfoButton>
-                      </span>
-                    </Tooltip>
-                  ) : null}
-                  {singleEventData?.has_categories &&
-                  props.userRole !== "technician" ? (
-                    <SettingsButton
-                      size="medium"
-                      label="Consultar Escalões"
-                      to={`/events/${eventId!}/categories/`}
-                    ></SettingsButton>
-                  ) : null}
-                  {singleEventData?.encounter_type === "comp" ? (
-                    <GenerateButton
-                      label="Sorteios"
-                      to="draw/"
-                    ></GenerateButton>
-                  ) : null}
-                  {["main_admin", "superuser"].includes(props.userRole) &&
-                  singleEventData?.has_registrations ? (
-                    <Button
-                      sx={{ m: 1 }}
-                      variant="contained"
-                      color="success"
-                      onClick={handleDownloadRegistrationsFile}
-                      startIcon={<FileDownload />}
-                    >
-                      Descarregar Inscrições
-                    </Button>
-                  ) : null}
-                  {["main_admin", "superuser", "technician"].includes(
-                    props.userRole,
-                  ) && singleEventData?.encounter_type === "comp" ? (
-                    <Button
-                      onClick={() => {
-                        navigate("results_display/");
-                      }}
-                      variant="contained"
-                      startIcon={<DeveloperBoard />}
-                    >
-                      Ecrã de resultados e Monitorização
-                    </Button>
-                  ) : null}
-                </Grid>
+                      ) : null}
+                      {singleEventData?.has_categories &&
+                      props.userRole !== "technician" ? (
+                        <SettingsButton
+                          size="medium"
+                          label="Consultar Escalões"
+                          to={`/events/${eventId!}/categories/`}
+                        ></SettingsButton>
+                      ) : null}
+                      {singleEventData?.encounter_type === "comp" ? (
+                        <GenerateButton
+                          label="Sorteios"
+                          to="draw/"
+                        ></GenerateButton>
+                      ) : null}
+                      {["main_admin", "superuser"].includes(props.userRole) &&
+                      singleEventData?.has_registrations ? (
+                        <Button
+                          sx={{ m: 1 }}
+                          variant="contained"
+                          color="success"
+                          onClick={handleDownloadRegistrationsFile}
+                          startIcon={<FileDownload />}
+                        >
+                          Descarregar Inscrições
+                        </Button>
+                      ) : null}
+                      {["main_admin", "superuser", "technician"].includes(
+                        props.userRole,
+                      ) && singleEventData?.encounter_type === "comp" ? (
+                        <Button
+                          onClick={() => {
+                            navigate("results_display/");
+                          }}
+                          disabled={singleEventData?.event_date < getFullDate()}
+                          variant="contained"
+                          startIcon={<DeveloperBoard />}
+                        >
+                          Ecrã de resultados e Monitorização
+                        </Button>
+                      ) : null}
+                    </Grid>
+                  )
+                )}
               </CardContent>
             </Card>
           )}

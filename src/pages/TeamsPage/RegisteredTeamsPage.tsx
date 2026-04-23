@@ -26,7 +26,7 @@ export default function RegisteredTeamsPage(
 ) {
   const today = new Date();
   const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
@@ -55,7 +55,7 @@ export default function RegisteredTeamsPage(
     ? "Inscrições abertas"
     : singleEventData?.is_retification
       ? "Período de retificações"
-      : "Inscrições fechadas";
+      : "Inscrições Encerradas";
 
   const handleAddNewTeamModalOpen = (disciplineName: string) => {
     setCurrentDiscipline(disciplineName);

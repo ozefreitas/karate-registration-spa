@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { MemberTypeEnum } from './MemberTypeEnum';
+import type { MemberTypeEe9Enum } from './MemberTypeEe9Enum';
 export type CreateMemberShips = {
-    member_type?: MemberTypeEnum;
+    member_type?: MemberTypeEe9Enum;
     person: string;
 };
 

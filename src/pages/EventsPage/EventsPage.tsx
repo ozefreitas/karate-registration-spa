@@ -40,7 +40,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
   const today = new Date();
   const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth()).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   };
 
   const [page, setPage] = useState<number>(1);
@@ -390,8 +390,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                   borderRadius: 4,
                                   p: 1.5,
                                   px: 2,
-                                  border: 2,
-                                  borderColor: "red",
+                                  border: 4,
+                                  borderColor: "lightgray",
+                                  bgcolor: "red",
                                   "&:hover": {
                                     transform: "translateY(-3px)",
                                     boxShadow: 6,
@@ -401,7 +402,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                 }}
                                 onClick={() => navigate(`/events/${comp.id}/`)}
                               >
-                                <East sx={{ color: "black" }}></East>
+                                <East sx={{ color: "white" }}></East>
                               </IconButton>
                             </span>
                           </Tooltip>

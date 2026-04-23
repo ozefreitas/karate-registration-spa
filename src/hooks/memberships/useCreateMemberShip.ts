@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import {  MembershipsService, PersonsService } from "../../openapi";
+import { MembershipsService, PersonsService } from "../../openapi";
 import { callNotiStack } from "../../utils/utils";
 
 export const useCreateMemberShip = () => {
@@ -9,9 +9,16 @@ export const useCreateMemberShip = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: MembershipsService.membershipsCreate,
-    onSuccess: () => {
-      callNotiStack(enqueueSnackbar, "Novo tipo de praticante criado com sucesso!", "success");
+    onSuccess: (data) => {
+      callNotiStack(
+        enqueueSnackbar,
+        "Novo tipo de praticante criado com sucesso!",
+        "success",
+      );
       queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({
+        queryKey: ["single-member", data.person],
+      });
       queryClient.invalidateQueries({ queryKey: ["member-ships"] });
       queryClient.invalidateQueries({ queryKey: ["club-members"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });

@@ -276,7 +276,7 @@ export default function EventsFilters(
                         name="is_closed"
                       />
                     }
-                    label="Inscrições fechadas"
+                    label="Inscrições Encerradas"
                     sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>

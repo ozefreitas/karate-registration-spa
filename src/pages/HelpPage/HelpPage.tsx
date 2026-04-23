@@ -251,7 +251,7 @@ export default function HelpPage() {
                   <li>Atleta Criado</li>
                   <li>Avaliação de Evento</li>
                   <li>Inscrições prestes a fechar</li>
-                  <li>Inscrições Fechadas</li>
+                  <li>Inscrições Encerradas</li>
                   <li>Inscrições Abertas</li>
                   <li>Classificações Disponíveis</li>
                   <li>Mensagens Administrativas</li>

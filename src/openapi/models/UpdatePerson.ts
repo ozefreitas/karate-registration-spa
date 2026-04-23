@@ -4,9 +4,11 @@
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
+import type { UpdatePersonMemberTypeEnum } from './UpdatePersonMemberTypeEnum';
 export type UpdatePerson = {
     readonly id: string;
     readonly age: string;
+    member_type?: UpdatePersonMemberTypeEnum;
     profile_image?: string | null;
     first_name: string;
     last_name: string;
@@ -24,7 +26,6 @@ export type UpdatePerson = {
     quotes_legible?: boolean;
     conditions?: string | null;
     observations?: string | null;
-    readonly modified_date: string;
     is_validated?: boolean;
     updated_by?: number | null;
 };

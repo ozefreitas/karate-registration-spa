@@ -107,7 +107,7 @@ export default function NextEventHomeComponent(
                                   ? "Inscrições Abertas"
                                   : nextCompData?.is_retification
                                     ? "Periodo Retificalções"
-                                    : "Inscrições Fechadas"
+                                    : "Inscrições Encerradas"
                               }
                             ></Chip>
                           ) : null}
