@@ -25,7 +25,43 @@ export const useAddDisciplineMember = () => {
       queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
     },
     onError: async (error: any) => {
-      const body = await error.body; 
+      const body = await error.body;
+      callNotiStack(
+        enqueueSnackbar,
+        body?.error || body?.detail || "Ocorreu um erro! Tente novamente.",
+        "error",
+        5000,
+      );
+    },
+  });
+};
+
+export const useAddDisciplineBulkMembers = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ disciplineId, data }: { disciplineId: string; data: any }) =>
+      DisciplinesService.disciplinesAddBulkMembersCreate(
+        Number(disciplineId),
+        data,
+      ),
+    retry: false,
+    onSuccess: (data: any) => {
+      callNotiStack(
+        enqueueSnackbar,
+        data.message,
+        data?.status === "info" ? "warning" : "success",
+        5000,
+      );
+      queryClient.invalidateQueries({ queryKey: ["events"] });
+      queryClient.invalidateQueries({ queryKey: ["single-event"] });
+      queryClient.invalidateQueries({ queryKey: ["disciplines"] });
+      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
+      queryClient.invalidateQueries({ queryKey: ["coaches-notin-event"] });
+    },
+    onError: async (error: any) => {
+      const body = await error.body;
       callNotiStack(
         enqueueSnackbar,
         body?.error || body?.detail || "Ocorreu um erro! Tente novamente.",

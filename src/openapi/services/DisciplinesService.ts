@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AddCategory } from '../models/AddCategory';
+import type { AddDisciplineBulkMembers } from '../models/AddDisciplineBulkMembers';
 import type { AddDisciplineMember } from '../models/AddDisciplineMember';
 import type { CreateDiscipline } from '../models/CreateDiscipline';
 import type { CreateTeam } from '../models/CreateTeam';
@@ -133,6 +134,26 @@ export class DisciplinesService {
             path: {
                 'id': id,
             },
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this discipline.
+     * @param requestBody
+     * @returns AddDisciplineBulkMembers
+     * @throws ApiError
+     */
+    public static disciplinesAddBulkMembersCreate(
+        id: number,
+        requestBody: AddDisciplineBulkMembers,
+    ): CancelablePromise<AddDisciplineBulkMembers> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/disciplines/{id}/add_bulk_members/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
     /**

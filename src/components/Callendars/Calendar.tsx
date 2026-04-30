@@ -64,7 +64,7 @@ export default function Calendar() {
   const [clickedDay, setClickedDay] = useState<string>("");
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const paramMonth = searchParams.get("month") ?? String(today.getMonth());
+  const paramMonth = searchParams.get("month") ?? String(today.getMonth() + 1);
   const paramYear = searchParams.get("year") ?? String(today.getFullYear());
 
   useEffect(() => {

@@ -8,6 +8,7 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AddCategory } from './models/AddCategory';
+export type { AddDisciplineBulkMembers } from './models/AddDisciplineBulkMembers';
 export type { AddDisciplineMember } from './models/AddDisciplineMember';
 export type { AddMember } from './models/AddMember';
 export type { AdvanceMatch } from './models/AdvanceMatch';

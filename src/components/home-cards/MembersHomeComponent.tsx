@@ -20,6 +20,7 @@ import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
 import { Persons as PersonType } from "../../openapi";
+import { MemberTypes } from "../../config";
 
 export default function MembersHomeComponent(
   props: Readonly<{ userRole: string }>,
@@ -36,8 +37,8 @@ export default function MembersHomeComponent(
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          title={"Membros adicionados recentemente"}
-          subheader={"A mostrar apenas os 5 últimos Membros."}
+          title={"Membros editados recentemente"}
+          subheader={"A mostrar 5 últimos Membros."}
           sx={{
             pb: 0,
             "& .MuiCardHeader-title": {
@@ -121,22 +122,29 @@ export default function MembersHomeComponent(
                             }}
                           >
                             <Typography>{person.full_name}</Typography>
-                            {/* <Chip
-                              color={
-                                person.member_type === "coach"
-                                  ? "secondary"
-                                  : person.member_type === "student"
+                            {person.member_types.includes("coach") ? (
+                              <Chip
+                                color={"secondary"}
+                                variant="outlined"
+                                label={"Treinador"}
+                              ></Chip>
+                            ) : null}
+                            {person.member_types.includes("student") ||
+                            person.member_types.includes("athlete") ? (
+                              <Chip
+                                color={
+                                  person.member_types.includes("student")
                                     ? "info"
                                     : "warning"
-                              }
-                              variant="outlined"
-                              label={`${
-                                MemberTypes.find(
-                                  (item: any) =>
-                                    item.value === person.member_type,
-                                )?.label
-                              }`}
-                            ></Chip> */}
+                                }
+                                variant="outlined"
+                                label={
+                                  person.member_types.includes("student")
+                                    ? "Aluno"
+                                    : "Competidor"
+                                }
+                              ></Chip>
+                            ) : null}
                             <Chip
                               variant="outlined"
                               label={person.gender}

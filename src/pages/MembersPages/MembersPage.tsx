@@ -435,6 +435,14 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             </Grid>
           </Grid>
         )}
+        {currentView === "card" &&
+        !isMembersDataLoading &&
+        membersData !== undefined &&
+        membersData?.count !== 0 ? (
+          <Typography variant="h6" sx={{ color: "gray", m: 3 }}>
+            {membersData?.count} Membros.
+          </Typography>
+        ) : null}
         {isMembersDataLoading ? (
           <Box mt={5} display={"flex"} justifyContent={"center"}>
             <CircularProgress />
@@ -479,7 +487,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             ></AllUseTable>
           </Grid>
         ) : (
-          <Grid container spacing={3} m={2} mt={5}>
+          <Grid container spacing={3} m={2}>
             {memberRows?.length === 0 ? (
               <Grid
                 sx={{ mt: 1, mb: 3 }}

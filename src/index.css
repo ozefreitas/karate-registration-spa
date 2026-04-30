@@ -4,7 +4,7 @@
 
   color-scheme: light dark;
   color: rgba(42, 42, 42, 0.87);
-  background-color: #f5f5f5;
+  background-color: #f3f3f3;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,8 +22,7 @@
   --shiro-color: white;
   --shiro-contrast-color: black;
   --lost-by-fouls-color: rgb(255, 78, 18);
-  --clock-color: grayscale
-  --clock-last-seconds-color: orange;
+  --clock-color: grayscale --clock-last-seconds-color: orange;
 }
 
 body {

@@ -16,7 +16,7 @@ import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { eventsHooks, disciplinesHooks } from "../../hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import { useSnackbar } from "notistack";
 import { Controller, useForm } from "react-hook-form";
 
@@ -24,21 +24,21 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function (
+export default function DuplicateRegistrationsModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
     disciplineData: any;
     eventName: string;
-  }>
+  }>,
 ) {
-  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const { id: eventId } = useParams<{ id: string }>();
 
   const { data: eventsData, isLoading: isEventsLoading } =
     eventsHooks.useFetchEventsData(
@@ -49,9 +49,8 @@ export default function (
       false,
       undefined,
       undefined,
-      true,
       undefined,
-      undefined
+      undefined,
     );
 
   const {
@@ -74,23 +73,30 @@ export default function (
 
   const addDisciplineMember = disciplinesHooks.useAddDisciplineMember();
 
-  const onSubmit = (data: any) => {
-    disciplinesData?.data.results
-      .find((item: any) => item.id === data.disciplineId)
-      ?.individuals.forEach((memberInfo: any) => {
+  const onSubmit = async (formData: any) => {
+    const requests =
+      props.disciplineData?.individuals.map((personInfo: any) => {
         const payload = {
-          disciplineId: data.disciplineId,
+          disciplineId: formData.disciplineId,
           data: {
-            member_id: memberInfo.member.id,
-            event_id: data.eventId,
+            member_id: personInfo.person.id,
+            event_id: formData.eventId,
           },
         };
-        addDisciplineMember.mutateAsync(payload, {
-          onSuccess: (data: any) => {
-            navigate(`/events/${data.eventId}`);
-          },
-        });
-      });
+        return addDisciplineMember.mutateAsync(payload);
+      }) ?? [];
+
+    try {
+      const results = await Promise.all(requests);
+      const shouldNavigate = results.every(
+        (result) => result.status !== "info",
+      );
+      if (shouldNavigate) {
+        navigate(`/events/${formData.eventId}`);
+      }
+    } catch (error) {
+      console.error("Failed to add one or more members:", error);
+    }
   };
 
   return (
@@ -106,9 +112,7 @@ export default function (
       fullWidth
     >
       <DialogTitle sx={{ p: 3 }}>
-        <Typography p={1} variant="h5">
-          Copiar Inscrições
-        </Typography>
+        <Typography variant="h5">Copiar Inscrições</Typography>
       </DialogTitle>
       <DialogContent
         sx={{
@@ -116,7 +120,7 @@ export default function (
           borderTop: "1px solid lightgrey",
         }}
       >
-        <Grid sx={{ p: 2 }} size={6}>
+        <Grid p={2} mt={2} size={6}>
           <Controller
             name="eventId"
             control={control}
@@ -144,11 +148,13 @@ export default function (
                     <CircularProgress />
                   </Grid>
                 ) : (
-                  eventsData?.data.results.map((item: any, index: any) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.name} {item.season}
-                    </MenuItem>
-                  ))
+                  eventsData?.results
+                    .filter((item) => item.id !== eventId)
+                    .map((item, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.name} {item.season}
+                      </MenuItem>
+                    ))
                 )}
               </TextField>
             )}
@@ -166,6 +172,7 @@ export default function (
                 type="text"
                 fullWidth
                 select
+                disabled={watch("eventId") === ""}
                 required
                 {...field}
                 onChange={(e) => {
@@ -182,7 +189,7 @@ export default function (
                     <CircularProgress />
                   </Grid>
                 ) : (
-                  disciplinesData?.data.results.map((item: any, index: any) => (
+                  disciplinesData?.results.map((item, index: any) => (
                     <MenuItem key={index} value={item.id}>
                       {item.name}
                     </MenuItem>
@@ -200,16 +207,16 @@ export default function (
               <strong>{props.eventName}</strong> para a modalidade{" "}
               <strong>
                 {
-                  disciplinesData?.data.results.find(
-                    (item: any) => item.id === watch("disciplineId")
+                  disciplinesData?.results.find(
+                    (item: any) => item.id === watch("disciplineId"),
                   )?.name
                 }
               </strong>{" "}
               do evento{" "}
               <strong>
                 {
-                  eventsData?.data.results.find(
-                    (item: any) => item.id === watch("eventId")
+                  eventsData?.results.find(
+                    (item: any) => item.id === watch("eventId"),
                   )?.name
                 }
               </strong>
@@ -235,7 +242,7 @@ export default function (
             sm: "row",
           }}
           sx={{
-            p: 2,
+            p: 1,
             gap: 2,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },

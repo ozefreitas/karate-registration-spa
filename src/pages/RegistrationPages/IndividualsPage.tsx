@@ -8,16 +8,14 @@ import {
   Box,
   CircularProgress,
   Typography,
-  Tooltip,
 } from "@mui/material";
-import { Add, ContentCopy, Visibility } from "@mui/icons-material";
+import { Add, Visibility } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import MembersModal from "../../components/Modals/MembersModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";
-import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
 import UnAuthorizedPage from "../ErrorPages/UnAuthorizedPage";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
@@ -29,12 +27,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
-  const [disciplineToDuplicate, setDisciplineToDuplicate] =
-    useState<string>("");
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
-  const [isDuplicateModalOpen, setIsDuplicateModalOpen] =
-    useState<boolean>(false);
-
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -46,15 +39,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const handleCategoriesListModalOpen = (disciplineName: string) => {
     setCurrentDiscipline(disciplineName);
     setIsCategoriesListModalOpen(true);
-  };
-
-  const handleDuplicateModalOpen = (disciplineName: string) => {
-    setDisciplineToDuplicate(disciplineName);
-    setIsDuplicateModalOpen(true);
-  };
-
-  const handleDuplicateModalClose = () => {
-    setIsDuplicateModalOpen(false);
   };
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
@@ -216,26 +200,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                         Escalões
                       </Button>
                     ) : null}
-                    {singleEventData !== undefined &&
-                    singleEventData.event_date < getFullDate() &&
-                    ["superuser", "subed_club"].includes(props.userRole) &&
-                    disciplineIndividuals.length !== 0 ? (
-                      <Grid size={1}>
-                        <Tooltip title="Copiar Inscrições">
-                          <span>
-                            <Button
-                              startIcon={<ContentCopy></ContentCopy>}
-                              variant="contained"
-                              onClick={() =>
-                                handleDuplicateModalOpen(discipline.name)
-                              }
-                            >
-                              Copiar
-                            </Button>
-                          </span>
-                        </Tooltip>
-                      </Grid>
-                    ) : null}
                   </Grid>
                 </Grid>
                 <AllUseTable
@@ -273,16 +237,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         eventData={singleEventData}
         disciplinesData={disciplinesData}
       ></MembersModal>
-      {disciplineToDuplicate === "" ? null : (
-        <DuplicateRegistrationsModal
-          handleModalClose={handleDuplicateModalClose}
-          isModalOpen={isDuplicateModalOpen}
-          disciplineData={disciplinesData?.results.find(
-            (disicpline: any) => disicpline.name === disciplineToDuplicate,
-          )}
-          eventName={singleEventData?.name!}
-        ></DuplicateRegistrationsModal>
-      )}
       {currentDiscipline === "" ? null : (
         <CategoriesReadOnlyModal
           currentDisicpline={currentDiscipline}
