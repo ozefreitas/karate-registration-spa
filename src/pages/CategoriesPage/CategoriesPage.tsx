@@ -5,6 +5,7 @@ import {
   ListItem,
   ListItemText,
   Chip,
+  Button,
 } from "@mui/material";
 import { categoriesHooks } from "../../hooks";
 import AddButton from "../../components/Buttons/AddButton";
@@ -129,6 +130,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
     data: categoriesData,
     isLoading: isCategoriesLoading,
     error: categoriesError,
+    refetch,
   } = categoriesHooks.useFetchCategoriesData(
     page,
     pageSize,
@@ -338,6 +340,16 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
             <ListItem>
               <ListItemText primary="Ocorreu um erro ao encontrar os Escalões, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
+            <Button
+              onClick={() => {
+                filtersReset();
+                orderReset();
+                setPage(1);
+                refetch();
+              }}
+            >
+              Refrescar
+            </Button>
           </Grid>
         ) : categoriesData === undefined ? null : (
           <AllUseTable

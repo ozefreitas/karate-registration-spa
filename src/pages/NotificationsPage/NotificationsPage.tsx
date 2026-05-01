@@ -181,7 +181,7 @@ const NotificationsPage = (props: { me: any }) => {
             </Grid>
           ) : notificationsData?.count === 0 ? null : (
             <Typography variant="h6" sx={{ color: "gray", ml: 1 }}>
-              {notificationsData?.count} Notificações.
+              {notificationsData?.count} Notificação(ões).
             </Typography>
           )}
           <Grid container spacing={2}>

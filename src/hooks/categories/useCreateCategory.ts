@@ -11,12 +11,6 @@ export const useCreateCategory = () => {
     mutationFn: ({ data }: { data: any }) =>
       CategoriesService.categoriesCreate(data),
     onSuccess: () => {
-      callNotiStack(
-        enqueueSnackbar,
-        "Escalão criado com sucesso!",
-        "success",
-        5000,
-      );
       queryClient.invalidateQueries({ queryKey: ["categories"] });
     },
     onError: () => {

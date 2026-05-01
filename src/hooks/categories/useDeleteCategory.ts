@@ -12,7 +12,7 @@ export const useDeleteCategory = () => {
     onSuccess: () => {
       callNotiStack(
         enqueueSnackbar,
-        "Escalão removido da plataforma com sucesso!",
+        "Escalão(ões) removido(s) da plataforma com sucesso!",
         "success",
         5000,
       );

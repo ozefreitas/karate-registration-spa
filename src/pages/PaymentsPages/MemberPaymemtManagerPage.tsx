@@ -154,13 +154,13 @@ export default function MemberPaymemtManagerPage(
       day:
         currentSettingData === undefined
           ? ""
-          : currentSettingData[0].billing_day,
+          : currentSettingData[0]?.billing_day,
     },
   });
 
   useEffect(() => {
     if (currentSettingData !== undefined) {
-      setValue("day", currentSettingData[0].billing_day);
+      setValue("day", currentSettingData[0]?.billing_day);
     }
   }, [currentSettingData]);
 

@@ -17,13 +17,10 @@ import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadO
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime } from "../../utils/utils";
 import UnAuthorizedPage from "../ErrorPages/UnAuthorizedPage";
+import { getFullDate } from "../../utils/utils";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
-  const today = new Date();
-  const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
@@ -48,7 +45,11 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     eventId!,
     false,
     false,
-    false,
+    Boolean(singleEventData?.has_any_team) &&
+      ["main_admin", "superuser", "single_admin"].includes(props.userRole) ===
+        true
+      ? undefined
+      : false,
   );
 
   const state = singleEventData?.is_open
@@ -57,7 +58,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       ? "Período de retificações"
       : "Inscrições Encerradas";
 
-  const getColumnMapping = (isCoach?: boolean) => {
+  const getIndividualColumnMapping = (isCoach?: boolean) => {
     // Base columns except the one that must be last
     const baseColumns = [
       { key: "full_name", label: "Nome" },
@@ -80,7 +81,23 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     return baseColumns;
   };
 
-  const columnMaping = getColumnMapping();
+  const individualsColumnMaping = getIndividualColumnMapping();
+
+  const getTeamsColumnMapping = () => {
+    // Base columns except the one that must be last
+    const baseColumns = [
+      { key: "member1", label: "Atleta 1" },
+      { key: "member2", label: "Atleta 2" },
+      { key: "member3", label: "Atleta 3" },
+      { key: "gender", label: "Género" },
+      { key: "category", label: "Escalão" },
+      { key: "added_at", label: "Data Inscrição" },
+    ];
+
+    return baseColumns;
+  };
+
+  const teamsColumnMaping = getTeamsColumnMapping();
 
   if (
     singleEventData?.event_date! < getFullDate() &&
@@ -153,7 +170,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
             type="Individuais"
             data={singleEventData?.individuals}
             count={singleEventData?.individuals.length!}
-            columnsHeaders={columnMaping}
+            columnsHeaders={individualsColumnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
               props.userRole,
@@ -175,6 +192,20 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 added_at: formatDateTime(memberInfo.added_at, "both"),
               }),
             );
+            const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
+              id: teamInfo.team.id,
+              member1: teamInfo.team.athlete1.full_name,
+              member2: teamInfo.team.athlete2.full_name,
+              member3: teamInfo.team.athlete3.full_name,
+              gender:
+                teamInfo.team.gender === "Masculino"
+                  ? "M"
+                  : teamInfo.team.gender === "Feminino"
+                    ? "F"
+                    : "Misto",
+              category: teamInfo.team.category.name,
+              added_at: formatDateTime(teamInfo.added_at, "both"),
+            }));
             return (
               <span key={index}>
                 <Grid
@@ -202,17 +233,43 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     ) : null}
                   </Grid>
                 </Grid>
-                <AllUseTable
-                  count={discipline.individuals.length}
-                  type="Modalidades"
-                  discipline={discipline.id}
-                  data={disciplineIndividuals}
-                  columnsHeaders={columnMaping}
-                  actions
-                  selection
-                  deletable
-                  userRole={props.userRole}
-                ></AllUseTable>
+                {disciplineIndividuals.length !== 0 ? (
+                  <AllUseTable
+                    count={discipline.individuals.length}
+                    type="Modalidades"
+                    discipline={discipline.id}
+                    data={disciplineIndividuals}
+                    columnsHeaders={individualsColumnMaping}
+                    actions
+                    selection
+                    deletable
+                    userRole={props.userRole}
+                  ></AllUseTable>
+                ) : disciplineTeams.length !== 0 ? (
+                  <AllUseTable
+                    count={discipline.teams.length}
+                    type="Modalidades"
+                    discipline={discipline.id}
+                    data={disciplineTeams}
+                    columnsHeaders={teamsColumnMaping}
+                    actions
+                    selection
+                    deletable
+                    userRole={props.userRole}
+                  ></AllUseTable>
+                ) : (
+                  <AllUseTable
+                    count={0}
+                    type="Modalidades"
+                    discipline={discipline.id}
+                    data={[]}
+                    columnsHeaders={teamsColumnMaping}
+                    actions
+                    selection
+                    deletable
+                    userRole={props.userRole}
+                  ></AllUseTable>
+                )}
               </span>
             );
           })

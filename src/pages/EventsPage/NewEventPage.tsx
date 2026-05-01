@@ -20,6 +20,7 @@ import {
   Chip,
   ListItemText,
   InputAdornment,
+  Typography,
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -119,7 +120,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const createEvent = eventsHooks.useCreateEvent();
   const createDiscipline = disciplinesHooks.useCreateDiscipline();
   const { data: categoriesData, isLoading: isCategoriesLoading } =
-    categoriesHooks.useFetchCategoriesData();
+    categoriesHooks.useFetchCategoriesData(1, 100);
   const addDisciplineCategory = disciplinesHooks.useAddDisciplineCategory();
 
   // Memoize `rows` to compute only when `members` changes
@@ -128,7 +129,9 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
       (item: any) => item.discipline === selectedDisciplineForCategory,
     );
     return categoriesData?.results
-      .filter((category) => currentIds?.categories.includes(category.id))
+      .filter((category) =>
+        currentIds?.categories.includes(String(category.id)),
+      )
       .map((category) => ({
         id: category.id,
         name: category.name,
@@ -140,6 +143,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -153,6 +158,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -168,6 +175,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -181,6 +190,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -196,6 +207,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -209,6 +222,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -224,6 +239,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="error"
               sx={{
+                bgcolor: "#ff8fa3",
+                color: "#800f2f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -237,6 +254,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               label=""
               color="success"
               sx={{
+                bgcolor: "#d9ffe7",
+                color: "#004d1f",
                 "& .MuiChip-label": {
                   display: "none",
                 },
@@ -247,6 +266,8 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           ),
       }));
   }, [categoriesData, selectedDisciplineForCategory, disciplineCategories]);
+
+  console.log(categoryRows);
 
   type EventMetadataForm = {
     name: string;
@@ -767,16 +788,14 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            disabled={watch("encounter_type") === ""}
-                            onClick={() => setValue("encounter_type", "")}
+                            disabled={watch("season") === ""}
+                            onClick={() => setValue("season", "")}
                             edge="end"
                             aria-label="toggle password visibility"
                           >
                             <Clear
                               color={
-                                watch("encounter_type") === ""
-                                  ? "disabled"
-                                  : "error"
+                                watch("season") === "" ? "disabled" : "error"
                               }
                             ></Clear>
                           </IconButton>
@@ -1112,93 +1131,183 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         <FormAccordion
           title="Modalidades"
           expanded={expanded}
-          tooltipMessage="Apenas poderá abrir esta secção se este Evento não for um encontro."
+          tooltipMessage="Apenas poderá abrir esta secção se este Evento for um Torneio/Competição."
         >
-          <Grid sx={{ p: 2, pt: 1 }} container justifyContent="center" size={5}>
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Modalidade"
-              fullWidth
-              value={discipline}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        disabled={discipline === ""}
-                        onClick={() => setDiscipline("")}
-                        edge="end"
-                        aria-label="toggle password visibility"
-                      >
-                        <Clear
-                          color={discipline === "" ? "disabled" : "error"}
-                        ></Clear>
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                },
-              }}
-              onChange={(e) => {
-                setDisciplineWarning(false);
-                setDiscipline(e.target.value);
-              }}
-              error={disciplineWarning}
-              helperText={
-                disciplineWarning ? "Este campo é obrigatório." : null
-              }
-            />
-            <FormHelperText
-              variant="filled"
-              sx={{ fontSize: 12, marginTop: "10px" }}
-            >
-              Preencha este campo com as Modalidades previstas para este Evento.
-              <br></br> Depois de adicionar, pode apagar ao carregar na
-              Modalidade que aparecerá emediatamente ao lado.
-            </FormHelperText>
+          <Grid size={6} container>
+            <Grid p={2} pt={1} container justifyContent="center" size={11}>
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Modalidade"
+                fullWidth
+                value={discipline}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          disabled={discipline === ""}
+                          onClick={() => setDiscipline("")}
+                          edge="end"
+                          aria-label="toggle password visibility"
+                        >
+                          <Clear
+                            color={discipline === "" ? "disabled" : "error"}
+                          ></Clear>
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                onChange={(e) => {
+                  setDisciplineWarning(false);
+                  setDiscipline(e.target.value);
+                }}
+                error={disciplineWarning}
+                helperText={
+                  disciplineWarning ? "Este campo é obrigatório." : null
+                }
+              />
+              <FormHelperText
+                variant="filled"
+                sx={{ fontSize: 12, marginTop: "10px" }}
+              >
+                Preencha este campo com as Modalidades previstas para este
+                Evento.
+                <br></br> Depois de adicionar, pode apagar ao carregar na
+                Modalidade que aparecerá emediatamente ao lado.
+              </FormHelperText>
+            </Grid>
+            <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={1}>
+              <Tooltip title="Adicionar">
+                <span>
+                  <IconButton
+                    onClick={() => {
+                      if (discipline === "") {
+                        setDisciplineWarning(true);
+                        return;
+                      }
+
+                      const isCoach = getValues("is_coach");
+                      const isTeam = getValues("is_team");
+
+                      setDisciplines((prev) => [...prev, discipline]);
+
+                      setDisciplineOptions((prev) => [
+                        ...prev,
+                        {
+                          discipline,
+                          is_coach: isCoach,
+                          is_team: isTeam,
+                        },
+                      ]);
+
+                      // Now it's safe to reset
+                      setValue("is_coach", false);
+                      setValue("is_team", false);
+                      setDiscipline("");
+                    }}
+                  >
+                    <Add color="success" />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
+            <Grid sx={{ p: 3, pt: 1 }} container size={12}>
+              <Controller
+                name="is_coach"
+                control={eventMetadataControl}
+                render={({ field }) => (
+                  <FormControl
+                    component="fieldset"
+                    variant="standard"
+                    error={!!errors.is_coach}
+                  >
+                    <FormLabel sx={{ mb: 1 }}>
+                      Selecione este campo se esta Modalidade for direcionada
+                      para a inscrição de Treinadores no evento.
+                    </FormLabel>
+                    <Stack spacing={1}>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                            }}
+                            name="is_coach"
+                          />
+                        }
+                        label="Treinadores"
+                        sx={{ justifyContent: "left", marginLeft: 0 }}
+                      />
+                      {field.value && (
+                        <FormHelperText
+                          variant="filled"
+                          sx={{ fontSize: 12, marginLeft: "14px" }}
+                        >
+                          Esta Modalidade irá aceitar apenas Membros guardados
+                          com o tipo "Treinador".
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid sx={{ p: 3, pt: 1 }} container size={12}>
+              <Controller
+                name="is_team"
+                control={eventMetadataControl}
+                render={({ field }) => (
+                  <FormControl
+                    component="fieldset"
+                    variant="standard"
+                    error={!!errors.is_team}
+                  >
+                    <FormLabel sx={{ mb: 1 }}>
+                      Selecione este campo se esta Modalidade for direcionada
+                      para a inscrição de Equipas no evento.
+                    </FormLabel>
+                    <Stack spacing={1}>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                            }}
+                            name="is_team"
+                          />
+                        }
+                        label="Equipas"
+                        sx={{ justifyContent: "left", marginLeft: 0 }}
+                      />
+                      {field.value && (
+                        <FormHelperText
+                          variant="filled"
+                          sx={{ fontSize: 12, marginLeft: "14px" }}
+                        >
+                          Esta Modalidade irá aceitar apenas Equipas.
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
           </Grid>
-          <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={0.5}>
-            <Tooltip title="Adicionar">
-              <span>
-                <IconButton
-                  onClick={() => {
-                    if (discipline === "") {
-                      setDisciplineWarning(true);
-                      return;
-                    }
-
-                    const isCoach = getValues("is_coach");
-                    const isTeam = getValues("is_team");
-
-                    setDisciplines((prev) => [...prev, discipline]);
-
-                    setDisciplineOptions((prev) => [
-                      ...prev,
-                      {
-                        discipline,
-                        is_coach: isCoach,
-                        is_team: isTeam,
-                      },
-                    ]);
-
-                    // Now it's safe to reset
-                    setValue("is_coach", false);
-                    setValue("is_team", false);
-                    setDiscipline("");
-                  }}
-                >
-                  <Add color="success" />
-                </IconButton>
-              </span>
-            </Tooltip>
-          </Grid>
-          <Grid size={6} sx={{ ml: 3, mt: 0 }}>
+          <Grid size={6} textAlign={"center"}>
             {disciplines.length === 0 ? (
-              <ListItem>
-                <ListItemButton sx={{ p: 1, px: 3, color: "gray" }}>
-                  Não tem modalidades para adicionar a este Evento.
-                </ListItemButton>
-              </ListItem>
+              <Typography p={3} color="textDisabled">
+                Não tem Modalidades para adicionar a este Evento.
+              </Typography>
             ) : (
               <List dense>
                 {disciplines.map((discipline, index) => {
@@ -1208,14 +1317,15 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
 
                   return (
                     <ListItem key={index}>
-                      <ListItemButton sx={{ p: 1, pl: 3 }}>
+                      <ListItemButton sx={{ p: 1, pl: 3 }} disableTouchRipple>
                         <ListItemIcon>
-                          <SportsMartialArts />
+                          <SportsMartialArts fontSize="large" />
                         </ListItemIcon>
                         <ListItemText
+                          slotProps={{ primary: { fontSize: 20 } }}
                           primary={discipline}
                           secondary={
-                            <Stack direction="row" spacing={1} sx={{ mt: 0.5 }}>
+                            <Stack direction="row" spacing={1} mt={0.5}>
                               {options.map((opt, idx) => (
                                 <Fragment key={idx}>
                                   {opt.is_coach && (
@@ -1248,95 +1358,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </List>
             )}
           </Grid>
-          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
-            <Controller
-              name="is_coach"
-              control={eventMetadataControl}
-              render={({ field }) => (
-                <FormControl
-                  component="fieldset"
-                  variant="standard"
-                  error={!!errors.is_coach}
-                >
-                  <FormLabel sx={{ mb: 1 }}>
-                    Selecione este campo se esta Modalidade for direcionada para
-                    a inscrição de Treinadores no evento.
-                  </FormLabel>
-                  <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          sx={{ ml: 2 }}
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                          }}
-                          name="is_coach"
-                        />
-                      }
-                      label="Treinadores"
-                      sx={{ justifyContent: "left", marginLeft: 0 }}
-                    />
-                    {field.value && (
-                      <FormHelperText
-                        variant="filled"
-                        sx={{ fontSize: 12, marginLeft: "14px" }}
-                      >
-                        Esta Modalidade irá aceitar apenas Membros guardados com
-                        o tipo "Treinador"
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
-            <Controller
-              name="is_team"
-              control={eventMetadataControl}
-              render={({ field }) => (
-                <FormControl
-                  component="fieldset"
-                  variant="standard"
-                  error={!!errors.is_team}
-                >
-                  <FormLabel sx={{ mb: 1 }}>
-                    Selecione este campo se esta Modalidade for direcionada para
-                    a inscrição de Equipas no evento.
-                  </FormLabel>
-                  <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          sx={{ ml: 2 }}
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                          }}
-                          name="is_team"
-                        />
-                      }
-                      label="Equipas"
-                      sx={{ justifyContent: "left", marginLeft: 0 }}
-                    />
-                    {field.value && (
-                      <FormHelperText
-                        variant="filled"
-                        sx={{ fontSize: 12, marginLeft: "14px" }}
-                      >
-                        Esta Modalidade irá aceitar apenas Equipas
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
-            />
-          </Grid>
         </FormAccordion>
         <FormAccordion
           title="Escalões"
@@ -1354,7 +1375,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 </ListItemButton>
               </ListItem>
             ) : (
-              <List dense>
+              <List dense sx={{ mb: 2 }}>
                 {disciplines
                   .filter(
                     (discipline: string) =>
@@ -1370,7 +1391,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                         sx={{ p: 1, pl: 3 }}
                       >
                         <ListItemIcon>
-                          <SportsMartialArts />
+                          <SportsMartialArts fontSize="large" />
                         </ListItemIcon>
                         {discipline}
                       </ListItemButton>
@@ -1379,7 +1400,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </List>
             )}
             <Button
-              sx={{ m: 1 }}
               variant="contained"
               size="large"
               color="success"
@@ -1397,14 +1417,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </Box>
             ) : selectedDisciplineForCategory === "" ? (
               <Grid container size={12} justifyContent="center">
-                <Grid sx={{ mt: 5 }} size={6}>
-                  <ListItem>
-                    <ListItemButton sx={{ p: 2, color: "gray" }}>
-                      Selecione uma Modalidade no campo ao lado para visualizar
-                      os Escalões já adicionadas.
-                    </ListItemButton>
-                  </ListItem>
-                </Grid>
+                <Typography mt={5} color="textDisabled">
+                  Selecione uma Modalidade no campo ao lado para visualizar os
+                  Escalões já adicionados.
+                </Typography>
               </Grid>
             ) : (
               <AllUseTable
@@ -1426,12 +1442,10 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               ></AllUseTable>
             )}
           </Grid>
-          <Grid sx={{ m: 2, mt: 1 }} container size={12}></Grid>
         </FormAccordion>
         <Grid
-          m={6}
+          mr={6}
           mt={2}
-          mb={0}
           justifyContent="flex-end"
           spacing={2}
           container
@@ -1445,7 +1459,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             type={"submit"}
             loading={loading}
             loadingPosition="start"
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               handleSubmit(onSubmit)();
             }}
@@ -1456,7 +1469,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             variant="outlined"
             size={"small"}
             type={"submit"}
-            sx={{ marginBottom: "20px" }}
             onClick={() => {
               navigate("/events/");
             }}

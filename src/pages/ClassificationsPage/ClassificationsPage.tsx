@@ -32,7 +32,13 @@ export default function ClassificationsPage() {
     isLoading: isEventsLoading,
     error: eventsError,
     refetch,
-  } = eventsHooks.useFetchEventsData(page, pageSize, "-event_date");
+  } = eventsHooks.useFetchEventsData(
+    page,
+    pageSize,
+    "-event_date",
+    undefined,
+    true,
+  );
 
   return (
     <>
@@ -133,7 +139,7 @@ export default function ClassificationsPage() {
             eventsError ? null : (
               <Grid size={12} mt={3} container justifyContent={"center"}>
                 <Pagination
-                  count={Math.ceil(eventsData?.count! / 5)}
+                  count={Math.ceil(eventsData?.count! / 10)}
                   page={page}
                   onChange={handleChange}
                   color="primary"

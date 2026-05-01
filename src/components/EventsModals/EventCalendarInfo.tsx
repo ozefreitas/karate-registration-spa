@@ -17,6 +17,7 @@ import { EncounterOptions } from "../../config";
 import EventDetailCard from "./EventDetailCard";
 import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { getFullDate } from "../../utils/utils";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -34,10 +35,6 @@ export default function EventCalendarInfo(
     eventData?: any;
   }>,
 ) {
-  const today = new Date();
-  const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  };
   const navigate = useNavigate();
   return (
     <Dialog

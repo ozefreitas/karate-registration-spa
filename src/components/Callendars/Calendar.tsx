@@ -34,7 +34,17 @@ function getFirstDayOfMonth(year: number, month: number) {
   return new Date(year, month, 1).getDay(); // 0 = Sunday
 }
 
-export default function Calendar() {
+export default function Calendar(
+  props: Readonly<{ filters: any; resetFilters: any }>,
+) {
+  const [currentView, _] = useState(() => {
+    return localStorage.getItem("eventsView") ?? "calendar";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("eventsView", currentView);
+  }, [currentView]);
+
   const navigate = useNavigate();
   const [isEventInfoModalOpen, setIsEventInfoModalOpen] =
     useState<boolean>(false);
@@ -148,13 +158,17 @@ export default function Calendar() {
     refetch,
   } = eventsHooks.useFetchEventsData(
     1,
-    20,
+    101,
     undefined,
-    "",
-    false,
-    false,
-    false,
+    undefined,
+    undefined,
+    props.filters("has_teams") === false ? undefined : true,
+    props.filters("has_categories") === false ? undefined : true,
+    props.filters("has_registrations") === false ? undefined : true,
     `${year}-${month < 9 ? "0" : ""}${month.toString()}`,
+    undefined,
+    props.filters("isOngoing") === false ? undefined : true,
+    currentView === "calendar"
   );
 
   return (
@@ -213,16 +227,17 @@ export default function Calendar() {
         </Tooltip>
       </Grid>
       {isEventsDataLoading ? (
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }} mt={15}>
           <CircularProgress />
         </Box>
       ) : eventsError ? (
-        <Grid my={3} container justifyContent="center" size={12}>
+        <Grid my={3} container justifyContent="center" size={12} mt={15}>
           <ListItem sx={{ textAlign: "center" }}>
-            <ListItemText primary="Ocorreu um erro ao encontrar os Membros disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
+            <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
           </ListItem>
           <Button
             onClick={() => {
+              props.resetFilters();
               refetch();
             }}
           >
@@ -236,7 +251,7 @@ export default function Calendar() {
               {WEEKDAYS.map((day) => (
                 <Grid
                   justifyContent={"center"}
-                  bgcolor={"black"}
+                  bgcolor={"lightgrey"}
                   container
                   key={day}
                   borderRadius={3}
@@ -246,7 +261,7 @@ export default function Calendar() {
                 >
                   <Box
                     sx={{
-                      color: "white",
+                      color: "black",
                       textAlign: "center",
                       py: 2,
                       fontWeight: 700,

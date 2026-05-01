@@ -33,6 +33,7 @@ export default function EventsFilters(
     errors: any;
     reset: any;
     changedCount: number;
+    setPage: any;
   }>,
 ) {
   const [open, setOpen] = React.useState(false);
@@ -45,13 +46,13 @@ export default function EventsFilters(
   };
 
   const DrawerList = (
-    <Box sx={{ width: 400 }} role="presentation">
+    <Box sx={{ width: 450 }} role="presentation">
       <List sx={{ p: 1, mt: 2 }}>
         <Typography variant="h4" pl={2} mb={4}>
           Filtragem
         </Typography>
         {currentView === "list" ? (
-          <Grid sx={{ p: 2 }} size={2}>
+          <Grid p={2} size={2}>
             <Controller
               name="season"
               control={props.control}
@@ -71,6 +72,7 @@ export default function EventsFilters(
                   select
                   {...field}
                   onChange={(e) => {
+                    props.setPage(1);
                     field.onChange(e);
                   }}
                   error={!!props.errors.season}
@@ -86,7 +88,7 @@ export default function EventsFilters(
             />
           </Grid>
         ) : null}
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="has_registrations"
             control={props.control}
@@ -106,6 +108,7 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="has_registrations"
@@ -119,7 +122,7 @@ export default function EventsFilters(
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="has_teams"
             control={props.control}
@@ -139,6 +142,7 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="has_teams"
@@ -152,7 +156,7 @@ export default function EventsFilters(
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="has_categories"
             control={props.control}
@@ -172,6 +176,7 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="has_categories"
@@ -185,7 +190,7 @@ export default function EventsFilters(
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="is_open"
             control={props.control}
@@ -205,6 +210,7 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="is_open"
@@ -218,7 +224,7 @@ export default function EventsFilters(
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="is_retification"
             control={props.control}
@@ -238,6 +244,7 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="is_retification"
@@ -251,7 +258,7 @@ export default function EventsFilters(
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="is_closed"
             control={props.control}
@@ -271,6 +278,7 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="is_closed"
@@ -284,7 +292,7 @@ export default function EventsFilters(
             )}
           />
         </Grid>
-        <Grid sx={{ p: 3, pt: 1, pb: 1 }} container size={6}>
+        <Grid p={3} py={1} container size={6}>
           <Controller
             name="has_ended"
             control={props.control}
@@ -304,12 +312,81 @@ export default function EventsFilters(
                         {...field}
                         checked={field.value}
                         onChange={(e) => {
+                          props.setPage(1);
                           field.onChange(e.target.checked);
                         }}
                         name="has_ended"
                       />
                     }
-                    label="Já realizado"
+                    label="Apenas já realizados"
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
+                  />
+                </Stack>
+              </FormControl>
+            )}
+          />
+        </Grid>
+        <Grid p={3} py={1} container size={6}>
+          <Controller
+            name="has_not_ended"
+            control={props.control}
+            render={({ field }) => (
+              <FormControl
+                sx={{ width: "100%" }}
+                component="fieldset"
+                variant="standard"
+                error={!!props.errors.has_ended}
+              >
+                <Stack>
+                  <FormControlLabel
+                    labelPlacement="start"
+                    control={
+                      <Switch
+                        sx={{ ml: 2 }}
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => {
+                          props.setPage(1);
+                          field.onChange(e.target.checked);
+                        }}
+                        name="has_ended"
+                      />
+                    }
+                    label="Apenas ainda não realizados"
+                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
+                  />
+                </Stack>
+              </FormControl>
+            )}
+          />
+        </Grid>
+        <Grid p={3} py={1} container size={6}>
+          <Controller
+            name="isOngoing"
+            control={props.control}
+            render={({ field }) => (
+              <FormControl
+                sx={{ width: "100%" }}
+                component="fieldset"
+                variant="standard"
+                error={!!props.errors.has_ended}
+              >
+                <Stack>
+                  <FormControlLabel
+                    labelPlacement="start"
+                    control={
+                      <Switch
+                        sx={{ ml: 2 }}
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => {
+                          props.setPage(1);
+                          field.onChange(e.target.checked);
+                        }}
+                        name="has_ended"
+                      />
+                    }
+                    label="A decorrer hoje"
                     sx={{ justifyContent: "space-between", marginLeft: 0 }}
                   />
                 </Stack>

@@ -14,15 +14,17 @@ export const useAddDisciplineTeam = () => {
     onSuccess: (data: any) => {
       callNotiStack(
         enqueueSnackbar,
-        data.data.message,
-        data.data.status === "info" ? "warning" : "success",
+        data.message,
+        data.status !== undefined && data.status === "info"
+          ? "warning"
+          : "success",
       );
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
-    onError: (data: any) => {
-      const errorData = data.response?.data || {};
+    onError: (err: any) => {
+       const errorData = err?.body || {};
       if (errorData.athletes?.[0]) {
         callNotiStack(enqueueSnackbar, errorData.athletes?.[0], "error");
       } else if (errorData.error) {
@@ -49,7 +51,7 @@ export const useDeleteDisciplineTeam = () => {
         data,
       ),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });

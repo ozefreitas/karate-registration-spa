@@ -108,7 +108,7 @@ export default function CoachesModal(
 
   const { id: eventId } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role;
 
   const [page, setPage] = useState<number>(0);
 
@@ -180,9 +180,9 @@ export default function CoachesModal(
   const filteredCoaches = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    if (!query) return coachesNotInEventData?.data.results ?? [];
+    if (!query) return coachesNotInEventData?.results ?? [];
 
-    return coachesNotInEventData?.data.results.filter((member: any) => {
+    return coachesNotInEventData?.results.filter((member: any) => {
       const fullName = `${member.first_name} ${member.last_name}`.toLowerCase();
       return (
         member.first_name.toLowerCase().includes(query) ||
@@ -252,7 +252,7 @@ export default function CoachesModal(
             onClick={() => {
               handleIndividualsSubmit(checked);
             }}
-            disabled={coachesNotInEventData?.data.results.length === 0}
+            disabled={coachesNotInEventData?.results.length === 0}
           >
             Adicionar
           </Button>
@@ -273,7 +273,7 @@ export default function CoachesModal(
             </Grid>
           ) : coachesNotInEventError ? (
             <div>Ocorreu um erro</div>
-          ) : filteredCoaches.length === 0 ? (
+          ) : filteredCoaches?.length === 0 ? (
             <ListItem>
               <ListItemText primary="Não tem Treinadores que ainda não estejam inscritos nesta prova."></ListItemText>
             </ListItem>
@@ -282,7 +282,7 @@ export default function CoachesModal(
               <ListItemText primary="O seu plano não concede acesso à listagem de Treinadores. Pesquise pelo Nº de Indentificação ou nome, ou inicie uma subscrição."></ListItemText>
             </ListItem>
           ) : (
-            filteredCoaches.map((member: Member, index: string) => (
+            filteredCoaches?.map((member, index: any) => (
               <ListItem
                 key={index}
                 disablePadding
@@ -335,7 +335,7 @@ export default function CoachesModal(
           )}
         </List>
       </DialogContent>
-      {coachesNotInEventData?.data?.count === 0 ? null : (
+      {coachesNotInEventData?.count === 0 ? null : (
         <DialogActions sx={{ pr: 4, pb: 2 }}>
           <>
             <Typography variant="body1" mr={1} color="textSecondary">
@@ -346,7 +346,7 @@ export default function CoachesModal(
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(coachesNotInEventData?.data.count / 10)}
+              {Math.ceil(coachesNotInEventData?.count! / 10)}
             </Typography>
             <Tooltip title="Página anterior">
               <span>
@@ -364,8 +364,8 @@ export default function CoachesModal(
                 <IconButton
                   onClick={handleNextButtonClick}
                   disabled={
-                    !coachesNotInEventData?.data?.count ||
-                    coachesNotInEventData?.data.count <= (page + 1) * 10
+                    !coachesNotInEventData?.count ||
+                    coachesNotInEventData?.count <= (page + 1) * 10
                   }
                   aria-label="next page"
                 >

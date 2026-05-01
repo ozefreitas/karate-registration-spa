@@ -14,6 +14,7 @@ export class CategoriesService {
     /**
      * @param gender
      * @param hasMaxAge
+     * @param hasMaxAthletes
      * @param hasMaxGrad
      * @param hasMaxWeight
      * @param hasMinAge
@@ -29,6 +30,7 @@ export class CategoriesService {
     public static categoriesList(
         gender?: string,
         hasMaxAge?: boolean,
+        hasMaxAthletes?: boolean,
         hasMaxGrad?: boolean,
         hasMaxWeight?: boolean,
         hasMinAge?: boolean,
@@ -45,6 +47,7 @@ export class CategoriesService {
             query: {
                 'gender': gender,
                 'has_max_age': hasMaxAge,
+                'has_max_athletes': hasMaxAthletes,
                 'has_max_grad': hasMaxGrad,
                 'has_max_weight': hasMaxWeight,
                 'has_min_age': hasMinAge,

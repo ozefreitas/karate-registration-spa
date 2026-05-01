@@ -18,21 +18,6 @@ import {
   CalendarMonth,
 } from "@mui/icons-material";
 
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 interface MonthYearPickerProps {
   open: boolean;
   onClose: () => void;
@@ -66,7 +51,13 @@ export default function MonthYearPicker({
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
       {/* Header */}
-      <DialogTitle sx={{ p: 0, width: "100%" }}>
+      <DialogTitle
+        sx={{
+          p: 0,
+          width: "100%",
+          borderTop: `5px solid #d32f2f`,
+        }}
+      >
         <Grid
           size={12}
           container
@@ -180,7 +171,9 @@ export default function MonthYearPicker({
         </Grid>
       </DialogContent>
 
-      <DialogActions sx={{ px: 2.5, p: 2.5, gap: 3 }}>
+      <DialogActions
+        sx={{ px: 2.5, p: 2.5, gap: 3, borderTop: "1px solid #eeeeee" }}
+      >
         <Button onClick={handleClose} disableElevation sx={{}}>
           Cancelar
         </Button>

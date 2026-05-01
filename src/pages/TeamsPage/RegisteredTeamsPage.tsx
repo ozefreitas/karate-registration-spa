@@ -20,14 +20,11 @@ import { formatDateTime } from "../../utils/utils";
 import { useState } from "react";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import NewTeamPageModal from "./NewTeamPageModal";
+import { getFullDate } from "../../utils/utils";
 
 export default function RegisteredTeamsPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  const today = new Date();
-  const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  };
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
     useState<string>("");
@@ -156,20 +153,11 @@ export default function RegisteredTeamsPage(
             </ListItem>
           </Grid>
         ) : disciplinesData?.results.length === 0 ? (
-          <AllUseTable
-            type="Individuais"
-            data={singleEventData?.individuals}
-            count={singleEventData?.individuals.length!}
-            columnsHeaders={columnMaping}
-            actions
-            selection={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole,
-            )}
-            deletable={["main_admin", "superuser", "subed_club"].includes(
-              props.userRole,
-            )}
-            userRole={props.userRole}
-          ></AllUseTable>
+          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <ListItem>
+              <ListItemText primary="Não foram encontradas Modalidades para este Evento."></ListItemText>
+            </ListItem>
+          </Grid>
         ) : (
           disciplinesData?.results.map((discipline: any, index: any) => {
             const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({

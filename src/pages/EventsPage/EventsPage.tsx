@@ -35,13 +35,10 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useForm } from "react-hook-form";
 import Calendar from "../../components/Callendars/Calendar";
 import { useNavigate } from "react-router-dom";
+import { getFullDate } from "../../utils/utils";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
-  const today = new Date();
-  const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  };
 
   const [page, setPage] = useState<number>(1);
   const [currentView, setCurrentView] = useState(() => {
@@ -70,8 +67,10 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
       is_open: false,
       is_retification: false,
       is_closed: false,
-      // has_ended: false,
+      has_ended: false,
+      has_not_ended: false,
       has_teams: false,
+      isOngoing: false,
     },
   });
 
@@ -125,13 +124,16 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     5,
     ordering,
     filtersWatch("season"),
+    undefined,
     // filtersWatch("has_ended"),
-    filtersWatch("has_teams"),
-    filtersWatch("has_categories"),
-    filtersWatch("has_registrations"),
+    filtersWatch("has_teams") === false ? undefined : true,
+    filtersWatch("has_categories") === false ? undefined : true,
+    filtersWatch("has_registrations") === false ? undefined : true,
     undefined,
     undefined,
+    filtersWatch("isOngoing") === false ? undefined : true,
     // props.userRole === "technician" ? true : undefined,
+    currentView === "list"
   );
 
   const infoCard: ReactNode =
@@ -158,7 +160,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
   return (
     <>
       <PageInfoCard description={infoCard} title="Eventos"></PageInfoCard>
-      <Grid container size={12} sx={{ m: 2, mt: 0 }}>
+      <Grid container size={12} m={2} mt={0}>
         {eventsError ? null : (
           <Grid
             size={12}
@@ -209,6 +211,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                   reset={filtersReset}
                   errors={filtersErrors}
                   changedCount={filtersChangedCount}
+                  setPage={setPage}
                 ></EventsFilters>
               )}
               {["technician", undefined].includes(props.userRole) ? null : (
@@ -269,16 +272,25 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             </Grid>
           </Grid>
         )}
-        {isEventsDataLoading ? (
+        {isEventsDataLoading && currentView === "list" ? (
           <Grid mt={3} container justifyContent={"center"} size={12}>
             <CircularProgress />
           </Grid>
-        ) : eventsError ? (
+        ) : eventsError && currentView === "list" ? (
           <Grid my={3} container justifyContent="center" size={12}>
             <ListItem sx={{ textAlign: "center" }}>
               <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
-            <Button onClick={() => refetch()}>Refrescar</Button>
+            <Button
+              onClick={() => {
+                filtersReset();
+                orderReset();
+                setPage(1);
+                refetch();
+              }}
+            >
+              Refrescar
+            </Button>
           </Grid>
         ) : eventsData?.count === 0 && currentView === "list" ? (
           <Grid mt={5} container justifyContent="center" size={12}>
@@ -288,6 +300,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         ) : eventsData?.count !== 0 && currentView === "list" ? (
           <Grid size={12}>
+            <Typography variant="h6" sx={{ color: "gray", ml: 3, mb: 1 }}>
+              {eventsData?.count} Evento(s).
+            </Typography>
             {eventsData?.results.map((comp, index: number) => (
               <Grid size={12} key={index} p={2}>
                 <Card elevation={3}>
@@ -318,15 +333,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                       </Grid>
                       <Grid container size={8} p={2}>
                         <Grid my={2} size={12}>
-                          <Typography
-                            sx={{ pl: 3, fontWeight: "bold" }}
-                            variant="h5"
-                          >
+                          <Typography pl={3} fontWeight={"bold"} variant="h5">
                             {comp.name}
                           </Typography>
                         </Grid>
-                        <Grid px={2} size={10}>
-                          <Grid container columnSpacing={3} size={12}>
+                        <Grid pl={2} size={10.5}>
+                          <Grid container columnSpacing={5} size={12}>
                             <Grid size={{ xs: 12, xl: 6 }}>
                               <CompInfoToolTip
                                 title="Dia do Evento"
@@ -344,7 +356,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               ) : null}
                             </Grid>
                           </Grid>
-                          <Grid container columnSpacing={2} size={12}>
+                          <Grid container columnSpacing={5} size={12}>
                             <Grid size={{ xs: 12, xl: 6 }}>
                               <CompInfoToolTip
                                 title="Estado"
@@ -363,8 +375,8 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                             <Grid size={{ xs: 12, xl: 6 }}>
                               {comp.has_any_team ? (
                                 <CompInfoToolTip
-                                  title=""
-                                  text="Equipas Disponíveis"
+                                  title="Equipas"
+                                  text="Disponíveis"
                                   icon={<Groups />}
                                 ></CompInfoToolTip>
                               ) : null}
@@ -380,7 +392,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                           container
                           justifyContent="flex-end"
                           alignContent="flex-end"
-                          size={2}
+                          size={1.5}
                         >
                           <Tooltip placement="top" title="Ir para">
                             <span>
@@ -417,10 +429,10 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         ) : null}
         {currentView === "calendar" &&
         ![undefined, "free_club"].includes(props.userRole) ? (
-          <Calendar></Calendar>
+          <Calendar filters={filtersWatch} resetFilters={filtersReset}></Calendar>
         ) : null}
         <Grid
-          sx={{ m: 3, mt: 1 }}
+          mt={1}
           container
           justifyContent={
             props.userRole === "main_admin" ? "space-between" : "flex-end"

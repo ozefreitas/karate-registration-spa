@@ -99,22 +99,6 @@ export default function CategoriesModal(
     setDisciplineCategories: any;
   }>,
 ) {
-  type Category = {
-    max_athletes: number;
-    id: string;
-    name: string;
-    gender: string;
-    has_age: string;
-    min_age: string;
-    max_age: string;
-    has_grad: string;
-    min_grad: number;
-    max_grad: number;
-    has_weight: string;
-    min_weight: string;
-    max_weight: string;
-  };
-
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [checked, setChecked] = useState<string[]>([]);

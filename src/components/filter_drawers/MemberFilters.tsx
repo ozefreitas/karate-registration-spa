@@ -39,6 +39,7 @@ export default function MemberFilters(
     changedCount: number;
     setSelectedUsers: any;
     userRole: string;
+    setPage: any;
   }>,
 ) {
   const [open, setOpen] = React.useState(false);
@@ -90,7 +91,7 @@ export default function MemberFilters(
   }, [watchedValues, availableUsersData]);
 
   const DrawerList = (
-    <Box sx={{ width: 400 }} role="presentation">
+    <Box sx={{ width: 450 }} role="presentation">
       <List sx={{ p: 1, mt: 2 }}>
         <Grid container size={12}>
           <Typography variant="h4" pl={2} mb={4}>
@@ -100,12 +101,7 @@ export default function MemberFilters(
         {["subed_club", "superuser", "single_admin"].includes(
           props.userRole,
         ) ? (
-          <Grid
-            sx={{ p: 3, py: 1 }}
-            alignItems={"center"}
-            container
-            spacing={2}
-          >
+          <Grid p={3} py={1} alignItems={"center"} container spacing={2}>
             <Typography fontSize={"1.05rem"}>Tipo</Typography>
             {MemberTypes.map((item: any, index: any) => (
               <Controller
@@ -120,6 +116,7 @@ export default function MemberFilters(
                     color={field.value ? "success" : "default"}
                     clickable
                     onClick={() => {
+                      props.setPage(1);
                       if (field.value) {
                         field.onChange(undefined);
                       } else {
@@ -133,7 +130,7 @@ export default function MemberFilters(
             ))}
           </Grid>
         ) : null}
-        <Grid sx={{ p: 3, py: 2 }} alignItems={"center"} container spacing={2}>
+        <Grid p={3} py={2} alignItems={"center"} container spacing={2}>
           <Typography fontSize={"1.05rem"}>Género</Typography>
           {GenderOptions.filter(
             (item: any) => item.label !== "Ambos" && item.label !== "Misto",
@@ -150,6 +147,7 @@ export default function MemberFilters(
                   color={field.value ? "success" : "default"}
                   clickable
                   onClick={() => {
+                    props.setPage(1);
                     if (field.value) {
                       field.onChange(undefined);
                     } else {
@@ -172,7 +170,8 @@ export default function MemberFilters(
                 size={12}
                 container
                 alignItems={"center"}
-                sx={{ p: 3, py: 2 }}
+                p={3}
+                py={2}
               >
                 <Typography fontSize={"1.05rem"} mr={2}>
                   Clube
@@ -185,7 +184,10 @@ export default function MemberFilters(
                       variant={field.value ? "filled" : "outlined"}
                       color={field.value ? "success" : "default"}
                       clickable
-                      onClick={() => field.onChange(!field.value)}
+                      onClick={() => {
+                        props.setPage(1);
+                        field.onChange(!field.value);
+                      }}
                       label={fieldName}
                     ></Chip>
                   )}
@@ -194,7 +196,7 @@ export default function MemberFilters(
             ))
         ) : (
           <>
-            <Grid sx={{ p: 3, py: 1 }} container>
+            <Grid p={3} py={1} container>
               <Controller
                 name="isValidated"
                 control={props.control}
@@ -214,6 +216,7 @@ export default function MemberFilters(
                             {...field}
                             checked={field.value}
                             onChange={(e) => {
+                              props.setPage(1);
                               field.onChange(e.target.checked);
                             }}
                             name="quotesLegible"
@@ -227,7 +230,7 @@ export default function MemberFilters(
                 )}
               />
             </Grid>
-            <Grid sx={{ p: 3, py: 1 }} container>
+            <Grid p={3} py={1} container>
               <Controller
                 name="quotesLegible"
                 control={props.control}
@@ -247,6 +250,7 @@ export default function MemberFilters(
                             {...field}
                             checked={field.value}
                             onChange={(e) => {
+                              props.setPage(1);
                               field.onChange(e.target.checked);
                             }}
                             name="quotesLegible"
@@ -260,7 +264,7 @@ export default function MemberFilters(
                 )}
               />
             </Grid>
-            <Grid sx={{ p: 3, py: 1 }} container>
+            <Grid p={3} py={1} container>
               <Controller
                 name="quotesOverdue"
                 control={props.control}
@@ -280,6 +284,7 @@ export default function MemberFilters(
                             {...field}
                             checked={field.value}
                             onChange={(e) => {
+                              props.setPage(1);
                               if (e.target.checked) {
                                 props.setValue("quotesLegible", true);
                               }

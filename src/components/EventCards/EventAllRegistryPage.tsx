@@ -14,14 +14,11 @@ import { formatDateTime } from "../../utils/utils";
 import { ContentCopy } from "@mui/icons-material";
 import { useState } from "react";
 import DuplicateRegistrationsModal from "../Modals/DuplicateRegistrationsModal";
+import { getFullDate } from "../../utils/utils";
 
 export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  const today = new Date();
-  const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  };
   const { id: eventId } = useParams<{ id: string }>();
 
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
@@ -124,9 +121,7 @@ export default function EventAllRegistryPage(
                   mt={5}
                   ml={3}
                 >
-                  <Typography variant="h5">
-                    {discipline.name}
-                  </Typography>
+                  <Typography variant="h5">{discipline.name}</Typography>
                   {singleEventData !== undefined &&
                   singleEventData.event_date < getFullDate() &&
                   ["superuser", "subed_club"].includes(props.userRole) &&

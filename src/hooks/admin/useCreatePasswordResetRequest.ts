@@ -10,7 +10,7 @@ export const useCreatePasswordResetRequest = () => {
   return useMutation({
     mutationFn: PasswordRecoveryService.passwordRecoveryRequestCreate,
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["password-requests"] });
     },
     onError: (data: any) => {

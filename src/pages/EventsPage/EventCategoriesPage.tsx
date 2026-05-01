@@ -25,7 +25,8 @@ export default function EventCategoriesPage(
   const [currentDiscipline, setCurrentDiscipline] = useState<{
     name: string;
     id: string;
-  }>({ name: "", id: "" });
+    isTeam?: boolean;
+  }>({ name: "", id: "", isTeam: undefined });
 
   const handleCategoriesModalOpen = () => {
     setIsCategoriesModalOpen(true);
@@ -214,6 +215,7 @@ export default function EventCategoriesPage(
                       setCurrentDiscipline({
                         name: discipline.name,
                         id: String(discipline.id),
+                        isTeam: discipline.is_team,
                       });
                       handleCategoriesModalOpen();
                     }}

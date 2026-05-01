@@ -15,22 +15,11 @@ import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Category } from "@mui/icons-material";
+import { GraduationsOptions } from "../../config";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-interface CategoryInfo {
-  name: string;
-  gender: string;
-  min_age: number | null;
-  max_age: number | null;
-  min_grad: string | null;
-  max_grad: string | null;
-  min_weight: number | null;
-  max_weight: number | null;
-  max_athletes: number | null;
-}
-
-function buildRows(c: CategoryInfo) {
+function buildRows(c: any) {
   return [
     { label: "Nome", value: c.name },
     { label: "Género", value: c.gender },
@@ -49,7 +38,8 @@ function buildRows(c: CategoryInfo) {
 function InfoRow({
   label,
   value,
-}: Readonly<{ label: string; value: string | number | null }>) {
+  type,
+}: Readonly<{ label: string; value: string | number | null; type?: string }>) {
   const isEmpty = value === null || value === undefined || value === "";
   return (
     <Grid
@@ -61,13 +51,26 @@ function InfoRow({
       <Typography variant="body1" fontWeight={600} sx={{ color: "#1a1a1a" }}>
         {label}
       </Typography>
-      <Typography
-        variant="body1"
-        fontWeight={600}
-        sx={{ color: isEmpty ? "#bdbdbd" : "#d32f2f" }}
-      >
-        {isEmpty ? "N/A" : String(value)}
-      </Typography>
+      {type === "graduation" ? (
+        <Typography
+          variant="body1"
+          fontWeight={600}
+          sx={{ color: isEmpty ? "#bdbdbd" : "#d32f2f" }}
+        >
+          {isEmpty
+            ? "N/A"
+            : GraduationsOptions.find((item) => item.value === Number(value))
+                ?.label}
+        </Typography>
+      ) : (
+        <Typography
+          variant="body1"
+          fontWeight={600}
+          sx={{ color: isEmpty ? "#bdbdbd" : "#d32f2f" }}
+        >
+          {isEmpty ? "N/A" : String(value)}
+        </Typography>
+      )}
     </Grid>
   );
 }
@@ -129,7 +132,7 @@ export default function CategoryInfoModal(
             </Grid>
             <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
               {singleCategoryData
-                ? `Informações de ${singleCategoryData?.data.name}`
+                ? `Informações de ${singleCategoryData?.name}`
                 : "Informações de Categoria"}
             </Typography>
           </Grid>
@@ -152,9 +155,15 @@ export default function CategoryInfoModal(
         )}
         {!isSingleCategoryDataLoading &&
           singleCategoryData &&
-          buildRows(singleCategoryData.data).map((row, i, arr) => (
+          buildRows(singleCategoryData).map((row, i, arr) => (
             <Box key={row.label}>
-              <InfoRow label={row.label} value={row.value} />
+              <InfoRow
+                label={row.label}
+                value={row.value}
+                type={
+                  row.label.includes("Graduação") ? "graduation" : undefined
+                }
+              />
               {i < arr.length - 1 && (
                 <Divider sx={{ borderColor: "#f5f5f5" }} />
               )}

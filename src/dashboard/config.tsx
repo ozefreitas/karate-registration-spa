@@ -214,7 +214,7 @@ export const breadcrumbsConvertion: Record<string, any> = {
   new_athlete: "Novo Atleta",
   new_member: "Novo Membro",
   new_team: "Nova Equipa",
-  individuals: "Individuais Registados",
+  individuals: "Registos",
   registered_teams: "Equipas Registadas",
   draw: "Sorteios",
   generate: "Gerar",

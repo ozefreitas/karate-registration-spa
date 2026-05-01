@@ -40,6 +40,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const paramPage = searchParams.get("page") ?? "1";
+  const paramPageSize = searchParams.get("page_size") ?? "10";
 
   const changePage = (number: string) => {
     setSearchParams((prev) => {
@@ -63,8 +64,9 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       newParams.delete("page_size");
       setSearchParams(newParams);
       setPage(Number(paramPage));
+      // setPageSize(Number(paramPageSize));
     }
-  }, [paramPage, currentView]);
+  }, [paramPage, paramPageSize, currentView]);
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -210,6 +212,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     data: membersData,
     isLoading: isMembersDataLoading,
     error: membersError,
+    refetch: refetchMembersData,
   } = membersHooks.useFetchMembersData(
     page,
     pageSize,
@@ -385,6 +388,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 changedCount={filtersChangedCount}
                 setSelectedUsers={setSelectedUsers}
                 userRole={props.userRole}
+                setPage={setPage}
               ></MemberFilters>
               <Grid pl={2} container spacing={1} borderRadius={3}>
                 <Tooltip placement="top" title={"Vista de Tabela"}>
@@ -440,7 +444,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         membersData !== undefined &&
         membersData?.count !== 0 ? (
           <Typography variant="h6" sx={{ color: "gray", m: 3 }}>
-            {membersData?.count} Membros.
+            {membersData?.count} Membro(s).
           </Typography>
         ) : null}
         {isMembersDataLoading ? (
@@ -454,8 +458,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             </ListItem>
             <Button
               onClick={() => {
+                filtersReset();
+                orderReset();
                 changePage("1");
                 setPage(1);
+                refetchMembersData();
               }}
             >
               Refrescar

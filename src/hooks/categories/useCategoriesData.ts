@@ -31,6 +31,7 @@ export const useFetchCategoriesData = (
       CategoriesService.categoriesList(
         gender,
         maxAge,
+        undefined,
         maxGrad,
         maxWeight,
         minAge,
@@ -54,19 +55,34 @@ export const useFetchSingleCategory = (categoryId: string) => {
   });
 };
 
-export const useFetchCategoryNotinDiscipline = (disciplineId: string) => {
+export const useFetchCategoryNotinDiscipline = (
+  disciplineId: string,
+  isTeam: boolean,
+  page?: number,
+  pageSize?: number,
+) => {
   return useQuery({
-    queryKey: ["category-not-in-discipline", disciplineId],
+    queryKey: [
+      "category-not-in-discipline",
+      disciplineId,
+      page,
+      pageSize,
+      isTeam,
+    ],
     queryFn: () =>
       CategoriesService.categoriesList(
         undefined,
         undefined,
+        isTeam,
         undefined,
         undefined,
         undefined,
         undefined,
         undefined,
         disciplineId,
+        undefined,
+        page,
+        pageSize,
       ),
     refetchOnWindowFocus: false,
     enabled: disciplineId !== "" && disciplineId !== undefined,

@@ -93,7 +93,9 @@ export default function DeleteMemberModal(
           },
           {
             onSuccess: () => {
-              navigate(`/events/${paramEvent}/teams/`);
+              if (paramEvent !== undefined) {
+                navigate(`/events/${paramEvent}/teams/`);
+              }
             },
           },
         );

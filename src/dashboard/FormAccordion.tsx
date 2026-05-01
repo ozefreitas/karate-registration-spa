@@ -24,7 +24,7 @@ export default function FormAccordion(
       <Accordion square expanded={props.expanded} onChange={props.onChange}>
         <Tooltip
           placement="bottom-start"
-          title={!props.expanded ? props.tooltipMessage : ""}
+          title={props.expanded ? "" : props.tooltipMessage}
         >
           <span>
             <AccordionSummary expandIcon={<ExpandMore />}>

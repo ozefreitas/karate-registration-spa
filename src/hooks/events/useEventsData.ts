@@ -7,13 +7,14 @@ export const useFetchEventsData = (
   pageSize: number,
   ordering?: string,
   season?: string,
-  // hasEnded?: boolean,
+  hasEnded?: boolean,
   hasTeams?: boolean,
   hasCategories?: boolean,
   hasRegistrations?: boolean,
   month?: string,
   day?: string,
-  isOngoing?: boolean
+  isOngoing?: boolean,
+  enabled?: boolean,
 ) => {
   return useQuery({
     queryKey: [
@@ -22,7 +23,7 @@ export const useFetchEventsData = (
       pageSize,
       ordering,
       season,
-      // hasEnded,
+      hasEnded,
       hasTeams,
       hasCategories,
       hasRegistrations,
@@ -33,7 +34,7 @@ export const useFetchEventsData = (
     queryFn: () =>
       EventsService.eventsList(
         hasCategories,
-        // hasEnded,
+        hasEnded,
         hasRegistrations,
         hasTeams,
         day,
@@ -47,7 +48,7 @@ export const useFetchEventsData = (
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
-    enabled: pageSize !== 100,
+    enabled: pageSize !== 100 && enabled,
   });
 };
 

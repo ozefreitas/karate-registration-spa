@@ -81,7 +81,7 @@ export default function NewTeamPageModal(
         },
         {
           onSuccess: (data: any) => {
-            if (data.data.status === "info") {
+            if (data.status !== undefined && data.status === "info") {
               setValue("is_category_visible", true);
               setPossibleCategories(data.data.category_ids);
             } else {
@@ -327,13 +327,11 @@ export default function NewTeamPageModal(
                   <MenuItem sx={{ color: "lightgrey" }} value="">
                     -- Selecionar --
                   </MenuItem>
-                  {membersNotInEventData?.data.results.map(
-                    (item: any, index: any) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.full_name}
-                      </MenuItem>
-                    ),
-                  )}
+                  {membersNotInEventData?.results.map((item, index: any) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.full_name}
+                    </MenuItem>
+                  ))}
                 </TextField>
               )}
             ></Controller>
@@ -362,17 +360,17 @@ export default function NewTeamPageModal(
                   >
                     <Avatar
                       {...stringAvatar(
-                        membersNotInEventData?.data.results.find(
-                          (item: any) => item.id === watch("athlete1"),
-                        ).full_name,
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete1"),
+                        )?.full_name!,
                         128,
                       )}
                     ></Avatar>
                     <Typography variant="h4">
                       {
-                        membersNotInEventData?.data.results.find(
-                          (item: any) => item.id === watch("athlete1"),
-                        ).full_name
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete1"),
+                        )?.full_name
                       }
                     </Typography>
                     <Grid container justifyContent={"center"}>
@@ -380,9 +378,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
+                          membersNotInEventData?.results.find(
                             (item: any) => item.id === watch("athlete1"),
-                          ).age
+                          )?.age
                         } anos (calculados)
                       `}
                       ></Chip>
@@ -390,9 +388,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
+                          membersNotInEventData?.results.find(
                             (item: any) => item.id === watch("athlete1"),
-                          ).gender
+                          )?.gender
                         }
                       `}
                       ></Chip>
@@ -400,9 +398,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete1"),
-                          ).weight
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete1"),
+                          )?.weight
                         } Kg
                       `}
                       ></Chip>
@@ -410,9 +408,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`Escalão (previsto): 
                         ${
-                          membersNotInEventData?.data.results.find(
+                          membersNotInEventData?.results.find(
                             (item: any) => item.id === watch("athlete1"),
-                          ).category
+                          )?.category ?? "N/A"
                         }
                       `}
                       ></Chip>
@@ -450,13 +448,11 @@ export default function NewTeamPageModal(
                   <MenuItem sx={{ color: "lightgrey" }} value="">
                     -- Selecionar --
                   </MenuItem>
-                  {membersNotInEventData?.data.results.map(
-                    (item: any, index: any) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.full_name}
-                      </MenuItem>
-                    ),
-                  )}
+                  {membersNotInEventData?.results.map((item, index: any) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.full_name}
+                    </MenuItem>
+                  ))}
                 </TextField>
               )}
             ></Controller>
@@ -485,17 +481,17 @@ export default function NewTeamPageModal(
                   >
                     <Avatar
                       {...stringAvatar(
-                        membersNotInEventData?.data.results.find(
-                          (item: any) => item.id === watch("athlete2"),
-                        ).full_name,
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete2"),
+                        )?.full_name!,
                         128,
                       )}
                     ></Avatar>
                     <Typography variant="h4">
                       {
-                        membersNotInEventData?.data.results.find(
-                          (item: any) => item.id === watch("athlete2"),
-                        ).full_name
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete2"),
+                        )?.full_name
                       }
                     </Typography>
                     <Grid container justifyContent={"center"}>
@@ -503,9 +499,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete2"),
-                          ).age
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete2"),
+                          )?.age
                         } anos (calculados)
                       `}
                       ></Chip>
@@ -513,9 +509,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete2"),
-                          ).gender
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete2"),
+                          )?.gender
                         }
                       `}
                       ></Chip>
@@ -523,9 +519,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete2"),
-                          ).weight
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete2"),
+                          )?.weight
                         } Kg
                       `}
                       ></Chip>
@@ -533,9 +529,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`Escalão (previsto): 
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete2"),
-                          ).category
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete2"),
+                          )?.category ?? "N/A"
                         }
                       `}
                       ></Chip>
@@ -572,13 +568,11 @@ export default function NewTeamPageModal(
                   <MenuItem sx={{ color: "lightgrey" }} value="">
                     -- Selecionar --
                   </MenuItem>
-                  {membersNotInEventData?.data.results.map(
-                    (item: any, index: any) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.full_name}
-                      </MenuItem>
-                    ),
-                  )}
+                  {membersNotInEventData?.results.map((item, index: any) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.full_name}
+                    </MenuItem>
+                  ))}
                 </TextField>
               )}
             ></Controller>
@@ -607,17 +601,17 @@ export default function NewTeamPageModal(
                   >
                     <Avatar
                       {...stringAvatar(
-                        membersNotInEventData?.data.results.find(
-                          (item: any) => item.id === watch("athlete3"),
-                        ).full_name,
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete3"),
+                        )?.full_name!,
                         128,
                       )}
                     ></Avatar>
                     <Typography variant="h4">
                       {
-                        membersNotInEventData?.data.results.find(
-                          (item: any) => item.id === watch("athlete3"),
-                        ).full_name
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete3"),
+                        )?.full_name
                       }
                     </Typography>
                     <Grid container justifyContent={"center"}>
@@ -625,9 +619,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete3"),
-                          ).age
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete3"),
+                          )?.age
                         } anos (calculados)
                       `}
                       ></Chip>
@@ -635,9 +629,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete3"),
-                          ).gender
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete3"),
+                          )?.gender
                         }
                       `}
                       ></Chip>
@@ -645,9 +639,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete3"),
-                          ).weight
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete3"),
+                          )?.weight
                         } Kg
                       `}
                       ></Chip>
@@ -655,9 +649,9 @@ export default function NewTeamPageModal(
                         sx={{ p: 1 }}
                         label={`Escalão (previsto): 
                         ${
-                          membersNotInEventData?.data.results.find(
-                            (item: any) => item.id === watch("athlete3"),
-                          ).category
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete3"),
+                          )?.category ?? "N/A"
                         }
                       `}
                       ></Chip>

@@ -36,21 +36,19 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
     error: disciplinesError,
   } = disciplinesHooks.useFetchDisciplinesData(eventId!, false, true);
 
-  const state = singleEventData?.data.is_open
+  const state = singleEventData?.is_open
     ? "Inscrições abertas"
-    : singleEventData?.data.is_retification
+    : singleEventData?.is_retification
       ? "Período de retificações"
       : "Inscrições Encerradas";
 
   // Memoize `rows` to compute only when `members` changes
   const registrationRows = useMemo(() => {
-    return disciplinesData?.data.results[0].individuals.map(
-      (memberInfo: any) => ({
-        id: memberInfo.member.id,
-        full_name: memberInfo.member.full_name,
-        added_at: formatDateTime(memberInfo.added_at, "both"),
-      }),
-    );
+    return disciplinesData?.results[0].individuals.map((memberInfo: any) => ({
+      id: memberInfo.member.id,
+      full_name: memberInfo.member.full_name,
+      added_at: formatDateTime(memberInfo.added_at, "both"),
+    }));
   }, [disciplinesData]);
 
   const getColumnMaping = () => {
@@ -80,7 +78,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
             subscrição, contacte um administrador de imediato.
           </>
         }
-        title={`Treinadores inscritos em ${singleEventData?.data.name}`}
+        title={`Treinadores inscritos em ${singleEventData?.name}`}
       ></PageInfoCard>
       <Grid container mx={4} mb={4}>
         <Grid>
@@ -103,9 +101,9 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
                   px={2}
                   sx={{
                     fontWeight: "bold",
-                    color: singleEventData?.data.is_open
+                    color: singleEventData?.is_open
                       ? "green"
-                      : singleEventData?.data.is_retification
+                      : singleEventData?.is_retification
                         ? "#ffc40c"
                         : "red",
                   }}
@@ -135,12 +133,12 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
               Evento.
             </Typography>
           </Grid>
-        ) : disciplinesData?.data.results.length === 0 ? null : (
+        ) : disciplinesData?.results.length === 0 ? null : (
           <AllUseTable
             type="Treinadores"
             data={registrationRows}
-            count={disciplinesData?.data.results[0].individuals.length}
-            discipline={disciplinesData?.data.results[0].id}
+            count={disciplinesData?.results[0].individuals.length!}
+            discipline={disciplinesData?.results[0].id}
             columnsHeaders={columnMaping}
             actions
             selection={["main_admin", "superuser", "subed_club"].includes(
@@ -153,7 +151,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
           ></AllUseTable>
         )}
       </Grid>
-      {singleEventData?.data.is_open ? (
+      {singleEventData?.is_open ? (
         <Grid container justifyContent="flex-end" m={4}>
           <Button
             variant="contained"
@@ -169,8 +167,8 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
       <CoachesModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}
-        eventData={singleEventData?.data}
-        disciplineId={disciplinesData?.data.results[0].id}
+        eventData={singleEventData}
+        disciplineId={String(disciplinesData?.results[0].id!)}
       ></CoachesModal>
     </>
   );

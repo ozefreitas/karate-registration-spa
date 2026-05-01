@@ -49,15 +49,12 @@ import DeleteEventModal from "../EventsModals/DeleteEventModal";
 import PageInfoCard from "../info-cards/PageInfoCard";
 import { EncounterOptions } from "../../config";
 import { useAuth } from "../../access/GlobalAuthProvider";
+import { getFullDate } from "../../utils/utils";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const { user: meData } = useAuth();
   const { id: eventId } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const today = new Date();
-  const getFullDate = () => {
-    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  };
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -234,7 +231,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <CompInfoToolTip
                           title="Email"
                           text={
-                            singleEventData?.email_contact === null
+                            singleEventData?.email_contact === null ||
+                            singleEventData?.email_contact === ""
                               ? null
                               : String(singleEventData?.email_contact)
                           }

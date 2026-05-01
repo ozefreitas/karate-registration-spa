@@ -29,14 +29,12 @@ import {
   KeyboardArrowRight,
   KeyboardArrowLeft,
   Category,
-  Add,
 } from "@mui/icons-material";
 import InputBase from "@mui/material/InputBase";
 import { styled, alpha } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import { categoriesHooks, disciplinesHooks } from "../../hooks";
 import { getGraduationFromValue } from "../../config";
-import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -97,21 +95,6 @@ export default function AddEventCategoriesModal(
     disciplineData: any;
   }>,
 ) {
-  type Category = {
-    id: string;
-    name: string;
-    gender: string;
-    has_age: string;
-    min_age: string;
-    max_age: string;
-    has_grad: string;
-    min_grad: number;
-    max_grad: number;
-    has_weight: string;
-    min_weight: string;
-    max_weight: string;
-    max_athletes: number;
-  };
   const [page, setPage] = useState<number>(1);
   const [checked, setChecked] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -119,7 +102,14 @@ export default function AddEventCategoriesModal(
     data: categoriesNotinDisciplineData,
     isLoading: iscategoriesNotinDisciplineLoading,
     error: categoriesNotinDisciplineError,
-  } = categoriesHooks.useFetchCategoryNotinDiscipline(props.disciplineData.id);
+  } = categoriesHooks.useFetchCategoryNotinDiscipline(
+    props.disciplineData.id,
+    props.disciplineData.isTeam,
+    page,
+    10,
+  );
+
+  console.log(props.disciplineData)
 
   const addDisciplineCategories =
     disciplinesHooks.useAddDisciplineCategory(true);
@@ -155,7 +145,7 @@ export default function AddEventCategoriesModal(
     setChecked(newChecked);
   };
 
-  const categoryMembers = React.useMemo(() => {
+  const filteredCategories = React.useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
     if (!query) return categoriesNotinDisciplineData?.results ?? [];
@@ -164,14 +154,6 @@ export default function AddEventCategoriesModal(
       return category.name.toLowerCase().includes(query);
     });
   }, [searchQuery, categoriesNotinDisciplineData]);
-
-  const itemsPerPage = 10;
-
-  const paginatedCategories = React.useMemo(() => {
-    const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    return categoryMembers?.slice(start, end);
-  }, [categoryMembers, page]);
 
   const handleSubmit = () => {
     const data = {
@@ -256,7 +238,7 @@ export default function AddEventCategoriesModal(
               <ListItemText primary="Não tem Escalões que ainda não tenham sido adicionados a esta Modalidade."></ListItemText>
             </ListItem>
           ) : (
-            paginatedCategories?.map((category, index: number) => (
+            filteredCategories?.map((category, index: number) => (
               <ListItem
                 key={index}
                 disablePadding
@@ -362,7 +344,7 @@ export default function AddEventCategoriesModal(
               de
             </Typography>
             <Typography mr={2}>
-              {Math.ceil(categoriesNotinDisciplineData?.count! / itemsPerPage)}
+              {Math.ceil(categoriesNotinDisciplineData?.count! / 10)}
             </Typography>
             <Tooltip title="Página anterior">
               <span>
@@ -381,7 +363,7 @@ export default function AddEventCategoriesModal(
                   onClick={handleNextButtonClick}
                   disabled={
                     !categoriesNotinDisciplineData?.count ||
-                    page * itemsPerPage >= categoriesNotinDisciplineData?.count
+                    page * 10 >= categoriesNotinDisciplineData?.count
                   }
                   aria-label="next page"
                 >

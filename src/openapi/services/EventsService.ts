@@ -19,6 +19,7 @@ import { request as __request } from '../core/request';
 export class EventsService {
     /**
      * @param hasCategories
+     * @param hasEnded
      * @param hasRegistrations
      * @param hasTeams
      * @param inDay
@@ -33,6 +34,7 @@ export class EventsService {
      */
     public static eventsList(
         hasCategories?: boolean,
+        hasEnded?: boolean,
         hasRegistrations?: boolean,
         hasTeams?: boolean,
         inDay?: string,
@@ -48,6 +50,7 @@ export class EventsService {
             url: '/events/',
             query: {
                 'has_categories': hasCategories,
+                'has_ended': hasEnded,
                 'has_registrations': hasRegistrations,
                 'has_teams': hasTeams,
                 'in_day': inDay,

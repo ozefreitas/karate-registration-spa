@@ -22,8 +22,11 @@ import { useNavigate } from "react-router-dom";
 import { categoriesHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { Clear } from "@mui/icons-material";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function NewCategoryPage() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [isAgeExpanded, setIsAgeExpanded] = useState<boolean>(true);
   const [isGradExpanded, setIsGradExpanded] = useState<boolean>(true);
@@ -95,6 +98,12 @@ export default function NewCategoryPage() {
         { data: formData2 },
         {
           onSuccess: () => {
+            callNotiStack(
+              enqueueSnackbar,
+              "Escalões criado com sucesso!",
+              "success",
+              5000,
+            );
             reset();
             window.scrollTo({ top: 0, behavior: "smooth" });
           },
@@ -121,6 +130,12 @@ export default function NewCategoryPage() {
         { data: formData2 },
         {
           onSuccess: () => {
+            callNotiStack(
+              enqueueSnackbar,
+              "Escalões criado com sucesso!",
+              "success",
+              5000,
+            );
             reset();
             window.scrollTo({ top: 0, behavior: "smooth" });
           },
@@ -134,6 +149,12 @@ export default function NewCategoryPage() {
         { data: formData },
         {
           onSuccess: () => {
+            callNotiStack(
+              enqueueSnackbar,
+              "Escalão criado com sucesso!",
+              "success",
+              5000,
+            );
             reset();
             window.scrollTo({ top: 0, behavior: "smooth" });
           },
