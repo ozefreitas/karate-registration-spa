@@ -133,7 +133,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     undefined,
     filtersWatch("isOngoing") === false ? undefined : true,
     // props.userRole === "technician" ? true : undefined,
-    currentView === "list"
+    currentView === "list",
   );
 
   const infoCard: ReactNode =
@@ -323,11 +323,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                             backgroundColor: "lightgray",
                             display: "flex",
                             justifyContent: "center",
-                            p: 5,
+                            p: 4,
                           }}
                         >
                           <Avatar
-                            {...stringAvatar(comp.encounter_type!, 120)}
+                            {...stringAvatar(comp.encounter_type!, 128)}
                           ></Avatar>
                         </Card>
                       </Grid>
@@ -429,7 +429,10 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
         ) : null}
         {currentView === "calendar" &&
         ![undefined, "free_club"].includes(props.userRole) ? (
-          <Calendar filters={filtersWatch} resetFilters={filtersReset}></Calendar>
+          <Calendar
+            filters={filtersWatch}
+            resetFilters={filtersReset}
+          ></Calendar>
         ) : null}
         <Grid
           mt={1}

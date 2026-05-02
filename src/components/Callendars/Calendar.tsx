@@ -42,7 +42,7 @@ export default function Calendar(
   });
 
   useEffect(() => {
-    localStorage.setItem("eventsView", currentView);
+    refetch();
   }, [currentView]);
 
   const navigate = useNavigate();
@@ -168,7 +168,7 @@ export default function Calendar(
     `${year}-${month < 9 ? "0" : ""}${month.toString()}`,
     undefined,
     props.filters("isOngoing") === false ? undefined : true,
-    currentView === "calendar"
+    currentView === "calendar",
   );
 
   return (

@@ -70,19 +70,20 @@ export default function SingleMemberPage(
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
+    console.log(file);
     setSelectedFile(file);
   };
 
   const onSubmit = () => {
-    const formData = new FormData();
     if (selectedFile) {
-      formData.append("profile_image", selectedFile);
+      uploadPersonProfilePicture.mutate(
+        {
+          personId: memberId!,
+          data: { profile_image: selectedFile },
+        },
+        { onSuccess: () => setSelectedFile(undefined) },
+      );
     }
-    uploadPersonProfilePicture.mutate({
-      personId: memberId!,
-      data: formData,
-    });
   };
 
   const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;

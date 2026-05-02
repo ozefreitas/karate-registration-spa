@@ -9,11 +9,15 @@ import {
   TextField,
   Grid,
   styled,
+  Typography,
+  IconButton,
 } from "@mui/material";
 import React, { useState } from "react";
 import { TransitionProps } from "notistack";
 import { membersHooks } from "../../hooks";
-import { CloudUpload } from "@mui/icons-material";
+import { CloudUpload, Delete, InsertDriveFile } from "@mui/icons-material";
+import IconBox from "../General/IconBox";
+import { RequestTypeEnum } from "../../openapi";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,11 +45,11 @@ export default function RequestModal(
     isOpen: boolean;
     handleClose: any;
     id: string;
-    requestType: "general" | "verify" | "exams";
+    requestType: RequestTypeEnum;
   }>,
 ) {
   const [requestText, setRequestText] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState(undefined);
+  const [selectedFile, setSelectedFile] = useState<any>(undefined);
   const createMemberValidationRequest =
     membersHooks.useCreateMemberValidationRequest();
 
@@ -59,7 +63,12 @@ export default function RequestModal(
       formData.append("file", selectedFile);
     }
 
-    createMemberValidationRequest.mutate(formData);
+    createMemberValidationRequest.mutate({
+      person: props.id,
+      message: requestText,
+      request_type: props.requestType,
+      file: selectedFile,
+    });
     props.handleClose();
   };
 
@@ -111,21 +120,56 @@ export default function RequestModal(
               Terá de anexar o ficheiro de Proposta de Exame assinado pelos
               responsáveis do Clube.
             </p>
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              tabIndex={-1}
-              startIcon={<CloudUpload />}
-            >
-              Escolher Ficheiro
-              <VisuallyHiddenInput
-                type="file"
-                onChange={(event: any) => {
-                  setSelectedFile(event.target.files[0]);
-                }}
-              />
-            </Button>
+            {selectedFile === undefined ? (
+              <Button
+                sx={{ mb: 1 }}
+                component="label"
+                role={undefined}
+                variant="contained"
+                tabIndex={-1}
+                startIcon={<CloudUpload />}
+              >
+                Escolher Ficheiro
+                <VisuallyHiddenInput
+                  type="file"
+                  onChange={(event: any) => {
+                    setSelectedFile(event.target.files[0]);
+                  }}
+                />
+              </Button>
+            ) : (
+              <Grid
+                size={12}
+                mb={1}
+                width={"100%"}
+                container
+                borderRadius={2}
+                p={2}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                border={"1px solid #FF8FA3A1"}
+                sx={{ color: "#800f2f" }}
+              >
+                <Grid container spacing={2}>
+                  <IconBox
+                    icon={<InsertDriveFile></InsertDriveFile>}
+                    color="Aka"
+                  ></IconBox>
+                  <Grid>
+                    <Typography sx={{ color: "black" }}>
+                      {selectedFile.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      Tamanho: {selectedFile.size}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <IconButton onClick={() => setSelectedFile(undefined)}>
+                  <Delete color="error" />
+                </IconButton>
+              </Grid>
+            )}
             <p>
               Introduza uma mensagem para informar o seu administrador de outras
               informações que ache relevante para complementar à proposta de

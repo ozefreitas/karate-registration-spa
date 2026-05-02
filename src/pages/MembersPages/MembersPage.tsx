@@ -59,7 +59,6 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
 
   useEffect(() => {
     const newParams = new URLSearchParams(searchParams);
-
     if (currentView === "card" && paramPage) {
       newParams.delete("page_size");
       setSearchParams(newParams);
