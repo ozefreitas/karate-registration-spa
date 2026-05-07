@@ -6,11 +6,13 @@ export const useFetchDisciplinesData = (
   restricted: boolean = false,
   is_coach?: boolean,
   is_team?: boolean,
+  allRegistry: boolean = false,
 ) => {
   return useQuery({
     queryKey: ["disciplines", eventId, restricted, is_coach, is_team],
     queryFn: () =>
       DisciplinesService.disciplinesList(
+        allRegistry,
         eventId,
         is_coach,
         is_team,
@@ -19,7 +21,6 @@ export const useFetchDisciplinesData = (
         restricted,
       ),
     refetchOnWindowFocus: false,
-    // refetchOnMount: false,
     enabled: !!eventId,
   });
 };

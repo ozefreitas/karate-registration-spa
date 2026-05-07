@@ -41,16 +41,17 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { data: singleEventData, isLoading: isSingleEventLoading } =
     eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!,
-    false,
-    false,
-    Boolean(singleEventData?.has_any_team) &&
-      ["main_admin", "superuser", "single_admin"].includes(props.userRole) ===
-        true
-      ? undefined
-      : false,
-  );
+  const { data: disciplinesData, isLoading: isDisciplinesLoading } =
+    disciplinesHooks.useFetchDisciplinesData(
+      eventId!,
+      false,
+      false,
+      Boolean(singleEventData?.has_any_team) &&
+        ["main_admin", "superuser", "single_admin"].includes(props.userRole) ===
+          true
+        ? undefined
+        : false,
+    );
 
   const state = singleEventData?.is_open
     ? "Inscrições abertas"
@@ -160,8 +161,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           </Card>
         </Grid>
       </Grid>
-      <Grid size={12} sx={{ m: 2 }}>
-        {isSingleEventLoading ? (
+      <Grid size={12} mt={5}>
+        {isSingleEventLoading || isDisciplinesLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
@@ -188,7 +189,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                 full_name: memberInfo.person.full_name,
                 gender: memberInfo.person.gender,
                 club: memberInfo.person.club,
-                category: memberInfo.category.name ?? "N/A",
+                category: memberInfo.category?.name ?? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ),
                 added_at: formatDateTime(memberInfo.added_at, "both"),
               }),
             );

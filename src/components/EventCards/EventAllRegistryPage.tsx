@@ -10,11 +10,10 @@ import AllUseTable from "../Table/AllUseTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
 import PageInfoCard from "../info-cards/PageInfoCard";
-import { formatDateTime } from "../../utils/utils";
+import { formatDateTime, getFullDate } from "../../utils/utils";
 import { ContentCopy } from "@mui/icons-material";
 import { useState } from "react";
 import DuplicateRegistrationsModal from "../Modals/DuplicateRegistrationsModal";
-import { getFullDate } from "../../utils/utils";
 
 export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>,
@@ -41,10 +40,14 @@ export default function EventAllRegistryPage(
     // error: singleEventError,
   } = eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData, isLoading: isDisciplinesLoading } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!,
-    !["superuser", "main_admin"].includes(props.userRole),
-  );
+  const { data: disciplinesData, isLoading: isDisciplinesLoading } =
+    disciplinesHooks.useFetchDisciplinesData(
+      eventId!,
+      !["superuser", "main_admin"].includes(props.userRole),
+      undefined,
+      undefined,
+      true,
+    );
 
   const getColumnMapping = (isCoach?: boolean) => {
     // Base columns except the one that must be last
@@ -81,7 +84,7 @@ export default function EventAllRegistryPage(
         }
         title="Visualização de inscrições gerais"
       ></PageInfoCard>
-      <Grid size={12} sx={{ m: 2 }}>
+      <Grid size={12} mt={5}>
         {isSingleEventLoading || isDisciplinesLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
@@ -105,9 +108,11 @@ export default function EventAllRegistryPage(
                 gender: personInfo.person.gender,
                 club: personInfo.person.club,
                 category:
-                  personInfo.category === null
-                    ? "N/A"
-                    : personInfo.category.name,
+                  personInfo.category === null ? (
+                    <Typography color="textDisabled">N/A</Typography>
+                  ) : (
+                    personInfo.category.name
+                  ),
                 added_at: formatDateTime(personInfo.added_at, "both"),
               }),
             );

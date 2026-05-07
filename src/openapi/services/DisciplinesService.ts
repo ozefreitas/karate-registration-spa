@@ -19,6 +19,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class DisciplinesService {
     /**
+     * @param allRegistry
      * @param eventDisciplines
      * @param isCoach
      * @param isTeam
@@ -29,6 +30,7 @@ export class DisciplinesService {
      * @throws ApiError
      */
     public static disciplinesList(
+        allRegistry?: boolean,
         eventDisciplines?: string,
         isCoach?: boolean,
         isTeam?: boolean,
@@ -40,6 +42,7 @@ export class DisciplinesService {
             method: 'GET',
             url: '/disciplines/',
             query: {
+                'all_registry': allRegistry,
                 'event_disciplines': eventDisciplines,
                 'is_coach': isCoach,
                 'is_team': isTeam,
