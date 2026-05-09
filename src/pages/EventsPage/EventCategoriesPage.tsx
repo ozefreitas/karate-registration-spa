@@ -8,11 +8,13 @@ import {
   Chip,
 } from "@mui/material";
 import { Add, Check, Close } from "@mui/icons-material";
-import { disciplinesHooks } from "../../hooks";
+import { disciplinesHooks, eventsHooks } from "../../hooks";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddEventCategoriesModal from "../../components/Categories/AddEventCategoriesModal";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import { getFullDate } from "../../utils/utils";
+import NotFoundPage from "../ErrorPages/NotFoundPage";
 
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>,
@@ -20,6 +22,12 @@ export default function EventCategoriesPage(
   const navigate = useNavigate();
 
   const { id: eventId } = useParams<{ id: string }>();
+  const {
+    data: singleEventData,
+    isLoading: isSingleEventLoading,
+    error: singleEventError,
+  } = eventsHooks.useFetchSingleEventData(eventId!);
+
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] =
     useState<boolean>(false);
   const [currentDiscipline, setCurrentDiscipline] = useState<{
@@ -162,6 +170,10 @@ export default function EventCategoriesPage(
 
   const columnMaping = getColumnMaping();
 
+  if (singleEventError) {
+    return <NotFoundPage />;
+  }
+
   return (
     <>
       <PageInfoCard
@@ -198,14 +210,22 @@ export default function EventCategoriesPage(
                 count={categoriesRows[index].length}
                 columnsHeaders={columnMaping}
                 actions
-                selection={["main_admin", "superuser"].includes(props.userRole)}
-                deletable={["main_admin", "superuser"].includes(props.userRole)}
+                selection={
+                  ["main_admin", "superuser"].includes(props.userRole) &&
+                  singleEventData &&
+                  singleEventData?.event_date > getFullDate()
+                }
+                deletable={
+                  ["main_admin", "superuser"].includes(props.userRole) &&
+                  singleEventData &&
+                  singleEventData?.event_date > getFullDate()
+                }
                 userRole={props.userRole}
                 discipline={discipline.id}
               ></AllUseTable>
               {["main_admin", "superuser"].includes(props.userRole) &&
               !discipline.is_coach ? (
-                <Grid container size={12} justifyContent={"flex-end"}>
+                <Grid container size={12}>
                   <Button
                     sx={{ m: 2 }}
                     variant="contained"
@@ -229,10 +249,9 @@ export default function EventCategoriesPage(
           ))
         )}
       </Grid>
-      <Grid container justifyContent={"flex-end"}>
+      <Grid container justifyContent={"flex-end"} mr={4}>
         <Button
-          sx={{ mr: 4, mt: 2 }}
-          variant="contained"
+          // variant="contained"
           size={"medium"}
           type={"submit"}
           onClick={() => {

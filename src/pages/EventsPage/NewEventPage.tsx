@@ -60,7 +60,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [disciplineWarning, setDisciplineWarning] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(100);
   const [searchParams, _] = useSearchParams();
 
   const predifinedDate = searchParams.get("date") || "";
@@ -1178,7 +1178,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 Modalidade que aparecerá emediatamente ao lado.
               </FormHelperText>
             </Grid>
-            <Grid sx={{ p: 1, pt: 2, pb: 1 }} container size={1}>
+            <Grid p={1} pt={2} container size={1}>
               <Tooltip title="Adicionar">
                 <span>
                   <IconButton
@@ -1213,7 +1213,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 </span>
               </Tooltip>
             </Grid>
-            <Grid sx={{ p: 3, pt: 1 }} container size={12}>
+            <Grid p={3} container size={12}>
               <Controller
                 name="is_coach"
                 control={eventMetadataControl}
@@ -1368,12 +1368,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             {disciplines.length === 0 ||
             (disciplines.length === 1 &&
               disciplines[0].toLowerCase() === "treinadores") ? (
-              <ListItem>
-                <ListItemButton sx={{ p: 1, pl: 3, color: "gray" }}>
+              <Grid m={1} mb={5} container size={12} justifyContent="center">
+                <Typography color="textDisabled">
                   As Modalidades que adicionar no campo de cima aparecerão aqui.
                   Adicione Modalidades para poder adicionar Escalões às mesmas.
-                </ListItemButton>
-              </ListItem>
+                </Typography>
+              </Grid>
             ) : (
               <List dense sx={{ mb: 2 }}>
                 {disciplines

@@ -16,7 +16,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
+import { EmojiEvents, ExpandMore } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import { useNavigate } from "react-router-dom";
 import { eventsHooks, classificationsHooks } from "../../hooks";
@@ -24,25 +24,6 @@ import { eventsHooks, classificationsHooks } from "../../hooks";
 export default function LastCompQualiHomeComponent(
   props: Readonly<{ userRole: string }>,
 ) {
-  type Member = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    age: string;
-    graduation: string;
-    category: string;
-    match_type: string;
-    gender: string;
-  };
-
-  type CategoryClassification = {
-    id: number;
-    full_category: string;
-    first_place: Member;
-    second_place: Member;
-    third_place: Member;
-  };
-
   const navigate = useNavigate();
 
   const { data: lastCompData } = eventsHooks.useFetchLastEvent(props.userRole);
@@ -54,16 +35,27 @@ export default function LastCompQualiHomeComponent(
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          sx={{
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-              mb: 1,
-            },
-          }}
-          title="Últimas Classificações"
-          subheader={`Última prova: ${lastCompData?.name ?? "Não"} ${
-            lastCompData?.season ?? "disponível"
-          }`}
+          title={
+            <Grid container alignItems={"center"} gap={2}>
+              <Grid
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+                color={"#fff"}
+                bgcolor={"#1976d2"}
+                sx={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 1.5,
+                }}
+              >
+                <EmojiEvents sx={{ fontSize: 28 }} />
+              </Grid>
+              <Typography variant="h5" fontWeight={"bold"}>
+                Últimas Classificações
+              </Typography>
+            </Grid>
+          }
         ></CardHeader>
         <CardContent sx={{ pt: 0, pb: 0 }}>
           {isLastCompQualiLoading ? (

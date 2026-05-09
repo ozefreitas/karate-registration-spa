@@ -90,3 +90,12 @@ export const useExportEventRegistrationFile = (eventId: string) => {
     enabled: false,
   });
 };
+
+export const useRegistrationsPerEventData = () => {
+  return useQuery({
+    queryKey: ["registration-per-event"],
+    queryFn: () => EventsService.eventsRegistrationCountsList(),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};

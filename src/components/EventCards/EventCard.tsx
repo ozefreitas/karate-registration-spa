@@ -225,7 +225,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         ></CompInfoToolTip>
                         <CompInfoToolTip
                           title="Responsável"
-                          text={singleEventData?.custody!}
+                          text={
+                            singleEventData?.custody === null ||
+                            singleEventData?.custody === ""
+                              ? null
+                              : singleEventData?.custody!
+                          }
                           icon={<LocalPolice />}
                         ></CompInfoToolTip>
                         <CompInfoToolTip
@@ -286,7 +291,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       },
                     }}
                   ></CardHeader>
-                  <CardContent sx={{ ml: 5 }}>
+                  <CardContent sx={{ ml: 2 }}>
                     <ListItemText
                       primary={"Não existem ficheiros para este Evento."}
                       sx={{ color: "GrayText" }}

@@ -141,7 +141,7 @@ export default function AllUseTable(
     count: number;
     columnsHeaders: any;
     actions: boolean;
-    selection: boolean;
+    selection?: boolean;
     notWatchable?: boolean;
     editable?: boolean;
     deletable?: boolean;

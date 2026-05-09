@@ -38,9 +38,12 @@ export default function DeleteEventModal(
   ) => {
     event.stopPropagation();
     if (id !== undefined && typeof id === "string") {
-      mutate(id);
-      props.handleModalClose();
-      navigate("/events/");
+      mutate(id, {
+        onSuccess: () => {
+          props.handleModalClose();
+          navigate("/events/");
+        },
+      });
     }
   };
 

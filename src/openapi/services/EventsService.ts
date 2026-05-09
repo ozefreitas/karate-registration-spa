@@ -10,6 +10,7 @@ import type { Events } from '../models/Events';
 import type { GenerateDrawRequest } from '../models/GenerateDrawRequest';
 import type { GenerateDrawResponse } from '../models/GenerateDrawResponse';
 import type { PaginatedCompactEventsList } from '../models/PaginatedCompactEventsList';
+import type { PaginatedEventRegistrationCountList } from '../models/PaginatedEventRegistrationCountList';
 import type { PatchedEvents } from '../models/PatchedEvents';
 import type { Rating } from '../models/Rating';
 import type { UpdateEvent } from '../models/UpdateEvent';
@@ -316,6 +317,52 @@ export class EventsService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/events/next_event/',
+        });
+    }
+    /**
+     * @param hasCategories
+     * @param hasEnded
+     * @param hasRegistrations
+     * @param hasTeams
+     * @param inDay
+     * @param inMonth
+     * @param isOngoing
+     * @param ordering Which field to use when ordering the results.
+     * @param page A page number within the paginated result set.
+     * @param pageSize Number of results to return per page.
+     * @param season
+     * @returns PaginatedEventRegistrationCountList
+     * @throws ApiError
+     */
+    public static eventsRegistrationCountsList(
+        hasCategories?: boolean,
+        hasEnded?: boolean,
+        hasRegistrations?: boolean,
+        hasTeams?: boolean,
+        inDay?: string,
+        inMonth?: string,
+        isOngoing?: boolean,
+        ordering?: string,
+        page?: number,
+        pageSize?: number,
+        season?: string,
+    ): CancelablePromise<PaginatedEventRegistrationCountList> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/events/registration-counts/',
+            query: {
+                'has_categories': hasCategories,
+                'has_ended': hasEnded,
+                'has_registrations': hasRegistrations,
+                'has_teams': hasTeams,
+                'in_day': inDay,
+                'in_month': inMonth,
+                'is_ongoing': isOngoing,
+                'ordering': ordering,
+                'page': page,
+                'page_size': pageSize,
+                'season': season,
+            },
         });
     }
 }

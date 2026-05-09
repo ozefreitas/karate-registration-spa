@@ -1,4 +1,15 @@
-import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Bar,
+} from "recharts";
 import { stringToColor } from "../../dashboard/utils/avatarColor";
 import {
   Grid,
@@ -7,16 +18,21 @@ import {
   Paper,
   CircularProgress,
   Typography,
+  CardContent,
   // ListItem,
   // ListItemButton,
   // ListItemIcon,
   // ListItemText,
 } from "@mui/material";
-import { adminHooks } from "../../hooks";
+import { adminHooks, eventsHooks } from "../../hooks";
+import { HowToReg, Person } from "@mui/icons-material";
 
 export default function ClubStats() {
   const { data: clubMembersData, isLoading: isClubMembersLoading } =
     adminHooks.useFetchClubMembersData();
+
+  const { data: registrationsPerEventData } =
+    eventsHooks.useRegistrationsPerEventData();
 
   const CustomTooltip = ({ active, payload }: any) => {
     const isVisible = active && payload && payload.length;
@@ -52,17 +68,30 @@ export default function ClubStats() {
           <Card sx={{ m: 2 }}>
             <CardHeader
               title={
-                item === "student"
-                  ? "Alunos por Clube"
-                  : item === "athlete"
-                    ? "Atletas por Clube"
-                    : "Treinadores por Clube"
+                <Grid container alignItems={"center"} gap={2}>
+                  <Grid
+                    container
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    color={"#fff"}
+                    bgcolor={"#1976d2"}
+                    sx={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 1.5,
+                    }}
+                  >
+                    <Person sx={{ fontSize: 28 }} />
+                  </Grid>
+                  <Typography variant="h5" fontWeight={"bold"}>
+                    {item === "student"
+                      ? "Alunos por Clube"
+                      : item === "athlete"
+                        ? "Atletas por Clube"
+                        : "Treinadores por Clube"}
+                  </Typography>
+                </Grid>
               }
-              sx={{
-                "& .MuiCardHeader-title": {
-                  fontWeight: "bold",
-                },
-              }}
             ></CardHeader>
             <Grid sx={{ height: 320 }}>
               {isClubMembersLoading ? (
@@ -121,6 +150,44 @@ export default function ClubStats() {
           </Card>
         </Grid>
       ))}
+      <Grid size={12} width={"100%"}>
+        <Card sx={{ m: 2 }}>
+          <CardHeader
+            title={
+              <Grid container alignItems={"center"} gap={2}>
+                <Grid
+                  container
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  color={"#fff"}
+                  bgcolor={"#004d1f"}
+                  sx={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 1.5,
+                  }}
+                >
+                  <HowToReg sx={{ fontSize: 28 }} />
+                </Grid>
+                <Typography variant="h5" fontWeight={"bold"}>
+                  Inscrições por Evento
+                </Typography>
+              </Grid>
+            }
+          ></CardHeader>
+          <CardContent sx={{ width: "100%" }}>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={registrationsPerEventData}>
+                <CartesianGrid strokeDasharray="1 1" />
+                <XAxis dataKey="name" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar dataKey="number_registrations" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </Grid>
     </>
   );
 }

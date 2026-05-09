@@ -35,13 +35,27 @@ export default function NextEventHomeComponent(
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          title={"Próxima prova"}
-          sx={{
-            pb: 0,
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-            },
-          }}
+          title={
+            <Grid container alignItems={"center"} gap={2}>
+              <Grid
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+                color={"#fff"}
+                bgcolor={"#1976d2"}
+                sx={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 1.5,
+                }}
+              >
+                <SportsMma sx={{ fontSize: 28 }} />
+              </Grid>
+              <Typography variant="h5" fontWeight={"bold"}>
+                Próxima Prova
+              </Typography>
+            </Grid>
+          }
         ></CardHeader>
         {isNextCompLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>

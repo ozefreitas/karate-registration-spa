@@ -1,4 +1,18 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid, Tooltip, Typography } from "@mui/material";
+import { useRef, useState, useEffect } from "react";
+
+function useIsOverflowing() {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    setIsOverflowing(el.scrollWidth > el.clientWidth);
+  }, []);
+
+  return { ref, isOverflowing };
+}
 
 function StatRow({
   icon,
@@ -9,14 +23,23 @@ function StatRow({
   label: string;
   value: string | null;
 }>) {
+  const { ref, isOverflowing } = useIsOverflowing();
   return (
     <Grid
       container
       alignItems={"center"}
       justifyContent={"space-between"}
       py={1}
+      spacing={3}
+      flexWrap="nowrap"
     >
-      <Grid container alignItems={"center"} spacing={3}>
+      <Grid
+        container
+        alignItems={"center"}
+        spacing={3}
+        flexWrap="nowrap"
+        flexShrink={0}
+      >
         <Grid
           width={30}
           height={30}
@@ -25,6 +48,7 @@ function StatRow({
           container
           alignItems={"center"}
           justifyContent={"center"}
+          flexShrink={0}
         >
           {icon}
         </Grid>
@@ -32,14 +56,24 @@ function StatRow({
           {label}
         </Typography>
       </Grid>
-      <Typography
-        variant="body1"
-        fontWeight={700}
-        color={value === null ? "textDisabled" : "error"}
-        sx={{ minWidth: 32, textAlign: "right" }}
-      >
-        {value ?? "N/A"}
-      </Typography>
+      <Tooltip title={isOverflowing ? (value ?? "N/A") : ""} placement="top">
+        <Typography
+          ref={ref}
+          variant="body1"
+          fontWeight={700}
+          color={value === null ? "textDisabled" : "error"}
+          sx={{
+            minWidth: 32,
+            textAlign: "right",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            cursor: "default"
+          }}
+        >
+          {value ?? "N/A"}
+        </Typography>
+      </Tooltip>
     </Grid>
   );
 }
