@@ -24,6 +24,7 @@ export type { Classifications } from './models/Classifications';
 export type { ClubMemberStats } from './models/ClubMemberStats';
 export type { Clubs } from './models/Clubs';
 export type { ClubsCreatePerson } from './models/ClubsCreatePerson';
+export { ClubsCreatePersonMemberTypeEnum } from './models/ClubsCreatePersonMemberTypeEnum';
 export type { ClubSettings } from './models/ClubSettings';
 export type { ClubSubscriptionConfig } from './models/ClubSubscriptionConfig';
 export type { ClubSubscriptions } from './models/ClubSubscriptions';

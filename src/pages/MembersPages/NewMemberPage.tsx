@@ -45,7 +45,71 @@ export default function NewMemberPage() {
     undefined,
     userRole,
   );
-  const createMember = membersHooks.useCreateMember();
+
+  const handleSuccess = (mode: any) => {
+    setLoading(false);
+    if (mode === "redirect") {
+      navigate("/members/");
+    } else {
+      reset();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const handleError = (data: any) => {
+    setLoading(false);
+    if (data.response?.data.incompatible_member) {
+      setError("member_type", {
+        message: data.response?.data.incompatible_member[0],
+      });
+    } else if (data.response?.data.impossible_gender) {
+      setError("gender", {
+        message: data.response?.data.impossible_gender[0],
+      });
+    } else if (data.response?.data.impossible_age) {
+      setError("birth_date", {
+        message: data.response?.data.impossible_age[0],
+      });
+    }
+
+    const errorData = data.response?.data || {};
+
+    type Fields =
+      | "first_name"
+      | "last_name"
+      | "graduation"
+      | "birth_date"
+      | "gender"
+      | "club"
+      | "id_number"
+      | "registration_date"
+      | "post_code"
+      | "national_card_number"
+      | "taxpayer_number"
+      | "address";
+
+    const fields: Fields[] = [
+      "first_name",
+      "last_name",
+      "graduation",
+      "birth_date",
+      "gender",
+      "club",
+      "id_number",
+      "registration_date",
+      "post_code",
+      "national_card_number",
+      "taxpayer_number",
+      "address",
+    ];
+
+    fields.forEach((field) => {
+      if (errorData[field]?.[0]) {
+        setError(field, { message: errorData[field][0] });
+      }
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const {
     control,
@@ -125,145 +189,29 @@ export default function NewMemberPage() {
     if (data.weight === "") formData.weight = null;
     if (data.force_ident) formData.id_number = 0;
     if (data.force_registration_date) formData.registration_date = undefined;
-
     if (userRole === "main_admin") {
       // main admins dont need to send a member type (membership defaults to student)
-      createMember.mutate(formData, {
-        onSuccess: () => {
-          setLoading(false);
-          if (mode === "redirect") {
-            navigate("/members/");
-          } else {
-            reset();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
-        },
+      const createMember = membersHooks.useCreateMember({
+        onSuccess: () => handleSuccess(mode),
         onError: (data: any) => {
-          setLoading(false);
-          if (data.response?.data.incompatible_member) {
-            setError("member_type", {
-              message: data.response?.data.incompatible_member[0],
-            });
-          } else if (data.response?.data.impossible_gender) {
-            setError("gender", {
-              message: data.response?.data.impossible_gender[0],
-            });
-          } else if (data.response?.data.impossible_age) {
-            setError("birth_date", {
-              message: data.response?.data.impossible_age[0],
-            });
-          }
-
-          const errorData = data.response?.data || {};
-
-          type Fields =
-            | "first_name"
-            | "last_name"
-            | "graduation"
-            | "birth_date"
-            | "gender"
-            | "club"
-            | "id_number"
-            | "registration_date"
-            | "post_code"
-            | "national_card_number"
-            | "taxpayer_number"
-            | "address";
-
-          const fields: Fields[] = [
-            "first_name",
-            "last_name",
-            "graduation",
-            "birth_date",
-            "gender",
-            "club",
-            "id_number",
-            "registration_date",
-            "post_code",
-            "national_card_number",
-            "taxpayer_number",
-            "address",
-          ];
-
-          fields.forEach((field) => {
-            if (errorData[field]?.[0]) {
-              setError(field, { message: errorData[field][0] });
-            }
-          });
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          handleError(data);
         },
       });
+
+      createMember.mutate(formData);
     } else {
-      data.member_type
-        .filter((item: string) => item !== "")
-        .forEach((type: string) => {
-          const payload = { ...formData, member_type: type };
-          createMember.mutate(payload, {
-            onSuccess: () => {
-              setLoading(false);
-              if (mode === "redirect") {
-                navigate("/members/");
-              } else {
-                reset();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }
-            },
-            onError: (data: any) => {
-              setLoading(false);
-              if (data.response?.data.incompatible_member) {
-                setError("member_type", {
-                  message: data.response?.data.incompatible_member[0],
-                });
-              } else if (data.response?.data.impossible_gender) {
-                setError("gender", {
-                  message: data.response?.data.impossible_gender[0],
-                });
-              } else if (data.response?.data.impossible_age) {
-                setError("birth_date", {
-                  message: data.response?.data.impossible_age[0],
-                });
-              }
+      const member_types = data.member_type.filter(
+        (item: string) => item !== "",
+      );
+      const payload = { ...formData, member_type: member_types };
+      const createMember = membersHooks.useCreateMember({
+        onSuccess: () => handleSuccess(mode),
+        onError: (data: any) => {
+          handleError(data);
+        },
+      });
 
-              const errorData = data.response?.data || {};
-
-              type Fields =
-                | "first_name"
-                | "last_name"
-                | "graduation"
-                | "birth_date"
-                | "gender"
-                | "club"
-                | "id_number"
-                | "registration_date"
-                | "post_code"
-                | "national_card_number"
-                | "taxpayer_number"
-                | "address";
-
-              const fields: Fields[] = [
-                "first_name",
-                "last_name",
-                "graduation",
-                "birth_date",
-                "gender",
-                "club",
-                "id_number",
-                "registration_date",
-                "post_code",
-                "national_card_number",
-                "taxpayer_number",
-                "address",
-              ];
-
-              fields.forEach((field) => {
-                if (errorData[field]?.[0]) {
-                  setError(field, { message: errorData[field][0] });
-                }
-              });
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            },
-          });
-        });
+      createMember.mutate(payload);
     }
   };
 

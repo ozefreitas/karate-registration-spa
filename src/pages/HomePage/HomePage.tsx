@@ -70,11 +70,12 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
             <LastCompQualiHomeComponent
               userRole={props.userRole}
             ></LastCompQualiHomeComponent>
-            <Grid size={12}>
+            {props.userRole === undefined ? null : (
               <MissingMemberQuotasCard
+                userRole={props.userRole}
                 onResolve={() => navigate("/members/")}
               />
-            </Grid>
+            )}
           </Grid>
         </Grid>
       )}

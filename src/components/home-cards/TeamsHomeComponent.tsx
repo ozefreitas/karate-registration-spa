@@ -12,71 +12,60 @@ import {
   Box,
   CircularProgress,
   Chip,
+  Typography,
 } from "@mui/material";
 import { Groups } from "@mui/icons-material";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
-
-const fetchLastFiveTeams = () => {
-  const token = localStorage.getItem("token");
-  return axios.get("http://127.0.0.1:8000/teams/last_five/", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  });
-};
+import { teamsHooks } from "../../hooks";
+import { Teams as TeamType } from "../../openapi";
 
 export default function TeamsHomeComponent(
   props: Readonly<{ userRole: string }>,
 ) {
-  type Category = { name: string };
-  type Team = {
-    id: string;
-    team_number: number;
-    category: Category;
-    gender: string;
-    events: any;
-    disciplines: any;
-  };
-
   const navigate = useNavigate();
 
   const {
     data: lastFiveTeamsData,
     isLoading: isLastFiveTeamsLoading,
     error: lastFiveTeamError,
-  } = useQuery({
-    queryKey: ["last-five-teams"],
-    queryFn: fetchLastFiveTeams,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    enabled: props.userRole === "subed_club",
-  });
+  } = teamsHooks.useFetchLastFiveTeamsData();
 
   return (
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          title={"Equipas adicionadas recentemente"}
-          subheader={"A mostrar apenas as 5 últimas Equipas."}
-          sx={{
-            pb: 0,
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-              mb: 1,
-            },
-          }}
+          title={
+            <Grid container alignItems={"center"} gap={2}>
+              <Grid
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+                size={2}
+                color={"#fff"}
+                bgcolor={"#1976d2"}
+                sx={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 1.5,
+                }}
+              >
+                <Groups sx={{ fontSize: 28 }} />
+              </Grid>
+              <Grid size={10} container>
+                <Typography variant="h5" fontWeight={"bold"}>
+                  Equipas editados recentemente
+                </Typography>
+                <Typography>A mostrar 5 últimas Equipas</Typography>
+              </Grid>
+            </Grid>
+          }
         ></CardHeader>
         <List>
           {props.userRole === undefined ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemIcon>
-                  <Groups />
-                </ListItemIcon>
                 <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
               </ListItemButton>
             </ListItem>
@@ -87,27 +76,21 @@ export default function TeamsHomeComponent(
           ) : lastFiveTeamError ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemIcon>
-                  <Groups />
-                </ListItemIcon>
                 <ListItemText
                   primary={"Ocorreu um erro ao carregar as Equipas."}
                 />
               </ListItemButton>
             </ListItem>
-          ) : lastFiveTeamsData?.data.length === 0 ? (
+          ) : lastFiveTeamsData?.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemIcon>
-                  <Groups />
-                </ListItemIcon>
                 <ListItemText
                   primary={"Não registou nenhuma Equipa recentemente."}
                 />
               </ListItemButton>
             </ListItem>
           ) : (
-            lastFiveTeamsData?.data.map((team: Team, index: string) => (
+            lastFiveTeamsData?.map((team, index: any) => (
               <Tooltip key={index} title={"Consultar"}>
                 <span style={{ width: "100%" }}>
                   <ListItem sx={{ m: 0, pb: 0 }}>
@@ -178,16 +161,24 @@ export default function TeamsHomeComponent(
             </ListItem>
           ) : null}
         </List>
-        <CardActions sx={{ justifyContent: "space-between" }}>
-          {props.userRole === "free_club" ? null : (
+        <CardActions
+          sx={{
+            justifyContent:
+              props.userRole === "subed_club" ? "space-between" : "flex-end",
+          }}
+        >
+          {props.userRole === "free_club" ? null : props.userRole ===
+            "subed_club" ? (
             <>
               <AddButton
                 label="Adicionar"
                 to="teams/new_team/"
-                size="medium"
+                size={"medium"}
               ></AddButton>
-              <InfoButton label="Ver Todas" to="teams/"></InfoButton>
+              <InfoButton label="Ver Todos" to="teams/"></InfoButton>
             </>
+          ) : (
+            <InfoButton label="Ver Todos" to="teams/"></InfoButton>
           )}
         </CardActions>
       </Card>

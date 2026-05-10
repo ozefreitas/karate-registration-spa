@@ -14,13 +14,12 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
-import { Person } from "@mui/icons-material";
+import { Person, PersonSearch } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { membersHooks } from "../../hooks";
 import { Persons as PersonType } from "../../openapi";
-import { MemberTypes } from "../../config";
 
 export default function MembersHomeComponent(
   props: Readonly<{ userRole: string }>,
@@ -37,22 +36,35 @@ export default function MembersHomeComponent(
     <Grid size={12}>
       <Card sx={{ m: 2 }}>
         <CardHeader
-          title={"Membros editados recentemente"}
-          subheader={"A mostrar 5 últimos Membros."}
-          sx={{
-            pb: 0,
-            "& .MuiCardHeader-title": {
-              fontWeight: "bold",
-              mb: 1,
-            },
-          }}
+          title={
+            <Grid container alignItems={"center"} gap={2}>
+              <Grid
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+                size={2}
+                color={"#fff"}
+                bgcolor={"#1976d2"}
+                sx={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 1.5,
+                }}
+              >
+                <Person sx={{ fontSize: 28 }} />
+              </Grid>
+              <Grid size={10} container>
+                <Typography variant="h5" fontWeight={"bold"}>
+                  Membros editados recentemente
+                </Typography>
+                <Typography>A mostrar 5 últimos Membros</Typography>
+              </Grid>
+            </Grid>
+          }
         ></CardHeader>
         {props.userRole === undefined ? (
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ m: 0 }}>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
               <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
             </ListItemButton>
           </ListItem>
@@ -63,9 +75,6 @@ export default function MembersHomeComponent(
         ) : lastFiveMembersError ? (
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ m: 0 }}>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
               <ListItemText
                 primary={"Ocorreu um erro ao carregar os membros."}
               />
@@ -74,9 +83,6 @@ export default function MembersHomeComponent(
         ) : lastFiveMembersData?.length === 0 ? (
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ m: 0 }}>
-              <ListItemIcon>
-                <Person />
-              </ListItemIcon>
               <ListItemText
                 primary={"Não registou nenhum Membro recentemente."}
               />

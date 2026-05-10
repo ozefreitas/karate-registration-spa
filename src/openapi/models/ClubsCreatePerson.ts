@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ClubsCreatePersonMemberTypeEnum } from './ClubsCreatePersonMemberTypeEnum';
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
 export type ClubsCreatePerson = {
-    member_type: string;
+    member_type: Array<ClubsCreatePersonMemberTypeEnum>;
     first_name: string;
     last_name: string;
     graduation: GraduationEnum;

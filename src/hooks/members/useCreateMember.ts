@@ -3,10 +3,17 @@ import { useSnackbar } from "notistack";
 import { MemberValidationService, PersonsService } from "../../openapi";
 import { callNotiStack } from "../../utils/utils";
 
-export const useCreateMember = () => {
+export const useCreateMember = ({
+  onSuccess,
+  onError,
+}: {
+  reset?: any;
+  onSuccess?: () => void;
+  onError?: (data: any) => void;
+} = {}) => {
   const { enqueueSnackbar } = useSnackbar();
-
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: PersonsService.personsCreate,
     onSuccess: () => {
@@ -14,6 +21,7 @@ export const useCreateMember = () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["club-members"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
+      onSuccess?.();
     },
     onError: (data: any) => {
       const errorData = data.response?.data || {};
@@ -24,13 +32,15 @@ export const useCreateMember = () => {
           "error",
           5000,
         );
-      } else
+      } else {
         callNotiStack(
           enqueueSnackbar,
           "Ocorreu um erro! Tente novamente.",
           "error",
           3000,
         );
+      }
+      onError?.(data);
     },
   });
 };

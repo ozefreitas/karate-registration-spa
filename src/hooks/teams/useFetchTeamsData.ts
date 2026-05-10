@@ -9,3 +9,12 @@ export const useFetchSingleTeamData = (teamId: any) => {
     enabled: !!teamId,
   });
 };
+
+export const useFetchLastFiveTeamsData = () => {
+  return useQuery({
+    queryKey: ["last-five-teams"],
+    queryFn: () => TeamsService.teamsLastFiveList(),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};

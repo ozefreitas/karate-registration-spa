@@ -11,10 +11,12 @@ import {
   Box,
 } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { clubsHooks, membersHooks } from "../../hooks";
+import { membersHooks } from "../../hooks";
 import { Groups, Payments } from "@mui/icons-material";
+import axios from "axios";
 
 interface MissingMemberQuotasCardProps {
+  userRole: string;
   onResolve?: () => void;
 }
 
@@ -63,6 +65,7 @@ function StatRow({
 }
 
 export default function MissingMemberQuotasCard({
+  userRole,
   onResolve,
 }: Readonly<MissingMemberQuotasCardProps>) {
   const {
@@ -70,6 +73,8 @@ export default function MissingMemberQuotasCard({
     isLoading: isMemberPaymentStatusLoading,
     error: memberPaymentStatusError,
   } = membersHooks.useFetchMemberPaymentsStatusData();
+
+  console.log(memberPaymentStatusError?.message);
 
   return (
     <Card
@@ -103,13 +108,15 @@ export default function MissingMemberQuotasCard({
       ></CardHeader>
 
       {/* Stats */}
-      {memberPaymentStatusError ? (
-        <CardContent
-          sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
-        >
-          Ocorreu um erro ao coletar o número de clubes com quotas em falta.
-          Tente mais tarde ou contacte um administrador.
-        </CardContent>
+      {userRole === undefined ? (
+        <Typography color="textDisabled" p={5} pt={2}>
+          Sem sessão iniciada. Faça Login.
+        </Typography>
+      ) : memberPaymentStatusError &&
+        memberPaymentStatusError?.message === "Forbidden" ? (
+        <Typography color="textDisabled" p={5} pt={2}>
+          Comece uma subscrição para ter acesso a esta funcionalidade.
+        </Typography>
       ) : (
         <CardContent
           sx={{
@@ -119,9 +126,9 @@ export default function MissingMemberQuotasCard({
           }}
         >
           {isMemberPaymentStatusLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Grid container mt={3} justifyContent={"center"}>
               <CircularProgress />
-            </Box>
+            </Grid>
           ) : (
             <Grid px={2} pb={2}>
               <StatRow

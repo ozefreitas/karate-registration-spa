@@ -52,7 +52,7 @@ export default function NextEventHomeComponent(
                 <SportsMma sx={{ fontSize: 28 }} />
               </Grid>
               <Typography variant="h5" fontWeight={"bold"}>
-                Próxima Prova
+                Próximo Evento
               </Typography>
             </Grid>
           }
@@ -152,9 +152,6 @@ export default function NextEventHomeComponent(
         ) : (
           <ListItem sx={{ m: 0 }}>
             <ListItemButton disabled sx={{ mt: 2 }}>
-              <ListItemIcon>
-                <SportsMma></SportsMma>
-              </ListItemIcon>
               <ListItemText primary={"Não há Eventos disponíveis."} />
             </ListItemButton>
           </ListItem>

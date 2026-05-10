@@ -131,7 +131,7 @@ export class TeamsService {
      * @returns Teams
      * @throws ApiError
      */
-    public static teamsLastFiveRetrieve(): CancelablePromise<Teams> {
+    public static teamsLastFiveList(): CancelablePromise<Array<Teams>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/teams/last_five/',
