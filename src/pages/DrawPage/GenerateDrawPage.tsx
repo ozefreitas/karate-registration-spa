@@ -18,7 +18,7 @@ import FormCard from "../../dashboard/FormCard";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { DrawFormatTypes } from "../../config";
-import { ArrowForward, Casino, Clear, Send } from "@mui/icons-material";
+import { ArrowForward, Casino, Clear } from "@mui/icons-material";
 import { drawsHooks, eventsHooks, disciplinesHooks } from "../../hooks";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import GenerateDrawModal from "../../components/Modals/GenerateDrawModal";
@@ -436,7 +436,8 @@ export default function GenerateDrawPage() {
           </Grid>
           <Grid size={12} p={2} container>
             <FormLabel>
-              Selecione o formato "Misto" para alterar o número de Atletas em cada final.
+              Selecione o formato "Misto" para alterar o número de Atletas em
+              cada final.
             </FormLabel>
           </Grid>
           <Grid p={2} pt={0} size={6}>
@@ -613,7 +614,9 @@ export default function GenerateDrawPage() {
                       {s.maxMembersPerGroup !== "" && (
                         <Grid>- Máximo de {s.maxMembersPerGroup} Atletas</Grid>
                       )}
-                      {s.finalsSize !== "" && <Grid>- Máximo de {s.finalsSize} Atletas na Final</Grid>}
+                      {s.finalsSize !== "" && (
+                        <Grid>- Máximo de {s.finalsSize} Atletas na Final</Grid>
+                      )}
                       {s.splitClubs && <Grid>- Separar Clubes</Grid>}
                       {s.splitFavourites && <Grid>- Separar Favoritos</Grid>}
                     </Grid>

@@ -31,7 +31,7 @@
  * * `wankan` - Wankan
  * * `unsi` - Unsu
  */
-export enum KataContender1Enum {
+export enum KataEnum {
     NONE = 'none',
     HEIANSHODAN = 'heianshodan',
     HEIANNIDAN = 'heiannidan',

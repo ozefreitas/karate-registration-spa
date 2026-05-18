@@ -18,6 +18,7 @@ interface MatchDetailEditCardProps {
   control: any;
   reverse?: boolean;
   bracketId: number;
+  scoring?: boolean;
 }
 
 function IconBox({
@@ -89,6 +90,7 @@ export default function MatchDetailEditCard({
   control,
   reverse,
   bracketId,
+  scoring,
 }: Readonly<MatchDetailEditCardProps>) {
   // Retrieve all members inside a given bracked
   const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
@@ -110,7 +112,9 @@ export default function MatchDetailEditCard({
           >
             <Grid container size={10}>
               <Controller
-                name={`contender_${color === "Shiro" ? 1 : 2}`}
+                name={
+                  scoring ? "person" : `contender_${color === "Shiro" ? 1 : 2}`
+                }
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -180,7 +184,11 @@ export default function MatchDetailEditCard({
           >
             <Grid container size={10}>
               <Controller
-                name={`kata_contender_${color === "Shiro" ? 1 : 2}`}
+                name={
+                  scoring
+                    ? "kata"
+                    : `kata_contender_${color === "Shiro" ? 1 : 2}`
+                }
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -214,41 +222,43 @@ export default function MatchDetailEditCard({
         }
         reverse={reverse}
       />
-      <InfoRow
-        color={color}
-        icon={<Flag />}
-        value={
-          <Grid
-            container
-            rowGap={1}
-            size={12}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Grid container size={10}>
-              <Controller
-                name={`flags_contender_${color === "Shiro" ? 1 : 2}`}
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    type="number"
-                    variant={"outlined"}
-                    label="Número de Bandeiras"
-                    fullWidth
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    // error={!!errors.flags_contender}
-                  ></TextField>
-                )}
-              />
+      {!scoring && (
+        <InfoRow
+          color={color}
+          icon={<Flag />}
+          value={
+            <Grid
+              container
+              rowGap={1}
+              size={12}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Grid container size={10}>
+                <Controller
+                  name={`flags_contender_${color === "Shiro" ? 1 : 2}`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      type="number"
+                      variant={"outlined"}
+                      label="Número de Bandeiras"
+                      fullWidth
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      // error={!!errors.flags_contender}
+                    ></TextField>
+                  )}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        }
-        reverse={reverse}
-      />
+          }
+          reverse={reverse}
+        />
+      )}
     </Grid>
   );
 }

@@ -13,7 +13,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -111,6 +111,13 @@ export default function NewMemberPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const modeRef = useRef<"redirect" | "scroll">("redirect");
+
+  const createMember = membersHooks.useCreateMember({
+    onSuccess: () => handleSuccess(modeRef.current),
+    onError: (data: any) => handleError(data),
+  });
+
   const {
     control,
     handleSubmit,
@@ -124,7 +131,6 @@ export default function NewMemberPage() {
       first_name: "",
       last_name: "",
       graduation: "",
-      category: "",
       gender: "",
       force_ident: false,
       national_card_number: "",
@@ -158,13 +164,13 @@ export default function NewMemberPage() {
       });
       return;
     }
+    modeRef.current = mode;
     setLoading(true);
 
     const formData = {
       first_name: data.first_name,
       last_name: data.last_name,
       graduation: data.graduation,
-      category: data.category,
       id_number: data.id_number,
       gender: data.gender,
       member_type: data.member_type,
@@ -191,25 +197,12 @@ export default function NewMemberPage() {
     if (data.force_registration_date) formData.registration_date = undefined;
     if (userRole === "main_admin") {
       // main admins dont need to send a member type (membership defaults to student)
-      const createMember = membersHooks.useCreateMember({
-        onSuccess: () => handleSuccess(mode),
-        onError: (data: any) => {
-          handleError(data);
-        },
-      });
-
       createMember.mutate(formData);
     } else {
       const member_types = data.member_type.filter(
         (item: string) => item !== "",
       );
       const payload = { ...formData, member_type: member_types };
-      const createMember = membersHooks.useCreateMember({
-        onSuccess: () => handleSuccess(mode),
-        onError: (data: any) => {
-          handleError(data);
-        },
-      });
 
       createMember.mutate(payload);
     }

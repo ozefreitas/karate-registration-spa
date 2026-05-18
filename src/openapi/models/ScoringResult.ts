@@ -3,11 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { KataEnum } from './KataEnum';
-export type KataResult = {
+export type ScoringResult = {
     readonly id: number;
-    flags_contender_1: number;
-    flags_contender_2: number;
-    kata_contender_1?: KataEnum;
-    kata_contender_2?: KataEnum;
+    kata?: KataEnum;
+    score_1: number;
+    score_2: number;
+    score_3: number;
+    score_4: number;
+    score_5: number;
 };
 

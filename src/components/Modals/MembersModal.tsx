@@ -153,6 +153,8 @@ export default function MembersModal(
     setPage(page + 1);
   };
 
+  console.log(page);
+
   const {
     data: membersNotInEventData,
     isLoading: isMembersNotInEventLoading,
@@ -170,7 +172,7 @@ export default function MembersModal(
     if (props.isModalOpen) {
       refetch();
     }
-  }, [props.isModalOpen]);
+  }, [props.isModalOpen, page]);
 
   const { data: disciplinesFreeData } =
     membersHooks.useFetchDisciplinesnotInMemberData(
@@ -556,7 +558,7 @@ export default function MembersModal(
                   </Grid>
                 ))
             ) : (
-              <Grid container justifyContent="center" size={12}>
+              <Grid my={3} container justifyContent="center" size={12}>
                 <CircularProgress />
               </Grid>
             )}
@@ -675,15 +677,8 @@ export default function MembersModal(
           </Grid>
         ) : isWeightInputScreenOpen ? (
           isMutationDelayActive ? (
-            <Grid sx={{ mt: 3, p: 2 }} justifyContent="center" size={12}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <CircularProgress />
-              </Box>
+            <Grid my={5} justifyContent="center" size={12}>
+              <CircularProgress />
             </Grid>
           ) : (
             <Grid container size={12}>
@@ -762,7 +757,7 @@ export default function MembersModal(
         ) : (
           <List>
             {isMembersNotInEventLoading ? (
-              <Grid mt={3} p={2} height={100} justifyContent="center" size={12}>
+              <Grid my={5} height={100} justifyContent="center" size={12}>
                 <CircularProgress />
               </Grid>
             ) : membersNotInEventError ? (

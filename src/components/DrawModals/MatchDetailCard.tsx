@@ -8,6 +8,7 @@ interface MatchDetailCardProps {
   matchInfo: number;
   kataInfo: string;
   reverse?: boolean;
+  scoring?: boolean;
 }
 
 function IconBox({
@@ -80,7 +81,9 @@ export default function MatchDetailCard({
   matchInfo,
   kataInfo,
   reverse,
+  scoring,
 }: Readonly<MatchDetailCardProps>) {
+  console.log(kataInfo)
   return (
     <Grid container direction={"column"} gap={2} width={"100%"}>
       <InfoRow
@@ -118,7 +121,7 @@ export default function MatchDetailCard({
             <Typography>Kata:</Typography>
             <Typography
               fontWeight={700}
-              color={kataInfo === undefined ? "textDisabled" : undefined}
+              color={kataInfo === undefined || kataInfo === "" ? "textDisabled" : undefined}
             >
               {KataOptions.find((item) => item.value === kataInfo)?.label ??
                 "N/A"}
@@ -127,30 +130,32 @@ export default function MatchDetailCard({
         }
         reverse={reverse}
       />
-      <InfoRow
-        color={color}
-        icon={<Flag />}
-        value={
-          <Grid
-            container
-            columnGap={2}
-            rowGap={1}
-            size={12}
-            textAlign={"center"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Typography>Número de Bandeiras:</Typography>
-            <Typography
-              color={matchInfo === undefined ? "textDisabled" : undefined}
-              fontWeight={700}
+      {!scoring && (
+        <InfoRow
+          color={color}
+          icon={<Flag />}
+          value={
+            <Grid
+              container
+              columnGap={2}
+              rowGap={1}
+              size={12}
+              textAlign={"center"}
+              justifyContent={"center"}
+              alignItems={"center"}
             >
-              {matchInfo ?? "N/A"}
-            </Typography>
-          </Grid>
-        }
-        reverse={reverse}
-      />
+              <Typography>Número de Bandeiras:</Typography>
+              <Typography
+                color={matchInfo === undefined ? "textDisabled" : undefined}
+                fontWeight={700}
+              >
+                {matchInfo ?? "N/A"}
+              </Typography>
+            </Grid>
+          }
+          reverse={reverse}
+        />
+      )}
     </Grid>
   );
 }

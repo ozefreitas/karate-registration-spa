@@ -2,15 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CompactPerson } from './CompactPerson';
-export type PatchedScoringEntry = {
-    readonly id?: number;
-    person?: CompactPerson;
+import type { ScoringResult } from './ScoringResult';
+export type PatchedUpdateScoringEntry = {
+    scoring_result?: ScoringResult;
     score?: string | null;
     rank?: number | null;
-    entry_number?: number;
     ongoing?: boolean;
     readonly created_at?: string;
-    scoring_round?: number;
+    person?: string | null;
 };
 

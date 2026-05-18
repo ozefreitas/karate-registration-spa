@@ -24,6 +24,7 @@ import {
   ArrowBackIos,
   ArrowForwardIos,
   Clear,
+  East,
   FormatListNumbered,
   LiveTv,
   Settings,
@@ -39,12 +40,15 @@ import SingleContenderCard from "../../components/DynamicView/SingleContenderCar
 import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
 import { useQueryClient } from "@tanstack/react-query";
+import ScrollToTop from "../../utils/scrollToTop";
+import ScoringEntryInfoModal from "../../components/DrawModals/ScoringEntryInfoModal";
 
 export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const [tab, setTab] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
+    changeTab(String(newValue));
   };
 
   const queryClient = useQueryClient();
@@ -64,6 +68,8 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams();
   const [isMatchInfoModalOpen, setIsMatchInfoModalOpen] =
     useState<boolean>(false);
+  const [isScoringEntryInfoModalOpen, setIsScoringEntryInfoModalOpen] =
+    useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [selectedForInfo, setSelectedForInfo] = useState<number | undefined>(
     undefined,
@@ -71,10 +77,18 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const paramBracket = searchParams.get("bracket") ?? "";
+  const paramTab = searchParams.get("tab") ?? "";
 
   const changeBracket = (bracket: string) => {
     setSearchParams((prev) => {
       prev.set("bracket", bracket);
+      return prev;
+    });
+  };
+
+  const changeTab = (tab: string) => {
+    setSearchParams((prev) => {
+      prev.set("tab", tab);
       return prev;
     });
   };
@@ -99,7 +113,13 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     } else {
       setValue("bracket", paramBracket);
     }
-  }, [paramBracket]);
+    if (paramTab === "") {
+      newParams.delete("tab");
+      setSearchParams(newParams);
+    } else {
+      setTab(Number(paramTab));
+    }
+  }, [paramBracket, paramTab]);
 
   const handleModalOpen = (matchId: number, isEdit: boolean) => {
     setSelectedForInfo(matchId);
@@ -109,6 +129,16 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
 
   const handleModalClose = () => {
     setIsMatchInfoModalOpen(false);
+  };
+
+  const handleScoringModalOpen = (scoringEntryId: number, isEdit: boolean) => {
+    setSelectedForInfo(scoringEntryId);
+    setIsEditMode(isEdit);
+    setIsScoringEntryInfoModalOpen(true);
+  };
+
+  const handleScoringModalClose = () => {
+    setIsScoringEntryInfoModalOpen(false);
   };
 
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
@@ -125,8 +155,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     refetch: scoringEntriesRefetch,
   } = drawsHooks.useEventScoringEntriesData(watch("bracket"), eventId!);
 
-  console.log(scoringEntriesData);
-
   const rounds = [...new Set(matchesData?.map((m) => m.round_number))].sort(
     (a, b) => b - a,
   );
@@ -136,6 +164,9 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const endBracket = drawsHooks.useOfficializeBracket();
 
   const patchOngoingMatch = drawsHooks.usePatchMatch(props.userRole);
+  const patchOngoingScoringEntry = drawsHooks.usePatchScoringEntry(
+    props.userRole,
+  );
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -444,6 +475,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                               match.kataresult?.flags_contender_2 != null &&
                               match.kataresult?.flags_contender_1 != null &&
                               match.winner !== null;
+                            const isFirstRound = roundNumber === rounds[0];
                             return (
                               <Grid container size={12} spacing={2} key={index}>
                                 {roundNumber === 0 && (
@@ -471,6 +503,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                 {isOngoing && (
                                   <Box
                                     sx={{
+                                      mt: 1,
                                       width: "fit-content",
                                       bgcolor: "#f59e0b",
                                       color: "white",
@@ -510,6 +543,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                       club={match.contender_1?.club}
                                       isMatchFinished={matchFinished}
                                       ongoing={isOngoing!}
+                                      isFirstRound={isFirstRound}
                                     ></SingleContenderCard>
                                     <SingleContenderCard
                                       roundNumber={roundNumber}
@@ -529,6 +563,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                       club={match.contender_2?.club}
                                       isMatchFinished={matchFinished}
                                       ongoing={isOngoing!}
+                                      isFirstRound={isFirstRound}
                                     ></SingleContenderCard>
                                   </Grid>
                                   <Grid
@@ -713,16 +748,93 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                       })()}
                   </Fragment>
                 ))}
+                {isScoringEntriesLoading ? (
+                  <Grid mt={5} container size={12} justifyContent={"center"}>
+                    <CircularProgress />
+                  </Grid>
+                ) : scoringEntriesError ? (
+                  <Grid my={3} container justifyContent="center" size={12}>
+                    <ListItem sx={{ textAlign: "center" }}>
+                      <ListItemText primary="Ocorreu um erro ao encontrar as Partidas disponíveis para o Escalão selecionado, tente mais tarde ou contacte um administrador."></ListItemText>
+                    </ListItem>
+                    <Button onClick={() => scoringEntriesRefetch()}>
+                      Refrescar
+                    </Button>
+                  </Grid>
+                ) : scoringEntriesData !== undefined &&
+                  scoringEntriesData.length > 0 ? (
+                  <Grid
+                    container
+                    justifyContent={"center"}
+                    border={"0.2px solid red"}
+                    borderRadius={4}
+                    bgcolor={"#fafafa"}
+                    p={3}
+                    pb={4}
+                    boxShadow={4}
+                    sx={{
+                      opacity: 0.85,
+                      transform: "rotate(-90deg)",
+                      transformOrigin: "center",
+                    }}
+                  >
+                    <Typography variant="h4">
+                      Vencedores seguem para Finais
+                    </Typography>
+                    <Tooltip placement="top" title="Ir para Finais">
+                      <span>
+                        <IconButton
+                          sx={{
+                            transition: "0.3s",
+                            borderRadius: 4,
+                            p: 1.5,
+                            px: 2,
+                            border: 4,
+                            borderColor: "lightgray",
+                            bgcolor: "red",
+                            transform: "rotate(90deg)",
+                            transformOrigin: "center",
+                            "&:hover": {
+                              transform: "rotate(90deg)",
+                              transformOrigin: "center",
+                              boxShadow: 6,
+                              borderColor: "red",
+                              bgcolor: "red",
+                            },
+                          }}
+                          onClick={() => {
+                            setTab(1);
+                            changeTab("1");
+                            window.scrollTo(0, 300);
+                          }}
+                        >
+                          <East sx={{ color: "white" }}></East>
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  </Grid>
+                ) : null}
               </Grid>
+            </Grid>
+          ) : tab === 0 && watch("bracket") === "" ? (
+            <Grid my={3} container justifyContent="center" size={12}>
+              <Typography color="textDisabled">
+                Comece por selecionar um Escalão no campo de cima.
+              </Typography>
             </Grid>
           ) : tab === 0 && matchesData?.length === 0 ? (
             <Grid my={3} container justifyContent="center" size={12}>
-              <ListItem sx={{ textAlign: "center" }}>
-                <ListItemText primary="Não existem provas de Eliminatórias para o Escalão selecionado."></ListItemText>
-              </ListItem>
+              <Typography></Typography>
+              <ListItemText primary="Não existem provas de Eliminatórias para o Escalão selecionado."></ListItemText>
             </Grid>
           ) : null}
-          {has_finals && scoringEntriesData?.length !== 0 && tab === 1 ? (
+          {has_finals && tab === 1 && watch("bracket") === "" ? (
+            <Grid my={3} container justifyContent="center" size={12}>
+              <Typography color="textDisabled">
+                Comece por selecionar um Escalão no campo de cima.
+              </Typography>
+            </Grid>
+          ) : has_finals && scoringEntriesData?.length !== 0 && tab === 1 ? (
             <Grid
               overflow={"auto"}
               container
@@ -730,6 +842,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               spacing={2}
               m={4}
               px={6}
+              pb={2}
               sx={{
                 maskImage:
                   "linear-gradient(to left, transparent 0%, black 5%, black 95%, transparent 100%)",
@@ -745,12 +858,13 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                 },
               }}
             >
-              {scoringEntriesData?.map((match, index) => (
+              {scoringEntriesData?.map((entry, index) => (
                 <>
                   <Grid size={12}>
-                    {match.ongoing && (
+                    {entry.ongoing && (
                       <Box
                         sx={{
+                          mt: 1,
                           width: "fit-content",
                           bgcolor: "#f59e0b",
                           color: "white",
@@ -770,14 +884,17 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                     <SingleContenderCard
                       key={index}
                       roundNumber={0}
-                      matchNumber={match.entry_number}
+                      matchNumber={entry.entry_number}
                       contenderNumber={index % 2 === 0 ? 1 : 2}
                       isWinner={true}
-                      points={0}
-                      fullName={match.person?.full_name}
-                      club={match.person?.club}
+                      points={
+                        Number(entry.score) === 0 ? 99 : Number(entry.score)
+                      }
+                      fullName={entry.person?.full_name}
+                      club={entry.person?.club}
                       isMatchFinished={false}
-                      ongoing={match.ongoing ?? false}
+                      ongoing={entry.ongoing ?? false}
+                      rank={entry.rank!}
                     ></SingleContenderCard>
                   </Grid>
                   <Grid
@@ -801,7 +918,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                handleModalOpen(match.id, true);
+                                handleScoringModalOpen(entry.id, true);
                               }}
                             >
                               <Settings />
@@ -810,19 +927,19 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         </Tooltip>
                         <Tooltip
                           title={
-                            match.ongoing
+                            entry.ongoing
                               ? "Já está em Direto"
                               : "Pôr em Direto"
                           }
-                          placement="right"
+                          placement="top"
                         >
                           <span>
                             <IconButton
                               size="small"
-                              disabled={match.ongoing}
+                              disabled={entry.ongoing}
                               onClick={() => {
-                                patchOngoingMatch.mutate({
-                                  matchId: Number(match.id),
+                                patchOngoingScoringEntry.mutate({
+                                  scoringEntryId: Number(entry.id),
                                   data: { ongoing: true },
                                 });
                               }}
@@ -833,16 +950,15 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         </Tooltip>
                       </>
                     )}
-                    <Tooltip title="Consultar">
+                    <Tooltip title="Consultar" placement="top">
                       <span>
                         <IconButton
                           size="small"
-                          // disabled={
-                          //   match.kataresult === null ||
-                          //   match.winner === null
-                          // }
+                          disabled={
+                            entry.person === null || entry.person === undefined
+                          }
                           onClick={() => {
-                            handleModalOpen(match.id, false);
+                            handleScoringModalOpen(entry.id, false);
                           }}
                         >
                           <Visibility />
@@ -879,6 +995,15 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
         matchData={matchesData?.find((item) => item.id === selectedForInfo)}
         brackedId={Number(watch("bracket"))}
       ></MatchInfoModal>
+      <ScoringEntryInfoModal
+        brackedId={Number(watch("bracket"))}
+        edit={isEditMode}
+        handleModalClose={handleScoringModalClose}
+        isModalOpen={isScoringEntryInfoModalOpen}
+        scoringEntryData={scoringEntriesData?.find(
+          (item) => item.id === selectedForInfo,
+        )}
+      ></ScoringEntryInfoModal>
     </>
   );
 }

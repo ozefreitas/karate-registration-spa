@@ -21,6 +21,7 @@ export const useUpdateMatch = () => {
       channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
     },
     onError: () => {
       callNotiStack(
@@ -45,12 +46,13 @@ export const usePatchMatch = (userRole: string) => {
         enqueueSnackbar,
         userRole === "technician"
           ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
-          : "Partida selecionada com sucesso!",
+          : "Partida selecionada com sucesso! Está agora em direto!",
         "success",
       );
       channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
     },
     onError: (data: any) => {
       callNotiStack(
@@ -75,6 +77,7 @@ export const useAdvanceMatch = () => {
       channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
     },
     onError: (error: ApiError) => {
       callNotiStack(
@@ -99,6 +102,7 @@ export const useTrackBackMatch = () => {
       channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
     },
     onError: (error: ApiError) => {
       callNotiStack(
@@ -131,6 +135,7 @@ export const usePatchMatchWinner = () => {
       channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
     },
     onError: () => {
       callNotiStack(

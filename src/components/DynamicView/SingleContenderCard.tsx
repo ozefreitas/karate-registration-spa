@@ -1,5 +1,5 @@
 import { EmojiEvents } from "@mui/icons-material";
-import { Box, Card, Grid, Typography } from "@mui/material";
+import { Box, Card, Chip, Grid, Typography } from "@mui/material";
 
 const SingleContenderCard = (props: {
   contenderNumber: number;
@@ -11,11 +11,14 @@ const SingleContenderCard = (props: {
   club: string;
   isMatchFinished: boolean;
   ongoing: boolean;
+  isFirstRound?: boolean;
+  rank?: number;
 }) => {
   return (
     <Card
       elevation={props.isMatchFinished ? (props.isWinner ? 5 : 0) : 2}
       sx={{
+        width: "100%",
         bgcolor: props.ongoing
           ? "#fffbeb"
           : props.isMatchFinished
@@ -43,12 +46,13 @@ const SingleContenderCard = (props: {
       }}
     >
       <Grid
+        size={12}
         container
         alignItems={"center"}
         justifyContent={"space-between"}
         p={2}
       >
-        <Grid container gap={3} alignItems={"center"}>
+        <Grid container spacing={3} alignItems={"center"} size={8}>
           <Box
             sx={{
               border:
@@ -71,7 +75,11 @@ const SingleContenderCard = (props: {
                   : undefined
               }
             >
-              {props.fullName ?? "TBD"}
+              {props.fullName === undefined && props.isFirstRound
+                ? "bye"
+                : props.fullName === undefined && !props.isFirstRound
+                  ? "TBD"
+                  : props.fullName}
             </Typography>
             <Typography
               variant="subtitle2"
@@ -83,7 +91,11 @@ const SingleContenderCard = (props: {
                   : undefined
               }
             >
-              {props.club ?? "TBD"}
+              {props.club === undefined && props.isFirstRound
+                ? "bye"
+                : props.club === undefined && !props.isFirstRound
+                  ? "TBD"
+                  : props.club}
             </Typography>
           </Grid>
           {props.isMatchFinished &&
@@ -93,7 +105,18 @@ const SingleContenderCard = (props: {
               <EmojiEvents sx={{ color: "#16a34a" }} fontSize="large" />
             )}
         </Grid>
-        <Grid container alignItems={"center"} gap={2}>
+
+        <Grid
+          container
+          alignItems={"center"}
+          size={4}
+          justifyContent={props.rank ? "space-between" : "flex-end"}
+        >
+          {props.rank && (
+            <Grid>
+              <Chip label={`Classicação provisória: ${props.rank}º Lugar`}></Chip>
+            </Grid>
+          )}
           <Typography
             variant="h6"
             fontWeight={

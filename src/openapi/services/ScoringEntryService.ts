@@ -2,8 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PatchedScoringEntry } from '../models/PatchedScoringEntry';
+import type { CreateMatch } from '../models/CreateMatch';
+import type { PatchedUpdateScoringEntry } from '../models/PatchedUpdateScoringEntry';
 import type { ScoringEntry } from '../models/ScoringEntry';
+import type { UpdateScoringEntry } from '../models/UpdateScoringEntry';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -29,12 +31,12 @@ export class ScoringEntryService {
     }
     /**
      * @param requestBody
-     * @returns ScoringEntry
+     * @returns CreateMatch
      * @throws ApiError
      */
     public static scoringEntryCreate(
-        requestBody: ScoringEntry,
-    ): CancelablePromise<ScoringEntry> {
+        requestBody: CreateMatch,
+    ): CancelablePromise<CreateMatch> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/scoring_entry/',
@@ -61,13 +63,13 @@ export class ScoringEntryService {
     /**
      * @param id A unique integer value identifying this scoring entry.
      * @param requestBody
-     * @returns ScoringEntry
+     * @returns UpdateScoringEntry
      * @throws ApiError
      */
     public static scoringEntryUpdate(
         id: number,
-        requestBody: ScoringEntry,
-    ): CancelablePromise<ScoringEntry> {
+        requestBody?: UpdateScoringEntry,
+    ): CancelablePromise<UpdateScoringEntry> {
         return __request(OpenAPI, {
             method: 'PUT',
             url: '/scoring_entry/{id}/',
@@ -81,13 +83,13 @@ export class ScoringEntryService {
     /**
      * @param id A unique integer value identifying this scoring entry.
      * @param requestBody
-     * @returns ScoringEntry
+     * @returns UpdateScoringEntry
      * @throws ApiError
      */
     public static scoringEntryPartialUpdate(
         id: number,
-        requestBody?: PatchedScoringEntry,
-    ): CancelablePromise<ScoringEntry> {
+        requestBody?: PatchedUpdateScoringEntry,
+    ): CancelablePromise<UpdateScoringEntry> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/scoring_entry/{id}/',
