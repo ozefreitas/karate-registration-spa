@@ -40,6 +40,7 @@ import {
   Edit,
   HowToReg,
   DeveloperBoard,
+  EmojiEvents,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useEffect, useState } from "react";
@@ -641,6 +642,23 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           to="draw/"
                         ></GenerateButton>
                       ) : null}
+                      <Tooltip title={"Este Evento ainda não foi realizado"} disableHoverListener={singleEventData?.event_date < getFullDate()}>
+                        <span>
+                          <Button
+                            disabled={
+                              singleEventData?.event_date >= getFullDate()
+                            }
+                            startIcon={<EmojiEvents></EmojiEvents>}
+                            variant="contained"
+                            color="info"
+                            onClick={() =>
+                              navigate(`/classifications/${eventId}/`)
+                            }
+                          >
+                            Classificações
+                          </Button>
+                        </span>
+                      </Tooltip>
                       {["main_admin", "superuser"].includes(props.userRole) &&
                       singleEventData?.has_registrations ? (
                         <Button

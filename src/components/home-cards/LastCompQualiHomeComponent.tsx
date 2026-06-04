@@ -15,6 +15,7 @@ import {
   Typography,
   Box,
   CircularProgress,
+  Chip,
 } from "@mui/material";
 import { EmojiEvents, ExpandMore } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
@@ -36,11 +37,12 @@ export default function LastCompQualiHomeComponent(
       <Card sx={{ m: 2 }}>
         <CardHeader
           title={
-            <Grid container alignItems={"center"} gap={2}>
+            <Grid container alignItems={"center"} gap={2} size={12}>
               <Grid
                 container
                 justifyContent={"center"}
                 alignItems={"center"}
+                size={2}
                 color={"#fff"}
                 bgcolor={"#1976d2"}
                 sx={{
@@ -51,17 +53,25 @@ export default function LastCompQualiHomeComponent(
               >
                 <EmojiEvents sx={{ fontSize: 28 }} />
               </Grid>
-              <Typography variant="h5" fontWeight={"bold"}>
-                Últimas Classificações
-              </Typography>
+              <Grid size={10} container direction={"column"}>
+                <Typography variant="h5" fontWeight={"bold"}>
+                  Últimas classificações
+                </Typography>
+                <Typography>{lastCompData?.name}</Typography>
+              </Grid>
             </Grid>
           }
         ></CardHeader>
         <CardContent sx={{ pt: 0, pb: 0 }}>
           {isLastCompQualiLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <Grid
+              container
+              justifyContent={"center"}
+              alignItems={"center"}
+              my={3}
+            >
               <CircularProgress />
-            </Box>
+            </Grid>
           ) : lastCompQualiData?.length === 0 ? (
             <ListItem sx={{ m: 0 }}>
               <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
@@ -69,88 +79,57 @@ export default function LastCompQualiHomeComponent(
               </ListItemButton>
             </ListItem>
           ) : (
-            <Accordion sx={{ m: 2, mt: 0 }}>
-              <AccordionSummary sx={{ pl: 4 }} expandIcon={<ExpandMore />}>
-                <Typography component="span">
-                  {lastCompQualiData![0].full_category}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ p: 1, mb: 1 }}>
-                <List sx={{ m: 0, p: 0 }}>
-                  <ListItem
-                    sx={{
-                      m: 0,
-                    }}
-                  >
-                    <Tooltip title={"Consultar"}>
-                      <span>
-                        <ListItemButton
-                          onClick={() =>
-                            navigate(
-                              `members/${lastCompQualiData![0].first_place?.id}/`,
-                            )
-                          }
-                          sx={{
-                            m: 0,
-                            pb: 0,
-                          }}
-                        >
-                          <ListItemText
-                            primary={`🥇 ${lastCompQualiData![0].first_place?.full_name}`}
-                          />
-                        </ListItemButton>
-                      </span>
-                    </Tooltip>
-                  </ListItem>
-                  <Tooltip title={"Consultar"}>
-                    <span>
-                      <ListItem
-                        onClick={() =>
-                          navigate(
-                            `members/${lastCompQualiData![0].second_place?.id}/`,
-                          )
-                        }
-                        sx={{ m: 0 }}
-                      >
-                        <ListItemButton
-                          sx={{
-                            m: 0,
-                            pb: 0,
-                            pt: 0,
-                          }}
-                        >
-                          <ListItemText
-                            primary={`🥈 ${lastCompQualiData![0].second_place?.full_name}`}
-                          />
-                        </ListItemButton>
+            lastCompQualiData?.map((bracket, index: any) => (
+              <Accordion
+                elevation={2}
+                key={index}
+                sx={{ m: 2, borderRadius: 16 }}
+              >
+                <AccordionSummary sx={{ pl: 4 }} expandIcon={<ExpandMore />}>
+                  <Typography component="span">
+                    {bracket.bracket.name}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails sx={{ pl: 2, mb: 1 }}>
+                  <List sx={{ m: 0, p: 0 }}>
+                    {bracket.classifications?.map((item: any, index: any) => (
+                      <ListItem key={index} sx={{ m: 0, py: 0 }}>
+                        <Tooltip title={"Consultar"}>
+                          <span style={{ width: "100%" }}>
+                            <ListItemButton
+                              onClick={() =>
+                                navigate(`members/${item.person.id}/`)
+                              }
+                              sx={{ m: 0 }}
+                            >
+                              <ListItemText
+                                primary={
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems={"center"}
+                                  >
+                                    <Typography>
+                                      {item.place === 1
+                                        ? "🥇"
+                                        : item.place === 2
+                                          ? "🥈"
+                                          : "🥉"}{" "}
+                                      {item.person.full_name}
+                                    </Typography>
+                                    <Chip label={item.person.club}></Chip>
+                                  </Grid>
+                                }
+                              />
+                            </ListItemButton>
+                          </span>
+                        </Tooltip>
                       </ListItem>
-                    </span>
-                  </Tooltip>
-                  <Tooltip title={"Consultar"}>
-                    <span>
-                      <ListItem sx={{ m: 0 }}>
-                        <ListItemButton
-                          onClick={() =>
-                            navigate(
-                              `members/${lastCompQualiData![0].third_place?.id}/`,
-                            )
-                          }
-                          sx={{
-                            m: 0,
-                            pb: 0,
-                            pt: 0,
-                          }}
-                        >
-                          <ListItemText
-                            primary={`🥉 ${lastCompQualiData![0].third_place?.full_name}`}
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    </span>
-                  </Tooltip>
-                </List>
-              </AccordionDetails>
-            </Accordion>
+                    ))}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
+            ))
           )}
           {props.userRole === "free_club" ? (
             <ListItem sx={{ m: 0 }}>
