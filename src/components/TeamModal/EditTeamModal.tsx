@@ -72,6 +72,7 @@ export default function EditTeamModal(
       athlete4: data.athlete4Id,
       athlete5: data.athlete5Id,
     };
+    console.log(formData)
     // updateTeamData.mutate(
     //   { teamId: props.id, data: formData },
     //   {

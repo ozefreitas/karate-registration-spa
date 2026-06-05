@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { MonthlyPersonPaymentConfig } from './MonthlyPersonPaymentConfig';
 export type PaginatedMonthlyPersonPaymentConfigList = {
     count: number;
@@ -9,4 +9,3 @@ export type PaginatedMonthlyPersonPaymentConfigList = {
     previous?: string | null;
     results: Array<MonthlyPersonPaymentConfig>;
 };
-

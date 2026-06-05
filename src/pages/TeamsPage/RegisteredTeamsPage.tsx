@@ -101,8 +101,8 @@ export default function RegisteredTeamsPage(
     <>
       <PageInfoCard
         description="Aqui poderá consultar todas as Equipas que estão inscritas para a
-          prova que selecionou (ver abaixo). Equipas não são editáveis! Se precisar de 
-          fazer alterções terá que primeiro eliminar essa Equipa e voltar a adicionar 
+          prova que selecionou (ver abaixo). Equipas não são editáveis! Se precisar de
+          fazer alterções terá que primeiro eliminar essa Equipa e voltar a adicionar
           com as informações corretas."
         title="Página de inscritos em Equipas"
       ></PageInfoCard>

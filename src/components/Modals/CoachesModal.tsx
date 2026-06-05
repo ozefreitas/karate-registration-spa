@@ -99,13 +99,6 @@ export default function CoachesModal(
     disciplineId: string;
   }>,
 ) {
-  type Member = {
-    id: string;
-    full_name: string;
-    graduation: string;
-    gender: string;
-  };
-
   const { id: eventId } = useParams<{ id: string }>();
   const { user } = useAuth();
   const userRole = user?.role;

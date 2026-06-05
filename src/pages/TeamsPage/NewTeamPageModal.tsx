@@ -1,7 +1,7 @@
 import * as React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { TransitionProps } from "@mui/material/transitions";
-import { Controller, set, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   Avatar,
   Card,
@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 import { membersHooks, disciplinesHooks } from "../../hooks";
 import { GenderOptions, getGraduationFromValue } from "../../config";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 
 const Transition = React.forwardRef(function Transition(
@@ -406,7 +406,7 @@ export default function NewTeamPageModal(
                       ></Chip>
                       <Chip
                         sx={{ p: 1 }}
-                        label={`Escalão (previsto): 
+                        label={`Escalão (previsto):
                         ${
                           membersNotInEventData?.results.find(
                             (item: any) => item.id === watch("athlete1"),
@@ -483,7 +483,7 @@ export default function NewTeamPageModal(
                       {...stringAvatar(
                         membersNotInEventData?.results.find(
                           (item) => item.id === watch("athlete2"),
-                        )?.full_name!,
+                        )?.full_name ?? "",
                         128,
                       )}
                     ></Avatar>
@@ -527,7 +527,7 @@ export default function NewTeamPageModal(
                       ></Chip>
                       <Chip
                         sx={{ p: 1 }}
-                        label={`Escalão (previsto): 
+                        label={`Escalão (previsto):
                         ${
                           membersNotInEventData?.results.find(
                             (item) => item.id === watch("athlete2"),
@@ -647,7 +647,7 @@ export default function NewTeamPageModal(
                       ></Chip>
                       <Chip
                         sx={{ p: 1 }}
-                        label={`Escalão (previsto): 
+                        label={`Escalão (previsto):
                         ${
                           membersNotInEventData?.results.find(
                             (item) => item.id === watch("athlete3"),

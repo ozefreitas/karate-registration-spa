@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { MembershipsService, PersonsService } from "../../openapi";
+import { MembershipsService } from "../../openapi";
 import { callNotiStack } from "../../utils/utils";
 
 export const useCreateMemberShip = () => {

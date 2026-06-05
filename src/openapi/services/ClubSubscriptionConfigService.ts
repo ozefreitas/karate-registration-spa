@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { ClubSubscriptionConfig } from '../models/ClubSubscriptionConfig';
 import type { PatchedClubSubscriptionConfig } from '../models/PatchedClubSubscriptionConfig';
 import type { CancelablePromise } from '../core/CancelablePromise';

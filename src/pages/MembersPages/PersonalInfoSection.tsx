@@ -87,7 +87,7 @@ export default function PersonalInfoSection(
     setIsWeightRedirectionModalOpen(false);
   };
 
-  const updateMember = membersHooks.useUpdateMemberData();
+  // const updateMember = membersHooks.useUpdateMemberData();
   const patchMember = membersHooks.usePatchMemberData();
 
   const {
@@ -97,7 +97,7 @@ export default function PersonalInfoSection(
     watch,
     setValue,
     getValues,
-    formState: { errors, dirtyFields },
+    formState: { dirtyFields },
   } = useForm({
     defaultValues: {
       firstName: props.memberData?.first_name,

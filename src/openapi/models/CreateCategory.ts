@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
 export type CreateCategory = {
@@ -17,4 +17,3 @@ export type CreateCategory = {
     max_athletes?: number | null;
     readonly creation_date: string;
 };
-

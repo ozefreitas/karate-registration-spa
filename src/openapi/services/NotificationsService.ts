@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { AllUsersNotifications } from '../models/AllUsersNotifications';
 import type { CreateNotifications } from '../models/CreateNotifications';
 import type { Notifications } from '../models/Notifications';

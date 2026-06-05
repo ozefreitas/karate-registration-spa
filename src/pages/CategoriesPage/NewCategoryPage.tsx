@@ -65,7 +65,7 @@ export default function NewCategoryPage() {
   useEffect(() => {
     setValue("min_weight", undefined);
     setValue("max_weight", undefined);
-  }, [weight_type]);
+  }, [weight_type, setValue]);
 
   const createCategory = categoriesHooks.useCreateCategory();
 

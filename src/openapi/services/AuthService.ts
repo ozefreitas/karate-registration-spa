@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { TokenObtainPair } from '../models/TokenObtainPair';
 import type { TokenRefresh } from '../models/TokenRefresh';
 import type { CancelablePromise } from '../core/CancelablePromise';

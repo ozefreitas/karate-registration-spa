@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^src/openapi/
+      - id: end-of-file-fixer
+        exclude: ^src/openapi/
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      # - id: eslint
+      #   name: ESLint
+      #   entry: npx eslint --fix
+      #   language: system
+      #   files: \.[jt]sx?$
+      #   types: [file]
+
+      - id: tsc
+        name: typescript check
+        entry: npx tsc --noEmit
+        language: system
+        types_or: [ts, tsx]
+        pass_filenames: false
+        require_serial: true

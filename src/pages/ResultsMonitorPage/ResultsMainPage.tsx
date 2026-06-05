@@ -5,8 +5,6 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
-  Typography,
-  Chip,
 } from "@mui/material";
 import {
   OpenInNew,
@@ -14,8 +12,6 @@ import {
   Add,
   Clear,
   AdsClick,
-  Person,
-  Send,
 } from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
@@ -28,7 +24,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import MatchPickerModal from "../../components/DrawModals/MatchPickerModal";
 import CommonActions from "../../components/DisplayScreenComponents/CommonActions";
-import InfoRow from "../../components/General/InfoRow";
 import { callNotiStack } from "../../utils/utils";
 import { useSnackbar } from "notistack";
 import { useQueryClient } from "@tanstack/react-query";

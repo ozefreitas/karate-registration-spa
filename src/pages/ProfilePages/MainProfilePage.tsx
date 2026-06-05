@@ -40,9 +40,6 @@ const MainProfilePage = (props: { user: any }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
     control,
-    handleSubmit,
-    setError,
-    reset,
     watch,
     setValue,
     formState: { errors },

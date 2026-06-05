@@ -24,7 +24,7 @@ import {
   Sports,
 } from "@mui/icons-material";
 import SingleContenderCard from "../DynamicView/SingleContenderCard";
-import { authHooks, drawsHooks } from "../../hooks";
+import { drawsHooks } from "../../hooks";
 import { useAuth } from "../../access/GlobalAuthProvider";
 
 const Transition = React.forwardRef(function Transition(

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { DisciplinesCompact } from './DisciplinesCompact';
 export type PaginatedDisciplinesCompactList = {
     count: number;
@@ -9,4 +9,3 @@ export type PaginatedDisciplinesCompactList = {
     previous?: string | null;
     results: Array<DisciplinesCompact>;
 };
-

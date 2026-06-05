@@ -21,13 +21,13 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function AddClubModal(
-  props: Readonly<{ isOpen: boolean; handleClose: any }>
+  props: Readonly<{ isOpen: boolean; handleClose: any }>,
 ) {
   const createClub = clubsHooks.useCreateClub();
 

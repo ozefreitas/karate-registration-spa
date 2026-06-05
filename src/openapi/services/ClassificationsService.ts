@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Classifications } from '../models/Classifications';
 import type { CreateClassifications } from '../models/CreateClassifications';
 import type { PaginatedClassificationsList } from '../models/PaginatedClassificationsList';

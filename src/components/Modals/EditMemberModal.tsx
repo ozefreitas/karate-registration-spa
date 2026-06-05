@@ -66,7 +66,7 @@ export default function EditMemberModal(
       birthDate: singleMemberData?.birth_date,
     };
     memberReset(formData);
-  }, [singleMemberData]);
+  }, [singleMemberData, memberReset]);
 
   const updateMemberData = membersHooks.useUpdateMemberData();
 

@@ -12,7 +12,7 @@ import {
   Button,
   Pagination,
 } from "@mui/material";
-import { classificationsHooks, eventsHooks } from "../../hooks";
+import { eventsHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ export default function ClassificationsPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
+  console.log(setPageSize);
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);

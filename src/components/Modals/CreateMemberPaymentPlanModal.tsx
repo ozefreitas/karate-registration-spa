@@ -9,7 +9,6 @@ import {
   Stack,
   Grid,
   TextField,
-  MenuItem,
   FormControl,
   FormControlLabel,
   Switch,

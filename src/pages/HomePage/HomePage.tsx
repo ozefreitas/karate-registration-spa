@@ -1,23 +1,8 @@
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Typography,
-  CircularProgress,
-  Box,
-  Button,
-  CardActions,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  ListItemIcon,
-} from "@mui/material";
+import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 import MembersHomeComponent from "../../components/home-cards/MembersHomeComponent";
 import TeamsHomeComponent from "../../components/home-cards/TeamsHomeComponent";
 import NextEventHomeComponent from "../../components/home-cards/NextEventHomeComponent";
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
-import { Person, PersonSearch } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import MissingMemberQuotasCard from "../../components/home-cards/MissingMemberQuotasCard";
 

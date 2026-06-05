@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { MonthlyPersonPaymentConfig } from '../models/MonthlyPersonPaymentConfig';
 import type { PaginatedMonthlyPersonPaymentConfigList } from '../models/PaginatedMonthlyPersonPaymentConfigList';
 import type { PatchedMonthlyPersonPaymentConfig } from '../models/PatchedMonthlyPersonPaymentConfig';

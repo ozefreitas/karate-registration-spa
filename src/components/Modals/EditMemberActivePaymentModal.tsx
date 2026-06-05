@@ -57,7 +57,7 @@ export default function EditMemberActivePaymentModal(
 
   useEffect(() => {
     setValue("customAmount", singleMonthlyMemberPayment?.amount!);
-  }, [singleMonthlyMemberPayment]);
+  }, [singleMonthlyMemberPayment, setValue]);
 
   const onSubmit = (data: any) => {
     if (data.customAmount == "") {

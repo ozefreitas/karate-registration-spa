@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { CompactEvents } from './CompactEvents';
 export type PaginatedCompactEventsList = {
     count: number;
@@ -9,4 +9,3 @@ export type PaginatedCompactEventsList = {
     previous?: string | null;
     results: Array<CompactEvents>;
 };
-

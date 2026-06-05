@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+ 
 import type { GenerateToken } from '../models/GenerateToken';
 import type { RegisterUser } from '../models/RegisterUser';
 import type { CancelablePromise } from '../core/CancelablePromise';

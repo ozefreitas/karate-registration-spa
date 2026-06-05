@@ -91,6 +91,7 @@ export default function MainSettingsPage() {
     left: number;
   } | null>(null);
   const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
+  console.log(activeRequestId)
   const [activeRequestMessage, setActiveRequestMessage] = useState<
     string | null
   >(null);
@@ -249,25 +250,6 @@ export default function MainSettingsPage() {
         console.error("Failed to copy text: ", err);
       });
   }
-
-  type Member = {
-    full_name: string;
-    id: string;
-    gender: string;
-  };
-  type Club = { username: string };
-  type Request = {
-    id: string;
-    message: string;
-    person: Member;
-    member_birth_date: string;
-    requested_by: Club;
-    reviewed_at: string;
-    created_at: string;
-    status: string;
-    request_type: string;
-    file: any;
-  };
 
   const {
     data: memberValidationRequestData,

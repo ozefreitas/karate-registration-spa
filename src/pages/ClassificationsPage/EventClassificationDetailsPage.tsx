@@ -20,8 +20,8 @@ const EventClassificationDetailsPage = () => {
     undefined,
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  // const [page, setPage] = useState<number>(1);
+  // const [pageSize, setPageSize] = useState<number>(10);
   const navigate = useNavigate();
 
   const handleModalOpen = (bracketId: string) => {

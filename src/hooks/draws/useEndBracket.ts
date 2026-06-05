@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiError, BracketService, MatchService } from "../../openapi";
+import { ApiError, BracketService } from "../../openapi";
 import { useSnackbar } from "notistack";
 import { callNotiStack } from "../../utils/utils";
 

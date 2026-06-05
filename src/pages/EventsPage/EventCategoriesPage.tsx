@@ -24,7 +24,7 @@ export default function EventCategoriesPage(
   const { id: eventId } = useParams<{ id: string }>();
   const {
     data: singleEventData,
-    isLoading: isSingleEventLoading,
+    // isLoading: isSingleEventLoading,
     error: singleEventError,
   } = eventsHooks.useFetchSingleEventData(eventId!);
 

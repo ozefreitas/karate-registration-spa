@@ -61,6 +61,7 @@ export default function Calendar(
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [currentSeason, setCurrentSeason] = useState<string>("");
+  console.log(currentSeason)
   const [pickerOpen, setPickerOpen] = useState(false);
   const [listModalOpen, setListModalOpen] = useState(false);
 

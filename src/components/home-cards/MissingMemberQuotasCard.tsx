@@ -8,12 +8,10 @@ import {
   CardActions,
   CardContent,
   CircularProgress,
-  Box,
 } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { membersHooks } from "../../hooks";
 import { Groups, Payments } from "@mui/icons-material";
-import axios from "axios";
 
 interface MissingMemberQuotasCardProps {
   userRole: string;

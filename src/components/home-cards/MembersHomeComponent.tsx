@@ -14,7 +14,7 @@ import {
   Typography,
   Chip,
 } from "@mui/material";
-import { Person, PersonSearch } from "@mui/icons-material";
+import { Person } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";

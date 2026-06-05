@@ -8,10 +8,8 @@ import {
   Button,
   Grid,
   TextField,
-  MenuItem,
   CircularProgress,
   FormControl,
-  FormLabel,
   FormControlLabel,
   Switch,
   FormHelperText,
@@ -58,9 +56,9 @@ export default function EditPaymentPlanModal(
 
   React.useEffect(() => {
     const formData = {
-      name: singlePaymentPlanData?.data.name,
-      is_default: singlePaymentPlanData?.data.is_default,
-      amount: singlePaymentPlanData?.data.amount,
+      name: singlePaymentPlanData?.name,
+      is_default: singlePaymentPlanData?.is_default,
+      amount: singlePaymentPlanData?.amount,
     };
     reset(formData);
   }, [singlePaymentPlanData]);
@@ -192,7 +190,7 @@ export default function EditPaymentPlanModal(
                         <Switch
                           disabled={
                             watch("is_default") &&
-                            singlePaymentPlanData?.data.is_default
+                            singlePaymentPlanData?.is_default
                           }
                           {...field}
                           checked={field.value}

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { GenderEnum } from './GenderEnum';
 import type { Users } from './Users';
 export type Persons = {
@@ -17,4 +17,3 @@ export type Persons = {
     is_validated?: boolean;
     readonly member_types: Array<string>;
 };
-

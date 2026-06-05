@@ -38,7 +38,7 @@ export default function EditMemberPaymentPlan(
 ) {
   const {
     data: monthlyPaymentPlansData,
-    isLoading: isMonthlyPaymentPlansLoadng,
+    // isLoading: isMonthlyPaymentPlansLoadng,
   } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
 
   const patchMemberMonthlyPaymentConfig =

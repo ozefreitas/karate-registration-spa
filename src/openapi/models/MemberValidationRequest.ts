@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { CompactPerson } from './CompactPerson';
 import type { CompactUser } from './CompactUser';
 import type { RequestTypeEnum } from './RequestTypeEnum';
@@ -19,4 +19,3 @@ export type MemberValidationRequest = {
     readonly created_at: string;
     reviewed_at?: string | null;
 };
-

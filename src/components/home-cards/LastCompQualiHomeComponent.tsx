@@ -13,7 +13,6 @@ import {
   AccordionSummary,
   Tooltip,
   Typography,
-  Box,
   CircularProgress,
   Chip,
 } from "@mui/material";

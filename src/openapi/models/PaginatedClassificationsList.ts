@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Classifications } from './Classifications';
 export type PaginatedClassificationsList = {
     count: number;
@@ -9,4 +9,3 @@ export type PaginatedClassificationsList = {
     previous?: string | null;
     results: Array<Classifications>;
 };
-

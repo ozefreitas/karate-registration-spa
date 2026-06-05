@@ -32,16 +32,6 @@ import dayjs from "dayjs";
 export default function AdminPaymentManagerPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  type Club = { id: string; username: string; role: string; tier: string };
-  type Subscriptions = {
-    id: string;
-    year: string;
-    amout: string;
-    paid: boolean;
-    paid_at: any;
-    club: Club;
-  };
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>("");
   const [currentUsername, setCurrentUsername] = useState<string>("");
@@ -105,8 +95,8 @@ export default function AdminPaymentManagerPage(
 
   const {
     data: subscriptionConfigData,
-    isLoading: isSubscriptionConfigLoading,
-    error: subscriptionConfigError,
+    // isLoading: isSubscriptionConfigLoading,
+    // error: subscriptionConfigError,
   } = clubsHooks.useFetchClubSubscriptionConfig();
 
   const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();

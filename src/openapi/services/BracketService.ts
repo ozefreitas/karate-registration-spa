@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Bracket } from '../models/Bracket';
 import type { CompactPerson } from '../models/CompactPerson';
 import type { CreateBracket } from '../models/CreateBracket';

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { ScoringResult } from './ScoringResult';
 export type PatchedUpdateScoringEntry = {
     scoring_result?: ScoringResult;
@@ -11,4 +11,3 @@ export type PatchedUpdateScoringEntry = {
     readonly created_at?: string;
     person?: string | null;
 };
-

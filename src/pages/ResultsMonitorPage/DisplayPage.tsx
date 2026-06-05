@@ -1,6 +1,5 @@
 import fighttechVisionLogo from "../../assets/FightTecVision-font-white-removebg-cropped.png";
 import { Grid } from "@mui/material";
-import { useDisplaySocket } from "../DisplayPanelPages/useDisplaySocket";
 
 export default function DisplayPage() {
   // useDisplaySocket((data) => {

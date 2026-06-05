@@ -6,7 +6,6 @@ import {
   Feedback,
 } from "@mui/icons-material";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import SettingsButton from "../../components/Buttons/SettingsButton";
 import DeleteButton from "../../components/Buttons/DeleteButton";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";

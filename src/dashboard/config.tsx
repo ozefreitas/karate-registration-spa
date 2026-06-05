@@ -9,7 +9,6 @@ import {
   HelpCenter,
   Home,
   Groups,
-  DeveloperBoard,
   AdminPanelSettings,
   Category,
   EventBusy,

@@ -10,7 +10,7 @@ export const useGenerateDraw = () => {
   return useMutation({
     mutationFn: ({ eventId, data }: { eventId: string; data: any }) =>
       EventsService.eventsGenerateDrawCreate(eventId, data),
-    onSuccess: (data: any) => {
+    onSuccess: () => {
       callNotiStack(enqueueSnackbar, "Sorteios gerados com sucesso!", "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
     },

@@ -3,7 +3,6 @@ import { drawsHooks } from "../../hooks";
 import {
   Box,
   Button,
-  Card,
   Chip,
   CircularProgress,
   Grid,
@@ -40,7 +39,6 @@ import SingleContenderCard from "../../components/DynamicView/SingleContenderCar
 import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
 import { useQueryClient } from "@tanstack/react-query";
-import ScrollToTop from "../../utils/scrollToTop";
 import ScoringEntryInfoModal from "../../components/DrawModals/ScoringEntryInfoModal";
 
 export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
@@ -664,7 +662,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         const CARD_GAP = 16; // spacing={2} between the two cards
                         const MATCH_GAP = 64; // spacing={8} between matches
                         const HEADER_OFFSET = roundNumber === 1 ? -120 : -380; // SectionHeader height
-                        const SVG_HEIGHT = 600; // tall enough to cover all matches
+                        // const SVG_HEIGHT = 600; // tall enough to cover all matches
 
                         return (
                           <Grid

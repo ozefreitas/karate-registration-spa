@@ -90,7 +90,7 @@ export default function ScoringEntryInfoModal(
             : props.scoringEntryData?.scoring_result?.score_5,
       });
     }
-  }, [props.scoringEntryData]);
+  }, [props.scoringEntryData, reset]);
 
   const onSubmit = (data: any) => {
     const payload = {

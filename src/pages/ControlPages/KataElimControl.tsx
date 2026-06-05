@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { Add } from "@mui/icons-material";
-import FormCard from "../../dashboard/FormCard";
 import { KataOptions } from "../../config";
 import { drawsHooks } from "../../hooks";
 import { useAuth } from "../../access/GlobalAuthProvider";

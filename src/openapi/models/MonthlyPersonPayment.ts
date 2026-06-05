@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { CompactPerson } from './CompactPerson';
 export type MonthlyPersonPayment = {
     readonly id: number;
@@ -16,4 +16,3 @@ export type MonthlyPersonPayment = {
     paid?: boolean;
     paid_at?: string | null;
 };
-

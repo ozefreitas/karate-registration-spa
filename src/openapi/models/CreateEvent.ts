@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { EncounterTypeEnum } from './EncounterTypeEnum';
 import type { SeasonEnum } from './SeasonEnum';
 export type CreateEvent = {
@@ -22,4 +22,3 @@ export type CreateEvent = {
     encounter_type?: EncounterTypeEnum;
     file?: string | null;
 };
-

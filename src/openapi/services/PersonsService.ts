@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { ClubsCreatePerson } from '../models/ClubsCreatePerson';
 import type { NotAdminLikeTypePersons } from '../models/NotAdminLikeTypePersons';
 import type { PaginatedDisciplinesCompactList } from '../models/PaginatedDisciplinesCompactList';

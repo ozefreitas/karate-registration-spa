@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { KataResult } from './KataResult';
 export type PatchedUpdateMatch = {
     readonly id?: number;
@@ -15,4 +15,3 @@ export type PatchedUpdateMatch = {
     feeds_into_scoring?: number | null;
     winner?: string | null;
 };
-

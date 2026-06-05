@@ -19,7 +19,6 @@ import {
   getSideMenuConfig,
   getAccountSideMenuConfig,
 } from "../../dashboard/config";
-import { AxiosResponse } from "axios";
 import { clubsHooks, membersHooks } from "../../hooks";
 
 const drawerWidth = 275;

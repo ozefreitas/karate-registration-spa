@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { Clubs } from '../models/Clubs';
 import type { CreateClub } from '../models/CreateClub';
 import type { PaginatedClubsList } from '../models/PaginatedClubsList';

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 export type MonthlyPersonPaymentConfig = {
     readonly id: number;
     readonly base_plan_amount: string;
@@ -9,4 +9,3 @@ export type MonthlyPersonPaymentConfig = {
     is_custom_active?: boolean;
     base_plan: number;
 };
-

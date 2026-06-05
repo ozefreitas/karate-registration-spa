@@ -1,7 +1,6 @@
 import {
   TextField,
   MenuItem,
-  Typography,
   List,
   ListItem,
   ListItemButton,
@@ -211,7 +210,7 @@ export default function NotificationManagerPage(
                                 pb: 0,
                               }}
                             >
-                              
+
                             </Typography> */}
                             </ListItemButton>
                           </span>

@@ -22,7 +22,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -37,10 +37,11 @@ export default function ChooseEditModal(
     id: string;
     chosenMember: string;
     setChosenMember: any;
-  }>
+  }>,
 ) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [teamData, setTeamData] = useState<any>(null);
+  console.log(setTeamData);
 
   const [isEditTeamModalOpen, setIsEditTeamModalOpen] =
     useState<boolean>(false);
@@ -59,7 +60,6 @@ export default function ChooseEditModal(
   const {
     control: teamControl,
     handleSubmit: teamHandleSubmit,
-    reset: teamReset,
     setValue: teamSetValue,
     formState: { errors: teamErrors },
   } = useForm({
@@ -109,6 +109,7 @@ export default function ChooseEditModal(
   }, [props.id]);
 
   const handleEdit = (event: React.MouseEvent<HTMLElement>, id: string) => {
+    console.log(id);
     event.stopPropagation();
     // fetchSingleAthlete.mutate(id, {
     //   onSuccess: (data: any) => {
@@ -132,7 +133,7 @@ export default function ChooseEditModal(
 
   const handleTeamEdit = (
     event: React.MouseEvent<HTMLElement>,
-    teamId: string
+    teamId: string,
   ) => {
     console.log(event, teamId);
     handleEditTeamModalOpen();

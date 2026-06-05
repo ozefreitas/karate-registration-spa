@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 export type CreateMatch = {
     readonly id: number;
     round_number: number;
@@ -16,4 +16,3 @@ export type CreateMatch = {
     feeds_into_scoring?: number | null;
     winner?: string | null;
 };
-

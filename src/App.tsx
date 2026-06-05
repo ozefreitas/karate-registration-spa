@@ -530,10 +530,7 @@ function App() {
               </Route>
               <Route element={<DisplayPanelLayout />}>
                 <Route path="/display_panel/" element={<DisplayPage />} />
-                <Route
-                  path="display_panel/kata_elim/"
-                  element={<KataElim match="Kata" />}
-                />
+                <Route path="display_panel/kata_elim/" element={<KataElim />} />
                 <Route
                   path="display_panel/kata_final/"
                   element={<KataFinal matchType="final" />}

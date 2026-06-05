@@ -40,7 +40,7 @@ const BracketClassificationModal = (props: {
   const {
     data: bracketClassificationData,
     isLoading: isBracketClassificationLoading,
-    error: bracketClassificationError,
+    // error: bracketClassificationError,
     refetch,
   } = classificationsHooks.useFetchClassificationsData(props.bracketId);
 

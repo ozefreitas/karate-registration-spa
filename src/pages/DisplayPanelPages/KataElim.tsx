@@ -6,9 +6,11 @@ import { useState, useEffect } from "react";
 import { KataOptions } from "../../config";
 import { useDisplaySocket } from "./useDisplaySocket";
 
-export default function CompetitorCard(props: Readonly<{ match: string }>) {
+export default function CompetitorCard() {
   const [akaScore, setAkaScore] = useState<number | undefined>(undefined);
+  console.log(setAkaScore);
   const [winner, setWinner] = useState({ aka: false, shiro: false });
+  console.log(winner);
   const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
   const [player1Club, setPlayer1Club] = useState<string>("CLUBE COMPETIDOR 1");

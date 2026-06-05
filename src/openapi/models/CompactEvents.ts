@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { EncounterTypeEnum } from './EncounterTypeEnum';
 import type { SeasonEnum } from './SeasonEnum';
 export type CompactEvents = {
@@ -19,4 +19,3 @@ export type CompactEvents = {
     encounter_type?: EncounterTypeEnum;
     description?: string | null;
 };
-

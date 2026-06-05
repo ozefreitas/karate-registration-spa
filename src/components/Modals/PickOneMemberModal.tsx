@@ -82,15 +82,6 @@ export default function PickOneMemberModal(
     number: number | null;
   }>,
 ) {
-  type Member = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    category: string;
-    gender: string;
-    match_type: string;
-  };
-
   const {
     data: athleteInCategoryGenderData,
     isLoading: isAthleteInCategoryGenderLoading,

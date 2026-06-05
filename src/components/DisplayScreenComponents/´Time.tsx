@@ -19,7 +19,8 @@ export default function Time(
   const [minutes, setMinutes] = useState<number>(2);
   const [isRunning, setIsRunning] = useState<boolean | null>(null);
   const [timeLow, setTimeLow] = useState<boolean>(false);
-  const [_, setEnded] = useState<boolean>(false);
+  const [ended, setEnded] = useState<boolean>(false);
+  console.log(ended)
 
 
   useEffect(() => {

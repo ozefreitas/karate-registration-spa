@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
 export type NotAdminLikeTypePersons = {
@@ -35,4 +35,3 @@ export type NotAdminLikeTypePersons = {
     observations?: string | null;
     is_validated?: boolean;
 };
-

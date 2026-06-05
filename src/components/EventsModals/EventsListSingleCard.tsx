@@ -82,7 +82,6 @@ export default function EventsListSingleCard({
   title,
   description,
   type,
-  registration_state,
 }: Readonly<EventsListSingleCardProps>) {
   return (
     <Box

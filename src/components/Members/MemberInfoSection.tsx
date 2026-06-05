@@ -21,7 +21,6 @@ import dayjs from "dayjs";
 import { Controller } from "react-hook-form";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { GraduationsOptions, GenderOptions } from "../../config";
-import { arEG } from "@mui/material/locale";
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 

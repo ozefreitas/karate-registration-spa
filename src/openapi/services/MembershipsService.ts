@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-/* eslint-disable */
+
 import type { CreateMemberShips } from '../models/CreateMemberShips';
 import type { MemberShips } from '../models/MemberShips';
 import type { PaginatedMemberShipsList } from '../models/PaginatedMemberShipsList';

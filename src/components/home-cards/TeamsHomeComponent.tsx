@@ -19,7 +19,6 @@ import InfoButton from "../Buttons/InfoButton";
 import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { teamsHooks } from "../../hooks";
-import { Teams as TeamType } from "../../openapi";
 
 export default function TeamsHomeComponent(
   props: Readonly<{ userRole: string }>,

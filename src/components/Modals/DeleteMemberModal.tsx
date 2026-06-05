@@ -16,7 +16,6 @@ import {
   disciplinesHooks,
   categoriesHooks,
   monthlyPaymentsHooks,
-  teamsHooks,
 } from "../../hooks";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 

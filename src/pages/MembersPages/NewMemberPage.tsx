@@ -237,7 +237,7 @@ export default function NewMemberPage() {
             paExemplo: Um atleta nascido a 16 de dezembro de 2010 é considerado
             Cadete na época 2024/2025, pois a idade tida em conta é a que terá a
             1 de janeiro de 2025 (14 anos), mesmo que ainda tenha 13 anos em
-            provas realizadas em 2024.
+            provas realizadas em 2024.
           </>
         }
         title="Novo Atleta"

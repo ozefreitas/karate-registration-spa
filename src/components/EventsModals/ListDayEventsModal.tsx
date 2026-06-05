@@ -65,7 +65,7 @@ export default function ListDayEventsModal(
               Lista de Eventos em {props.date}
             </Typography>
             {/* <Typography fontWeight={"bold"} m={2} ml={1} variant="h4">
-              
+
             </Typography> */}
           </Grid>
           <IconButton
