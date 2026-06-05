@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 /**
  * * `2024/2025` - 2024/2025
  * * `2025/2026` - 2025/2026

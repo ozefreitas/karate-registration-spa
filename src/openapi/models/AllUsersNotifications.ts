@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { PaymentObjectEnum } from './PaymentObjectEnum';
 import type { TypeEnum } from './TypeEnum';
 export type AllUsersNotifications = {
@@ -15,3 +15,4 @@ export type AllUsersNotifications = {
     target_event?: string | null;
     target_person?: string | null;
 };
+

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { MemberValidationRequest } from './MemberValidationRequest';
 export type PaginatedMemberValidationRequestList = {
     count: number;
@@ -9,3 +9,4 @@ export type PaginatedMemberValidationRequestList = {
     previous?: string | null;
     results: Array<MemberValidationRequest>;
 };
+

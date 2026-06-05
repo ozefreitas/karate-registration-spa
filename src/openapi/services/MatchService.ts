@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { AdvanceMatch } from '../models/AdvanceMatch';
 import type { CreateMatch } from '../models/CreateMatch';
 import type { Match } from '../models/Match';

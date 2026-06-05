@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
 export type CreateTeam = {
     readonly id: string;
@@ -15,3 +15,4 @@ export type CreateTeam = {
     athlete4?: string | null;
     athlete5?: string | null;
 };
+

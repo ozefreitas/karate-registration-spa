@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import AddButton from "../../components/Buttons/AddButton";
 import AllUseTable from "../../components/Table/AllUseTable";
-import { useFetchTeamsData } from "../../hooks/useTeamsData";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
@@ -40,26 +39,26 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
 
-  const { data: teamsData, isLoading: isTeamsLoading } = useFetchTeamsData(
-    page + 1,
-    pageSize
-  );
+  // const { data: teamsData, isLoading: isTeamsLoading } = useFetchTeamsData(
+  //   page + 1,
+  //   pageSize
+  // );
 
   const { user } = useAuth();
-  const userRole = user?.data.role;
+  const userRole = user?.role;
 
-  const teamRows = useMemo(() => {
-    return teamsData?.data.results.map((team: Team) => ({
-      id: team.id,
-      team_number: team.team_number,
-      athlete1: team.athlete1_full_name,
-      athlete2: team.athlete2_full_name,
-      athlete3: team.athlete3_full_name,
-      category: team.category,
-      gender: team.gender,
-      match_type: team.match_type,
-    }));
-  }, [teamsData]);
+  // const teamRows = useMemo(() => {
+  //   return teamsData?.data.results.map((team: Team) => ({
+  //     id: team.id,
+  //     team_number: team.team_number,
+  //     athlete1: team.athlete1_full_name,
+  //     athlete2: team.athlete2_full_name,
+  //     athlete3: team.athlete3_full_name,
+  //     category: team.category,
+  //     gender: team.gender,
+  //     match_type: team.match_type,
+  //   }));
+  // }, [teamsData]);
 
   const columnMaping = [
     { key: "athlete1", label: "Atleta 1" },
@@ -92,7 +91,7 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
         <CardContent></CardContent>
       </Card>
       <Grid size={12} sx={{ m: 2 }}>
-        {isTeamsLoading ? (
+        {/* {isTeamsLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
@@ -111,7 +110,7 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
             setPageSize={setPageSize}
             userRole={props.userRole}
           ></AllUseTable>
-        )}
+        )} */}
       </Grid>
       {userRole === "main_admin" ? null : (
         <Grid sx={{ m: 3, mt: 2 }}>

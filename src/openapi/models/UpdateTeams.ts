@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 export type UpdateTeams = {
     readonly id: string;
     readonly creation_date: string;
@@ -13,3 +13,4 @@ export type UpdateTeams = {
     athlete5?: string | null;
     category: number;
 };
+

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { CompactPerson } from './CompactPerson';
 import type { KataResult } from './KataResult';
 import type { KumiteResult } from './KumiteResult';
@@ -21,3 +21,4 @@ export type Match = {
     loser_goes_to?: number | null;
     feeds_into_scoring?: number | null;
 };
+

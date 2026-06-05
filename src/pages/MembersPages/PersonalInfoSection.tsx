@@ -24,6 +24,7 @@ import {
   FieldRow,
   SectionBlock,
 } from "../../components/Members/MemberInfoSection";
+import { RequestTypeEnum } from "../../openapi";
 
 export default function PersonalInfoSection(
   props: Readonly<{ memberData: any }>,
@@ -684,7 +685,7 @@ export default function PersonalInfoSection(
         id={props.memberData?.id}
         isOpen={isRequestModalOpen}
         handleClose={handleRequestExamModalClose}
-        requestType="exams"
+        requestType={RequestTypeEnum.EXAMS}
       ></RequestModal>
     </Grid>
   );

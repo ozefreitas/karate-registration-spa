@@ -3,14 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
-import type { GraduationEnum } from './GraduationEnum';
-export type CompactPerson = {
+export type CompactCategorizedPersons = {
     readonly id: string;
+    first_name: string;
+    last_name: string;
     gender: GenderEnum;
     readonly club: string;
     readonly full_name: string;
-    readonly age: string;
-    weight?: number | null;
-    graduation: GraduationEnum;
 };
 

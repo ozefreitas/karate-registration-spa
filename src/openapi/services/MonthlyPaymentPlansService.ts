@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { CreateMonthlyPaymentPlan } from '../models/CreateMonthlyPaymentPlan';
 import type { MonthlyPaymentPlan } from '../models/MonthlyPaymentPlan';
 import type { PatchedMonthlyPaymentPlan } from '../models/PatchedMonthlyPaymentPlan';

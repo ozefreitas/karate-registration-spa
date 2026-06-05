@@ -34,7 +34,7 @@ import {
 import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { Persons } from "../../openapi";
+import { RequestTypeEnum } from "../../openapi";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
@@ -225,7 +225,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   );
 
   const memberRows = useMemo(() => {
-    return membersData?.results.map((person: Persons) => ({
+    return membersData?.results.map((person) => ({
       id: person.id,
       full_name: person.full_name,
       gender: person.gender === "Masculino" ? "M" : "F",
@@ -649,7 +649,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         id={actionedMember}
         isOpen={isRequestModalOpen}
         handleClose={handleModalClose}
-        requestType="verify"
+        requestType={RequestTypeEnum.VERIFY}
       ></RequestModal>
     </>
   );

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { CompactPerson } from './CompactPerson';
 import type { GenderEnum } from './GenderEnum';
 import type { NameCategory } from './NameCategory';
@@ -19,3 +19,4 @@ export type Teams = {
     gender: GenderEnum;
     team_number: number;
 };
+

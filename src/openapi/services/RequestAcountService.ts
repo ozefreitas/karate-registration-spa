@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { PaginatedRequestedAcountList } from '../models/PaginatedRequestedAcountList';
 import type { PatchedRequestedAcount } from '../models/PatchedRequestedAcount';
 import type { RequestedAcount } from '../models/RequestedAcount';

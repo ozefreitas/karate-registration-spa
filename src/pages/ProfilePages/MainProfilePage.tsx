@@ -388,7 +388,9 @@ const MainProfilePage = (props: { user: any }) => {
                           >
                             <Clear
                               color={
-                                watch("cellphone_number") === "" ? "disabled" : "error"
+                                watch("cellphone_number") === ""
+                                  ? "disabled"
+                                  : "error"
                               }
                             ></Clear>
                           </IconButton>
@@ -448,11 +450,7 @@ const MainProfilePage = (props: { user: any }) => {
           </Grid>
         </Grid>
       </FormCard>
-      <FormCard
-        title="Bio"
-        subheader="Escreva algo sobre o seu Clube"
-        actions
-      >
+      <FormCard title="Bio" subheader="Escreva algo sobre o seu Clube" actions>
         <Grid size={12}>
           <Controller
             name="bio"

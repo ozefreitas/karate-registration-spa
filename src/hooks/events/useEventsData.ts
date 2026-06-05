@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { EventsService } from "../../openapi";
 import { eventsExportMembersExcelRetrieve } from "../../api";
 
@@ -91,10 +91,20 @@ export const useExportEventRegistrationFile = (eventId: string) => {
   });
 };
 
-export const useRegistrationsPerEventData = () => {
+interface EventRegistrationCount {
+  number_registrations: string;
+  name: string;
+}
+
+export const useRegistrationsPerEventData = (): UseQueryResult<
+  EventRegistrationCount[]
+> => {
   return useQuery({
-    queryKey: ["registration-per-event"],
-    queryFn: () => EventsService.eventsRegistrationCountsList(),
+    queryKey: ["registration-counts"],
+    queryFn: () =>
+      EventsService.eventsRegistrationCountsList() as unknown as Promise<
+        EventRegistrationCount[]
+      >,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

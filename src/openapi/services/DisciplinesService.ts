@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { AddCategory } from '../models/AddCategory';
 import type { AddDisciplineBulkMembers } from '../models/AddDisciplineBulkMembers';
 import type { AddDisciplineMember } from '../models/AddDisciplineMember';

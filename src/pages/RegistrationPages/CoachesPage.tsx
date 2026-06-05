@@ -44,7 +44,7 @@ export default function CoachesPage(props: Readonly<{ userRole: string }>) {
 
   // Memoize `rows` to compute only when `members` changes
   const registrationRows = useMemo(() => {
-    return disciplinesData?.results[0].individuals.map((memberInfo: any) => ({
+    return disciplinesData?.results[0].individuals?.map((memberInfo: any) => ({
       id: memberInfo.member.id,
       full_name: memberInfo.member.full_name,
       added_at: formatDateTime(memberInfo.added_at, "both"),

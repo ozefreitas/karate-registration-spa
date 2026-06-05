@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { AvailableQuoteYears } from '../models/AvailableQuoteYears';
 import type { ClubSubscriptions } from '../models/ClubSubscriptions';
 import type { CreateAllClubsSubscription } from '../models/CreateAllClubsSubscription';

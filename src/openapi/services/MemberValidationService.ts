@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { CreateMemberValidationRequest } from '../models/CreateMemberValidationRequest';
 import type { MemberValidationRequest } from '../models/MemberValidationRequest';
 import type { PaginatedMemberValidationRequestList } from '../models/PaginatedMemberValidationRequestList';

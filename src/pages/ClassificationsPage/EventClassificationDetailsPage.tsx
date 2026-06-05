@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { drawsHooks } from "../../hooks";
 import {
@@ -88,7 +88,9 @@ const EventClassificationDetailsPage = () => {
                       spacing={2}
                       textAlign={"center"}
                     >
-                      <Typography variant="h5" mb={2}>{bracket.name}</Typography>
+                      <Typography variant="h5" mb={2}>
+                        {bracket.name}
+                      </Typography>
                       <Grid size={12} container justifyContent={"center"}>
                         <Chip
                           size="small"

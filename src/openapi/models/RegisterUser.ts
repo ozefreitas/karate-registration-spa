@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 /**
  * Will check for the tohen authenticity, expiration and usage before creating an user acount
  */
@@ -16,3 +16,4 @@ export type RegisterUser = {
     password: string;
     token: string;
 };
+

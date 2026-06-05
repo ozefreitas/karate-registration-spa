@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { CompactCategory } from './CompactCategory';
 import type { DrawTypeEnum } from './DrawTypeEnum';
 export type PatchedBracket = {
@@ -14,3 +14,4 @@ export type PatchedBracket = {
     event?: string;
     discipline?: number;
 };
+

@@ -26,7 +26,7 @@ export default function Announcement() {
   };
 
   const activeAnnouncements =
-    data?.data?.filter(
+    data?.filter(
       (announcement: any) =>
         !dismissedIds.includes(announcement.id?.toString()),
     ) || [];

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { KataEnum } from './KataEnum';
 export type KataResult = {
     readonly id: number;
@@ -10,3 +10,4 @@ export type KataResult = {
     kata_contender_1?: KataEnum;
     kata_contender_2?: KataEnum;
 };
+

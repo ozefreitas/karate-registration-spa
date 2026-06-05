@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { ClubsCreatePersonMemberTypeEnum } from './ClubsCreatePersonMemberTypeEnum';
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
@@ -26,3 +26,4 @@ export type ClubsCreatePerson = {
     is_validated?: boolean;
     readonly club: number;
 };
+

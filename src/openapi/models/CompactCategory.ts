@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
 export type CompactCategory = {
@@ -16,3 +16,4 @@ export type CompactCategory = {
     max_weight?: number | null;
     max_athletes?: number | null;
 };
+

@@ -1,11 +1,12 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { Category } from './Category';
+import type { DisciplineMember } from './DisciplineMember';
 export type Disciplines = {
     readonly id: number;
-    readonly individuals: string;
+    readonly individuals: Array<DisciplineMember>;
     readonly teams: string;
     categories: Array<Category>;
     name: string;
@@ -13,3 +14,4 @@ export type Disciplines = {
     is_coach?: boolean;
     event: string;
 };
+

@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 import type { ClubSettings } from '../models/ClubSettings';
 import type { CreateClubSettigs } from '../models/CreateClubSettigs';
 import type { PatchClubSettigs } from '../models/PatchClubSettigs';

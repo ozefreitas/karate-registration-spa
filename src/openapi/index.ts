@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 export { ApiError } from './core/ApiError';
 export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
@@ -29,6 +29,7 @@ export type { ClubSettings } from './models/ClubSettings';
 export type { ClubSubscriptionConfig } from './models/ClubSubscriptionConfig';
 export type { ClubSubscriptions } from './models/ClubSubscriptions';
 export { CodeEnum } from './models/CodeEnum';
+export type { CompactCategorizedPersons } from './models/CompactCategorizedPersons';
 export type { CompactCategory } from './models/CompactCategory';
 export type { CompactEvents } from './models/CompactEvents';
 export type { CompactPerson } from './models/CompactPerson';
@@ -52,6 +53,7 @@ export type { CreateTeam } from './models/CreateTeam';
 export type { DeleteMember } from './models/DeleteMember';
 export type { DeleteTeam } from './models/DeleteTeam';
 export type { DisciplineDraw } from './models/DisciplineDraw';
+export type { DisciplineMember } from './models/DisciplineMember';
 export type { Disciplines } from './models/Disciplines';
 export type { DisciplinesCompact } from './models/DisciplinesCompact';
 export { DrawTypeEnum } from './models/DrawTypeEnum';

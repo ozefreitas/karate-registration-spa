@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
-
+/* eslint-disable */
 export type ClubMemberStats = {
     username: string;
     member_count: number;
@@ -9,3 +9,4 @@ export type ClubMemberStats = {
     coach_count: number;
     athlete_count: number;
 };
+

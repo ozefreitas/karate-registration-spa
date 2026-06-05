@@ -1,5 +1,52 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { MemberValidationService, PersonsService } from "../../openapi";
+
+export interface NotInEventCoaches {
+  id: string;
+  gender: string;
+  full_name: string;
+  graduation: string;
+}
+
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+interface Club {
+  username: string;
+}
+
+interface Members {
+  id: string;
+  full_name: string;
+  gender: string;
+  club: Club;
+  member_types: any;
+  age: string;
+  is_validated: boolean;
+  request_status: string;
+  past_month_payment_status: string;
+  updated_by: Club;
+}
+
+interface MembersNotInEvent {
+  id: string;
+  full_name: string;
+  gender: string;
+  club: Club;
+  member_types: any;
+  age: string;
+  is_validated: boolean;
+  request_status: string;
+  past_month_payment_status: string;
+  updated_by: Club;
+  graduation: string;
+  weight: string;
+  category: string;
+}
 
 export const useFetchMembersData = (
   page: number,
@@ -11,7 +58,7 @@ export const useFetchMembersData = (
   monthlyPaymentStatus?: string,
   isValidated?: boolean,
   users?: string,
-) => {
+): UseQueryResult<PaginatedResponse<Members>> => {
   return useQuery({
     queryKey: [
       "members",
@@ -40,7 +87,7 @@ export const useFetchMembersData = (
         ordering,
         page,
         pageSize,
-      ),
+      ).then((res) => res as unknown as PaginatedResponse<Members>),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
@@ -71,7 +118,7 @@ export const useFetchMembersNotInEvent = (
   gender?: string,
   enabled?: boolean,
   disciplineId?: string,
-) => {
+): UseQueryResult<PaginatedResponse<MembersNotInEvent>> => {
   return useQuery({
     queryKey: [
       "members-notin-event",
@@ -96,7 +143,7 @@ export const useFetchMembersNotInEvent = (
         undefined,
         page,
         pageSize,
-      ),
+      ).then((res) => res as unknown as PaginatedResponse<MembersNotInEvent>),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!eventId && !!enabled,
@@ -107,7 +154,7 @@ export const useFetchCoachesNotInEvent = (
   eventId: string,
   page: number,
   pageSize: number,
-) => {
+): UseQueryResult<PaginatedResponse<NotInEventCoaches>> => {
   return useQuery({
     queryKey: ["coaches-notin-event", eventId, page, pageSize],
     queryFn: () =>
@@ -125,7 +172,7 @@ export const useFetchCoachesNotInEvent = (
         undefined,
         page,
         pageSize,
-      ),
+      ).then((res) => res as unknown as PaginatedResponse<NotInEventCoaches>),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!eventId,

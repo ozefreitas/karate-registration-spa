@@ -1,7 +1,7 @@
 /* generated using openapi-typescript-codegen -- do not edit */
 /* istanbul ignore file */
 /* tslint:disable */
- 
+/* eslint-disable */
 import type { Password } from '../models/Password';
 import type { RequestPasswordReset } from '../models/RequestPasswordReset';
 import type { Username } from '../models/Username';
