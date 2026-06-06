@@ -10,6 +10,8 @@ import { PaginatedResponse } from "../types";
 interface AvailableClubs {
   id: string;
   club: string;
+  is_registered: boolean;
+  name: string;
 }
 
 export const useFetchAvailableClubs = (): UseQueryResult<

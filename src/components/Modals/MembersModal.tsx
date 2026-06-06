@@ -45,7 +45,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { getGraduationFromValue, GraduationsOptions } from "../../config";
-import { Disciplines, Persons } from "../../openapi";
+import { Disciplines } from "../../openapi";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
