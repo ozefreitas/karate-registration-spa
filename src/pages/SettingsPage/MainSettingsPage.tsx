@@ -91,7 +91,7 @@ export default function MainSettingsPage() {
     left: number;
   } | null>(null);
   const [activeRequestId, setActiveRequestId] = useState<string | null>(null);
-  console.log(activeRequestId)
+  console.log(activeRequestId);
   const [activeRequestMessage, setActiveRequestMessage] = useState<
     string | null
   >(null);

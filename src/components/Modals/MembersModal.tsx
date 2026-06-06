@@ -283,7 +283,7 @@ export default function MembersModal(
       props.eventData.has_categories
     ) {
       const target: any = filteredMembers?.find(
-        (member: Persons) => member.id === currentMemberId,
+        (member) => member.id === currentMemberId,
       );
       const hasWeight = target?.weight !== null;
       setDoesNotHaveWeight(!hasWeight);
@@ -296,7 +296,7 @@ export default function MembersModal(
     try {
       if (isWeightInputScreenOpen) {
         const target: any = filteredMembers?.find(
-          (member: Persons) => member.id === currentMemberId,
+          (member) => member.id === currentMemberId,
         );
         if (target[0].weight !== freeClubWeight) {
           const payload = {

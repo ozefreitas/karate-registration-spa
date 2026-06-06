@@ -1,43 +1,14 @@
-import { useState, useMemo } from "react";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Grid,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import { useState } from "react";
+import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 import AddButton from "../../components/Buttons/AddButton";
-import AllUseTable from "../../components/Table/AllUseTable";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
-export default function TeamsPage(props: Readonly<{ userRole: string }>) {
-  type Member = {
-    id: string;
-    first_name: string;
-    last_name: string;
-    category: string;
-    gender: string;
-    match_type: string;
-  };
+export default function TeamsPage() {
+  // props: Readonly<{ userRole: string }>
 
-  type Team = {
-    id: string;
-    team_number: number;
-    athlete1: Member;
-    athlete1_full_name: string;
-    athlete2_full_name: string;
-    athlete3_full_name: string;
-    athlete2: Member;
-    athlete3: Member;
-    category: string;
-    gender: string;
-    match_type: string;
-  };
-
-  const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(10);
+  // const [page, setPage] = useState<number>(0);
+  // const [pageSize, setPageSize] = useState<number>(10);
 
   // const { data: teamsData, isLoading: isTeamsLoading } = useFetchTeamsData(
   //   page + 1,
@@ -60,15 +31,15 @@ export default function TeamsPage(props: Readonly<{ userRole: string }>) {
   //   }));
   // }, [teamsData]);
 
-  const columnMaping = [
-    { key: "athlete1", label: "Atleta 1" },
-    { key: "athlete2", label: "Atleta 2" },
-    { key: "athlete3", label: "Atleta 3" },
-    { key: "match_type", label: "Partida" },
-    { key: "category", label: "Escalão" },
-    { key: "gender", label: "Género" },
-    { key: "team_number", label: "Número" },
-  ];
+  // const columnMaping = [
+  //   { key: "athlete1", label: "Atleta 1" },
+  //   { key: "athlete2", label: "Atleta 2" },
+  //   { key: "athlete3", label: "Atleta 3" },
+  //   { key: "match_type", label: "Partida" },
+  //   { key: "category", label: "Escalão" },
+  //   { key: "gender", label: "Género" },
+  //   { key: "team_number", label: "Número" },
+  // ];
 
   return (
     <>

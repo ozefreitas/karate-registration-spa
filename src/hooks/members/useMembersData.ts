@@ -1,18 +1,12 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { MemberValidationService, PersonsService } from "../../openapi";
+import { PaginatedResponse } from "../types";
 
 export interface NotInEventCoaches {
   id: string;
   gender: string;
   full_name: string;
   graduation: string;
-}
-
-export interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
 }
 
 interface Club {
@@ -46,6 +40,8 @@ interface MembersNotInEvent {
   graduation: string;
   weight: string;
   category: string;
+  current_month_payment_status: string;
+  exam_request_status: string;
 }
 
 export const useFetchMembersData = (
