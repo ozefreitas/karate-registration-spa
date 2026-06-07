@@ -150,13 +150,14 @@ export const useFetchCoachesNotInEvent = (
   eventId: string,
   page: number,
   pageSize: number,
+  disciplineId?: string
 ): UseQueryResult<PaginatedResponse<NotInEventCoaches>> => {
   return useQuery({
-    queryKey: ["coaches-notin-event", eventId, page, pageSize],
+    queryKey: ["coaches-notin-event", eventId, page, pageSize, disciplineId],
     queryFn: () =>
       PersonsService.personsList(
         eventId,
-        undefined,
+        disciplineId,
         undefined,
         undefined,
         undefined,

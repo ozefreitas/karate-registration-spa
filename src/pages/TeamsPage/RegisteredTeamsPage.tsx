@@ -16,11 +16,10 @@ import { disciplinesHooks, eventsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { Add, ContentCopy, Visibility } from "@mui/icons-material";
-import { formatDateTime } from "../../utils/utils";
+import { formatDateTime, getFullDate } from "../../utils/utils";
 import { useState } from "react";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import NewTeamPageModal from "./NewTeamPageModal";
-import { getFullDate } from "../../utils/utils";
 
 export default function RegisteredTeamsPage(
   props: Readonly<{ userRole: string }>,
@@ -141,19 +140,19 @@ export default function RegisteredTeamsPage(
           </Card>
         </Grid>
       </Grid>
-      <Grid size={12} sx={{ m: 2 }}>
+      <Grid size={12} m={2}>
         {isSingleEventLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
           </Box>
         ) : singleEventError ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid mt={3} container justifyContent="center" size={12}>
             <ListItem>
               <ListItemText primary="Ocorreu um erro ao encontrar as Equipas para este Evento, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
         ) : disciplinesData?.results.length === 0 ? (
-          <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+          <Grid mt={3} container justifyContent="center" size={12}>
             <ListItem>
               <ListItemText primary="Não foram encontradas Modalidades para este Evento."></ListItemText>
             </ListItem>

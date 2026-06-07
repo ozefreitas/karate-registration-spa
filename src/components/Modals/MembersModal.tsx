@@ -165,6 +165,7 @@ export default function MembersModal(
     10,
     undefined,
     false,
+    props.disciplinesData?.results[0].id,
   );
 
   React.useEffect(() => {
@@ -381,6 +382,14 @@ export default function MembersModal(
     setSearchQuery(event.target.value);
   };
 
+  const uniqueCategories = [
+    ...new Map(
+      props.disciplinesData?.results
+        ?.flatMap((item: any) => item.categories)
+        .map((category: any) => [category.id, category]),
+    ).values(),
+  ];
+
   return (
     <Dialog
       open={props.isModalOpen}
@@ -590,7 +599,7 @@ export default function MembersModal(
                       >
                         -- Selecionar --
                       </MenuItem>
-                      {props.disciplinesData.results[0].categories
+                      {uniqueCategories
                         ?.filter((item: any) =>
                           possibleCategories.includes(item.id),
                         )
@@ -756,7 +765,13 @@ export default function MembersModal(
         ) : (
           <List>
             {isMembersNotInEventLoading ? (
-              <Grid my={5} height={100} justifyContent="center" size={12}>
+              <Grid
+                my={5}
+                height={100}
+                justifyContent="center"
+                size={12}
+                width={"100%"}
+              >
                 <CircularProgress />
               </Grid>
             ) : membersNotInEventError ? (

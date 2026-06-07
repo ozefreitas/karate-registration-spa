@@ -161,7 +161,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           </Card>
         </Grid>
       </Grid>
-      <Grid size={12} mt={5}>
+      <Grid size={12} m={2}>
         {isSingleEventLoading || isDisciplinesLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
@@ -219,7 +219,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Typography p={3} variant="h5">
+                  <Typography p={3} variant="h5" fontWeight={"bold"}>
                     {discipline.name}
                   </Typography>
                   <Grid container spacing={2}>

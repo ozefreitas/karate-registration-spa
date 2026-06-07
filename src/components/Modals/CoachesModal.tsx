@@ -164,7 +164,12 @@ export default function CoachesModal(
     isLoading: isCoachesNotInEventLoading,
     error: coachesNotInEventError,
     refetch,
-  } = membersHooks.useFetchCoachesNotInEvent(eventId!, page + 1, 10);
+  } = membersHooks.useFetchCoachesNotInEvent(
+    eventId!,
+    page + 1,
+    10,
+    props.disciplineId,
+  );
 
   React.useEffect(() => {
     refetch();

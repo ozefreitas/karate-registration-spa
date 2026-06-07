@@ -176,15 +176,30 @@ export default function ClubStats() {
             }
           ></CardHeader>
           <CardContent sx={{ width: "100%" }}>
-            <ResponsiveContainer width="100%" height={400}>
-              <BarChart data={registrationsPerEventData}>
-                <CartesianGrid strokeDasharray="1 1" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="number_registrations" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
+            {registrationsPerEventData?.length === 0 ? (
+              <Grid
+                size={12}
+                mb={3}
+                height={"100%"}
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                <Typography color="textDisabled">
+                  Ainda não há Eventos com inscritos
+                </Typography>
+              </Grid>
+            ) : (
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={registrationsPerEventData}>
+                  <CartesianGrid strokeDasharray="1 1" />
+                  <XAxis dataKey="name" />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip />
+                  <Bar dataKey="number_registrations" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </CardContent>
         </Card>
       </Grid>
