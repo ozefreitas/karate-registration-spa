@@ -10,5 +10,6 @@ export type PatchedUpdateScoringEntry = {
     ongoing?: boolean;
     readonly created_at?: string;
     person?: string | null;
+    team?: string | null;
 };
 

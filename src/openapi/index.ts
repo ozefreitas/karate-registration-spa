@@ -33,6 +33,7 @@ export type { CompactCategorizedPersons } from './models/CompactCategorizedPerso
 export type { CompactCategory } from './models/CompactCategory';
 export type { CompactEvents } from './models/CompactEvents';
 export type { CompactPerson } from './models/CompactPerson';
+export type { CompactTeam } from './models/CompactTeam';
 export type { CompactUser } from './models/CompactUser';
 export type { CreateAllClubsSubscription } from './models/CreateAllClubsSubscription';
 export type { CreateBracket } from './models/CreateBracket';

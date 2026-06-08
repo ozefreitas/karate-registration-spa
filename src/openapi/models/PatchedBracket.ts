@@ -7,6 +7,7 @@ import type { DrawTypeEnum } from './DrawTypeEnum';
 export type PatchedBracket = {
     readonly id?: number;
     category?: CompactCategory;
+    readonly is_team?: string;
     name?: string;
     draw_type?: DrawTypeEnum | null;
     readonly created_at?: string;

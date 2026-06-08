@@ -13,6 +13,10 @@ const SingleTeamContenderCard = (props: {
   isFirstRound?: boolean;
   rank?: number;
 }) => {
+  const athletes = Object.entries(props.teamData)
+    .filter(([key, value]) => key.startsWith("athlete") && value !== null)
+    .map(([_, athlete]) => athlete);
+  console.log(athletes);
   return (
     <Card
       elevation={props.isMatchFinished ? (props.isWinner ? 5 : 0) : 2}
@@ -72,7 +76,7 @@ const SingleTeamContenderCard = (props: {
             ></Box>
           </Grid>
           <Grid container direction={"column"} spacing={1} size={10}>
-            {props.teamData?.map((member: any, index: any) => (
+            {athletes?.map((member: any, index: any) => (
               <Grid key={index} container direction={"column"} spacing={1}>
                 <Typography
                   fontWeight={
@@ -83,11 +87,11 @@ const SingleTeamContenderCard = (props: {
                       : undefined
                   }
                 >
-                  {member.fullName === undefined && props.isFirstRound
+                  {member.full_name === undefined && props.isFirstRound
                     ? "bye"
-                    : member.fullName === undefined && !props.isFirstRound
+                    : member.full_name === undefined && !props.isFirstRound
                       ? "TBD"
-                      : member.fullName}
+                      : member.full_name}
                 </Typography>
                 <Typography
                   variant="subtitle2"

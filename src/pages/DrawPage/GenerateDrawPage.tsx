@@ -170,7 +170,7 @@ export default function GenerateDrawPage() {
       ></PageInfoCard>
       <FormCard
         title="Configurar Sorteio"
-        subheader="Altere as confugurações do Sorteios de cada Modalidade."
+        subheader="Altere as configurações do Sorteios de cada Modalidade."
       >
         <Grid size={12} p={2} container>
           <FormLabel>
@@ -436,7 +436,7 @@ export default function GenerateDrawPage() {
           </Grid>
           <Grid size={12} p={2} container>
             <FormLabel>
-              Selecione o formato "Misto" para alterar o número de Atletas em
+              Selecione o formato "Misto" para alterar o número de Atletas/Equipas em
               cada final.
             </FormLabel>
           </Grid>

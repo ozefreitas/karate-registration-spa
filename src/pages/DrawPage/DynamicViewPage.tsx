@@ -36,6 +36,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Fragment, useEffect, useRef, useState } from "react";
 import MatchInfoModal from "../../components/DrawModals/MatchInfoModal";
 import SingleContenderCard from "../../components/DynamicView/SingleContenderCard";
+import SingleTeamContenderCard from "../../components/DynamicView/SingleTeamContenderCard";
 import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
 import { useQueryClient } from "@tanstack/react-query";
@@ -763,13 +764,17 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   scoringEntriesData.length > 0 ? (
                   <Grid
                     container
+                    alignItems={"center"}
                     justifyContent={"center"}
+                    textAlign={"center"}
                     border={"0.2px solid red"}
                     borderRadius={4}
                     bgcolor={"#fafafa"}
                     p={3}
                     pb={4}
+                    size={12}
                     boxShadow={4}
+                    width={"100%"}
                     sx={{
                       opacity: 0.85,
                       transform: "rotate(-90deg)",
@@ -822,8 +827,9 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             </Grid>
           ) : tab === 0 && matchesData?.length === 0 ? (
             <Grid my={3} container justifyContent="center" size={12}>
-              <Typography></Typography>
-              <ListItemText primary="Não existem provas de Eliminatórias para o Escalão selecionado."></ListItemText>
+              <Typography>
+                Não existem provas de Eliminatórias para o Escalão selecionado.
+              </Typography>
             </Grid>
           ) : null}
           {has_finals && tab === 1 && watch("bracket") === "" ? (
@@ -879,21 +885,38 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                     )}
                   </Grid>
                   <Grid size={10}>
-                    <SingleContenderCard
-                      key={index}
-                      roundNumber={0}
-                      matchNumber={entry.entry_number}
-                      contenderNumber={index % 2 === 0 ? 1 : 2}
-                      isWinner={true}
-                      points={
-                        Number(entry.score) === 0 ? 99 : Number(entry.score)
-                      }
-                      fullName={entry.person?.full_name}
-                      club={entry.person?.club}
-                      isMatchFinished={false}
-                      ongoing={entry.ongoing ?? false}
-                      rank={entry.rank!}
-                    ></SingleContenderCard>
+                    {bracketsData?.find(
+                      (item) => watch("bracket") === String(item.id),
+                    )?.is_team ? (
+                      <SingleTeamContenderCard
+                        contenderNumber={index % 2 === 0 ? 1 : 2}
+                        isMatchFinished={false}
+                        isWinner={true}
+                        matchNumber={entry.entry_number}
+                        ongoing={entry.ongoing ?? false}
+                        points={
+                          Number(entry.score) === 0 ? 99 : Number(entry.score)
+                        }
+                        roundNumber={0}
+                        teamData={entry.team}
+                      ></SingleTeamContenderCard>
+                    ) : (
+                      <SingleContenderCard
+                        key={index}
+                        roundNumber={0}
+                        matchNumber={entry.entry_number}
+                        contenderNumber={index % 2 === 0 ? 1 : 2}
+                        isWinner={true}
+                        points={
+                          Number(entry.score) === 0 ? 99 : Number(entry.score)
+                        }
+                        fullName={entry.person?.full_name}
+                        club={entry.person?.club}
+                        isMatchFinished={false}
+                        ongoing={entry.ongoing ?? false}
+                        rank={entry.rank!}
+                      ></SingleContenderCard>
+                    )}
                   </Grid>
                   <Grid
                     size={2}
@@ -952,9 +975,16 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                       <span>
                         <IconButton
                           size="small"
-                          disabled={
-                            entry.person === null || entry.person === undefined
-                          }
+                          disabled={Boolean(
+                            (bracketsData?.find(
+                              (item) => watch("bracket") === String(item.id),
+                            )?.is_team &&
+                              entry.team == null) ||
+                            (!bracketsData?.find(
+                              (item) => watch("bracket") === String(item.id),
+                            )?.is_team &&
+                              entry.person == null),
+                          )}
                           onClick={() => {
                             handleScoringModalOpen(entry.id, false);
                           }}
@@ -967,16 +997,16 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                 </>
               ))}
             </Grid>
-          ) : has_finals && scoringEntriesData?.length === 0 && tab === 1 ? (
+          ) : scoringEntriesData?.length === 0 && tab === 1 ? (
             <Grid my={3} container justifyContent="center" size={12}>
-              <ListItem sx={{ textAlign: "center" }}>
-                <ListItemText primary="Não existem provas de Finais para o Escalão selecionado."></ListItemText>
-              </ListItem>
+              <Typography>
+                Não existem provas de Finais para o Escalão selecionado.
+              </Typography>
             </Grid>
           ) : null}
         </Grid>
       )}
-      {rounds.length === 0 ? null : (
+      {rounds.length === 0 || scoringEntriesData?.length === 0 ? null : (
         <Grid size={12} container spacing={3} pl={7} mt={3} gap={5}>
           <Typography variant="body2" fontWeight={500}>
             bye - Não tem registo
