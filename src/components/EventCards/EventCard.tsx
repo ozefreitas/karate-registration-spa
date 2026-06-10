@@ -41,6 +41,7 @@ import {
   HowToReg,
   DeveloperBoard,
   EmojiEvents,
+  Clear,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { useEffect, useState } from "react";
@@ -310,11 +311,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           sx={{ m: 2, ml: 0 }}
                           variant="contained"
                           size="small"
-                          color="warning"
+                          color={isDescriptionEdit ? "inherit" : "warning"}
                           onClick={() => setIsDescriptionEdit((prev) => !prev)}
-                          startIcon={<Edit />}
+                          startIcon={isDescriptionEdit ? <Clear /> : <Edit />}
                         >
-                          Editar
+                          {isDescriptionEdit ? "Cancelar" : "Editar"}
                         </Button>
                       ) : null
                     }
@@ -642,7 +643,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           to="draw/"
                         ></GenerateButton>
                       ) : null}
-                      <Tooltip title={"Este Evento ainda não foi realizado"} disableHoverListener={singleEventData?.event_date < getFullDate()}>
+                      <Tooltip
+                        title={"Este Evento ainda não foi realizado"}
+                        disableHoverListener={
+                          singleEventData?.event_date < getFullDate()
+                        }
+                      >
                         <span>
                           <Button
                             disabled={

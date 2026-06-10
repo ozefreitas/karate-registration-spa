@@ -16,7 +16,7 @@ export default function AddButton(
     <Button
       sx={{ m: 1 }}
       variant="contained"
-      size={props.size ?? "large"}
+      size={props.size ?? "medium"}
       color="success"
       onClick={() => {
         if (props.to !== undefined) {

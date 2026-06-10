@@ -70,6 +70,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const [isScoringEntryInfoModalOpen, setIsScoringEntryInfoModalOpen] =
     useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [isTeam, setIsTeam] = useState<boolean>(false);
   const [selectedForInfo, setSelectedForInfo] = useState<number | undefined>(
     undefined,
   );
@@ -130,9 +131,15 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     setIsMatchInfoModalOpen(false);
   };
 
-  const handleScoringModalOpen = (scoringEntryId: number, isEdit: boolean) => {
+  const handleScoringModalOpen = (
+    scoringEntryId: number,
+    isEdit: boolean,
+    isTeam: boolean,
+  ) => {
+    console.log(isTeam)
     setSelectedForInfo(scoringEntryId);
     setIsEditMode(isEdit);
+    setIsTeam(isTeam);
     setIsScoringEntryInfoModalOpen(true);
   };
 
@@ -212,7 +219,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                           disabled={watch("bracket") === ""}
                           onClick={() => setValue("bracket", "")}
                           edge="end"
-                          aria-label="toggle password visibility"
+                          aria-label="remove bracket selection"
                         >
                           <Clear
                             color={
@@ -247,6 +254,13 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                           color="warning"
                           variant="outlined"
                           label="Realizado"
+                        ></Chip>
+                      )}
+                      {item.has_only_scoring_rounds && (
+                        <Chip
+                          color="warning"
+                          variant="outlined"
+                          label="Final Direta"
                         ></Chip>
                       )}
                     </Grid>
@@ -864,7 +878,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             >
               {scoringEntriesData?.map((entry, index) => (
                 <>
-                  <Grid size={12}>
+                  <Grid size={12} key={index}>
                     {entry.ongoing && (
                       <Box
                         sx={{
@@ -939,7 +953,16 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                handleScoringModalOpen(entry.id, true);
+                                handleScoringModalOpen(
+                                  entry.id,
+                                  true,
+                                  Boolean(
+                                    bracketsData?.find(
+                                      (item) =>
+                                        watch("bracket") === String(item.id),
+                                    )?.is_team,
+                                  ),
+                                );
                               }}
                             >
                               <Settings />
@@ -986,7 +1009,16 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                               entry.person == null),
                           )}
                           onClick={() => {
-                            handleScoringModalOpen(entry.id, false);
+                            handleScoringModalOpen(
+                              entry.id,
+                              false,
+                              Boolean(
+                                bracketsData?.find(
+                                  (item) =>
+                                    watch("bracket") === String(item.id),
+                                )?.is_team,
+                              ),
+                            );
                           }}
                         >
                           <Visibility />
@@ -1031,6 +1063,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
         scoringEntryData={scoringEntriesData?.find(
           (item) => item.id === selectedForInfo,
         )}
+        team={isTeam}
       ></ScoringEntryInfoModal>
     </>
   );

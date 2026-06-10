@@ -36,14 +36,18 @@ export default function ScoringEntryInfoModal(
     scoringEntryData?: any;
     brackedId: number;
     edit: boolean;
+    team?: boolean;
   }>,
 ) {
   const updateScoringEntry = drawsHooks.useUpdateScoringEntry();
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      person:
-        props.scoringEntryData?.person === null
+      person: props.team
+        ? props.scoringEntryData?.team === null
+          ? ""
+          : props.scoringEntryData?.team.id
+        : props.scoringEntryData?.person === null
           ? ""
           : props.scoringEntryData?.person.id,
       kata: props.scoringEntryData?.scoring_result?.kata ?? "",
@@ -58,8 +62,11 @@ export default function ScoringEntryInfoModal(
   React.useEffect(() => {
     if (props.scoringEntryData) {
       reset({
-        person:
-          props.scoringEntryData?.person === null
+        person: props.team
+          ? props.scoringEntryData?.team === null
+            ? ""
+            : props.scoringEntryData?.team.id
+          : props.scoringEntryData?.person === null
             ? ""
             : props.scoringEntryData?.person.id,
         kata: props.scoringEntryData?.scoring_result?.kata ?? "",
@@ -102,8 +109,14 @@ export default function ScoringEntryInfoModal(
         score_4: data.score_4 === "N/A" ? 0 : data.score_4,
         score_5: data.score_5 === "N/A" ? 0 : data.score_5,
       },
-      person: data.person,
+      person: null,
+      team: null,
     };
+    if (props.team) {
+      payload.team = data.person;
+    } else {
+      payload.person = data.person;
+    }
 
     updateScoringEntry.mutate(
       { scoringEntryId: props.scoringEntryData.id, data: payload },
@@ -159,18 +172,24 @@ export default function ScoringEntryInfoModal(
               control={control}
               bracketId={props.brackedId}
               scoring
+              team={props.team}
             ></MatchDetailEditCard>
           ) : (
             <MatchDetailCard
               color={
                 props.scoringEntryData?.entry_number % 2 === 0 ? "Shiro" : "Aka"
               }
-              contenderInfo={props.scoringEntryData?.person}
+              contenderInfo={
+                props.team
+                  ? props.scoringEntryData?.team
+                  : props.scoringEntryData?.person
+              }
               matchInfo={
                 props.scoringEntryData?.scoring_result?.flags_contender_1
               }
               kataInfo={props.scoringEntryData?.scoring_result?.kata}
               scoring
+              team={props.team}
             ></MatchDetailCard>
           )}
           <Grid

@@ -29,6 +29,15 @@ export const useMembersPerBracketData = (bracketId: number) => {
   });
 };
 
+export const useTeamsPerBracketData = (bracketId: number) => {
+  return useQuery({
+    queryKey: ["bracket-teams", bracketId],
+    queryFn: () => BracketService.bracketTeamsList(bracketId),
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export const useEventScoringEntriesData = (bracketId: string, eventId: string) => {
   return useQuery({
     queryKey: ["event-scoring-entries", bracketId, eventId],

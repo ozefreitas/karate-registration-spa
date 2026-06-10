@@ -6,8 +6,9 @@ import {
   MenuItem,
   CircularProgress,
   Chip,
+  Typography,
 } from "@mui/material";
-import { Person, SportsMartialArts, Flag } from "@mui/icons-material";
+import { Person, SportsMartialArts, Flag, Group } from "@mui/icons-material";
 import { Controller } from "react-hook-form";
 import { KataOptions } from "../../config";
 import { drawsHooks } from "../../hooks";
@@ -18,6 +19,7 @@ interface MatchDetailEditCardProps {
   reverse?: boolean;
   bracketId: number;
   scoring?: boolean;
+  team?: boolean;
 }
 
 function IconBox({
@@ -90,16 +92,20 @@ export default function MatchDetailEditCard({
   reverse,
   bracketId,
   scoring,
+  team,
 }: Readonly<MatchDetailEditCardProps>) {
   // Retrieve all members inside a given bracked
   const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
     drawsHooks.useMembersPerBracketData(bracketId);
 
+  const { data: bracketTeamsData, isLoading: isBracketTeamsLoading } =
+    drawsHooks.useTeamsPerBracketData(bracketId);
+
   return (
     <Grid container direction={"column"} gap={2} width={"100%"}>
       <InfoRow
         color={color}
-        icon={<Person />}
+        icon={team ? <Group /> : <Person />}
         value={
           <Grid
             size={12}
@@ -112,7 +118,13 @@ export default function MatchDetailEditCard({
             <Grid container size={10}>
               <Controller
                 name={
-                  scoring ? "person" : `contender_${color === "Shiro" ? 1 : 2}`
+                  team
+                    ? scoring
+                      ? "person"
+                      : `team_contender_${color === "Shiro" ? 1 : 2}`
+                    : scoring
+                      ? "person"
+                      : `contender_${color === "Shiro" ? 1 : 2}`
                 }
                 control={control}
                 render={({ field }) => (
@@ -121,17 +133,33 @@ export default function MatchDetailEditCard({
                     type="text"
                     variant="outlined"
                     fullWidth
-                    label="Atleta"
+                    label={team ? "Equipa" : "Atleta"}
                     select
                     required
                     {...field}
                     slotProps={{
                       select: {
                         renderValue: (selected) => {
-                          const selectedMember = bracketMembersData?.find(
-                            (m: any) => m.id === selected,
-                          );
-                          return selectedMember?.full_name || "";
+                          if (team) {
+                            const selectedTeam = bracketTeamsData?.find(
+                              (m: any) => m.id === selected,
+                            );
+                            return (
+                              <Grid
+                                container
+                                alignItems={"center"}
+                                columnSpacing={2}
+                              >
+                                <Typography>{`${selectedTeam?.athlete1.full_name} | ${selectedTeam?.athlete2.full_name} | ${selectedTeam?.athlete3?.full_name}`}</Typography>
+                                <Chip label={selectedTeam?.club}></Chip>
+                              </Grid>
+                            );
+                          } else {
+                            const selectedMember = bracketMembersData?.find(
+                              (m: any) => m.id === selected,
+                            );
+                            return <>{selectedMember?.full_name || ""}</>;
+                          }
                         },
                       },
                     }}
@@ -140,7 +168,29 @@ export default function MatchDetailEditCard({
                     <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
                       -- Selecionar --
                     </MenuItem>
-                    {isBracketMembersLoading ? (
+                    {team ? (
+                      isBracketTeamsLoading ? (
+                        <Grid
+                          mt={3}
+                          container
+                          size={12}
+                          justifyContent={"center"}
+                        >
+                          <CircularProgress />
+                        </Grid>
+                      ) : (
+                        bracketTeamsData?.map((team, index: number) => (
+                          <MenuItem
+                            sx={{ display: "flex", gap: 2, p: 2 }}
+                            key={index}
+                            value={team.id}
+                          >
+                            {`${team?.athlete1.full_name} | ${team?.athlete2.full_name} | ${team?.athlete3?.full_name}`}
+                            <Chip size="small" label={team.club} />
+                          </MenuItem>
+                        ))
+                      )
+                    ) : isBracketMembersLoading ? (
                       <Grid
                         mt={3}
                         container
@@ -150,15 +200,15 @@ export default function MatchDetailEditCard({
                         <CircularProgress />
                       </Grid>
                     ) : (
-                      bracketMembersData?.map((item: any, index: number) => (
+                      bracketMembersData?.map((person, index: number) => (
                         <MenuItem
                           sx={{ display: "flex", gap: 2, p: 2 }}
                           key={index}
-                          value={item.id}
+                          value={person.id}
                         >
-                          {item.full_name}
-                          <Chip size="small" label={item.club} />
-                          <Chip size="small" label={`${item.age} anos`} />
+                          {person.full_name}
+                          <Chip size="small" label={person.club} />
+                          <Chip size="small" label={`${person.age} anos`} />
                         </MenuItem>
                       ))
                     )}

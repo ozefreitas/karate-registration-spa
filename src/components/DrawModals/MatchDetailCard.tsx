@@ -1,5 +1,5 @@
 import { Box, Typography, Paper, Grid, Chip } from "@mui/material";
-import { Person, SportsMartialArts, Flag } from "@mui/icons-material";
+import { Person, SportsMartialArts, Flag, Group } from "@mui/icons-material";
 import { KataOptions } from "../../config";
 
 interface MatchDetailCardProps {
@@ -9,6 +9,7 @@ interface MatchDetailCardProps {
   kataInfo: string;
   reverse?: boolean;
   scoring?: boolean;
+  team?: boolean;
 }
 
 function IconBox({
@@ -82,13 +83,13 @@ export default function MatchDetailCard({
   kataInfo,
   reverse,
   scoring,
+  team,
 }: Readonly<MatchDetailCardProps>) {
-  console.log(kataInfo)
   return (
     <Grid container direction={"column"} gap={2} width={"100%"}>
       <InfoRow
         color={color}
-        icon={<Person />}
+        icon={team ? <Group /> : <Person />}
         value={
           <Grid
             container
@@ -98,9 +99,30 @@ export default function MatchDetailCard({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography fontWeight={700}>{contenderInfo.full_name}</Typography>
-            <Chip size="small" label={`${contenderInfo.age} anos`}></Chip>
-            <Chip size="small" label={contenderInfo.club}></Chip>
+            {team ? (
+              <Grid container spacing={3} alignItems={"center"}>
+                <Grid container direction={"column"} rowSpacing={2}>
+                  <Typography fontWeight={700}>
+                    {contenderInfo.athlete1?.full_name}
+                  </Typography>
+                  <Typography fontWeight={700}>
+                    {contenderInfo.athlete2?.full_name}
+                  </Typography>
+                  <Typography fontWeight={700}>
+                    {contenderInfo.athlete3?.full_name}
+                  </Typography>
+                </Grid>
+                <Chip size="small" label={`${contenderInfo.club}`}></Chip>
+              </Grid>
+            ) : (
+              <>
+                <Typography fontWeight={700}>
+                  {contenderInfo.full_name}
+                </Typography>
+                <Chip size="small" label={`${contenderInfo.age} anos`}></Chip>
+                <Chip size="small" label={contenderInfo.club}></Chip>
+              </>
+            )}
           </Grid>
         }
         reverse={reverse}
@@ -121,7 +143,11 @@ export default function MatchDetailCard({
             <Typography>Kata:</Typography>
             <Typography
               fontWeight={700}
-              color={kataInfo === undefined || kataInfo === "" ? "textDisabled" : undefined}
+              color={
+                kataInfo === undefined || kataInfo === ""
+                  ? "textDisabled"
+                  : undefined
+              }
             >
               {KataOptions.find((item) => item.value === kataInfo)?.label ??
                 "N/A"}

@@ -16,7 +16,7 @@ const SingleTeamContenderCard = (props: {
   const athletes = Object.entries(props.teamData)
     .filter(([key, value]) => key.startsWith("athlete") && value !== null)
     .map(([_, athlete]) => athlete);
-  console.log(athletes);
+
   return (
     <Card
       elevation={props.isMatchFinished ? (props.isWinner ? 5 : 0) : 2}
@@ -54,6 +54,7 @@ const SingleTeamContenderCard = (props: {
         alignItems={"center"}
         justifyContent={"space-between"}
         p={2}
+        pr={4}
       >
         <Grid container spacing={3} alignItems={"center"} size={8}>
           <Grid
@@ -75,7 +76,7 @@ const SingleTeamContenderCard = (props: {
               }}
             ></Box>
           </Grid>
-          <Grid container direction={"column"} spacing={1} size={10}>
+          <Grid container direction={"column"} spacing={1} size={8}>
             {athletes?.map((member: any, index: any) => (
               <Grid key={index} container direction={"column"} spacing={1}>
                 <Typography
@@ -93,24 +94,26 @@ const SingleTeamContenderCard = (props: {
                       ? "TBD"
                       : member.full_name}
                 </Typography>
-                <Typography
-                  variant="subtitle2"
-                  fontWeight={
-                    props.isMatchFinished
-                      ? props.isWinner
-                        ? 700
-                        : undefined
-                      : undefined
-                  }
-                >
-                  {member.club === undefined && props.isFirstRound
-                    ? "bye"
-                    : member.club === undefined && !props.isFirstRound
-                      ? "TBD"
-                      : member.club}
-                </Typography>
               </Grid>
             ))}
+          </Grid>
+          <Grid>
+            <Typography
+              variant="subtitle2"
+              fontWeight={
+                props.isMatchFinished
+                  ? props.isWinner
+                    ? 700
+                    : undefined
+                  : undefined
+              }
+            >
+              {props.teamData.club === undefined && props.isFirstRound
+                ? "bye"
+                : props.teamData.club === undefined && !props.isFirstRound
+                  ? "TBD"
+                  : props.teamData.club}
+            </Typography>
           </Grid>
           {props.isMatchFinished &&
             props.isWinner &&
