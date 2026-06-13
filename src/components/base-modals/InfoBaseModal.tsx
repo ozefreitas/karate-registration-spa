@@ -13,11 +13,7 @@ import {
 import * as React from "react";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { EncounterOptions } from "../../config";
-import EventDetailCard from "./EventDetailCard";
 import { Close } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
-import { getFullDate } from "../../utils/utils";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -28,30 +24,29 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EventCalendarInfo(
+export default function ComunicateProblemModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
-    eventData?: any;
+    chipName?: string;
+    title: string;
+    children: any;
+    onSubmit: any;
   }>,
 ) {
-  const navigate = useNavigate();
   return (
     <Dialog
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       open={props.isModalOpen}
-      onClose={props.handleModalClose}
+      onClose={() => {
+        props.handleModalClose();
+      }}
       slots={{
         transition: Transition,
       }}
     >
-      <DialogTitle
-        sx={{
-          borderTop: `5px solid ${EncounterOptions.find((item) => item.value === props.eventData?.encounter_type)?.color}`,
-          width: "100%",
-        }}
-      >
+      <DialogTitle sx={{ borderTop: "red", width: "100%" }}>
         <Grid
           container
           justifyContent={"space-between"}
@@ -59,15 +54,9 @@ export default function EventCalendarInfo(
           mt={1}
         >
           <Grid>
-            <Chip
-              label={
-                EncounterOptions.find(
-                  (item) => item.value === props.eventData?.encounter_type,
-                )?.label ?? "Competição/Torneio"
-              }
-            ></Chip>
+            {props.chipName && <Chip label={props.chipName}></Chip>}
             <Typography fontWeight={"bold"} m={2} ml={1} variant="h4">
-              {props.eventData?.name}
+              {props.title}
             </Typography>
           </Grid>
           <IconButton
@@ -78,23 +67,7 @@ export default function EventCalendarInfo(
           </IconButton>
         </Grid>
       </DialogTitle>
-      <DialogContent>
-        <EventDetailCard
-          date={props.eventData?.event_date}
-          description={props.eventData?.description}
-          location={props.eventData?.location}
-          type={props.eventData?.encounter_type}
-          registration_state={
-            props.eventData?.event_date < getFullDate()
-              ? "Realizado"
-              : props.eventData?.is_open || props.eventData?.is_retification
-                ? "Inscrições em Progresso"
-                : props.eventData?.is_closed
-                  ? "Inscrições Encerradas"
-                  : "Por Iniciar"
-          }
-        ></EventDetailCard>
-      </DialogContent>
+      <DialogContent>{props.children}</DialogContent>
       <DialogActions>
         <Stack
           direction={{
@@ -108,16 +81,23 @@ export default function EventCalendarInfo(
             alignSelf: { xs: "flex-end", sm: "center" },
           }}
         >
-          <Button sx={{ p: 1 }} size="small" onClick={props.handleModalClose}>
-            Voltar
-          </Button>
           <Button
             sx={{ p: 1 }}
             size="small"
-            onClick={() => navigate(`${props.eventData?.id}`)}
-            variant="contained"
+            onClick={() => {
+              props.handleModalClose();
+            }}
           >
-            Mais Informações
+            Voltar
+          </Button>
+          <Button
+            sx={{ px: 2 }}
+            size="small"
+            color="info"
+            variant="contained"
+            onClick={() => props.onSubmit()}
+          >
+            Confirmar
           </Button>
         </Stack>
       </DialogActions>

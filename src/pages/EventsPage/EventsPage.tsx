@@ -400,9 +400,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                   borderRadius: 4,
                                   p: 1.5,
                                   px: 2,
-                                  border: 4,
+                                  border: 3,
                                   borderColor: "lightgray",
-                                  bgcolor: "red",
+                                  bgcolor: "#f35757",
                                   "&:hover": {
                                     transform: "translateY(-3px)",
                                     boxShadow: 6,

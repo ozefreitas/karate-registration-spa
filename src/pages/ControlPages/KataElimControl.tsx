@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { Add } from "@mui/icons-material";
+import { Send } from "@mui/icons-material";
 import { KataOptions } from "../../config";
 import { drawsHooks } from "../../hooks";
 import { useAuth } from "../../access/GlobalAuthProvider";
@@ -137,6 +137,7 @@ export default function KataElimControl(
       //   },
       // },
     );
+
   };
 
   return (
@@ -189,13 +190,12 @@ export default function KataElimControl(
         >
           <Button
             variant="contained"
-            size="large"
             color="success"
             onClick={() => {
               sendPlayer1Kata();
               handleSubmit(onSubmitKatas)();
             }}
-            startIcon={<Add />}
+            startIcon={<Send />}
           >
             Enviar
           </Button>
@@ -242,13 +242,12 @@ export default function KataElimControl(
         >
           <Button
             variant="contained"
-            size="large"
             color="success"
             onClick={() => {
               sendPlayer2Kata();
               handleSubmit(onSubmitKatas)();
             }}
-            startIcon={<Add />}
+            startIcon={<Send />}
           >
             Enviar
           </Button>
@@ -263,7 +262,7 @@ export default function KataElimControl(
         size={12}
         justifyContent={"space-between"}
       >
-        <Typography>Número de Bandeiras AKA</Typography>
+        <Typography>Número de Bandeiras <strong>AKA</strong></Typography>
         <Button
           variant="contained"
           disabled={points !== 0 && points !== undefined}

@@ -40,12 +40,8 @@ export default function RegisteredTeamsPage(
     error: singleEventError,
   } = eventsHooks.useFetchSingleEventData(eventId!);
 
-  const { data: disciplinesData } = disciplinesHooks.useFetchDisciplinesData(
-    eventId!,
-    false,
-    false,
-    true,
-  );
+  const { data: disciplinesData, isLoading: isDisciplinesLoading } =
+    disciplinesHooks.useFetchDisciplinesData(eventId!, false, false, true);
 
   const state = singleEventData?.is_open
     ? "Inscrições abertas"
@@ -141,18 +137,18 @@ export default function RegisteredTeamsPage(
         </Grid>
       </Grid>
       <Grid size={12} m={2}>
-        {isSingleEventLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+        {isSingleEventLoading || isDisciplinesLoading ? (
+          <Grid container justifyContent={"center"} mt={5}>
             <CircularProgress />
-          </Box>
+          </Grid>
         ) : singleEventError ? (
-          <Grid mt={3} container justifyContent="center" size={12}>
+          <Grid mt={5} container justifyContent="center" size={12}>
             <ListItem>
               <ListItemText primary="Ocorreu um erro ao encontrar as Equipas para este Evento, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
           </Grid>
         ) : disciplinesData?.results.length === 0 ? (
-          <Grid mt={3} container justifyContent="center" size={12}>
+          <Grid mt={5} container justifyContent="center" size={12}>
             <ListItem>
               <ListItemText primary="Não foram encontradas Modalidades para este Evento."></ListItemText>
             </ListItem>

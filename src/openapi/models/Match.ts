@@ -12,6 +12,8 @@ export type Match = {
     winner: CompactPerson;
     readonly kataresult: KataResult | null;
     readonly kumiteresult: KumiteResult | null;
+    readonly contender_1_dorsal: string;
+    readonly contender_2_dorsal: string;
     round_number: number;
     is_third_place?: boolean;
     match_number: number;

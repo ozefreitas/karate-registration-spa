@@ -418,6 +418,16 @@ export default function MatchPickerModal(
           }}
         >
           <Button
+            sx={{ p: 1 }}
+            size="small"
+            onClick={() => {
+              setSelectedMatchId(props.getValues("match"));
+              props.handleModalClose();
+            }}
+          >
+            Voltar
+          </Button>
+          <Button
             sx={{ px: 2 }}
             size="small"
             color="info"
@@ -439,16 +449,6 @@ export default function MatchPickerModal(
             }}
           >
             Prosseguir
-          </Button>
-          <Button
-            sx={{ p: 1 }}
-            size="small"
-            onClick={() => {
-              setSelectedMatchId(props.getValues("match"));
-              props.handleModalClose();
-            }}
-          >
-            Voltar
           </Button>
         </Stack>
       </DialogActions>

@@ -112,15 +112,17 @@ export default function MatchDetailCard({
                     {contenderInfo.athlete3?.full_name}
                   </Typography>
                 </Grid>
-                <Chip size="small" label={`${contenderInfo.club}`}></Chip>
+                <Chip size="small" label={`${contenderInfo?.club}`}></Chip>
               </Grid>
+            ) : contenderInfo === null ? (
+              <Typography>Bye</Typography>
             ) : (
               <>
                 <Typography fontWeight={700}>
-                  {contenderInfo.full_name}
+                  {contenderInfo?.full_name}
                 </Typography>
-                <Chip size="small" label={`${contenderInfo.age} anos`}></Chip>
-                <Chip size="small" label={contenderInfo.club}></Chip>
+                <Chip size="small" label={`${contenderInfo?.age} anos`}></Chip>
+                <Chip size="small" label={contenderInfo?.club}></Chip>
               </>
             )}
           </Grid>
@@ -140,18 +142,24 @@ export default function MatchDetailCard({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <Typography>Kata:</Typography>
-            <Typography
-              fontWeight={700}
-              color={
-                kataInfo === undefined || kataInfo === ""
-                  ? "textDisabled"
-                  : undefined
-              }
-            >
-              {KataOptions.find((item) => item.value === kataInfo)?.label ??
-                "N/A"}
-            </Typography>
+            {contenderInfo === null ? (
+              <Typography>Bye</Typography>
+            ) : (
+              <>
+                <Typography>Kata:</Typography>
+                <Typography
+                  fontWeight={700}
+                  color={
+                    kataInfo === undefined || kataInfo === ""
+                      ? "textDisabled"
+                      : undefined
+                  }
+                >
+                  {KataOptions.find((item) => item.value === kataInfo)?.label ??
+                    "N/A"}
+                </Typography>{" "}
+              </>
+            )}
           </Grid>
         }
         reverse={reverse}
@@ -170,13 +178,19 @@ export default function MatchDetailCard({
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <Typography>Número de Bandeiras:</Typography>
-              <Typography
-                color={matchInfo === undefined ? "textDisabled" : undefined}
-                fontWeight={700}
-              >
-                {matchInfo ?? "N/A"}
-              </Typography>
+              {contenderInfo === null ? (
+                <Typography>Bye</Typography>
+              ) : (
+                <>
+                  <Typography>Número de Bandeiras:</Typography>
+                  <Typography
+                    color={matchInfo === undefined ? "textDisabled" : undefined}
+                    fontWeight={700}
+                  >
+                    {matchInfo ?? "N/A"}
+                  </Typography>
+                </>
+              )}
             </Grid>
           }
           reverse={reverse}

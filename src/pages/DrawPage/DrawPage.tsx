@@ -13,10 +13,13 @@ import DeleteDrawModal from "../../components/Modals/DeleteDrawModal";
 import AddButton from "../../components/Buttons/AddButton";
 import { eventsHooks, drawsHooks } from "../../hooks";
 import FormCard from "../../dashboard/FormCard";
+import ComunicateProblemModal from "../../components/Modals/ComunicateProblemModal";
 
 export default function RulesPage(props: Readonly<{ userRole: string }>) {
+  const navigate = useNavigate();
   const { id: eventId } = useParams();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isProblemModalOpen, setIsProblemModalOpen] = useState<boolean>(false);
 
   const handleDeleteModalOpen = () => {
     setIsDeleteModalOpen(true);
@@ -24,7 +27,13 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
   const handleDeleteModalClose = () => {
     setIsDeleteModalOpen(false);
   };
-  const navigate = useNavigate();
+
+  const handleProblemModalOpen = () => {
+    setIsProblemModalOpen(true);
+  };
+  const handleProblemModalClose = () => {
+    setIsProblemModalOpen(false);
+  };
 
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
   const generateDrawPDF = eventsHooks.useGenerateDrawPDF();
@@ -139,6 +148,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
                 variant="contained"
                 disabled={bracketsData?.length === 0}
                 startIcon={<Feedback></Feedback>}
+                onClick={() => handleProblemModalOpen()}
               >
                 Comunicar Problema
               </Button>
@@ -151,6 +161,11 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
         handleModalClose={handleDeleteModalClose}
         isModalOpen={isDeleteModalOpen}
       ></DeleteDrawModal>
+      <ComunicateProblemModal
+        handleModalClose={handleProblemModalClose}
+        isModalOpen={isProblemModalOpen}
+        location="Sorteios"
+      ></ComunicateProblemModal>
     </div>
   );
 }

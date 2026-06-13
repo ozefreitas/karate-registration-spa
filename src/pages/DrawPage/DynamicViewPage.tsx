@@ -136,7 +136,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     isEdit: boolean,
     isTeam: boolean,
   ) => {
-    console.log(isTeam)
+    console.log(isTeam);
     setSelectedForInfo(scoringEntryId);
     setIsEditMode(isEdit);
     setIsTeam(isTeam);
@@ -250,18 +250,10 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                     <Grid px={1} container spacing={3} alignItems={"center"}>
                       <Typography>{item.name}</Typography>
                       {item.officialized_at === null ? null : (
-                        <Chip
-                          color="warning"
-                          variant="outlined"
-                          label="Realizado"
-                        ></Chip>
+                        <Chip color="success" label="Realizado"></Chip>
                       )}
                       {item.has_only_scoring_rounds && (
-                        <Chip
-                          color="warning"
-                          variant="outlined"
-                          label="Final Direta"
-                        ></Chip>
+                        <Chip color="warning" label="Final Direta"></Chip>
                       )}
                     </Grid>
                   </MenuItem>
@@ -453,9 +445,10 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                 {rounds.map((roundNumber, index: number) => (
                   <Fragment key={index}>
                     <Grid
-                      height={"100%"}
+                      // height={"100%"}
                       size={5}
                       container
+                      pb={5}
                       sx={{ minWidth: 450 }}
                     >
                       <Grid
@@ -484,10 +477,13 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                 match.kataresult?.flags_contender_1!;
                             const isOngoing = match.ongoing;
                             const matchFinished =
-                              !match.ongoing &&
-                              match.kataresult?.flags_contender_2 != null &&
-                              match.kataresult?.flags_contender_1 != null &&
-                              match.winner !== null;
+                              (!match.ongoing &&
+                                match.kataresult?.flags_contender_2 != null &&
+                                match.kataresult?.flags_contender_1 != null &&
+                                match.winner !== null) ||
+                              (!match.ongoing &&
+                                match.kataresult === null &&
+                                match.winner !== null);
                             const isFirstRound = roundNumber === rounds[0];
                             return (
                               <Grid container size={12} spacing={2} key={index}>
@@ -591,9 +587,11 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                     alignContent={"space-evenly"}
                                     minWidth={50}
                                   >
-                                    {["subed_club", "free_club"].includes(
-                                      props.userRole,
-                                    ) ? null : (
+                                    {[
+                                      "subed_club",
+                                      "free_club",
+                                      undefined,
+                                    ].includes(props.userRole) ? null : (
                                       <>
                                         <Tooltip
                                           title="Fazer Alterações"
@@ -621,7 +619,12 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                           <span>
                                             <IconButton
                                               size="small"
-                                              disabled={match.ongoing}
+                                              disabled={
+                                                match.ongoing ||
+                                                (!match.ongoing &&
+                                                  match.kataresult === null &&
+                                                  match.winner !== null)
+                                              }
                                               onClick={() => {
                                                 patchOngoingMatch.mutate({
                                                   matchId: Number(match.id),
@@ -778,6 +781,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   scoringEntriesData.length > 0 ? (
                   <Grid
                     container
+                    direction={"column"}
                     alignItems={"center"}
                     justifyContent={"center"}
                     textAlign={"center"}
@@ -786,9 +790,8 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                     bgcolor={"#fafafa"}
                     p={3}
                     pb={4}
-                    size={12}
                     boxShadow={4}
-                    width={"100%"}
+                    width={"1000px"}
                     sx={{
                       opacity: 0.85,
                       transform: "rotate(-90deg)",
@@ -913,6 +916,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         }
                         roundNumber={0}
                         teamData={entry.team}
+                        rank={entry.rank!}
                       ></SingleTeamContenderCard>
                     ) : (
                       <SingleContenderCard
@@ -934,7 +938,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   </Grid>
                   <Grid
                     size={2}
-                    px={2}
                     borderRadius={4}
                     bgcolor={"#fdecea"}
                     container
@@ -944,7 +947,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                     alignContent={"space-evenly"}
                     minWidth={50}
                   >
-                    {["subed_club", "free_club"].includes(
+                    {["subed_club", "free_club", undefined].includes(
                       props.userRole,
                     ) ? null : (
                       <>

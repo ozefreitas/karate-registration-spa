@@ -13,6 +13,8 @@ export default function CompetitorCard() {
   console.log(winner);
   const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
+  const [player1Number, setPlayer1Number] = useState<string>("XXX");
+  const [player2Number, setPlayer2Number] = useState<string>("XXX");
   const [player1Club, setPlayer1Club] = useState<string>("CLUBE COMPETIDOR 1");
   const [player2Club, setPlayer2Club] = useState<string>("CLUBE COMPETIDOR 2");
   const [player1Kata, setPlayer1Kata] = useState<string>("KATA COMPETIDOR 1");
@@ -23,11 +25,25 @@ export default function CompetitorCard() {
     console.log(data);
     if (data.player1Name) setPlayer1Name(data.player1Name);
     if (data.player2Name) setPlayer2Name(data.player2Name);
+    if (data.player1Number) setPlayer1Number(data.player1Number);
+    if (data.player2Number) setPlayer2Number(data.player2Number);
     if (data.player1Club) setPlayer1Club(data.player1Club);
     if (data.player2Club) setPlayer2Club(data.player2Club);
     if (data.player1Kata) setPlayer1Kata(data.player1Kata);
     if (data.player2Kata) setPlayer2Kata(data.player2Kata);
     if (data.tatami) setTatami(data.tatami);
+    if (data.reset) {
+      setPlayer1Name("NOME COMPETIDOR 1");
+      setPlayer1Club("CLUBE COMPETIDOR 1");
+      setPlayer1Kata("KATA COMPETIDOR 1");
+      setPlayer1Number("XXX");
+      setPlayer2Name("NOME COMPETIDOR 2");
+      setPlayer2Club("CLUBE COMPETIDOR 2");
+      setPlayer2Kata("KATA COMPETIDOR 2");
+      setPlayer2Number("XXX");
+      setWinner({ aka: false, shiro: false });
+      setAkaScore(undefined);
+    }
   });
 
   useEffect(() => {
@@ -78,20 +94,20 @@ export default function CompetitorCard() {
           }}
         >
           <Grid>
-            <Typography sx={{ m: 3, mb: 0, ml: 5 }} variant="h3">
+            <Typography m={3} mb={0} ml={5} variant="h3">
               {player1Name}
             </Typography>
           </Grid>
           <Grid container>
-            <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-              001
+            <Typography m={1} ml={5} variant="h4Half">
+              {player1Number}
             </Typography>
-            <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
+            <Typography m={1} ml={5} variant="h4Half">
               <i>{player1Club}</i>
             </Typography>
           </Grid>
           <Grid>
-            <Typography sx={{ mt: 1, ml: 5 }} variant="h4">
+            <Typography mt={1} ml={5} variant="h4">
               {KataOptions.find((item) => item.value === player1Kata)?.label ??
                 "KATA COMPETIDOR 1"}
             </Typography>
@@ -120,7 +136,7 @@ export default function CompetitorCard() {
               <i>{player2Club}</i>
             </Typography>
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
-              002
+              {player2Number}
             </Typography>
           </Grid>
           <Grid container justifyContent="flex-end">

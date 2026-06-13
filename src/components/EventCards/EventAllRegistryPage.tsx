@@ -37,7 +37,7 @@ export default function EventAllRegistryPage(
   const {
     data: singleEventData,
     isLoading: isSingleEventLoading,
-    // error: singleEventError,
+    error: singleEventError,
   } = eventsHooks.useFetchSingleEventData(eventId!);
 
   const { data: disciplinesData, isLoading: isDisciplinesLoading } =
@@ -49,13 +49,27 @@ export default function EventAllRegistryPage(
       true,
     );
 
-  const getColumnMapping = (isCoach?: boolean) => {
+  const getColumnMapping = (isTeam?: boolean, isCoach?: boolean) => {
     // Base columns except the one that must be last
-    const baseColumns = [
-      { key: "full_name", label: "Nome" },
+    const baseColumns = [];
+    if (
+      disciplinesData?.results.length !== 0 &&
+      (isTeam === undefined || isTeam === false)
+    ) {
+      baseColumns.push({ key: "full_name", label: "Nome" });
+    } else if (disciplinesData?.results.length !== 0 && isTeam) {
+      baseColumns.push(
+        { key: "athlete1", label: "Atleta 1" },
+        { key: "athlete2", label: "Atleta 2" },
+        { key: "athlete3", label: "Atleta 3" },
+      );
+    }
+
+    // Always add these ones
+    baseColumns.push(
       { key: "gender", label: "Género" },
       { key: "club", label: "Clube" },
-    ];
+    );
 
     // Conditionally add category
     if (
@@ -82,13 +96,20 @@ export default function EventAllRegistryPage(
             inscritos para a prova que selecionou (ver acima).
           </>
         }
-        title="Visualização de inscrições gerais"
+        title="Inscrições gerais"
       ></PageInfoCard>
       <Grid size={12} mt={5}>
         {isSingleEventLoading || isDisciplinesLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Grid container justifyContent={"center"} mt={5}>
             <CircularProgress />
-          </Box>
+          </Grid>
+        ) : singleEventError ? (
+          <Grid mt={5} container justifyContent="center" size={12}>
+            <Typography>
+              Ocorreu um erro ao encontrar as Atletas inscritos neste Evento
+              para este Evento, tente mais tarde ou contacte um administrador.
+            </Typography>
+          </Grid>
         ) : disciplinesData?.results.length === 0 ? (
           <AllUseTable
             count={singleEventData?.individuals.length!}
@@ -116,6 +137,21 @@ export default function EventAllRegistryPage(
                 added_at: formatDateTime(personInfo.added_at, "both"),
               }),
             );
+            const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
+              id: teamInfo.team.id,
+              athlete1: teamInfo.team.athlete1.full_name,
+              athlete2: teamInfo.team.athlete2.full_name,
+              athlete3: teamInfo.team.athlete3?.full_name,
+              gender: teamInfo.team.gender,
+              club: teamInfo.team.club,
+              category:
+                teamInfo.category === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.category.name
+                ),
+              added_at: formatDateTime(teamInfo.added_at, "both"),
+            }));
             return (
               <>
                 <Grid
@@ -148,16 +184,39 @@ export default function EventAllRegistryPage(
                     </Grid>
                   ) : null}
                 </Grid>
-                <AllUseTable
-                  count={discipline.individuals.length}
-                  type="Modalidades"
-                  discipline={discipline.id}
-                  data={disciplineIndividuals}
-                  columnsHeaders={getColumnMapping(discipline.is_coach)}
-                  actions={["main_admin", "superuser"].includes(props.userRole)}
-                  selection={false}
-                  userRole={props.userRole}
-                ></AllUseTable>
+                {discipline.is_team ? (
+                  <AllUseTable
+                    count={discipline.teams.length}
+                    type="Modalidades"
+                    discipline={discipline.id}
+                    data={disciplineTeams}
+                    columnsHeaders={getColumnMapping(
+                      discipline.is_team,
+                      discipline.is_coach,
+                    )}
+                    actions={["main_admin", "superuser"].includes(
+                      props.userRole,
+                    )}
+                    selection={false}
+                    userRole={props.userRole}
+                  ></AllUseTable>
+                ) : (
+                  <AllUseTable
+                    count={discipline.individuals.length}
+                    type="Modalidades"
+                    discipline={discipline.id}
+                    data={disciplineIndividuals}
+                    columnsHeaders={getColumnMapping(
+                      discipline.is_team,
+                      discipline.is_coach,
+                    )}
+                    actions={["main_admin", "superuser"].includes(
+                      props.userRole,
+                    )}
+                    selection={false}
+                    userRole={props.userRole}
+                  ></AllUseTable>
+                )}
               </>
             );
           })

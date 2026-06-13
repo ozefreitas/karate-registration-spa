@@ -27,6 +27,7 @@ export default function GenerateDrawModal(
     eventId: string;
     willOverwrite: any;
     submitFunction: any;
+    loading: boolean;
   }>,
 ) {
   const handleGenerate = async (event: React.MouseEvent<HTMLElement>) => {
@@ -78,22 +79,22 @@ export default function GenerateDrawModal(
           }}
           sx={{
             p: 2,
-            gap: 3,
+            gap: 2,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },
           }}
         >
+          <Button size="small" onClick={props.handleModalClose}>
+            Cancelar
+          </Button>
           <Button
             size="small"
             onClick={(e) => handleGenerate(e)}
             variant="contained"
-            // loading={generateDrawMutation.isPending}
-            // loadingPosition="start"
+            loading={props.loading}
+            loadingPosition="start"
           >
             Confirmar
-          </Button>
-          <Button size="small" onClick={props.handleModalClose}>
-            Cancelar
           </Button>
         </Stack>
       </DialogActions>

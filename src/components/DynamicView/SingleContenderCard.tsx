@@ -81,22 +81,25 @@ const SingleContenderCard = (props: {
                   ? "TBD"
                   : props.fullName}
             </Typography>
-            <Typography
-              variant="subtitle2"
-              fontWeight={
-                props.isMatchFinished
-                  ? props.isWinner
-                    ? 700
+            {(props.club === undefined && props.isFirstRound) ||
+            (props.club === undefined && !props.isFirstRound) ? null : (
+              <Typography
+                variant="subtitle2"
+                fontWeight={
+                  props.isMatchFinished
+                    ? props.isWinner
+                      ? 700
+                      : undefined
                     : undefined
-                  : undefined
-              }
-            >
-              {props.club === undefined && props.isFirstRound
-                ? "bye"
-                : props.club === undefined && !props.isFirstRound
-                  ? "TBD"
-                  : props.club}
-            </Typography>
+                }
+              >
+                {props.club === undefined && props.isFirstRound
+                  ? "bye"
+                  : props.club === undefined && !props.isFirstRound
+                    ? "TBD"
+                    : props.club}
+              </Typography>
+            )}
           </Grid>
           {props.isMatchFinished &&
             props.isWinner &&
@@ -114,7 +117,7 @@ const SingleContenderCard = (props: {
         >
           {props.rank && (
             <Grid>
-              <Chip label={`Classicação provisória: ${props.rank}º Lugar`}></Chip>
+              <Chip label={`Classicação prov.: ${props.rank}º Lugar`}></Chip>
             </Grid>
           )}
           <Typography

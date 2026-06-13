@@ -52,7 +52,7 @@ export default function ControlPage(
                 value={
                   <Grid
                     container
-                    columnGap={3}
+                    columnGap={2}
                     rowGap={1}
                     size={12}
                     justifyContent={"center"}
@@ -74,6 +74,24 @@ export default function ControlPage(
                     ></Chip>
                     <Chip
                       size="small"
+                      label={`${
+                        props.matchesData?.find(
+                          (item: any) =>
+                            String(item.id) === props.watch("match"),
+                        )?.contender_1?.id_number ?? "N/A"
+                      }`}
+                    ></Chip>
+                    <Chip
+                      size="small"
+                      label={`${
+                        props.matchesData?.find(
+                          (item: any) =>
+                            String(item.id) === props.watch("match"),
+                        )?.contender_1_dorsal ?? "N/A"
+                      }`}
+                    ></Chip>
+                    <Chip
+                      size="small"
                       label={
                         props.matchesData?.find(
                           (item: any) =>
@@ -92,7 +110,7 @@ export default function ControlPage(
                 value={
                   <Grid
                     container
-                    columnGap={3}
+                    columnGap={2}
                     rowGap={1}
                     size={12}
                     justifyContent={"center"}
@@ -111,6 +129,24 @@ export default function ControlPage(
                             String(item.id) === props.watch("match"),
                         )?.contender_2?.age ?? "N/A"
                       } anos`}
+                    ></Chip>
+                    <Chip
+                      size="small"
+                      label={`${
+                        props.matchesData?.find(
+                          (item: any) =>
+                            String(item.id) === props.watch("match"),
+                        )?.contender_2?.id_number ?? "N/A"
+                      }`}
+                    ></Chip>
+                    <Chip
+                      size="small"
+                      label={`${
+                        props.matchesData?.find(
+                          (item: any) =>
+                            String(item.id) === props.watch("match"),
+                        )?.contender_2_dorsal ?? "N/A"
+                      }`}
                     ></Chip>
                     <Chip
                       size="small"
@@ -155,23 +191,23 @@ export default function ControlPage(
           </Button>
         </Grid>
       )}
-      {props.currentScreen === "Kata Individual" ? (
-        <KataElimControl
-          currentMatchData={props.currentMatch}
-        ></KataElimControl>
-      ) : null}
-      {props.currentScreen === "Final Kata Individual" ? (
-        <KataFinalControl></KataFinalControl>
-      ) : null}
-      {props.currentScreen === "Kumite Individual" ? (
-        <KumiteIndivControl></KumiteIndivControl>
-      ) : null}
-      {props.currentScreen === "Kata Equipa" ? (
-        <KataTeamControl></KataTeamControl>
-      ) : null}
-      {props.currentScreen === "Kumite Equipa" ? (
-        <KumiteTeamControl></KumiteTeamControl>
-      ) : null}
+      {props.watch("match") !== "" && (
+        <>
+          {props.currentScreen === "Kata Individual" ? (
+            <KataElimControl currentMatchData={props.currentMatch} />
+          ) : null}
+          {props.currentScreen === "Final Kata Individual" ? (
+            <KataFinalControl />
+          ) : null}
+          {props.currentScreen === "Kumite Individual" ? (
+            <KumiteIndivControl />
+          ) : null}
+          {props.currentScreen === "Kata Equipa" ? <KataTeamControl /> : null}
+          {props.currentScreen === "Kumite Equipa" ? (
+            <KumiteTeamControl />
+          ) : null}
+        </>
+      )}
     </FormCard>
   );
 }

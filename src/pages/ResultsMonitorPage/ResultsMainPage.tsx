@@ -5,13 +5,15 @@ import {
   MenuItem,
   InputAdornment,
   IconButton,
+  Typography,
+  Chip,
 } from "@mui/material";
 import {
   OpenInNew,
   CloseFullscreen,
-  Add,
   Clear,
   AdsClick,
+  Send,
 } from "@mui/icons-material";
 import ControlPage from "../ResultsMonitorPage/ControlPage";
 import { useEffect, useState, useRef } from "react";
@@ -233,10 +235,6 @@ export default function ResultsMainPage() {
   };
 
   useEffect(() => {
-    matchesDataRef.current = matchesData;
-  }, [matchesData]);
-
-  useEffect(() => {
     selectedMatchRef.current = watch("match");
   }, [watch("match")]);
 
@@ -256,11 +254,37 @@ export default function ResultsMainPage() {
       JSON.stringify({
         player1Name: currentMatch?.contender_1?.full_name,
         player2Name: currentMatch?.contender_2?.full_name,
+        player1Number: currentMatch?.contender_1_dorsal,
+        player2Number: currentMatch?.contender_2_dorsal,
         player1Club: currentMatch?.contender_1?.club,
         player2Club: currentMatch?.contender_2?.club,
         player1Kata: currentMatch?.kataresult?.kata_contender_1,
         player2Kata: currentMatch?.kataresult?.kata_contender_2,
         tatami: inputedTatamiRef.current,
+      }),
+    );
+  };
+
+  const sendNextMatchState = (nextMatchId: number) => {
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN)
+      return;
+
+    const nextMatch = matchesDataRef.current?.find(
+      (item) => item.id === nextMatchId,
+    );
+
+    socketRef.current.send(
+      JSON.stringify({
+        player1Name: nextMatch?.contender_1?.full_name,
+        player2Name: nextMatch?.contender_2?.full_name,
+        player1Number: nextMatch?.contender_1_dorsal,
+        player2Number: nextMatch?.contender_2_dorsal,
+        player1Club: nextMatch?.contender_1?.club,
+        player2Club: nextMatch?.contender_2?.club,
+        player1Kata: nextMatch?.kataresult?.kata_contender_1,
+        player2Kata: nextMatch?.kataresult?.kata_contender_2,
+        tatami: inputedTatamiRef.current,
+        nextMatch: true,
       }),
     );
   };
@@ -297,15 +321,27 @@ export default function ResultsMainPage() {
     });
   };
 
-  const getNextMatchId = (currentMatchId: number) => {
-    const orderedMatches = getOrderedMatches();
-    const currentIndex = orderedMatches.findIndex(
-      (m: any) => m.id === currentMatchId,
-    );
+  const getNextMatchId = (currentMatch: any) => {
+    const ordered = getOrderedMatches();
+    const currentIndex = ordered.findIndex((m: any) => m.id === currentMatch);
+    // console.log(
+    //   "currentIndex",
+    //   currentIndex,
+    //   "currentMatch.id",
+    //   currentMatch,
+    //   "ordered",
+    //   ordered.map((m: any) => m.id),
+    // );
+    if (currentIndex === -1) return null; // match not found in ordered list
 
-    if (currentIndex === -1 || currentIndex === orderedMatches.length - 1)
-      return null;
-    return orderedMatches[currentIndex + 1].id;
+    for (let i = currentIndex + 1; i < ordered.length; i++) {
+      const match = ordered[i];
+      if (match.contender_1 && match.contender_2) {
+        return match.id;
+      }
+    }
+
+    return null;
   };
 
   const handleNextMatch = () => {
@@ -474,7 +510,20 @@ export default function ResultsMainPage() {
                       </MenuItem>
                       {bracketsData?.map((item, index) => (
                         <MenuItem key={index} value={item.id}>
-                          {item.name}
+                          <Grid
+                            px={1}
+                            container
+                            spacing={3}
+                            alignItems={"center"}
+                          >
+                            <Typography>{item.name}</Typography>
+                            {item.officialized_at === null ? null : (
+                              <Chip color="success" label="Realizado"></Chip>
+                            )}
+                            {item.has_only_scoring_rounds && (
+                              <Chip color="warning" label="Final Direta"></Chip>
+                            )}
+                          </Grid>
                         </MenuItem>
                       ))}
                     </TextField>
@@ -510,7 +559,7 @@ export default function ResultsMainPage() {
             subheader="Selecione um Escalão para poder selecionar o ecrã respetivo."
           >
             <Grid container size={12} alignContent="center">
-              <Grid p={2} size={3}>
+              <Grid size={2} p={2}>
                 <Controller
                   name="tatami"
                   control={control}
@@ -534,22 +583,15 @@ export default function ResultsMainPage() {
                   )}
                 />
               </Grid>
-              <Grid
-                size={2}
-                container
-                justifyContent={"center"}
-                alignContent="center"
-              >
+              <Grid container alignContent="center">
                 <Button
-                  sx={{ m: 1 }}
                   variant="contained"
-                  size="large"
                   color="success"
                   disabled={!isDisplayOpen || currentScreen === ""}
                   onClick={() => {
                     sendTatami();
                   }}
-                  startIcon={<Add />}
+                  startIcon={<Send />}
                 >
                   Enviar
                 </Button>
@@ -628,6 +670,8 @@ export default function ResultsMainPage() {
             currentMatchId={getValues("match")}
             nextMatchId={String(getNextMatchId(Number(getValues("match"))))}
             prevMatchId={String(getPrevMatchId(Number(getValues("match"))))}
+            sendNextMatchState={sendNextMatchState}
+            setValue={setValue}
           ></CommonActions>
         </>
       ) : null}

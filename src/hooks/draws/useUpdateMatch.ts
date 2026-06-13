@@ -1,9 +1,25 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { ApiError, MatchService } from "../../openapi";
 import { useSnackbar } from "notistack";
 import { callNotiStack } from "../../utils/utils";
 
 const channel = new BroadcastChannel("match_updates");
+
+const invalidateMatchQueries = (() => {
+  let timer: ReturnType<typeof setTimeout>;
+  return (queryClient: QueryClient) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      queryClient.invalidateQueries({ queryKey: ["brackets"] });
+      queryClient.invalidateQueries({ queryKey: ["event-matches"] });
+      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
+    }, 100);
+  };
+})();
 
 export const useUpdateMatch = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -19,9 +35,7 @@ export const useUpdateMatch = () => {
         "success",
       );
       channel.postMessage({ type: "MATCH_UPDATED" });
-      queryClient.invalidateQueries({ queryKey: ["brackets"] });
-      queryClient.invalidateQueries({ queryKey: ["event-matches"] });
-      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
+      invalidateMatchQueries(queryClient);
     },
     onError: () => {
       callNotiStack(
@@ -34,7 +48,7 @@ export const useUpdateMatch = () => {
   });
 };
 
-export const usePatchMatch = (userRole: string) => {
+export const usePatchMatch = (userRole: string, reset?: boolean) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const queryClient = useQueryClient();
@@ -44,9 +58,11 @@ export const usePatchMatch = (userRole: string) => {
     onSuccess: () => {
       callNotiStack(
         enqueueSnackbar,
-        userRole === "technician"
-          ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
-          : "Partida selecionada com sucesso! Está agora em direto!",
+        reset
+          ? "Ecrã limpo! Sem partida em direto!"
+          : userRole === "technician"
+            ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
+            : "Partida selecionada com sucesso! Está agora em direto!",
         "success",
       );
       channel.postMessage({ type: "MATCH_UPDATED" });
@@ -133,9 +149,7 @@ export const usePatchMatchWinner = () => {
         "success",
       );
       channel.postMessage({ type: "MATCH_UPDATED" });
-      queryClient.invalidateQueries({ queryKey: ["brackets"] });
-      queryClient.invalidateQueries({ queryKey: ["event-matches"] });
-      queryClient.invalidateQueries({ queryKey: ["event-scoring-entries"] });
+      invalidateMatchQueries(queryClient);
     },
     onError: () => {
       callNotiStack(

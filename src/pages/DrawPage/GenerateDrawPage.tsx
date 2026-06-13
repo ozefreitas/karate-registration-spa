@@ -42,7 +42,7 @@ export default function GenerateDrawPage() {
     minMembersPerGroup?: string;
     finalsSize?: string;
   };
-
+  const [loading, setLoading] = useState<boolean>(false);
   // Confirmed selections
   const [selections, setSelections] = useState<SelectionConfig[]>([]);
 
@@ -83,6 +83,7 @@ export default function GenerateDrawPage() {
   const generateDrawMutation = eventsHooks.useGenerateDraw();
 
   const onSubmit = (data: any) => {
+    setLoading(true);
     const payload = {
       eventId: eventId!,
       data: {
@@ -100,6 +101,7 @@ export default function GenerateDrawPage() {
     };
     generateDrawMutation.mutate(payload, {
       onSuccess: () => {
+        setLoading(false);
         navigate(`/events/${eventId!}/draw/`);
       },
     });
@@ -436,8 +438,8 @@ export default function GenerateDrawPage() {
           </Grid>
           <Grid size={12} p={2} container>
             <FormLabel>
-              Selecione o formato "Misto" para alterar o número de Atletas/Equipas em
-              cada final.
+              Selecione o formato "Misto" para alterar o número de
+              Atletas/Equipas em cada final.
             </FormLabel>
           </Grid>
           <Grid p={2} pt={0} size={6}>
@@ -691,6 +693,8 @@ export default function GenerateDrawPage() {
             size="large"
             disabled={selections.length === 0}
             color="secondary"
+            loading={loading}
+            loadingPosition="start"
             onClick={handleModalOpen}
             startIcon={<Casino />}
           >
@@ -704,6 +708,7 @@ export default function GenerateDrawPage() {
         eventId={eventId!}
         willOverwrite={bracketsData?.length! > 0}
         submitFunction={handleSubmit(onSubmit)}
+        loading={loading}
       ></GenerateDrawModal>
     </Grid>
   );

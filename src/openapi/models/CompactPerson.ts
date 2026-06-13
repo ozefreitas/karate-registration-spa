@@ -12,5 +12,6 @@ export type CompactPerson = {
     readonly age: string;
     weight?: number | null;
     graduation: GraduationEnum;
+    id_number?: number | null;
 };
 

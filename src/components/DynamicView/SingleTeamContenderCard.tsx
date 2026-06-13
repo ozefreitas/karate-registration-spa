@@ -76,7 +76,7 @@ const SingleTeamContenderCard = (props: {
               }}
             ></Box>
           </Grid>
-          <Grid container direction={"column"} spacing={1} size={8}>
+          <Grid container direction={"column"} spacing={1} size={7}>
             {athletes?.map((member: any, index: any) => (
               <Grid key={index} container direction={"column"} spacing={1}>
                 <Typography
@@ -108,11 +108,17 @@ const SingleTeamContenderCard = (props: {
                   : undefined
               }
             >
-              {props.teamData.club === undefined && props.isFirstRound
-                ? "bye"
-                : props.teamData.club === undefined && !props.isFirstRound
-                  ? "TBD"
-                  : props.teamData.club}
+              {props.teamData.club === undefined && props.isFirstRound ? (
+                "bye"
+              ) : props.teamData.club === undefined && !props.isFirstRound ? (
+                "TBD"
+              ) : (
+                <Chip
+                  variant="outlined"
+                  color="info"
+                  label={props.teamData.club}
+                ></Chip>
+              )}
             </Typography>
           </Grid>
           {props.isMatchFinished &&
@@ -126,14 +132,13 @@ const SingleTeamContenderCard = (props: {
         <Grid
           container
           alignItems={"center"}
-          size={4}
+          size={3.5}
+          pl={2}
           justifyContent={props.rank ? "space-between" : "flex-end"}
         >
           {props.rank && (
             <Grid>
-              <Chip
-                label={`Classicação provisória: ${props.rank}º Lugar`}
-              ></Chip>
+              <Chip label={`Classicação prov.: ${props.rank}º Lugar`}></Chip>
             </Grid>
           )}
           <Typography

@@ -64,7 +64,6 @@ export const useFetchNextEventData = () => {
     queryKey: ["next-event"],
     queryFn: EventsService.eventsNextEventRetrieve,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
   });
 };
 
