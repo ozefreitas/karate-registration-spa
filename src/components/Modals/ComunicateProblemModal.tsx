@@ -46,12 +46,12 @@ export default function ComunicateProblemModal(
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = () => {
     // check if contender with most flags is the one selected as winner
 
-    const payload = {
-      description: data.description,
-    };
+    // const payload = {
+    //   description: data.description,
+    // };
   };
 
   return (
