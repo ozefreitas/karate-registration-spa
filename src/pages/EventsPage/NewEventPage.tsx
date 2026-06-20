@@ -60,7 +60,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
   const [disciplines, setDisciplines] = useState<string[]>([]);
   const [disciplineWarning, setDisciplineWarning] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
-  const [pageSize, setPageSize] = useState<number>(100);
+  const [pageSize, setPageSize] = useState<number>(-1);
   const [searchParams, _] = useSearchParams();
 
   const predifinedDate = searchParams.get("date") || "";
@@ -119,11 +119,12 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
 
   const createEvent = eventsHooks.useCreateEvent();
   const createDiscipline = disciplinesHooks.useCreateDiscipline();
+  const [isTeam, setIsTeam] = useState<boolean | undefined>(undefined);
   const { data: categoriesData, isLoading: isCategoriesLoading } =
     categoriesHooks.useFetchCategoriesData(1, 100);
   const addDisciplineCategory = disciplinesHooks.useAddDisciplineCategory();
 
-  // Memoize `rows` to compute only when `members` changes
+  // Memoize `rows` to compute only when `categories` changes
   const categoryRows = useMemo(() => {
     const currentIds = disciplineCategories.find(
       (item: any) => item.discipline === selectedDisciplineForCategory,
@@ -266,8 +267,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           ),
       }));
   }, [categoriesData, selectedDisciplineForCategory, disciplineCategories]);
-
-  console.log(categoryRows);
 
   type EventMetadataForm = {
     name: string;
@@ -1385,9 +1384,17 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                     <ListItem key={index}>
                       <ListItemButton
                         selected={discipline === selectedDisciplineForCategory}
-                        onClick={() =>
-                          setSelectedDisciplineForCategory(discipline)
-                        }
+                        onClick={() => {
+                          setSelectedDisciplineForCategory(discipline);
+                          const options = disciplineOptions.find(
+                            (item) => item.discipline === discipline,
+                          );
+                          if (options?.is_team) {
+                            setIsTeam(true);
+                          } else if (!options?.is_team) {
+                            setIsTeam(false);
+                          }
+                        }}
                         sx={{ p: 1, pl: 3 }}
                       >
                         <ListItemIcon>
@@ -1481,6 +1488,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           isModalOpen={isCategoriesModalOpen}
           disciplineData={selectedDisciplineForCategory}
           disciplineCategories={disciplineCategories}
+          isTeam={isTeam}
           setDisciplineCategories={setDisciplineCategories}
         ></CategoriesModal>
       </Grid>
