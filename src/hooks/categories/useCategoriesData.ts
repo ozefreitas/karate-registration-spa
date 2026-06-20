@@ -12,6 +12,7 @@ export const useFetchCategoriesData = (
   maxGrad?: boolean,
   minWeight?: boolean,
   maxWeight?: boolean,
+  maxAthletes?: boolean,
 ) => {
   return useQuery({
     queryKey: [
@@ -26,12 +27,13 @@ export const useFetchCategoriesData = (
       maxGrad,
       minWeight,
       maxWeight,
+      maxAthletes
     ],
     queryFn: () =>
       CategoriesService.categoriesList(
         gender,
         maxAge,
-        undefined,
+        maxAthletes,
         maxGrad,
         maxWeight,
         minAge,

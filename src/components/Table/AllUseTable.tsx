@@ -161,7 +161,10 @@ export default function AllUseTable(
   const [searchParams, setSearchParams] = useSearchParams();
 
   const paramPage = searchParams.get("page") ?? "1";
-  const paramPageSize = searchParams.get("page_size") ?? "10";
+  const paramPageSize =
+    props.type === "CategoriasReadOnly"
+      ? "-1"
+      : (searchParams.get("page_size") ?? "10");
 
   useEffect(() => {
     if (!props.setPage || !props.setPageSize) return;

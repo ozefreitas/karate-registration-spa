@@ -96,6 +96,7 @@ export default function CategoriesModal(
     handleModalClose: any;
     disciplineData: any;
     disciplineCategories: any;
+    isTeam: boolean | undefined;
     setDisciplineCategories: any;
   }>,
 ) {
@@ -107,7 +108,19 @@ export default function CategoriesModal(
     data: categoriesData,
     isLoading: isCategoriesLoading,
     error: categoriesError,
-  } = categoriesHooks.useFetchCategoriesData(1, 100);
+  } = categoriesHooks.useFetchCategoriesData(
+    1,
+    100,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    props.isTeam,
+  );
 
   const handleBackButtonClick = () => {
     setPage(page - 1);
