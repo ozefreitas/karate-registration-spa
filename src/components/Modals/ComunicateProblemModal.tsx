@@ -17,6 +17,8 @@ import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import { Clear, Close } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
+import { adminHooks } from "../../hooks";
+import { FeedbackOptions } from "../../config";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -46,12 +48,18 @@ export default function ComunicateProblemModal(
     },
   });
 
-  const onSubmit = () => {
-    // check if contender with most flags is the one selected as winner
+  const createFeedback = adminHooks.useCreateFeedback();
 
-    // const payload = {
-    //   description: data.description,
-    // };
+  const onSubmit = (data: any) => {
+    const payload = {
+      feedback: data.description,
+      feedback_type: props.location,
+    };
+
+    createFeedback.mutate(
+      { data: payload },
+      { onSuccess: () => props.handleModalClose() },
+    );
   };
 
   return (
@@ -74,7 +82,12 @@ export default function ComunicateProblemModal(
           mt={1}
         >
           <Grid>
-            <Chip label={props.location}></Chip>
+            <Chip
+              label={
+                FeedbackOptions.find((item) => item.value === props.location)
+                  ?.label
+              }
+            ></Chip>
             <Typography fontWeight={"bold"} m={2} ml={1} variant="h4">
               Comunicar Problema
             </Typography>
