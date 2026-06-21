@@ -254,3 +254,10 @@ export const RulesOptions: {
     disabled: true,
   },
 ];
+
+export const FeedbackOptions: { value: string; label: string }[] = [
+  { value: "general", label: "Geral" },
+  { value: "draw", label: "Sorteios" },
+  { value: "event", label: "Eventos" },
+  { value: "member", label: "Membros" },
+];

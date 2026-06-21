@@ -38,6 +38,7 @@ export default function MatchInfoModal(
     matchData?: any;
     brackedId: number;
     edit: boolean;
+    isKata?: boolean;
   }>,
 ) {
   const { enqueueSnackbar } = useSnackbar();
@@ -59,6 +60,8 @@ export default function MatchInfoModal(
       flags_contender_1: props.matchData?.kataresult?.flags_contender_1,
       kata_contender_2: props.matchData?.kataresult?.kata_contender_2,
       flags_contender_2: props.matchData?.kataresult?.flags_contender_2,
+      points_contender_1: props.matchData?.kumiteresult?.points_contender_1,
+      points_contender_2: props.matchData?.kumiteresult?.points_contender_2,
     },
   });
 
@@ -77,6 +80,10 @@ export default function MatchInfoModal(
         flags_contender_1: props.matchData.kataresult?.flags_contender_1 ?? 0,
         kata_contender_2: props.matchData.kataresult?.kata_contender_2 ?? "",
         flags_contender_2: props.matchData.kataresult?.flags_contender_2 ?? 0,
+        points_contender_1:
+          props.matchData?.kumiteresult?.points_contender_1 ?? 0,
+        points_contender_2:
+          props.matchData?.kumiteresult?.points_contender_2 ?? 0,
       });
 
       if (props.matchData.winner === null) {
@@ -91,8 +98,8 @@ export default function MatchInfoModal(
     }
   }, [props.matchData]);
 
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const onKataSubmit = (data: any) => {
+    console.log(data);
     // check if contender with most flags is the one selected as winner
     if (
       data.flags_contender_1 > data.flags_contender_2 &&
@@ -176,6 +183,8 @@ export default function MatchInfoModal(
     );
   };
 
+  const onKumiteSubmit = (data: any) => {};
+
   return (
     <Dialog
       fullWidth
@@ -230,10 +239,10 @@ export default function MatchInfoModal(
               ></MatchDetailEditCard>
             ) : (
               <MatchDetailCard
+                isKata={props.isKata!}
                 color="Shiro"
                 contenderInfo={props.matchData?.contender_1}
-                matchInfo={props.matchData?.kataresult?.flags_contender_1}
-                kataInfo={props.matchData?.kataresult?.kata_contender_1}
+                matchInfo={props.matchData}
               ></MatchDetailCard>
             )}
           </Grid>
@@ -247,10 +256,11 @@ export default function MatchInfoModal(
               ></MatchDetailEditCard>
             ) : (
               <MatchDetailCard
+                isKata={props.isKata!}
                 color="Aka"
                 contenderInfo={props.matchData?.contender_2}
-                matchInfo={props.matchData?.kataresult?.flags_contender_2}
-                kataInfo={props.matchData?.kataresult?.kata_contender_2}
+                matchInfo={props.matchData}
+                // kataInfo={props.matchData?.kataresult?.kata_contender_2}
                 reverse
               ></MatchDetailCard>
             )}
@@ -345,7 +355,13 @@ export default function MatchInfoModal(
                 size="small"
                 color="info"
                 variant="contained"
-                onClick={() => handleSubmit(onSubmit)()}
+                onClick={() => {
+                  if (props.isKata) {
+                    handleSubmit(onKataSubmit)();
+                  } else {
+                    handleSubmit(onKumiteSubmit)();
+                  }
+                }}
               >
                 Confirmar
               </Button>

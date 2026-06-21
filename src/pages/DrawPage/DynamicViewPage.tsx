@@ -186,6 +186,10 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     setCanScrollRight(el.scrollLeft + 45 + el.clientWidth < el.scrollWidth - 1);
   };
 
+  const isKata = bracketsData
+    ?.find((item) => watch("bracket") === String(item.id))
+    ?.name.includes("Kata");
+
   return (
     <>
       <PageInfoCard
@@ -253,7 +257,11 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         <Chip color="success" label="Realizado"></Chip>
                       )}
                       {item.has_only_scoring_rounds && (
-                        <Chip color="warning" label="Final Direta"></Chip>
+                        <Chip
+                          color="warning"
+                          size="small"
+                          label="Final Direta"
+                        ></Chip>
                       )}
                     </Grid>
                   </MenuItem>
@@ -444,13 +452,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               >
                 {rounds.map((roundNumber, index: number) => (
                   <Fragment key={index}>
-                    <Grid
-                      // height={"100%"}
-                      size={5}
-                      container
-                      pb={5}
-                      sx={{ minWidth: 450 }}
-                    >
+                    <Grid size={5} container pb={5} sx={{ minWidth: 450 }}>
                       <Grid
                         size={12}
                         sx={{ minWidth: 300 }}
@@ -471,19 +473,31 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         {matchesData
                           ?.filter((item) => item.round_number === roundNumber)
                           .map((match, index: number) => {
-                            const is2Winner =
-                              match.winner?.id === match.contender_2?.id &&
-                              match.kataresult?.flags_contender_2! >
-                                match.kataresult?.flags_contender_1!;
+                            const is2Winner = isKata
+                              ? match.winner?.id === match.contender_2?.id &&
+                                match.kataresult?.flags_contender_2! >
+                                  match.kataresult?.flags_contender_1!
+                              : match.winner?.id === match.contender_2?.id &&
+                                match.kumiteresult?.points_contender_2! >
+                                  match.kumiteresult?.points_contender_1!;
                             const isOngoing = match.ongoing;
-                            const matchFinished =
-                              (!match.ongoing &&
-                                match.kataresult?.flags_contender_2 != null &&
-                                match.kataresult?.flags_contender_1 != null &&
-                                match.winner !== null) ||
-                              (!match.ongoing &&
-                                match.kataresult === null &&
-                                match.winner !== null);
+                            const matchFinished = isKata
+                              ? (!match.ongoing &&
+                                  match.kataresult?.flags_contender_2 != null &&
+                                  match.kataresult?.flags_contender_1 != null &&
+                                  match.winner !== null) ||
+                                (!match.ongoing &&
+                                  match.kataresult === null &&
+                                  match.winner !== null)
+                              : (!match.ongoing &&
+                                  match.kumiteresult?.points_contender_2 !=
+                                    null &&
+                                  match.kumiteresult?.points_contender_1 !=
+                                    null &&
+                                  match.winner !== null) ||
+                                (!match.ongoing &&
+                                  match.kumiteresult === null &&
+                                  match.winner !== null);
                             const isFirstRound = roundNumber === rounds[0];
                             return (
                               <Grid container size={12} spacing={2} key={index}>
@@ -540,13 +554,23 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                       contenderNumber={1}
                                       isWinner={!is2Winner}
                                       points={
-                                        match.kataresult === null ||
-                                        (match.kataresult?.flags_contender_1 ===
-                                          0 &&
-                                          match.kataresult
-                                            ?.flags_contender_2 === 0)
-                                          ? 99
-                                          : match.kataresult?.flags_contender_1
+                                        isKata
+                                          ? match.kataresult === null ||
+                                            (match.kataresult
+                                              ?.flags_contender_1 === 0 &&
+                                              match.kataresult
+                                                ?.flags_contender_2 === 0)
+                                            ? 99
+                                            : match.kataresult
+                                                ?.flags_contender_1
+                                          : match.kumiteresult === null ||
+                                              (match.kumiteresult
+                                                ?.points_contender_1 === 0 &&
+                                                match.kumiteresult
+                                                  ?.points_contender_2 === 0)
+                                            ? 99
+                                            : match.kumiteresult
+                                                ?.points_contender_1!
                                       }
                                       fullName={match.contender_1?.full_name}
                                       club={match.contender_1?.club}
@@ -560,13 +584,23 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                       contenderNumber={2}
                                       isWinner={is2Winner}
                                       points={
-                                        match.kataresult === null ||
-                                        (match.kataresult?.flags_contender_1 ===
-                                          0 &&
-                                          match.kataresult
-                                            ?.flags_contender_2 === 0)
-                                          ? 99
-                                          : match.kataresult?.flags_contender_2
+                                        isKata
+                                          ? match.kataresult === null ||
+                                            (match.kataresult
+                                              ?.flags_contender_1 === 0 &&
+                                              match.kataresult
+                                                ?.flags_contender_2 === 0)
+                                            ? 99
+                                            : match.kataresult
+                                                ?.flags_contender_2
+                                          : match.kumiteresult === null ||
+                                              (match.kumiteresult
+                                                ?.points_contender_1 === 0 &&
+                                                match.kumiteresult
+                                                  ?.points_contender_2 === 0)
+                                            ? 99
+                                            : match.kumiteresult
+                                                ?.points_contender_2!
                                       }
                                       fullName={match.contender_2?.full_name}
                                       club={match.contender_2?.club}
@@ -1057,6 +1091,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
         edit={isEditMode}
         matchData={matchesData?.find((item) => item.id === selectedForInfo)}
         brackedId={Number(watch("bracket"))}
+        isKata={isKata}
       ></MatchInfoModal>
       <ScoringEntryInfoModal
         brackedId={Number(watch("bracket"))}

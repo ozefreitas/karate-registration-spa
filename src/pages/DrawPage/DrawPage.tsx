@@ -164,7 +164,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
       <ComunicateProblemModal
         handleModalClose={handleProblemModalClose}
         isModalOpen={isProblemModalOpen}
-        location="Sorteios"
+        location="draw"
       ></ComunicateProblemModal>
     </div>
   );
