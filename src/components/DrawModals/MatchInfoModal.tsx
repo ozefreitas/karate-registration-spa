@@ -183,7 +183,60 @@ export default function MatchInfoModal(
     );
   };
 
-  const onKumiteSubmit = (data: any) => {};
+  const onKumiteSubmit = (data: any) => {
+    if (
+      data.points_contender_1 > data.points_contender_2 &&
+      selectedWinner === "AKA"
+    ) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Vencedor selecionado não é o que tem mais pontos! Verifique o resultado.",
+        "error",
+      );
+      return;
+    }
+    if (
+      data.points_contender_2 > data.points_contender_1 &&
+      selectedWinner === "SHIRO"
+    ) {
+      callNotiStack(
+        enqueueSnackbar,
+        "Vencedor selecionado não é o que tem mais pontos! Verifique o resultado.",
+        "error",
+      );
+      return;
+    }
+
+    const payload = {
+      kumiteresult: {
+        points_contender_1: data.points_contender_1,
+        points_contender_2: data.points_contender_2,
+        points_conceded_contender_1: data.points_contender_2,
+        points_conceded_contender_2: data.points_contender_1,
+      },
+      contender_1: data.contender_1,
+      contender_2: data.contender_2,
+      winner:
+        selectedWinner === "SHIRO"
+          ? data.contender_1
+          : selectedWinner === "AKA"
+            ? data.contender_2
+            : null,
+    };
+    if (selectedWinner !== "") {
+      const winner = { winner: selectedWinner === "SHIRO" ? 1 : 2 };
+      patchMatchWinner.mutate({ matchId: props.matchData.id, data: winner });
+    }
+    updateMatch.mutate(
+      { matchId: props.matchData.id, data: payload },
+      {
+        onSuccess: () => {
+          props.handleModalClose();
+          setSelectedWinner("");
+        },
+      },
+    );
+  };
 
   return (
     <Dialog
@@ -233,6 +286,7 @@ export default function MatchInfoModal(
           <Grid size={6}>
             {props.edit ? (
               <MatchDetailEditCard
+                isKata={props.isKata!}
                 color="Shiro"
                 control={control}
                 bracketId={props.brackedId}
@@ -249,6 +303,7 @@ export default function MatchInfoModal(
           <Grid size={6}>
             {props.edit ? (
               <MatchDetailEditCard
+                isKata={props.isKata!}
                 color="Aka"
                 control={control}
                 bracketId={props.brackedId}

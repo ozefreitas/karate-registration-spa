@@ -3,9 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { KataResult } from './KataResult';
+import type { KumiteResult } from './KumiteResult';
 export type UpdateMatch = {
     readonly id: number;
     kataresult?: KataResult;
+    kumiteresult?: KumiteResult;
     is_third_place?: boolean;
     ongoing?: boolean;
     readonly created_at: string;
