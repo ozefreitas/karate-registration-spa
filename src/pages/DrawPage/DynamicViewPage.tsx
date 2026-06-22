@@ -446,7 +446,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                 container
                 alignItems={"center"}
                 size={12}
-                spacing={5}
+                spacing={15}
                 width={"fit-content"}
                 wrap="nowrap"
               >
@@ -696,106 +696,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                           })}
                       </Grid>
                     </Grid>
-                    {/* Connector column — render between rounds, not after the last */}
-                    {index < rounds.length - 1 &&
-                      (() => {
-                        const currentRoundMatches =
-                          matchesData?.filter(
-                            (item) => item.round_number === roundNumber,
-                          ) ?? [];
-                        const nextRoundMatches =
-                          matchesData?.filter(
-                            (item) => item.round_number === rounds[index + 1],
-                          ) ?? [];
-
-                        // Each pair of current matches feeds one next-round match
-                        // Matches are grouped in pairs: [0,1] → nextMatch[0], [2,3] → nextMatch[1], etc.
-                        const CARD_HEIGHT = 95; // height of one SingleContenderCard (px)
-                        const CARD_GAP = 16; // spacing={2} between the two cards
-                        const MATCH_GAP = 64; // spacing={8} between matches
-                        const HEADER_OFFSET = roundNumber === 1 ? -120 : -380; // SectionHeader height
-                        // const SVG_HEIGHT = 600; // tall enough to cover all matches
-
-                        return (
-                          <Grid
-                            size="auto"
-                            sx={{ width: 40, position: "relative" }}
-                          >
-                            <svg
-                              width="40"
-                              height="10dvh"
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                overflow: "visible",
-                              }}
-                            >
-                              {nextRoundMatches.map((_, nextIdx) => {
-                                // The two R1 matches that feed this R2 match
-                                const matchA = currentRoundMatches[nextIdx * 2];
-                                const matchB =
-                                  currentRoundMatches[nextIdx * 2 + 1];
-                                if (!matchA || !matchB) return null;
-
-                                // Y center of winner card (contender_1 = top card) for each match
-                                const matchAY =
-                                  HEADER_OFFSET +
-                                  nextIdx *
-                                    2 *
-                                    (CARD_HEIGHT * 2 + CARD_GAP + MATCH_GAP) +
-                                  CARD_HEIGHT / 2;
-
-                                const matchBY =
-                                  HEADER_OFFSET +
-                                  (nextIdx * 2 + 1) *
-                                    (CARD_HEIGHT * 2 + CARD_GAP + MATCH_GAP) +
-                                  CARD_HEIGHT / 2;
-
-                                // Y of top and bottom cards in the next round match
-                                const nextTopY =
-                                  HEADER_OFFSET +
-                                  nextIdx *
-                                    (CARD_HEIGHT * 2 + CARD_GAP + MATCH_GAP) +
-                                  CARD_HEIGHT / 2 +
-                                  (roundNumber === 1 ? -30 : 210);
-
-                                const nextBottomY =
-                                  nextTopY + CARD_HEIGHT + CARD_GAP;
-
-                                return (
-                                  <g key={nextIdx}>
-                                    {/* Match A winner → next round top card */}
-                                    <path
-                                      d={`M0 ${matchAY} H20 V${nextTopY} H40`}
-                                      fill="none"
-                                      stroke="#d1d5db"
-                                      strokeWidth={2}
-                                      strokeDasharray={
-                                        nextRoundMatches[nextIdx]
-                                          ? undefined
-                                          : "5 3"
-                                      }
-                                    />
-                                    {/* Match B winner → next round bottom card */}
-                                    <path
-                                      d={`M0 ${matchBY} H20 V${nextBottomY} H40`}
-                                      fill="none"
-                                      stroke="#d1d5db"
-                                      strokeWidth={2}
-                                      strokeDasharray={
-                                        nextRoundMatches[nextIdx]
-                                          ? undefined
-                                          : "5 3"
-                                      }
-                                    />
-                                  </g>
-                                );
-                              })}
-                            </svg>
-                          </Grid>
-                        );
-                      })()}
                   </Fragment>
                 ))}
                 {isScoringEntriesLoading ? (

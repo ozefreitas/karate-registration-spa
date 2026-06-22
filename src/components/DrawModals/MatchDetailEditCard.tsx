@@ -8,12 +8,20 @@ import {
   Chip,
   Typography,
 } from "@mui/material";
-import { Person, SportsMartialArts, Flag, Group } from "@mui/icons-material";
+import {
+  Person,
+  SportsMartialArts,
+  Flag,
+  Group,
+  ModeStandby,
+  Warning,
+} from "@mui/icons-material";
 import { Controller } from "react-hook-form";
 import { KataOptions } from "../../config";
 import { drawsHooks } from "../../hooks";
 
 interface MatchDetailEditCardProps {
+  isKata: boolean;
   color: string;
   control: any;
   reverse?: boolean;
@@ -87,6 +95,7 @@ function InfoRow({
 }
 
 export default function MatchDetailEditCard({
+  isKata,
   color,
   control,
   reverse,
@@ -220,58 +229,78 @@ export default function MatchDetailEditCard({
         }
         reverse={reverse}
       />
-      <InfoRow
-        color={color}
-        icon={<SportsMartialArts />}
-        value={
-          <Grid
-            container
-            rowGap={1}
-            size={12}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Grid container size={10}>
-              <Controller
-                name={
-                  scoring
-                    ? "kata"
-                    : `kata_contender_${color === "Shiro" ? 1 : 2}`
-                }
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    type="text"
-                    variant={"outlined"}
-                    label="Kata"
-                    fullWidth
-                    select
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    // error={!!errors.kata_contender}
-                  >
-                    <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
-                    {KataOptions.filter((item) => item.value !== "none").map(
-                      (item, index) => (
-                        <MenuItem key={index} value={item.value}>
-                          {item.label}
-                        </MenuItem>
-                      ),
-                    )}
-                  </TextField>
-                )}
-              />
+      {isKata && (
+        <InfoRow
+          color={color}
+          icon={<SportsMartialArts />}
+          value={
+            <Grid
+              container
+              rowGap={1}
+              size={12}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Grid container size={10}>
+                <Controller
+                  name={
+                    scoring
+                      ? "kata"
+                      : `kata_contender_${color === "Shiro" ? 1 : 2}`
+                  }
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      type="text"
+                      variant={"outlined"}
+                      label="Kata"
+                      fullWidth
+                      select
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      // error={!!errors.kata_contender}
+                    >
+                      <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
+                        -- Selecionar --
+                      </MenuItem>
+                      {KataOptions.filter((item) => item.value !== "none").map(
+                        (item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ),
+                      )}
+                    </TextField>
+                  )}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        }
-        reverse={reverse}
-      />
-      {!scoring && (
+          }
+          reverse={reverse}
+        />
+      )}
+      {/* // ) : (
+      //   <InfoRow
+      //     color={color}
+      //     icon={<Warning />}
+      //     value={
+      //       <Grid
+      //         container
+      //         rowGap={1}
+      //         size={12}
+      //         justifyContent={"center"}
+      //         alignItems={"center"}
+      //       >
+      //         <Grid container size={10}></Grid>
+      //       </Grid>
+      //     }
+      //     reverse={reverse}
+      //   />
+      // )} */}
+      {!scoring && isKata ? (
         <InfoRow
           color={color}
           icon={<Flag />}
@@ -299,6 +328,41 @@ export default function MatchDetailEditCard({
                         field.onChange(e);
                       }}
                       // error={!!errors.flags_contender}
+                    ></TextField>
+                  )}
+                />
+              </Grid>
+            </Grid>
+          }
+          reverse={reverse}
+        />
+      ) : (
+        <InfoRow
+          color={color}
+          icon={<ModeStandby />}
+          value={
+            <Grid
+              container
+              rowGap={1}
+              size={12}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Grid container size={10}>
+                <Controller
+                  name={`points_contender_${color === "Shiro" ? 1 : 2}`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      type="number"
+                      variant={"outlined"}
+                      label="Pontos Marcados"
+                      fullWidth
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
                     ></TextField>
                   )}
                 />

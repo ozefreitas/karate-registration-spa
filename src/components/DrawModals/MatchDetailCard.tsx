@@ -136,7 +136,7 @@ export default function MatchDetailCard({
         }
         reverse={reverse}
       />
-      {isKata ? (
+      {isKata && (
         <InfoRow
           color={color}
           icon={<SportsMartialArts />}
@@ -189,7 +189,8 @@ export default function MatchDetailCard({
           }
           reverse={reverse}
         />
-      ) : (
+      )}
+      {/* ) : (
         <InfoRow
           color={color}
           icon={<Warning />}
@@ -207,17 +208,19 @@ export default function MatchDetailCard({
                 <Typography>Bye</Typography>
               ) : (
                 <Grid container>
-                  <Grid>
+                  <Grid size={12}>
                     <Typography>Faltas:</Typography>
                   </Grid>
-                  <Grid></Grid>
+                  <Grid size={12} container>
+                    <Grid>Hansoku</Grid>
+                  </Grid>
                 </Grid>
               )}
             </Grid>
           }
           reverse={reverse}
         />
-      )}
+      )} */}
       {!scoring && isKata ? (
         <InfoRow
           color={color}
