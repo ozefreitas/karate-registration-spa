@@ -44,6 +44,72 @@ import { formatDateTime } from "../../utils/utils";
 import ActionValidationModal from "../../components/Modals/ActionValidationModal";
 import SectionHeader from "../../components/Header/SectionHeader";
 
+import { Paper } from "@mui/material";
+import GroupIcon from "@mui/icons-material/Group";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import LockResetIcon from "@mui/icons-material/LockReset";
+import FormCard from "../../dashboard/FormCard";
+
+// ── Reusable bits ─────────────────────────────────────────────────────────────
+
+function SettingsSection({
+  icon,
+  title,
+  children,
+}: Readonly<{
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}>) {
+  return (
+    <Paper
+      elevation={0}
+      sx={{
+        border: "1px solid #eeeeee",
+        borderRadius: 3,
+        overflow: "hidden",
+        bgcolor: "#fff",
+      }}
+    >
+      {/* Header */}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          px: 3,
+          py: 2,
+          borderBottom: "2px solid #d32f2f",
+        }}
+      >
+        <Box
+          sx={{
+            width: 38,
+            height: 38,
+            borderRadius: 2,
+            bgcolor: "#d32f2f",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#fff",
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </Box>
+        <Typography fontSize={18} fontWeight={"bold"} sx={{ color: "#1a1a1a" }}>
+          {title}
+        </Typography>
+      </Box>
+
+      {/* Content */}
+      <Box sx={{ px: 3, py: 3 }}>{children}</Box>
+    </Paper>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 export default function MainSettingsPage() {
   const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
   const { enqueueSnackbar } = useSnackbar();
@@ -551,22 +617,35 @@ export default function MainSettingsPage() {
   };
 
   return (
-    <>
+    <Grid
+      sx={{
+        mb: 3,
+        // px: { xs: 2, md: 6 },
+      }}
+    >
       <PageInfoCard
         description="Aqui poderá configurar esta plataforma, e da forma como é
           apresentada para as contas associadas, assim como controlo sobre essas
           mesmas contas, controlar a forma como quotas são criadas, entre outras coisas."
         title="Administrador"
       ></PageInfoCard>
-      <Box sx={{ width: "100%" }}>
+
+      {/* Tabs */}
+      <Paper
+        elevation={0}
+        sx={{
+          border: "1px solid #eeeeee",
+          borderRadius: 3,
+          m: 6,
+          bgcolor: "#fff",
+        }}
+      >
         <Tabs
           sx={{
             "& .MuiTab-root": { color: "#e81c24" },
             "& .Mui-selected": { color: "#e81c24" },
             "& .MuiTabs-indicator": { backgroundColor: "#e81c24" },
             "& .MuiTab-fullWidth	": { color: "#e81c24" },
-            m: 2,
-            mt: 0,
             color: "#e81c24",
           }}
           value={section}
@@ -578,517 +657,525 @@ export default function MainSettingsPage() {
           <Tab value="payments_settings" label="Definições de Pagamentos" />
           <Tab value="members_manager" label="Gestor de Membros" />
         </Tabs>
-      </Box>
-      {section === "accounts_manager" ? (
-        <Grid m={5} mt={10}>
-          <SectionHeader title="Adicionar/Remover Clubes"></SectionHeader>
-          <Grid
-            mb={5}
-            container
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Grid size={6} sx={{ p: 2 }}>
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Conta Associada"
-                select
-                fullWidth
-                multiline
-                maxRows={8}
-                value={selectedUserId}
-                onChange={handleClubChange}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {availableClubsData?.results.map((item, index: number) => (
-                  <MenuItem key={index} value={item.id}>
-                    {item.club}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid size={6} container justifyContent="space-around">
-              <Button
-                variant="contained"
-                size="large"
-                color="error"
-                onClick={handleDeleteModalOpen}
-                disabled={selectedUserId === ""}
-                startIcon={<Delete />}
-              >
-                Eliminar Clube
-              </Button>
-              <Button
-                variant="contained"
-                size={"large"}
-                color={"success"}
-                type={"submit"}
-                startIcon={<Add></Add>}
-                onClick={handleAddClubModalOpen}
-              >
-                Adicionar Clube
-              </Button>
-            </Grid>
-          </Grid>
-          <SectionHeader title="Pedidos de Conta"></SectionHeader>
-          <Grid mb={5}>
-            <Grid size={6} sx={{ p: 2 }}>
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Conta a Inspecionar"
-                select
-                fullWidth
-                multiline
-                maxRows={8}
-                value={selectedRequestId}
-                onChange={handleAcountChange}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {requestAccountData?.results.map((item, index: number) => (
-                  <MenuItem key={index} value={item.id}>
-                    {item.username}
-                  </MenuItem>
-                ))}
-              </TextField>
+      </Paper>
 
-              {acountDetails === undefined ? null : (
-                <Card sx={{ m: 2 }}>
-                  <CardContent>
-                    <FormControl
-                      sx={{ pb: 2, justifyContent: "center" }}
-                      component="fieldset"
-                      variant="standard"
-                    >
-                      <FormControlLabel
-                        sx={{ mr: 2 }}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                          >
-                            Primeiro Nome:
-                          </Typography>
-                        }
-                        control={
-                          <TextField
-                            sx={{ width: "200px" }}
-                            color="warning"
-                            variant="standard"
-                            label=""
-                            value={acountDetails.first_name}
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: { fontSize: 18, marginRight: 10 },
-                              },
-                            }}
-                          />
-                        }
-                      ></FormControlLabel>
-                    </FormControl>
-                    <FormControl
-                      sx={{ pb: 2, justifyContent: "center" }}
-                      component="fieldset"
-                      variant="standard"
-                    >
-                      <FormControlLabel
-                        sx={{ mr: 2 }}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                          >
-                            Último Nome:
-                          </Typography>
-                        }
-                        control={
-                          <TextField
-                            sx={{ width: "200px" }}
-                            color="warning"
-                            variant="standard"
-                            label=""
-                            value={acountDetails.last_name}
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: { fontSize: 18, marginRight: 10 },
-                              },
-                            }}
-                          />
-                        }
-                      ></FormControlLabel>
-                    </FormControl>
-                    <FormControl
-                      sx={{ pb: 2, justifyContent: "center" }}
-                      component="fieldset"
-                      variant="standard"
-                    >
-                      <FormControlLabel
-                        sx={{ mr: 2 }}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                          >
-                            Identificação:
-                          </Typography>
-                        }
-                        control={
-                          <TextField
-                            sx={{ width: "150px" }}
-                            color="warning"
-                            variant="standard"
-                            label=""
-                            value={acountDetails.id_number}
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: { fontSize: 18, marginRight: 10 },
-                              },
-                            }}
-                          />
-                        }
-                      ></FormControlLabel>
-                    </FormControl>
-                    <FormControl
-                      sx={{ pb: 2, justifyContent: "center" }}
-                      component="fieldset"
-                      variant="standard"
-                    >
-                      <FormControlLabel
-                        sx={{ mr: 2 }}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                          >
-                            Email:
-                          </Typography>
-                        }
-                        control={
-                          <TextField
-                            sx={{ width: "300px" }}
-                            color="warning"
-                            variant="standard"
-                            label=""
-                            value={
-                              acountDetails.email === ""
-                                ? "N/A"
-                                : acountDetails.email
-                            }
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: {
-                                  fontSize: 18,
-                                  marginRight: 10,
-                                  color:
-                                    acountDetails.email === ""
-                                      ? "red"
-                                      : undefined,
-                                },
-                              },
-                            }}
-                          />
-                        }
-                      ></FormControlLabel>
-                    </FormControl>
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      justifyContent: "flex-end",
-                      alignContent: "center",
-                    }}
-                  >
-                    <Stack
-                      direction={{
-                        xs: "row-reverse",
-                        sm: "row",
-                      }}
-                      sx={{
-                        p: 2,
-                        gap: 4,
-                        flexShrink: 0,
-                        alignSelf: { xs: "flex-end", sm: "center" },
-                      }}
-                    >
-                      <Button
-                        size="small"
-                        onClick={() => handleTokenCreation()}
-                        variant="contained"
-                        disabled={createdToken !== ""}
+      {/* Sections */}
+      {section === "accounts_manager" ? (
+        <Grid container direction={"column"} size={12}>
+          <FormCard title="Adicionar/Remover Clubes">
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              size={12}
+            >
+              <Grid size={6} p={2}>
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Conta Associada"
+                  select
+                  fullWidth
+                  multiline
+                  maxRows={8}
+                  value={selectedUserId}
+                  onChange={handleClubChange}
+                >
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {availableClubsData?.results.map((item, index: number) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.club}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid size={6} container justifyContent="space-around">
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="error"
+                  onClick={handleDeleteModalOpen}
+                  disabled={selectedUserId === ""}
+                  startIcon={<Delete />}
+                >
+                  Eliminar Clube
+                </Button>
+                <Button
+                  variant="contained"
+                  size={"large"}
+                  color={"success"}
+                  type={"submit"}
+                  startIcon={<Add></Add>}
+                  onClick={handleAddClubModalOpen}
+                >
+                  Adicionar Clube
+                </Button>
+              </Grid>
+            </Grid>
+          </FormCard>
+
+          <FormCard title="Adicionar/Remover Clubes">
+            <Grid size={12}>
+              <Grid size={12} p={2}>
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Conta a Inspecionar"
+                  select
+                  fullWidth
+                  multiline
+                  maxRows={8}
+                  value={selectedRequestId}
+                  onChange={handleAcountChange}
+                >
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {requestAccountData?.results.map((item, index: number) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.username}
+                    </MenuItem>
+                  ))}
+                </TextField>
+
+                {acountDetails === undefined ? null : (
+                  <Card sx={{ m: 2 }}>
+                    <CardContent>
+                      <FormControl
+                        sx={{ pb: 2, justifyContent: "center" }}
+                        component="fieldset"
+                        variant="standard"
                       >
-                        Aceitar e Criar Link
-                      </Button>
-                      <Button
-                        size="small"
-                        disabled={createdToken !== ""}
-                        onClick={() => {
-                          handleAcountRejection();
+                        <FormControlLabel
+                          sx={{ mr: 2 }}
+                          labelPlacement="start"
+                          label={
+                            <Typography
+                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                            >
+                              Primeiro Nome:
+                            </Typography>
+                          }
+                          control={
+                            <TextField
+                              sx={{ width: "200px" }}
+                              color="warning"
+                              variant="standard"
+                              label=""
+                              value={acountDetails.first_name}
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: { fontSize: 18, marginRight: 10 },
+                                },
+                              }}
+                            />
+                          }
+                        ></FormControlLabel>
+                      </FormControl>
+                      <FormControl
+                        sx={{ pb: 2, justifyContent: "center" }}
+                        component="fieldset"
+                        variant="standard"
+                      >
+                        <FormControlLabel
+                          sx={{ mr: 2 }}
+                          labelPlacement="start"
+                          label={
+                            <Typography
+                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                            >
+                              Último Nome:
+                            </Typography>
+                          }
+                          control={
+                            <TextField
+                              sx={{ width: "200px" }}
+                              color="warning"
+                              variant="standard"
+                              label=""
+                              value={acountDetails.last_name}
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: { fontSize: 18, marginRight: 10 },
+                                },
+                              }}
+                            />
+                          }
+                        ></FormControlLabel>
+                      </FormControl>
+                      <FormControl
+                        sx={{ pb: 2, justifyContent: "center" }}
+                        component="fieldset"
+                        variant="standard"
+                      >
+                        <FormControlLabel
+                          sx={{ mr: 2 }}
+                          labelPlacement="start"
+                          label={
+                            <Typography
+                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                            >
+                              Identificação:
+                            </Typography>
+                          }
+                          control={
+                            <TextField
+                              sx={{ width: "150px" }}
+                              color="warning"
+                              variant="standard"
+                              label=""
+                              value={acountDetails.id_number}
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: { fontSize: 18, marginRight: 10 },
+                                },
+                              }}
+                            />
+                          }
+                        ></FormControlLabel>
+                      </FormControl>
+                      <FormControl
+                        sx={{ pb: 2, justifyContent: "center" }}
+                        component="fieldset"
+                        variant="standard"
+                      >
+                        <FormControlLabel
+                          sx={{ mr: 2 }}
+                          labelPlacement="start"
+                          label={
+                            <Typography
+                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                            >
+                              Email:
+                            </Typography>
+                          }
+                          control={
+                            <TextField
+                              sx={{ width: "300px" }}
+                              color="warning"
+                              variant="standard"
+                              label=""
+                              value={
+                                acountDetails.email === ""
+                                  ? "N/A"
+                                  : acountDetails.email
+                              }
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: {
+                                    fontSize: 18,
+                                    marginRight: 10,
+                                    color:
+                                      acountDetails.email === ""
+                                        ? "red"
+                                        : undefined,
+                                  },
+                                },
+                              }}
+                            />
+                          }
+                        ></FormControlLabel>
+                      </FormControl>
+                    </CardContent>
+                    <CardActions
+                      sx={{
+                        justifyContent: "flex-end",
+                        alignContent: "center",
+                      }}
+                    >
+                      <Stack
+                        direction={{
+                          xs: "row-reverse",
+                          sm: "row",
+                        }}
+                        sx={{
+                          p: 2,
+                          gap: 4,
+                          flexShrink: 0,
+                          alignSelf: { xs: "flex-end", sm: "center" },
                         }}
                       >
-                        Rejeitar
-                      </Button>
-                    </Stack>
-                  </CardActions>
-                  {createdToken === "" ? null : (
-                    <CardContent>
-                      <Grid container>
-                        <FormLabel sx={{ mb: 2 }}>
-                          Copie este link e envie para o email fornecido pelo
-                          pedinte desta conta. Apenas a pessoa com acesso a este
-                          link será capaz de criar uma conta.
-                        </FormLabel>
-                        <Grid size={10} sx={{ p: 2, pb: 0 }}>
-                          <TextField
-                            color="warning"
-                            variant={"outlined"}
-                            label="Link de Criação de Conta"
-                            maxRows={8}
-                            fullWidth
-                            value={`${baseURL}/signup/${createdToken}/`}
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: { fontSize: 18, marginRight: 10 },
-                              },
-                            }}
-                          />
-                          <FormHelperText sx={{ p: 1, pt: 0 }}>
-                            Atenção: Este token é de uso único e irá ser
-                            desativado quando a conta for criada ou passados 3
-                            dias da sua criação.
-                          </FormHelperText>
-                        </Grid>
-                        <Tooltip title="Copiar para áera de transferência">
-                          <span>
-                            <Button
-                              onClick={() =>
-                                copyToClipboard(
-                                  `${baseURL}/signup/${createdToken}/`,
-                                )
-                              }
-                            >
-                              <ContentCopy></ContentCopy>
-                            </Button>
-                          </span>
-                        </Tooltip>
-                      </Grid>
-                    </CardContent>
-                  )}
-                </Card>
-              )}
-            </Grid>
-          </Grid>
-          <SectionHeader title="Pedidos de Recuperação de Password"></SectionHeader>
-          <Grid>
-            <Grid size={6} sx={{ p: 2 }}>
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Conta a Inspecionar"
-                select
-                fullWidth
-                multiline
-                maxRows={8}
-                value={selectedPasswordRequestId}
-                onChange={handlePasswordRequestAcountChange}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {requestingPasswordsData?.data?.map(
-                  (item: any, index: string) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.club_user.username}
-                    </MenuItem>
-                  ),
-                )}
-              </TextField>
-
-              {passwordRequestedDetails === undefined ? null : (
-                <Card sx={{ m: 2 }}>
-                  <CardContent>
-                    <FormControl
-                      sx={{ pb: 2, justifyContent: "center" }}
-                      component="fieldset"
-                      variant="standard"
-                    >
-                      <FormControlLabel
-                        sx={{ mr: 2 }}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                          >
-                            Username:
-                          </Typography>
-                        }
-                        control={
-                          <TextField
-                            sx={{ width: "200px" }}
-                            color="warning"
-                            variant="standard"
-                            label=""
-                            value={passwordRequestedDetails.username}
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: { fontSize: 18, marginRight: 10 },
-                              },
-                            }}
-                          />
-                        }
-                      ></FormControlLabel>
-                    </FormControl>
-                    <FormControl
-                      sx={{ pb: 2, justifyContent: "center" }}
-                      component="fieldset"
-                      variant="standard"
-                    >
-                      <FormControlLabel
-                        sx={{ mr: 2 }}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                          >
-                            Email:
-                          </Typography>
-                        }
-                        control={
-                          <TextField
-                            sx={{ width: "300px" }}
-                            color="warning"
-                            variant="standard"
-                            label=""
-                            value={
-                              passwordRequestedDetails.email === ""
-                                ? "N/A"
-                                : passwordRequestedDetails.email
-                            }
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: {
-                                  fontSize: 18,
-                                  marginRight: 10,
-                                  color:
-                                    passwordRequestedDetails.email === ""
-                                      ? "red"
-                                      : undefined,
+                        <Button
+                          size="small"
+                          onClick={() => handleTokenCreation()}
+                          variant="contained"
+                          disabled={createdToken !== ""}
+                        >
+                          Aceitar e Criar Link
+                        </Button>
+                        <Button
+                          size="small"
+                          disabled={createdToken !== ""}
+                          onClick={() => {
+                            handleAcountRejection();
+                          }}
+                        >
+                          Rejeitar
+                        </Button>
+                      </Stack>
+                    </CardActions>
+                    {createdToken === "" ? null : (
+                      <CardContent>
+                        <Grid container>
+                          <FormLabel sx={{ mb: 2 }}>
+                            Copie este link e envie para o email fornecido pelo
+                            pedinte desta conta. Apenas a pessoa com acesso a
+                            este link será capaz de criar uma conta.
+                          </FormLabel>
+                          <Grid size={10} sx={{ p: 2, pb: 0 }}>
+                            <TextField
+                              color="warning"
+                              variant={"outlined"}
+                              label="Link de Criação de Conta"
+                              maxRows={8}
+                              fullWidth
+                              value={`${baseURL}/signup/${createdToken}/`}
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: { fontSize: 18, marginRight: 10 },
                                 },
-                              },
-                            }}
-                          />
-                        }
-                      ></FormControlLabel>
-                    </FormControl>
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      justifyContent: "flex-end",
-                      alignContent: "center",
-                    }}
-                  >
-                    <Stack
-                      direction={{
-                        xs: "row-reverse",
-                        sm: "row",
-                      }}
-                      sx={{
-                        p: 2,
-                        gap: 4,
-                        flexShrink: 0,
-                        alignSelf: { xs: "flex-end", sm: "center" },
-                      }}
-                    >
-                      <Button
-                        size="small"
-                        onClick={() => handlePasswordURLCreation()}
-                        variant="contained"
-                        disabled={createdPasswordURL !== ""}
-                      >
-                        Criar Link
-                      </Button>
-                    </Stack>
-                  </CardActions>
-                  {createdPasswordURL === "" ? null : (
-                    <CardContent>
-                      <Grid container>
-                        <FormLabel sx={{ mb: 2 }}>
-                          Copie este link e envie para o email fornecido pelo
-                          pedinte desta conta. Apenas a pessoa com acesso a este
-                          link será capaz de repor a sua prórpia palavra-passe.
-                        </FormLabel>
-                        <Grid size={10} sx={{ p: 2, pb: 0 }}>
-                          <TextField
-                            color="warning"
-                            variant={"outlined"}
-                            label="Link de Criação de Conta"
-                            maxRows={8}
-                            fullWidth
-                            value={createdPasswordURL}
-                            slotProps={{
-                              input: {
-                                readOnly: true,
-                                disableUnderline: true,
-                                style: { fontSize: 18, marginRight: 10 },
-                              },
-                            }}
-                          />
-                          <FormHelperText sx={{ p: 1, pt: 0 }}>
-                            Atenção: Este token é de uso único e irá ser
-                            desativado quando a conta for reposta a
-                            palavra-passe por parte do utilizador ou passados 3
-                            dias da sua criação.
-                          </FormHelperText>
-                        </Grid>
-                        <Grid container alignItems="center">
+                              }}
+                            />
+                            <FormHelperText sx={{ p: 1, pt: 0 }}>
+                              Atenção: Este token é de uso único e irá ser
+                              desativado quando a conta for criada ou passados 3
+                              dias da sua criação.
+                            </FormHelperText>
+                          </Grid>
                           <Tooltip title="Copiar para áera de transferência">
                             <span>
                               <Button
-                                onClick={() => {
-                                  copyToClipboard(createdPasswordURL);
-                                  enqueueSnackbar(
-                                    "Copiado para área de transferência!",
-                                    {
-                                      variant: "success",
-                                      anchorOrigin: {
-                                        vertical: "top",
-                                        horizontal: "center",
-                                      },
-                                      autoHideDuration: 3000,
-                                      preventDuplicate: true,
-                                    },
-                                  );
-                                }}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    `${baseURL}/signup/${createdToken}/`,
+                                  )
+                                }
                               >
                                 <ContentCopy></ContentCopy>
                               </Button>
                             </span>
                           </Tooltip>
                         </Grid>
-                      </Grid>
-                    </CardContent>
-                  )}
-                </Card>
-              )}
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
+          </FormCard>
+
+          <FormCard title="Pedidos de Recuperação de Password">
+            <Grid size={12}>
+              <Grid size={12} p={2}>
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Conta a Inspecionar"
+                  select
+                  fullWidth
+                  multiline
+                  maxRows={8}
+                  value={selectedPasswordRequestId}
+                  onChange={handlePasswordRequestAcountChange}
+                >
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                  {requestingPasswordsData?.data?.map(
+                    (item: any, index: string) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.club_user.username}
+                      </MenuItem>
+                    ),
+                  )}
+                </TextField>
+
+                {passwordRequestedDetails === undefined ? null : (
+                  <Card sx={{ m: 2 }}>
+                    <CardContent>
+                      <FormControl
+                        sx={{ pb: 2, justifyContent: "center" }}
+                        component="fieldset"
+                        variant="standard"
+                      >
+                        <FormControlLabel
+                          sx={{ mr: 2 }}
+                          labelPlacement="start"
+                          label={
+                            <Typography
+                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                            >
+                              Username:
+                            </Typography>
+                          }
+                          control={
+                            <TextField
+                              sx={{ width: "200px" }}
+                              color="warning"
+                              variant="standard"
+                              label=""
+                              value={passwordRequestedDetails.username}
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: { fontSize: 18, marginRight: 10 },
+                                },
+                              }}
+                            />
+                          }
+                        ></FormControlLabel>
+                      </FormControl>
+                      <FormControl
+                        sx={{ pb: 2, justifyContent: "center" }}
+                        component="fieldset"
+                        variant="standard"
+                      >
+                        <FormControlLabel
+                          sx={{ mr: 2 }}
+                          labelPlacement="start"
+                          label={
+                            <Typography
+                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                            >
+                              Email:
+                            </Typography>
+                          }
+                          control={
+                            <TextField
+                              sx={{ width: "300px" }}
+                              color="warning"
+                              variant="standard"
+                              label=""
+                              value={
+                                passwordRequestedDetails.email === ""
+                                  ? "N/A"
+                                  : passwordRequestedDetails.email
+                              }
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: {
+                                    fontSize: 18,
+                                    marginRight: 10,
+                                    color:
+                                      passwordRequestedDetails.email === ""
+                                        ? "red"
+                                        : undefined,
+                                  },
+                                },
+                              }}
+                            />
+                          }
+                        ></FormControlLabel>
+                      </FormControl>
+                    </CardContent>
+                    <CardActions
+                      sx={{
+                        justifyContent: "flex-end",
+                        alignContent: "center",
+                      }}
+                    >
+                      <Stack
+                        direction={{
+                          xs: "row-reverse",
+                          sm: "row",
+                        }}
+                        sx={{
+                          p: 2,
+                          gap: 4,
+                          flexShrink: 0,
+                          alignSelf: { xs: "flex-end", sm: "center" },
+                        }}
+                      >
+                        <Button
+                          size="small"
+                          onClick={() => handlePasswordURLCreation()}
+                          variant="contained"
+                          disabled={createdPasswordURL !== ""}
+                        >
+                          Criar Link
+                        </Button>
+                      </Stack>
+                    </CardActions>
+                    {createdPasswordURL === "" ? null : (
+                      <CardContent>
+                        <Grid container>
+                          <FormLabel sx={{ mb: 2 }}>
+                            Copie este link e envie para o email fornecido pelo
+                            pedinte desta conta. Apenas a pessoa com acesso a
+                            este link será capaz de repor a sua prórpia
+                            palavra-passe.
+                          </FormLabel>
+                          <Grid size={10} sx={{ p: 2, pb: 0 }}>
+                            <TextField
+                              color="warning"
+                              variant={"outlined"}
+                              label="Link de Criação de Conta"
+                              maxRows={8}
+                              fullWidth
+                              value={createdPasswordURL}
+                              slotProps={{
+                                input: {
+                                  readOnly: true,
+                                  disableUnderline: true,
+                                  style: { fontSize: 18, marginRight: 10 },
+                                },
+                              }}
+                            />
+                            <FormHelperText sx={{ p: 1, pt: 0 }}>
+                              Atenção: Este token é de uso único e irá ser
+                              desativado quando a conta for reposta a
+                              palavra-passe por parte do utilizador ou passados
+                              3 dias da sua criação.
+                            </FormHelperText>
+                          </Grid>
+                          <Grid container alignItems="center">
+                            <Tooltip title="Copiar para áera de transferência">
+                              <span>
+                                <Button
+                                  onClick={() => {
+                                    copyToClipboard(createdPasswordURL);
+                                    enqueueSnackbar(
+                                      "Copiado para área de transferência!",
+                                      {
+                                        variant: "success",
+                                        anchorOrigin: {
+                                          vertical: "top",
+                                          horizontal: "center",
+                                        },
+                                        autoHideDuration: 3000,
+                                        preventDuplicate: true,
+                                      },
+                                    );
+                                  }}
+                                >
+                                  <ContentCopy></ContentCopy>
+                                </Button>
+                              </span>
+                            </Tooltip>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    )}
+                  </Card>
+                )}
+              </Grid>
+            </Grid>
+          </FormCard>
         </Grid>
       ) : section === "payments_settings" ? (
         <Grid m={5}>
@@ -1098,40 +1185,46 @@ export default function MainSettingsPage() {
           todos os Clubes será pedido o mesmo valor. <p></p>
           Ao serem criadas as quotas, cada Clube é automaticamente notificado.
         </Grid>
-      ) : isMemberValidationRequestsLoading ? null : (
-        <Grid m={5} mt={10}>
-          <Grid>
-            <SectionHeader
-              title="Verificação de Membros"
-              icon={<Person sx={{ fontSize: 22 }} />}
-            ></SectionHeader>
-            <AllUseTable
-              count={requestsVerifyRows?.length!}
-              data={requestsVerifyRows}
-              actions={false}
-              selection={false}
-              type="Atletas"
-              userRole="main_admin"
-              columnsHeaders={getColumnMapping("ola")}
-              overideInternalPage
-            ></AllUseTable>
-          </Grid>
-          <Grid mt={7}>
-            <SectionHeader
-              title="Pedidos de Propostas a Exame"
-              icon={<Upgrade sx={{ fontSize: 22 }} />}
-            ></SectionHeader>
-            <AllUseTable
-              count={requestsExamsRows?.length!}
-              data={requestsExamsRows}
-              actions={false}
-              selection={false}
-              type="Atletas"
-              userRole="main_admin"
-              columnsHeaders={getColumnMapping("exams")}
-              overideInternalPage
-            ></AllUseTable>
-          </Grid>
+      ) : (
+        <Grid container direction={"column"} gap={2} size={12} m={3}>
+          {isMemberValidationRequestsLoading ? null : (
+            <>
+              <SettingsSection
+                icon={<GroupIcon />}
+                title="Verificação de Membros"
+              >
+                <Grid>
+                  <AllUseTable
+                    count={requestsVerifyRows?.length!}
+                    data={requestsVerifyRows}
+                    actions={false}
+                    selection={false}
+                    type="Atletas"
+                    userRole="main_admin"
+                    columnsHeaders={getColumnMapping("ola")}
+                    overideInternalPage
+                  ></AllUseTable>
+                </Grid>
+              </SettingsSection>
+              <SettingsSection
+                icon={<GroupIcon />}
+                title="Pedidos de Propostas a Exame"
+              >
+                <Grid>
+                  <AllUseTable
+                    count={requestsExamsRows?.length!}
+                    data={requestsExamsRows}
+                    actions={false}
+                    selection={false}
+                    type="Atletas"
+                    userRole="main_admin"
+                    columnsHeaders={getColumnMapping("exams")}
+                    overideInternalPage
+                  ></AllUseTable>
+                </Grid>
+              </SettingsSection>
+            </>
+          )}
         </Grid>
       )}
       <DeleteClubModal
@@ -1168,6 +1261,6 @@ export default function MainSettingsPage() {
       >
         <Typography sx={{ p: 2 }}>{activeRequestMessage}</Typography>
       </Popover>
-    </>
+    </Grid>
   );
 }

@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Password } from '../models/Password';
 import type { RequestPasswordReset } from '../models/RequestPasswordReset';
+import type { RequestPasswordResetResponse } from '../models/RequestPasswordResetResponse';
 import type { Username } from '../models/Username';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -72,12 +73,12 @@ export class PasswordRecoveryService {
     /**
      * Creates a new request for a password recovery.
      * @param requestBody
-     * @returns any No response body
+     * @returns RequestPasswordResetResponse
      * @throws ApiError
      */
     public static passwordRecoveryRequestCreate(
         requestBody: RequestPasswordReset,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<RequestPasswordResetResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/password_recovery/request/',

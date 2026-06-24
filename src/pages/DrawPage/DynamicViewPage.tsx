@@ -304,9 +304,19 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
       ) : rounds.length === 0 && !has_finals ? null : (
         <Grid>
           <Tabs
+            sx={{
+              m: 6,
+              "& .MuiTab-root": { color: "#e81c24" },
+              "& .Mui-selected": { color: "#e81c24" },
+              "& .MuiTabs-indicator": { backgroundColor: "#e81c24" },
+              "& .MuiTab-fullWidth	": { color: "#e81c24" },
+              color: "#e81c24",
+              borderBottom: "1px solid lightgrey",
+            }}
+            variant="fullWidth"
             value={tab}
             onChange={handleChange}
-            sx={{ m: 6, borderBottom: "1px solid lightgrey" }}
+            textColor="inherit"
             aria-label="tabs for different parts of the draw"
           >
             <Tab
