@@ -173,9 +173,13 @@ export default function RequestAccountPage() {
                     error={!!errors.username}
                     helperText={errors.username?.message}
                   >
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
+                    {availableClubsData?.count === 0 ? (
+                      <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                    ) : (
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
+                      </MenuItem>
+                    )}
                     {availableClubsData?.results
                       .filter((club) => club.is_registered === false)
                       .map((club, index) => (

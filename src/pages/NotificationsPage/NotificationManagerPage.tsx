@@ -157,9 +157,13 @@ export default function NotificationManagerPage(
               value={selectedUserId}
               onChange={handleChange}
             >
-              <MenuItem sx={{ color: "lightgrey" }} value="0">
-                -- Selecionar --
-              </MenuItem>
+              {clubUserData ? (
+                <MenuItem sx={{ color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
+              ) : (
+                <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+              )}
               {clubUserData?.data.map((item: any, index: string) => (
                 <MenuItem key={index} value={item.id}>
                   {item.username}
@@ -245,9 +249,13 @@ export default function NotificationManagerPage(
                   error={!!errors.club_user}
                   helperText={errors.club_user?.message}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="0">
-                    -- Selecionar --
-                  </MenuItem>
+                  {clubUserData ? (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  ) : (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  )}
                   {clubUserData?.data.map((item: any, index: string) => (
                     <MenuItem key={index} value={item.id}>
                       {item.username}
@@ -408,19 +416,25 @@ export default function NotificationManagerPage(
                     error={!!errors.payment_object}
                     helperText={errors.payment_object?.message}
                   >
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
                     {isEventsLoading ? (
                       <Grid container justifyContent="center" mt={1} size={12}>
                         <CircularProgress />
                       </Grid>
                     ) : (
-                      eventsData?.results.map((item: any, index: any) => (
-                        <MenuItem key={index} value={item.id}>
-                          {item.name} {item.season}
-                        </MenuItem>
-                      ))
+                      <>
+                        {eventsData?.count === 0 ? (
+                          <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                        ) : (
+                          <MenuItem sx={{ color: "lightgrey" }} value="">
+                            -- Selecionar --
+                          </MenuItem>
+                        )}
+                        {eventsData?.results.map((item: any, index: any) => (
+                          <MenuItem key={index} value={item.id}>
+                            {item.name} {item.season}
+                          </MenuItem>
+                        ))}
+                      </>
                     )}
                   </TextField>
                 )}

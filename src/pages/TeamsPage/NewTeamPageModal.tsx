@@ -115,6 +115,10 @@ export default function NewTeamPageModal(
     props.disciplineData?.id,
   );
 
+  const filteredCategories = props.disciplineData.categories?.filter(
+    (item: any) => possible_categories.includes(item.id),
+  );
+
   return (
     <Dialog
       fullScreen
@@ -219,9 +223,13 @@ export default function NewTeamPageModal(
                   }}
                   error={true}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value={undefined}>
-                    -- Selecionar --
-                  </MenuItem>
+                  {filteredCategories?.length === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {props.disciplineData.categories
                     ?.filter((item: any) =>
                       possible_categories.includes(item.id),
@@ -324,9 +332,13 @@ export default function NewTeamPageModal(
                   }}
                   error={!!errors.athlete1}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {membersNotInEventData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {membersNotInEventData?.results.map((item, index: any) => (
                     <MenuItem key={index} value={item.id}>
                       {item.full_name}
@@ -445,9 +457,13 @@ export default function NewTeamPageModal(
                   }}
                   error={!!errors.athlete2}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {membersNotInEventData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {membersNotInEventData?.results.map((item, index: any) => (
                     <MenuItem key={index} value={item.id}>
                       {item.full_name}
@@ -565,9 +581,13 @@ export default function NewTeamPageModal(
                   }}
                   error={!!errors.athlete3}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {membersNotInEventData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {membersNotInEventData?.results.map((item, index: any) => (
                     <MenuItem key={index} value={item.id}>
                       {item.full_name}

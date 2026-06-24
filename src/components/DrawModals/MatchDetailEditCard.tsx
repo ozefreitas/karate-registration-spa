@@ -174,9 +174,6 @@ export default function MatchDetailEditCard({
                     }}
                     onChange={(e) => field.onChange(e)}
                   >
-                    <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
                     {team ? (
                       isBracketTeamsLoading ? (
                         <Grid
@@ -188,16 +185,27 @@ export default function MatchDetailEditCard({
                           <CircularProgress />
                         </Grid>
                       ) : (
-                        bracketTeamsData?.map((team, index: number) => (
-                          <MenuItem
-                            sx={{ display: "flex", gap: 2, p: 2 }}
-                            key={index}
-                            value={team.id}
-                          >
-                            {`${team?.athlete1.full_name} | ${team?.athlete2.full_name} | ${team?.athlete3?.full_name}`}
-                            <Chip size="small" label={team.club} />
-                          </MenuItem>
-                        ))
+                        <>
+                          {bracketTeamsData?.length === 0 ? (
+                            <MenuItem disabled>
+                              Sem opções disponíveis.
+                            </MenuItem>
+                          ) : (
+                            <MenuItem sx={{ color: "lightgrey" }} value="">
+                              -- Selecionar --
+                            </MenuItem>
+                          )}
+                          {bracketTeamsData?.map((team, index: number) => (
+                            <MenuItem
+                              sx={{ display: "flex", gap: 2, p: 2 }}
+                              key={index}
+                              value={team.id}
+                            >
+                              {`${team?.athlete1.full_name} | ${team?.athlete2.full_name} | ${team?.athlete3?.full_name}`}
+                              <Chip size="small" label={team.club} />
+                            </MenuItem>
+                          ))}
+                        </>
                       )
                     ) : isBracketMembersLoading ? (
                       <Grid

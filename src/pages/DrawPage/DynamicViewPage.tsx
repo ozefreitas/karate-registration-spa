@@ -246,9 +246,13 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                 error={!!errors.bracket}
                 helperText={errors.bracket?.message}
               >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
+                {bracketsData?.length === 0 ? (
+                  <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                ) : (
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                )}
                 {bracketsData?.map((item, index) => (
                   <MenuItem key={index} value={item.id}>
                     <Grid px={1} container spacing={3} alignItems={"center"}>

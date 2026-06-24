@@ -220,9 +220,13 @@ export default function AddMemberPaymentModal(
                 }}
                 error={!!errors.plan}
               >
-                <MenuItem value="" sx={{ color: "lightgrey" }}>
-                  -- Selecionar --
-                </MenuItem>
+                {monthlyPaymentPlansData?.length === 0 ? (
+                  <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                ) : (
+                  <MenuItem sx={{ color: "lightgrey" }} value="">
+                    -- Selecionar --
+                  </MenuItem>
+                )}
                 {monthlyPaymentPlansData?.map((item: any, index: any) => (
                   <MenuItem key={index} value={item.id}>
                     {item.name} ({item.amount}€)

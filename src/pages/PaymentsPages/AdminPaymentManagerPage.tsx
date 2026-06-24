@@ -247,9 +247,13 @@ export default function AdminPaymentManagerPage(
                     error={!!errors.search}
                     helperText={errors.search?.message}
                   >
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
+                    {data ? (
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
+                      </MenuItem>
+                    ) : (
+                      <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                    )}
                     {data?.years.map((item: any, index: any) => (
                       <MenuItem key={index} value={item}>
                         {item}
