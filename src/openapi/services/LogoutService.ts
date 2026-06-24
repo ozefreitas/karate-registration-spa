@@ -9,18 +9,13 @@ import { request as __request } from '../core/request';
 export class LogoutService {
     /**
      * Logs out the authenticated user by deleting their auth token.
-     * @param requestBody
      * @returns LogoutResponse
      * @throws ApiError
      */
-    public static logoutCreate(
-        requestBody: LogoutResponse,
-    ): CancelablePromise<LogoutResponse> {
+    public static logoutCreate(): CancelablePromise<LogoutResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/logout/',
-            body: requestBody,
-            mediaType: 'application/json',
         });
     }
 }

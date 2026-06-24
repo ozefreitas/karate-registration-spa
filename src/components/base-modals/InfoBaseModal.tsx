@@ -24,7 +24,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ComunicateProblemModal(
+export default function InfoBaseModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
@@ -32,12 +32,14 @@ export default function ComunicateProblemModal(
     title: string;
     children: any;
     onSubmit: any;
+    size?: "sm" | "md" | "lg" | "xl";
+    disableConfirm?: boolean;
   }>,
 ) {
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth={props.size ?? "md"}
       open={props.isModalOpen}
       onClose={() => {
         props.handleModalClose();
@@ -46,16 +48,16 @@ export default function ComunicateProblemModal(
         transition: Transition,
       }}
     >
-      <DialogTitle sx={{ borderTop: "red", width: "100%" }}>
+      <DialogTitle sx={{ borderTop: "4px solid red", width: "100%" }}>
         <Grid
           container
           justifyContent={"space-between"}
           alignItems={"start"}
-          mt={1}
+          my={1}
         >
           <Grid>
             {props.chipName && <Chip label={props.chipName}></Chip>}
-            <Typography fontWeight={"bold"} m={2} ml={1} variant="h4">
+            <Typography fontWeight={"bold"} ml={1} variant="h5">
               {props.title}
             </Typography>
           </Grid>
@@ -76,14 +78,13 @@ export default function ComunicateProblemModal(
           }}
           sx={{
             p: 2,
+            pt: 0,
             gap: 2,
             flexShrink: 0,
             alignSelf: { xs: "flex-end", sm: "center" },
           }}
         >
           <Button
-            sx={{ p: 1 }}
-            size="small"
             onClick={() => {
               props.handleModalClose();
             }}
@@ -91,10 +92,9 @@ export default function ComunicateProblemModal(
             Voltar
           </Button>
           <Button
-            sx={{ px: 2 }}
-            size="small"
             color="info"
             variant="contained"
+            disabled={props.disableConfirm}
             onClick={() => props.onSubmit()}
           >
             Confirmar

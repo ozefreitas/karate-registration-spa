@@ -14,7 +14,6 @@ import {
   Flag,
   Group,
   ModeStandby,
-  Warning,
 } from "@mui/icons-material";
 import { Controller } from "react-hook-form";
 import { KataOptions } from "../../config";

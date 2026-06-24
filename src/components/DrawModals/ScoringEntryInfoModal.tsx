@@ -173,6 +173,7 @@ export default function ScoringEntryInfoModal(
               bracketId={props.brackedId}
               scoring
               team={props.team}
+              isKata={true}
             ></MatchDetailEditCard>
           ) : (
             <MatchDetailCard
@@ -184,12 +185,10 @@ export default function ScoringEntryInfoModal(
                   ? props.scoringEntryData?.team
                   : props.scoringEntryData?.person
               }
-              matchInfo={
-                props.scoringEntryData?.scoring_result?.flags_contender_1
-              }
-              kataInfo={props.scoringEntryData?.scoring_result?.kata}
+              matchInfo={props.scoringEntryData?.scoring_result}
               scoring
               team={props.team}
+              isKata={true}
             ></MatchDetailCard>
           )}
           <Grid

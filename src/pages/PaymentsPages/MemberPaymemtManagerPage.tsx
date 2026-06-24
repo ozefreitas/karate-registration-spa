@@ -151,7 +151,7 @@ export default function MemberPaymemtManagerPage(
     formState: { errors },
   } = useForm({
     defaultValues: {
-      day:
+      billing_day:
         currentSettingData === undefined
           ? ""
           : currentSettingData[0]?.billing_day,
@@ -160,7 +160,7 @@ export default function MemberPaymemtManagerPage(
 
   useEffect(() => {
     if (currentSettingData !== undefined) {
-      setValue("day", currentSettingData[0]?.billing_day);
+      setValue("billing_day", currentSettingData[0]?.billing_day);
     }
   }, [currentSettingData]);
 
@@ -323,7 +323,7 @@ export default function MemberPaymemtManagerPage(
         <Grid container p={2} size={12} alignItems={"center"} spacing={4}>
           <Grid size={6}>
             <Controller
-              name="day"
+              name="billing_day"
               control={control}
               render={({ field }: any) => (
                 <TextField
@@ -339,8 +339,8 @@ export default function MemberPaymemtManagerPage(
                   onChange={(e) => {
                     field.onChange(e);
                   }}
-                  error={!!errors.day}
-                  helperText={errors.day?.message}
+                  error={!!errors.billing_day}
+                  helperText={errors.billing_day?.message}
                 ></TextField>
               )}
             />
@@ -357,12 +357,12 @@ export default function MemberPaymemtManagerPage(
           <Button
             variant="contained"
             endIcon={<Save></Save>}
-            disabled={watch("day") === ""}
+            disabled={watch("billing_day") === ""}
             onClick={() => {
               if (currentSettingData !== undefined) {
                 patchBillingDay.mutate({
                   settingId: currentSettingData[0].id,
-                  data: { day: watch("day") },
+                  data: { billing_day: watch("billing_day") },
                 });
               }
             }}
@@ -372,13 +372,13 @@ export default function MemberPaymemtManagerPage(
         </Grid>
       </FormCard>
       <FormCard title="Planos de Pagamento">
-        <Grid container size={12} mb={0}>
+        <Grid size={12}>
           {isPlansLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
             </Box>
           ) : plansError ? (
-            <Grid sx={{ mt: 3 }} container justifyContent="center" size={12}>
+            <Grid mt={3} container justifyContent="center" size={12}>
               <ListItem>
                 <ListItemText primary="Ocorreu um erro ao encontrar a listagem de Planos de Pagamento. Tente mais tarde ou contacte um administrador."></ListItemText>
               </ListItem>

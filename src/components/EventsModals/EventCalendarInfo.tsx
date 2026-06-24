@@ -37,6 +37,7 @@ export default function EventCalendarInfo(
 ) {
   const navigate = useNavigate();
   return (
+    
     <Dialog
       fullWidth
       maxWidth="sm"

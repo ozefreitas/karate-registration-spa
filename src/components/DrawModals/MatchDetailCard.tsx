@@ -5,7 +5,6 @@ import {
   Flag,
   Group,
   ModeStandby,
-  Warning,
 } from "@mui/icons-material";
 import { KataOptions } from "../../config";
 

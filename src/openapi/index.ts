@@ -84,6 +84,7 @@ export type { MonthlyPersonPaymentConfig } from './models/MonthlyPersonPaymentCo
 export type { NameCategory } from './models/NameCategory';
 export type { NotAdminLikeTypePersons } from './models/NotAdminLikeTypePersons';
 export type { Notifications } from './models/Notifications';
+export type { NotificationsResponse } from './models/NotificationsResponse';
 export type { PaginatedCategoryList } from './models/PaginatedCategoryList';
 export type { PaginatedClassificationsList } from './models/PaginatedClassificationsList';
 export type { PaginatedClubsList } from './models/PaginatedClubsList';

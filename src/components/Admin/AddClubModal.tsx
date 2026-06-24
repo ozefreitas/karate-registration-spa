@@ -1,30 +1,7 @@
-import {
-  Dialog,
-  DialogContent,
-  Slide,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  Grid,
-  TextField,
-  FormHelperText,
-} from "@mui/material";
+import { Typography, Grid, TextField } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import React from "react";
-import { TransitionProps } from "notistack";
-import { Close } from "@mui/icons-material";
 import { clubsHooks } from "../../hooks";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function AddClubModal(
   props: Readonly<{ isOpen: boolean; handleClose: any }>,
@@ -34,6 +11,8 @@ export default function AddClubModal(
   const {
     control,
     handleSubmit,
+    setError,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -42,87 +21,52 @@ export default function AddClubModal(
   });
 
   const onSubmit = (data: any) => {
-    const formData = { name: data.name };
-    createClub.mutate(formData);
+    if (data.name === "") {
+      setError("name", { message: "Este campo é obrigatório" });
+    } else {
+      const formData = { name: data.name };
+      createClub.mutate(formData);
+    }
   };
 
   return (
-    <Dialog
-      keepMounted
-      open={props.isOpen}
-      onClose={props.handleClose}
-      maxWidth="md"
-      fullWidth
-      slots={{
-        transition: Transition,
+    <InfoBaseModal
+      isModalOpen={props.isOpen}
+      handleModalClose={() => {
+        props.handleClose();
+        reset();
       }}
+      title="Adicionar Clube"
+      onSubmit={handleSubmit(onSubmit)}
+      size="sm"
     >
-      <AppBar
-        sx={{
-          position: "relative",
-          width: "99%",
-          margin: "auto",
-          marginTop: "8px",
-          backgroundColor: "#e81c24",
-        }}
-      >
-        <Toolbar style={{ paddingRight: 0 }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={props.handleClose}
-            aria-label="close"
-          >
-            <Close />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Adicionar Clube
-          </Typography>
-          <Button
-            size="large"
-            sx={{ bgcolor: "#2e7d32" }}
-            autoFocus
-            color="inherit"
-            onClick={() => {
-              handleSubmit(onSubmit)();
-              props.handleClose();
-            }}
-          >
-            Adicionar
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <DialogContent>
-        <Grid container justifyContent={"center"}>
-          <Grid sx={{ m: 2 }} size={6}>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Nome"
-                  required
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                />
-              )}
-            />
-          </Grid>
-          <FormHelperText sx={{ p: 1, pb: 0 }}>
-            Insira o nome do Clube que pretende adicionar à sua tutela. Este
-            nome será o username que o Clube irá usar para fazer Login na sua
-            conta.
-          </FormHelperText>
+      <Grid container justifyContent={"center"}>
+        <Typography px={2} variant="body1">
+          Insira o nome do Clube que pretende adicionar à sua tutela. Este nome
+          será o username que o Clube irá usar para fazer Login na sua conta.
+        </Typography>
+        <Grid mt={3} size={6}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                color="warning"
+                variant={"outlined"}
+                label="Nome"
+                required
+                fullWidth
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                }}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+              />
+            )}
+          />
         </Grid>
-      </DialogContent>
-      {/* <DialogActions></DialogActions> */}
-    </Dialog>
+      </Grid>
+    </InfoBaseModal>
   );
 }

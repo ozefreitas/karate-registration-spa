@@ -1,12 +1,5 @@
 import {
-  Dialog,
-  DialogContent,
-  Slide,
   Typography,
-  Button,
-  DialogActions,
-  DialogTitle,
-  Stack,
   Grid,
   TextField,
   MenuItem,
@@ -15,19 +8,9 @@ import {
   Switch,
   FormLabel,
 } from "@mui/material";
-import React from "react";
-import { TransitionProps } from "notistack";
 import { monthlyPaymentsHooks } from "../../hooks";
 import { Controller, useForm } from "react-hook-form";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function EditMemberPaymentPlan(
   props: Readonly<{
@@ -74,160 +57,122 @@ export default function EditMemberPaymentPlan(
   };
 
   return (
-    <Dialog
-      open={props.isOpen}
-      onClose={props.handleClose}
-      slots={{
-        transition: Transition,
+    <InfoBaseModal
+      isModalOpen={props.isOpen}
+      handleModalClose={() => {
+        reset();
+        props.handleClose();
       }}
+      title="Alterar montante pré-definido"
+      onSubmit={handleSubmit(onSubmit)}
+      size="md"
     >
-      <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">Alterar montante pré-definido</Typography>
-      </DialogTitle>
-      <DialogContent
-        sx={{
-          borderBottom: "1px solid lightgrey",
-          borderTop: "1px solid lightgrey",
-        }}
-      >
-        <p>
-          Escolha o montante a ser pedido a este Membro. <br /> Este será
-          utilizado para criar novas quotas no primeiro dia de cada mês. <br />{" "}
-          Se quiser alterar uma quota já criada, dirija-se ao icone da linha
-          correspondente dentro da tabela.
-        </p>
-        <Grid sx={{ p: 2 }} size={6}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Plano"
-                fullWidth
-                select
-                disabled={watch("custom")}
-                required
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.name}
-              >
-                {monthlyPaymentPlansData?.length === 0 ? (
-                  <MenuItem disabled>Sem opções disponíveis.</MenuItem>
-                ) : (
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
-                )}
-                {monthlyPaymentPlansData?.map((item: any, index: any) => (
-                  <MenuItem key={index} value={item.id}>
-                    {item.name} ({item.amount}€)
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid mt={2} ml={1} size={6}>
-          <Controller
-            name="custom"
-            control={control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ pb: 2, justifyContent: "center" }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormLabel sx={{ ml: 2, mb: 1 }}>
-                  Insira um montante personalizado apenas para este Membro. Este
-                  não será guardado como um plano.
-                </FormLabel>
-                <FormControlLabel
-                  sx={{ mr: 2, justifyContent: "flex-end" }}
-                  labelPlacement="start"
-                  label={
-                    <Typography sx={{ fontSize: 18, pr: 2 }}>
-                      Montante Personalizado:
-                    </Typography>
-                  }
-                  control={
-                    <Switch
-                      {...field}
-                      checked={field.value}
-                      color="warning"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                      }}
-                    />
-                  }
-                ></FormControlLabel>
-              </FormControl>
-            )}
-          />
-        </Grid>
-        <Grid pl={2}>
-          <Controller
-            name="customAmount"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Novo Montante"
-                type="number"
-                disabled={!watch("custom")}
-                slotProps={{
-                  htmlInput: {
-                    inputMode: "numeric",
-                    pattern: "[0-9]*",
-                  },
-                }}
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.customAmount}
-                helperText={errors.customAmount?.message}
-              ></TextField>
-            )}
-          />
-        </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Stack
-          direction={{
-            xs: "row-reverse",
-            sm: "row",
-          }}
-          sx={{
-            p: 2,
-            gap: 3,
-            flexShrink: 0,
-            alignSelf: { xs: "flex-end", sm: "center" },
-          }}
-        >
-          <Button
-            size="small"
-            onClick={() => handleSubmit(onSubmit)()}
-            variant="contained"
-          >
-            Confirmar
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              reset();
-              props.handleClose();
-            }}
-          >
-            Cancelar
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      <Typography p={2} pt={0}>
+        Escolha o montante a ser pedido a este Membro. <br /> Este será
+        utilizado para criar novas quotas no primeiro dia de cada mês. <br /> Se
+        quiser alterar uma quota já criada, dirija-se ao icone da linha
+        correspondente dentro da tabela.
+      </Typography>
+      <Grid sx={{ p: 2 }} size={6}>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              color="warning"
+              variant={"outlined"}
+              label="Plano"
+              fullWidth
+              select
+              disabled={watch("custom")}
+              required
+              {...field}
+              onChange={(e) => {
+                field.onChange(e);
+              }}
+              error={!!errors.name}
+            >
+              {monthlyPaymentPlansData?.length === 0 ? (
+                <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+              ) : (
+                <MenuItem sx={{ color: "lightgrey" }} value="">
+                  -- Selecionar --
+                </MenuItem>
+              )}
+              {monthlyPaymentPlansData?.map((item: any, index: any) => (
+                <MenuItem key={index} value={item.id}>
+                  {item.name} ({item.amount}€)
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        />
+      </Grid>
+      <Grid mt={2} ml={1} size={6}>
+        <Controller
+          name="custom"
+          control={control}
+          render={({ field }) => (
+            <FormControl
+              sx={{ pb: 2, justifyContent: "center" }}
+              component="fieldset"
+              variant="standard"
+            >
+              <FormLabel sx={{ ml: 2, mb: 1 }}>
+                Insira um montante personalizado apenas para este Membro. Este
+                não será guardado como um plano.
+              </FormLabel>
+              <FormControlLabel
+                sx={{ mr: 2, justifyContent: "flex-end" }}
+                labelPlacement="start"
+                label={
+                  <Typography sx={{ fontSize: 16, pr: 2 }}>
+                    Montante Personalizado:
+                  </Typography>
+                }
+                control={
+                  <Switch
+                    {...field}
+                    checked={field.value}
+                    color="warning"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                    }}
+                  />
+                }
+              ></FormControlLabel>
+            </FormControl>
+          )}
+        />
+      </Grid>
+      <Grid pl={2}>
+        <Controller
+          name="customAmount"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              color="warning"
+              variant={"outlined"}
+              label="Novo Montante"
+              type="number"
+              disabled={!watch("custom")}
+              slotProps={{
+                htmlInput: {
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                },
+              }}
+              {...field}
+              onChange={(e) => {
+                field.onChange(e);
+              }}
+              error={!!errors.customAmount}
+              helperText={errors.customAmount?.message}
+            ></TextField>
+          )}
+        />
+      </Grid>
+    </InfoBaseModal>
   );
 }

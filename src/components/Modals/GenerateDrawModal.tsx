@@ -1,24 +1,5 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Button,
-  Stack,
-} from "@mui/material";
-import * as React from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Typography } from "@mui/material";
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function GenerateDrawModal(
   props: Readonly<{
@@ -30,74 +11,36 @@ export default function GenerateDrawModal(
     loading: boolean;
   }>,
 ) {
-  const handleGenerate = async (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
+  const handleGenerate = async () => {
     props.submitFunction();
   };
 
   return (
-    <Dialog
-      open={props.isModalOpen}
-      onClose={props.handleModalClose}
-      slots={{
-        transition: Transition,
+    <InfoBaseModal
+      isModalOpen={props.isModalOpen}
+      handleModalClose={() => {
+        props.handleModalClose();
       }}
+      title="Gerar Sorteio"
+      onSubmit={() => handleGenerate()}
+      size="sm"
     >
-      <DialogTitle>
-        <Typography variant="h5">Gerar Sorteio</Typography>
-      </DialogTitle>
-      <DialogContent
-        sx={{
-          borderBottom: "1px solid lightgrey",
-          borderTop: "1px solid lightgrey",
-        }}
-      >
-        {props.willOverwrite ? (
-          <>
-            <p></p>
-            Já existe um sorteio para este Evento.<p></p>
-            Gerar um novo sorteio irá eliminar permanentemente o sorteio
-            anterior. <p></p>
-            Deseja continuar? Esta ação é <strong>IRREVERSÍVEL!</strong>
-          </>
-        ) : (
-          <>
-            <p></p>
-            Esta ação irá criar um novo sorteio para todos os Escalões
-            selecionados para cada uma das Modalidades.<p></p>
-            Mais tarde, e antes do dia de início da prova, poderá apagar ou
-            gerar um novo sorteio nesta página.<p></p>
-            Deseja continuar?
-          </>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Stack
-          direction={{
-            xs: "row-reverse",
-            sm: "row",
-          }}
-          sx={{
-            p: 2,
-            gap: 2,
-            flexShrink: 0,
-            alignSelf: { xs: "flex-end", sm: "center" },
-          }}
-        >
-          <Button size="small" onClick={props.handleModalClose}>
-            Cancelar
-          </Button>
-          <Button
-            size="small"
-            onClick={(e) => handleGenerate(e)}
-            variant="contained"
-            loading={props.loading}
-            loadingPosition="start"
-          >
-            Confirmar
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      {props.willOverwrite ? (
+        <Typography px={2}>
+          Já existe um sorteio para este Evento.<p></p>
+          Gerar um novo sorteio irá eliminar permanentemente o sorteio anterior.{" "}
+          <p></p>
+          Deseja continuar? Esta ação é <strong>IRREVERSÍVEL!</strong>
+        </Typography>
+      ) : (
+        <Typography px={2} mb={1}>
+          Esta ação irá criar um novo sorteio para todos os Escalões
+          selecionados para cada uma das Modalidades.<p></p>
+          Mais tarde, e antes do dia de início da prova, poderá apagar ou gerar
+          um novo sorteio nesta página.<p></p>
+          Deseja continuar?
+        </Typography>
+      )}
+    </InfoBaseModal>
   );
 }

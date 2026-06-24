@@ -295,13 +295,15 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
         }
         title="Escalões"
       ></PageInfoCard>
-      <Grid size={12} sx={{ m: 2 }}>
+      <Grid size={12} m={2}>
         {categoriesError ? null : (
           <Grid
             size={12}
             container
-            mb={3}
-            justifyContent={"space-between"}
+            mx={3}
+            justifyContent={
+              props.userRole === "main_admin" ? "space-between" : "flex-end"
+            }
             alignItems={"center"}
           >
             {props.userRole === "main_admin" ? (
@@ -309,7 +311,7 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
                 <AddButton label="Adicionar" to="new_category/"></AddButton>
               </Grid>
             ) : null}
-            <Grid container spacing={2} pr={2}>
+            <Grid container spacing={2}>
               <CategoriesOrdering
                 isLoading={isCategoriesLoading}
                 control={orderControl}

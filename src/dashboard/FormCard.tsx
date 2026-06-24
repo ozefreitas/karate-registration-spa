@@ -19,7 +19,7 @@ export default function FormCard(
   }>,
 ) {
   return (
-    <Grid m={6} my={2}>
+    <Grid m={6} my={2} size={12}>
       <Card
         elevation={1}
         sx={{
@@ -45,7 +45,7 @@ export default function FormCard(
             },
           }}
         >
-          <Grid container>{props.children}</Grid>
+          <Grid container >{props.children}</Grid>
         </CardContent>
         {props.actions !== undefined || props.actions ? (
           <CardActions

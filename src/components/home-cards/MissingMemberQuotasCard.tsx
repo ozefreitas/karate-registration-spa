@@ -128,7 +128,7 @@ export default function MissingMemberQuotasCard({
               <CircularProgress />
             </Grid>
           ) : (
-            <Grid px={2} pb={2}>
+            <Grid px={2} >
               <StatRow
                 icon={<Groups sx={{ fontSize: 22 }} color="error" />}
                 label="Número Total de Membros"
@@ -145,7 +145,9 @@ export default function MissingMemberQuotasCard({
         </CardContent>
       )}
       {/* Footer */}
-      <CardActions sx={{ p: 2, pt: 0 }}>
+      <CardActions
+        sx={{ p: 2, pt: 0, display: "flex", justifyContent: "flex-end" }}
+      >
         <Button
           variant="contained"
           startIcon={<WarningAmberIcon />}
