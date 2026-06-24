@@ -390,6 +390,10 @@ export default function MembersModal(
     ).values(),
   ];
 
+  const filteredCategories = uniqueCategories?.filter((item: any) =>
+    possibleCategories.includes(item.id),
+  );
+
   return (
     <Dialog
       open={props.isModalOpen}
@@ -593,75 +597,77 @@ export default function MembersModal(
                       }}
                       error={true}
                     >
-                      <MenuItem
-                        sx={{ px: 3, py: 1, color: "lightgrey" }}
-                        value={undefined}
-                      >
-                        -- Selecionar --
-                      </MenuItem>
-                      {uniqueCategories
-                        ?.filter((item: any) =>
-                          possibleCategories.includes(item.id),
-                        )
-                        .map((item: any, index: any) => (
-                          <MenuItem key={index} value={item.id}>
-                            <Grid
-                              container
-                              spacing={2}
-                              py={1}
-                              px={3}
-                              alignContent={"center"}
-                            >
-                              <Typography mr={2}>
-                                {item.name} {item.gender}
-                              </Typography>
+                      {filteredCategories?.length === 0 ? (
+                        <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                      ) : (
+                        <MenuItem sx={{ color: "lightgrey" }} value="">
+                          -- Selecionar --
+                        </MenuItem>
+                      )}
+                      {filteredCategories?.map((item: any, index: any) => (
+                        <MenuItem key={index} value={item.id}>
+                          <Grid
+                            container
+                            spacing={2}
+                            py={1}
+                            px={3}
+                            alignContent="center"
+                          >
+                            <Typography mr={2}>
+                              {item.name} {item.gender}
+                            </Typography>
+
+                            <Chip
+                              size="small"
+                              label={`Idade Min.: ${item.min_age ?? "N/A"} anos`}
+                            />
+
+                            <Chip
+                              size="small"
+                              label={`Idade Máx.: ${item.max_age ?? "N/A"} anos`}
+                            />
+
+                            <Chip
+                              size="small"
+                              label={`Graduação Min.: ${
+                                getGraduationFromValue(Number(item.min_grad)) ??
+                                "N/A"
+                              }`}
+                            />
+
+                            <Chip
+                              size="small"
+                              label={`Graduação Máx.: ${
+                                getGraduationFromValue(Number(item.max_grad)) ??
+                                "N/A"
+                              }`}
+                            />
+
+                            <Chip
+                              size="small"
+                              label={`Peso Min.: ${item.min_weight ?? "N/A"} ${
+                                item.min_weight ? "Kg" : ""
+                              }`}
+                            />
+
+                            <Chip
+                              size="small"
+                              label={`Peso Máx.: ${item.max_weight ?? "N/A"} ${
+                                item.max_weight ? "Kg" : ""
+                              }`}
+                            />
+
+                            {item.max_athletes && (
                               <Chip
                                 size="small"
-                                label={`Idade Min.: ${item.min_age ?? "N/A"} anos`}
-                              ></Chip>
-                              <Chip
-                                size="small"
-                                label={`Idade Máx.: ${item.max_age ?? "N/A"} anos`}
-                              ></Chip>
-                              <Chip
-                                size="small"
-                                label={`Graduação Min.: ${
-                                  getGraduationFromValue(
-                                    Number(item.min_grad),
-                                  ) ?? "N/A"
-                                }`}
-                              ></Chip>
-                              <Chip
-                                size="small"
-                                label={`Graduação Máx.: ${
-                                  getGraduationFromValue(
-                                    Number(item.max_grad),
-                                  ) ?? "N/A"
-                                }`}
-                              ></Chip>
-                              <Chip
-                                size="small"
-                                label={`Peso Min.: ${item.min_weight ?? "N/A"} ${
-                                  item.min_weight ? "Kg" : ""
-                                }`}
-                              ></Chip>
-                              <Chip
-                                size="small"
-                                label={`Peso Máx.: ${item.max_weight ?? "N/A"} ${
-                                  item.max_weight ? "Kg" : ""
-                                }`}
-                              ></Chip>
-                              {item.max_athletes ? (
-                                <Chip
-                                  size="small"
-                                  label={`Número Máx. de Atletas (Equipas): ${
-                                    item.max_athletes ?? "N/A"
-                                  } ${item.max_athletes ? "Atletas" : ""}`}
-                                ></Chip>
-                              ) : null}
-                            </Grid>
-                          </MenuItem>
-                        ))}
+                                label={`Número Máx. de Atletas (Equipas): ${
+                                  item.max_athletes
+                                } Atletas`}
+                              />
+                            )}
+                          </Grid>
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 ></Controller>

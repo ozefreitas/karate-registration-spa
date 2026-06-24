@@ -40,7 +40,8 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           )}
         </CardContent>
       </Card>
-      {props.userRole === "technician" ? null : (
+      {props.userRole === "technician" ||
+      props.userRole === "superuser" ? null : (
         <Grid container size={12}>
           <Grid size={6}>
             <MembersHomeComponent

@@ -140,21 +140,28 @@ export default function DuplicateRegistrationsModal(
                 error={!!errors.eventId}
                 helperText={errors.eventId?.message}
               >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
                 {isEventsLoading ? (
                   <Grid container justifyContent="center" mt={1} size={12}>
                     <CircularProgress />
                   </Grid>
                 ) : (
-                  eventsData?.results
-                    .filter((item) => item.id !== eventId)
-                    .map((item, index: any) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.name} {item.season}
+                  <>
+                    {eventsData?.count === 0 ? (
+                      <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                    ) : (
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
                       </MenuItem>
-                    ))
+                    )}
+
+                    {eventsData?.results
+                      ?.filter((item) => item.id !== eventId)
+                      .map((item, index) => (
+                        <MenuItem key={index} value={item.id}>
+                          {item.name} {item.season}
+                        </MenuItem>
+                      ))}
+                  </>
                 )}
               </TextField>
             )}
@@ -181,19 +188,25 @@ export default function DuplicateRegistrationsModal(
                 error={!!errors.eventId}
                 helperText={errors.eventId?.message}
               >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
                 {isDisciplineLoading ? (
                   <Grid container justifyContent="center" mt={1} size={12}>
                     <CircularProgress />
                   </Grid>
                 ) : (
-                  disciplinesData?.results.map((item, index: any) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.name}
-                    </MenuItem>
-                  ))
+                  <>
+                    {disciplinesData?.count === 0 ? (
+                      <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                    ) : (
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
+                      </MenuItem>
+                    )}
+                    {disciplinesData?.results.map((item, index: any) => (
+                      <MenuItem key={index} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </>
                 )}
               </TextField>
             )}

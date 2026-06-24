@@ -681,9 +681,13 @@ export default function MainSettingsPage() {
                   value={selectedUserId}
                   onChange={handleClubChange}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {availableClubsData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {availableClubsData?.results.map((item, index: number) => (
                     <MenuItem key={index} value={item.id}>
                       {item.club}
@@ -730,9 +734,13 @@ export default function MainSettingsPage() {
                   value={selectedRequestId}
                   onChange={handleAcountChange}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {requestAccountData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {requestAccountData?.results.map((item, index: number) => (
                     <MenuItem key={index} value={item.id}>
                       {item.username}
@@ -990,9 +998,13 @@ export default function MainSettingsPage() {
                   value={selectedPasswordRequestId}
                   onChange={handlePasswordRequestAcountChange}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {requestingPasswordsData?.length === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {requestingPasswordsData?.data?.map(
                     (item: any, index: string) => (
                       <MenuItem key={index} value={item.id}>
@@ -1186,14 +1198,16 @@ export default function MainSettingsPage() {
           Ao serem criadas as quotas, cada Clube é automaticamente notificado.
         </Grid>
       ) : (
-        <Grid container direction={"column"} gap={2} size={12} m={3}>
+        <Grid container direction={"column"} size={12}>
           {isMemberValidationRequestsLoading ? null : (
             <>
-              <SettingsSection
-                icon={<GroupIcon />}
-                title="Verificação de Membros"
-              >
-                <Grid>
+              <FormCard title="Verificação de Membros">
+                <Grid
+                  container
+                  size={12}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
                   <AllUseTable
                     count={requestsVerifyRows?.length!}
                     data={requestsVerifyRows}
@@ -1205,12 +1219,14 @@ export default function MainSettingsPage() {
                     overideInternalPage
                   ></AllUseTable>
                 </Grid>
-              </SettingsSection>
-              <SettingsSection
-                icon={<GroupIcon />}
-                title="Pedidos de Propostas a Exame"
-              >
-                <Grid>
+              </FormCard>
+              <FormCard title="Pedidos de Propostas a Exame">
+                <Grid
+                  container
+                  size={12}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                >
                   <AllUseTable
                     count={requestsExamsRows?.length!}
                     data={requestsExamsRows}
@@ -1222,7 +1238,7 @@ export default function MainSettingsPage() {
                     overideInternalPage
                   ></AllUseTable>
                 </Grid>
-              </SettingsSection>
+              </FormCard>
             </>
           )}
         </Grid>

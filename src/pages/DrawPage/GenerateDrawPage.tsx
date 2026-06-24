@@ -235,9 +235,13 @@ export default function GenerateDrawPage() {
                   error={!!errors.discipline}
                   helperText={errors.discipline?.message}
                 >
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  {disciplinesData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
                   {disciplinesData?.results
                     .filter((item) => !item.is_coach)
                     .map((item, index) => (
