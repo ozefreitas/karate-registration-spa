@@ -324,13 +324,12 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         }
         title="Membros"
       ></PageInfoCard>
-      <Grid size={12} sx={{ m: 2 }}>
+      <Grid size={12} m={2}>
         {membersError ? null : (
           <Grid
             size={12}
             container
-            ml={1}
-            mr={2}
+            mx={2}
             justifyContent={"space-between"}
             alignItems={"center"}
           >

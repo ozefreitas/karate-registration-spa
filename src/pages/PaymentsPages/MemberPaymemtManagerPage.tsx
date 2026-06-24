@@ -353,7 +353,7 @@ export default function MemberPaymemtManagerPage(
             </FormHelperText>
           </Grid>
         </Grid>
-        <Grid container size={12} justifyContent={"flex-end"} mr={2} mb={2}>
+        <Grid container size={12} justifyContent={"flex-end"} p={2} pt={0}>
           <Button
             variant="contained"
             endIcon={<Save></Save>}
@@ -372,7 +372,7 @@ export default function MemberPaymemtManagerPage(
         </Grid>
       </FormCard>
       <FormCard title="Planos de Pagamento">
-        <Grid size={12} mb={0}>
+        <Grid container size={12} mb={0}>
           {isPlansLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <CircularProgress />
@@ -399,7 +399,7 @@ export default function MemberPaymemtManagerPage(
               overideInternalPage
             ></AllUseTable>
           )}
-          <Grid p={2} container justifyContent={"flex-end"}>
+          <Grid p={2} pt={0} container justifyContent={"flex-end"}>
             <Button
               variant="contained"
               color={"success"}

@@ -2,18 +2,25 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { LogoutResponse } from '../models/LogoutResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LogoutService {
     /**
-     * @returns any No response body
+     * Logs out the authenticated user by deleting their auth token.
+     * @param requestBody
+     * @returns LogoutResponse
      * @throws ApiError
      */
-    public static logoutCreate(): CancelablePromise<any> {
+    public static logoutCreate(
+        requestBody: LogoutResponse,
+    ): CancelablePromise<LogoutResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/logout/',
+            body: requestBody,
+            mediaType: 'application/json',
         });
     }
 }

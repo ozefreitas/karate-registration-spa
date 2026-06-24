@@ -471,13 +471,13 @@ export default function AllUseTable(
   return (
     <>
       {props.data?.length === 0 ? (
-        <Grid sx={{ my: 5 }} container justifyContent="center" size={12}>
-          <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
+        <Grid my={5} container justifyContent="center" size={12}>
+          <Typography variant="subtitle1" color="textDisabled">
             Não foram encontrados registos.
           </Typography>
         </Grid>
       ) : (
-        <Grid container sx={{ m: 2 }}>
+        <Grid container m={2}>
           <TableContainer component={Paper}>
             <Table size="small" aria-label="simple table">
               <TableHead>
