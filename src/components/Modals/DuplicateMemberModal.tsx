@@ -1,26 +1,7 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Button,
-  Stack,
-} from "@mui/material";
-import * as React from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
+import { Typography, Grid } from "@mui/material";
 import { membershipsHooks } from "../../hooks";
 import { useSnackbar } from "notistack";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function DuplicateMemberModal(
   props: Readonly<{
@@ -60,70 +41,33 @@ export default function DuplicateMemberModal(
   };
 
   return (
-    <Dialog
-      open={props.isModalOpen}
-      onClose={props.handleModalClose}
-      slots={{
-        transition: Transition,
+    <InfoBaseModal
+      isModalOpen={props.isModalOpen}
+      handleModalClose={() => {
+        props.handleModalClose();
       }}
+      title={`Duplicar ${props.memberData?.full_name}`}
+      onSubmit={handleSubmit}
+      size="sm"
     >
-      <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">
-          Duplicar {props.memberData?.full_name}
-        </Typography>
-      </DialogTitle>
-      {props.memberData?.member_types?.includes("coach") ? (
-        <DialogContent
-          sx={{
-            borderBottom: "1px solid lightgrey",
-            borderTop: "1px solid lightgrey",
-          }}
-        >
-          <p>
-            Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>.
-          </p>
-          Deseja prosseguir?
-        </DialogContent>
-      ) : (
-        <DialogContent
-          sx={{
-            borderBottom: "1px solid lightgrey",
-            borderTop: "1px solid lightgrey",
-          }}
-        >
-          <p>
-            Esta ação irá duplicar este Membro para <strong>Treinador</strong>.
-          </p>
-          Deseja prosseguir?
-        </DialogContent>
-      )}
-      <DialogActions>
-        <Stack
-          direction={{
-            xs: "row-reverse",
-            sm: "row",
-          }}
-          sx={{
-            p: 2,
-            gap: 3,
-            flexShrink: 0,
-            alignSelf: { xs: "flex-end", sm: "center" },
-          }}
-        >
-          <Button
-            size="small"
-            onClick={() => {
-              handleSubmit();
-            }}
-            variant="contained"
-          >
-            Confirmar
-          </Button>
-          <Button size="small" onClick={props.handleModalClose}>
-            Cancelar
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      <Grid px={2}>
+        {props.memberData?.member_types?.includes("coach") ? (
+          <Grid>
+            <Typography>
+              Esta ação irá duplicar este Membro para <strong>"Aluno"</strong>.
+            </Typography>
+            <Typography>Deseja prosseguir?</Typography>
+          </Grid>
+        ) : (
+          <Grid>
+            <Typography>
+              Esta ação irá duplicar este Membro para <strong>Treinador</strong>
+              .
+            </Typography>
+            <Typography>Deseja prosseguir?</Typography>
+          </Grid>
+        )}
+      </Grid>
+    </InfoBaseModal>
   );
 }

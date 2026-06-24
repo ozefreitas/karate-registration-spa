@@ -201,7 +201,7 @@ export default function EventCategoriesPage(
           categoriesRows === undefined ? null : (
           disciplinesData.results.map((discipline, index: any) => (
             <span key={index}>
-              <Typography sx={{ m: 3 }} variant="h5">
+              <Typography ml={3} mt={5} mb={3} variant="h5" fontWeight={"bold"}>
                 {discipline.name}
               </Typography>
               <AllUseTable

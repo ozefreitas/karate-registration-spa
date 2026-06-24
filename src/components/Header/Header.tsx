@@ -44,15 +44,6 @@ import { adminHooks, notificationsHooks, authHooks } from "../../hooks";
 import { formatTimeDifference } from "../../utils/utils";
 
 export default function Header(props: Readonly<{ me: any }>) {
-  type Notification = {
-    id: string;
-    notification: string;
-    can_remove: boolean;
-    type: string;
-    created_at: any;
-    target_event: any;
-  };
-
   const navigate = useNavigate();
   const [currentSeason, setCurrentSeason] = useState<string>("");
 
@@ -514,58 +505,56 @@ export default function Header(props: Readonly<{ me: any }>) {
           </MenuItem>
         ) : (
           <List sx={{ display: "flex", flexDirection: "column", p: 0 }}>
-            {notificationData?.response.map(
-              (noti: Notification, index: number) => (
-                <MenuItem
-                  divider={
-                    notificationError !== null ||
-                    notificationData.response.length - 1 === index
-                  }
-                  onClick={(e) => e.stopPropagation()}
-                  key={index}
-                >
-                  <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
-                    <ListItemIcon sx={{ px: 1 }}>
-                      <IconBox
-                        icon={getNotificationTypeIcon(noti.type)}
-                      ></IconBox>
-                    </ListItemIcon>
-                    <ListItemText
-                      sx={{
-                        p: 1,
-                        pl: 3,
-                        pr: 3,
-                        "& .MuiListItemText-secondary": {
-                          whiteSpace: "normal",
-                          overflowWrap: "break-word",
-                          wordBreak: "break-word",
-                          hyphens: "auto",
-                        },
-                      }}
-                      primary={
-                        <Grid
-                          container
-                          justifyContent={"space-between"}
-                          alignItems={"center"}
-                        >
-                          <Typography>
-                            {noti.type === "none"
-                              ? "Geral"
-                              : NotificationTypeOptions.find(
-                                  (item) => item.value === noti.type,
-                                )?.label}
-                          </Typography>
-                          <Typography variant="caption" color="textDisabled">
-                            {formatTimeDifference(noti.created_at)}
-                          </Typography>
-                        </Grid>
-                      }
-                      secondary={noti.notification}
-                    />
-                  </ListItem>
-                </MenuItem>
-              ),
-            )}
+            {notificationData?.response.map((noti, index: number) => (
+              <MenuItem
+                divider={
+                  notificationError !== null ||
+                  notificationData.response.length - 1 === index
+                }
+                onClick={(e) => e.stopPropagation()}
+                key={index}
+              >
+                <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
+                  <ListItemIcon sx={{ px: 1 }}>
+                    <IconBox
+                      icon={getNotificationTypeIcon(noti.type!)}
+                    ></IconBox>
+                  </ListItemIcon>
+                  <ListItemText
+                    sx={{
+                      p: 1,
+                      pl: 3,
+                      pr: 3,
+                      "& .MuiListItemText-secondary": {
+                        whiteSpace: "normal",
+                        overflowWrap: "break-word",
+                        wordBreak: "break-word",
+                        hyphens: "auto",
+                      },
+                    }}
+                    primary={
+                      <Grid
+                        container
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                      >
+                        <Typography>
+                          {noti.type === "none"
+                            ? "Geral"
+                            : NotificationTypeOptions.find(
+                                (item) => item.value === noti.type,
+                              )?.label}
+                        </Typography>
+                        <Typography variant="caption" color="textDisabled">
+                          {formatTimeDifference(noti.created_at)}
+                        </Typography>
+                      </Grid>
+                    }
+                    secondary={noti.notification}
+                  />
+                </ListItem>
+              </MenuItem>
+            ))}
           </List>
         )}
         <MenuItem
@@ -574,10 +563,10 @@ export default function Header(props: Readonly<{ me: any }>) {
           sx={{ p: 2, display: "flex", justifyContent: "center", gap: 3 }}
         >
           <Typography>Abrir todas as Notificações </Typography>
-          {notificationData?.total > 5 ? (
+          {notificationData?.total! > 5 ? (
             <Typography color="textDisabled">
-              (+ {notificationData?.total - 5}{" "}
-              {notificationData?.total - 5 === 1
+              (+ {notificationData?.total! - 5}{" "}
+              {notificationData?.total! - 5 === 1
                 ? "notificação"
                 : "notificações"}
               )

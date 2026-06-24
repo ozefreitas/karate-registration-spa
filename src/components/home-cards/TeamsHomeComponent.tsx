@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { Groups } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
-import AddButton from "../Buttons/AddButton";
 import { useNavigate } from "react-router-dom";
 import { teamsHooks } from "../../hooks";
 
@@ -131,6 +130,11 @@ export default function TeamsHomeComponent(
                             <Chip variant="outlined" label={team.gender}></Chip>
                             <Chip
                               variant="outlined"
+                              color="warning"
+                              label={`Nº: ${team.team_number}`}
+                            ></Chip>
+                            <Chip
+                              variant="outlined"
                               color="primary"
                               label={`Evento: ${team.events}`}
                             ></Chip>
@@ -162,21 +166,10 @@ export default function TeamsHomeComponent(
         </List>
         <CardActions
           sx={{
-            justifyContent:
-              props.userRole === "subed_club" ? "space-between" : "flex-end",
+            justifyContent: "flex-end",
           }}
         >
-          {props.userRole === "free_club" ? null : props.userRole ===
-            "subed_club" ? (
-            <>
-              <AddButton
-                label="Adicionar"
-                to="teams/new_team/"
-                size={"medium"}
-              ></AddButton>
-              <InfoButton label="Ver Todos" to="teams/"></InfoButton>
-            </>
-          ) : (
+          {props.userRole === "free_club" ? null : (
             <InfoButton label="Ver Todos" to="teams/"></InfoButton>
           )}
         </CardActions>

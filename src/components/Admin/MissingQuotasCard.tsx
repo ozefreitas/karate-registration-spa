@@ -147,7 +147,9 @@ export default function MissingQuotasCard({
         </CardContent>
       )}
       {/* Footer */}
-      <CardActions sx={{ p: 2, pt: 0 }}>
+      <CardActions
+        sx={{ p: 2, pt: 0, display: "flex", justifyContent: "flex-end" }}
+      >
         <Button
           variant="contained"
           startIcon={<WarningAmberIcon />}

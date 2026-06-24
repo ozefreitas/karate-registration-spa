@@ -7,10 +7,10 @@ import {
   ReactNode,
 } from "react";
 import { authHooks } from "../hooks";
-import { Users } from "../openapi";
+import { UserDetail } from "../openapi";
 
 interface AuthContextType {
-  user: Users | undefined;
+  user: UserDetail | undefined;
   isAuthenticated: boolean;
   isAuthLoading: boolean;
 }
@@ -23,7 +23,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export const GlobalAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<Users | undefined>(undefined); // ✅ Correct type
+  const [user, setUser] = useState<UserDetail | undefined>(undefined); // ✅ Correct type
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
   const {
     data: meData,

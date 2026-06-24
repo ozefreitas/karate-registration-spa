@@ -431,7 +431,7 @@ export default function MembersModal(
             <Close />
           </IconButton>
           {isDisciplineScreenOpen ? (
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+            <Typography ml={2} flex={1} variant="h6" component="div">
               Inscrever{" "}
               {
                 membersNotInEventData?.results.find(
@@ -501,7 +501,7 @@ export default function MembersModal(
               </Tooltip>
             </Grid>
             <Grid size={10}>
-              <Typography sx={{ m: 1, mb: 2 }}>
+              <Typography m={1} mb={2}>
                 Estas são as Modalidades disponíveis para este Evento. Selecione
                 {props.eventData.has_categories ? " as tais" : " a tal"} em que
                 este Atleta irá participar.
@@ -712,7 +712,7 @@ export default function MembersModal(
                 </Tooltip>
               </Grid>
               <Grid size={11}>
-                <Typography sx={{ m: 1, mb: 3 }}>
+                <Typography m={1} mb={3}>
                   O escalão disponível na Modalidade encontrada requer um peso.
                   {userRole === "free_club"
                     ? doesNotHaveWeight
@@ -727,7 +727,7 @@ export default function MembersModal(
                     : "Dirija-se à pagina e insira o peso deste Atleta clicando neste botão."}
                 </Typography>
               </Grid>
-              <Grid sx={{ p: 2 }} size={12} container justifyContent="center">
+              <Grid p={2} size={12} container justifyContent="center">
                 {userRole === "free_club" ? (
                   <Grid
                     container
@@ -783,13 +783,19 @@ export default function MembersModal(
             ) : membersNotInEventError ? (
               <div>Ocorreu um erro</div>
             ) : filteredMembers?.length === 0 ? (
-              <ListItem>
-                <ListItemText primary="Não tem atletas que ainda não estejam inscritos nesta prova."></ListItemText>
-              </ListItem>
+              <Grid container size={12} justifyContent={"center"} pb={2}>
+                <Typography color="textSecondary">
+                  Não tem atletas que ainda não estejam inscritos nesta prova.
+                </Typography>
+              </Grid>
             ) : userRole === "free_club" && searchQuery === "" ? (
-              <ListItem>
-                <ListItemText primary="O seu plano não concede acesso à listagem de Atletas. Pesquise pelo Nº de Indentificação ou nome do Membro, ou inicie uma subscrição."></ListItemText>
-              </ListItem>
+              <Grid container size={12} justifyContent={"center"} pb={2}>
+                <Typography color="textSecondary">
+                  O seu plano não concede acesso à listagem de Atletas. Pesquise
+                  pelo Nº de Indentificação ou nome do Membro, ou inicie uma
+                  subscrição.
+                </Typography>
+              </Grid>
             ) : (
               filteredMembers?.map((member: any, index: number) => (
                 <ListItem

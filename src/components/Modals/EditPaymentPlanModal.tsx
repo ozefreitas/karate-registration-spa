@@ -1,11 +1,5 @@
 import {
-  Dialog,
-  DialogContent,
-  IconButton,
   Typography,
-  AppBar,
-  Toolbar,
-  Button,
   Grid,
   TextField,
   CircularProgress,
@@ -15,27 +9,16 @@ import {
   FormHelperText,
 } from "@mui/material";
 import * as React from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
-import { Close } from "@mui/icons-material";
 import { Controller, useForm } from "react-hook-form";
 import { monthlyPaymentsHooks } from "../../hooks";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function EditPaymentPlanModal(
   props: Readonly<{
     isModalOpen: boolean;
     handleModalClose: any;
     id: string;
-  }>
+  }>,
 ) {
   const { data: singlePaymentPlanData, isLoading: isSinglePaymentPlanLoading } =
     monthlyPaymentsHooks.useFetcSingleMonthlyMemberSubscriptionsData(props.id);
@@ -70,150 +53,113 @@ export default function EditPaymentPlanModal(
   };
 
   return (
-    <Dialog
-      open={props.isModalOpen}
-      onClose={props.handleModalClose}
-      maxWidth="sm"
-      fullWidth
-      slots={{
-        transition: Transition,
+    <InfoBaseModal
+      isModalOpen={props.isModalOpen}
+      handleModalClose={() => {
+        reset();
+        props.handleModalClose();
       }}
+      title="Editar Plano de Pagamento"
+      onSubmit={handleSubmit(onSubmit)}
+      size="sm"
     >
-      <AppBar
-        sx={{
-          position: "relative",
-          width: "99%",
-          margin: "auto",
-          marginTop: "8px",
-          backgroundColor: "#e81c24",
-        }}
-      >
-        <Toolbar style={{ paddingRight: 0 }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={props.handleModalClose}
-            aria-label="close"
-          >
-            <Close />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Editar Plano de Pagamento
-          </Typography>
-          <Button
-            sx={{ bgcolor: "#2e7d32" }}
-            autoFocus
-            color="inherit"
-            size="large"
-            onClick={() => {
-              handleSubmit(onSubmit)();
-              props.handleModalClose();
-            }}
-          >
-            Guardar
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <DialogContent>
-        {isSinglePaymentPlanLoading ? (
-          <Grid container justifyContent="center" size={12}>
-            <CircularProgress />
+      {isSinglePaymentPlanLoading ? (
+        <Grid container justifyContent="center" mt={5} size={12}>
+          <CircularProgress />
+        </Grid>
+      ) : (
+        <Grid container justifyContent={"center"}>
+          <Grid p={2} size={12}>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Nome"
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                />
+              )}
+            />
           </Grid>
-        ) : (
-          <Grid container justifyContent={"center"}>
-            <Grid sx={{ m: 2 }} size={12}>
-              <Controller
-                name="name"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={"outlined"}
-                    label="Nome"
-                    fullWidth
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.name}
-                    helperText={errors.name?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid sx={{ m: 2 }} size={12}>
-              <Controller
-                name="amount"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={"outlined"}
-                    label="Novo Montante"
-                    type="number"
-                    fullWidth
-                    slotProps={{
-                      htmlInput: {
-                        inputMode: "numeric",
-                        pattern: "[0-9]*",
-                      },
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.amount}
-                    helperText={errors.amount?.message}
-                  ></TextField>
-                )}
-              />
-            </Grid>
-            <Grid sx={{ m: 1 }} size={12}>
-              <Controller
-                name="is_default"
-                control={control}
-                render={({ field }) => (
-                  <FormControl
-                    sx={{ pb: 2, justifyContent: "center" }}
-                    component="fieldset"
-                    variant="standard"
-                  >
-                    <FormControlLabel
-                      sx={{ mr: 2, justifyContent: "flex-end" }}
-                      labelPlacement="start"
-                      label={
-                        <Typography sx={{ fontSize: 18, pr: 2 }}>
-                          Tornar padrão:
-                        </Typography>
-                      }
-                      control={
-                        <Switch
-                          disabled={
-                            watch("is_default") &&
-                            singlePaymentPlanData?.is_default
-                          }
-                          {...field}
-                          checked={field.value}
-                          color="warning"
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                          }}
-                        />
-                      }
-                    ></FormControlLabel>
-                  </FormControl>
-                )}
-              />
-            </Grid>
-            <FormHelperText>
-              Apenas poderá ter um Plano como padrão em simultâneo. Fazer este
-              Plano como padrão irá remover esse estatuto do anterior.
-            </FormHelperText>
+          <Grid p={2} size={12}>
+            <Controller
+              name="amount"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Novo Montante"
+                  type="number"
+                  fullWidth
+                  slotProps={{
+                    htmlInput: {
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                    },
+                  }}
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.amount}
+                  helperText={errors.amount?.message}
+                ></TextField>
+              )}
+            />
           </Grid>
-        )}
-      </DialogContent>
-      {/* <DialogActions></DialogActions> */}
-    </Dialog>
+          <Grid px={1} mt={1} size={12}>
+            <Controller
+              name="is_default"
+              control={control}
+              render={({ field }) => (
+                <FormControl
+                  sx={{ pb: 2, justifyContent: "center" }}
+                  component="fieldset"
+                  variant="standard"
+                >
+                  <FormControlLabel
+                    sx={{ mr: 2, justifyContent: "flex-end" }}
+                    labelPlacement="start"
+                    label={
+                      <Typography sx={{ fontSize: 16, pr: 2 }}>
+                        Tornar padrão:
+                      </Typography>
+                    }
+                    control={
+                      <Switch
+                        disabled={
+                          watch("is_default") &&
+                          singlePaymentPlanData?.is_default
+                        }
+                        {...field}
+                        checked={field.value}
+                        color="warning"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e.target.checked);
+                        }}
+                      />
+                    }
+                  ></FormControlLabel>
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <FormHelperText sx={{ px: 2 }}>
+            Apenas poderá ter um Plano como padrão em simultâneo. Fazer este
+            Plano como padrão irá remover esse estatuto do anterior.
+          </FormHelperText>
+        </Grid>
+      )}
+    </InfoBaseModal>
   );
 }

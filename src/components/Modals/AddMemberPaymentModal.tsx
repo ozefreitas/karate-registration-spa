@@ -181,7 +181,7 @@ export default function AddMemberPaymentModal(
                   sx={{ mr: 2, justifyContent: "flex-end" }}
                   labelPlacement="start"
                   label={
-                    <Typography sx={{ fontSize: 18, pr: 2 }}>
+                    <Typography sx={{ fontSize: 16, pr: 2 }}>
                       Usar padrão:
                     </Typography>
                   }
@@ -255,7 +255,7 @@ export default function AddMemberPaymentModal(
                   sx={{ mr: 2, justifyContent: "flex-end" }}
                   labelPlacement="start"
                   label={
-                    <Typography sx={{ fontSize: 18, pr: 2 }}>
+                    <Typography sx={{ fontSize: 16, pr: 2 }}>
                       Montante Personalizado:
                     </Typography>
                   }

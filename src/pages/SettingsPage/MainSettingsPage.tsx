@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardActions,
-  Box,
   Tabs,
   Tab,
   Grid,
@@ -19,6 +18,7 @@ import {
   IconButton,
   Chip,
   Popover,
+  Paper,
 } from "@mui/material";
 import {
   Delete,
@@ -29,8 +29,6 @@ import {
   Block,
   ThumbUp,
   PictureAsPdf,
-  Upgrade,
-  Person,
 } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
 import { authHooks, clubsHooks, adminHooks, membersHooks } from "../../hooks";
@@ -42,73 +40,7 @@ import { useSearchParams } from "react-router-dom";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { formatDateTime } from "../../utils/utils";
 import ActionValidationModal from "../../components/Modals/ActionValidationModal";
-import SectionHeader from "../../components/Header/SectionHeader";
-
-import { Paper } from "@mui/material";
-import GroupIcon from "@mui/icons-material/Group";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import LockResetIcon from "@mui/icons-material/LockReset";
 import FormCard from "../../dashboard/FormCard";
-
-// ── Reusable bits ─────────────────────────────────────────────────────────────
-
-function SettingsSection({
-  icon,
-  title,
-  children,
-}: Readonly<{
-  icon: React.ReactNode;
-  title: string;
-  children: React.ReactNode;
-}>) {
-  return (
-    <Paper
-      elevation={0}
-      sx={{
-        border: "1px solid #eeeeee",
-        borderRadius: 3,
-        overflow: "hidden",
-        bgcolor: "#fff",
-      }}
-    >
-      {/* Header */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 2,
-          px: 3,
-          py: 2,
-          borderBottom: "2px solid #d32f2f",
-        }}
-      >
-        <Box
-          sx={{
-            width: 38,
-            height: 38,
-            borderRadius: 2,
-            bgcolor: "#d32f2f",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            flexShrink: 0,
-          }}
-        >
-          {icon}
-        </Box>
-        <Typography fontSize={18} fontWeight={"bold"} sx={{ color: "#1a1a1a" }}>
-          {title}
-        </Typography>
-      </Box>
-
-      {/* Content */}
-      <Box sx={{ px: 3, py: 3 }}>{children}</Box>
-    </Paper>
-  );
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function MainSettingsPage() {
   const baseURL = import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173";
@@ -637,6 +569,7 @@ export default function MainSettingsPage() {
           border: "1px solid #eeeeee",
           borderRadius: 3,
           m: 6,
+          mb: 4,
           bgcolor: "#fff",
         }}
       >
@@ -661,7 +594,7 @@ export default function MainSettingsPage() {
 
       {/* Sections */}
       {section === "accounts_manager" ? (
-        <Grid container direction={"column"} size={12}>
+        <Grid container>
           <FormCard title="Adicionar/Remover Clubes">
             <Grid
               container
@@ -695,10 +628,9 @@ export default function MainSettingsPage() {
                   ))}
                 </TextField>
               </Grid>
-              <Grid size={6} container justifyContent="space-around">
+              <Grid size={6} container justifyContent="space-evenly">
                 <Button
                   variant="contained"
-                  size="large"
                   color="error"
                   onClick={handleDeleteModalOpen}
                   disabled={selectedUserId === ""}
@@ -708,7 +640,6 @@ export default function MainSettingsPage() {
                 </Button>
                 <Button
                   variant="contained"
-                  size={"large"}
                   color={"success"}
                   type={"submit"}
                   startIcon={<Add></Add>}

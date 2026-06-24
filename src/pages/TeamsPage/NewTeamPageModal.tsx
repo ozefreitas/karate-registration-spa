@@ -115,7 +115,7 @@ export default function NewTeamPageModal(
     props.disciplineData?.id,
   );
 
-  const filteredCategories = props.disciplineData.categories?.filter(
+  const filteredCategories = props.disciplineData?.categories?.filter(
     (item: any) => possible_categories.includes(item.id),
   );
 

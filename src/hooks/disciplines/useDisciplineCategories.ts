@@ -41,7 +41,7 @@ export const useRemoveDisciplineCategory = () => {
         data,
       ),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });

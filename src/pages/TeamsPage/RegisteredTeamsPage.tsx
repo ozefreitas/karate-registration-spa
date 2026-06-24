@@ -179,7 +179,7 @@ export default function RegisteredTeamsPage(
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Typography p={3} variant="h5">
+                  <Typography p={3} variant="h5" fontWeight={"bold"}>
                     {discipline.name}
                   </Typography>
                   <Grid container spacing={2}>

@@ -2,16 +2,16 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Notifications } from '../models/Notifications';
+import type { NotificationsResponse } from '../models/NotificationsResponse';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class ClubNotificationsService {
     /**
-     * @returns Notifications
+     * @returns NotificationsResponse
      * @throws ApiError
      */
-    public static clubNotificationsRetrieve(): CancelablePromise<Notifications> {
+    public static clubNotificationsRetrieve(): CancelablePromise<NotificationsResponse> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/club_notifications/',

@@ -329,8 +329,13 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
           <Grid
             size={12}
             container
-            mx={2}
-            justifyContent={"space-between"}
+            ml={1}
+            mr={2}
+            justifyContent={
+              props.userRole === "main_admin" || props.userRole === "subed_club"
+                ? "space-between"
+                : "flex-end"
+            }
             alignItems={"center"}
           >
             {props.userRole === "main_admin" ||

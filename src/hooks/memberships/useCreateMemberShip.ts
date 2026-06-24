@@ -20,8 +20,6 @@ export const useCreateMemberShip = () => {
         queryKey: ["single-member", data.person],
       });
       queryClient.invalidateQueries({ queryKey: ["member-ships"] });
-      queryClient.invalidateQueries({ queryKey: ["club-members"] });
-      queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });
     },
     onError: (data: any) => {
       const errorData = data.response?.data || {};

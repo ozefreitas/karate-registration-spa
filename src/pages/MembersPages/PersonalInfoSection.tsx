@@ -677,7 +677,6 @@ export default function PersonalInfoSection(
       ></DeleteMemberModal>
       <WeightConfirmModal
         handleModalClose={handleWeightModalClose}
-        handleModalOpen={handleWeightModalOpen}
         isModalOpen={isWeightRedirectionModalOpen}
         id={searchParams.get("event_id")}
       ></WeightConfirmModal>

@@ -147,7 +147,7 @@ export default function NotificationManagerPage(
       ></PageInfoCard>
       <Grid container>
         <FormCard title="Notificações ativas">
-          <Grid size={12} sx={{ p: 2 }}>
+          <Grid size={12} p={2}>
             <TextField
               color="warning"
               variant={"outlined"}

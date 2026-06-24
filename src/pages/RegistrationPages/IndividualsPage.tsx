@@ -15,9 +15,8 @@ import MembersModal from "../../components/Modals/MembersModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadOnlyModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
-import { formatDateTime } from "../../utils/utils";
+import { formatDateTime, getFullDate } from "../../utils/utils";
 import UnAuthorizedPage from "../ErrorPages/UnAuthorizedPage";
-import { getFullDate } from "../../utils/utils";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
