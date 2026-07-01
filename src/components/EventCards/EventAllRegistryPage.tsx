@@ -138,9 +138,9 @@ export default function EventAllRegistryPage(
             );
             const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
               id: teamInfo.team.id,
-              athlete1: teamInfo.team.athlete1.full_name,
-              athlete2: teamInfo.team.athlete2.full_name,
-              athlete3: teamInfo.team.athlete3?.full_name,
+              athlete1: teamInfo.team.athlete1?.full_name ?? "N/A",
+              athlete2: teamInfo.team.athlete2?.full_name ?? "N/A",
+              athlete3: teamInfo.team.athlete3?.full_name ?? "N/A",
               gender: teamInfo.team.gender,
               club: teamInfo.team.club,
               category:
