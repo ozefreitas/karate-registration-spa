@@ -83,22 +83,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
 
   const individualsColumnMaping = getIndividualColumnMapping();
 
-  const getTeamsColumnMapping = () => {
-    // Base columns except the one that must be last
-    const baseColumns = [
-      { key: "member1", label: "Atleta 1" },
-      { key: "member2", label: "Atleta 2" },
-      { key: "member3", label: "Atleta 3" },
-      { key: "gender", label: "Género" },
-      { key: "category", label: "Escalão" },
-      { key: "added_at", label: "Data Inscrição" },
-    ];
-
-    return baseColumns;
-  };
-
-  const teamsColumnMaping = getTeamsColumnMapping();
-
   if (
     singleEventData?.event_date! < getFullDate() &&
     !["main_admin", "single_admin"].includes(props.userRole)
@@ -183,31 +167,32 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         ) : (
           disciplinesData?.results.map((discipline: any, index: any) => {
             const disciplineIndividuals = discipline?.individuals.map(
-              (memberInfo: any) => ({
-                id: memberInfo.person.id,
-                full_name: memberInfo.person.full_name,
-                gender: memberInfo.person.gender,
-                club: memberInfo.person.club,
-                category: memberInfo.category?.name ?? (
-                  <Typography color="textDisabled">N/A</Typography>
-                ),
-                added_at: formatDateTime(memberInfo.added_at, "both"),
+              (personInfo: any) => ({
+                id: personInfo.person.id,
+                full_name: personInfo.person.full_name,
+                gender: personInfo.person.gender,
+                club: personInfo.person.club,
+                category:
+                  personInfo.category === null ? (
+                    <Typography color="textDisabled">N/A</Typography>
+                  ) : personInfo.category.min_weight === null &&
+                    personInfo.category.max_weight === null ? (
+                    personInfo.category.name
+                  ) : personInfo.category.min_weight !== null &&
+                    personInfo.category.max_weight === null ? (
+                    personInfo.category.name +
+                    " +" +
+                    personInfo.category.min_weight +
+                    "Kg"
+                  ) : (
+                    personInfo.category.name +
+                    " -" +
+                    personInfo.category.max_weight +
+                    "Kg"
+                  ),
+                added_at: formatDateTime(personInfo.added_at, "both"),
               }),
             );
-            const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
-              id: teamInfo.team.id,
-              member1: teamInfo.team.athlete1.full_name,
-              member2: teamInfo.team.athlete2.full_name,
-              member3: teamInfo.team.athlete3.full_name,
-              gender:
-                teamInfo.team.gender === "Masculino"
-                  ? "M"
-                  : teamInfo.team.gender === "Feminino"
-                    ? "F"
-                    : "Misto",
-              category: teamInfo.team.category.name,
-              added_at: formatDateTime(teamInfo.added_at, "both"),
-            }));
             return (
               <span key={index}>
                 <Grid
@@ -235,37 +220,13 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     ) : null}
                   </Grid>
                 </Grid>
-                {disciplineIndividuals.length !== 0 ? (
+                {disciplineIndividuals.length === 0 ? null : (
                   <AllUseTable
                     count={discipline.individuals.length}
                     type="Modalidades"
                     discipline={discipline.id}
                     data={disciplineIndividuals}
                     columnsHeaders={individualsColumnMaping}
-                    actions
-                    selection
-                    deletable
-                    userRole={props.userRole}
-                  ></AllUseTable>
-                ) : disciplineTeams.length !== 0 ? (
-                  <AllUseTable
-                    count={discipline.teams.length}
-                    type="Modalidades"
-                    discipline={discipline.id}
-                    data={disciplineTeams}
-                    columnsHeaders={teamsColumnMaping}
-                    actions
-                    selection
-                    deletable
-                    userRole={props.userRole}
-                  ></AllUseTable>
-                ) : (
-                  <AllUseTable
-                    count={0}
-                    type="Modalidades"
-                    discipline={discipline.id}
-                    data={[]}
-                    columnsHeaders={teamsColumnMaping}
                     actions
                     selection
                     deletable

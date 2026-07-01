@@ -4,5 +4,7 @@
 /* eslint-disable */
 export type NameCategory = {
     name: string;
+    min_weight?: number | null;
+    max_weight?: number | null;
 };
 
