@@ -157,9 +157,24 @@ export default function RegisteredTeamsPage(
           disciplinesData?.results.map((discipline: any, index: any) => {
             const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
               id: teamInfo.team.id,
-              member1: teamInfo.team.athlete1?.full_name ?? "N/A",
-              member2: teamInfo.team.athlete2?.full_name ?? "N/A",
-              member3: teamInfo.team.athlete3?.full_name ?? "N/A",
+              member1:
+                teamInfo.team.athlete1 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete1?.full_name
+                ),
+              member2:
+                teamInfo.team.athlete2 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete2?.full_name
+                ),
+              member3:
+                teamInfo.team.athlete3 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete3?.full_name
+                ),
               gender:
                 teamInfo.team.gender === "Masculino"
                   ? "M"
