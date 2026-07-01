@@ -130,8 +130,20 @@ export default function EventAllRegistryPage(
                 category:
                   personInfo.category === null ? (
                     <Typography color="textDisabled">N/A</Typography>
-                  ) : (
+                  ) : personInfo.category.min_weight === null &&
+                    personInfo.category.max_weight === null ? (
                     personInfo.category.name
+                  ) : personInfo.category.min_weight !== null &&
+                    personInfo.category.max_weight === null ? (
+                    personInfo.category.name +
+                    " +" +
+                    personInfo.category.min_weight +
+                    "Kg"
+                  ) : (
+                    personInfo.category.name +
+                    " -" +
+                    personInfo.category.max_weight +
+                    "Kg"
                   ),
                 added_at: formatDateTime(personInfo.added_at, "both"),
               }),
