@@ -59,7 +59,7 @@ export default function SingleMemberPage(
 
   const avatarData = stringAvatar(
     singleMemberData?.full_name!,
-    256,
+    228,
     props.userRole,
   );
 
@@ -216,7 +216,7 @@ export default function SingleMemberPage(
                       </Avatar>
                     </Tooltip>
                   ) : (
-                    <Avatar sx={{ width: 256, height: 256, mb: 2 }}></Avatar>
+                    <Avatar sx={{ width: 228, height: 228, mb: 2 }}></Avatar>
                   )}
                   {previewUrl !== null && props.userRole !== "main_admin" ? (
                     <Grid
