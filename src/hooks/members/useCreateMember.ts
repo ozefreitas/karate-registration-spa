@@ -7,7 +7,6 @@ export const useCreateMember = ({
   onSuccess,
   onError,
 }: {
-  reset?: any;
   onSuccess?: () => void;
   onError?: (data: any) => void;
 } = {}) => {

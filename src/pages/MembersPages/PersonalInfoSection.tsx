@@ -351,22 +351,24 @@ export default function PersonalInfoSection(
       >
         <Grid>
           {["superuser", "subed_club"].includes(userRole!) ? (
-            <Grid size={1}>
+            <Grid>
               <Tooltip
                 title={
                   props.memberData?.member_types.length === 2
                     ? "Este Membro já tem 2 tipos de praticante"
-                    : "Duplicar Membro"
+                    : null
                 }
                 placement="right"
                 arrow
               >
                 <span>
                   <Button
+                    variant="outlined"
                     disabled={props.memberData?.member_types.length === 2}
                     onClick={() => handleDuplicateModalOpen()}
+                    startIcon={<ContentCopy />}
                   >
-                    <ContentCopy></ContentCopy>
+                    Duplicar
                   </Button>
                 </span>
               </Tooltip>
@@ -560,17 +562,20 @@ export default function PersonalInfoSection(
                 isValidated={isValidated}
               />
             </Grid>
-            <Grid container size={6}>
-              <FieldBox
-                label="É Competidor"
-                control={control}
-                name="competitor"
-                type="switch"
-                isEditMode={isEditMode}
-                userRole={userRole}
-                isValidated={isValidated}
-              />
-            </Grid>
+            {props.memberData?.member_types?.includes("athlete") ||
+            props.memberData?.member_types?.includes("student") ? (
+              <Grid container size={6}>
+                <FieldBox
+                  label="É Competidor"
+                  control={control}
+                  name="competitor"
+                  type="switch"
+                  isEditMode={isEditMode}
+                  userRole={userRole}
+                  isValidated={isValidated}
+                />
+              </Grid>
+            ) : null}
           </FieldRow>
         ) : null}
         <FieldRow>

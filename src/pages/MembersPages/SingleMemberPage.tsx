@@ -14,7 +14,7 @@ import PersonalInfoSection from "./PersonalInfoSection";
 import ResultsHistorySection from "./ResultsHistorySection";
 import QuotesSettingsSection from "./QuotesSettingsSection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { membersHooks } from "../../hooks";
+import { membersHooks, membershipsHooks } from "../../hooks";
 import {
   Navigate,
   useParams,
@@ -87,6 +87,8 @@ export default function SingleMemberPage(
   };
 
   const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+
+  const removeMemberShip = membershipsHooks.useDeleteMemberShipData();
 
   return (
     <>
@@ -239,11 +241,14 @@ export default function SingleMemberPage(
                       <Chip
                         color="error"
                         sx={{ p: 1 }}
+                        onDelete={() => {
+                          setSelectedFile(undefined);
+                        }}
                         onClick={() => {
                           setSelectedFile(undefined);
                         }}
                         clickable
-                        icon={<Cancel />}
+                        deleteIcon={<Cancel />}
                         size="small"
                         label="Cancelar"
                       ></Chip>
@@ -285,6 +290,9 @@ export default function SingleMemberPage(
                         (types: string, index: any) => (
                           <Chip
                             variant="outlined"
+                            // deleteIcon={<Cancel />}
+                            // onDelete={() => {removeMemberShip.mutate()}}
+                            onClick={() => {}}
                             color={
                               types === "coach"
                                 ? "secondary"
