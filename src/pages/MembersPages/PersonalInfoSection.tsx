@@ -276,21 +276,18 @@ export default function PersonalInfoSection(
             ? null
             : data.observations,
         member_type:
-          props.memberData?.member_type === "coach"
-            ? "coach"
-            : data.competitor &&
-                ["athlete"].includes(props.memberData?.member_type)
+          data.competitor && props.memberData?.member_types.includes("athlete")
+            ? null
+            : !data.competitor &&
+                props.memberData?.member_types.includes("student")
               ? null
-              : !data.competitor &&
-                  ["student"].includes(props.memberData?.member_type)
-                ? null
-                : data.competitor &&
-                    ["student"].includes(props.memberData?.member_type)
-                  ? "athlete"
-                  : !data.competitor &&
-                      ["athlete"].includes(props.memberData?.member_type)
-                    ? "student"
-                    : null,
+              : data.competitor &&
+                  props.memberData?.member_types.includes("student")
+                ? "athlete"
+                : !data.competitor &&
+                    props.memberData?.member_types.includes("athlete")
+                  ? "student"
+                  : null,
         quotes_legible:
           data.quotesLegible === props.memberData?.quotes_legible
             ? null
@@ -310,6 +307,8 @@ export default function PersonalInfoSection(
         personId: props.memberData?.id,
         data: formData,
       };
+      console.log(props.memberData?.member_types);
+      console.log(data.competitor);
       patchMember.mutate(updateData, {
         onSuccess: (data: any) => {
           setValue("age", data.data.age);
