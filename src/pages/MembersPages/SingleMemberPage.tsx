@@ -14,7 +14,7 @@ import PersonalInfoSection from "./PersonalInfoSection";
 import ResultsHistorySection from "./ResultsHistorySection";
 import QuotesSettingsSection from "./QuotesSettingsSection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { membersHooks, membershipsHooks } from "../../hooks";
+import { membersHooks } from "../../hooks";
 import {
   Navigate,
   useParams,
@@ -88,7 +88,7 @@ export default function SingleMemberPage(
 
   const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
 
-  const removeMemberShip = membershipsHooks.useDeleteMemberShipData();
+  // const removeMemberShip = membershipsHooks.useDeleteMemberShipData();
 
   return (
     <>
