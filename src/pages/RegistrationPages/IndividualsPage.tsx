@@ -60,10 +60,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
 
   const getIndividualColumnMapping = (isCoach?: boolean) => {
     // Base columns except the one that must be last
-    const baseColumns = [
-      { key: "full_name", label: "Nome" },
-      { key: "gender", label: "Género" },
-    ];
+    const baseColumns = [{ key: "full_name", label: "Nome" }];
 
     // Conditionally add category
     if (
@@ -72,6 +69,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     ) {
       baseColumns.push({ key: "category", label: "Escalão" });
     }
+    baseColumns.push({ key: "gender", label: "Género" });
     if (["main_admin", "single_admin", "superuser"].includes(props.userRole)) {
       baseColumns.push({ key: "club", label: "Clube" });
     }
@@ -89,8 +87,9 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       { key: "member1", label: "Atleta 1" },
       { key: "member2", label: "Atleta 2" },
       { key: "member3", label: "Atleta 3" },
-      { key: "gender", label: "Género" },
       { key: "category", label: "Escalão" },
+      { key: "gender", label: "Género" },
+      { key: "club", label: "Clube" },
       { key: "added_at", label: "Data Inscrição" },
     ];
 
@@ -236,6 +235,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     ? "F"
                     : "Misto",
               category: teamInfo.team.category.name,
+              club: teamInfo.team.club,
               added_at: formatDateTime(teamInfo.added_at, "both"),
             }));
             return (

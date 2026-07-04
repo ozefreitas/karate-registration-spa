@@ -82,8 +82,8 @@ export default function RegisteredTeamsPage(
       { key: "member1", label: "Atleta 1" },
       { key: "member2", label: "Atleta 2" },
       { key: "member3", label: "Atleta 3" },
-      { key: "gender", label: "Género" },
       { key: "category", label: "Escalão" },
+      { key: "gender", label: "Género" },
       { key: "added_at", label: "Data Inscrição" },
     ];
 

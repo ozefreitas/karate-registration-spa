@@ -65,10 +65,7 @@ export default function EventAllRegistryPage(
     }
 
     // Always add these ones
-    baseColumns.push(
-      { key: "gender", label: "Género" },
-      { key: "club", label: "Clube" },
-    );
+    baseColumns.push({ key: "club", label: "Clube" });
 
     // Conditionally add category
     if (
@@ -78,8 +75,11 @@ export default function EventAllRegistryPage(
       baseColumns.push({ key: "category", label: "Escalão" });
     }
 
-    // Always add this one last
-    baseColumns.push({ key: "added_at", label: "Data Inscrição" });
+    // Always add these ones last
+    baseColumns.push(
+      { key: "gender", label: "Género" },
+      { key: "added_at", label: "Data Inscrição" },
+    );
 
     return baseColumns;
   };
