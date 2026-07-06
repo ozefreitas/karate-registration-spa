@@ -10,7 +10,6 @@ export const useDeleteMemberShipData = () => {
   return useMutation({
     mutationFn: MembershipsService.membershipsDestroy,
     onSuccess: (data: any) => {
-        console.log(data)
       callNotiStack(
         enqueueSnackbar,
         "Tipo de praticante removido com sucesso!",

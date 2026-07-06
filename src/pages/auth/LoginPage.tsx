@@ -18,19 +18,7 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import { Navigate } from "react-router-dom";
 
 export default function LoginPage() {
-  // const action = (snackbarId: SnackbarKey | undefined) => (
-  //   <Close
-  //     sx={{ cursor: "pointer" }}
-  //     onClick={() => {
-  //       closeSnackbar(snackbarId);
-  //     }}
-  //   >
-  //     Fechar
-  //   </Close>
-  // );
-
   const { user } = useAuth();
-
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -46,6 +34,8 @@ export default function LoginPage() {
   const {
     control,
     handleSubmit,
+    watch,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -57,7 +47,14 @@ export default function LoginPage() {
   const loginUser = authHooks.useLogInUser();
 
   const onSubmit = async (data: { username: string; password: string }) => {
-    await loginUser.mutateAsync(data);
+    if (watch("username") === "") {
+      setError("username", { message: "Este campo é obrigatório" });
+    }
+    if (watch("password") === "") {
+      setError("password", { message: "Este campo é obrigatório" });
+    }
+    if (watch("password") !== "" && watch("username") !== "")
+      await loginUser.mutateAsync(data);
   };
 
   useEffect(() => {
@@ -154,7 +151,7 @@ export default function LoginPage() {
                 )}
               />
             </Grid>
-            <Grid size={12} sx={{ ml: 3, mt: 0 }}>
+            <Grid size={12} sx={{ ml: 2, mt: 1 }}>
               <Typography
                 onClick={handleModalOpen}
                 sx={{
@@ -165,7 +162,7 @@ export default function LoginPage() {
                   },
                 }}
               >
-                Equeceu-se da password?
+                Esqueceu-se da password?
               </Typography>
             </Grid>
             <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>

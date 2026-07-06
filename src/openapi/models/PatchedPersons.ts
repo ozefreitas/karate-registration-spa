@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
+import type { PersonMemberShip } from './PersonMemberShip';
 import type { Users } from './Users';
 export type PatchedPersons = {
     readonly id?: string;
@@ -15,6 +16,6 @@ export type PatchedPersons = {
     readonly request_status?: string;
     readonly exam_request_status?: string;
     is_validated?: boolean;
-    readonly member_types?: Array<string>;
+    readonly member_types?: Array<PersonMemberShip>;
 };
 

@@ -124,7 +124,9 @@ export default function PersonalInfoSection(
         props.memberData?.address === null || props.memberData?.address === ""
           ? "N/A"
           : props.memberData?.address,
-      competitor: props.memberData?.member_types?.includes("athlete"),
+      competitor: props.memberData?.member_types?.some(
+        (mt: any) => mt.member_type === "athlete",
+      ),
       birthDate: props.memberData?.birth_date,
       quotesLegible: props.memberData?.quotes_legible,
       weight:
@@ -167,7 +169,9 @@ export default function PersonalInfoSection(
         props.memberData?.address === null || props.memberData?.address === ""
           ? "N/A"
           : props.memberData?.address,
-      competitor: props.memberData?.member_types?.includes("athlete"),
+      competitor: props.memberData?.member_types?.some(
+        (mt: any) => mt.member_type === "athlete",
+      ),
       birthDate: props.memberData?.birth_date,
       quotesLegible: props.memberData?.quotes_legible,
       weight:
@@ -276,16 +280,25 @@ export default function PersonalInfoSection(
             ? null
             : data.observations,
         member_type:
-          data.competitor && props.memberData?.member_types.includes("athlete")
+          data.competitor &&
+          props.memberData?.member_types?.some(
+            (mt: any) => mt.member_type === "athlete",
+          )
             ? null
             : !data.competitor &&
-                props.memberData?.member_types.includes("student")
+                props.memberData?.member_types?.some(
+                  (mt: any) => mt.member_type === "student",
+                )
               ? null
               : data.competitor &&
-                  props.memberData?.member_types.includes("student")
+                  props.memberData?.member_types?.some(
+                    (mt: any) => mt.member_type === "student",
+                  )
                 ? "athlete"
                 : !data.competitor &&
-                    props.memberData?.member_types.includes("athlete")
+                    props.memberData?.member_types?.some(
+                      (mt: any) => mt.member_type === "athlete",
+                    )
                   ? "student"
                   : null,
         quotes_legible:

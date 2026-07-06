@@ -15,7 +15,9 @@ export default function DuplicateMemberModal(
   const createMembership = membershipsHooks.useCreateMemberShip();
   const handleSubmit = () => {
     const formData: { member_type: any; person: string } = {
-      member_type: props.memberData?.member_types.includes("coach")
+      member_type: props.memberData?.member_types?.some(
+        (mt: any) => mt.member_type === "coach",
+      )
         ? "student"
         : "coach",
       person: props.memberData?.id,
@@ -52,7 +54,9 @@ export default function DuplicateMemberModal(
       size="sm"
     >
       <Grid px={2}>
-        {props.memberData?.member_types?.includes("coach") ? (
+        {props.memberData?.member_types?.some(
+          (mt: any) => mt.member_type === "coach",
+        ) ? (
           <Grid>
             <Typography>
               Esta ação irá duplicar este Membro para <strong>Aluno</strong>.

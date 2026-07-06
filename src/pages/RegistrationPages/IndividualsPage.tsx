@@ -8,8 +8,10 @@ import {
   Box,
   CircularProgress,
   Typography,
+  Paper,
+  CardHeader,
 } from "@mui/material";
-import { Add, Visibility } from "@mui/icons-material";
+import { Add, HowToReg, Visibility } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import MembersModal from "../../components/Modals/MembersModal";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
@@ -17,6 +19,16 @@ import CategoriesReadOnlyModal from "../../components/Categories/CategoriesReadO
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { formatDateTime, getFullDate } from "../../utils/utils";
 import UnAuthorizedPage from "../ErrorPages/UnAuthorizedPage";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip as RechartToolTip,
+  Cell,
+} from "recharts";
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -36,6 +48,14 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
     setCurrentDiscipline(disciplineName);
     setIsCategoriesListModalOpen(true);
   };
+
+  const { data: categoryStats } =
+    eventsHooks.useRegistrationsPerEventPerCategoryData(eventId!);
+
+  const chartData = categoryStats?.map((row: any) => ({
+    name: row.discipline_name + " - " + row.category_name,
+    number_registrations: row.member_count,
+  }));
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
     eventsHooks.useFetchSingleEventData(eventId!);
@@ -104,6 +124,34 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   ) {
     return <UnAuthorizedPage></UnAuthorizedPage>;
   }
+
+  function generateDistinctColors(count: number) {
+    return Array.from({ length: count }, (_, i) => {
+      const hue = Math.round((360 / count) * i);
+      return `hsl(${hue}, 65%, 55%)`;
+    });
+  }
+
+  const colors = generateDistinctColors(chartData?.length!);
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    const isVisible = active && payload && payload.length;
+    return (
+      <div
+        className="custom-tooltip"
+        style={{ visibility: isVisible ? "visible" : "hidden" }}
+      >
+        {isVisible && (
+          <Paper elevation={1} sx={{ py: 2, px: 3 }}>
+            <Typography
+              fontWeight={"bold"}
+            >{`Número de inscritos: ${payload[0].value}`}</Typography>
+            {/* <p>Anything you want can be displayed here.</p> */}
+          </Paper>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -178,133 +226,182 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
               props.userRole,
             )}
             userRole={props.userRole}
-          ></AllUseTable>
+          />
         ) : (
-          disciplinesData?.results.map((discipline: any, index: any) => {
-            const disciplineIndividuals = discipline?.individuals.map(
-              (personInfo: any) => ({
-                id: personInfo.person.id,
-                full_name: personInfo.person.full_name,
-                gender: personInfo.person.gender,
-                club: personInfo.person.club,
-                category:
-                  personInfo.category === null ? (
-                    <Typography color="textDisabled">N/A</Typography>
-                  ) : personInfo.category.min_weight === null &&
-                    personInfo.category.max_weight === null ? (
-                    personInfo.category.name
-                  ) : personInfo.category.min_weight !== null &&
-                    personInfo.category.max_weight === null ? (
-                    personInfo.category.name +
-                    " +" +
-                    personInfo.category.min_weight +
-                    "Kg"
-                  ) : (
-                    personInfo.category.name +
-                    " -" +
-                    personInfo.category.max_weight +
-                    "Kg"
-                  ),
-                added_at: formatDateTime(personInfo.added_at, "both"),
-              }),
-            );
-            const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
-              id: teamInfo.team.id,
-              member1:
-                teamInfo.team.athlete1 === null ? (
-                  <Typography color="textDisabled">N/A</Typography>
-                ) : (
-                  teamInfo.team.athlete1?.full_name
-                ),
-              member2:
-                teamInfo.team.athlete2 === null ? (
-                  <Typography color="textDisabled">N/A</Typography>
-                ) : (
-                  teamInfo.team.athlete2?.full_name
-                ),
-              member3:
-                teamInfo.team.athlete3 === null ? (
-                  <Typography color="textDisabled">N/A</Typography>
-                ) : (
-                  teamInfo.team.athlete3?.full_name
-                ),
-              gender:
-                teamInfo.team.gender === "Masculino"
-                  ? "M"
-                  : teamInfo.team.gender === "Feminino"
-                    ? "F"
-                    : "Misto",
-              category: teamInfo.team.category.name,
-              club: teamInfo.team.club,
-              added_at: formatDateTime(teamInfo.added_at, "both"),
-            }));
-            return (
-              <span key={index}>
-                <Grid
-                  size={12}
-                  pr={2}
-                  mt={3}
-                  container
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Typography p={3} variant="h5" fontWeight={"bold"}>
-                    {discipline.name}
-                  </Typography>
-                  <Grid container spacing={2}>
-                    {singleEventData?.has_categories ? (
-                      <Button
-                        startIcon={<Visibility />}
-                        variant="contained"
-                        onClick={() => {
-                          handleCategoriesListModalOpen(discipline.name);
+          <>
+            <Grid size={12} width="100%">
+              <Card sx={{ m: 2, my: 5 }}>
+                <CardHeader
+                  title={
+                    <Grid container alignItems="center" gap={2}>
+                      <Grid
+                        container
+                        justifyContent="center"
+                        alignItems="center"
+                        color="#fff"
+                        bgcolor="#004d1f"
+                        sx={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: 1.5,
                         }}
                       >
-                        Escalões
-                      </Button>
-                    ) : null}
+                        <HowToReg sx={{ fontSize: 28 }} />
+                      </Grid>
+
+                      <Typography variant="h5" fontWeight="bold">
+                        Inscrições por Escalão
+                      </Typography>
+                    </Grid>
+                  }
+                />
+
+                <CardContent sx={{ width: "100%" }}>
+                  <ResponsiveContainer width="100%" height={400}>
+                    <BarChart data={chartData}>
+                      <CartesianGrid strokeDasharray="1 1" />
+                      <XAxis dataKey="name" />
+                      <YAxis allowDecimals={false} />
+                      <RechartToolTip content={CustomTooltip} />
+                      <Bar dataKey="number_registrations">
+                        {chartData?.map((entry, i) => (
+                          <Cell
+                            key={entry.name}
+                            fill={colors[i % colors.length]}
+                          />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {disciplinesData?.results.map((discipline: any, index: any) => {
+              const disciplineIndividuals = discipline?.individuals.map(
+                (personInfo: any) => ({
+                  id: personInfo.person.id,
+                  full_name: personInfo.person.full_name,
+                  gender: personInfo.person.gender,
+                  club: personInfo.person.club,
+                  category:
+                    personInfo.category === null ? (
+                      <Typography color="textDisabled">N/A</Typography>
+                    ) : personInfo.category.min_weight === null &&
+                      personInfo.category.max_weight === null ? (
+                      personInfo.category.name
+                    ) : personInfo.category.min_weight !== null &&
+                      personInfo.category.max_weight === null ? (
+                      `${personInfo.category.name} +${personInfo.category.min_weight}Kg`
+                    ) : (
+                      `${personInfo.category.name} -${personInfo.category.max_weight}Kg`
+                    ),
+                  added_at: formatDateTime(personInfo.added_at, "both"),
+                }),
+              );
+
+              const disciplineTeams = discipline?.teams.map(
+                (teamInfo: any) => ({
+                  id: teamInfo.team.id,
+                  member1:
+                    teamInfo.team.athlete1 === null ? (
+                      <Typography color="textDisabled">N/A</Typography>
+                    ) : (
+                      teamInfo.team.athlete1.full_name
+                    ),
+                  member2:
+                    teamInfo.team.athlete2 === null ? (
+                      <Typography color="textDisabled">N/A</Typography>
+                    ) : (
+                      teamInfo.team.athlete2.full_name
+                    ),
+                  member3:
+                    teamInfo.team.athlete3 === null ? (
+                      <Typography color="textDisabled">N/A</Typography>
+                    ) : (
+                      teamInfo.team.athlete3.full_name
+                    ),
+                  gender:
+                    teamInfo.team.gender === "Masculino"
+                      ? "M"
+                      : teamInfo.team.gender === "Feminino"
+                        ? "F"
+                        : "Misto",
+                  category: teamInfo.team.category.name,
+                  added_at: formatDateTime(teamInfo.added_at, "both"),
+                }),
+              );
+
+              return (
+                <span key={index}>
+                  <Grid
+                    size={12}
+                    pr={2}
+                    mt={3}
+                    container
+                    alignItems="center"
+                    justifyContent="space-between"
+                  >
+                    <Typography p={3} variant="h5" fontWeight="bold">
+                      {discipline.name}
+                    </Typography>
+
+                    <Grid container spacing={2}>
+                      {singleEventData?.has_categories && (
+                        <Button
+                          startIcon={<Visibility />}
+                          variant="contained"
+                          onClick={() =>
+                            handleCategoriesListModalOpen(discipline.name)
+                          }
+                        >
+                          Escalões
+                        </Button>
+                      )}
+                    </Grid>
                   </Grid>
-                </Grid>
-                {disciplineIndividuals.length !== 0 ? (
-                  <AllUseTable
-                    count={discipline.individuals.length}
-                    type="Modalidades"
-                    discipline={discipline.id}
-                    data={disciplineIndividuals}
-                    columnsHeaders={individualsColumnMaping}
-                    actions
-                    selection
-                    deletable
-                    userRole={props.userRole}
-                  ></AllUseTable>
-                ) : disciplineTeams.length !== 0 ? (
-                  <AllUseTable
-                    count={discipline.teams.length}
-                    type="Modalidades"
-                    discipline={discipline.id}
-                    data={disciplineTeams}
-                    columnsHeaders={teamsColumnMaping}
-                    actions
-                    selection
-                    deletable
-                    userRole={props.userRole}
-                  ></AllUseTable>
-                ) : (
-                  <AllUseTable
-                    count={0}
-                    type="Modalidades"
-                    discipline={discipline.id}
-                    data={[]}
-                    columnsHeaders={teamsColumnMaping}
-                    actions
-                    selection
-                    deletable
-                    userRole={props.userRole}
-                  ></AllUseTable>
-                )}
-              </span>
-            );
-          })
+
+                  {disciplineIndividuals.length !== 0 ? (
+                    <AllUseTable
+                      count={discipline.individuals.length}
+                      type="Modalidades"
+                      discipline={discipline.id}
+                      data={disciplineIndividuals}
+                      columnsHeaders={individualsColumnMaping}
+                      actions
+                      selection
+                      deletable
+                      userRole={props.userRole}
+                    />
+                  ) : disciplineTeams.length !== 0 ? (
+                    <AllUseTable
+                      count={discipline.teams.length}
+                      type="Modalidades"
+                      discipline={discipline.id}
+                      data={disciplineTeams}
+                      columnsHeaders={teamsColumnMaping}
+                      actions
+                      selection
+                      deletable
+                      userRole={props.userRole}
+                    />
+                  ) : (
+                    <AllUseTable
+                      count={0}
+                      type="Modalidades"
+                      discipline={discipline.id}
+                      data={[]}
+                      columnsHeaders={teamsColumnMaping}
+                      actions
+                      selection
+                      deletable
+                      userRole={props.userRole}
+                    />
+                  )}
+                </span>
+              );
+            })}
+          </>
         )}
       </Grid>
       {singleEventData?.is_open ? (
