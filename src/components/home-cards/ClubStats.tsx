@@ -19,10 +19,6 @@ import {
   CircularProgress,
   Typography,
   CardContent,
-  // ListItem,
-  // ListItemButton,
-  // ListItemIcon,
-  // ListItemText,
 } from "@mui/material";
 import { adminHooks, eventsHooks } from "../../hooks";
 import { HowToReg, Person } from "@mui/icons-material";
