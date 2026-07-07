@@ -78,7 +78,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<unknown>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -89,7 +89,7 @@ export default function CategoriesReadOnlyModal(
     handleModalClose: any;
     disciplineData: any;
     currentDisicpline: string;
-  }>
+  }>,
 ) {
   type Category = {
     id: string;
@@ -104,6 +104,7 @@ export default function CategoriesReadOnlyModal(
     has_weight: string;
     min_weight: string;
     max_weight: string;
+    max_athletes: string;
   };
 
   const [page, setPage] = useState<number>(1);
@@ -225,7 +226,7 @@ export default function CategoriesReadOnlyModal(
                             size="small"
                             label={`Graduação Min.: ${
                               getGraduationFromValue(
-                                Number(category.min_grad)
+                                Number(category.min_grad),
                               ) ?? "N/A"
                             }`}
                           ></Chip>
@@ -233,7 +234,7 @@ export default function CategoriesReadOnlyModal(
                             size="small"
                             label={`Graduação Máx.: ${
                               getGraduationFromValue(
-                                Number(category.max_grad)
+                                Number(category.max_grad),
                               ) ?? "N/A"
                             }`}
                           ></Chip>
@@ -251,6 +252,14 @@ export default function CategoriesReadOnlyModal(
                               category.max_weight ?? "N/A"
                             } ${category.max_weight ? "Kg" : ""}`}
                           ></Chip>
+                          {category.max_athletes ? (
+                            <Chip
+                              size="small"
+                              label={`Número Máx. de Atletas (Equipas): ${
+                                category.max_athletes ?? "N/A"
+                              } ${category.max_athletes ? "Atletas" : ""}`}
+                            ></Chip>
+                          ) : null}
                         </Grid>
                       </Grid>
                     }
@@ -275,7 +284,7 @@ export default function CategoriesReadOnlyModal(
             </Typography>
             <Typography mr={2}>
               {Math.ceil(
-                props.disciplineData[0].categories.length / itemsPerPage
+                props.disciplineData[0].categories.length / itemsPerPage,
               )}
             </Typography>
             <Tooltip title="Página anterior">

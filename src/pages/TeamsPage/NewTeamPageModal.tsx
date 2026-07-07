@@ -60,6 +60,7 @@ export default function NewTeamPageModal(
       athlete1: "",
       athlete2: "",
       athlete3: "",
+      athlete4: "",
       category: "",
       gender: "",
       is_category_visible: false,
@@ -75,6 +76,7 @@ export default function NewTeamPageModal(
             athlete1: data.athlete1,
             athlete2: data.athlete2,
             athlete3: data.athlete3,
+            athlete4: data.athlete4,
             gender: data.gender,
             chosen_category: data.category,
           },
@@ -671,6 +673,130 @@ export default function NewTeamPageModal(
                         ${
                           membersNotInEventData?.results.find(
                             (item) => item.id === watch("athlete3"),
+                          )?.category ?? "N/A"
+                        }
+                      `}
+                      ></Chip>
+                    </Grid>
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid
+            container
+            size={{ xs: 12, md: 6, lg: 4 }}
+            alignContent={"flex-start"}
+          >
+            <Controller
+              name="athlete4"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  color="warning"
+                  variant={"outlined"}
+                  label="Atleta 4 (suplente)"
+                  fullWidth
+                  select
+                  disabled={
+                    watch("gender") === "" || watch("is_category_visible")
+                  }
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                  }}
+                  error={!!errors.athlete2}
+                >
+                  {membersNotInEventData?.count === 0 ? (
+                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                  ) : (
+                    <MenuItem sx={{ color: "lightgrey" }} value="">
+                      -- Selecionar --
+                    </MenuItem>
+                  )}
+                  {membersNotInEventData?.results.map((item, index: any) => (
+                    <MenuItem key={index} value={item.id}>
+                      {item.full_name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            ></Controller>
+            <Card
+              elevation={watch("athlete4") === "" ? 1 : 3}
+              sx={{
+                width: "100%",
+                minHeight: "30vh",
+                m: 2,
+                mt: 3,
+              }}
+            >
+              <CardContent sx={{ textAlign: "center", p: 4, width: "100%" }}>
+                {watch("athlete4") === "" ? (
+                  <Typography color="textDisabled" mt={8}>
+                    Prévisualização indisponível. <br></br> Selecione um Atleta
+                    acima.
+                  </Typography>
+                ) : (
+                  <Grid
+                    container
+                    direction={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    spacing={2}
+                  >
+                    <Avatar
+                      {...stringAvatar(
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete4"),
+                        )?.full_name ?? "",
+                        128,
+                      )}
+                    ></Avatar>
+                    <Typography variant="h4">
+                      {
+                        membersNotInEventData?.results.find(
+                          (item) => item.id === watch("athlete4"),
+                        )?.full_name
+                      }
+                    </Typography>
+                    <Grid container justifyContent={"center"}>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
+                        ${
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete4"),
+                          )?.age
+                        } anos (calculados)
+                      `}
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
+                        ${
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete4"),
+                          )?.gender
+                        }
+                      `}
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`
+                        ${
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete4"),
+                          )?.weight
+                        } Kg
+                      `}
+                      ></Chip>
+                      <Chip
+                        sx={{ p: 1 }}
+                        label={`Escalão (previsto):
+                        ${
+                          membersNotInEventData?.results.find(
+                            (item) => item.id === watch("athlete4"),
                           )?.category ?? "N/A"
                         }
                       `}

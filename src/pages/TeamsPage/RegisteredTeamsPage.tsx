@@ -9,6 +9,7 @@ import {
   ListItemText,
   Tooltip,
   Typography,
+  Badge,
 } from "@mui/material";
 import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -171,9 +172,30 @@ export default function RegisteredTeamsPage(
                 ),
               member3:
                 teamInfo.team.athlete3 === null ? (
-                  <Typography color="textDisabled">N/A</Typography>
+                  <Typography color="textDisabled" align="center">
+                    N/A
+                  </Typography>
+                ) : teamInfo.team.athlete4 ? (
+                  <Grid container justifyContent="center" alignItems="center">
+                    <Badge
+                      badgeContent="+1"
+                      color="secondary"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          right: -18,
+                          top: 2,
+                        },
+                      }}
+                    >
+                      <Typography>
+                        {teamInfo.team.athlete3?.full_name}
+                      </Typography>
+                    </Badge>
+                  </Grid>
                 ) : (
-                  teamInfo.team.athlete3?.full_name
+                  <Typography align="center">
+                    {teamInfo.team.athlete3?.full_name}
+                  </Typography>
                 ),
               gender:
                 teamInfo.team.gender === "Masculino"
