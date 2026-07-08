@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import AllUseTable from "../Table/AllUseTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PageInfoCard from "../info-cards/PageInfoCard";
 import { formatDateTime, getFullDate } from "../../utils/utils";
 import { ContentCopy } from "@mui/icons-material";
@@ -18,7 +18,7 @@ export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>,
 ) {
   const { id: eventId } = useParams<{ id: string }>();
-
+  const navigate = useNavigate();
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
     useState<string>("");
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] =
@@ -247,6 +247,24 @@ export default function EventAllRegistryPage(
             );
           })
         )}
+        <Grid
+          mr={2}
+          mt={4}
+          container
+          size={12}
+          justifyContent={"flex-end"}
+          spacing={2}
+        >
+          <Button
+            size={"medium"}
+            type={"submit"}
+            onClick={() => {
+              navigate(`/events/${eventId}/`);
+            }}
+          >
+            Voltar
+          </Button>
+        </Grid>
       </Grid>
       {disciplineToDuplicate === "" ? null : (
         <DuplicateRegistrationsModal

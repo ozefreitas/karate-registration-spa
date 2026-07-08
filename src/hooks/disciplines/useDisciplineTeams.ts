@@ -24,7 +24,7 @@ export const useAddDisciplineTeam = () => {
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });
     },
     onError: (err: any) => {
-       const errorData = err?.body || {};
+      const errorData = err?.body || {};
       if (errorData.athletes?.[0]) {
         callNotiStack(enqueueSnackbar, errorData.athletes?.[0], "error");
       } else if (errorData.error) {
@@ -70,7 +70,7 @@ export const useRemoveAllDisciplineTeams = () => {
     mutationFn: ({ disciplineId }: { disciplineId: string }) =>
       DisciplinesService.disciplinesDeleteAllTeamsDestroy(Number(disciplineId)),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["events"] });
       queryClient.invalidateQueries({ queryKey: ["single-event"] });
       queryClient.invalidateQueries({ queryKey: ["disciplines"] });

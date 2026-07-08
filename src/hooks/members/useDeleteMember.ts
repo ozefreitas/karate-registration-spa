@@ -37,7 +37,7 @@ export const useDeleteAllMemberData = () => {
   return useMutation({
     mutationFn: PersonsService.personsDeleteAllDestroy,
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success");
+      callNotiStack(enqueueSnackbar, data.message, "success");
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["individuals"] });
       queryClient.invalidateQueries({ queryKey: ["members-notin-event"] });

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -10,6 +10,7 @@ import {
   Typography,
   Paper,
   CardHeader,
+  Badge,
 } from "@mui/material";
 import { Add, HowToReg, Visibility } from "@mui/icons-material";
 import AllUseTable from "../../components/Table/AllUseTable";
@@ -32,6 +33,7 @@ import {
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
@@ -50,7 +52,10 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   };
 
   const { data: categoryStats } =
-    eventsHooks.useRegistrationsPerEventPerCategoryData(eventId!);
+    eventsHooks.useRegistrationsPerEventPerCategoryData(
+      eventId!,
+      props.userRole,
+    );
 
   const chartData = categoryStats?.map((row: any) => ({
     name: row.discipline_name + " - " + row.category_name,
@@ -143,10 +148,17 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       >
         {isVisible && (
           <Paper elevation={1} sx={{ py: 2, px: 3 }}>
-            <Typography
-              fontWeight={"bold"}
-            >{`Número de inscritos: ${payload[0].value}`}</Typography>
-            {/* <p>Anything you want can be displayed here.</p> */}
+            <Grid>
+              <Typography>
+                Modalidade: {payload[0].payload.name.split(" - ")[0]}
+              </Typography>
+              <Typography>
+                Escalão: {payload[0].payload.name.split(" - ")[1]}
+              </Typography>
+              <Typography
+                fontWeight={"bold"}
+              >{`Número de inscritos: ${payload[0].value}`}</Typography>
+            </Grid>
           </Paper>
         )}
       </div>
@@ -229,53 +241,57 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           />
         ) : (
           <>
-            <Grid size={12} width="100%">
-              <Card sx={{ m: 2, my: 5 }}>
-                <CardHeader
-                  title={
-                    <Grid container alignItems="center" gap={2}>
-                      <Grid
-                        container
-                        justifyContent="center"
-                        alignItems="center"
-                        color="#fff"
-                        bgcolor="#004d1f"
-                        sx={{
-                          width: 50,
-                          height: 50,
-                          borderRadius: 1.5,
-                        }}
-                      >
-                        <HowToReg sx={{ fontSize: 28 }} />
+            {["main_admin", "superuser", "single_admin"].includes(
+              props.userRole,
+            ) && (
+              <Grid size={12} width="100%">
+                <Card sx={{ m: 2, my: 5 }}>
+                  <CardHeader
+                    title={
+                      <Grid container alignItems="center" gap={2}>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          alignItems="center"
+                          color="#fff"
+                          bgcolor="#004d1f"
+                          sx={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 1.5,
+                          }}
+                        >
+                          <HowToReg sx={{ fontSize: 28 }} />
+                        </Grid>
+
+                        <Typography variant="h5" fontWeight="bold">
+                          Inscrições por Escalão
+                        </Typography>
                       </Grid>
+                    }
+                  />
 
-                      <Typography variant="h5" fontWeight="bold">
-                        Inscrições por Escalão
-                      </Typography>
-                    </Grid>
-                  }
-                />
-
-                <CardContent sx={{ width: "100%" }}>
-                  <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={chartData}>
-                      <CartesianGrid strokeDasharray="1 1" />
-                      <XAxis dataKey="name" />
-                      <YAxis allowDecimals={false} />
-                      <RechartToolTip content={CustomTooltip} />
-                      <Bar dataKey="number_registrations">
-                        {chartData?.map((entry, i) => (
-                          <Cell
-                            key={entry.name}
-                            fill={colors[i % colors.length]}
-                          />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </Grid>
+                  <CardContent sx={{ width: "100%" }}>
+                    <ResponsiveContainer width="100%" height={400}>
+                      <BarChart data={chartData}>
+                        <CartesianGrid strokeDasharray="1 1" />
+                        <XAxis dataKey="name" />
+                        <YAxis allowDecimals={false} />
+                        <RechartToolTip content={CustomTooltip} />
+                        <Bar dataKey="number_registrations">
+                          {chartData?.map((entry, i) => (
+                            <Cell
+                              key={entry.name}
+                              fill={colors[i % colors.length]}
+                            />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
 
             {disciplinesData?.results.map((discipline: any, index: any) => {
               const disciplineIndividuals = discipline?.individuals.map(
@@ -317,9 +333,34 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     ),
                   member3:
                     teamInfo.team.athlete3 === null ? (
-                      <Typography color="textDisabled">N/A</Typography>
+                      <Typography color="textDisabled" align="center">
+                        N/A
+                      </Typography>
+                    ) : teamInfo.team.athlete4 ? (
+                      <Grid
+                        container
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <Badge
+                          badgeContent="+1"
+                          color="secondary"
+                          sx={{
+                            "& .MuiBadge-badge": {
+                              right: -18,
+                              top: 2,
+                            },
+                          }}
+                        >
+                          <Typography>
+                            {teamInfo.team.athlete3?.full_name}
+                          </Typography>
+                        </Badge>
+                      </Grid>
                     ) : (
-                      teamInfo.team.athlete3.full_name
+                      <Typography align="center">
+                        {teamInfo.team.athlete3?.full_name}
+                      </Typography>
                     ),
                   gender:
                     teamInfo.team.gender === "Masculino"
@@ -328,6 +369,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                         ? "F"
                         : "Misto",
                   category: teamInfo.team.category.name,
+                  club: teamInfo.team.club,
                   added_at: formatDateTime(teamInfo.added_at, "both"),
                 }),
               );
@@ -376,7 +418,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                   ) : disciplineTeams.length !== 0 ? (
                     <AllUseTable
                       count={discipline.teams.length}
-                      type="Modalidades"
+                      type="Equipas"
                       discipline={discipline.id}
                       data={disciplineTeams}
                       columnsHeaders={teamsColumnMaping}
@@ -404,8 +446,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           </>
         )}
       </Grid>
-      {singleEventData?.is_open ? (
-        <Grid container justifyContent="flex-end" m={4}>
+      <Grid container spacing={2} justifyContent="flex-end" m={4}>
+        {singleEventData?.is_open ? (
           <Button
             variant="contained"
             size="large"
@@ -415,8 +457,17 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           >
             Inscrever
           </Button>
-        </Grid>
-      ) : null}
+        ) : null}
+        <Button
+          size={"medium"}
+          type={"submit"}
+          onClick={() => {
+            navigate(`/events/${eventId}/`);
+          }}
+        >
+          Voltar
+        </Button>
+      </Grid>
       <MembersModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}

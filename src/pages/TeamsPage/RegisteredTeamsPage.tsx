@@ -14,7 +14,7 @@ import {
 import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AllUseTable from "../../components/Table/AllUseTable";
 import { Add, ContentCopy, Visibility } from "@mui/icons-material";
 import { formatDateTime, getFullDate } from "../../utils/utils";
@@ -34,6 +34,7 @@ export default function RegisteredTeamsPage(
     useState<boolean>(false);
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
   const { id: eventId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const {
     data: singleEventData,
@@ -282,6 +283,17 @@ export default function RegisteredTeamsPage(
             );
           })
         )}
+        <Grid mr={2} mt={4} container size={12} justifyContent={"flex-end"}>
+          <Button
+            size={"medium"}
+            type={"submit"}
+            onClick={() => {
+              navigate(`/events/${eventId}/`);
+            }}
+          >
+            Voltar
+          </Button>
+        </Grid>
       </Grid>
       <NewTeamPageModal
         isModalOpen={isModalOpen}
