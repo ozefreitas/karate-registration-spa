@@ -108,3 +108,17 @@ export const useRegistrationsPerEventData = (): UseQueryResult<
     refetchOnMount: false,
   });
 };
+
+export const useRegistrationsPerEventPerCategoryData = (
+  eventId: string,
+): UseQueryResult<EventRegistrationCount[]> => {
+  return useQuery({
+    queryKey: ["registrations-per-category-counts", eventId],
+    queryFn: () =>
+      EventsService.eventsCategoryStatsList(eventId) as unknown as Promise<
+        EventRegistrationCount[]
+      >,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+};

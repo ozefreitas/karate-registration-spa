@@ -9,6 +9,7 @@ import type { DeleteMember } from '../models/DeleteMember';
 import type { Events } from '../models/Events';
 import type { GenerateDrawRequest } from '../models/GenerateDrawRequest';
 import type { GenerateDrawResponse } from '../models/GenerateDrawResponse';
+import type { PaginatedCategoryStatsList } from '../models/PaginatedCategoryStatsList';
 import type { PaginatedCompactEventsList } from '../models/PaginatedCompactEventsList';
 import type { PaginatedEventRegistrationCountList } from '../models/PaginatedEventRegistrationCountList';
 import type { PatchedEvents } from '../models/PatchedEvents';
@@ -169,6 +170,59 @@ export class EventsService {
             },
             body: requestBody,
             mediaType: 'application/json',
+        });
+    }
+    /**
+     * Category registration statistics for an event
+     * Returns the number of registered members per category (and discipline) for the given event. Categories with no registrations are omitted.
+     * @param id A unique value identifying this event.
+     * @param hasCategories
+     * @param hasEnded
+     * @param hasRegistrations
+     * @param hasTeams
+     * @param inDay
+     * @param inMonth
+     * @param isOngoing
+     * @param ordering Which field to use when ordering the results.
+     * @param page A page number within the paginated result set.
+     * @param pageSize Number of results to return per page.
+     * @param season
+     * @returns PaginatedCategoryStatsList
+     * @throws ApiError
+     */
+    public static eventsCategoryStatsList(
+        id: string,
+        hasCategories?: boolean,
+        hasEnded?: boolean,
+        hasRegistrations?: boolean,
+        hasTeams?: boolean,
+        inDay?: string,
+        inMonth?: string,
+        isOngoing?: boolean,
+        ordering?: string,
+        page?: number,
+        pageSize?: number,
+        season?: string,
+    ): CancelablePromise<PaginatedCategoryStatsList> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/events/{id}/category_stats/',
+            path: {
+                'id': id,
+            },
+            query: {
+                'has_categories': hasCategories,
+                'has_ended': hasEnded,
+                'has_registrations': hasRegistrations,
+                'has_teams': hasTeams,
+                'in_day': inDay,
+                'in_month': inMonth,
+                'is_ongoing': isOngoing,
+                'ordering': ordering,
+                'page': page,
+                'page_size': pageSize,
+                'season': season,
+            },
         });
     }
     /**

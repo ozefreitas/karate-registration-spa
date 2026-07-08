@@ -51,12 +51,14 @@ import DeleteEventModal from "../EventsModals/DeleteEventModal";
 import PageInfoCard from "../info-cards/PageInfoCard";
 import { EncounterOptions } from "../../config";
 import { useAuth } from "../../access/GlobalAuthProvider";
-import { getFullDate } from "../../utils/utils";
+import { callNotiStack, getFullDate } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function EventCard(props: Readonly<{ userRole: string }>) {
   const { user: meData } = useAuth();
   const { id: eventId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [isDescriptionEdit, setIsDescriptionEdit] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -139,11 +141,23 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
       const url = globalThis.URL.createObjectURL(data.data);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `lista_inscritos_evento_${eventId}_.xlsx`);
+      link.setAttribute("download", `lista_inscritos_evento_${eventId}.xlsx`);
       document.body.appendChild(link);
       link.click();
       link.remove();
       globalThis.URL.revokeObjectURL(url);
+      callNotiStack(
+        enqueueSnackbar,
+        "Download de inscrições iniciado! Verifique a sua pasta de Transferências.",
+        "success",
+      );
+    } else {
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
     }
   };
 

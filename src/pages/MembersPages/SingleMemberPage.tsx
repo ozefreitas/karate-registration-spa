@@ -14,7 +14,7 @@ import PersonalInfoSection from "./PersonalInfoSection";
 import ResultsHistorySection from "./ResultsHistorySection";
 import QuotesSettingsSection from "./QuotesSettingsSection";
 import stringAvatar from "../../dashboard/utils/avatarColor";
-import { membersHooks } from "../../hooks";
+import { membersHooks, membershipsHooks } from "../../hooks";
 import {
   Navigate,
   useParams,
@@ -32,12 +32,15 @@ import {
 } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import { MemberTypes } from "../../config";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function SingleMemberPage(
   props: Readonly<{ userRole: string }>,
 ) {
   const navigate = useNavigate();
   const { id: memberId } = useParams<{ id: string }>();
+  const { enqueueSnackbar } = useSnackbar();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isHovered, setIsHovered] = useState(false);
   const [selectedFile, setSelectedFile] = useState<any>(undefined);
@@ -56,10 +59,11 @@ export default function SingleMemberPage(
   } = membersHooks.useFetchSingleMemberData(memberId);
 
   const uploadPersonProfilePicture = membersHooks.usePatchMemberData();
+  const removeMembership = membershipsHooks.useDeleteMemberShipData();
 
   const avatarData = stringAvatar(
     singleMemberData?.full_name!,
-    256,
+    228,
     props.userRole,
   );
 
@@ -87,6 +91,8 @@ export default function SingleMemberPage(
   };
 
   const previewUrl = selectedFile ? URL.createObjectURL(selectedFile) : null;
+
+  // const removeMemberShip = membershipsHooks.useDeleteMemberShipData();
 
   return (
     <>
@@ -216,7 +222,7 @@ export default function SingleMemberPage(
                       </Avatar>
                     </Tooltip>
                   ) : (
-                    <Avatar sx={{ width: 256, height: 256, mb: 2 }}></Avatar>
+                    <Avatar sx={{ width: 228, height: 228, mb: 2 }}></Avatar>
                   )}
                   {previewUrl !== null && props.userRole !== "main_admin" ? (
                     <Grid
@@ -239,11 +245,14 @@ export default function SingleMemberPage(
                       <Chip
                         color="error"
                         sx={{ p: 1 }}
+                        onDelete={() => {
+                          setSelectedFile(undefined);
+                        }}
                         onClick={() => {
                           setSelectedFile(undefined);
                         }}
                         clickable
-                        icon={<Cancel />}
+                        deleteIcon={<Cancel />}
                         size="small"
                         label="Cancelar"
                       ></Chip>
@@ -282,20 +291,42 @@ export default function SingleMemberPage(
                       justifyContent={"center"}
                     >
                       {singleMemberData?.member_types.map(
-                        (types: string, index: any) => (
+                        (type: any, index: any) => (
                           <Chip
                             variant="outlined"
                             color={
-                              types === "coach"
+                              type.member_type === "coach"
                                 ? "secondary"
-                                : types === "student"
+                                : type.member_type === "student"
                                   ? "info"
                                   : "warning"
                             }
+                            deleteIcon={<Cancel />}
+                            onClick={() => {
+                              if (singleMemberData?.member_types.length === 1) {
+                                callNotiStack(
+                                  enqueueSnackbar,
+                                  "Não pode remover todos os tipos de praticante de um Membro!",
+                                  "error",
+                                  3000,
+                                );
+                              } else removeMembership.mutate(type.id);
+                            }}
+                            onDelete={() => {
+                              if (singleMemberData?.member_types.length === 1) {
+                                callNotiStack(
+                                  enqueueSnackbar,
+                                  "Não pode remover todos os tipos de praticante de um Membro!",
+                                  "error",
+                                  3000,
+                                );
+                              } else removeMembership.mutate(type.id);
+                            }}
                             key={index}
                             label={
-                              MemberTypes.find((item) => item.value === types)
-                                ?.label
+                              MemberTypes.find(
+                                (item) => item.value === type.member_type,
+                              )?.label
                             }
                           ></Chip>
                         ),

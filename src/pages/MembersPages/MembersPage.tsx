@@ -232,19 +232,22 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       username: person.club?.username,
       member_type: (
         <Grid container spacing={1} justifyContent={"center"}>
-          {person.member_types?.map((types: string, index: any) => (
+          {person.member_types?.map((types: any, index: any) => (
             <Chip
               variant="outlined"
               color={
-                types === "coach"
+                types.member_type === "coach"
                   ? "secondary"
-                  : types === "student"
+                  : types.member_type === "student"
                     ? "info"
                     : "warning"
               }
               key={index}
               size="small"
-              label={MemberTypes.find((item) => item.value === types)?.label}
+              label={
+                MemberTypes.find((item) => item.value === types.member_type)
+                  ?.label
+              }
             ></Chip>
           ))}
         </Grid>

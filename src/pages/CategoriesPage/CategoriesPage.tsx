@@ -300,14 +300,15 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
           <Grid
             size={12}
             container
-            mx={3}
+            ml={1}
+            mr={2}
             justifyContent={
               props.userRole === "main_admin" ? "space-between" : "flex-end"
             }
             alignItems={"center"}
           >
             {props.userRole === "main_admin" ? (
-              <Grid pl={1}>
+              <Grid>
                 <AddButton label="Adicionar" to="new_category/"></AddButton>
               </Grid>
             ) : null}

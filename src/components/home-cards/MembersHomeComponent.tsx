@@ -128,29 +128,36 @@ export default function MembersHomeComponent(
                             }}
                           >
                             <Typography>{person.full_name}</Typography>
-                            {person.member_types.includes("coach") ? (
-                              <Chip
-                                color={"secondary"}
-                                variant="outlined"
-                                label={"Treinador"}
-                              ></Chip>
-                            ) : null}
-                            {person.member_types.includes("student") ||
-                            person.member_types.includes("athlete") ? (
-                              <Chip
-                                color={
-                                  person.member_types.includes("student")
-                                    ? "info"
-                                    : "warning"
-                                }
-                                variant="outlined"
-                                label={
-                                  person.member_types.includes("student")
-                                    ? "Aluno"
-                                    : "Competidor"
-                                }
-                              ></Chip>
-                            ) : null}
+                            {(() => {
+                              const isCoach = person.member_types.some(
+                                (mt) => mt.member_type === "coach",
+                              );
+                              const isStudent = person.member_types.some(
+                                (mt) => mt.member_type === "student",
+                              );
+                              const isAthlete = person.member_types.some(
+                                (mt) => mt.member_type === "athlete",
+                              );
+
+                              return (
+                                <>
+                                  {isCoach ? (
+                                    <Chip
+                                      color={"secondary"}
+                                      variant="outlined"
+                                      label={"Treinador"}
+                                    ></Chip>
+                                  ) : null}
+                                  {isStudent || isAthlete ? (
+                                    <Chip
+                                      color={isStudent ? "info" : "warning"}
+                                      variant="outlined"
+                                      label={isStudent ? "Aluno" : "Competidor"}
+                                    ></Chip>
+                                  ) : null}
+                                </>
+                              );
+                            })()}
                             <Chip
                               variant="outlined"
                               label={person.gender}

@@ -65,10 +65,7 @@ export default function EventAllRegistryPage(
     }
 
     // Always add these ones
-    baseColumns.push(
-      { key: "gender", label: "Género" },
-      { key: "club", label: "Clube" },
-    );
+    baseColumns.push({ key: "club", label: "Clube" });
 
     // Conditionally add category
     if (
@@ -78,8 +75,11 @@ export default function EventAllRegistryPage(
       baseColumns.push({ key: "category", label: "Escalão" });
     }
 
-    // Always add this one last
-    baseColumns.push({ key: "added_at", label: "Data Inscrição" });
+    // Always add these ones last
+    baseColumns.push(
+      { key: "gender", label: "Género" },
+      { key: "added_at", label: "Data Inscrição" },
+    );
 
     return baseColumns;
   };
@@ -130,17 +130,44 @@ export default function EventAllRegistryPage(
                 category:
                   personInfo.category === null ? (
                     <Typography color="textDisabled">N/A</Typography>
-                  ) : (
+                  ) : personInfo.category.min_weight === null &&
+                    personInfo.category.max_weight === null ? (
                     personInfo.category.name
+                  ) : personInfo.category.min_weight !== null &&
+                    personInfo.category.max_weight === null ? (
+                    personInfo.category.name +
+                    " +" +
+                    personInfo.category.min_weight +
+                    "Kg"
+                  ) : (
+                    personInfo.category.name +
+                    " -" +
+                    personInfo.category.max_weight +
+                    "Kg"
                   ),
                 added_at: formatDateTime(personInfo.added_at, "both"),
               }),
             );
             const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
               id: teamInfo.team.id,
-              athlete1: teamInfo.team.athlete1.full_name,
-              athlete2: teamInfo.team.athlete2.full_name,
-              athlete3: teamInfo.team.athlete3?.full_name,
+              athlete1:
+                teamInfo.team.athlete1 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete1?.full_name
+                ),
+              athlete2:
+                teamInfo.team.athlete2 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete2?.full_name
+                ),
+              athlete3:
+                teamInfo.team.athlete3 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete3?.full_name
+                ),
               gender: teamInfo.team.gender,
               club: teamInfo.team.club,
               category:

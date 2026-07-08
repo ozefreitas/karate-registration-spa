@@ -306,7 +306,7 @@ export function SectionBlock({
         borderRadius: 3,
         overflow: "hidden",
         bgcolor: "#fff",
-        boxShadow: 2,
+        boxShadow: 1,
       }}
     >
       {/* Block header */}

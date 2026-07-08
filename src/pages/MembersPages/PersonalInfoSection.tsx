@@ -124,7 +124,9 @@ export default function PersonalInfoSection(
         props.memberData?.address === null || props.memberData?.address === ""
           ? "N/A"
           : props.memberData?.address,
-      competitor: props.memberData?.member_types?.includes("athlete"),
+      competitor: props.memberData?.member_types?.some(
+        (mt: any) => mt.member_type === "athlete",
+      ),
       birthDate: props.memberData?.birth_date,
       quotesLegible: props.memberData?.quotes_legible,
       weight:
@@ -167,7 +169,9 @@ export default function PersonalInfoSection(
         props.memberData?.address === null || props.memberData?.address === ""
           ? "N/A"
           : props.memberData?.address,
-      competitor: props.memberData?.member_types?.includes("athlete"),
+      competitor: props.memberData?.member_types?.some(
+        (mt: any) => mt.member_type === "athlete",
+      ),
       birthDate: props.memberData?.birth_date,
       quotesLegible: props.memberData?.quotes_legible,
       weight:
@@ -276,21 +280,27 @@ export default function PersonalInfoSection(
             ? null
             : data.observations,
         member_type:
-          props.memberData?.member_type === "coach"
-            ? "coach"
-            : data.competitor &&
-                ["athlete"].includes(props.memberData?.member_type)
+          data.competitor &&
+          props.memberData?.member_types?.some(
+            (mt: any) => mt.member_type === "athlete",
+          )
+            ? null
+            : !data.competitor &&
+                props.memberData?.member_types?.some(
+                  (mt: any) => mt.member_type === "student",
+                )
               ? null
-              : !data.competitor &&
-                  ["student"].includes(props.memberData?.member_type)
-                ? null
-                : data.competitor &&
-                    ["student"].includes(props.memberData?.member_type)
-                  ? "athlete"
-                  : !data.competitor &&
-                      ["athlete"].includes(props.memberData?.member_type)
-                    ? "student"
-                    : null,
+              : data.competitor &&
+                  props.memberData?.member_types?.some(
+                    (mt: any) => mt.member_type === "student",
+                  )
+                ? "athlete"
+                : !data.competitor &&
+                    props.memberData?.member_types?.some(
+                      (mt: any) => mt.member_type === "athlete",
+                    )
+                  ? "student"
+                  : null,
         quotes_legible:
           data.quotesLegible === props.memberData?.quotes_legible
             ? null
@@ -310,6 +320,8 @@ export default function PersonalInfoSection(
         personId: props.memberData?.id,
         data: formData,
       };
+      console.log(props.memberData?.member_types);
+      console.log(data.competitor);
       patchMember.mutate(updateData, {
         onSuccess: (data: any) => {
           setValue("age", data.data.age);
@@ -352,22 +364,24 @@ export default function PersonalInfoSection(
       >
         <Grid>
           {["superuser", "subed_club"].includes(userRole!) ? (
-            <Grid size={1}>
+            <Grid>
               <Tooltip
                 title={
                   props.memberData?.member_types.length === 2
                     ? "Este Membro já tem 2 tipos de praticante"
-                    : "Duplicar Membro"
+                    : null
                 }
                 placement="right"
                 arrow
               >
                 <span>
                   <Button
+                    variant="outlined"
                     disabled={props.memberData?.member_types.length === 2}
                     onClick={() => handleDuplicateModalOpen()}
+                    startIcon={<ContentCopy />}
                   >
-                    <ContentCopy></ContentCopy>
+                    Duplicar
                   </Button>
                 </span>
               </Tooltip>
@@ -561,17 +575,20 @@ export default function PersonalInfoSection(
                 isValidated={isValidated}
               />
             </Grid>
-            <Grid container size={6}>
-              <FieldBox
-                label="É Competidor"
-                control={control}
-                name="competitor"
-                type="switch"
-                isEditMode={isEditMode}
-                userRole={userRole}
-                isValidated={isValidated}
-              />
-            </Grid>
+            {props.memberData?.member_types?.includes("athlete") ||
+            props.memberData?.member_types?.includes("student") ? (
+              <Grid container size={6}>
+                <FieldBox
+                  label="É Competidor"
+                  control={control}
+                  name="competitor"
+                  type="switch"
+                  isEditMode={isEditMode}
+                  userRole={userRole}
+                  isValidated={isValidated}
+                />
+              </Grid>
+            ) : null}
           </FieldRow>
         ) : null}
         <FieldRow>

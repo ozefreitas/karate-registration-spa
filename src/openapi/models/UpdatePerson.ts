@@ -27,6 +27,7 @@ export type UpdatePerson = {
     conditions?: string | null;
     observations?: string | null;
     is_validated?: boolean;
+    created_by?: number | null;
     updated_by?: number | null;
 };
 

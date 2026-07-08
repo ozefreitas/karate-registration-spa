@@ -9,6 +9,7 @@ import {
   ListItemText,
   Tooltip,
   Typography,
+  Badge,
 } from "@mui/material";
 import DuplicateRegistrationsModal from "../../components/Modals/DuplicateRegistrationsModal";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
@@ -82,8 +83,8 @@ export default function RegisteredTeamsPage(
       { key: "member1", label: "Atleta 1" },
       { key: "member2", label: "Atleta 2" },
       { key: "member3", label: "Atleta 3" },
-      { key: "gender", label: "Género" },
       { key: "category", label: "Escalão" },
+      { key: "gender", label: "Género" },
       { key: "added_at", label: "Data Inscrição" },
     ];
 
@@ -157,9 +158,45 @@ export default function RegisteredTeamsPage(
           disciplinesData?.results.map((discipline: any, index: any) => {
             const disciplineTeams = discipline?.teams.map((teamInfo: any) => ({
               id: teamInfo.team.id,
-              member1: teamInfo.team.athlete1.full_name,
-              member2: teamInfo.team.athlete2.full_name,
-              member3: teamInfo.team.athlete3.full_name,
+              member1:
+                teamInfo.team.athlete1 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete1?.full_name
+                ),
+              member2:
+                teamInfo.team.athlete2 === null ? (
+                  <Typography color="textDisabled">N/A</Typography>
+                ) : (
+                  teamInfo.team.athlete2?.full_name
+                ),
+              member3:
+                teamInfo.team.athlete3 === null ? (
+                  <Typography color="textDisabled" align="center">
+                    N/A
+                  </Typography>
+                ) : teamInfo.team.athlete4 ? (
+                  <Grid container justifyContent="center" alignItems="center">
+                    <Badge
+                      badgeContent="+1"
+                      color="secondary"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          right: -18,
+                          top: 2,
+                        },
+                      }}
+                    >
+                      <Typography>
+                        {teamInfo.team.athlete3?.full_name}
+                      </Typography>
+                    </Badge>
+                  </Grid>
+                ) : (
+                  <Typography align="center">
+                    {teamInfo.team.athlete3?.full_name}
+                  </Typography>
+                ),
               gender:
                 teamInfo.team.gender === "Masculino"
                   ? "M"

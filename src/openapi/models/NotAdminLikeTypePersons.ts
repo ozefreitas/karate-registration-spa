@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { GenderEnum } from './GenderEnum';
 import type { GraduationEnum } from './GraduationEnum';
+import type { PersonMemberShip } from './PersonMemberShip';
 export type NotAdminLikeTypePersons = {
     readonly id: string;
     readonly full_name: string;
@@ -14,7 +15,7 @@ export type NotAdminLikeTypePersons = {
         prev?: string | null;
         next?: string | null;
     };
-    readonly member_types: Array<string>;
+    readonly member_types: Array<PersonMemberShip>;
     readonly exam_request_status: string;
     readonly classifications: string;
     profile_image?: string | null;

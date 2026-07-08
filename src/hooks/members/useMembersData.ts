@@ -85,7 +85,7 @@ export const useFetchMembersData = (
         pageSize,
       ).then((res) => res as unknown as PaginatedResponse<Members>),
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    // refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
   });
 };

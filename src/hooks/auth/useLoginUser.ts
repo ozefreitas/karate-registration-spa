@@ -8,18 +8,17 @@ export const useLogInUser = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: LoginService.loginCreate,
+    mutationFn: (variables: any) => {
+      localStorage.removeItem("token");
+      return LoginService.loginCreate(variables);
+    },
     onSuccess: (data: any) => {
       const token = data.token;
       localStorage.setItem("token", token);
-
       callNotiStack(enqueueSnackbar, "Login com sucesso!", "success");
-
       queryClient.invalidateQueries({ queryKey: ["me"] });
       queryClient.invalidateQueries({ queryKey: ["club-notifications"] });
-
       navigate("/");
     },
     onError: () => {
