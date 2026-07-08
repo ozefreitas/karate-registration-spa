@@ -8,6 +8,7 @@ export type CreateClassifications = {
     place: PlaceEnum;
     readonly created_at: string;
     bracket: number;
-    person: string;
+    person?: string | null;
+    team?: string | null;
 };
 

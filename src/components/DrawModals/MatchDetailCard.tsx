@@ -135,7 +135,7 @@ export default function MatchDetailCard({
         }
         reverse={reverse}
       />
-      {isKata && (
+      {isKata && !scoring ? (
         <InfoRow
           color={color}
           icon={<SportsMartialArts />}
@@ -188,7 +188,39 @@ export default function MatchDetailCard({
           }
           reverse={reverse}
         />
-      )}
+      ) : isKata && scoring ? (
+        <InfoRow
+          color={color}
+          icon={<SportsMartialArts />}
+          value={
+            <Grid
+              container
+              columnGap={2}
+              rowGap={1}
+              size={12}
+              textAlign={"center"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              {contenderInfo === null ? (
+                <Typography>Bye</Typography>
+              ) : (
+                <>
+                  <Typography>Kata:</Typography>
+                  <Typography
+                    fontWeight={700}
+                    color={matchInfo === null ? "textDisabled" : undefined}
+                  >
+                    {KataOptions.find((item) => item.value === matchInfo?.kata)
+                      ?.label ?? "N/A"}
+                  </Typography>
+                </>
+              )}
+            </Grid>
+          }
+          reverse={reverse}
+        />
+      ) : null}
       {/* ) : (
         <InfoRow
           color={color}
@@ -261,7 +293,8 @@ export default function MatchDetailCard({
           }
           reverse={reverse}
         />
-      ) : (
+      ) : null}
+      {isKata ? null : (
         <InfoRow
           color={color}
           icon={<ModeStandby />}
@@ -279,7 +312,9 @@ export default function MatchDetailCard({
                 <Typography>Bye</Typography>
               ) : (
                 <>
-                  <Typography>Pontos Marcados:</Typography>
+                  <Typography>
+                    {team ? "Vitórias:" : "Pontos Marcados:"}
+                  </Typography>
                   <Typography
                     color={
                       color === "Aka"

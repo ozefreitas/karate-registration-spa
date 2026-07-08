@@ -39,6 +39,7 @@ export default function MatchInfoModal(
     brackedId: number;
     edit: boolean;
     isKata?: boolean;
+    team?: boolean;
   }>,
 ) {
   const { enqueueSnackbar } = useSnackbar();
@@ -56,6 +57,14 @@ export default function MatchInfoModal(
         props.matchData?.contender_2 === null
           ? ""
           : props.matchData?.contender_2.id,
+      team_contender_1:
+        props.matchData?.team_contender_1 === null
+          ? ""
+          : props.matchData?.team_contender_1.id,
+      team_contender_2:
+        props.matchData?.team_contender_2 === null
+          ? ""
+          : props.matchData?.team_contender_2.id,
       kata_contender_1: props.matchData?.kataresult?.kata_contender_1,
       flags_contender_1: props.matchData?.kataresult?.flags_contender_1,
       kata_contender_2: props.matchData?.kataresult?.kata_contender_2,
@@ -76,6 +85,14 @@ export default function MatchInfoModal(
           props.matchData?.contender_2 === null
             ? ""
             : props.matchData?.contender_2.id,
+        team_contender_1:
+          props.matchData?.team_contender_1 === null
+            ? ""
+            : props.matchData?.team_contender_1.id,
+        team_contender_2:
+          props.matchData?.team_contender_2 === null
+            ? ""
+            : props.matchData?.team_contender_2.id,
         kata_contender_1: props.matchData.kataresult?.kata_contender_1 ?? "",
         flags_contender_1: props.matchData.kataresult?.flags_contender_1 ?? 0,
         kata_contender_2: props.matchData.kataresult?.kata_contender_2 ?? "",
@@ -206,7 +223,6 @@ export default function MatchInfoModal(
       );
       return;
     }
-
     const payload = {
       kumiteresult: {
         points_contender_1: data.points_contender_1,
@@ -216,6 +232,9 @@ export default function MatchInfoModal(
       },
       contender_1: data.contender_1,
       contender_2: data.contender_2,
+      team_contender_1: data.team_contender_1,
+      team_contender_2: data.team_contender_2,
+      ongoing: true,
       winner:
         selectedWinner === "SHIRO"
           ? data.contender_1
@@ -226,6 +245,13 @@ export default function MatchInfoModal(
     if (selectedWinner !== "") {
       const winner = { winner: selectedWinner === "SHIRO" ? 1 : 2 };
       patchMatchWinner.mutate({ matchId: props.matchData.id, data: winner });
+    }
+    if (
+      selectedWinner !== "" &&
+      props.matchData.round_number === 0 &&
+      props.matchData.match_number === 1
+    ) {
+      payload["ongoing"] = false;
     }
     updateMatch.mutate(
       { matchId: props.matchData.id, data: payload },
@@ -241,7 +267,7 @@ export default function MatchInfoModal(
   return (
     <Dialog
       fullWidth
-      maxWidth="md"
+      maxWidth={props.team ? "lg" : "md"}
       open={props.isModalOpen}
       onClose={() => {
         props.handleModalClose();
@@ -290,13 +316,19 @@ export default function MatchInfoModal(
                 color="Shiro"
                 control={control}
                 bracketId={props.brackedId}
+                team={props.team}
               ></MatchDetailEditCard>
             ) : (
               <MatchDetailCard
                 isKata={props.isKata!}
                 color="Shiro"
-                contenderInfo={props.matchData?.contender_1}
+                contenderInfo={
+                  props.team
+                    ? props.matchData?.team_contender_1
+                    : props.matchData?.contender_1
+                }
                 matchInfo={props.matchData}
+                team={props.team}
               ></MatchDetailCard>
             )}
           </Grid>
@@ -308,15 +340,20 @@ export default function MatchInfoModal(
                 control={control}
                 bracketId={props.brackedId}
                 reverse
+                team={props.team}
               ></MatchDetailEditCard>
             ) : (
               <MatchDetailCard
                 isKata={props.isKata!}
                 color="Aka"
-                contenderInfo={props.matchData?.contender_2}
+                contenderInfo={
+                  props.team
+                    ? props.matchData?.team_contender_2
+                    : props.matchData?.contender_2
+                }
                 matchInfo={props.matchData}
-                // kataInfo={props.matchData?.kataresult?.kata_contender_2}
                 reverse
+                team={props.team}
               ></MatchDetailCard>
             )}
           </Grid>

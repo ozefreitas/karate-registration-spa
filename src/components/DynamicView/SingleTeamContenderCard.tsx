@@ -8,6 +8,7 @@ const SingleTeamContenderCard = (props: {
   isWinner: boolean;
   points: number;
   teamData: any;
+  dorsalData: any;
   isMatchFinished: boolean;
   ongoing: boolean;
   isFirstRound?: boolean;
@@ -15,7 +16,13 @@ const SingleTeamContenderCard = (props: {
 }) => {
   const athletes = Object.entries(props.teamData)
     .filter(([key, value]) => key.startsWith("athlete") && value !== null)
-    .map(([_, athlete]) => athlete);
+    .map(([key, athlete]) => ({
+      key,
+      athlete,
+      dorsal: props.dorsalData?.[key],
+    }));
+
+  console.log(athletes);
 
   return (
     <Card
@@ -76,28 +83,44 @@ const SingleTeamContenderCard = (props: {
               }}
             ></Box>
           </Grid>
-          <Grid container direction={"column"} spacing={1} size={7}>
-            {athletes?.map((member: any, index: any) => (
-              <Grid key={index} container direction={"column"} spacing={1}>
-                <Typography
-                  fontWeight={
-                    props.isMatchFinished
-                      ? props.isWinner
-                        ? 700
+          <Grid container direction="column" spacing={1} size={7}>
+            {athletes.map(
+              ({
+                key,
+                athlete,
+                dorsal,
+              }: {
+                key: any;
+                athlete: any;
+                dorsal: any;
+              }) => (
+                <Grid key={key} container spacing={2}>
+                  <Typography
+                    fontWeight={
+                      props.isMatchFinished
+                        ? props.isWinner
+                          ? 700
+                          : undefined
                         : undefined
-                      : undefined
-                  }
-                >
-                  {member.full_name === undefined && props.isFirstRound
-                    ? "bye"
-                    : member.full_name === undefined && !props.isFirstRound
-                      ? "TBD"
-                      : member.full_name}
-                </Typography>
-              </Grid>
-            ))}
+                    }
+                  >
+                    {athlete.full_name === undefined && props.isFirstRound
+                      ? "bye"
+                      : athlete.full_name === undefined && !props.isFirstRound
+                        ? "TBD"
+                        : athlete.full_name}
+                  </Typography>
+                  <Chip
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                    label={dorsal}
+                  ></Chip>
+                </Grid>
+              ),
+            )}
           </Grid>
-          <Grid>
+          <Grid container>
             <Typography
               variant="subtitle2"
               fontWeight={
