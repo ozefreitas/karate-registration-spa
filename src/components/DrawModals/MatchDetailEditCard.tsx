@@ -102,6 +102,8 @@ export default function MatchDetailEditCard({
   scoring,
   team,
 }: Readonly<MatchDetailEditCardProps>) {
+  console.log(team);
+  console.log(scoring);
   // Retrieve all members inside a given bracked
   const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
     drawsHooks.useMembersPerBracketData(bracketId);
@@ -156,7 +158,8 @@ export default function MatchDetailEditCard({
                               <Grid
                                 container
                                 alignItems={"center"}
-                                columnSpacing={2}
+                                spacing={2}
+                                m={1}
                               >
                                 <Typography>{`${selectedTeam?.athlete1.full_name} | ${selectedTeam?.athlete2.full_name} | ${selectedTeam?.athlete3?.full_name}`}</Typography>
                                 <Chip label={selectedTeam?.club}></Chip>
@@ -184,27 +187,31 @@ export default function MatchDetailEditCard({
                           <CircularProgress />
                         </Grid>
                       ) : (
-                        <>
-                          {bracketTeamsData?.length === 0 ? (
-                            <MenuItem disabled>
+                        [
+                          bracketTeamsData?.length === 0 ? (
+                            <MenuItem key="empty" disabled>
                               Sem opções disponíveis.
                             </MenuItem>
                           ) : (
-                            <MenuItem sx={{ color: "lightgrey" }} value="">
+                            <MenuItem
+                              key="placeholder"
+                              sx={{ color: "lightgrey" }}
+                              value=""
+                            >
                               -- Selecionar --
                             </MenuItem>
-                          )}
-                          {bracketTeamsData?.map((team, index: number) => (
+                          ),
+                          ...(bracketTeamsData?.map((team, index: number) => (
                             <MenuItem
                               sx={{ display: "flex", gap: 2, p: 2 }}
-                              key={index}
+                              key={team.id ?? index}
                               value={team.id}
                             >
                               {`${team?.athlete1.full_name} | ${team?.athlete2.full_name} | ${team?.athlete3?.full_name}`}
                               <Chip size="small" label={team.club} />
                             </MenuItem>
-                          ))}
-                        </>
+                          )) ?? []),
+                        ]
                       )
                     ) : isBracketMembersLoading ? (
                       <Grid
@@ -216,17 +223,32 @@ export default function MatchDetailEditCard({
                         <CircularProgress />
                       </Grid>
                     ) : (
-                      bracketMembersData?.map((person, index: number) => (
-                        <MenuItem
-                          sx={{ display: "flex", gap: 2, p: 2 }}
-                          key={index}
-                          value={person.id}
-                        >
-                          {person.full_name}
-                          <Chip size="small" label={person.club} />
-                          <Chip size="small" label={`${person.age} anos`} />
-                        </MenuItem>
-                      ))
+                      [
+                        bracketMembersData?.length === 0 ? (
+                          <MenuItem key="empty" disabled>
+                            Sem opções disponíveis.
+                          </MenuItem>
+                        ) : (
+                          <MenuItem
+                            key="placeholder"
+                            sx={{ color: "lightgrey" }}
+                            value=""
+                          >
+                            -- Selecionar --
+                          </MenuItem>
+                        ),
+                        ...(bracketMembersData?.map((person, index: number) => (
+                          <MenuItem
+                            sx={{ display: "flex", gap: 2, p: 2 }}
+                            key={person.id ?? index}
+                            value={person.id}
+                          >
+                            {person.full_name}
+                            <Chip size="small" label={person.club} />
+                            <Chip size="small" label={`${person.age} anos`} />
+                          </MenuItem>
+                        )) ?? []),
+                      ]
                     )}
                   </TextField>
                 )}
@@ -343,7 +365,7 @@ export default function MatchDetailEditCard({
           }
           reverse={reverse}
         />
-      ) : (
+      ) : !isKata ? (
         <InfoRow
           color={color}
           icon={<ModeStandby />}
@@ -364,7 +386,7 @@ export default function MatchDetailEditCard({
                       color="warning"
                       type="number"
                       variant={"outlined"}
-                      label="Pontos Marcados"
+                      label={team ? "Vitórias" : "Pontos Marcados"}
                       fullWidth
                       {...field}
                       onChange={(e) => {
@@ -378,7 +400,7 @@ export default function MatchDetailEditCard({
           }
           reverse={reverse}
         />
-      )}
+      ) : null}
     </Grid>
   );
 }

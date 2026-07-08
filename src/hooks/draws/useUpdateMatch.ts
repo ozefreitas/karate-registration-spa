@@ -55,16 +55,25 @@ export const usePatchMatch = (userRole: string, reset?: boolean) => {
   return useMutation({
     mutationFn: ({ matchId, data }: { matchId: number; data: any }) =>
       MatchService.matchPartialUpdate(matchId, data),
-    onSuccess: () => {
-      callNotiStack(
-        enqueueSnackbar,
-        reset
-          ? "Ecrã limpo! Sem partida em direto!"
-          : userRole === "technician"
-            ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
-            : "Partida selecionada com sucesso! Está agora em direto!",
-        "success",
-      );
+    onSuccess: (data: any) => {
+      if (data.ongoing) {
+        callNotiStack(
+          enqueueSnackbar,
+          reset
+            ? "Ecrã limpo! Sem partida em direto!"
+            : userRole === "technician"
+              ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
+              : "Partida selecionada com sucesso! Está agora em direto!",
+          "success",
+        );
+      } else {
+        callNotiStack(
+          enqueueSnackbar,
+          "Partida retirada de direto!",
+          "success",
+        );
+      }
+
       channel.postMessage({ type: "MATCH_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });

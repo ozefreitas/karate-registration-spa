@@ -7,12 +7,12 @@ const SingleContenderCard = (props: {
   matchNumber: number;
   isWinner: boolean;
   points: number;
-  fullName: string;
-  club: string;
+  contenderInfo: any;
   isMatchFinished: boolean;
   ongoing: boolean;
   isFirstRound?: boolean;
   rank?: number;
+  dorsal?: string;
 }) => {
   return (
     <Card
@@ -65,24 +65,38 @@ const SingleContenderCard = (props: {
               height: 25,
             }}
           ></Box>
-          <Grid container direction={"column"} spacing={1}>
-            <Typography
-              fontWeight={
-                props.isMatchFinished
-                  ? props.isWinner
-                    ? 700
+          <Grid container direction={"column"} spacing={2}>
+            <Grid container spacing={3}>
+              <Typography
+                fontWeight={
+                  props.isMatchFinished
+                    ? props.isWinner
+                      ? 700
+                      : undefined
                     : undefined
-                  : undefined
-              }
-            >
-              {props.fullName === undefined && props.isFirstRound
-                ? "bye"
-                : props.fullName === undefined && !props.isFirstRound
-                  ? "TBD"
-                  : props.fullName}
-            </Typography>
-            {(props.club === undefined && props.isFirstRound) ||
-            (props.club === undefined && !props.isFirstRound) ? null : (
+                }
+              >
+                {props.contenderInfo?.full_name === undefined &&
+                props.isFirstRound
+                  ? "bye"
+                  : props.contenderInfo?.full_name === undefined &&
+                      !props.isFirstRound
+                    ? "TBD"
+                    : props.contenderInfo?.full_name}
+              </Typography>
+              {props.dorsal && (
+                <Chip
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  label={props.dorsal}
+                ></Chip>
+              )}
+            </Grid>
+
+            {(props.contenderInfo?.club === undefined && props.isFirstRound) ||
+            (props.contenderInfo?.club === undefined &&
+              !props.isFirstRound) ? null : (
               <Typography
                 variant="subtitle2"
                 fontWeight={
@@ -93,11 +107,19 @@ const SingleContenderCard = (props: {
                     : undefined
                 }
               >
-                {props.club === undefined && props.isFirstRound
-                  ? "bye"
-                  : props.club === undefined && !props.isFirstRound
-                    ? "TBD"
-                    : props.club}
+                {props.contenderInfo?.club === undefined &&
+                props.isFirstRound ? (
+                  "bye"
+                ) : props.contenderInfo?.club === undefined &&
+                  !props.isFirstRound ? (
+                  "TBD"
+                ) : (
+                  <Chip
+                    variant="outlined"
+                    color="info"
+                    label={props.contenderInfo?.club}
+                  ></Chip>
+                )}
               </Typography>
             )}
           </Grid>

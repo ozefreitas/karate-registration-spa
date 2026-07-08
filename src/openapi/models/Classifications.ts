@@ -11,5 +11,6 @@ export type Classifications = {
     person: CompactPerson;
     place: PlaceEnum;
     readonly created_at: string;
+    team?: string | null;
 };
 

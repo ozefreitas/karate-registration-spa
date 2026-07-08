@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CompactPerson } from './CompactPerson';
+import type { CompactTeam } from './CompactTeam';
 import type { KataResult } from './KataResult';
 import type { KumiteResult } from './KumiteResult';
 export type Match = {
@@ -10,10 +11,15 @@ export type Match = {
     contender_1: CompactPerson;
     contender_2: CompactPerson;
     winner: CompactPerson;
+    team_contender_1: CompactTeam;
+    team_contender_2: CompactTeam;
+    team_winner: CompactTeam;
     readonly kataresult: KataResult | null;
     readonly kumiteresult: KumiteResult | null;
     readonly contender_1_dorsal: string;
     readonly contender_2_dorsal: string;
+    readonly team_contender_1_dorsals: string;
+    readonly team_contender_2_dorsals: string;
     round_number: number;
     is_third_place?: boolean;
     match_number: number;
@@ -22,8 +28,5 @@ export type Match = {
     bracket: number;
     loser_goes_to?: number | null;
     feeds_into_scoring?: number | null;
-    team_contender_1?: string | null;
-    team_contender_2?: string | null;
-    team_winner?: string | null;
 };
 

@@ -347,8 +347,7 @@ export default function MatchPickerModal(
                                 ? 99
                                 : match.kataresult?.flags_contender_1
                             }
-                            fullName={match.contender_1?.full_name}
-                            club={match.contender_1?.club}
+                            contenderInfo={match.contender_1}
                             isMatchFinished={matchFinished}
                             ongoing={isOngoing}
                           ></SingleContenderCard>
@@ -364,8 +363,7 @@ export default function MatchPickerModal(
                                 ? 99
                                 : match.kataresult?.flags_contender_2
                             }
-                            fullName={match.contender_2?.full_name}
-                            club={match.contender_2?.club}
+                            contenderInfo={match.contender_2}
                             isMatchFinished={matchFinished}
                             ongoing={isOngoing}
                           ></SingleContenderCard>

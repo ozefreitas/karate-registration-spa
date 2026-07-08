@@ -783,7 +783,7 @@ export default function MembersModal(
             ) : membersNotInEventError ? (
               <div>Ocorreu um erro</div>
             ) : filteredMembers?.length === 0 ? (
-              <Grid container size={12} justifyContent={"center"} pb={2}>
+              <Grid container size={12} justifyContent={"center"} py={5} pb={10}>
                 <Typography color="textSecondary">
                   Não tem atletas que ainda não estejam inscritos nesta prova.
                 </Typography>

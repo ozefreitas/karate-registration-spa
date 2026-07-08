@@ -111,6 +111,7 @@ export const useRegistrationsPerEventData = (): UseQueryResult<
 
 export const useRegistrationsPerEventPerCategoryData = (
   eventId: string,
+  userRole?: string,
 ): UseQueryResult<EventRegistrationCount[]> => {
   return useQuery({
     queryKey: ["registrations-per-category-counts", eventId],
@@ -120,5 +121,6 @@ export const useRegistrationsPerEventPerCategoryData = (
       >,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: ["main_admin", "superuser", "single_admin"].includes(userRole!),
   });
 };

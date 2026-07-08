@@ -11,6 +11,7 @@ export type ScoringEntry = {
     team: CompactTeam;
     readonly scoring_result: ScoringResult | null;
     readonly person_dorsal: string;
+    readonly team_dorsal: string;
     score?: string | null;
     rank?: number | null;
     entry_number: number;

@@ -51,14 +51,23 @@ export const usePatchScoringEntry = (userRole: string) => {
       scoringEntryId: number;
       data: any;
     }) => ScoringEntryService.scoringEntryPartialUpdate(scoringEntryId, data),
-    onSuccess: () => {
-      callNotiStack(
-        enqueueSnackbar,
-        userRole === "technician"
-          ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
-          : "Partida selecionada com sucesso! Está agora em direto!",
-        "success",
-      );
+    onSuccess: (data: any) => {
+      if (data.ongoing) {
+        callNotiStack(
+          enqueueSnackbar,
+          userRole === "technician"
+            ? "Partida selecionada com sucesso! Está agora visível no ecrã de resultados!"
+            : "Partida selecionada com sucesso! Está agora em direto!",
+          "success",
+        );
+      } else {
+        callNotiStack(
+          enqueueSnackbar,
+          "Partida retirada de direto!",
+          "success",
+        );
+      }
+
       channel.postMessage({ type: "SCORING_ENTRY_UPDATED" });
       queryClient.invalidateQueries({ queryKey: ["brackets"] });
       queryClient.invalidateQueries({ queryKey: ["event-matches"] });

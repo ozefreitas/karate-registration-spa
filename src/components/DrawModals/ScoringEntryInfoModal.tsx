@@ -40,7 +40,6 @@ export default function ScoringEntryInfoModal(
   }>,
 ) {
   const updateScoringEntry = drawsHooks.useUpdateScoringEntry();
-
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       person: props.team
