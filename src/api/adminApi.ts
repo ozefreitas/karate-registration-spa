@@ -14,6 +14,12 @@ export const eventsExportMembersExcelRetrieve = (eventId: string) => {
   });
 };
 
+export const drawsExportBracketInfoExcelRetrieve = (bracketId: string) => {
+  return authClient.get(`/bracket/${bracketId}/export_bracket_draw/`, {
+    responseType: "blob",
+  });
+};
+
 export const eventsExportDrawPdf = (eventId: string, data: any) => {
   return authClient.post(`/events/${eventId}/generate_draw_pdf/`, {
     data,

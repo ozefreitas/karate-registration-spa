@@ -24,9 +24,12 @@ import {
   ArrowForwardIos,
   Clear,
   East,
+  FileDownload,
   FormatListNumbered,
   LiveTv,
+  Merge,
   Settings,
+  SettingsBackupRestore,
   Sports,
   SportsScore,
   Visibility,
@@ -41,6 +44,8 @@ import { RoundsOptions } from "../../config";
 import SectionHeader from "../../components/Header/SectionHeader";
 import { useQueryClient } from "@tanstack/react-query";
 import ScoringEntryInfoModal from "../../components/DrawModals/ScoringEntryInfoModal";
+import { callNotiStack } from "../../utils/utils";
+import { useSnackbar } from "notistack";
 
 export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const [tab, setTab] = useState(0);
@@ -65,6 +70,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   }, []);
 
   const { id: eventId } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   const [isMatchInfoModalOpen, setIsMatchInfoModalOpen] =
     useState<boolean>(false);
   const [isScoringEntryInfoModalOpen, setIsScoringEntryInfoModalOpen] =
@@ -167,6 +173,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const has_finals = scoringEntriesData?.length !== 0;
 
   const endBracket = drawsHooks.useOfficializeBracket();
+  const generateBracketDraw = drawsHooks.useGenerateBracketDraw();
 
   const patchOngoingMatch = drawsHooks.usePatchMatch(props.userRole);
   const patchOngoingScoringEntry = drawsHooks.usePatchScoringEntry(
@@ -188,6 +195,38 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const isKata = bracketsData
     ?.find((item) => watch("bracket") === String(item.id))
     ?.name.includes("Kata");
+
+  const { refetch: refetchBracketDrawFile } =
+    drawsHooks.useExportBracketDrawFile(watch("bracket"));
+
+  const handleDownloadRegistrationsFile = async () => {
+    const { data } = await refetchBracketDrawFile();
+    if (data) {
+      const url = globalThis.URL.createObjectURL(data.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute(
+        "download",
+        `Draw ${bracketsData?.find((item) => String(item.id) === watch("bracket"))?.name}.xlsx`,
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      globalThis.URL.revokeObjectURL(url);
+      callNotiStack(
+        enqueueSnackbar,
+        "Download do sorteio iniciado! Verifique a sua pasta de Transferências.",
+        "success",
+      );
+    } else {
+      callNotiStack(
+        enqueueSnackbar,
+        "Ocorreu um erro! Tente novamente.",
+        "error",
+        3000,
+      );
+    }
+  };
 
   return (
     <>
@@ -280,7 +319,56 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
         {[undefined, "subed_club", "free_club"].includes(
           props.userRole,
         ) ? null : (
-          <Grid size={12} container justifyContent={"flex-end"} m={2}>
+          <Grid
+            size={12}
+            container
+            justifyContent={"flex-end"}
+            m={2}
+            spacing={2}
+          >
+            {["superuser", "main_admin"].includes(props.userRole) ? (
+              <>
+                <Button
+                  startIcon={<SettingsBackupRestore> </SettingsBackupRestore>}
+                  variant="contained"
+                  color="warning"
+                  disabled={watch("bracket") === ""}
+                  onClick={() => {
+                    generateBracketDraw.mutate({
+                      bracketId: Number(watch("bracket")),
+                      data: {},
+                    });
+                    setValue("bracket", "");
+                  }}
+                >
+                  Regenerar Escalão
+                </Button>
+                <Button
+                  startIcon={<Merge> </Merge>}
+                  variant="contained"
+                  color="secondary"
+                  disabled={watch("bracket") === ""}
+                  // onClick={() => {
+                  //   generateBracketDraw.mutate({
+                  //     bracketId: Number(watch("bracket")),
+                  //     data: {},
+                  //   });
+                  //   setValue("bracket", "");
+                  // }}
+                >
+                  Fundir com outro Escalão
+                </Button>
+              </>
+            ) : null}
+            <Button
+              startIcon={<FileDownload> </FileDownload>}
+              variant="contained"
+              color="success"
+              disabled={watch("bracket") === ""}
+              onClick={handleDownloadRegistrationsFile}
+            >
+              Exportar Escalão
+            </Button>
             <Button
               startIcon={<SportsScore> </SportsScore>}
               variant="contained"

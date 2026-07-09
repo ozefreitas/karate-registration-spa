@@ -81,7 +81,7 @@ const SingleTeamContenderCard = (props: {
               }}
             ></Box>
           </Grid>
-          <Grid container direction="column" spacing={1} size={7}>
+          <Grid container direction="column" spacing={1} size={9}>
             {athletes.map(
               ({
                 key,

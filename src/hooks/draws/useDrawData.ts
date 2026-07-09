@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { BracketService, MatchService, ScoringEntryService } from "../../openapi";
+import {
+  BracketService,
+  MatchService,
+  ScoringEntryService,
+} from "../../openapi";
+import { drawsExportBracketInfoExcelRetrieve } from "../../api";
 
 export const useBracketsData = (eventId: string) => {
   return useQuery({
@@ -38,12 +43,26 @@ export const useTeamsPerBracketData = (bracketId: number) => {
   });
 };
 
-export const useEventScoringEntriesData = (bracketId: string, eventId: string) => {
+export const useEventScoringEntriesData = (
+  bracketId: string,
+  eventId: string,
+) => {
   return useQuery({
     queryKey: ["event-scoring-entries", bracketId, eventId],
     queryFn: () => ScoringEntryService.scoringEntryList(bracketId, eventId),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     enabled: !!bracketId,
+  });
+};
+
+export const useExportBracketDrawFile = (bracketId: string) => {
+  return useQuery({
+    queryKey: ["bracket-draw-file", bracketId],
+    queryFn: async () => await drawsExportBracketInfoExcelRetrieve(bracketId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    retry: false,
+    enabled: false,
   });
 };

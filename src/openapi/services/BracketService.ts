@@ -116,6 +116,42 @@ export class BracketService {
     }
     /**
      * @param id A unique integer value identifying this bracket.
+     * @returns Bracket
+     * @throws ApiError
+     */
+    public static bracketExportBracketDrawRetrieve(
+        id: number,
+    ): CancelablePromise<Bracket> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/bracket/{id}/export_bracket_draw/',
+            path: {
+                'id': id,
+            },
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this bracket.
+     * @param requestBody
+     * @returns Bracket
+     * @throws ApiError
+     */
+    public static bracketGenerateBracketDrawCreate(
+        id: number,
+        requestBody: Bracket,
+    ): CancelablePromise<Bracket> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/bracket/{id}/generate_bracket_draw/',
+            path: {
+                'id': id,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+        });
+    }
+    /**
+     * @param id A unique integer value identifying this bracket.
      * @param requestBody
      * @returns Bracket
      * @throws ApiError
