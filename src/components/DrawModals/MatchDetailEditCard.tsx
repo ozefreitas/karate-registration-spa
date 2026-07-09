@@ -102,8 +102,6 @@ export default function MatchDetailEditCard({
   scoring,
   team,
 }: Readonly<MatchDetailEditCardProps>) {
-  console.log(team);
-  console.log(scoring);
   // Retrieve all members inside a given bracked
   const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
     drawsHooks.useMembersPerBracketData(bracketId);
@@ -150,27 +148,41 @@ export default function MatchDetailEditCard({
                     slotProps={{
                       select: {
                         renderValue: (selected) => {
-                          if (team) {
-                            const selectedTeam = bracketTeamsData?.find(
-                              (m: any) => m.id === selected,
-                            );
-                            return (
-                              <Grid
-                                container
-                                alignItems={"center"}
-                                spacing={2}
-                                m={1}
-                              >
-                                <Typography>{`${selectedTeam?.athlete1.full_name} | ${selectedTeam?.athlete2.full_name} | ${selectedTeam?.athlete3?.full_name}`}</Typography>
-                                <Chip label={selectedTeam?.club}></Chip>
-                              </Grid>
-                            );
-                          } else {
+                          if (!team) {
                             const selectedMember = bracketMembersData?.find(
                               (m: any) => m.id === selected,
                             );
                             return <>{selectedMember?.full_name || ""}</>;
                           }
+
+                          const selectedTeam = bracketTeamsData?.find(
+                            (m: any) => m.id === selected,
+                          );
+
+                          const athleteNames = [
+                            selectedTeam?.athlete1?.full_name,
+                            selectedTeam?.athlete2?.full_name,
+                            selectedTeam?.athlete3?.full_name,
+                            selectedTeam?.athlete4?.full_name,
+                          ]
+                            .filter(Boolean)
+                            .join(" • ");
+
+                          return (
+                            <Grid
+                              container
+                              alignItems="center"
+                              spacing={2}
+                              m={1}
+                            >
+                              <Typography>{athleteNames}</Typography>
+                              <Chip
+                                label={selectedTeam?.club}
+                                variant="outlined"
+                                color="info"
+                              />
+                            </Grid>
+                          );
                         },
                       },
                     }}
@@ -178,14 +190,17 @@ export default function MatchDetailEditCard({
                   >
                     {team ? (
                       isBracketTeamsLoading ? (
-                        <Grid
-                          mt={3}
-                          container
-                          size={12}
-                          justifyContent={"center"}
+                        <MenuItem
+                          disabled
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            my: 3,
+                          }}
                         >
-                          <CircularProgress />
-                        </Grid>
+                          <CircularProgress sx={{ mr: 2 }} />A carregar
+                          Equipas...
+                        </MenuItem>
                       ) : (
                         [
                           bracketTeamsData?.length === 0 ? (
@@ -201,27 +216,42 @@ export default function MatchDetailEditCard({
                               -- Selecionar --
                             </MenuItem>
                           ),
-                          ...(bracketTeamsData?.map((team, index: number) => (
-                            <MenuItem
-                              sx={{ display: "flex", gap: 2, p: 2 }}
-                              key={team.id ?? index}
-                              value={team.id}
-                            >
-                              {`${team?.athlete1.full_name} | ${team?.athlete2.full_name} | ${team?.athlete3?.full_name}`}
-                              <Chip size="small" label={team.club} />
-                            </MenuItem>
-                          )) ?? []),
+                          ...(bracketTeamsData?.map((team, index: number) => {
+                            const athleteNames = [
+                              team?.athlete1?.full_name,
+                              team?.athlete2?.full_name,
+                              team?.athlete3?.full_name,
+                              team?.athlete4?.full_name,
+                            ]
+                              .filter(Boolean)
+                              .join(" • ");
+
+                            return (
+                              <MenuItem
+                                sx={{ display: "flex", gap: 2, p: 2 }}
+                                key={team.id ?? index}
+                                value={team.id}
+                              >
+                                <Typography flexGrow={1}>
+                                  {athleteNames}
+                                </Typography>
+                                <Chip size="small" label={team.club} />
+                              </MenuItem>
+                            );
+                          }) ?? []),
                         ]
                       )
                     ) : isBracketMembersLoading ? (
-                      <Grid
-                        mt={3}
-                        container
-                        size={12}
-                        justifyContent={"center"}
+                      <MenuItem
+                        disabled
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          my: 3,
+                        }}
                       >
-                        <CircularProgress />
-                      </Grid>
+                        <CircularProgress sx={{ mr: 2 }} />A carregar Atletas...
+                      </MenuItem>
                     ) : (
                       [
                         bracketMembersData?.length === 0 ? (

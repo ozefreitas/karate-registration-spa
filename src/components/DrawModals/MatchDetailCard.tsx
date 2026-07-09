@@ -106,29 +106,44 @@ export default function MatchDetailCard({
             alignItems={"center"}
           >
             {team ? (
-              <Grid container spacing={3} alignItems={"center"}>
+              <Grid container spacing={4} alignItems={"center"}>
                 <Grid container direction={"column"} rowSpacing={2}>
                   <Typography fontWeight={700}>
-                    {contenderInfo.athlete1?.full_name}
+                    {contenderInfo.athlete1?.full_name ?? ""}
                   </Typography>
                   <Typography fontWeight={700}>
-                    {contenderInfo.athlete2?.full_name}
+                    {contenderInfo.athlete2?.full_name ?? ""}
                   </Typography>
-                  <Typography fontWeight={700}>
-                    {contenderInfo.athlete3?.full_name}
-                  </Typography>
+                  {contenderInfo.athlete3 === null ? null : (
+                    <Typography fontWeight={700}>
+                      {contenderInfo.athlete3?.full_name}
+                    </Typography>
+                  )}
+                  {contenderInfo.athlete4 === null ? null : (
+                    <Typography fontWeight={700}>
+                      {contenderInfo.athlete4?.full_name}
+                    </Typography>
+                  )}
                 </Grid>
-                <Chip size="small" label={`${contenderInfo?.club}`}></Chip>
+                <Chip
+                  size="small"
+                  label={`${contenderInfo?.club ?? "N/A"}`}
+                  color="info"
+                  variant="outlined"
+                ></Chip>
               </Grid>
             ) : contenderInfo === null ? (
               <Typography>Bye</Typography>
             ) : (
               <>
                 <Typography fontWeight={700}>
-                  {contenderInfo?.full_name}
+                  {contenderInfo?.full_name ?? ""}
                 </Typography>
-                <Chip size="small" label={`${contenderInfo?.age} anos`}></Chip>
-                <Chip size="small" label={contenderInfo?.club}></Chip>
+                <Chip
+                  size="small"
+                  label={`${contenderInfo?.age ?? ""} anos`}
+                ></Chip>
+                <Chip size="small" label={contenderInfo?.club ?? "N/A"}></Chip>
               </>
             )}
           </Grid>

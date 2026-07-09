@@ -14,15 +14,13 @@ const SingleTeamContenderCard = (props: {
   isFirstRound?: boolean;
   rank?: number;
 }) => {
-  const athletes = Object.entries(props.teamData)
+  const athletes = Object.entries(props.teamData ?? {})
     .filter(([key, value]) => key.startsWith("athlete") && value !== null)
     .map(([key, athlete]) => ({
       key,
       athlete,
       dorsal: props.dorsalData?.[key],
     }));
-
-  console.log(athletes);
 
   return (
     <Card
@@ -131,15 +129,15 @@ const SingleTeamContenderCard = (props: {
                   : undefined
               }
             >
-              {props.teamData.club === undefined && props.isFirstRound ? (
+              {props.teamData?.club === undefined && props.isFirstRound ? (
                 "bye"
-              ) : props.teamData.club === undefined && !props.isFirstRound ? (
+              ) : props.teamData?.club === undefined && !props.isFirstRound ? (
                 "TBD"
               ) : (
                 <Chip
                   variant="outlined"
                   color="info"
-                  label={props.teamData.club}
+                  label={props.teamData?.club}
                 ></Chip>
               )}
             </Typography>
