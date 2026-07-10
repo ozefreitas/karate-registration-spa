@@ -46,6 +46,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import ScoringEntryInfoModal from "../../components/DrawModals/ScoringEntryInfoModal";
 import { callNotiStack } from "../../utils/utils";
 import { useSnackbar } from "notistack";
+import MergeBracketModal from "../../components/DrawModals/MergeBracketModal";
 
 export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const [tab, setTab] = useState(0);
@@ -75,6 +76,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     useState<boolean>(false);
   const [isScoringEntryInfoModalOpen, setIsScoringEntryInfoModalOpen] =
     useState<boolean>(false);
+  const [isMergeModalOpen, setIsMergeModalOpen] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isTeam, setIsTeam] = useState<boolean>(false);
   const [selectedForInfo, setSelectedForInfo] = useState<number | undefined>(
@@ -228,6 +230,14 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     }
   };
 
+  const handleMergeModalOpen = () => {
+    setIsMergeModalOpen(true);
+  };
+
+  const handleMergeModalClose = () => {
+    setIsMergeModalOpen(false);
+  };
+
   return (
     <>
       <PageInfoCard
@@ -348,13 +358,9 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   variant="contained"
                   color="secondary"
                   disabled={watch("bracket") === ""}
-                  // onClick={() => {
-                  //   generateBracketDraw.mutate({
-                  //     bracketId: Number(watch("bracket")),
-                  //     data: {},
-                  //   });
-                  //   setValue("bracket", "");
-                  // }}
+                  onClick={() => {
+                    handleMergeModalOpen();
+                  }}
                 >
                   Fundir com outro Escalão
                 </Button>
@@ -1241,6 +1247,13 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
         )}
         team={isTeam}
       ></ScoringEntryInfoModal>
+      <MergeBracketModal
+        handleClose={handleMergeModalClose}
+        isOpen={isMergeModalOpen}
+        title={bracketsData?.find(
+          (item) => watch("bracket") === String(item.id),
+        )}
+      ></MergeBracketModal>
     </>
   );
 }

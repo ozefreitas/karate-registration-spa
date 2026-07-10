@@ -24,3 +24,12 @@ export const useFetchDisciplinesData = (
     enabled: !!eventId,
   });
 };
+
+export const useFetchSingleDisciplines = (disciplineId: number) => {
+  return useQuery({
+    queryKey: ["single-discipline"],
+    queryFn: () => DisciplinesService.disciplinesRetrieve(disciplineId),
+    refetchOnWindowFocus: false,
+    enabled: false,
+  });
+};
