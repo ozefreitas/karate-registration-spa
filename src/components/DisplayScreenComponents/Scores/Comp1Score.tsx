@@ -9,7 +9,7 @@ export default function Comp1Score(
 
   useDisplaySocket((data) => {
     if (data.player1) {
-      setPlayer1Score((prev) => prev + data.player1);
+      setPlayer1Score((prev) => prev + 5 - data.player1);
     }
     if (data.reset || data.nextMatch) {
       setPlayer1Score(0);

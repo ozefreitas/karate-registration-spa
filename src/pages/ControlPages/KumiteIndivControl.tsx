@@ -87,55 +87,7 @@ export default function KumiteIndivControl() {
             Pontos
           </Typography>
         </Grid>
-        <Grid size={6} container justifyContent="center">
-          <FormControlLabel
-            sx={{ mr: 2 }}
-            labelPlacement="start"
-            label={
-              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Aka Wazari:
-              </Typography>
-            }
-            control={
-              <TextField
-                sx={{ width: "30px" }}
-                color="warning"
-                variant="standard"
-                label=""
-                value={akaWazari}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                    disableUnderline: true,
-                    style: { fontSize: 18, marginRight: 10 },
-                  },
-                }}
-              />
-            }
-          ></FormControlLabel>
-          <Grid container spacing={2}>
-            <Button
-              variant="contained"
-              color="success"
-              onClick={() => {
-                setAkaWazari((prev) => prev + 1);
-                sendPoint("add", 1, 1);
-              }}
-            >
-              <Add></Add>
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                setAkaWazari((prev) => prev - 1);
-                sendPoint("remove", 1, 1);
-              }}
-            >
-              <Remove></Remove>
-            </Button>
-          </Grid>
-        </Grid>
+
         <Grid size={6} container justifyContent="center">
           <FormControlLabel
             sx={{ mr: 2 }}
@@ -191,16 +143,16 @@ export default function KumiteIndivControl() {
             labelPlacement="start"
             label={
               <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Aka Ippon:
+                Aka Wazari:
               </Typography>
             }
             control={
               <TextField
-                sx={{ width: "40px" }}
+                sx={{ width: "30px" }}
                 color="warning"
                 variant="standard"
                 label=""
-                value={akaIppon}
+                value={akaWazari}
                 slotProps={{
                   input: {
                     readOnly: true,
@@ -216,8 +168,8 @@ export default function KumiteIndivControl() {
               variant="contained"
               color="success"
               onClick={() => {
-                setAkaIppon((prev) => prev + 1);
-                sendPoint("add", 1, 2);
+                setAkaWazari((prev) => prev + 1);
+                sendPoint("add", 1, 1);
               }}
             >
               <Add></Add>
@@ -226,8 +178,8 @@ export default function KumiteIndivControl() {
               variant="contained"
               color="error"
               onClick={() => {
-                setAkaIppon((prev) => prev - 1);
-                sendPoint("remove", 1, 2);
+                setAkaWazari((prev) => prev - 1);
+                sendPoint("remove", 1, 1);
               }}
             >
               <Remove></Remove>
@@ -283,29 +235,22 @@ export default function KumiteIndivControl() {
             </Button>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container size={12} spacing={2} sx={{ m: "auto", mt: 5 }}>
-        <Grid size={12} container justifyContent="center">
-          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            Faltas
-          </Typography>
-        </Grid>
         <Grid size={6} container justifyContent="center">
           <FormControlLabel
             sx={{ mr: 2 }}
             labelPlacement="start"
             label={
               <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Aka Kekoku:
+                Aka Ippon:
               </Typography>
             }
             control={
               <TextField
-                sx={{ width: "30px" }}
+                sx={{ width: "40px" }}
                 color="warning"
                 variant="standard"
                 label=""
-                value={fouls.akaKekoku}
+                value={akaIppon}
                 slotProps={{
                   input: {
                     readOnly: true,
@@ -321,11 +266,8 @@ export default function KumiteIndivControl() {
               variant="contained"
               color="success"
               onClick={() => {
-                setFouls((prev: any) => ({
-                  ...prev,
-                  akaKekoku: prev.akaKekoku + 1,
-                }));
-                sendPoint("add_foul", 1, "K");
+                setAkaIppon((prev) => prev + 1);
+                sendPoint("add", 1, 2);
               }}
             >
               <Add></Add>
@@ -334,17 +276,22 @@ export default function KumiteIndivControl() {
               variant="contained"
               color="error"
               onClick={() => {
-                setFouls((prev: any) => ({
-                  ...prev,
-                  akaKekoku: prev.akaKekoku - 1,
-                }));
-                sendPoint("remove_foul", 1, "K");
+                setAkaIppon((prev) => prev - 1);
+                sendPoint("remove", 1, 2);
               }}
             >
               <Remove></Remove>
             </Button>
           </Grid>
         </Grid>
+      </Grid>
+      <Grid container size={12} spacing={2} sx={{ m: "auto", mt: 5 }}>
+        <Grid size={12} container justifyContent="center">
+          <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+            Faltas
+          </Typography>
+        </Grid>
+
         <Grid size={6} container justifyContent="center">
           <FormControlLabel
             sx={{ mr: 2 }}
@@ -406,7 +353,7 @@ export default function KumiteIndivControl() {
             labelPlacement="start"
             label={
               <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Aka Mubobi:
+                Aka Kekoku:
               </Typography>
             }
             control={
@@ -415,7 +362,7 @@ export default function KumiteIndivControl() {
                 color="warning"
                 variant="standard"
                 label=""
-                value={fouls.akaMubobi}
+                value={fouls.akaKekoku}
                 slotProps={{
                   input: {
                     readOnly: true,
@@ -433,9 +380,9 @@ export default function KumiteIndivControl() {
               onClick={() => {
                 setFouls((prev: any) => ({
                   ...prev,
-                  akaMubobi: prev.akaMubobi + 1,
+                  akaKekoku: prev.akaKekoku + 1,
                 }));
-                sendPoint("add_foul", 1, "M");
+                sendPoint("add_foul", 1, "K");
               }}
             >
               <Add></Add>
@@ -446,15 +393,16 @@ export default function KumiteIndivControl() {
               onClick={() => {
                 setFouls((prev: any) => ({
                   ...prev,
-                  akaMubobi: prev.akaMubobi - 1,
+                  akaKekoku: prev.akaKekoku - 1,
                 }));
-                sendPoint("remove_foul", 1, "M");
+                sendPoint("remove_foul", 1, "K");
               }}
             >
               <Remove></Remove>
             </Button>
           </Grid>
         </Grid>
+
         <Grid size={6} container justifyContent="center">
           <FormControlLabel
             sx={{ mr: 2 }}
@@ -516,16 +464,16 @@ export default function KumiteIndivControl() {
             labelPlacement="start"
             label={
               <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
-                Aka Jogai:
+                Aka Mubobi:
               </Typography>
             }
             control={
               <TextField
-                sx={{ width: "50px" }}
+                sx={{ width: "30px" }}
                 color="warning"
                 variant="standard"
                 label=""
-                value={fouls.akaJogai}
+                value={fouls.akaMubobi}
                 slotProps={{
                   input: {
                     readOnly: true,
@@ -543,9 +491,9 @@ export default function KumiteIndivControl() {
               onClick={() => {
                 setFouls((prev: any) => ({
                   ...prev,
-                  akaJogai: prev.akaJogai + 1,
+                  akaMubobi: prev.akaMubobi + 1,
                 }));
-                sendPoint("add_foul", 1, "J");
+                sendPoint("add_foul", 1, "M");
               }}
             >
               <Add></Add>
@@ -556,15 +504,16 @@ export default function KumiteIndivControl() {
               onClick={() => {
                 setFouls((prev: any) => ({
                   ...prev,
-                  akaJogai: prev.akaJogai - 1,
+                  akaMubobi: prev.akaMubobi - 1,
                 }));
-                sendPoint("remove_foul", 1, "J");
+                sendPoint("remove_foul", 1, "M");
               }}
             >
               <Remove></Remove>
             </Button>
           </Grid>
         </Grid>
+
         <Grid size={6} container justifyContent="center">
           <FormControlLabel
             sx={{ mr: 2 }}
@@ -614,6 +563,61 @@ export default function KumiteIndivControl() {
                   shiroJogai: prev.shiroJogai - 1,
                 }));
                 sendPoint("remove_foul", 2, "J");
+              }}
+            >
+              <Remove></Remove>
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid size={6} container justifyContent="center">
+          <FormControlLabel
+            sx={{ mr: 2 }}
+            labelPlacement="start"
+            label={
+              <Typography sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}>
+                Aka Jogai:
+              </Typography>
+            }
+            control={
+              <TextField
+                sx={{ width: "50px" }}
+                color="warning"
+                variant="standard"
+                label=""
+                value={fouls.akaJogai}
+                slotProps={{
+                  input: {
+                    readOnly: true,
+                    disableUnderline: true,
+                    style: { fontSize: 18, marginRight: 10 },
+                  },
+                }}
+              />
+            }
+          ></FormControlLabel>
+          <Grid container spacing={2}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => {
+                setFouls((prev: any) => ({
+                  ...prev,
+                  akaJogai: prev.akaJogai + 1,
+                }));
+                sendPoint("add_foul", 1, "J");
+              }}
+            >
+              <Add></Add>
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                setFouls((prev: any) => ({
+                  ...prev,
+                  akaJogai: prev.akaJogai - 1,
+                }));
+                sendPoint("remove_foul", 1, "J");
               }}
             >
               <Remove></Remove>

@@ -225,15 +225,15 @@ export default function KumiteIndiv() {
         >
           <Grid>
             <Typography sx={{ m: 3, mb: 0, ml: 5 }} variant="h3">
-              {player1Name}
+              {player2Name}
             </Typography>
           </Grid>
           <Grid container>
             <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-              {player1Number}
+              {player2Number}
             </Typography>
             <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-              <i>{player1Club}</i>
+              <i>{player2Club}</i>
             </Typography>
           </Grid>
         </Grid>
@@ -251,15 +251,15 @@ export default function KumiteIndiv() {
               sx={{ m: 3, mb: 0, mr: 5, color: "black" }}
               variant="h3"
             >
-              {player2Name}
+              {player1Name}
             </Typography>
           </Grid>
           <Grid container justifyContent="flex-end">
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
-              <i>{player2Club}</i>
+              <i>{player1Club}</i>
             </Typography>
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
-              {player2Number}
+              {player1Number}
             </Typography>
           </Grid>
         </Grid>
