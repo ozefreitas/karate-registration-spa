@@ -4,8 +4,14 @@ import { Add } from "@mui/icons-material";
 import { useEffect, useRef } from "react";
 import { useSnackbar } from "notistack";
 import { KataOptions } from "../../config";
+import { drawsHooks } from "../../hooks";
+import { useAuth } from "../../access/GlobalAuthProvider";
 
-export default function KataFinalControl() {
+export default function KataFinalControl(
+  props: Readonly<{ currentMatchData: any }>,
+) {
+  const { user } = useAuth();
+  const patchScoringEntry = drawsHooks.usePatchScoringEntry(user?.role!);
   const socketRef = useRef<WebSocket | null>(null);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -36,7 +42,7 @@ export default function KataFinalControl() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      playerKata: "",
+      player1Kata: "",
       points1: undefined,
       points2: undefined,
       points3: undefined,
@@ -45,16 +51,32 @@ export default function KataFinalControl() {
     },
   });
 
-  const sendPlayerKata = () => {
-    if (watch("playerKata") === "") {
-      setError("playerKata", { message: "Este campo é obrigatório" });
+  const sendPlayer1Kata = () => {
+    if (watch("player1Kata") === "") {
+      setError("player1Kata", { message: "Este campo é obrigatório" });
     } else if (
       socketRef.current &&
       socketRef.current.readyState === WebSocket.OPEN
     ) {
       socketRef.current.send(
-        JSON.stringify({ playerKata: watch("playerKata") }),
+        JSON.stringify({ player1Kata: watch("player1Kata") }),
       );
+      const payload = {
+        scoring_result: {
+          kata: KataOptions.find((item) => item.label === watch("player1Kata"))
+            ?.value,
+        },
+      };
+      patchScoringEntry.mutate({
+        scoringEntryId: props.currentMatchData.id,
+        data: payload,
+      });
+    }
+  };
+
+  const sendResetRequest = () => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({ reset: true }));
     }
   };
 
@@ -113,9 +135,9 @@ export default function KataFinalControl() {
 
   return (
     <Grid container>
-      <Grid p={2} size={10}>
+      <Grid p={2} container size={10}>
         <Controller
-          name="playerKata"
+          name="player1Kata"
           control={control}
           render={({ field }) => (
             <TextField
@@ -129,8 +151,8 @@ export default function KataFinalControl() {
                 field.onChange(e);
                 clearErrors();
               }}
-              error={!!errors.playerKata}
-              helperText={errors.playerKata?.message}
+              error={!!errors.player1Kata}
+              helperText={errors.player1Kata?.message}
             >
               <MenuItem sx={{ px: 2, color: "lightgrey" }} value="">
                 -- Selecionar --
@@ -153,7 +175,7 @@ export default function KataFinalControl() {
           size="large"
           color="success"
           onClick={() => {
-            sendPlayerKata();
+            sendPlayer1Kata();
           }}
           startIcon={<Add />}
         >
@@ -298,7 +320,10 @@ export default function KataFinalControl() {
             variant="contained"
             size="large"
             color="warning"
-            onClick={() => reset()}
+            onClick={() => {
+              reset();
+              sendResetRequest();
+            }}
             startIcon={<Add />}
           >
             Reiniciar Valores

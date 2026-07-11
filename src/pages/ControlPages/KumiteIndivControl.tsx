@@ -1,5 +1,4 @@
-import { Controller, useForm } from "react-hook-form";
-import FormCard from "../../dashboard/FormCard";
+import { useForm } from "react-hook-form";
 import {
   Grid,
   Button,
@@ -29,7 +28,7 @@ export default function KumiteIndivControl() {
   const {
     control,
     watch,
-    setError,
+    // setError,
     clearErrors,
     formState: { errors },
   } = useForm({
@@ -61,7 +60,7 @@ export default function KumiteIndivControl() {
   const sendPoint = (
     operation: string,
     playerNumber: number,
-    pointNumber: number | string
+    pointNumber: number | string,
   ) => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(
@@ -69,110 +68,13 @@ export default function KumiteIndivControl() {
           player: playerNumber,
           points: pointNumber,
           operation: operation,
-        })
-      );
-    }
-  };
-
-  const sendPlayer1Name = () => {
-    if (watch("player1Name") === "") {
-      setError("player1Name", { message: "Este campo é obrigatório" });
-    } else if (
-      socketRef.current &&
-      socketRef.current.readyState === WebSocket.OPEN
-    ) {
-      socketRef.current.send(
-        JSON.stringify({ player1Name: watch("player1Name") })
-      );
-    }
-  };
-
-  const sendPlayer2Name = () => {
-    if (watch("player2Name") === "") {
-      setError("player2Name", { message: "Este campo é obrigatório" });
-    } else if (
-      socketRef.current &&
-      socketRef.current.readyState === WebSocket.OPEN
-    ) {
-      socketRef.current.send(
-        JSON.stringify({ player2Name: watch("player2Name") })
+        }),
       );
     }
   };
 
   return (
-    <FormCard title="Controles de Kumite Individual">
-      <Grid sx={{ p: 2 }} size={10}>
-        <Controller
-          name="player1Name"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Nome Competidor 1"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-                clearErrors();
-              }}
-              error={!!errors.player1Name}
-              helperText={errors.player1Name?.message}
-            />
-          )}
-        />
-      </Grid>
-      <Grid size={2} container justifyContent={"center"} alignContent="center">
-        <Button
-          sx={{ m: 1 }}
-          variant="contained"
-          size="large"
-          color="success"
-          onClick={() => {
-            sendPlayer1Name();
-          }}
-          startIcon={<Add />}
-        >
-          Enviar
-        </Button>
-      </Grid>
-      <Grid sx={{ p: 2 }} size={10}>
-        <Controller
-          name="player2Name"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              color="warning"
-              variant={"outlined"}
-              label="Nome Competidor 2"
-              fullWidth
-              {...field}
-              onChange={(e) => {
-                field.onChange(e);
-                clearErrors();
-              }}
-              error={!!errors.player2Name}
-              helperText={errors.player2Name?.message}
-            />
-          )}
-        />
-      </Grid>
-      <Grid size={2} container justifyContent={"center"} alignContent="center">
-        <Button
-          sx={{ m: 1 }}
-          variant="contained"
-          size="large"
-          color="success"
-          onClick={() => {
-            sendPlayer2Name();
-          }}
-          startIcon={<Add />}
-        >
-          Enviar
-        </Button>
-      </Grid>
-
+    <Grid p={2}>
       <Time
         control={control}
         clearErrors={clearErrors}
@@ -719,6 +621,6 @@ export default function KumiteIndivControl() {
           </Grid>
         </Grid>
       </Grid>
-    </FormCard>
+    </Grid>
   );
 }

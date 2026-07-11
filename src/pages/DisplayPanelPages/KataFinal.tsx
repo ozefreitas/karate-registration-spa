@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import MatchTypeInfo from "../../components/DisplayScreenComponents/MatchTypeInfo";
+import { useDisplaySocket } from "./useDisplaySocket";
 
 export default function KataFinal(props: Readonly<{ matchType: string }>) {
   const [ponctuation, setPonctuation] = useState<number | undefined>(0.0);
@@ -13,50 +14,53 @@ export default function KataFinal(props: Readonly<{ matchType: string }>) {
   });
   const [minIndex, setMinIndex] = useState<string>("");
   const [maxIndex, setMaxIndex] = useState<string>("");
-  const [playerKata, setPlayerKata] = useState<string>("KATA NAME");
+  const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
+  const [player1Number, setPlayer1Number] = useState<string>("XXX");
+  const [player1Club, setPlayer1Club] = useState<string>("CLUBE COMPETIDOR 1");
+  const [player1Kata, setPlayer1Kata] = useState<string>("KATA NAME");
   const [tatami, setTatami] = useState<string>("");
 
-  useEffect(() => {
-    let baseURL = import.meta.env.VITE_API_URL || "127.0.0.1:8000";
-
-    // Remove protocol prefix (http:// or https://)
-    baseURL = baseURL.replace(/^https?:\/\//, "");
-
-    // Detect the correct protocol
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-
-    // Construct the full WebSocket URL
-    const socket = new WebSocket(`${protocol}://${baseURL}/ws/match/123/`);
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.playerKata) {
-        setPlayerKata(data.playerKata);
-      }
-      if (data.ponctuation) {
-        setPonctuation(data.ponctuation);
-        const newPoints = {
-          points1: data.points1,
-          points2: data.points2,
-          points3: data.points3,
-          points4: data.points4,
-          points5: data.points5,
-        };
-        setPoints(newPoints);
-      }
-      if (data.min_index) {
-        setMinIndex(data.min_index);
-      }
-      if (data.max_index) {
-        setMaxIndex(data.max_index);
-      }
-      if (data.tatami) {
-        setTatami(data.tatami);
-      }
-    };
-
-    return () => socket.close();
-  }, []);
+  useDisplaySocket((data) => {
+    console.log(data);
+    if (data.player1Name) setPlayer1Name(data.player1Name);
+    if (data.player1Number) setPlayer1Number(data.player1Number);
+    if (data.player1Club) setPlayer1Club(data.player1Club);
+    if (data.player1Kata) setPlayer1Kata(data.player1Kata);
+    if (data.tatami) setTatami(data.tatami);
+    if (data.ponctuation) {
+      setPonctuation(data.ponctuation);
+      const newPoints = {
+        points1: data.points1,
+        points2: data.points2,
+        points3: data.points3,
+        points4: data.points4,
+        points5: data.points5,
+      };
+      setPoints(newPoints);
+    }
+    if (data.min_index) {
+      setMinIndex(data.min_index);
+    }
+    if (data.max_index) {
+      setMaxIndex(data.max_index);
+    }
+    if (data.reset) {
+      setPlayer1Name("NOME COMPETIDOR 1");
+      setPlayer1Club("CLUBE COMPETIDOR 1");
+      setPlayer1Kata("KATA COMPETIDOR 1");
+      setPlayer1Number("XXX");
+      setPoints({
+        points1: "0.0",
+        points2: "0.0",
+        points3: "0.0",
+        points4: "0.0",
+        points5: "0.0",
+      });
+      setPonctuation(0.0);
+      setMaxIndex("");
+      setMinIndex("");
+    }
+  });
 
   return (
     <>
@@ -84,24 +88,24 @@ export default function KataFinal(props: Readonly<{ matchType: string }>) {
             size={12}
             container={props.matchType === "team"}
           >
-            <Grid>
+            <Grid size={12}>
               <Typography sx={{ m: 3, mb: 0, ml: 5 }} variant="h3">
-                NOEM HUAIHB UGUVI
+                {player1Name}
               </Typography>
             </Grid>
             {props.matchType !== "team" ? (
               <Grid container>
                 <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-                  001
+                  {player1Number}
                 </Typography>
                 <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-                  <i>AKFAFE</i>
+                  <i>{player1Club}</i>
                 </Typography>
               </Grid>
             ) : null}
             <Grid>
               <Typography sx={{ mt: 4, ml: 5 }} variant="h3">
-                {playerKata}
+                {player1Kata}
               </Typography>
             </Grid>
           </Grid>

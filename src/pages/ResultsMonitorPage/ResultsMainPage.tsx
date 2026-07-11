@@ -43,6 +43,7 @@ export default function ResultsMainPage() {
 
   const paramBracket = searchParams.get("bracket") ?? "";
   const paramMatch = searchParams.get("match") ?? "";
+  const paramEntry = searchParams.get("entry") ?? "";
 
   const changeBracket = (bracket: string) => {
     setSearchParams((prev) => {
@@ -54,6 +55,13 @@ export default function ResultsMainPage() {
   const changeMatch = (match: string) => {
     setSearchParams((prev) => {
       prev.set("match", match);
+      return prev;
+    });
+  };
+
+  const changeEntry = (entry: string) => {
+    setSearchParams((prev) => {
+      prev.set("entry", entry);
       return prev;
     });
   };
@@ -123,12 +131,14 @@ export default function ResultsMainPage() {
     defaultValues: {
       bracket: "",
       match: "",
+      entry: "",
       tatami: "",
       restTime: "",
     },
   });
 
   const selectedMatchRef = useRef(watch("match"));
+  const selectedScoringEntryRef = useRef(watch("entry"));
   const inputedTatamiRef = useRef(watch("tatami"));
 
   useEffect(() => {
@@ -145,17 +155,27 @@ export default function ResultsMainPage() {
     } else {
       setValue("match", paramMatch);
     }
-  }, [paramBracket, paramMatch]);
+    if (paramEntry === "" || watch("entry") === "") {
+      newParams.delete("entry");
+      setSearchParams(newParams);
+    } else {
+      setValue("entry", paramEntry);
+    }
+  }, [paramBracket, paramMatch, paramEntry]);
 
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
   const { data: matchesData, isLoading: isMatchesLoading } =
     drawsHooks.useEventMatchesData(watch("bracket"), eventId!);
+  const { data: scoringEntriesData, isLoading: isScoringEntriesLoading } =
+    drawsHooks.useEventScoringEntriesData(watch("bracket"), eventId!);
 
   const matchesDataRef = useRef(matchesData);
+  const scoringEntriesDataRef = useRef(scoringEntriesData);
 
   useEffect(() => {
     matchesDataRef.current = matchesData;
-  }, [matchesData]);
+    scoringEntriesDataRef.current = scoringEntriesData;
+  }, [matchesData, scoringEntriesData]);
 
   const hasSetOngoing = useRef(false);
 
@@ -239,6 +259,10 @@ export default function ResultsMainPage() {
   }, [watch("match")]);
 
   useEffect(() => {
+    selectedScoringEntryRef.current = watch("entry");
+  }, [watch("entry")]);
+
+  useEffect(() => {
     inputedTatamiRef.current = watch("tatami");
   }, [watch("tatami")]);
 
@@ -250,19 +274,75 @@ export default function ResultsMainPage() {
       (item) => String(item.id) === selectedMatchRef.current,
     );
 
-    socketRef.current.send(
-      JSON.stringify({
-        player1Name: currentMatch?.contender_1?.full_name,
-        player2Name: currentMatch?.contender_2?.full_name,
-        player1Number: currentMatch?.contender_1_dorsal,
-        player2Number: currentMatch?.contender_2_dorsal,
-        player1Club: currentMatch?.contender_1?.club,
-        player2Club: currentMatch?.contender_2?.club,
-        player1Kata: currentMatch?.kataresult?.kata_contender_1,
-        player2Kata: currentMatch?.kataresult?.kata_contender_2,
-        tatami: inputedTatamiRef.current,
-      }),
+    const currentEntry = scoringEntriesDataRef.current?.find(
+      (item) => String(item.id) === selectedScoringEntryRef.current,
     );
+
+    console.log(currentEntry);
+
+    if (
+      watch("match") !== "" &&
+      !bracketsData?.find((item) => String(item.id) === watch("bracket"))
+        ?.is_team
+    ) {
+      socketRef.current.send(
+        JSON.stringify({
+          player1Name: currentMatch?.contender_1?.full_name,
+          player2Name: currentMatch?.contender_2?.full_name,
+          player1Number: currentMatch?.contender_1_dorsal,
+          player2Number: currentMatch?.contender_2_dorsal,
+          player1Club: currentMatch?.contender_1?.club,
+          player2Club: currentMatch?.contender_2?.club,
+          player1Kata: currentMatch?.kataresult?.kata_contender_1,
+          player2Kata: currentMatch?.kataresult?.kata_contender_2,
+          tatami: inputedTatamiRef.current,
+        }),
+      );
+    }
+
+    if (
+      watch("match") !== "" &&
+      bracketsData?.find((item) => String(item.id) === watch("bracket"))
+        ?.is_team
+    ) {
+      socketRef.current.send(
+        JSON.stringify({
+          player1Name: currentMatch?.team_contender_1?.club,
+          player1Kata: currentMatch?.kataresult?.kata_contender_1,
+          tatami: inputedTatamiRef.current,
+        }),
+      );
+    }
+
+    if (
+      watch("entry") !== "" &&
+      !bracketsData?.find((item) => String(item.id) === watch("bracket"))
+        ?.is_team
+    ) {
+      socketRef.current.send(
+        JSON.stringify({
+          player1Name: currentEntry?.person?.full_name,
+          player1Number: currentEntry?.person_dorsal,
+          player1Club: currentEntry?.person?.club,
+          player1Kata: currentEntry?.scoring_result?.kata,
+          tatami: inputedTatamiRef.current,
+        }),
+      );
+    }
+
+    if (
+      watch("entry") !== "" &&
+      bracketsData?.find((item) => String(item.id) === watch("bracket"))
+        ?.is_team
+    ) {
+      socketRef.current.send(
+        JSON.stringify({
+          player1Name: currentEntry?.team?.club,
+          player1Kata: currentEntry?.scoring_result?.kata,
+          tatami: inputedTatamiRef.current,
+        }),
+      );
+    }
   };
 
   const sendNextMatchState = (nextMatchId: number) => {
@@ -537,11 +617,15 @@ export default function ResultsMainPage() {
               <Grid container size={6} gap={5} justifyContent={"flex-end"}>
                 <Button
                   variant="contained"
-                  disabled={watch("bracket") === "" || isMatchesLoading}
+                  disabled={
+                    watch("bracket") === "" ||
+                    isMatchesLoading ||
+                    isScoringEntriesLoading
+                  }
                   color="primary"
                   startIcon={<AdsClick></AdsClick>}
                   onClick={handleBracketModalOpen}
-                  loading={isMatchesLoading}
+                  loading={isMatchesLoading || isScoringEntriesLoading}
                 >
                   Selecionar Partida
                 </Button>
@@ -659,12 +743,25 @@ export default function ResultsMainPage() {
           </FormCard>
           <ControlPage
             currentScreen={currentScreen}
-            currentMatch={matchesData?.find(
-              (item) => String(item.id) === watch("match"),
-            )}
-            matchesData={matchesData}
+            currentMatch={
+              watch("match") !== ""
+                ? matchesData?.find(
+                    (item) => String(item.id) === watch("match"),
+                  )
+                : watch("entry") !== ""
+                  ? scoringEntriesData?.find(
+                      (item) => String(item.id) === watch("entry"),
+                    )
+                  : undefined
+            }
             handleBracketModalOpen={handleBracketModalOpen}
-            isMatchesLoading={isMatchesLoading}
+            isMatchesLoading={
+              watch("match") !== ""
+                ? isMatchesLoading
+                : watch("entry") !== ""
+                  ? isScoringEntriesLoading
+                  : false
+            }
             sendMatchState={sendMatchState}
             watch={watch}
           ></ControlPage>
@@ -683,15 +780,16 @@ export default function ResultsMainPage() {
         handleModalClose={handleBracketModalClose}
         isModalOpen={isBracketModalOpen}
         matchesData={matchesData}
+        scoringEntriesData={scoringEntriesData}
         rounds={rounds}
         watch={watch}
         setValue={setValue}
         getValues={getValues}
-        bracketName={
-          bracketsData?.find((item) => String(item.id) === watch("bracket"))
-            ?.name!
-        }
+        bracketData={bracketsData?.find(
+          (item) => String(item.id) === watch("bracket"),
+        )}
         changeMatch={changeMatch}
+        changeEntry={changeEntry}
       ></MatchPickerModal>
     </Grid>
   );

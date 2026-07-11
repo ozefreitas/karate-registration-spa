@@ -9,6 +9,7 @@ export default function IconBox({
       sx={{
         width: 48,
         height: 48,
+        mx: 2,
         borderRadius: 2,
         bgcolor: color === "Aka" ? "red" : "transparent",
         border: color === "Aka" ? "1px solid red" : "1px solid black",

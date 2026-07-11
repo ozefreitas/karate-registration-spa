@@ -137,7 +137,6 @@ export default function KataElimControl(
       //   },
       // },
     );
-
   };
 
   return (
@@ -262,7 +261,9 @@ export default function KataElimControl(
         size={12}
         justifyContent={"space-between"}
       >
-        <Typography>Número de Bandeiras <strong>AKA</strong></Typography>
+        <Typography>
+          Número de Bandeiras <strong>AKA</strong>
+        </Typography>
         <Button
           variant="contained"
           disabled={points !== 0 && points !== undefined}

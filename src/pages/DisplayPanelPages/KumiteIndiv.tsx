@@ -20,7 +20,10 @@ export default function KumiteIndiv() {
   });
   const [player1Name, setPlayer1Name] = useState<string>("NOME COMPETIDOR 1");
   const [player2Name, setPlayer2Name] = useState<string>("NOME COMPETIDOR 2");
-
+  const [player1Number, setPlayer1Number] = useState<string>("XXX");
+  const [player2Number, setPlayer2Number] = useState<string>("XXX");
+  const [player1Club, setPlayer1Club] = useState<string>("CLUBE COMPETIDOR 1");
+  const [player2Club, setPlayer2Club] = useState<string>("CLUBE COMPETIDOR 2");
   const [milliseconds, setMilliseconds] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
   const [minutes, setMinutes] = useState<number>(2);
@@ -97,6 +100,38 @@ export default function KumiteIndiv() {
 
       if (data.player1Name) setPlayer1Name(data.player1Name);
       if (data.player2Name) setPlayer2Name(data.player2Name);
+      if (data.player1Number) setPlayer1Number(data.player1Number);
+      if (data.player2Number) setPlayer2Number(data.player2Number);
+      if (data.player1Club) setPlayer1Club(data.player1Club);
+      if (data.player2Club) setPlayer2Club(data.player2Club);
+      if (data.reset) {
+        setPlayer1Name("NOME COMPETIDOR 1");
+        setPlayer1Club("CLUBE COMPETIDOR 1");
+        setPlayer1Number("XXX");
+        setPlayer2Name("NOME COMPETIDOR 2");
+        setPlayer2Club("CLUBE COMPETIDOR 2");
+        setPlayer2Number("XXX");
+        setAkaIppon(0);
+        setAkaScore(0);
+        setAkaWazari(0);
+        setShiroIppon(0);
+        setShiroScore(0);
+        setShiroWazari(0);
+        setEnded(false);
+        setIsRunning(false);
+        setTimeLow(false);
+        setFouls({
+          akaKekoku: 0,
+          akaMubobi: 0,
+          akaJogai: 0,
+          shiroKekoku: 0,
+          shiroMubobi: 0,
+          shiroJogai: 0,
+        });
+        setMilliseconds(0);
+        setSeconds(0);
+        setMinutes(2);
+      }
 
       if (["add", "remove"].includes(data.operation)) {
         handleScoreUpdate(data.operation, data.player, data.points);
@@ -195,10 +230,10 @@ export default function KumiteIndiv() {
           </Grid>
           <Grid container>
             <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-              001
+              {player1Number}
             </Typography>
             <Typography sx={{ m: 1, ml: 5 }} variant="h4Half">
-              <i>AKFAFE</i>
+              <i>{player1Club}</i>
             </Typography>
           </Grid>
         </Grid>
@@ -221,10 +256,10 @@ export default function KumiteIndiv() {
           </Grid>
           <Grid container justifyContent="flex-end">
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
-              <i>AKFAFE</i>
+              <i>{player2Club}</i>
             </Typography>
             <Typography sx={{ m: 1, mr: 5, color: "black" }} variant="h4Half">
-              002
+              {player2Number}
             </Typography>
           </Grid>
         </Grid>

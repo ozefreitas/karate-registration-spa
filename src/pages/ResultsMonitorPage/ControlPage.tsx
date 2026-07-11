@@ -1,24 +1,24 @@
 import KataElimControl from "../ControlPages/KataElimControl";
 import KataFinalControl from "../ControlPages/KataFinalControl";
-import KataTeamControl from "../ControlPages/KataTeamControl";
+// import KataTeamControl from "../ControlPages/KataTeamControl";
 import KumiteIndivControl from "../ControlPages/KumiteIndivControl";
 import KumiteTeamControl from "../ControlPages/KumiteTeamControl";
 import { Grid, Typography, Chip, Button } from "@mui/material";
 import InfoRow from "../../components/General/InfoRow";
-import { Person, AdsClick, Send } from "@mui/icons-material";
+import { Person, AdsClick, Send, Group } from "@mui/icons-material";
 import FormCard from "../../dashboard/FormCard";
 
 export default function ControlPage(
   props: Readonly<{
     currentScreen: string;
     currentMatch: any;
-    matchesData: any;
     watch: any;
     sendMatchState: any;
     handleBracketModalOpen: any;
     isMatchesLoading: any;
   }>,
 ) {
+  console.log(props.currentMatch);
   return (
     <FormCard
       title={
@@ -28,14 +28,8 @@ export default function ControlPage(
       }
       subheader="Veja a partida que está a decorrer neste momento, e faça operações."
     >
-      {props.matchesData?.find(
-        (item: any) => String(item.id) === props.watch("match"),
-      )?.contender_1 !== null &&
-      props.matchesData?.find(
-        (item: any) => String(item.id) === props.watch("match"),
-      )?.contender_2 !== null &&
-      props.watch("bracket") !== "" &&
-      props.watch("match") !== "" ? (
+      {(props.watch("bracket") !== "" && props.watch("match") !== "") ||
+      props.watch("entry") ? (
         props.currentScreen === "" ? (
           <Grid container size={12} justifyContent={"center"} m={2}>
             <Typography color="textDisabled">
@@ -45,123 +39,190 @@ export default function ControlPage(
           </Grid>
         ) : (
           <Grid m={2} container size={12} columnSpacing={5} rowSpacing={3}>
-            <Grid container size={6}>
+            <Grid
+              container
+              size={
+                ["Final Kata Individual", "Kata Equipa"].includes(
+                  props.currentScreen,
+                )
+                  ? 12
+                  : 6
+              }
+            >
               <InfoRow
                 color={"Shiro"}
-                icon={<Person />}
+                icon={
+                  !["Kumite Equipa", "Kata Equipa"].includes(
+                    props.currentScreen,
+                  ) ? (
+                    <Person />
+                  ) : (
+                    <Group />
+                  )
+                }
                 value={
-                  <Grid
-                    container
-                    columnGap={2}
-                    rowGap={1}
-                    size={12}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                  >
-                    <Typography fontWeight={700}>
-                      {props.matchesData?.find(
-                        (item: any) => String(item.id) === props.watch("match"),
-                      )?.contender_1?.full_name ?? "N/A"}
-                    </Typography>
-                    <Chip
-                      size="small"
-                      label={`${
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_1?.age ?? "N/A"
-                      } anos`}
-                    ></Chip>
-                    <Chip
-                      size="small"
-                      label={`${
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_1?.id_number ?? "N/A"
-                      }`}
-                    ></Chip>
-                    <Chip
-                      size="small"
-                      label={`${
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_1_dorsal ?? "N/A"
-                      }`}
-                    ></Chip>
-                    <Chip
-                      size="small"
-                      label={
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_1?.club ?? "N/A"
-                      }
-                    ></Chip>
-                  </Grid>
+                  ["Kumite Equipa", "Kata Equipa"].includes(
+                    props.currentScreen,
+                  ) ? (
+                    <Grid
+                      container
+                      columnGap={2}
+                      rowGap={1}
+                      size={12}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                    >
+                      <Grid>
+                        <Typography fontWeight={700}>
+                          {props.watch("match") !== ""
+                            ? (props.currentMatch?.team_contender_1
+                                ?.full_name ?? "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.team?.athlete1
+                                  ?.full_name ?? "N/A")
+                              : "N/A"}
+                        </Typography>
+                        <Typography fontWeight={700}>
+                          {props.watch("match") !== ""
+                            ? (props.currentMatch?.team_contender_1
+                                ?.full_name ?? "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.team?.athlete2
+                                  ?.full_name ?? "N/A")
+                              : "N/A"}
+                        </Typography>
+                        <Typography fontWeight={700}>
+                          {props.watch("match") !== ""
+                            ? (props.currentMatch?.team_contender_1
+                                ?.full_name ?? "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.team?.athlete3
+                                  ?.full_name ?? "N/A")
+                              : "N/A"}
+                        </Typography>
+                      </Grid>
+                      <Chip
+                        size="small"
+                        label={
+                          props.watch("match") !== ""
+                            ? (props.currentMatch?.team_contender_1?.club ??
+                              "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.team?.club ?? "N/A")
+                              : "N/A"
+                        }
+                      ></Chip>
+                    </Grid>
+                  ) : (
+                    <Grid
+                      container
+                      columnGap={2}
+                      rowGap={1}
+                      size={12}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                    >
+                      <Typography fontWeight={700}>
+                        {props.watch("match") !== ""
+                          ? (props.currentMatch?.contender_1?.full_name ??
+                            "N/A")
+                          : props.watch("entry") !== ""
+                            ? (props.currentMatch?.person?.full_name ?? "N/A")
+                            : "N/A"}
+                      </Typography>
+                      <Chip
+                        size="small"
+                        label={
+                          props.watch("match") !== ""
+                            ? `${props.currentMatch?.contender_1?.age} anos`
+                            : props.watch("entry") !== ""
+                              ? `${props.currentMatch?.person?.age} anos`
+                              : "N/A"
+                        }
+                      ></Chip>
+                      <Chip
+                        size="small"
+                        label={
+                          props.watch("match") !== ""
+                            ? (props.currentMatch?.contender_1?.id_number ??
+                              "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.person?.id_number ?? "N/A")
+                              : "N/A"
+                        }
+                      ></Chip>
+                      <Chip
+                        size="small"
+                        label={
+                          props.watch("match") !== ""
+                            ? (props.currentMatch?.contender_1_dorsal ?? "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.person_dorsal ?? "N/A")
+                              : "N/A"
+                        }
+                      ></Chip>
+                      <Chip
+                        size="small"
+                        label={
+                          props.watch("match") !== ""
+                            ? (props.currentMatch?.contender_1?.club ?? "N/A")
+                            : props.watch("entry") !== ""
+                              ? (props.currentMatch?.person?.club ?? "N/A")
+                              : "N/A"
+                        }
+                      ></Chip>
+                    </Grid>
+                  )
                 }
               />
             </Grid>
-            <Grid container size={6}>
-              <InfoRow
-                color={"Aka"}
-                icon={<Person />}
-                value={
-                  <Grid
-                    container
-                    columnGap={2}
-                    rowGap={1}
-                    size={12}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                  >
-                    <Typography fontWeight={700}>
-                      {props.matchesData?.find(
-                        (item: any) => String(item.id) === props.watch("match"),
-                      )?.contender_2?.full_name ?? "N/A"}
-                    </Typography>
-                    <Chip
-                      size="small"
-                      label={`${
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_2?.age ?? "N/A"
-                      } anos`}
-                    ></Chip>
-                    <Chip
-                      size="small"
-                      label={`${
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_2?.id_number ?? "N/A"
-                      }`}
-                    ></Chip>
-                    <Chip
-                      size="small"
-                      label={`${
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_2_dorsal ?? "N/A"
-                      }`}
-                    ></Chip>
-                    <Chip
-                      size="small"
-                      label={
-                        props.matchesData?.find(
-                          (item: any) =>
-                            String(item.id) === props.watch("match"),
-                        )?.contender_2?.club ?? "N/A"
-                      }
-                    ></Chip>
-                  </Grid>
-                }
-                reverse={true}
-              />
-            </Grid>
+            {["Final Kata Individual", "Kata Equipa"].includes(
+              props.currentScreen,
+            ) ? null : (
+              <Grid container size={6}>
+                <InfoRow
+                  color={"Aka"}
+                  icon={<Person />}
+                  value={
+                    <Grid
+                      container
+                      columnGap={2}
+                      rowGap={1}
+                      size={12}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                    >
+                      <Typography fontWeight={700}>
+                        {props.currentMatch?.contender_2?.full_name ?? "N/A"}
+                      </Typography>
+                      <Chip
+                        size="small"
+                        label={`${
+                          props.currentMatch?.contender_2?.age ?? "N/A"
+                        } anos`}
+                      ></Chip>
+                      <Chip
+                        size="small"
+                        label={`${
+                          props.currentMatch?.contender_2?.id_number ?? "N/A"
+                        }`}
+                      ></Chip>
+                      <Chip
+                        size="small"
+                        label={`${
+                          props.currentMatch?.contender_2_dorsal ?? "N/A"
+                        }`}
+                      ></Chip>
+                      <Chip
+                        size="small"
+                        label={props.currentMatch?.contender_2?.club ?? "N/A"}
+                      ></Chip>
+                    </Grid>
+                  }
+                  reverse={true}
+                />
+              </Grid>
+            )}
             <Grid container justifyContent={"flex-end"} size={12}>
               <Button
                 variant="contained"
@@ -191,23 +252,27 @@ export default function ControlPage(
           </Button>
         </Grid>
       )}
-      {props.watch("match") !== "" && (
+      {props.watch("match") !== "" || props.watch("entry") !== "" ? (
         <>
           {props.currentScreen === "Kata Individual" ? (
             <KataElimControl currentMatchData={props.currentMatch} />
           ) : null}
           {props.currentScreen === "Final Kata Individual" ? (
-            <KataFinalControl />
+            <KataFinalControl currentMatchData={props.currentMatch} />
           ) : null}
           {props.currentScreen === "Kumite Individual" ? (
             <KumiteIndivControl />
           ) : null}
-          {props.currentScreen === "Kata Equipa" ? <KataTeamControl /> : null}
+          {props.currentScreen === "Kata Equipa" ? (
+            <KataFinalControl
+              currentMatchData={props.currentMatch}
+            ></KataFinalControl>
+          ) : null}
           {props.currentScreen === "Kumite Equipa" ? (
             <KumiteTeamControl />
           ) : null}
         </>
-      )}
+      ) : null}
     </FormCard>
   );
 }

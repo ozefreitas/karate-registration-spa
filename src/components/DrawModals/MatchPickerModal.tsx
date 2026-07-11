@@ -9,6 +9,8 @@ import {
   IconButton,
   Slide,
   Stack,
+  Tab,
+  Tabs,
   Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
@@ -16,16 +18,19 @@ import React, { useEffect, useRef, useState } from "react";
 import SectionHeader from "../Header/SectionHeader";
 import { RoundsOptions } from "../../config";
 import {
+  AccountTree,
   ArrowBackIos,
   ArrowForwardIos,
   CheckBox,
   CheckBoxOutlineBlank,
   Close,
+  FormatListNumbered,
   Sports,
 } from "@mui/icons-material";
 import SingleContenderCard from "../DynamicView/SingleContenderCard";
 import { drawsHooks } from "../../hooks";
 import { useAuth } from "../../access/GlobalAuthProvider";
+import SingleTeamContenderCard from "../DynamicView/SingleTeamContenderCard";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,25 +46,40 @@ export default function MatchPickerModal(
     isModalOpen: boolean;
     handleModalClose: any;
     matchesData: any;
+    scoringEntriesData: any;
     rounds: any;
     setValue: any;
     watch: any;
     getValues: any;
-    bracketName: string;
+    bracketData: any;
     changeMatch: any;
+    changeEntry: any;
   }>,
 ) {
+  const [tab, setTab] = useState(0);
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  };
   const [selectedMatchId, setSelectedMatchId] = useState<string>(
     props.watch("match"),
+  );
+  const [selectedEntryId, setSelectedEntryId] = useState<string>(
+    props.watch("entry"),
   );
 
   useEffect(() => {
     setSelectedMatchId(props.watch("match"));
   }, [props.watch("match")]);
 
+  useEffect(() => {
+    setSelectedEntryId(props.watch("entry"));
+  }, [props.watch("entry")]);
+
   const { user } = useAuth();
 
   const patchOngoingMatch = drawsHooks.usePatchMatch(user?.role!);
+  const patchOngoingScoringEntry = drawsHooks.usePatchScoringEntry(user?.role!);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -96,7 +116,7 @@ export default function MatchPickerModal(
         >
           <Grid>
             <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
-              Selecionar Partida de {props.bracketName}
+              Selecionar Partida de {props.bracketData?.name}
             </Typography>
             <Typography variant="body2">
               Partida a amarelo é a que está a ser apresentada no ecrã num dado
@@ -131,11 +151,40 @@ export default function MatchPickerModal(
           },
         }}
       >
+        <Tabs
+          sx={{
+            mx: 3,
+            mt: 1,
+            mb: 7,
+            "& .MuiTab-root": { color: "#e81c24" },
+            "& .Mui-selected": { color: "#e81c24" },
+            "& .MuiTabs-indicator": { backgroundColor: "#e81c24" },
+            "& .MuiTab-fullWidth	": { color: "#e81c24" },
+            color: "#e81c24",
+            borderBottom: "1px solid lightgrey",
+          }}
+          variant="fullWidth"
+          value={tab}
+          onChange={handleChange}
+          textColor="inherit"
+          aria-label="tabs for different parts of the draw"
+        >
+          <Tab
+            icon={<AccountTree />}
+            label="Eliminatórias"
+            sx={{ fontSize: 15, mx: 2 }}
+          />
+          <Tab
+            icon={<FormatListNumbered />}
+            label="Finais"
+            sx={{ fontSize: 15 }}
+          />
+        </Tabs>
         <Grid
           container
           alignItems={"center"}
           my={3}
-          width={"fit-content"}
+          // width={"fit-content"}
           pl={10}
           size={12}
           wrap="nowrap"
@@ -242,164 +291,306 @@ export default function MatchPickerModal(
             )}
           </Box>
 
-          {props.rounds.map((roundNumber: any, index: number) => (
-            <Grid key={index} container sx={{ minWidth: 550 }}>
-              <Grid size={10} container spacing={6} direction={"column"}>
-                <Grid px={2} size={12} container alignItems={"center"}>
-                  <SectionHeader
-                    title={
-                      RoundsOptions.find(
-                        (item) => Number(item.value) === roundNumber,
-                      )?.label!
-                    }
-                    icon={<Sports sx={{ fontSize: 22 }} />}
-                  ></SectionHeader>
-                </Grid>
-                {props.matchesData
-                  ?.filter((item: any) => item.round_number === roundNumber)
-                  .map((match: any, index: number) => {
-                    const hasBothContenders =
-                      match.contender_1 !== null && match.contender_2 !== null;
-                    const is2Winner =
-                      match.winner?.id === match.contender_2?.id &&
-                      match.kataresult?.flags_contender_2! >
-                        match.kataresult?.flags_contender_1!;
-                    const isOngoing = match.ongoing;
-                    const matchFinished =
-                      !match.ongoing &&
-                      match.kataresult?.flags_contender_2 != null &&
-                      match.kataresult?.flags_contender_1 != null &&
-                      match.winner !== null;
-                    return (
-                      <Grid
-                        size={12}
-                        spacing={2}
-                        key={index}
-                        container
-                        p={2}
-                        justifyContent={"space-between"}
-                        alignItems={"center"}
-                        borderRadius={4}
-                        bgcolor={"#d7ecfc"}
-                        border={"1px solid #9dd3fc"}
-                        onClick={() => {
-                          if (String(match.id) === selectedMatchId) {
-                            setSelectedMatchId("");
-                          } else {
-                            setSelectedMatchId(String(match.id));
-                          }
-                        }}
-                        sx={{
-                          transition: "0.3s",
-                          opacity:
-                            matchFinished || !hasBothContenders ? "0.4" : 1,
-                          "&:hover": {
-                            cursor:
-                              matchFinished || !hasBothContenders
-                                ? "default"
-                                : "pointer",
-                            transform:
-                              matchFinished || !hasBothContenders
-                                ? "none"
-                                : "translateY(-3px)",
-                            boxShadow:
-                              matchFinished || !hasBothContenders ? 0 : 6,
-                            borderColor:
-                              matchFinished || !hasBothContenders
-                                ? "#9dd3fc"
-                                : "#88cafc",
-                          },
-                        }}
-                      >
-                        {roundNumber === 0 && (
-                          <Grid container size={12} justifyContent={"flex-end"}>
-                            <Box
-                              sx={{
-                                width: "fit-content",
-                                border: "1px solid red",
-                                fontSize: 14,
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 2,
-                              }}
-                            >
-                              {match.match_number === 1
-                                ? "1º e 2º Lugares"
-                                : "3º e 4º Lugares"}
-                            </Box>
-                          </Grid>
-                        )}
+          {tab === 0 &&
+            props.rounds.map((roundNumber: any, index: number) => (
+              <Grid key={index} container sx={{ minWidth: 550 }}>
+                <Grid size={10} container spacing={6} direction={"column"}>
+                  <Grid px={2} size={12} container alignItems={"center"}>
+                    <SectionHeader
+                      title={
+                        RoundsOptions.find(
+                          (item) => Number(item.value) === roundNumber,
+                        )?.label!
+                      }
+                      icon={<Sports sx={{ fontSize: 22 }} />}
+                    ></SectionHeader>
+                  </Grid>
+                  {props.matchesData
+                    ?.filter((item: any) => item.round_number === roundNumber)
+                    .map((match: any, index: number) => {
+                      const hasBothContenders =
+                        match.contender_1 !== null &&
+                        match.contender_2 !== null;
+                      const is2Winner =
+                        match.winner?.id === match.contender_2?.id &&
+                        match.kataresult?.flags_contender_2! >
+                          match.kataresult?.flags_contender_1!;
+                      const isOngoing = match.ongoing;
+                      const matchFinished =
+                        !match.ongoing &&
+                        match.kataresult?.flags_contender_2 != null &&
+                        match.kataresult?.flags_contender_1 != null &&
+                        match.winner !== null;
+                      return (
                         <Grid
-                          size={10}
-                          container
-                          direction={"column"}
+                          size={12}
                           spacing={2}
-                        >
-                          <SingleContenderCard
-                            roundNumber={roundNumber}
-                            matchNumber={match.match_number}
-                            contenderNumber={1}
-                            isWinner={!is2Winner}
-                            points={
-                              match.kataresult === null ||
-                              (match.kataresult?.flags_contender_1 === 0 &&
-                                match.kataresult?.flags_contender_2 === 0)
-                                ? 99
-                                : match.kataresult?.flags_contender_1
-                            }
-                            contenderInfo={match.contender_1}
-                            isMatchFinished={matchFinished}
-                            ongoing={isOngoing}
-                          ></SingleContenderCard>
-                          <SingleContenderCard
-                            roundNumber={roundNumber}
-                            matchNumber={match.match_number}
-                            contenderNumber={2}
-                            isWinner={is2Winner}
-                            points={
-                              match.kataresult === null ||
-                              (match.kataresult?.flags_contender_1 === 0 &&
-                                match.kataresult?.flags_contender_2 === 0)
-                                ? 99
-                                : match.kataresult?.flags_contender_2
-                            }
-                            contenderInfo={match.contender_2}
-                            isMatchFinished={matchFinished}
-                            ongoing={isOngoing}
-                          ></SingleContenderCard>
-                        </Grid>
-                        <Grid size={2}>
-                          <IconButton
-                            disabled={matchFinished || !hasBothContenders}
-                            onClick={() => {
+                          key={index}
+                          container
+                          p={2}
+                          justifyContent={"space-between"}
+                          alignItems={"center"}
+                          borderRadius={4}
+                          bgcolor={"#d7ecfc"}
+                          border={"1px solid #9dd3fc"}
+                          onClick={() => {
+                            if (!matchFinished && hasBothContenders) {
                               if (String(match.id) === selectedMatchId) {
                                 setSelectedMatchId("");
                               } else {
                                 setSelectedMatchId(String(match.id));
                               }
-                            }}
+                            }
+                          }}
+                          sx={{
+                            transition: "0.3s",
+                            opacity:
+                              matchFinished || !hasBothContenders ? "0.4" : 1,
+                            "&:hover": {
+                              cursor:
+                                matchFinished || !hasBothContenders
+                                  ? "default"
+                                  : "pointer",
+                              transform:
+                                matchFinished || !hasBothContenders
+                                  ? "none"
+                                  : "translateY(-3px)",
+                              boxShadow:
+                                matchFinished || !hasBothContenders ? 0 : 6,
+                              borderColor:
+                                matchFinished || !hasBothContenders
+                                  ? "#9dd3fc"
+                                  : "#88cafc",
+                            },
+                          }}
+                        >
+                          {roundNumber === 0 && (
+                            <Grid
+                              container
+                              size={12}
+                              justifyContent={"flex-end"}
+                            >
+                              <Box
+                                sx={{
+                                  width: "fit-content",
+                                  border: "1px solid red",
+                                  fontSize: 14,
+                                  px: 1,
+                                  py: 0.5,
+                                  borderRadius: 2,
+                                }}
+                              >
+                                {match.match_number === 1
+                                  ? "1º e 2º Lugares"
+                                  : "3º e 4º Lugares"}
+                              </Box>
+                            </Grid>
+                          )}
+                          <Grid
+                            size={10}
+                            container
+                            direction={"column"}
+                            spacing={2}
                           >
-                            {selectedMatchId === String(match.id) ? (
-                              <CheckBox />
-                            ) : (
-                              <CheckBoxOutlineBlank />
-                            )}
-                          </IconButton>
+                            <SingleContenderCard
+                              roundNumber={roundNumber}
+                              matchNumber={match.match_number}
+                              contenderNumber={1}
+                              isWinner={!is2Winner}
+                              points={
+                                match.kataresult === null ||
+                                (match.kataresult?.flags_contender_1 === 0 &&
+                                  match.kataresult?.flags_contender_2 === 0)
+                                  ? 99
+                                  : match.kataresult?.flags_contender_1
+                              }
+                              contenderInfo={match.contender_1}
+                              isMatchFinished={matchFinished}
+                              ongoing={isOngoing}
+                            ></SingleContenderCard>
+                            <SingleContenderCard
+                              roundNumber={roundNumber}
+                              matchNumber={match.match_number}
+                              contenderNumber={2}
+                              isWinner={is2Winner}
+                              points={
+                                match.kataresult === null ||
+                                (match.kataresult?.flags_contender_1 === 0 &&
+                                  match.kataresult?.flags_contender_2 === 0)
+                                  ? 99
+                                  : match.kataresult?.flags_contender_2
+                              }
+                              contenderInfo={match.contender_2}
+                              isMatchFinished={matchFinished}
+                              ongoing={isOngoing}
+                            ></SingleContenderCard>
+                          </Grid>
+                          <Grid size={2}>
+                            <IconButton
+                              disabled={matchFinished || !hasBothContenders}
+                              onClick={() => {
+                                if (String(match.id) === selectedMatchId) {
+                                  setSelectedMatchId("");
+                                } else {
+                                  setSelectedMatchId(String(match.id));
+                                }
+                              }}
+                            >
+                              {selectedMatchId === String(match.id) ? (
+                                <CheckBox />
+                              ) : (
+                                <CheckBoxOutlineBlank />
+                              )}
+                            </IconButton>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    );
-                  })}
+                      );
+                    })}
+                </Grid>
               </Grid>
-            </Grid>
-          ))}
+            ))}
+          <Grid container direction={"column"} size={12} spacing={2}>
+            {props.scoringEntriesData?.length !== 0 && tab === 1
+              ? props.scoringEntriesData?.map((entry: any, index: any) => (
+                  <Grid
+                    size={10}
+                    spacing={2}
+                    key={index}
+                    container
+                    p={2}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    borderRadius={4}
+                    bgcolor={"#d7ecfc"}
+                    border={"1px solid #9dd3fc"}
+                    onClick={() => {
+                      if (entry.person || entry.team) {
+                        if (String(entry.id) === selectedEntryId) {
+                          setSelectedEntryId("");
+                        } else {
+                          setSelectedEntryId(String(entry.id));
+                        }
+                      }
+                    }}
+                    sx={{
+                      transition: "0.3s",
+                      opacity: props.bracketData?.is_team
+                        ? !entry.team
+                          ? "0.4"
+                          : 1
+                        : !entry.person
+                          ? "0.4"
+                          : 1,
+                      "&:hover": {
+                        cursor: props.bracketData?.is_team
+                          ? !entry.team
+                            ? "default"
+                            : "pointer"
+                          : !entry.person
+                            ? "default"
+                            : "pointer",
+                        transform: props.bracketData?.is_team
+                          ? !entry.team
+                            ? "none"
+                            : "translateY(-3px)"
+                          : !entry.person
+                            ? "none"
+                            : "translateY(-3px)",
+                        boxShadow: props.bracketData?.is_team
+                          ? !entry.team
+                            ? 0
+                            : 6
+                          : !entry.person
+                            ? 0
+                            : 6,
+                        borderColor: props.bracketData?.is_team
+                          ? !entry.team
+                            ? "9dd3fc"
+                            : "#88cafc"
+                          : !entry.person
+                            ? "9dd3fc"
+                            : "#88cafc",
+                      },
+                    }}
+                  >
+                    <Grid size={10} container>
+                      {props.bracketData?.is_team ? (
+                        <Grid container size={12}>
+                          <SingleTeamContenderCard
+                            contenderNumber={index % 2 === 0 ? 1 : 2}
+                            isMatchFinished={false}
+                            isWinner={true}
+                            matchNumber={entry.entry_number}
+                            ongoing={entry.ongoing ?? false}
+                            points={
+                              Number(entry.score) === 0
+                                ? 99
+                                : Number(entry.score)
+                            }
+                            roundNumber={0}
+                            teamData={entry.team}
+                            rank={entry.rank!}
+                            dorsalData={entry.team_dorsal}
+                          ></SingleTeamContenderCard>
+                        </Grid>
+                      ) : (
+                        <Grid container size={12}>
+                          <SingleContenderCard
+                            key={index}
+                            roundNumber={0}
+                            matchNumber={entry.entry_number}
+                            contenderNumber={index % 2 === 0 ? 1 : 2}
+                            isWinner={true}
+                            points={
+                              Number(entry.score) === 0
+                                ? 99
+                                : Number(entry.score)
+                            }
+                            contenderInfo={entry.person}
+                            isMatchFinished={false}
+                            ongoing={entry.ongoing ?? false}
+                            rank={entry.rank!}
+                            dorsal={entry.person_dorsal}
+                          ></SingleContenderCard>
+                        </Grid>
+                      )}
+                    </Grid>
+                    <Grid container justifyContent={"center"} size={2}>
+                      <IconButton
+                        disabled={
+                          props.bracketData?.is_team
+                            ? !entry.team
+                            : !entry.person
+                        }
+                        onClick={() => {
+                          if (String(entry.id) === selectedMatchId) {
+                            setSelectedEntryId("");
+                          } else {
+                            setSelectedEntryId(String(entry.id));
+                          }
+                        }}
+                      >
+                        {selectedEntryId === String(entry.id) ? (
+                          <CheckBox />
+                        ) : (
+                          <CheckBoxOutlineBlank />
+                        )}
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))
+              : null}
+          </Grid>
         </Grid>
-        <Grid ml={5} mr={1} mb={2}>
-          {selectedMatchId === "" ? null : (
-            <FormHelperText>
-              Partida selecionada. Pode alternar entre as partidas anteriores e
-              seguintes à escolhida na secção <i>Opções</i>.
-            </FormHelperText>
-          )}
+        <Grid ml={10} mr={2} mt={5}>
+          {tab === 0 ? (
+            selectedMatchId === "" ? null : (
+              <FormHelperText>
+                Partida selecionada. Pode alternar entre as partidas anteriores
+                e seguintes à escolhida na secção <i>Opções</i>.
+              </FormHelperText>
+            )
+          ) : null}
         </Grid>
       </Grid>
       <DialogActions>
@@ -431,19 +622,38 @@ export default function MatchPickerModal(
             color="info"
             variant="contained"
             onClick={() => {
-              patchOngoingMatch.mutate(
-                {
-                  matchId: Number(selectedMatchId),
-                  data: { ongoing: true },
-                },
-                {
-                  onSuccess: () => {
-                    props.changeMatch(selectedMatchId);
-                    props.setValue("match", selectedMatchId);
+              if (tab === 0) {
+                patchOngoingMatch.mutate(
+                  {
+                    matchId: Number(selectedMatchId),
+                    data: { ongoing: true },
                   },
-                },
-              );
-              props.handleModalClose();
+                  {
+                    onSuccess: () => {
+                      props.changeMatch(selectedMatchId);
+                      props.changeEntry("");
+                      props.setValue("entry", "");
+                      props.setValue("match", selectedMatchId);
+                    },
+                  },
+                );
+                props.handleModalClose();
+              } else {
+                patchOngoingScoringEntry.mutate(
+                  {
+                    scoringEntryId: Number(selectedEntryId),
+                    data: { ongoing: true },
+                  },
+                  {
+                    onSuccess: () => {
+                      props.changeEntry(selectedEntryId);
+                      props.changeMatch("");
+                      props.setValue("match", "");
+                      props.setValue("entry", selectedEntryId);
+                    },
+                  },
+                );
+              }
             }}
           >
             Prosseguir
