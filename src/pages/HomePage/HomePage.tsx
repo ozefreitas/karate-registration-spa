@@ -5,6 +5,7 @@ import NextEventHomeComponent from "../../components/home-cards/NextEventHomeCom
 import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQualiHomeComponent";
 import { useNavigate } from "react-router-dom";
 import MissingMemberQuotasCard from "../../components/home-cards/MissingMemberQuotasCard";
+import HomeSearch from "../../components/home-cards/HomeSearch";
 
 export default function HomePage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
@@ -40,6 +41,9 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           )}
         </CardContent>
       </Card>
+      {["main_admin", "single_admin", "subed_club"].includes(
+        props.userRole,
+      ) && <HomeSearch></HomeSearch>}
       {props.userRole === "technician" ||
       props.userRole === "superuser" ? null : (
         <Grid container size={12}>
