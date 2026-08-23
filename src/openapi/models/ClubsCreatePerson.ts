@@ -24,6 +24,7 @@ export type ClubsCreatePerson = {
     conditions?: string | null;
     observations?: string | null;
     is_validated?: boolean;
+    search_vector?: string | null;
     readonly club: number;
 };
 

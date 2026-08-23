@@ -30,6 +30,7 @@ export type PatchedEvents = {
     encounter_type?: EncounterTypeEnum;
     rating?: number;
     file?: string | null;
+    search_vector?: string | null;
     created_by?: number | null;
 };
 
