@@ -38,6 +38,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);
   const [currentDiscipline, setCurrentDiscipline] = useState<string>("");
+  const [currentRegistrationType, setCurrentRegistrationType] =
+    useState<string>("indiv");
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -57,10 +59,18 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
       props.userRole,
     );
 
-  const chartData = categoryStats?.map((row: any) => ({
-    name: row.discipline_name + " - " + row.category_name,
-    number_registrations: row.member_count,
-  }));
+  const chartData = categoryStats
+    ?.filter((row: any) => {
+      if (currentRegistrationType === "indiv") {
+        return !row.is_team;
+      } else {
+        return row.is_team;
+      }
+    })
+    .map((row: any) => ({
+      name: row.discipline_name + " - " + row.category_name,
+      number_registrations: row.count,
+    }));
 
   const { data: singleEventData, isLoading: isSingleEventLoading } =
     eventsHooks.useFetchSingleEventData(eventId!);
@@ -272,11 +282,75 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                   />
 
                   <CardContent sx={{ width: "100%" }}>
-                    <ResponsiveContainer width="100%" height={400}>
-                      <BarChart data={chartData}>
+                    <Grid size={12} mb={2} container justifyContent={"center"}>
+                      <Box
+                        height={60}
+                        p={2}
+                        gap={2}
+                        bgcolor={"lightgray"}
+                        borderRadius={12}
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-evenly"}
+                      >
+                        <Button
+                          sx={{ borderRadius: 10 }}
+                          variant="contained"
+                          color={
+                            currentRegistrationType === "indiv"
+                              ? "primary"
+                              : "inherit"
+                          }
+                          onClick={() => {
+                            setCurrentRegistrationType("indiv");
+                          }}
+                        >
+                          Individual
+                        </Button>
+                        <Button
+                          sx={{ borderRadius: 10 }}
+                          variant="contained"
+                          color={
+                            currentRegistrationType === "teams"
+                              ? "primary"
+                              : "inherit"
+                          }
+                          onClick={() => {
+                            setCurrentRegistrationType("teams");
+                          }}
+                        >
+                          Equipas
+                        </Button>
+                      </Box>
+                    </Grid>
+                    <ResponsiveContainer width="100%" height={500}>
+                      <BarChart
+                        data={chartData}
+                        margin={{ top: 5, right: 20, left: 20, bottom: 100 }}
+                      >
                         <CartesianGrid strokeDasharray="1 1" />
-                        <XAxis dataKey="name" />
-                        <YAxis allowDecimals={false} />
+                        <XAxis
+                          dataKey="name"
+                          interval={0}
+                          tick={{ fontSize: 12 }}
+                          angle={-45}
+                          textAnchor="end"
+                          height={70}
+                          label={{
+                            position: "insideBottom",
+                            value: "Escalão",
+                            dy: 100,
+                          }}
+                        />
+                        <YAxis
+                          allowDecimals={false}
+                          label={{
+                            position: "insideTopLeft",
+                            value: "Nº Inscrições",
+                            angle: -90,
+                            dy: 210,
+                          }}
+                        />
                         <RechartToolTip content={CustomTooltip} />
                         <Bar dataKey="number_registrations">
                           {chartData?.map((entry, i) => (

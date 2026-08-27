@@ -111,7 +111,7 @@ export default function NewTeamPageModal(
   } = membersHooks.useFetchMembersNotInEvent(
     eventId!,
     1,
-    100,
+    200,
     selectedGender,
     props.isModalOpen && watch("gender") !== undefined,
     props.disciplineData?.id,

@@ -244,7 +244,7 @@ export default function NewMemberPage() {
       ></PageInfoCard>
       <Grid container>
         <FormCard title="Dados Pessoais">
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="first_name"
               control={control}
@@ -287,7 +287,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="last_name"
               control={control}
@@ -328,7 +328,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="graduation"
               control={control}
@@ -387,7 +387,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="birth_date"
               control={control}
@@ -418,7 +418,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="gender"
               control={control}
@@ -481,7 +481,7 @@ export default function NewMemberPage() {
             />
           </Grid>
           <Grid size={6}></Grid>
-          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+          <Grid p={3} pt={1} container size={6}>
             <Controller
               name="force_ident"
               control={control}
@@ -521,7 +521,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2, pt: 3 }} container size={6}>
+          <Grid p={2} pt={3} container size={6}>
             <Controller
               name="id_number"
               control={control}
@@ -563,7 +563,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 3, pt: 1 }} container size={6}>
+          <Grid p={3} pt={1} container size={6}>
             <Controller
               name="force_registration_date"
               control={control}
@@ -600,7 +600,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="registration_date"
               control={control}
@@ -634,7 +634,7 @@ export default function NewMemberPage() {
           </Grid>
         </FormCard>
         <FormAccordion expanded={undefined} title="Dados Opcionais">
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="national_card_number"
               control={control}
@@ -677,7 +677,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="taxpayer_number"
               control={control}
@@ -720,7 +720,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="address"
               control={control}
@@ -760,7 +760,7 @@ export default function NewMemberPage() {
               )}
             />
           </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
+          <Grid p={2} size={6}>
             <Controller
               name="post_code"
               control={control}

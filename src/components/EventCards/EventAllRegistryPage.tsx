@@ -13,6 +13,7 @@ import { formatDateTime, getFullDate } from "../../utils/utils";
 import { ContentCopy } from "@mui/icons-material";
 import { useState } from "react";
 import DuplicateRegistrationsModal from "../Modals/DuplicateRegistrationsModal";
+import { FEATURE_COPY_INSCRICOES } from "../../config/featureFlasgs";
 
 export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>,
@@ -138,12 +139,12 @@ export default function EventAllRegistryPage(
                     personInfo.category.name +
                     " +" +
                     personInfo.category.min_weight +
-                    "Kg"
+                    "kg"
                   ) : (
                     personInfo.category.name +
                     " -" +
                     personInfo.category.max_weight +
-                    "Kg"
+                    "kg"
                   ),
                 added_at: formatDateTime(personInfo.added_at, "both"),
               }),
@@ -189,7 +190,8 @@ export default function EventAllRegistryPage(
                   ml={3}
                 >
                   <Typography variant="h5">{discipline.name}</Typography>
-                  {singleEventData !== undefined &&
+                  {FEATURE_COPY_INSCRICOES &&
+                  singleEventData !== undefined &&
                   singleEventData.event_date < getFullDate() &&
                   ["superuser", "subed_club"].includes(props.userRole) &&
                   disciplineIndividuals.length !== 0 ? (

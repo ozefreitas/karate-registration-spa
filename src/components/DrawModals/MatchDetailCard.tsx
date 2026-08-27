@@ -5,6 +5,7 @@ import {
   Flag,
   Group,
   ModeStandby,
+  PersonOff,
 } from "@mui/icons-material";
 import { KataOptions } from "../../config";
 
@@ -355,6 +356,47 @@ export default function MatchDetailCard({
           reverse={reverse}
         />
       )}
+      <InfoRow
+        color={color}
+        icon={<PersonOff />}
+        value={
+          <Grid
+            container
+            columnGap={2}
+            rowGap={1}
+            size={12}
+            textAlign={"center"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            {contenderInfo === null ? (
+              <Typography>Bye</Typography>
+            ) : (
+              <Typography
+                color={
+                  color === "Aka"
+                    ? matchInfo.contender_1_present
+                      ? undefined
+                      : "textDisabled"
+                    : matchInfo.contender_2_present
+                      ? undefined
+                      : "textDisabled"
+                }
+                fontWeight={700}
+              >
+                {color === "Aka"
+                  ? matchInfo.contender_1_present
+                    ? "Presente"
+                    : "Falta de Comparência"
+                  : matchInfo.contender_2_present
+                    ? "Presente"
+                    : "Falta de Comparência"}
+              </Typography>
+            )}
+          </Grid>
+        }
+        reverse={reverse}
+      />
     </Grid>
   );
 }

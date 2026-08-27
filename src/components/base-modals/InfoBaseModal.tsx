@@ -30,6 +30,7 @@ export default function InfoBaseModal(
     handleModalClose: any;
     chipName?: string;
     title: string;
+    subheader?: string;
     children: any;
     onSubmit: any;
     size?: "sm" | "md" | "lg" | "xl";
@@ -55,10 +56,18 @@ export default function InfoBaseModal(
           alignItems={"start"}
           my={1}
         >
-          <Grid>
+          <Grid
+            container
+            direction={"column"}
+            alignItems={"flex-start"}
+            spacing={1}
+          >
             {props.chipName && <Chip label={props.chipName}></Chip>}
             <Typography fontWeight={"bold"} ml={1} variant="h5">
               {props.title}
+            </Typography>
+            <Typography ml={1} variant="subtitle1">
+              {props.subheader}
             </Typography>
           </Grid>
           <IconButton

@@ -143,6 +143,7 @@ export type { PersonsPaymentsStatus } from './models/PersonsPaymentsStatus';
 export { PlaceEnum } from './models/PlaceEnum';
 export type { PreviousMatch } from './models/PreviousMatch';
 export type { Rating } from './models/Rating';
+export type { ReGenBracketDraw } from './models/ReGenBracketDraw';
 export type { RegisterUser } from './models/RegisterUser';
 export type { RequestedAcount } from './models/RequestedAcount';
 export type { RequestPasswordReset } from './models/RequestPasswordReset';

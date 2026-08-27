@@ -31,6 +31,7 @@ export const useMembersPerBracketData = (bracketId: number) => {
     queryFn: () => BracketService.bracketPersonsList(bracketId),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    enabled: !!bracketId,
   });
 };
 
@@ -40,6 +41,7 @@ export const useTeamsPerBracketData = (bracketId: number) => {
     queryFn: () => BracketService.bracketTeamsList(bracketId),
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    enabled: !!bracketId,
   });
 };
 

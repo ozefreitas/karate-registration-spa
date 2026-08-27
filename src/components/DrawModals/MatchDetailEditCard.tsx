@@ -7,6 +7,8 @@ import {
   CircularProgress,
   Chip,
   Typography,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import {
   Person,
@@ -14,6 +16,7 @@ import {
   Flag,
   Group,
   ModeStandby,
+  PersonOff,
 } from "@mui/icons-material";
 import { Controller } from "react-hook-form";
 import { KataOptions } from "../../config";
@@ -27,6 +30,7 @@ interface MatchDetailEditCardProps {
   bracketId: number;
   scoring?: boolean;
   team?: boolean;
+  watch?: any;
 }
 
 function IconBox({
@@ -101,6 +105,7 @@ export default function MatchDetailEditCard({
   bracketId,
   scoring,
   team,
+  watch,
 }: Readonly<MatchDetailEditCardProps>) {
   // Retrieve all members inside a given bracked
   const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
@@ -135,8 +140,14 @@ export default function MatchDetailEditCard({
                       : `contender_${color === "Shiro" ? 1 : 2}`
                 }
                 control={control}
+                disabled={watch(
+                  `contender_${color === "Shiro" ? 1 : 2}_present`,
+                )}
                 render={({ field }) => (
                   <TextField
+                    disabled={watch(
+                      `contender_${color === "Shiro" ? 1 : 2}_present`,
+                    )}
                     color="warning"
                     type="text"
                     variant="outlined"
@@ -307,9 +318,15 @@ export default function MatchDetailEditCard({
                       ? "kata"
                       : `kata_contender_${color === "Shiro" ? 1 : 2}`
                   }
+                  disabled={watch(
+                    `contender_${color === "Shiro" ? 1 : 2}_present`,
+                  )}
                   control={control}
                   render={({ field }) => (
                     <TextField
+                      disabled={watch(
+                        `contender_${color === "Shiro" ? 1 : 2}_present`,
+                      )}
                       color="warning"
                       type="text"
                       variant={"outlined"}
@@ -373,10 +390,16 @@ export default function MatchDetailEditCard({
             >
               <Grid container size={10}>
                 <Controller
+                  disabled={watch(
+                    `contender_${color === "Shiro" ? 1 : 2}_present`,
+                  )}
                   name={`flags_contender_${color === "Shiro" ? 1 : 2}`}
                   control={control}
                   render={({ field }) => (
                     <TextField
+                      disabled={watch(
+                        `contender_${color === "Shiro" ? 1 : 2}_present`,
+                      )}
                       color="warning"
                       type="number"
                       variant={"outlined"}
@@ -409,10 +432,16 @@ export default function MatchDetailEditCard({
             >
               <Grid container size={10}>
                 <Controller
+                  disabled={watch(
+                    `contender_${color === "Shiro" ? 1 : 2}_present`,
+                  )}
                   name={`points_contender_${color === "Shiro" ? 1 : 2}`}
                   control={control}
                   render={({ field }) => (
                     <TextField
+                      disabled={watch(
+                        `contender_${color === "Shiro" ? 1 : 2}_present`,
+                      )}
                       color="warning"
                       type="number"
                       variant={"outlined"}
@@ -431,6 +460,45 @@ export default function MatchDetailEditCard({
           reverse={reverse}
         />
       ) : null}
+      <InfoRow
+        color={color}
+        icon={<PersonOff />}
+        value={
+          <Grid
+            container
+            rowGap={1}
+            size={12}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Grid container size={10}>
+              <Controller
+                name={`contender_${color === "Shiro" ? 1 : 2}_present`}
+                control={control}
+                render={({ field }) => (
+                  <FormControlLabel
+                    labelPlacement="start"
+                    control={
+                      <Checkbox
+                        sx={{ ml: 2 }}
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                      />
+                    }
+                    label="Faltou: "
+                    sx={{
+                      justifyContent: "center",
+                      width: "100%",
+                      alignItems: "center",
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        }
+        reverse={reverse}
+      />
     </Grid>
   );
 }

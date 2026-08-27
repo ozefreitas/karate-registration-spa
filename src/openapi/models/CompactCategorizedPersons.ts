@@ -5,10 +5,10 @@
 import type { GenderEnum } from './GenderEnum';
 export type CompactCategorizedPersons = {
     readonly id: string;
-    first_name: string;
-    last_name: string;
     gender: GenderEnum;
     readonly club: string;
     readonly full_name: string;
+    readonly age: string;
+    weight?: number | null;
 };
 

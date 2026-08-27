@@ -36,10 +36,10 @@ export default function ResultsMainPage() {
   const [isDisplayOpen, setIsDisplayOpen] = useState<boolean>(false);
   const [isBracketModalOpen, setIsBracketModalOpen] = useState<boolean>(false);
   const [currentScreen, setCurrentScreen] = useState<string>("");
-  const displayWindowRef = useRef<Window | null>(null);
   const dynamicWindowRef = useRef<Window | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient();
 
   const paramBracket = searchParams.get("bracket") ?? "";
   const paramMatch = searchParams.get("match") ?? "";
@@ -66,15 +66,28 @@ export default function ResultsMainPage() {
     });
   };
 
-  const handleBracketModalOpen = () => {
-    setIsBracketModalOpen(true);
-  };
+  useEffect(() => {
+    const newParams = new URLSearchParams(searchParams);
+    if (paramBracket === "" || watch("bracket") === "") {
+      newParams.delete("bracket");
+      setSearchParams(newParams);
+    } else {
+      setValue("bracket", paramBracket);
+    }
+    if (paramMatch === "" || watch("match") === "") {
+      newParams.delete("match");
+      setSearchParams(newParams);
+    } else {
+      setValue("match", paramMatch);
+    }
+    if (paramEntry === "" || watch("entry") === "") {
+      newParams.delete("entry");
+      setSearchParams(newParams);
+    } else {
+      setValue("entry", paramEntry);
+    }
+  }, [paramBracket, paramMatch, paramEntry]);
 
-  const handleBracketModalClose = () => {
-    setIsBracketModalOpen(false);
-  };
-
-  const queryClient = useQueryClient();
   useEffect(() => {
     const channel = new BroadcastChannel("match_updates");
 
@@ -88,6 +101,7 @@ export default function ResultsMainPage() {
     return () => channel.close();
   }, []);
 
+  // open socket
   useEffect(() => {
     if (
       socketRef.current?.readyState === WebSocket.OPEN ||
@@ -141,28 +155,6 @@ export default function ResultsMainPage() {
   const selectedScoringEntryRef = useRef(watch("entry"));
   const inputedTatamiRef = useRef(watch("tatami"));
 
-  useEffect(() => {
-    const newParams = new URLSearchParams(searchParams);
-    if (paramBracket === "" || watch("bracket") === "") {
-      newParams.delete("bracket");
-      setSearchParams(newParams);
-    } else {
-      setValue("bracket", paramBracket);
-    }
-    if (paramMatch === "" || watch("match") === "") {
-      newParams.delete("match");
-      setSearchParams(newParams);
-    } else {
-      setValue("match", paramMatch);
-    }
-    if (paramEntry === "" || watch("entry") === "") {
-      newParams.delete("entry");
-      setSearchParams(newParams);
-    } else {
-      setValue("entry", paramEntry);
-    }
-  }, [paramBracket, paramMatch, paramEntry]);
-
   const { data: bracketsData } = drawsHooks.useBracketsData(eventId!);
   const { data: matchesData, isLoading: isMatchesLoading } =
     drawsHooks.useEventMatchesData(watch("bracket"), eventId!);
@@ -199,45 +191,75 @@ export default function ResultsMainPage() {
     hasSetOngoing.current = true;
   }, [matchesData]);
 
-  // On mount, check if the named window is already open
+  // On mount, check if either named window is already open
   useEffect(() => {
-    const existingWindow = window.open("", "displayPanel");
-
-    // If the window exists and has a location (is actually open), update state
+    const existingWindow1 = window.open("", "displayPanel1");
     if (
-      existingWindow &&
-      !existingWindow.closed &&
-      existingWindow.location.href !== "about:blank"
+      existingWindow1 &&
+      !existingWindow1.closed &&
+      existingWindow1.location.href !== "about:blank"
     ) {
-      displayWindowRef.current = existingWindow;
-      setIsDisplayOpen(true);
+      displayWindowRef1.current = existingWindow1;
     } else {
-      // accidentally opened a blank window, close it
-      existingWindow?.close();
+      existingWindow1?.close();
     }
+
+    const existingWindow2 = window.open("", "displayPanel2");
+    if (
+      existingWindow2 &&
+      !existingWindow2.closed &&
+      existingWindow2.location.href !== "about:blank"
+    ) {
+      displayWindowRef2.current = existingWindow2;
+    } else {
+      existingWindow2?.close();
+    }
+
+    setIsDisplayOpen(
+      !!displayWindowRef1.current || !!displayWindowRef2.current,
+    );
   }, []);
 
+  const displayWindowRef1 = useRef<Window | null>(null);
+  const displayWindowRef2 = useRef<Window | null>(null);
+
   const openDisplay = () => {
-    if (!displayWindowRef.current || displayWindowRef.current.closed) {
-      displayWindowRef.current = window.open(
+    if (!displayWindowRef1.current || displayWindowRef1.current.closed) {
+      displayWindowRef1.current = window.open(
         "/display_panel/",
-        "displayPanel",
+        "displayPanel1",
         "width=800,height=600",
       );
-      setIsDisplayOpen(true);
     } else {
-      displayWindowRef.current.focus();
+      displayWindowRef1.current.focus();
     }
+
+    if (!displayWindowRef2.current || displayWindowRef2.current.closed) {
+      displayWindowRef2.current = window.open(
+        "/display_panel/",
+        "displayPanel2",
+        "width=800,height=600,left=820",
+      );
+    } else {
+      displayWindowRef2.current.focus();
+    }
+
+    setIsDisplayOpen(true);
   };
 
   const closeDisplay = () => {
-    displayWindowRef.current?.close();
+    displayWindowRef1.current?.close();
+    displayWindowRef2.current?.close();
+    setIsDisplayOpen(false);
     setCurrentScreen("");
   };
 
   const navigateDisplay = (matchId: string) => {
-    if (displayWindowRef.current && !displayWindowRef.current?.closed) {
-      displayWindowRef.current.location.href = `/display_panel/${matchId}/`;
+    if (displayWindowRef1.current && !displayWindowRef1.current.closed) {
+      displayWindowRef1.current.location.href = `/display_panel/${matchId}/`;
+    }
+    if (displayWindowRef2.current && !displayWindowRef2.current.closed) {
+      displayWindowRef2.current.location.href = `/display_panel/${matchId}/`;
     }
   };
 
@@ -277,8 +299,6 @@ export default function ResultsMainPage() {
     const currentEntry = scoringEntriesDataRef.current?.find(
       (item) => String(item.id) === selectedScoringEntryRef.current,
     );
-
-    console.log(currentEntry);
 
     if (
       watch("match") !== "" &&
@@ -371,15 +391,23 @@ export default function ResultsMainPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (displayWindowRef.current) {
-        setIsDisplayOpen(!displayWindowRef.current.closed);
-      } else {
-        setIsDisplayOpen(false);
-      }
+      const win1Open =
+        !!displayWindowRef1.current && !displayWindowRef1.current.closed;
+      const win2Open =
+        !!displayWindowRef2.current && !displayWindowRef2.current.closed;
+      setIsDisplayOpen(win1Open || win2Open);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
+
+  const handleBracketModalOpen = () => {
+    setIsBracketModalOpen(true);
+  };
+
+  const handleBracketModalClose = () => {
+    setIsBracketModalOpen(false);
+  };
 
   const rounds = [
     ...new Set(matchesData?.map((m: any) => m.round_number)),

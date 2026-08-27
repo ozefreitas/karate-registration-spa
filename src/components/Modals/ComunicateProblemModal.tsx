@@ -57,7 +57,7 @@ export default function ComunicateProblemModal(
         FeedbackOptions.find((item) => item.value === props.location)?.label
       }
     >
-      <Grid container size={12} m={2}>
+      <Grid container size={12} m={2} mt={0}>
         <Typography variant="body1">
           Descreva o problema encontrado. O seu administrador entrará em
           contacto assim que possível.
