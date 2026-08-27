@@ -13,6 +13,7 @@ export type Bracket = {
     draw_type?: DrawTypeEnum | null;
     readonly created_at: string;
     officialized_at?: string | null;
+    public?: boolean;
     event: string;
     discipline: number;
 };

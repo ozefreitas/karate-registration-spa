@@ -4,9 +4,13 @@
 /* eslint-disable */
 export type CreateMatch = {
     readonly id: number;
+    contender_1_present?: boolean;
+    contender_2_present?: boolean;
     round_number: number;
     is_third_place?: boolean;
     match_number: number;
+    team_contender_1_present?: boolean;
+    team_contender_2_present?: boolean;
     ongoing?: boolean;
     readonly created_at: string;
     bracket: number;
