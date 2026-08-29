@@ -6,8 +6,6 @@ export type SearchResult = {
     type: string;
     id: string;
     title: string;
-    subtitle?: string;
-    url: string;
     rank: number;
 };
 
