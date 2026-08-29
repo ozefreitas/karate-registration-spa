@@ -6,9 +6,13 @@ import type { KataResult } from './KataResult';
 import type { KumiteResult } from './KumiteResult';
 export type UpdateMatch = {
     readonly id: number;
-    kataresult?: KataResult;
-    kumiteresult?: KumiteResult;
+    kataresult?: KataResult | null;
+    kumiteresult?: KumiteResult | null;
+    contender_1_present?: boolean;
+    contender_2_present?: boolean;
     is_third_place?: boolean;
+    team_contender_1_present?: boolean;
+    team_contender_2_present?: boolean;
     ongoing?: boolean;
     readonly created_at: string;
     contender_1?: string | null;

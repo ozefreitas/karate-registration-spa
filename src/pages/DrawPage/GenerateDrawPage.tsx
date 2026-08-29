@@ -498,7 +498,7 @@ export default function GenerateDrawPage() {
             />
           </Grid>
         </Grid>
-        <Grid sx={{ p: 2 }} container size={12}>
+        <Grid p={2} container size={12}>
           <Controller
             name="splitClubs"
             control={control}
@@ -535,7 +535,7 @@ export default function GenerateDrawPage() {
             )}
           />
         </Grid>
-        <Grid sx={{ p: 2 }} container size={12}>
+        <Grid p={2} container size={12}>
           <Controller
             name="splitFavourites"
             control={control}
@@ -648,7 +648,7 @@ export default function GenerateDrawPage() {
             </Typography>
           )}
         </Grid>
-        <Grid sx={{ p: 2 }} container size={12}>
+        <Grid p={2} container size={12}>
           <Controller
             name="notificate"
             control={control}

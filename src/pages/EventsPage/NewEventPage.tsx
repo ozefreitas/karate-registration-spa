@@ -1444,7 +1444,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
                 setPageSize={setPageSize}
                 userRole={props.userRole}
                 selectedDisciplineForCategory={selectedDisciplineForCategory}
-                disciplineCategories={disciplineCategories}
                 setDisciplineCategories={setDisciplineCategories}
               ></AllUseTable>
             )}

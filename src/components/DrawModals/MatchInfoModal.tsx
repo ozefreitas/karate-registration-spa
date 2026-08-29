@@ -47,7 +47,7 @@ export default function MatchInfoModal(
   const updateMatch = drawsHooks.useUpdateMatch();
   const patchMatchWinner = drawsHooks.usePatchMatchWinner();
 
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit, reset, watch } = useForm({
     defaultValues: {
       contender_1:
         props.matchData?.contender_1 === null
@@ -71,6 +71,10 @@ export default function MatchInfoModal(
       flags_contender_2: props.matchData?.kataresult?.flags_contender_2,
       points_contender_1: props.matchData?.kumiteresult?.points_contender_1,
       points_contender_2: props.matchData?.kumiteresult?.points_contender_2,
+      contender_1_present: !props.matchData?.contender_1_present,
+      contender_2_present: !props.matchData?.contender_2_present,
+      team_contender_1_present: !props.matchData?.team_contender_1_present,
+      team_contender_2_present: !props.matchData?.team_contender_2_present,
     },
   });
 
@@ -101,6 +105,12 @@ export default function MatchInfoModal(
           props.matchData?.kumiteresult?.points_contender_1 ?? 0,
         points_contender_2:
           props.matchData?.kumiteresult?.points_contender_2 ?? 0,
+        contender_1_present: props.matchData?.contender_1_present !== true,
+        contender_2_present: props.matchData?.contender_2_present !== true,
+        team_contender_1_present:
+          props.matchData?.team_contender_1_present !== true,
+        team_contender_2_present:
+          props.matchData?.team_contender_2_present !== true,
       });
 
       if (props.matchData.winner === null) {
@@ -115,8 +125,27 @@ export default function MatchInfoModal(
     }
   }, [props.matchData]);
 
+  interface KataResultPayload {
+    flags_contender_1: number;
+    flags_contender_2: number;
+    kata_contender_1: string;
+    kata_contender_2: string;
+  }
+
+  interface MatchPayload {
+    kataresult: KataResultPayload | null;
+    contender_1: string | null;
+    contender_2: string | null;
+    winner: string | null;
+    team_contender_1: string | null;
+    team_contender_2: string | null;
+    contender_1_present: boolean;
+    contender_2_present: boolean;
+    team_contender_1_present: boolean;
+    team_contender_2_present: boolean;
+  }
+
   const onKataSubmit = (data: any) => {
-    console.log(data);
     // check if contender with most flags is the one selected as winner
     if (
       data.flags_contender_1 > data.flags_contender_2 &&
@@ -169,22 +198,46 @@ export default function MatchInfoModal(
       return;
     }
 
-    const payload = {
+    const payload: MatchPayload = {
       kataresult: {
         flags_contender_1: data.flags_contender_1,
         flags_contender_2: data.flags_contender_2,
         kata_contender_1: data.kata_contender_1,
         kata_contender_2: data.kata_contender_2,
       },
-      contender_1: data.contender_1,
-      contender_2: data.contender_2,
+      contender_1: data.contender_1 === "" ? null : data.contender_1,
+      contender_2: data.contender_2 === "" ? null : data.contender_2,
       winner:
         selectedWinner === "SHIRO"
           ? data.contender_1
           : selectedWinner === "AKA"
             ? data.contender_2
             : null,
+      team_contender_1:
+        data.team_contender_1 === "" ? null : data.team_contender_1,
+      team_contender_2:
+        data.team_contender_2 === "" ? null : data.team_contender_2,
+      contender_1_present: data.contender_1_present !== true,
+      contender_2_present: data.contender_2_present !== true,
+      team_contender_1_present: data.team_contender_1_present !== true,
+      team_contender_2_present: data.team_contender_2_present !== true,
     };
+
+    const kataFields: KataResultPayload = {
+      flags_contender_1: data.flags_contender_1 ?? 0,
+      flags_contender_2: data.flags_contender_2 ?? 0,
+      kata_contender_1: data.kata_contender_1 ?? "",
+      kata_contender_2: data.kata_contender_2 ?? "",
+    };
+
+    const kataHasValue =
+      kataFields.flags_contender_1 !== 0 ||
+      kataFields.flags_contender_2 !== 0 ||
+      kataFields.kata_contender_1 !== "" ||
+      kataFields.kata_contender_2 !== "";
+
+    payload.kataresult = kataHasValue ? kataFields : null;
+
     if (selectedWinner !== "") {
       const winner = { winner: selectedWinner === "SHIRO" ? 1 : 2 };
       patchMatchWinner.mutate({ matchId: props.matchData.id, data: winner });
@@ -230,10 +283,8 @@ export default function MatchInfoModal(
         points_conceded_contender_1: data.points_contender_2,
         points_conceded_contender_2: data.points_contender_1,
       },
-      contender_1: data.contender_1,
-      contender_2: data.contender_2,
-      team_contender_1: data.team_contender_1,
-      team_contender_2: data.team_contender_2,
+      contender_1: data.contender_1 === "" ? null : data.contender_1,
+      contender_2: data.contender_2 === "" ? null : data.contender_2,
       ongoing: true,
       winner:
         selectedWinner === "SHIRO"
@@ -241,6 +292,14 @@ export default function MatchInfoModal(
           : selectedWinner === "AKA"
             ? data.contender_2
             : null,
+      team_contender_1:
+        data.team_contender_1 === "" ? null : data.team_contender_1,
+      team_contender_2:
+        data.team_contender_2 === "" ? null : data.team_contender_2,
+      contender_1_present: data.contender_1_present !== true,
+      contender_2_present: data.contender_2_present !== true,
+      team_contender_1_present: data.team_contender_1_present !== true,
+      team_contender_2_present: data.team_contender_2_present !== true,
     };
     if (selectedWinner !== "") {
       const winner = { winner: selectedWinner === "SHIRO" ? 1 : 2 };
@@ -315,6 +374,7 @@ export default function MatchInfoModal(
                 isKata={props.isKata!}
                 color="Shiro"
                 control={control}
+                watch={watch}
                 bracketId={props.brackedId}
                 team={props.team}
               ></MatchDetailEditCard>
@@ -338,6 +398,7 @@ export default function MatchInfoModal(
                 isKata={props.isKata!}
                 color="Aka"
                 control={control}
+                watch={watch}
                 bracketId={props.brackedId}
                 reverse
                 team={props.team}

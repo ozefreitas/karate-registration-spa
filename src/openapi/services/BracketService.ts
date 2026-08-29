@@ -7,6 +7,7 @@ import type { CompactPerson } from '../models/CompactPerson';
 import type { CompactTeam } from '../models/CompactTeam';
 import type { CreateBracket } from '../models/CreateBracket';
 import type { PatchedBracket } from '../models/PatchedBracket';
+import type { ReGenBracketDraw } from '../models/ReGenBracketDraw';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -138,7 +139,7 @@ export class BracketService {
      */
     public static bracketGenerateBracketDrawCreate(
         id: number,
-        requestBody: Bracket,
+        requestBody: ReGenBracketDraw,
     ): CancelablePromise<Bracket> {
         return __request(OpenAPI, {
             method: 'POST',

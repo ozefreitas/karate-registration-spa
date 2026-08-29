@@ -58,6 +58,12 @@ export default function MatchPickerModal(
 ) {
   const [tab, setTab] = useState(0);
 
+  useEffect(() => {
+    if (!props.matchesData && props.scoringEntriesData) {
+      setTab(1);
+    }
+  }, [props.matchesData, props.scoringEntriesData]);
+
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
   };

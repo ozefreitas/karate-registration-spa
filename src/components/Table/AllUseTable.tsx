@@ -151,10 +151,12 @@ export default function AllUseTable(
     setPageSize?: any;
     userRole: string;
     selectedDisciplineForCategory?: any;
-    disciplineCategories?: any;
     setDisciplineCategories?: any;
     overideInternalPage?: boolean;
     disallowEdit?: boolean;
+    disallowDelete?: boolean;
+    selectedIds?: string[];
+    onSelectionChange?: (selected: string[]) => void;
   }>,
 ) {
   const { id: eventId } = useParams<{ id: string }>();
@@ -192,7 +194,21 @@ export default function AllUseTable(
   const [internalPageSize, setInternalPageSize] = useState<number>(
     props.overideInternalPage ? -1 : 10,
   );
-  const [selected, setSelected] = useState<string[]>([]);
+  // const [selected, setSelected] = useState<string[]>([]);
+  const [internalSelected, setInternalSelected] = useState<string[]>(
+    props.selectedIds ?? [],
+  );
+
+  useEffect(() => {
+    if (props.selectedIds) setInternalSelected(props.selectedIds);
+  }, [props.selectedIds]);
+
+  const selected = props.selectedIds ?? internalSelected;
+
+  const setSelected = (newSelected: string[]) => {
+    setInternalSelected(newSelected);
+    props.onSelectionChange?.(newSelected);
+  };
 
   const handleSelectionDelete = () => {
     handleDeleteAllModalOpen();
@@ -421,11 +437,13 @@ export default function AllUseTable(
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = props.data.map((n: any) => n.id);
+      const newSelected = props.data?.map((n: any) => n.id);
       setSelected(newSelected);
+      props.onSelectionChange?.(newSelected);
       return;
     }
     setSelected([]);
+    props.onSelectionChange?.([]);
   };
 
   const handleRowClick = (event: React.MouseEvent<unknown>, id: string) => {
@@ -446,7 +464,12 @@ export default function AllUseTable(
       );
     }
     setSelected(newSelected);
+    props.onSelectionChange?.(newSelected);
   };
+
+  useEffect(() => {
+    props.onSelectionChange?.(selected);
+  }, [selected]);
 
   const paginatedData = useMemo(() => {
     if (props.page === undefined && props.pageSize === undefined) {
@@ -455,7 +478,7 @@ export default function AllUseTable(
       }
       const start = internalPage * internalPageSize;
       const end = start + internalPageSize;
-      return props.data.slice(start, end);
+      return props.data?.slice(start, end);
     } else return props.data;
   }, [props.data, props.page, props.pageSize, internalPage, internalPageSize]);
 
@@ -489,11 +512,11 @@ export default function AllUseTable(
                           color="primary"
                           indeterminate={
                             selected.length > 0 &&
-                            selected.length < props.data.length
+                            selected.length < props.data?.length
                           }
                           checked={
-                            props.data.length > 0 &&
-                            selected.length === props.data.length
+                            props.data?.length > 0 &&
+                            selected.length === props.data?.length
                           }
                           onChange={handleSelectAllClick}
                           slotProps={{
@@ -697,7 +720,7 @@ export default function AllUseTable(
               </TableBody>
               <TableFooter>
                 <TableRow>
-                  {props.selection ? (
+                  {props.selection && !props.disallowDelete ? (
                     <StyledTableCell selection>
                       <Tooltip arrow title="Remover Selecionados">
                         <span>
@@ -767,7 +790,7 @@ export default function AllUseTable(
               handleModalClose={handleDeleteAllModalClose}
               handleModalOpen={handleDeleteAllModalOpen}
               from={props.type}
-              id={props.data.length === selected.length ? undefined : selected}
+              id={props.data?.length === selected.length ? undefined : selected}
               setSelected={setSelected}
               discipline={props.discipline}
             ></DeleteMemberModal>

@@ -189,8 +189,23 @@ export default function ClubStats() {
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={registrationsPerEventData}>
                   <CartesianGrid strokeDasharray="1 1" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
+                  <XAxis
+                    height={60}
+                    label={{
+                      position: "insideBottom",
+                      value: "Evento",
+                    }}
+                    dataKey="name"
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    label={{
+                      position: "insideTopLeft",
+                      value: "Nº Inscrições",
+                      angle: -90,
+                      dy: 210,
+                    }}
+                  />
                   <Tooltip />
                   <Bar dataKey="number_registrations" fill="#8884d8" />
                 </BarChart>
