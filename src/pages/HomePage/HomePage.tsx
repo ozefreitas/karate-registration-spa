@@ -6,9 +6,11 @@ import LastCompQualiHomeComponent from "../../components/home-cards/LastCompQual
 import { useNavigate } from "react-router-dom";
 import MissingMemberQuotasCard from "../../components/home-cards/MissingMemberQuotasCard";
 import HomeSearch from "../../components/home-cards/HomeSearch";
+import { useState } from "react";
 
 export default function HomePage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <>
@@ -41,9 +43,10 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           )}
         </CardContent>
       </Card>
-      {["main_admin", "single_admin", "subed_club"].includes(
-        props.userRole,
-      ) && <HomeSearch></HomeSearch>}
+      {props.userRole &&
+        ["main_admin", "single_admin", "subed_club"].includes(
+          props.userRole,
+        ) && <HomeSearch query={searchQuery} setQuery={setSearchQuery} />}
       {props.userRole === "technician" ||
       props.userRole === "superuser" ? null : (
         <Grid container size={12}>

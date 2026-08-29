@@ -2,15 +2,18 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { CancelablePromise, SearchService, SearchResult } from "../../openapi";
 
 interface UseSearchOptions {
+  query?: string;
+  setQuery?: (value: string) => void;
   debounceMs?: number;
   minChars?: number;
 }
 
 export function useSearch({
+  query = "",
+  setQuery = () => {},
   debounceMs = 500,
   minChars = 2,
 }: UseSearchOptions = {}) {
-  const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +46,7 @@ export function useSearch({
           err?.name !== "CancelError" &&
           thisRequestId === requestId.current
         ) {
-          setError("Search failed. Please try again.");
+          setError("Procura falhou. Por favor, tente novamente.");
           setResults([]);
         }
       })
