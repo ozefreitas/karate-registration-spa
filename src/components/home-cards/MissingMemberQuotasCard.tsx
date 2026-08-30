@@ -9,9 +9,8 @@ import {
   CardContent,
   CircularProgress,
 } from "@mui/material";
-import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { membersHooks } from "../../hooks";
-import { Groups, Payments } from "@mui/icons-material";
+import { Groups, Payments, WarningAmber } from "@mui/icons-material";
 
 interface MissingMemberQuotasCardProps {
   userRole: string;
@@ -94,7 +93,7 @@ export default function MissingMemberQuotasCard({
                 borderRadius: 1.5,
               }}
             >
-              <WarningAmberIcon sx={{ fontSize: 28 }} />
+              <WarningAmber sx={{ fontSize: 28 }} />
             </Grid>
             <Typography variant="h5" fontWeight={"bold"}>
               Resumo de pagamentos mensais
@@ -148,7 +147,7 @@ export default function MissingMemberQuotasCard({
       >
         <Button
           variant="contained"
-          startIcon={<WarningAmberIcon />}
+          startIcon={<WarningAmber />}
           onClick={onResolve}
           disableElevation
           color="error"

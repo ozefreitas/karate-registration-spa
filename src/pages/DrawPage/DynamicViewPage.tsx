@@ -251,10 +251,10 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     setIsReGenModalOpen(false);
   };
 
-  console.log(watch("bracket"));
-  console.log(
-    bracketsData?.find((item) => watch("bracket") === String(item.id)),
-  );
+  // console.log(watch("bracket"));
+  // console.log(
+  //   bracketsData?.find((item) => watch("bracket") === String(item.id)),
+  // );
 
   return (
     <>
@@ -330,11 +330,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                         label={`Tipo de Sorteio: ${item.draw_type}`}
                       ></Chip>
                       {item.is_team && (
-                        <Chip
-                          color="info"
-                          size="small"
-                          label="Equipas"
-                        ></Chip>
+                        <Chip color="info" size="small" label="Equipas"></Chip>
                       )}
                       {item.has_only_scoring_rounds && (
                         <Chip
@@ -461,12 +457,12 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             <Tab
               icon={<AccountTree />}
               label="Eliminatórias"
-              sx={{ fontSize: 15, mx: 2 }}
+              sx={{ fontSize: 13 }}
             />
             <Tab
               icon={<FormatListNumbered />}
               label="Finais"
-              sx={{ fontSize: 15 }}
+              sx={{ fontSize: 13 }}
             />
           </Tabs>
           <Card sx={{ m: 6 }}>

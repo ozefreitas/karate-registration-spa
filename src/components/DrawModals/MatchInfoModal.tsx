@@ -461,7 +461,7 @@ export default function MatchInfoModal(
               </Typography>
               <Grid container spacing={2}>
                 <Chip
-                  sx={{ p: 3, fontSize: 20 }}
+                  sx={{ p: 3, fontSize: 17 }}
                   clickable
                   onClick={() => {
                     if (selectedWinner === "SHIRO") {
@@ -472,7 +472,7 @@ export default function MatchInfoModal(
                   label={"SHIRO"}
                 ></Chip>
                 <Chip
-                  sx={{ p: 3, fontSize: 20 }}
+                  sx={{ p: 3, fontSize: 17 }}
                   clickable
                   onClick={() => {
                     if (selectedWinner === "AKA") {

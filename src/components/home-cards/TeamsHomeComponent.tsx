@@ -51,7 +51,7 @@ export default function TeamsHomeComponent(
               >
                 <Groups sx={{ fontSize: 28 }} />
               </Grid>
-              <Grid size={10} container>
+              <Grid size={10} container direction={"column"}>
                 <Typography variant="h5" fontWeight={"bold"}>
                   Equipas editados recentemente
                 </Typography>

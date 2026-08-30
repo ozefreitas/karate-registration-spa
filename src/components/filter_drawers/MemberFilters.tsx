@@ -101,8 +101,8 @@ export default function MemberFilters(
         {["subed_club", "superuser", "single_admin"].includes(
           props.userRole,
         ) ? (
-          <Grid p={3} py={1} alignItems={"center"} container spacing={2}>
-            <Typography fontSize={"1.05rem"}>Tipo</Typography>
+          <Grid px={3} py={2} alignItems={"center"} container spacing={2}>
+            <Typography>Tipo</Typography>
             {MemberTypes.map((item: any, index: any) => (
               <Controller
                 key={index}
@@ -115,6 +115,7 @@ export default function MemberFilters(
                     variant={field.value ? "filled" : "outlined"}
                     color={field.value ? "success" : "default"}
                     clickable
+                    size="small"
                     onClick={() => {
                       props.setPage(1);
                       if (field.value) {
@@ -130,8 +131,8 @@ export default function MemberFilters(
             ))}
           </Grid>
         ) : null}
-        <Grid p={3} py={2} alignItems={"center"} container spacing={2}>
-          <Typography fontSize={"1.05rem"}>Género</Typography>
+        <Grid px={3} py={2} alignItems={"center"} container spacing={2}>
+          <Typography>Género</Typography>
           {GenderOptions.filter(
             (item: any) => item.label !== "Ambos" && item.label !== "Misto",
           ).map((item: any, index: any) => (
@@ -146,6 +147,7 @@ export default function MemberFilters(
                   variant={field.value ? "filled" : "outlined"}
                   color={field.value ? "success" : "default"}
                   clickable
+                  size="small"
                   onClick={() => {
                     props.setPage(1);
                     if (field.value) {
@@ -173,9 +175,7 @@ export default function MemberFilters(
                 p={3}
                 py={2}
               >
-                <Typography fontSize={"1.05rem"} mr={2}>
-                  Clube
-                </Typography>
+                <Typography mr={2}>Clube</Typography>
                 <Controller
                   name={fieldName}
                   control={props.control}
@@ -184,6 +184,7 @@ export default function MemberFilters(
                       variant={field.value ? "filled" : "outlined"}
                       color={field.value ? "success" : "default"}
                       clickable
+                      size="small"
                       onClick={() => {
                         props.setPage(1);
                         field.onChange(!field.value);

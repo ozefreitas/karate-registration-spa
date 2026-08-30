@@ -95,11 +95,11 @@ export default function NotificationsFilters(
           size={12}
           container
           alignItems={"center"}
-          p={3}
+          px={3}
           py={2}
           spacing={1}
         >
-          <Typography fontSize={"1.05rem"} mr={2}>
+          <Typography  mr={2}>
             Tipo
           </Typography>
           {Object.keys(props.control._defaultValues)
@@ -118,6 +118,7 @@ export default function NotificationsFilters(
                     variant={field.value ? "filled" : "outlined"}
                     color={field.value ? "success" : "default"}
                     clickable
+                    size="small"
                     onClick={() => field.onChange(!field.value)}
                     label={
                       NotificationTypeOptions.find(

@@ -165,7 +165,7 @@ export default function MemberPaymemtManagerPage(
   }, [currentSettingData]);
 
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       <FormAccordion
         expanded={isExpanded}
         onChange={handleIsExpandedOpen}

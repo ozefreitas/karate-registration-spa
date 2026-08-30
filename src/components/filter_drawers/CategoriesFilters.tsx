@@ -239,8 +239,8 @@ export default function CategoriesFilters(
               ))}
           </Grid>
         ) : null}
-        <Grid sx={{ p: 3, py: 1 }} alignItems={"center"} container spacing={2}>
-          <Typography fontSize={"1.05rem"}>Género</Typography>
+        <Grid px={3} py={2} alignItems={"center"} container spacing={2}>
+          <Typography >Género</Typography>
           {GenderOptions.filter(
             (item: any) => item.label !== "Ambos" && item.label !== "Misto"
           ).map((item: any, index: any) => (
@@ -255,6 +255,7 @@ export default function CategoriesFilters(
                   variant={field.value ? "filled" : "outlined"}
                   color={field.value ? "success" : "default"}
                   clickable
+                  size="small"
                   onClick={() => field.onChange(!field.value)}
                   label={item.label}
                 ></Chip>

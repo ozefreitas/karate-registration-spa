@@ -53,7 +53,7 @@ export default function MembersHomeComponent(
               >
                 <Person sx={{ fontSize: 28 }} />
               </Grid>
-              <Grid size={10} container>
+              <Grid size={10} container direction={"column"}>
                 <Typography variant="h5" fontWeight={"bold"}>
                   Membros editados recentemente
                 </Typography>
