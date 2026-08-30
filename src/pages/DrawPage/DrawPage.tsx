@@ -55,7 +55,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
   };
 
   return (
-    <div>
+    <Grid>
       <PageInfoCard
         description={
           ["main_admin", "superuser", "single_admin"].includes(
@@ -78,7 +78,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
         }
         title="Sorteios"
       ></PageInfoCard>
-      <Grid container size={12}>
+      <Grid container size={12} spacing={2} justifyContent="flex-end" >
         <FormCard title="Ficheiro">
           <Grid
             container
@@ -166,6 +166,6 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
         isModalOpen={isProblemModalOpen}
         location="draw"
       ></ComunicateProblemModal>
-    </div>
+    </Grid>
   );
 }

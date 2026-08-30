@@ -502,7 +502,7 @@ export default function ResultsMainPage() {
   }, [watch("bracket")]);
 
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       <PageInfoCard
         description="Aqui poderá iniciar o sistema de monitorização de resultados de cada
           prova. Poderá controlar todos os aspetos, como inserir sorteios,

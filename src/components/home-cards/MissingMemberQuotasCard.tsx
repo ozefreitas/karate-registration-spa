@@ -72,8 +72,6 @@ export default function MissingMemberQuotasCard({
     error: memberPaymentStatusError,
   } = membersHooks.useFetchMemberPaymentsStatusData();
 
-  console.log(memberPaymentStatusError?.message);
-
   return (
     <Card
       sx={{
@@ -128,7 +126,7 @@ export default function MissingMemberQuotasCard({
               <CircularProgress />
             </Grid>
           ) : (
-            <Grid px={2} >
+            <Grid px={2}>
               <StatRow
                 icon={<Groups sx={{ fontSize: 22 }} color="error" />}
                 label="Número Total de Membros"

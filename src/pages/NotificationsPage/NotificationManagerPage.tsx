@@ -145,7 +145,7 @@ export default function NotificationManagerPage(
           apagar e criar uma nova."
         title="Gestor de Notificações"
       ></PageInfoCard>
-      <Grid container>
+      <Grid container spacing={2}>
         <FormCard title="Notificações ativas">
           <Grid size={12} p={2}>
             <TextField

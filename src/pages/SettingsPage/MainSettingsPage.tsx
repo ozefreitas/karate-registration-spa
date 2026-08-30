@@ -549,12 +549,7 @@ export default function MainSettingsPage() {
   };
 
   return (
-    <Grid
-      sx={{
-        mb: 3,
-        // px: { xs: 2, md: 6 },
-      }}
-    >
+    <Grid>
       <PageInfoCard
         description="Aqui poderá configurar esta plataforma, e da forma como é
           apresentada para as contas associadas, assim como controlo sobre essas
@@ -568,8 +563,8 @@ export default function MainSettingsPage() {
         sx={{
           border: "1px solid #eeeeee",
           borderRadius: 3,
-          m: 6,
-          mb: 4,
+          m: 4,
+          pt: 1,
           bgcolor: "#fff",
         }}
       >
@@ -594,7 +589,7 @@ export default function MainSettingsPage() {
 
       {/* Sections */}
       {section === "accounts_manager" ? (
-        <Grid container>
+        <Grid container spacing={2}>
           <FormCard title="Adicionar/Remover Clubes">
             <Grid
               container
