@@ -7,6 +7,7 @@ import "@fontsource/poppins/700.css";
 const theme = createTheme(
   {
     typography: {
+      fontSize: 12,
       h4Half: {
         fontSize: "2.3rem",
         lineHeight: 1.4,

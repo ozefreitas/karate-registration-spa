@@ -178,12 +178,12 @@ export default function MatchPickerModal(
           <Tab
             icon={<AccountTree />}
             label="Eliminatórias"
-            sx={{ fontSize: 15, mx: 2 }}
+            sx={{ fontSize: 12 }}
           />
           <Tab
             icon={<FormatListNumbered />}
             label="Finais"
-            sx={{ fontSize: 15 }}
+            sx={{ fontSize: 12 }}
           />
         </Tabs>
         <Grid

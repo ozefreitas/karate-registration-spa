@@ -307,7 +307,6 @@ export default function CategoriesModal(
                   secondaryAction={
                     <label>
                       <Checkbox
-                        // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                         edge="end"
                         onChange={() => handleToggle(String(category.id))}
                         checked={checked.includes(String(category.id))}

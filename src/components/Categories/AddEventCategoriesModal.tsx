@@ -245,7 +245,6 @@ export default function AddEventCategoriesModal(
                 secondaryAction={
                   <label>
                     <Checkbox
-                      // sx={{ "& .MuiSvgIcon-root": { fontSize: 30 } }}
                       edge="end"
                       onChange={() => handleToggle(String(category.id))}
                       checked={checked.includes(String(category.id))}

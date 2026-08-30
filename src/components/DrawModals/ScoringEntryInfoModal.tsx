@@ -40,7 +40,7 @@ export default function ScoringEntryInfoModal(
   }>,
 ) {
   const updateScoringEntry = drawsHooks.useUpdateScoringEntry();
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit, reset, watch } = useForm({
     defaultValues: {
       person: props.team
         ? props.scoringEntryData?.team === null
@@ -173,6 +173,7 @@ export default function ScoringEntryInfoModal(
               scoring
               team={props.team}
               isKata={true}
+              watch={watch}
             ></MatchDetailEditCard>
           ) : (
             <MatchDetailCard
@@ -221,7 +222,7 @@ export default function ScoringEntryInfoModal(
                             readOnly: !props.edit,
                             disableUnderline: true,
                             style: {
-                              fontSize: 22,
+                              fontSize: 18,
                               marginRight: 10,
                               color:
                                 field.value === "N/A" ? "lightgray" : "inherit",
