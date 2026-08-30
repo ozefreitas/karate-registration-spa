@@ -133,7 +133,7 @@ export default function SingleMemberPage(
         <Navigate to={"/not_found/"}></Navigate>
       ) : (
         <>
-          <Grid container justifyContent={"space-between"} m={2}>
+          <Grid container justifyContent={"space-between"} m={4}>
             <Button
               sx={{ px: 2 }}
               onClick={() => {
@@ -159,7 +159,7 @@ export default function SingleMemberPage(
               Membro Seguinte
             </Button>
           </Grid>
-          <Card sx={{ m: 2 }}>
+          <Card sx={{ m: 4 }}>
             <CardContent
               sx={{
                 p: 0,

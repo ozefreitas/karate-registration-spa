@@ -53,6 +53,7 @@ import GenerateDrawPage from "./pages/DrawPage/GenerateDrawPage";
 import DynamicViewPage from "./pages/DrawPage/DynamicViewPage";
 import EventClassificationDetailsPage from "./pages/ClassificationsPage/EventClassificationDetailsPage";
 import MainProfilePage from "./pages/ProfilePages/MainProfilePage";
+import PageWithBackButton from "./layouts/PageWithBackButton";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -102,7 +103,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<MembersPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <MembersPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "subed_club",
                           "main_admin",
@@ -117,7 +122,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<SingleMemberPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <SingleMemberPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "subed_club",
                           "main_admin",
@@ -160,7 +169,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<SingleTeamPage />}
+                        element={
+                          <PageWithBackButton>
+                            <SingleTeamPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["subed_club", "main_admin"]}
                       />
                     )
@@ -171,7 +184,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<EventsPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <EventsPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "free_club",
                           "subed_club",
@@ -203,7 +220,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<EventCategoriesPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <EventCategoriesPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["main_admin", "subed_club"]}
                       />
                     )
@@ -214,7 +235,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<CategoriesPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <CategoriesPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["main_admin", "single_admin"]}
                       />
                     )
@@ -236,7 +261,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<NotificationsPage me={user} />}
+                        element={
+                          <PageWithBackButton>
+                            <NotificationsPage me={user} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["main_admin", "subed_club"]}
                       />
                     )
@@ -248,7 +277,9 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={
-                          <NotificationManagerPage userRole={userRole} />
+                          <PageWithBackButton>
+                            <NotificationManagerPage userRole={userRole} />
+                          </PageWithBackButton>
                         }
                         allowedRoles={["main_admin", "superuser"]}
                       />
@@ -260,7 +291,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<PaymentManagerPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <PaymentManagerPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["main_admin", "superuser", "subed_club"]}
                       />
                     )
@@ -271,7 +306,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<EventCard userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <EventCard userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "free_club",
                           "subed_club",
@@ -288,7 +327,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<EventAllRegistryPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <EventAllRegistryPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "main_admin",
                           "single_admin",
@@ -303,7 +346,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<DrawPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <DrawPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "main_admin",
                           "superuser",
@@ -319,7 +366,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<GenerateDrawPage />}
+                        element={
+                          <PageWithBackButton>
+                            <GenerateDrawPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "main_admin",
                           "superuser",
@@ -334,7 +385,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<DynamicViewPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <DynamicViewPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={[
                           "main_admin",
                           "superuser",
@@ -352,7 +407,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<IndividualsPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <IndividualsPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["free_club", "subed_club", "main_admin"]} // keep "main_admin" for now, for debbuging effects
                       />
                     )
@@ -363,7 +422,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<CoachesPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <CoachesPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["free_club", "subed_club", "main_admin"]} // keep "main_admin" for now, for debbuging effects
                       />
                     )
@@ -374,7 +437,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<RegisteredTeamsPage userRole={userRole} />}
+                        element={
+                          <PageWithBackButton>
+                            <RegisteredTeamsPage userRole={userRole} />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["free_club", "subed_club", "main_admin"]}
                       />
                     )
@@ -385,7 +452,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<ResultsMainPage />}
+                        element={
+                          <PageWithBackButton>
+                            <ResultsMainPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["main_admin", "technician", "superuser"]}
                       />
                     )
@@ -396,7 +467,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<RulesPage />}
+                        element={
+                          <PageWithBackButton>
+                            <RulesPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["free_club", "subed_club"]}
                         allowUnauthenticated
                       />
@@ -408,7 +483,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<ClassificationsPage />}
+                        element={
+                          <PageWithBackButton>
+                            <ClassificationsPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["free_club", "subed_club"]}
                         allowUnauthenticated
                       />
@@ -420,7 +499,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<EventClassificationDetailsPage />}
+                        element={
+                          <PageWithBackButton>
+                            <EventClassificationDetailsPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["free_club", "subed_club"]}
                         allowUnauthenticated
                       />
@@ -444,7 +527,11 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<MainSettingsPage />}
+                        element={
+                          <PageWithBackButton>
+                            <MainSettingsPage />
+                          </PageWithBackButton>
+                        }
                         allowedRoles={["main_admin"]}
                       />
                     )
@@ -456,7 +543,9 @@ function App() {
                     isAuthLoading ? null : (
                       <ProtectedRoute
                         element={
-                          <MainProfilePage user={user}></MainProfilePage>
+                          <PageWithBackButton>
+                            <MainProfilePage user={user}></MainProfilePage>
+                          </PageWithBackButton>
                         }
                         allowedRoles={[
                           "main_admin",
@@ -468,10 +557,6 @@ function App() {
                     )
                   }
                 />
-                {/* <Route
-                  path="profile//"
-                  element={isAuthLoading ? null : <WIPPage></WIPPage>}
-                /> */}
                 <Route
                   path="pricing/"
                   element={

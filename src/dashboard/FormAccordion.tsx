@@ -20,7 +20,7 @@ export default function FormAccordion(
   }>
 ) {
   return (
-    <Grid sx={{ m: 6, mt: 2, mb: 2 }} size={12}>
+    <Grid mx={4} size={12}>
       <Accordion square expanded={props.expanded} onChange={props.onChange}>
         <Tooltip
           placement="bottom-start"

@@ -126,9 +126,6 @@ const EventClassificationDetailsPage = () => {
             </Grid>
           ))
         )}
-        <Grid container size={12} justifyContent={"flex-end"}>
-          <Button onClick={() => navigate("/classifications/")}>Voltar</Button>
-        </Grid>
       </Grid>
       <BracketClassificationModal
         bracketId={selectedBracket!}

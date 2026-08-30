@@ -178,8 +178,8 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
           inscrever os seus Atletas, Equipas e Treinadores."
         title={isSingleEventLoading ? "" : `Evento - ${singleEventData?.name}`}
       ></PageInfoCard>
-      <Grid container columnSpacing={3}>
-        <Grid container size={12} m={2}>
+      <Grid container spacing={3} mx={4}>
+        <Grid container size={12}>
           <Grid size={props.userRole === undefined ? 12 : 6}>
             <Card elevation={4}>
               <CardHeader
@@ -515,7 +515,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         {singleEventData?.has_registrations &&
         props.userRole !== undefined &&
         singleEventData?.event_date > getFullDate() ? (
-          <Grid container size={12} sx={{ mx: 2 }}>
+          <Grid container size={12}>
             <Card
               sx={{
                 width: "100%",
@@ -560,7 +560,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
         ) : null}
         <Grid size={12}>
           {props.userRole === undefined ? null : (
-            <Card sx={{ m: 2 }}>
+            <Card>
               <CardHeader
                 title="Ações"
                 sx={{

@@ -249,24 +249,6 @@ export default function EventAllRegistryPage(
             );
           })
         )}
-        <Grid
-          mr={2}
-          mt={4}
-          container
-          size={12}
-          justifyContent={"flex-end"}
-          spacing={2}
-        >
-          <Button
-            size={"medium"}
-            type={"submit"}
-            onClick={() => {
-              navigate(`/events/${eventId}/`);
-            }}
-          >
-            Voltar
-          </Button>
-        </Grid>
       </Grid>
       {disciplineToDuplicate === "" ? null : (
         <DuplicateRegistrationsModal

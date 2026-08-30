@@ -165,7 +165,7 @@ export default function GenerateDrawPage() {
   };
 
   return (
-    <Grid container>
+    <Grid container spacing={2}>
       <PageInfoCard
         title="Gerar Novo Sorteio"
         description="Altere as definições relativas aos Sorteios a ser gerados. Pode atribuir a cada Modalidade um tipo de Sorteio específico de forma a satisfazer as regras de cada prova."

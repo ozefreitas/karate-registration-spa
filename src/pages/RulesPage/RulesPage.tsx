@@ -11,7 +11,7 @@ export default function RulesPage() {
           Carregue no botão para obter os documentos correspondentes."
         title="Regras"
       ></PageInfoCard>
-      <Grid m={5} container justifyContent={"space-between"}>
+      <Grid m={4} mb={8} container justifyContent={"space-between"}>
         {RulesOptions.map((item: any, index: any) => (
           <Grid
             key={index}

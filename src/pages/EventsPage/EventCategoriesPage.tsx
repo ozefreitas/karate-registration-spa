@@ -282,18 +282,6 @@ export default function EventCategoriesPage(
           ))
         )}
       </Grid>
-      <Grid container justifyContent={"flex-end"} mr={4}>
-        <Button
-          // variant="contained"
-          size={"medium"}
-          type={"submit"}
-          onClick={() => {
-            navigate(`/events/${eventId}/`);
-          }}
-        >
-          Voltar
-        </Button>
-      </Grid>
       <AddEventCategoriesModal
         handleModalClose={handleCategoriesModalClose}
         isModalOpen={isCategoriesModalOpen}

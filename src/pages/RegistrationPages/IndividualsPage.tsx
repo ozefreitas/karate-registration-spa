@@ -520,8 +520,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           </>
         )}
       </Grid>
-      <Grid container spacing={2} justifyContent="flex-end" m={4}>
-        {singleEventData?.is_open ? (
+      {singleEventData?.is_open ? (
+        <Grid container spacing={2} justifyContent="flex-end" m={4}>
           <Button
             variant="contained"
             size="large"
@@ -531,17 +531,8 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
           >
             Inscrever
           </Button>
-        ) : null}
-        <Button
-          size={"medium"}
-          type={"submit"}
-          onClick={() => {
-            navigate(`/events/${eventId}/`);
-          }}
-        >
-          Voltar
-        </Button>
-      </Grid>
+        </Grid>
+      ) : null}
       <MembersModal
         isModalOpen={isModalOpen}
         handleModalClose={handleModalClose}

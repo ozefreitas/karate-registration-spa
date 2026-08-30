@@ -19,7 +19,7 @@ export default function FormCard(
   }>,
 ) {
   return (
-    <Grid m={6} my={2} size={12}>
+    <Grid mx={4} size={12}>
       <Card
         elevation={1}
         sx={{
