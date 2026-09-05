@@ -45,15 +45,15 @@ export default function LastCompQualiHomeComponent(
                 color={"#fff"}
                 bgcolor={"#1976d2"}
                 sx={{
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   borderRadius: 1.5,
                 }}
               >
-                <EmojiEvents sx={{ fontSize: 28 }} />
+                <EmojiEvents sx={{ fontSize: 18 }} />
               </Grid>
               <Grid size={10} container direction={"column"}>
-                <Typography variant="h5" fontWeight={"bold"}>
+                <Typography variant="h6" fontWeight={"bold"}>
                   Últimas classificações
                 </Typography>
                 <Typography>{lastCompData?.name}</Typography>

@@ -49,20 +49,20 @@ export function FieldBox({
   is_validated?: boolean;
   handleOpen?: any;
 }>) {
-  const sensitiveFields = [
+  const sensitiveFields = new Set([
     "firstName",
     "lastName",
     "birthDate",
     "id_number",
     "graduation",
     "gender",
-  ];
+  ]);
   return (
     <Grid container alignItems={"center"} columnSpacing={5}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <Typography
           // variant="h6"
-          sx={{ color: "#9e9e9e", fontWeight: 600, letterSpacing: 0.3 }}
+          sx={{ color: "#9e9e9e", fontWeight: 600, fontSize: 11, letterSpacing: 0.3 }}
         >
           {label}
         </Typography>
@@ -121,7 +121,7 @@ export function FieldBox({
                               sx: {
                                 border: "none",
                                 padding: 0,
-                                fontSize: 20,
+                                fontSize: 16,
                               },
                             },
                             sx: {
@@ -180,7 +180,7 @@ export function FieldBox({
                     : isEditMode &&
                         name !== "age" &&
                         isValidated &&
-                        !sensitiveFields.includes(name) &&
+                        !sensitiveFields.has(name) &&
                         ["subed_club"].includes(userRole!)
                       ? "outlined"
                       : isEditMode &&
@@ -202,7 +202,7 @@ export function FieldBox({
                           ? false
                           : ["subed_club"].includes(userRole!) &&
                               isEditMode &&
-                              !sensitiveFields.includes(name)
+                              !sensitiveFields.has(name)
                             ? false
                             : !(
                                 ["subed_club"].includes(userRole!) &&
@@ -211,7 +211,7 @@ export function FieldBox({
                               ),
                     disableUnderline: true,
                     style: {
-                      fontSize: 22,
+                      fontSize: 16,
                       marginRight: 10,
                       color: field.value === "N/A" ? "lightgray" : "inherit",
                     },
@@ -235,7 +235,10 @@ export function FieldBox({
                     ? GenderOptions.filter((item) =>
                         ["Feminino", "Masculino"].includes(item.value),
                       ).map((item, index) => (
-                        <MenuItem key={index} value={item.value}>
+                        <MenuItem
+                          key={index}
+                          value={item.value}
+                        >
                           {item.label}
                         </MenuItem>
                       ))
@@ -273,7 +276,7 @@ export function FieldBox({
                   color={"info"}
                 >
                   <Upgrade
-                    fontSize="large"
+                    fontSize="medium"
                     color={is_validated && !isEditMode ? "info" : "disabled"}
                   />
                 </IconButton>
@@ -343,11 +346,11 @@ export function SectionBlock({
         {status ? (
           verified ? (
             <Tooltip title="Verificado">
-              <VerifiedUser color="info" sx={{ fontSize: 28 }} />
+              <VerifiedUser color="info" sx={{ fontSize: 22 }} />
             </Tooltip>
           ) : (
             <Tooltip title="Próprio" sx={{ cursor: "pointer" }}>
-              <AccountCircle color="info" sx={{ fontSize: 28 }} />
+              <AccountCircle color="info" sx={{ fontSize: 22 }} />
             </Tooltip>
           )
         ) : null}

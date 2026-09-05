@@ -45,7 +45,7 @@ const theme = createTheme(
         },
       },
       MuiCardHeader: {
-        styleOverrides: { root: { paddingLeft: 20, paddingTop: 25 } },
+        styleOverrides: { root: { paddingLeft: 20, paddingTop: 20 } },
       },
       MuiCard: {
         styleOverrides: {
@@ -95,6 +95,14 @@ const theme = createTheme(
           },
         },
       },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            fontSize: "0.6rem",
+            p: 5,
+          },
+        },
+      },
       MuiFormHelperText: {
         styleOverrides: {
           root: {
@@ -114,6 +122,7 @@ const theme = createTheme(
       MuiButton: {
         styleOverrides: {
           root: {
+            fontSize: "0.6rem",
             borderRadius: 12,
             border: "1px solid #eeeeee",
             boxShadow: "6px 6px 10px rgba(0,0,0,0.2)", // add your desired box shadow

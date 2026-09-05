@@ -19,6 +19,7 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import NotificationsFilters from "../../components/filter_drawers/NotificationsFilters";
 import NotificationsOrdering from "../../components/filter_drawers/NotificationsOrdering";
 import { useForm } from "react-hook-form";
+import { ColoredIconBox } from "../../components/icon-utils/boxes";
 
 const NotificationsPage = (props: { me: any }) => {
   const [page, setPage] = useState<number>(1);
@@ -128,26 +129,6 @@ const NotificationsPage = (props: { me: any }) => {
         : undefined,
     );
 
-  function IconBox({ icon }: Readonly<{ icon: React.ReactNode }>) {
-    return (
-      <Box
-        sx={{
-          width: 54,
-          height: 54,
-          borderRadius: 2,
-          bgcolor: "red",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          color: "#fff",
-        }}
-      >
-        {icon}
-      </Box>
-    );
-  }
-
   return (
     <>
       <PageInfoCard
@@ -238,17 +219,30 @@ const NotificationsPage = (props: { me: any }) => {
                 }}
                 key={index}
               >
-                <CardContent sx={{ pt: 3, pl: 5, pr: 0, display: "flex" }}>
+                <CardContent
+                  sx={{
+                    py: 2,
+                    pl: 4,
+                    pr: 0,
+                    display: "flex",
+                    "&:last-child": {
+                      paddingBottom: 2,
+                    },
+                  }}
+                >
                   <Grid container alignItems={"center"} pr={1}>
-                    <IconBox
+                    <ColoredIconBox
                       icon={getNotificationTypeIcon(item.type)}
-                    ></IconBox>
+                      bgColor={"red"}
+                      color={"#fff"}
+                      border={"none"}
+                    ></ColoredIconBox>
                   </Grid>
                   <Grid container alignItems={"center"} size={12} px={4}>
                     <Typography width={"100%"}>{item.notification}</Typography>
                     <Typography variant="body2" color="textDisabled">
                       {formatDateTime(item.created_at, "day")} às{" "}
-                      {formatDateTime(item.created_at, "hour")} | (
+                      {formatDateTime(item.created_at, "hour")} (
                       {formatTimeDifference(item.created_at)})
                     </Typography>
                   </Grid>

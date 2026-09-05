@@ -1,35 +1,13 @@
 import { Box, Typography, Paper } from "@mui/material";
 import { EncounterOptions } from "../../config";
 import { SportsMma } from "@mui/icons-material";
+import { ColoredIconBox } from "../icon-utils/boxes";
 
 interface EventsListSingleCardProps {
   title: string;
   description: string;
   type: string;
   registration_state?: string;
-}
-
-function IconBox({
-  icon,
-  type,
-}: Readonly<{ icon: React.ReactNode; type: string }>) {
-  return (
-    <Box
-      sx={{
-        width: 48,
-        height: 48,
-        borderRadius: 2,
-        bgcolor: EncounterOptions.find((item) => item.value === type)?.color,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        color: "#fff",
-      }}
-    >
-      {icon}
-    </Box>
-  );
 }
 
 function InfoRow({
@@ -63,7 +41,12 @@ function InfoRow({
         },
       }}
     >
-      <IconBox icon={icon} type={type} />
+      <ColoredIconBox
+        icon={icon}
+        bgColor={EncounterOptions.find((item) => item.value === type)?.color}
+        color={"#fff"}
+        border={"none"}
+      />
       <Box>
         <Typography variant="h6">{label}</Typography>
         <Typography

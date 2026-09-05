@@ -56,7 +56,7 @@ export default function QuotesOrdering(props: {
   const DrawerList = (
     <Box sx={{ width: 400 }} role="presentation">
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
-        <Typography variant="h4" pl={2} mb={4}>
+        <Typography variant="h6" pl={2} mb={3}>
           Ordenação
         </Typography>
         <Grid container alignContent="center" alignItems="center">

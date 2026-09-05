@@ -46,15 +46,15 @@ export default function MembersHomeComponent(
                 color={"#fff"}
                 bgcolor={"#1976d2"}
                 sx={{
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   borderRadius: 1.5,
                 }}
               >
-                <Person sx={{ fontSize: 28 }} />
+                <Person sx={{ fontSize: 18 }} />
               </Grid>
               <Grid size={10} container direction={"column"}>
-                <Typography variant="h5" fontWeight={"bold"}>
+                <Typography variant="h6" fontWeight={"bold"}>
                   Membros editados recentemente
                 </Typography>
                 <Typography>A mostrar 5 últimos Membros</Typography>
@@ -120,7 +120,7 @@ export default function MembersHomeComponent(
                           <Grid
                             container
                             alignItems="center"
-                            spacing={2}
+                            spacing={1.5}
                             pr={3}
                             wrap="nowrap"
                             sx={{
@@ -143,6 +143,7 @@ export default function MembersHomeComponent(
                                 <>
                                   {isCoach ? (
                                     <Chip
+                                      size={"small"}
                                       color={"secondary"}
                                       variant="outlined"
                                       label={"Treinador"}
@@ -150,6 +151,7 @@ export default function MembersHomeComponent(
                                   ) : null}
                                   {isStudent || isAthlete ? (
                                     <Chip
+                                      size={"small"}
                                       color={isStudent ? "info" : "warning"}
                                       variant="outlined"
                                       label={isStudent ? "Aluno" : "Competidor"}
@@ -161,14 +163,17 @@ export default function MembersHomeComponent(
                             <Chip
                               variant="outlined"
                               label={person.gender}
+                              size={"small"}
                             ></Chip>
                             <Chip
                               variant="outlined"
+                              size={"small"}
                               label={`${person.age} anos`}
                             ></Chip>
                             {person.past_month_payment_status ===
                             null ? null : (
                               <Chip
+                                size={"small"}
                                 color={
                                   person.past_month_payment_status === "unpaid"
                                     ? "error"

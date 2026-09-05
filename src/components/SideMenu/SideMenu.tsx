@@ -1,5 +1,5 @@
 import { styled, Theme, CSSObject } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
@@ -14,7 +14,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
-import { ChevronRight, ChevronLeft } from "@mui/icons-material";
+import {
+  ChevronRight,
+  ChevronLeft,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from "@mui/icons-material";
 import {
   getSideMenuConfig,
   getAccountSideMenuConfig,
@@ -38,9 +43,9 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
+  width: `calc(${theme.spacing(5)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
+    width: `calc(${theme.spacing(6)} + 1px)`,
   },
 });
 
@@ -48,8 +53,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  // padding: theme.spacing(0, 1.5),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -78,12 +81,13 @@ const Drawer = styled(MuiDrawer, {
   ],
 }));
 
-export default function SideMenu(
-  props: Readonly<{ me: any }>,
-) {
+export default function SideMenu(props: Readonly<{ me: any }>) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const [showTopScrollHint, setShowTopScrollHint] = useState(false);
+  const paperRef = useRef<HTMLDivElement | null>(null);
 
   const handleDrawerBehavior = () => {
     setIsMenuOpen((prev) => !prev);
@@ -101,6 +105,34 @@ export default function SideMenu(
   const { data: memberValidationRequestData } =
     membersHooks.useFetchMemberValidationRequestsData(props.me?.role);
 
+  const checkScroll = useCallback(() => {
+    const el = paperRef.current;
+    if (!el) return;
+    const remaining = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setShowScrollHint(remaining > 25);
+    setShowTopScrollHint(el.scrollTop > 20);
+  }, []);
+
+  useEffect(() => {
+    checkScroll();
+    const el = paperRef.current;
+    if (!el) return;
+
+    el.addEventListener("scroll", checkScroll);
+    window.addEventListener("resize", checkScroll);
+
+    // Content height can change after menu items / badges load in —
+    // ResizeObserver catches that without needing extra effect deps.
+    const resizeObserver = new ResizeObserver(checkScroll);
+    resizeObserver.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", checkScroll);
+      window.removeEventListener("resize", checkScroll);
+      resizeObserver.disconnect();
+    };
+  }, [checkScroll, isMenuOpen]);
+
   return (
     <Box>
       <CssBaseline>
@@ -108,26 +140,70 @@ export default function SideMenu(
           variant="permanent"
           open={isMenuOpen}
           sx={{
+            scollbarWidth: "none",
             "& .MuiDrawer-paper": {
               marginTop: "10px",
               marginBottom: "10px",
               marginLeft: "10px",
               height: "calc(100% - 20px)",
               "&::-webkit-scrollbar": {
-                width: 5,
+                width: 0,
               },
-              // maskImage:
-              //   "linear-gradient(to bottom, white 95%, transparent 100%)",
+            },
+          }}
+          slotProps={{
+            paper: {
+              ref: paperRef,
             },
           }}
         >
-          <Divider />
+          {/* Scroll hint: sticks to the top of the scrollable area once the
+              user has scrolled down, disappears again at the very top. */}
+          <Box
+            sx={{
+              position: "sticky",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 48,
+              mb: -5,
+              pointerEvents: "none",
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              zIndex: 1,
+              opacity: showTopScrollHint ? 1 : 0,
+              transition: "opacity 0.25s ease",
+              background: (theme) =>
+                `linear-gradient(to top, transparent, ${theme.palette.background.paper} 85%)`,
+            }}
+          >
+            <KeyboardArrowUp
+              fontSize="small"
+              sx={{
+                mt: 2.5,
+                color: "text.secondary",
+                animation: showTopScrollHint
+                  ? "bounceUp 1.4s infinite"
+                  : "none",
+                "@keyframes bounceUp": {
+                  "0%, 100%": { transform: "translateY(0)" },
+                  "50%": { transform: "translateY(-3px)" },
+                },
+              }}
+            />
+          </Box>
+
           <List
             onMouseEnter={() => setIsMenuOpen(true)}
             onMouseLeave={() => setIsMenuOpen(false)}
           >
             {sideMenuConfig.map((options, index) => (
-              <ListItem key={index} disablePadding sx={{ display: "block" }}>
+              <ListItem
+                key={index}
+                disablePadding
+                sx={{ display: "block", mb: 0 }}
+              >
                 <Tooltip title={options.label} placement="right">
                   <span>
                     <ListItemButton
@@ -238,6 +314,41 @@ export default function SideMenu(
               {!isMenuOpen ? <ChevronRight /> : <ChevronLeft />}
             </IconButton>
           </DrawerHeader>
+
+          {/* Scroll hint: sticks to the bottom of the scrollable area while
+              there's more content below, settles into place at the true end.
+              Fades out via opacity once the user has scrolled all the way down. */}
+          <Box
+            sx={{
+              position: "sticky",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 48,
+              mt: -6, // pulls it over the content instead of adding scroll length
+              pointerEvents: "none",
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              opacity: showScrollHint ? 1 : 0,
+              transition: "opacity 0.25s ease",
+              background: (theme) =>
+                `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 85%)`,
+            }}
+          >
+            <KeyboardArrowDown
+              fontSize="small"
+              sx={{
+                mb: 2,
+                color: "text.secondary",
+                animation: showScrollHint ? "bounceDown 1.4s infinite" : "none",
+                "@keyframes bounceDown": {
+                  "0%, 100%": { transform: "translateY(0)" },
+                  "50%": { transform: "translateY(3px)" },
+                },
+              }}
+            />
+          </Box>
         </Drawer>
       </CssBaseline>
     </Box>
