@@ -44,14 +44,14 @@ export default function NextEventHomeComponent(
                 color={"#fff"}
                 bgcolor={"#1976d2"}
                 sx={{
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   borderRadius: 1.5,
                 }}
               >
-                <SportsMma sx={{ fontSize: 28 }} />
+                <SportsMma sx={{ fontSize: 18 }} />
               </Grid>
-              <Typography variant="h5" fontWeight={"bold"}>
+              <Typography variant="h6" fontWeight={"bold"}>
                 Próximo Evento
               </Typography>
             </Grid>
@@ -108,6 +108,7 @@ export default function NextEventHomeComponent(
                           <Typography>{nextCompData?.name}</Typography>
                           {nextCompData?.has_registrations ? (
                             <Chip
+                              size={"small"}
                               variant="outlined"
                               color={
                                 nextCompData?.is_open
@@ -126,10 +127,12 @@ export default function NextEventHomeComponent(
                             ></Chip>
                           ) : null}
                           <Chip
+                            size={"small"}
                             label={nextCompData?.season}
                             variant="outlined"
                           ></Chip>
                           <Chip
+                            size={"small"}
                             label={
                               EncounterOptions.find(
                                 (item) =>
@@ -139,7 +142,11 @@ export default function NextEventHomeComponent(
                             variant="outlined"
                           ></Chip>
                           {nextCompData?.has_any_team ? (
-                            <Chip label="Equipas" variant="outlined"></Chip>
+                            <Chip
+                              size={"small"}
+                              label="Equipas"
+                              variant="outlined"
+                            ></Chip>
                           ) : null}
                         </Grid>
                       }

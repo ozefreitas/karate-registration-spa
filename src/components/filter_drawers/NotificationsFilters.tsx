@@ -87,7 +87,7 @@ export default function NotificationsFilters(
     <Box sx={{ width: 400 }} role="presentation">
       <List sx={{ p: 1, mt: 2 }}>
         <Grid container size={12}>
-          <Typography variant="h4" pl={2} mb={4}>
+          <Typography variant="h6" pl={2} mb={3}>
             Filtragem
           </Typography>
         </Grid>

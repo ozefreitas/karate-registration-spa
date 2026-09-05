@@ -2,6 +2,7 @@ import { Box, Typography, Paper } from "@mui/material";
 import { EncounterOptions } from "../../config";
 import { stringToColor } from "../../dashboard/utils/avatarColor";
 import { AccessTime, CalendarMonth, LocationOn } from "@mui/icons-material";
+import { ColoredIconBox } from "../icon-utils/boxes";
 
 interface EventDetailCardProps {
   date: string;
@@ -9,31 +10,6 @@ interface EventDetailCardProps {
   description: string;
   type: string;
   registration_state?: string;
-}
-
-function IconBox({
-  icon,
-  type,
-}: Readonly<{ icon: React.ReactNode; type: string }>) {
-  return (
-    <Box
-      sx={{
-        width: 48,
-        height: 48,
-        borderRadius: 2,
-        bgcolor:
-          EncounterOptions.find((item) => item.value === type)?.color ??
-          stringToColor("Competição/Torneio"),
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        color: "#fff",
-      }}
-    >
-      {icon}
-    </Box>
-  );
 }
 
 function InfoRow({
@@ -60,7 +36,15 @@ function InfoRow({
         bgcolor: "#fff",
       }}
     >
-      <IconBox icon={icon} type={type} />
+      <ColoredIconBox
+        border={"none"}
+        icon={icon}
+        bgColor={
+          EncounterOptions.find((item) => item.value === type)?.color ??
+          stringToColor("Competição/Torneio")
+        }
+        color={"#fff"}
+      />
       <Box>
         <Typography
           variant="caption"

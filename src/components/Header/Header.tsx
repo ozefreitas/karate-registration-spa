@@ -31,6 +31,7 @@ import {
   Logout,
   Refresh,
   Home,
+  OpenInNew,
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import {
@@ -42,6 +43,7 @@ import stringAvatar from "../../dashboard/utils/avatarColor";
 import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks, notificationsHooks, authHooks } from "../../hooks";
 import { formatTimeDifference } from "../../utils/utils";
+import { ColoredIconBox } from "../icon-utils/boxes";
 
 export default function Header(props: Readonly<{ me: any }>) {
   const navigate = useNavigate();
@@ -123,26 +125,6 @@ export default function Header(props: Readonly<{ me: any }>) {
     (item) => item.title === "Não permitido" && item.link === "unauthorized/",
   );
 
-  function IconBox({ icon }: Readonly<{ icon: React.ReactNode }>) {
-    return (
-      <Box
-        sx={{
-          width: 40,
-          height: 40,
-          borderRadius: 2,
-          bgcolor: "red",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          color: "#fff",
-        }}
-      >
-        {icon}
-      </Box>
-    );
-  }
-
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -150,7 +132,7 @@ export default function Header(props: Readonly<{ me: any }>) {
           sx={{
             borderRadius: 4,
             width: "99%",
-            margin: "auto",
+            // margin: "auto",
             backgroundColor: "#5a5a5a",
           }}
           position="static"
@@ -169,10 +151,10 @@ export default function Header(props: Readonly<{ me: any }>) {
                   style={{
                     width: "250px",
                     margin: "10px",
-                    marginTop: 30,
+                    marginTop: 20,
                     marginLeft: 0,
                     marginRight: 20,
-                    marginBottom: 30,
+                    marginBottom: 20,
                   }}
                   src={fighttecLogo}
                   alt=""
@@ -186,11 +168,12 @@ export default function Header(props: Readonly<{ me: any }>) {
               component="div"
               sx={{ flexGrow: 1 }}
             ></Typography>
-            <Stack alignItems="center" direction="row" spacing={3}>
+            <Stack alignItems="center" direction="row" spacing={2}>
               {currentSeason === "" ? null : (
                 <Chip
-                  sx={{ p: 2 }}
+                  sx={{ p: 1 }}
                   color="info"
+                  size="small"
                   label={`Época: ${currentSeason}`}
                 ></Chip>
               )}
@@ -215,7 +198,7 @@ export default function Header(props: Readonly<{ me: any }>) {
                       disableRipple
                       disableFocusRipple
                       disableElevation
-                      size="large"
+                      // size="large"
                     >
                       {props.me?.role === "main_admin" ||
                       props.me?.role === "single_admin"
@@ -261,12 +244,12 @@ export default function Header(props: Readonly<{ me: any }>) {
                                   notificationData?.total === 0 ||
                                   notificationData === null
                                     ? null
-                                    : 50,
+                                    : 42,
                                 width:
                                   notificationData?.total === 0 ||
                                   notificationData === null
                                     ? null
-                                    : 50,
+                                    : 42,
                                 bgcolor: notificationError
                                   ? "red"
                                   : notificationData?.total === 0 ||
@@ -280,13 +263,13 @@ export default function Header(props: Readonly<{ me: any }>) {
                                   height:
                                     notificationData?.total === 0 ||
                                     notificationData === null
-                                      ? 20
-                                      : 25,
+                                      ? 18
+                                      : 20,
                                   width:
                                     notificationData?.total === 0 ||
                                     notificationData === null
-                                      ? 20
-                                      : 25,
+                                      ? 18
+                                      : 20,
                                 }}
                               />
                             </Avatar>
@@ -516,9 +499,11 @@ export default function Header(props: Readonly<{ me: any }>) {
               >
                 <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
                   <ListItemIcon sx={{ px: 1 }}>
-                    <IconBox
+                    <ColoredIconBox
+                      bgColor={"red"}
+                      color={"#fff"}
                       icon={getNotificationTypeIcon(noti.type!)}
-                    ></IconBox>
+                    ></ColoredIconBox>
                   </ListItemIcon>
                   <ListItemText
                     sx={{
@@ -526,6 +511,7 @@ export default function Header(props: Readonly<{ me: any }>) {
                       pl: 3,
                       pr: 3,
                       "& .MuiListItemText-secondary": {
+                        fontSize: "0.65rem",
                         whiteSpace: "normal",
                         overflowWrap: "break-word",
                         wordBreak: "break-word",
@@ -560,9 +546,10 @@ export default function Header(props: Readonly<{ me: any }>) {
         <MenuItem
           disabled={notificationData?.total === 0 || notificationError !== null}
           onClick={() => navigate("/profile/list_notifications/")}
-          sx={{ p: 2, display: "flex", justifyContent: "center", gap: 3 }}
+          sx={{ p: 1.5, display: "flex", justifyContent: "center", gap: 2 }}
         >
           <Typography>Abrir todas as Notificações </Typography>
+          <OpenInNew fontSize="small"></OpenInNew>
           {notificationData?.total! > 5 ? (
             <Typography color="textDisabled">
               (+ {notificationData?.total! - 5}{" "}
@@ -578,10 +565,13 @@ export default function Header(props: Readonly<{ me: any }>) {
         <Breadcrumbs
           sx={{
             p: 3,
-            pb: 1,
+            pb: 0,
             display: "flex",
             alignItems: "stretch",
-            height: 80,
+            position: "sticky",
+            top: 0,
+            zIndex: (theme) => theme.zIndex.appBar - 1,
+            backgroundColor: "#f3f3f3",
           }}
         >
           {breadcrumbs.length === 0 ? (

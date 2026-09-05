@@ -333,13 +333,7 @@ export default function SingleMemberPage(
                       )}
                     </Grid>
                   )}
-                  <Grid
-                    container
-                    justifyContent="center"
-                    spacing={2}
-                    size={12}
-                    mt={10}
-                  >
+                  <Grid container size={12} mt={10}>
                     <Button
                       variant={
                         section === "personal_info" ? "contained" : "text"
@@ -352,7 +346,7 @@ export default function SingleMemberPage(
                         p: 1,
                         textTransform: "none",
                         fontWeight: "bold",
-                        fontSize: 16,
+                        fontSize: 12,
                       }}
                       onClick={() => {
                         changeSection("personal_info");
@@ -385,7 +379,7 @@ export default function SingleMemberPage(
                           p: 1,
                           textTransform: "none",
                           fontWeight: "bold",
-                          fontSize: 16,
+                          fontSize: 12,
                         }}
                         onClick={() => {
                           changeSection("payments_management");
@@ -416,7 +410,7 @@ export default function SingleMemberPage(
                         p: 1,
                         textTransform: "none",
                         fontWeight: "bold",
-                        fontSize: 16,
+                        fontSize: 12,
                       }}
                       onClick={() => {
                         changeSection("registration_history");
@@ -440,7 +434,7 @@ export default function SingleMemberPage(
                         p: 1,
                         textTransform: "none",
                         fontWeight: "bold",
-                        fontSize: 16,
+                        fontSize: 12,
                       }}
                       onClick={() => {
                         changeSection("results_history");

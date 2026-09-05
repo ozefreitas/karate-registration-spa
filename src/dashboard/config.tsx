@@ -39,61 +39,61 @@ export const getSideMenuConfig = (userRole: string) => {
     {
       name: "",
       label: "Início",
-      icon: <Home sx={{ color: "#e81c24" }} />,
+      icon: <Home sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/",
     },
     {
       name: "members",
       label: "Membros",
-      icon: <Person sx={{ color: "#e81c24" }} />,
+      icon: <Person sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/members/",
     },
     {
       name: "teams",
       label: "Equipas",
-      icon: <Groups sx={{ color: "#e81c24" }} />,
+      icon: <Groups sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/teams/",
     },
     {
       name: "events",
       label: "Eventos",
-      icon: <SportsMma sx={{ color: "#e81c24" }} />,
+      icon: <SportsMma sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/events/",
     },
     {
       name: "categories",
       label: "Escalões",
-      icon: <Category sx={{ color: "#e81c24" }} />,
+      icon: <Category sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/categories/",
     },
     {
       name: "notifications_manager",
       label: "Gestor de Notificações",
-      icon: <EditNotifications sx={{ color: "#e81c24" }} />,
+      icon: <EditNotifications sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/notifications_manager/",
     },
     {
       name: "payment_manager",
       label: "Gestor de Pagamentos",
-      icon: <PointOfSale sx={{ color: "#e81c24" }} />,
+      icon: <PointOfSale sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/payment_manager/",
     },
     {
       name: "rules",
       label: "Regras",
-      icon: <Rule sx={{ color: "#e81c24" }} />,
+      icon: <Rule sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/rules/",
     },
     {
       name: "classifications",
       label: "Classificações",
-      icon: <EmojiEvents sx={{ color: "#e81c24" }} />,
+      icon: <EmojiEvents sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/classifications/",
     },
     {
       name: "help",
       label: "Ajuda",
-      icon: <HelpCenter sx={{ color: "#e81c24" }} />,
+      icon: <HelpCenter sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/help/",
     },
     // {
@@ -105,7 +105,7 @@ export const getSideMenuConfig = (userRole: string) => {
     {
       name: "settings",
       label: "Definições",
-      icon: <AdminPanelSettings sx={{ color: "#e81c24" }} />,
+      icon: <AdminPanelSettings sx={{ color: "#e81c24" }} fontSize="small" />,
       to: "/settings/?section=accounts_manager",
     },
   ];
@@ -159,20 +159,25 @@ export const getAccountSideMenuConfig = (userRole: string) => {
     {
       name: "pricing",
       label: "Planos",
-      icon: <MonetizationOn />,
+      icon: <MonetizationOn fontSize="small" />,
       to: "/pricing/",
     },
-    { name: "news", label: "Novidades", icon: <Celebration />, to: "/news/" },
+    {
+      name: "news",
+      label: "Novidades",
+      icon: <Celebration fontSize="small" />,
+      to: "/news/",
+    },
     {
       name: "feedback",
       label: "Feedback",
-      icon: <Feedback />,
+      icon: <Feedback fontSize="small" />,
       to: "/feedback/",
     },
     {
       name: "contacts",
       label: "Contactos",
-      icon: <Phone />,
+      icon: <Phone fontSize="small" />,
       to: "/contacts/",
     },
   ];
@@ -240,96 +245,96 @@ export const NotificationTypeOptions: {
   value: string;
   icon: any;
 }[] = [
-  { value: "none", label: "Geral", icon: <Info fontSize="large" /> },
+  { value: "none", label: "Geral", icon: <Info /> },
   {
     value: "request",
     label: "Pedido de Conta",
-    icon: <RecordVoiceOver fontSize="large" />,
+    icon: <RecordVoiceOver />,
   },
   {
     value: "reset",
     label: "Reposição de Password",
-    icon: <Password fontSize="large" />,
+    icon: <Password />,
   },
   {
     value: "create_member",
     label: "Novo Membro Adicionado",
-    icon: <PersonAddAlt1 fontSize="large" />,
+    icon: <PersonAddAlt1 />,
   },
   {
     value: "member_updated",
     label: "Membro Atualizado",
-    icon: <ManageAccounts fontSize="large" />,
+    icon: <ManageAccounts />,
   },
   {
     value: "member_request",
     label: "Pedido de Adição de Membro",
-    icon: <QuestionMark fontSize="large" />,
+    icon: <QuestionMark />,
   },
   {
     value: "exam_prop",
     label: "Pedido de Proposta para Exame",
-    icon: <Upgrade fontSize="large" />,
+    icon: <Upgrade />,
   },
   {
     value: "rate_event",
     label: "Classificar Evento",
-    icon: <StarRate fontSize="large" />,
+    icon: <StarRate />,
   },
   {
     value: "registrations_closing",
     label: "Inscrições a Fechar",
-    icon: <Warning fontSize="large" />,
+    icon: <Warning />,
   },
   {
     value: "registrations_close",
     label: "Inscrições Encerradas",
-    icon: <EventBusy fontSize="large" />,
+    icon: <EventBusy />,
   },
   {
     value: "open_registrations",
     label: "Inscrições Abertas",
-    icon: <EventAvailable fontSize="large" />,
+    icon: <EventAvailable />,
   },
   {
     value: "draw_available",
     label: "Sorteio Disponível",
-    icon: <Casino fontSize="large" />,
+    icon: <Casino />,
   },
   {
     value: "draw_patched",
     label: "Sorteio Alterado",
-    icon: <Brush fontSize="large" />,
+    icon: <Brush />,
   },
   {
     value: "classifications_available",
     label: "Resultados Disponíveis",
-    icon: <EmojiEvents fontSize="large" />,
+    icon: <EmojiEvents />,
   },
   {
     value: "payment_available",
     label: "Pagamento Disponível",
-    icon: <AccountBalanceWallet fontSize="large" />,
+    icon: <AccountBalanceWallet />,
   },
   {
     value: "payment_overdue",
     label: "Pagamento Expirado",
-    icon: <HourglassDisabled fontSize="large" />,
+    icon: <HourglassDisabled />,
   },
   {
     value: "administrative",
     label: "Mensagem Administrativa",
-    icon: <Email fontSize="large" />,
+    icon: <Email />,
   },
   {
     value: "system",
     label: "Alterações de Sistema",
-    icon: <Settings fontSize="large" />,
+    icon: <Settings />,
   },
   {
     value: "danger",
     label: "Atenção Imediata!",
-    icon: <Report color="error" fontSize="large" />,
+    icon: <Report color="error" />,
   },
 ];
 

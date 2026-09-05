@@ -35,8 +35,8 @@ function StatRow({
     >
       <Grid container alignItems={"center"} spacing={3}>
         <Grid
-          width={45}
-          height={45}
+          width={40}
+          height={40}
           borderRadius={2}
           bgcolor={"#fdecea"}
           container
@@ -45,7 +45,7 @@ function StatRow({
         >
           {icon}
         </Grid>
-        <Typography variant="h6" sx={{ color: "#555", fontWeight: 500 }}>
+        <Typography sx={{ color: "#555", fontWeight: 500 }}>
           {label}
         </Typography>
       </Grid>
@@ -88,14 +88,14 @@ export default function MissingMemberQuotasCard({
               color={"#fff"}
               bgcolor={"#d32f2f"}
               sx={{
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 borderRadius: 1.5,
               }}
             >
-              <WarningAmber sx={{ fontSize: 28 }} />
+              <WarningAmber sx={{ fontSize: 18 }} />
             </Grid>
-            <Typography variant="h5" fontWeight={"bold"}>
+            <Typography variant="h6" fontWeight={"bold"}>
               Resumo de pagamentos mensais
             </Typography>
           </Grid>
@@ -127,13 +127,13 @@ export default function MissingMemberQuotasCard({
           ) : (
             <Grid px={2}>
               <StatRow
-                icon={<Groups sx={{ fontSize: 22 }} color="error" />}
+                icon={<Groups sx={{ fontSize: 18 }} color="error" />}
                 label="Número Total de Membros"
                 value={memberPaymentStatusData?.number!}
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
               <StatRow
-                icon={<Payments sx={{ fontSize: 22 }} color="error" />}
+                icon={<Payments sx={{ fontSize: 18 }} color="error" />}
                 label="Pagamentos por efetuar"
                 value={memberPaymentStatusData?.unpaid_members!}
               />

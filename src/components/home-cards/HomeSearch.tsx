@@ -50,7 +50,7 @@ export default function HomeSearch({
         sx={{
           m: 2,
           mb: 0,
-          zIndex: (theme) => theme.zIndex.modal + 1,
+          zIndex: (theme) => (open ? theme.zIndex.modal + 1 : "auto"),
           position: "relative",
         }}
       >
@@ -62,7 +62,7 @@ export default function HomeSearch({
             sx={{
               width: "100%",
               position: "relative",
-              zIndex: (theme) => theme.zIndex.modal + 1,
+              zIndex: (theme) => open ? theme.zIndex.modal + 1 : "auto",
             }}
             options={results}
             loading={loading}
@@ -121,6 +121,9 @@ export default function HomeSearch({
                 {...params}
                 placeholder="Procurar por primeiro nome, apelido, nome de evento, etc..."
                 size="small"
+                sx={{
+                  zIndex: 0,
+                }}
                 slotProps={{
                   input: {
                     ...params.InputProps,

@@ -16,8 +16,8 @@ import React, { useState } from "react";
 import { TransitionProps } from "notistack";
 import { membersHooks } from "../../hooks";
 import { CloudUpload, Delete, InsertDriveFile } from "@mui/icons-material";
-import IconBox from "../General/IconBox";
 import { RequestTypeEnum } from "../../openapi";
+import { ColoredIconBox } from "../icon-utils/boxes";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -151,10 +151,12 @@ export default function RequestModal(
                 sx={{ color: "#800f2f" }}
               >
                 <Grid container spacing={2}>
-                  <IconBox
+                  <ColoredIconBox
+                    bgColor={"red"}
+                    color={"#fff"}
+                    border={"1px solid red"}
                     icon={<InsertDriveFile></InsertDriveFile>}
-                    color="Aka"
-                  ></IconBox>
+                  />
                   <Grid>
                     <Typography sx={{ color: "black" }}>
                       {selectedFile.name}

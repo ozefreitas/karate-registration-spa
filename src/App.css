@@ -5,9 +5,13 @@ html {
 
 #root {
   /* max-width: 1280px; */
-  padding: 10px 0px 25px 75px;
+  padding: 10px 0px 25px 67px;
   background-color: #f3f3f3;
   zoom: 1;
+}
+
+.notistack-MuiContent {
+  font-size: 0.5rem;
 }
 
 .display-mode #root {

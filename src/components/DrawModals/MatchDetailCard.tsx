@@ -8,6 +8,7 @@ import {
   PersonOff,
 } from "@mui/icons-material";
 import { KataOptions } from "../../config";
+import { ColoredIconBox } from "../icon-utils/boxes";
 
 interface MatchDetailCardProps {
   isKata: boolean;
@@ -17,30 +18,6 @@ interface MatchDetailCardProps {
   reverse?: boolean;
   scoring?: boolean;
   team?: boolean;
-}
-
-function IconBox({
-  icon,
-  color,
-}: Readonly<{ icon: React.ReactNode; color: string }>) {
-  return (
-    <Box
-      sx={{
-        width: 48,
-        height: 48,
-        borderRadius: 2,
-        bgcolor: color === "Aka" ? "red" : "transparent",
-        border: color === "Aka" ? "1px solid red" : "1px solid black",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        color: color === "Aka" ? "#fff" : "black",
-      }}
-    >
-      {icon}
-    </Box>
-  );
 }
 
 function InfoRow({
@@ -71,11 +48,21 @@ function InfoRow({
       {reverse ? (
         <>
           {value}
-          <IconBox color={color} icon={icon} />
+          <ColoredIconBox
+            bgColor={color === "Aka" ? "red" : "transparent"}
+            color={color === "Aka" ? "#fff" : "black"}
+            border={color === "Aka" ? "1px solid red" : "1px solid black"}
+            icon={icon}
+          />
         </>
       ) : (
         <>
-          <IconBox color={color} icon={icon} />
+          <ColoredIconBox
+            bgColor={color === "Aka" ? "red" : "transparent"}
+            color={color === "Aka" ? "#fff" : "black"}
+            border={color === "Aka" ? "1px solid red" : "1px solid black"}
+            icon={icon}
+          />
           {value}
         </>
       )}

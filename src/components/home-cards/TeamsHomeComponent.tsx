@@ -44,16 +44,16 @@ export default function TeamsHomeComponent(
                 color={"#fff"}
                 bgcolor={"#1976d2"}
                 sx={{
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   borderRadius: 1.5,
                 }}
               >
-                <Groups sx={{ fontSize: 28 }} />
+                <Groups sx={{ fontSize: 18 }} />
               </Grid>
               <Grid size={10} container direction={"column"}>
-                <Typography variant="h5" fontWeight={"bold"}>
-                  Equipas editados recentemente
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Equipas editadas recentemente
                 </Typography>
                 <Typography>A mostrar 5 últimas Equipas</Typography>
               </Grid>
@@ -124,21 +124,29 @@ export default function TeamsHomeComponent(
                             }}
                           >
                             <Chip
+                              size={"small"}
                               variant="outlined"
                               label={team.category.name}
                             ></Chip>
-                            <Chip variant="outlined" label={team.gender}></Chip>
                             <Chip
+                              size={"small"}
+                              variant="outlined"
+                              label={team.gender}
+                            ></Chip>
+                            <Chip
+                              size={"small"}
                               variant="outlined"
                               color="warning"
                               label={`Nº: ${team.team_number}`}
                             ></Chip>
                             <Chip
+                              size={"small"}
                               variant="outlined"
                               color="primary"
                               label={`Evento: ${team.events}`}
                             ></Chip>
                             <Chip
+                              size={"small"}
                               variant="outlined"
                               color="secondary"
                               label={`Modalidade: ${team.disciplines}`}

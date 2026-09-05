@@ -1,5 +1,5 @@
 import { Paper, Typography } from "@mui/material";
-import IconBox from "./IconBox";
+import { ColoredIconBox } from "../icon-utils/boxes";
 
 export default function InfoRow({
   color,
@@ -39,11 +39,21 @@ export default function InfoRow({
       {reverse ? (
         <>
           <Typography>{value}</Typography>
-          <IconBox color={color} icon={icon} />
+          <ColoredIconBox
+            bgColor={color === "Aka" ? "red" : "transparent"}
+            color={color === "Aka" ? "#fff" : "black"}
+            border={color === "Aka" ? "1px solid red" : "1px solid black"}
+            icon={icon}
+          />
         </>
       ) : (
         <>
-          <IconBox color={color} icon={icon} />
+          <ColoredIconBox
+            bgColor={color === "Aka" ? "red" : "transparent"}
+            color={color === "Aka" ? "#fff" : "black"}
+            border={color === "Aka" ? "1px solid red" : "1px solid black"}
+            icon={icon}
+          />
           <Typography>{value}</Typography>
         </>
       )}

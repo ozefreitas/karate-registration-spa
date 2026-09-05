@@ -39,7 +39,7 @@ import SignUpWithTokenPage from "./pages/auth/SignUpWithTokenPage";
 import PasswordResetPage from "./pages/auth/PasswordResetPage";
 import { useEffect } from "react";
 import { useAuth } from "./access/GlobalAuthProvider";
-import { SnackbarProvider } from "notistack";
+import { MaterialDesignContent, SnackbarProvider } from "notistack";
 import WIPPage from "./pages/ErrorPages/WIPPage";
 // import SnackbarCloser from "./dashboard/SnackBarCloser";
 import PaymentManagerPage from "./pages/PaymentsPages/PaymentManagerPage";
@@ -54,6 +54,7 @@ import DynamicViewPage from "./pages/DrawPage/DynamicViewPage";
 import EventClassificationDetailsPage from "./pages/ClassificationsPage/EventClassificationDetailsPage";
 import MainProfilePage from "./pages/ProfilePages/MainProfilePage";
 import PageWithBackButton from "./layouts/PageWithBackButton";
+import { styled } from "@mui/material";
 
 function App() {
   const { user, isAuthLoading } = useAuth();
@@ -74,8 +75,22 @@ function App() {
     } else return <NotFoundPage />;
   };
 
+  const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
+    "&.notistack-MuiContent-success": {
+      fontSize: "0.65rem",
+    },
+    "&.notistack-MuiContent-error": {
+      fontSize: "0.65rem",
+    },
+  }));
+
   return (
-    <SnackbarProvider>
+    <SnackbarProvider
+      Components={{
+        success: StyledMaterialDesignContent,
+        error: StyledMaterialDesignContent,
+      }}
+    >
       <BrowserRouter>
         {/* <SnackbarCloser /> */}
         <ScrollToTop>
