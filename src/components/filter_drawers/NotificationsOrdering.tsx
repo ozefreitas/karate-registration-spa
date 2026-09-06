@@ -75,6 +75,13 @@ export default function NotificationsOrdering(
                       label={item.label}
                       fullWidth
                       select
+                      slotProps={{
+                        input: {
+                          style: {
+                            fontSize: 13,
+                          },
+                        },
+                      }}
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     >
@@ -116,7 +123,7 @@ export default function NotificationsOrdering(
       </List>
       <Grid size={12} mt={5} mx={10} container>
         <Button
-        disabled={props.changedCount === 0}
+          disabled={props.changedCount === 0}
           color="error"
           sx={{ width: "100%" }}
           onClick={() => props.reset()}

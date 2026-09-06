@@ -66,6 +66,7 @@ export default function EventsFilters(
                     htmlInput: {
                       inputMode: "numeric",
                       pattern: "[0-9]*",
+                      fontSize: 13,
                     },
                   }}
                   fullWidth

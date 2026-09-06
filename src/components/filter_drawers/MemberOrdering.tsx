@@ -75,6 +75,13 @@ export default function MemberOrdering(
                       label={item.label}
                       fullWidth
                       select
+                      slotProps={{
+                        input: {
+                          style: {
+                            fontSize: 13,
+                          },
+                        },
+                      }}
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     >
@@ -153,7 +160,20 @@ export default function MemberOrdering(
             overlap="circular"
           />
         </Button>
-        <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+        <Drawer
+          anchor="right"
+          sx={{
+            scollbarWidth: "none",
+            "& .MuiDrawer-paper": {
+              marginTop: "25px",
+              marginBottom: "25px",
+              marginRight: "25px",
+              height: "calc(100% - 50px)",
+            },
+          }}
+          open={open}
+          onClose={toggleDrawer(false)}
+        >
           {DrawerList}
         </Drawer>
       </Grid>

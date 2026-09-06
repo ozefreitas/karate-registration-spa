@@ -24,15 +24,17 @@ const FiltersBadge = styled(Badge)`
   }
 `;
 
-export default function QuotesOrdering(props: {
-  isLoading: boolean;
-  control: any;
-  errors: any;
-  reset: any;
-  changedCount: number;
-  orderFields: any;
-  setOrderFields: any;
-}) {
+export default function QuotesOrdering(
+  props: Readonly<{
+    isLoading: boolean;
+    control: any;
+    errors: any;
+    reset: any;
+    changedCount: number;
+    orderFields: any;
+    setOrderFields: any;
+  }>,
+) {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -73,6 +75,13 @@ export default function QuotesOrdering(props: {
                       label={item.label}
                       fullWidth
                       select
+                      slotProps={{
+                        input: {
+                          style: {
+                            fontSize: 13,
+                          },
+                        },
+                      }}
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     >
