@@ -14,7 +14,7 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
 
   return (
     <>
-      <Card sx={{ m: 2, mt: 0 }}>
+      <Card sx={{ m: 2 }}>
         <CardHeader
           title={`Bem-vindo à plataforma de registos da ${
             import.meta.env.VITE_DISPLAY_BUTTON_SIGLA

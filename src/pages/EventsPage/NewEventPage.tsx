@@ -511,7 +511,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
         }
         title="Novo Evento"
       ></PageInfoCard>
-      <Grid container>
+      <Grid container spacing={2}>
         <FormCard title="Tipo de Evento">
           <Grid sx={{ p: 2 }} size={6}>
             <Controller
@@ -1450,7 +1450,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         </FormAccordion>
         <Grid
-          mr={6}
+          mr={4}
           mt={2}
           justifyContent="flex-end"
           spacing={2}
@@ -1460,7 +1460,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           <Button
             id="add_event_button"
             variant="contained"
-            size={"large"}
             color={"success"}
             type={"submit"}
             loading={loading}
@@ -1473,7 +1472,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
           </Button>
           <Button
             variant="outlined"
-            size={"small"}
             type={"submit"}
             onClick={() => {
               navigate("/events/");

@@ -33,7 +33,7 @@ export default function CategoriesOrdering(
     changedCount: number;
     orderFields: any;
     setOrderFields: any;
-  }>
+  }>,
 ) {
   const [open, setOpen] = React.useState(false);
 
@@ -75,6 +75,13 @@ export default function CategoriesOrdering(
                       label={item.label}
                       fullWidth
                       select
+                      slotProps={{
+                        input: {
+                          style: {
+                            fontSize: 13,
+                          },
+                        },
+                      }}
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     >

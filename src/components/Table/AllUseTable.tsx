@@ -391,13 +391,13 @@ export default function AllUseTable(
   }>(({ theme, selection }) => ({
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
-      fontSize: 17,
+      fontSize: 15,
       paddingTop: selection ? 0 : 10,
       paddingBottom: selection ? 0 : 10,
       color: theme.palette.common.black,
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 15,
+      fontSize: 13,
       paddingTop: 10,
       paddingBottom: 10,
     },

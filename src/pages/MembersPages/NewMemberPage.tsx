@@ -242,7 +242,7 @@ export default function NewMemberPage() {
         }
         title="Novo Atleta"
       ></PageInfoCard>
-      <Grid container>
+      <Grid container spacing={2}>
         <FormCard title="Dados Pessoais">
           <Grid p={2} size={6}>
             <Controller
@@ -1017,8 +1017,8 @@ export default function NewMemberPage() {
           </FormCard>
         ) : null}
         <Grid
-          m={3}
-          mr={6}
+          m={2}
+          mr={4}
           mb={0}
           justifyContent="flex-end"
           alignItems="center"
@@ -1028,7 +1028,6 @@ export default function NewMemberPage() {
         >
           <Button
             variant="contained"
-            size={"large"}
             color={"success"}
             type={"submit"}
             loading={loading}
@@ -1040,7 +1039,6 @@ export default function NewMemberPage() {
           <Button
             id="add_another_button"
             variant="contained"
-            size={"large"}
             color={"success"}
             type={"submit"}
             loading={loading}
@@ -1051,7 +1049,6 @@ export default function NewMemberPage() {
           </Button>
           <Button
             variant="outlined"
-            size="medium"
             onClick={() => {
               navigate("/members/");
             }}

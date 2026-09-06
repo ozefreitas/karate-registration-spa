@@ -20,8 +20,7 @@ import AddButton from "../../components/Buttons/AddButton";
 import { membersHooks } from "../../hooks";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { MemberTypes } from "../../config";
-import MemberFilters from "../../components/filter_drawers/MemberFilters";
-import MemberOrdering from "../../components/filter_drawers/MemberOrdering";
+import MemberOrdering from "../../components/Members/members-filters/MemberOrdering";
 import { useForm } from "react-hook-form";
 import {
   VerifiedUser,
@@ -35,6 +34,7 @@ import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import { RequestTypeEnum } from "../../openapi";
+import MemberFiltering from "../../components/Members/members-filters/MemberFiltering";
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
@@ -130,7 +130,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     watch: filtersWatch,
     setValue: filtersSetValue,
     reset: filtersReset,
-    formState: { errors: filtersErrors, dirtyFields: filtersDirtyFields },
+    formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
       quotesLegible: false,
@@ -385,17 +385,15 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 orderFields={orderFields}
                 setOrderFields={setOrderFields}
               ></MemberOrdering>
-              <MemberFilters
+              <MemberFiltering
                 isLoading={isMembersDataLoading}
                 control={filtersControl}
                 setValue={filtersSetValue}
                 reset={filtersReset}
-                errors={filtersErrors}
                 changedCount={filtersChangedCount}
                 setSelectedUsers={setSelectedUsers}
-                userRole={props.userRole}
                 setPage={setPage}
-              ></MemberFilters>
+              ></MemberFiltering>
               <Grid pl={2} container spacing={1} borderRadius={3}>
                 <Tooltip placement="top" title={"Vista de Tabela"}>
                   <span>
