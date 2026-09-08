@@ -11,7 +11,7 @@ import { Add, Check, Close } from "@mui/icons-material";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddEventCategoriesModal from "../../components/Categories/AddEventCategoriesModal";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { getFullDate } from "../../utils/utils";
 import NotFoundPage from "../ErrorPages/NotFoundPage";
@@ -19,8 +19,6 @@ import NotFoundPage from "../ErrorPages/NotFoundPage";
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  const navigate = useNavigate();
-
   const { id: eventId } = useParams<{ id: string }>();
   const {
     data: singleEventData,

@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import InfoBaseModal from "../base-modals/InfoBaseModal";
-import { disciplinesHooks, drawsHooks, membersHooks } from "../../hooks";
+import { disciplinesHooks, drawsHooks } from "../../hooks";
 import { useEffect, useMemo, useState } from "react";
 import {
   Add,
@@ -45,7 +45,6 @@ export default function ReGenBracketDrawModal(
   const {
     control,
     handleSubmit,
-    setError,
     watch,
     setValue,
     reset,
@@ -69,13 +68,12 @@ export default function ReGenBracketDrawModal(
     useState<boolean>(false);
   const [isAddAthletesSectionOpen, setIsAddAthletesSectionOpen] =
     useState<boolean>(false);
-  const { data: bracketMembersData, isLoading: isBracketMembersLoading } =
+  const { data: bracketMembersData } =
     drawsHooks.useMembersPerBracketData(props.bracketInfo?.id);
-  const { data: bracketTeamsData, isLoading: isBracketTeamsLoading } =
+  const { data: bracketTeamsData } =
     drawsHooks.useTeamsPerBracketData(props.bracketInfo?.id);
   const {
     data: singleDisciplinesData,
-    isLoading: isSingleDisciplinesLoading,
     refetch: refetchSingleDisciplineData,
   } = disciplinesHooks.useFetchSingleDisciplines(props.bracketInfo?.discipline);
 

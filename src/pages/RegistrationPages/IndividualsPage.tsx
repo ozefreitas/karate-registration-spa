@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -33,7 +33,6 @@ import {
 
 export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
   const { id: eventId } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCategoriesListModalOpen, setIsCategoriesListModalOpen] =
     useState<boolean>(false);

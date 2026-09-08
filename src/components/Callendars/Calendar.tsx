@@ -61,7 +61,7 @@ export default function Calendar(
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
   const [currentSeason, setCurrentSeason] = useState<string>("");
-  console.log(currentSeason)
+  console.log(currentSeason);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [listModalOpen, setListModalOpen] = useState(false);
 
@@ -166,7 +166,7 @@ export default function Calendar(
     props.filters("has_teams") === false ? undefined : true,
     props.filters("has_categories") === false ? undefined : true,
     props.filters("has_registrations") === false ? undefined : true,
-    `${year}-${month < 9 ? "0" : ""}${month.toString()}`,
+    `${year}-${month <= 9 ? "0" : ""}${month.toString()}`,
     undefined,
     props.filters("isOngoing") === false ? undefined : true,
     currentView === "calendar",
@@ -190,7 +190,7 @@ export default function Calendar(
         </IconButton>
         <Tooltip title={"Selecionar Mês e Ano"} placement="top">
           <Typography
-            variant="h4"
+            variant="h5"
             color="info"
             fontWeight={700}
             onClick={() => setPickerOpen(true)}
@@ -266,7 +266,7 @@ export default function Calendar(
                       textAlign: "center",
                       py: 2,
                       fontWeight: 700,
-                      fontSize: "1.1rem",
+                      fontSize: "0.9rem",
                       letterSpacing: 1,
                     }}
                   >
@@ -351,7 +351,7 @@ export default function Calendar(
                                   alignItems: "center",
                                   justifyContent: "center",
                                   fontWeight: todayCell ? 800 : 400,
-                                  fontSize: todayCell ? "1.5rem" : "0.95rem",
+                                  fontSize: todayCell ? "1.2rem" : "0.86rem",
                                 }}
                               >
                                 {day}
@@ -404,7 +404,7 @@ export default function Calendar(
                                         )?.color,
                                         color: "#fff",
                                         fontWeight: 600,
-                                        fontSize: "0.72rem",
+                                        fontSize: "0.7rem",
                                         height: 22,
                                         textDecoration:
                                           new Date(year, month - 1, day) <
@@ -439,7 +439,7 @@ export default function Calendar(
                                         bgcolor: "grey.300",
                                         color: "#fff",
                                         fontWeight: 700,
-                                        fontSize: "0.72rem",
+                                        fontSize: "0.7rem",
                                         height: 22,
                                         cursor: "pointer",
                                         letterSpacing: isHovered ? 0 : "0.05em",
@@ -461,7 +461,7 @@ export default function Calendar(
                                 sx={{
                                   color: "#fff",
                                   fontWeight: 600,
-                                  fontSize: "0.72rem",
+                                  fontSize: "0.7rem",
                                   height: 22,
                                   cursor: "pointer",
                                   "& .MuiChip-label": { px: 1 },

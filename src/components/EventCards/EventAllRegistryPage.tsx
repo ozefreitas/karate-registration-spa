@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import AllUseTable from "../Table/AllUseTable";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import PageInfoCard from "../info-cards/PageInfoCard";
 import { formatDateTime, getFullDate } from "../../utils/utils";
 import { ContentCopy } from "@mui/icons-material";
@@ -19,7 +19,6 @@ export default function EventAllRegistryPage(
   props: Readonly<{ userRole: string }>,
 ) {
   const { id: eventId } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [disciplineToDuplicate, setDisciplineToDuplicate] =
     useState<string>("");
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] =

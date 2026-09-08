@@ -28,6 +28,7 @@ export class PersonsService {
      * @param ordering Which field to use when ordering the results.
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
+     * @param q Full-text search across name fields
      * @returns PaginatedPersonsList
      * @throws ApiError
      */
@@ -45,6 +46,7 @@ export class PersonsService {
         ordering?: string,
         page?: number,
         pageSize?: number,
+        q?: string,
     ): CancelablePromise<PaginatedPersonsList> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -63,6 +65,7 @@ export class PersonsService {
                 'ordering': ordering,
                 'page': page,
                 'page_size': pageSize,
+                'q': q,
             },
         });
     }

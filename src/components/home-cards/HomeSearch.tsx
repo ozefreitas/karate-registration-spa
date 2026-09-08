@@ -14,10 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-// Human-readable labels for each `type` your endpoint returns.
-// Extend this as you add more searchable models.
 const TYPE_LABELS: Record<string, string> = {
   person: "Membros",
   team: "Equipas",
@@ -62,7 +60,7 @@ export default function HomeSearch({
             sx={{
               width: "100%",
               position: "relative",
-              zIndex: (theme) => open ? theme.zIndex.modal + 1 : "auto",
+              zIndex: (theme) => (open ? theme.zIndex.modal + 1 : "auto"),
             }}
             options={results}
             loading={loading}

@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Grid, Chip } from "@mui/material";
+import { Typography, Paper, Grid, Chip } from "@mui/material";
 import {
   Person,
   SportsMartialArts,

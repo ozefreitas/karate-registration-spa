@@ -1,8 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Grid,
-  Box,
-  CircularProgress,
   ListItem,
   ListItemText,
   Typography,
@@ -14,6 +12,9 @@ import {
   Avatar,
   Chip,
   Button,
+  TextField,
+  CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
@@ -29,6 +30,7 @@ import {
   TableRows,
   CreditCard,
   Add,
+  Search,
 } from "@mui/icons-material";
 import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -38,9 +40,19 @@ import MemberFiltering from "../../components/Members/members-filters/MemberFilt
 
 export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
+  const [query, setQuery] = useState<string>("");
+  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const [searchParams, setSearchParams] = useSearchParams();
   const paramPage = searchParams.get("page") ?? "1";
   const paramPageSize = searchParams.get("page_size") ?? "10";
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
 
   const changePage = (number: string) => {
     setSearchParams((prev) => {
@@ -63,7 +75,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
       newParams.delete("page_size");
       setSearchParams(newParams);
       setPage(Number(paramPage));
-      // setPageSize(Number(paramPageSize));
+      // setPageSize(Number(paramPageSize));-
     }
   }, [paramPage, paramPageSize, currentView]);
 
@@ -222,6 +234,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("quotesOverdue") ? "unpaid" : undefined,
     filtersWatch("isValidated") ? true : undefined,
     selectedUsers === "" ? undefined : selectedUsers,
+    debouncedQuery,
   );
 
   const memberRows = useMemo(() => {
@@ -375,7 +388,37 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 </Grid>
               </>
             ) : null}
-            <Grid container spacing={2}>
+            <Grid container spacing={2} alignItems={"center"}>
+              <TextField
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Primeiro nome/apelido..."
+                variant="outlined"
+                size="small"
+                sx={{
+                  // bgcolor: "white",
+                  "& .MuiOutlinedInput-root": {
+                    height: 42,
+                  },
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search fontSize="small" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <>
+                        {isMembersDataLoading ? (
+                          <CircularProgress size={16} />
+                        ) : null}
+                        {/* {params.InputProps.endAdornment} */}
+                      </>
+                    ),
+                  },
+                }}
+              />
               <MemberOrdering
                 isLoading={isMembersDataLoading}
                 control={orderControl}
@@ -451,11 +494,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             {membersData?.count} Membro(s).
           </Typography>
         ) : null}
-        {isMembersDataLoading ? (
-          <Box mt={5} display={"flex"} justifyContent={"center"}>
-            <CircularProgress />
-          </Box>
-        ) : membersError ? (
+        {membersError ? (
           <Grid my={3} container justifyContent="center" size={12}>
             <ListItem sx={{ textAlign: "center" }}>
               <ListItemText primary="Ocorreu um erro ao encontrar os Membros disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
@@ -472,12 +511,13 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               Refrescar
             </Button>
           </Grid>
-        ) : membersData === undefined ? null : currentView === "table" ? (
+        ) : currentView === "table" ? (
           <Grid mt={3}>
             <AllUseTable
               type="Atletas"
+              loading={isMembersDataLoading}
               data={memberRows}
-              count={membersData?.count}
+              count={membersData?.count ?? 0}
               columnsHeaders={columnMaping}
               actions
               editable={["main_admin", "superuser", "subed_club"].includes(

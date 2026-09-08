@@ -30,6 +30,7 @@ export class EventsService {
      * @param ordering Which field to use when ordering the results.
      * @param page A page number within the paginated result set.
      * @param pageSize Number of results to return per page.
+     * @param q Full-text search across name fields
      * @param season
      * @returns PaginatedCompactEventsList
      * @throws ApiError
@@ -45,6 +46,7 @@ export class EventsService {
         ordering?: string,
         page?: number,
         pageSize?: number,
+        q?: string,
         season?: string,
     ): CancelablePromise<PaginatedCompactEventsList> {
         return __request(OpenAPI, {
@@ -61,6 +63,7 @@ export class EventsService {
                 'ordering': ordering,
                 'page': page,
                 'page_size': pageSize,
+                'q': q,
                 'season': season,
             },
         });

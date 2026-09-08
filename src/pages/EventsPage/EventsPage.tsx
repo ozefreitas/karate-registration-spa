@@ -11,6 +11,8 @@ import {
   Button,
   IconButton,
   Tooltip,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import EventsFilters from "../../components/filter_drawers/EventsFilters";
 import EventsOrdering from "../../components/filter_drawers/EventsOrdering";
@@ -25,6 +27,7 @@ import {
   Subject,
   East,
   Groups,
+  Search,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useEffect, useState } from "react";
@@ -37,11 +40,20 @@ import { getFullDate } from "../../utils/utils";
 
 export default function EventsPage(props: Readonly<{ userRole: string }>) {
   const navigate = useNavigate();
-
+  const [query, setQuery] = useState<string>("");
+  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [currentView, setCurrentView] = useState(() => {
     return localStorage.getItem("eventsView") ?? "list";
   });
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
 
   useEffect(() => {
     localStorage.setItem("eventsView", currentView);
@@ -132,6 +144,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     filtersWatch("isOngoing") === false ? undefined : true,
     // props.userRole === "technician" ? true : undefined,
     currentView === "list",
+    debouncedQuery,
   );
 
   const infoCard: ReactNode =
@@ -192,15 +205,46 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             >
               {props.userRole === "technician" ? null : currentView ===
                 "list" ? (
-                <EventsOrdering
-                  isLoading={isEventsDataLoading}
-                  control={orderControl}
-                  reset={orderReset}
-                  errors={orderErrors}
-                  changedCount={orderChangedCount}
-                  orderFields={orderFields}
-                  setOrderFields={setOrderFields}
-                ></EventsOrdering>
+                <>
+                  <TextField
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Nome do Evento..."
+                    variant="outlined"
+                    size="small"
+                    sx={{
+                      // bgcolor: "white",
+                      "& .MuiOutlinedInput-root": {
+                        height: 42,
+                      },
+                    }}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Search fontSize="small" />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <>
+                            {isEventsDataLoading ? (
+                              <CircularProgress size={16} />
+                            ) : null}
+                          </>
+                        ),
+                      },
+                    }}
+                  />
+                  <EventsOrdering
+                    isLoading={isEventsDataLoading}
+                    control={orderControl}
+                    reset={orderReset}
+                    errors={orderErrors}
+                    changedCount={orderChangedCount}
+                    orderFields={orderFields}
+                    setOrderFields={setOrderFields}
+                  ></EventsOrdering>
+                </>
               ) : null}
               {props.userRole === "technician" ? null : (
                 <EventsFilters
