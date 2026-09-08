@@ -54,6 +54,7 @@ export const useFetchMembersData = (
   monthlyPaymentStatus?: string,
   isValidated?: boolean,
   users?: string,
+  q?: string,
 ): UseQueryResult<PaginatedResponse<Members>> => {
   return useQuery({
     queryKey: [
@@ -67,6 +68,7 @@ export const useFetchMembersData = (
       monthlyPaymentStatus,
       isValidated,
       users,
+      q,
     ],
     queryFn: () =>
       PersonsService.personsList(
@@ -83,6 +85,7 @@ export const useFetchMembersData = (
         ordering,
         page,
         pageSize,
+        q,
       ).then((res) => res as unknown as PaginatedResponse<Members>),
     refetchOnWindowFocus: false,
     // refetchOnMount: false,
@@ -150,7 +153,7 @@ export const useFetchCoachesNotInEvent = (
   eventId: string,
   page: number,
   pageSize: number,
-  disciplineId?: string
+  disciplineId?: string,
 ): UseQueryResult<PaginatedResponse<NotInEventCoaches>> => {
   return useQuery({
     queryKey: ["coaches-notin-event", eventId, page, pageSize, disciplineId],

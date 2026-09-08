@@ -20,6 +20,7 @@ import {
   Stack,
   Box,
   Checkbox,
+  Skeleton,
 } from "@mui/material";
 import {
   Edit,
@@ -138,6 +139,7 @@ export default function AllUseTable(
       | "Plano";
     discipline?: any;
     data: any;
+    loading?: boolean;
     count: number;
     columnsHeaders: any;
     actions: boolean;
@@ -493,7 +495,50 @@ export default function AllUseTable(
 
   return (
     <>
-      {props.data?.length === 0 ? (
+      {props.loading ? (
+        <Grid container m={2}>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="loading table">
+              <TableHead>
+                <StyledTableRow header>
+                  {props.selection ? <StyledTableCell selection /> : null}
+                  {props.columnsHeaders.map((_header: any, index: number) => (
+                    <StyledTableCell key={index}>
+                      <Skeleton variant="text" />
+                    </StyledTableCell>
+                  ))}
+                  {props.actions ? <StyledTableCell /> : null}
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {Array.from({ length: 5 }).map((_, rowIndex) => (
+                  <StyledTableRow key={rowIndex} header>
+                    {props.selection ? (
+                      <StyledTableCell selection>
+                        <Skeleton
+                          variant="rectangular"
+                          width={24}
+                          height={24}
+                        />
+                      </StyledTableCell>
+                    ) : null}
+                    {props.columnsHeaders.map((_: any, columnIndex: number) => (
+                      <StyledTableCell key={columnIndex}>
+                        <Skeleton variant="text" />
+                      </StyledTableCell>
+                    ))}
+                    {props.actions ? (
+                      <StyledTableCell>
+                        <Skeleton variant="circular" width={28} height={28} />
+                      </StyledTableCell>
+                    ) : null}
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      ) : props.data?.length === 0 ? (
         <Grid my={5} container justifyContent="center" size={12}>
           <Typography variant="subtitle1" color="textDisabled">
             Não foram encontrados registos.

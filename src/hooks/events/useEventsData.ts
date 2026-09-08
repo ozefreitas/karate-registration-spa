@@ -15,6 +15,7 @@ export const useFetchEventsData = (
   day?: string,
   isOngoing?: boolean,
   enabled?: boolean,
+  q?: string,
 ) => {
   return useQuery({
     queryKey: [
@@ -30,6 +31,7 @@ export const useFetchEventsData = (
       month,
       day,
       isOngoing,
+      q,
     ],
     queryFn: () =>
       EventsService.eventsList(
@@ -43,6 +45,7 @@ export const useFetchEventsData = (
         ordering,
         page,
         pageSize,
+        q,
         season,
       ),
     refetchOnWindowFocus: false,

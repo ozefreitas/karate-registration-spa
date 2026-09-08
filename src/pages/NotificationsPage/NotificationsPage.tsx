@@ -7,7 +7,6 @@ import {
   CardContent,
   IconButton,
   Tooltip,
-  Box,
 } from "@mui/material";
 import { notificationsHooks } from "../../hooks";
 import { useState } from "react";

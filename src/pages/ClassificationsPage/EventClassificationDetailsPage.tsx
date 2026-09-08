@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { drawsHooks } from "../../hooks";
 import {
-  Button,
   Card,
   CardContent,
   Chip,
@@ -20,9 +19,6 @@ const EventClassificationDetailsPage = () => {
     undefined,
   );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const [page, setPage] = useState<number>(1);
-  // const [pageSize, setPageSize] = useState<number>(10);
-  const navigate = useNavigate();
 
   const handleModalOpen = (bracketId: string) => {
     setSelectedBracket(bracketId);
