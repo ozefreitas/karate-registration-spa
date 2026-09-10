@@ -65,7 +65,7 @@ const PageInfoCard = (props: {
       gap={3}
       alignItems={"center"}
     >
-      <Typography variant="h4">{props.title}</Typography>
+      <Typography variant="h5Half">{props.title}</Typography>
       {props.description ? (
         <>
           <Box

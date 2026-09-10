@@ -1,32 +1,9 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   ClubSettingsService,
-  ClubsService,
   ClubSubscriptionConfigService,
   ClubSubscriptionService,
 } from "../../openapi";
-import { PaginatedResponse } from "../types";
-
-interface AvailableClubs {
-  id: string;
-  club: string;
-  is_registered: boolean;
-  name: string;
-}
-
-export const useFetchAvailableClubs = (): UseQueryResult<
-  PaginatedResponse<AvailableClubs>
-> => {
-  return useQuery({
-    queryKey: ["available-clubs"],
-    queryFn: () =>
-      ClubsService.clubsList().then(
-        (res) => res as unknown as PaginatedResponse<AvailableClubs>,
-      ),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
-};
 
 export const useFetchClubSubscriptions = (
   search: string,

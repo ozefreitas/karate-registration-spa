@@ -110,6 +110,7 @@ export default function PersonalInfoSection(
           ? "N/A"
           : props.memberData?.id_number,
       gender: props.memberData?.gender,
+      club: props.memberData?.club,
       taxNumber:
         props.memberData?.taxpayer_number === null
           ? "N/A"
@@ -155,6 +156,7 @@ export default function PersonalInfoSection(
           ? "N/A"
           : props.memberData?.id_number,
       gender: props.memberData?.gender,
+      club: props.memberData?.club,
       taxNumber:
         props.memberData?.taxpayer_number === null
           ? "N/A"
@@ -355,13 +357,7 @@ export default function PersonalInfoSection(
 
   return (
     <Grid>
-      <Grid
-        size={12}
-        container
-        justifyContent={"space-between"}
-        mb={3}
-        spacing={2}
-      >
+      <Grid size={12} container justifyContent={"flex-end"} mb={2} spacing={1}>
         <Grid>
           {["superuser", "subed_club"].includes(userRole!) ? (
             <Grid>
@@ -388,70 +384,70 @@ export default function PersonalInfoSection(
             </Grid>
           ) : null}
         </Grid>
-        <Grid container>
-          {isEditMode ? (
-            <>
-              <Button
-                id="update_button"
-                variant="contained"
-                color="success"
-                onClick={() => {
-                  handleSubmit(onSubmit)();
-                  setIsEditMode(false);
-                }}
-                startIcon={<Update />}
-              >
-                Atualizar
-              </Button>
-              <Button
-                id="escape_button"
-                variant="contained"
-                color="inherit"
-                onClick={() => {
-                  reset();
-                  setIsEditMode(false);
-                }}
-                startIcon={<Clear />}
-              >
-                Cancelar
-              </Button>
-            </>
-          ) : (
+        {isEditMode ? (
+          <>
             <Button
+              id="update_button"
               variant="contained"
+              color="success"
               size="small"
-              color="warning"
               onClick={() => {
-                if (isEditMode === false) {
-                  if (getValues("address") === "N/A") {
-                    setValue("address", "");
-                  }
-                  if (getValues("conditions") === "N/A") {
-                    setValue("conditions", "");
-                  }
-                  if (getValues("observations") === "N/A") {
-                    setValue("observations", "");
-                  }
-                }
-                setIsEditMode(true);
+                handleSubmit(onSubmit)();
+                setIsEditMode(false);
               }}
-              startIcon={<Edit />}
+              startIcon={<Update />}
             >
-              Editar
+              Atualizar
             </Button>
-          )}
-          {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
             <Button
+              id="escape_button"
               variant="contained"
-              color="error"
-              startIcon={<Delete />}
-              disabled={!isValidated}
-              onClick={handleModalOpen}
+              color="inherit"
+              onClick={() => {
+                reset();
+                setIsEditMode(false);
+              }}
+              startIcon={<Clear />}
             >
-              Remover
+              Cancelar
             </Button>
-          ) : null}
-        </Grid>
+          </>
+        ) : (
+          <Button
+            variant="contained"
+            size="small"
+            color="warning"
+            onClick={() => {
+              if (isEditMode === false) {
+                if (getValues("address") === "N/A") {
+                  setValue("address", "");
+                }
+                if (getValues("conditions") === "N/A") {
+                  setValue("conditions", "");
+                }
+                if (getValues("observations") === "N/A") {
+                  setValue("observations", "");
+                }
+              }
+              setIsEditMode(true);
+            }}
+            startIcon={<Edit />}
+          >
+            Editar
+          </Button>
+        )}
+        {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            startIcon={<Delete />}
+            disabled={!isValidated}
+            onClick={handleModalOpen}
+          >
+            Remover
+          </Button>
+        ) : null}
       </Grid>
       {/* Main Info Section */}
       <SectionBlock
@@ -542,12 +538,25 @@ export default function PersonalInfoSection(
               label="Género"
               control={control}
               name="gender"
-              type="dropdown"
+              type="text"
               isEditMode={isEditMode}
               userRole={userRole}
               isValidated={isValidated}
             />
           </Grid>
+          {["main_admin"].includes(userRole!) ? (
+            <Grid container size={6}>
+              <FieldBox
+                label="Clube"
+                control={control}
+                name="club"
+                type="text"
+                isEditMode={isEditMode}
+                userRole={userRole}
+                isValidated={isValidated}
+              />
+            </Grid>
+          ) : null}
           {["subed_club", "single_admin"].includes(userRole!) ? (
             <Grid container size={6}>
               <FieldBox

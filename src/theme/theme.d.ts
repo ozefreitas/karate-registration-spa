@@ -15,3 +15,20 @@ declare module "@mui/material/Typography" {
     h4Half: true;
   }
 }
+
+
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+    h5Half: React.CSSProperties;
+  }
+
+  interface TypographyVariantsOptions {
+    h5Half?: React.CSSProperties;
+  }
+}
+
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    h5Half: true;
+  }
+}

@@ -63,7 +63,7 @@ export default function SingleMemberPage(
 
   const avatarData = stringAvatar(
     singleMemberData?.full_name!,
-    228,
+    208,
     props.userRole,
   );
 
@@ -159,7 +159,7 @@ export default function SingleMemberPage(
               Membro Seguinte
             </Button>
           </Grid>
-          <Card sx={{ m: 4 }}>
+          <Card sx={{ m: 4, overflow: "visible" }}>
             <CardContent
               sx={{
                 p: 0,
@@ -168,7 +168,7 @@ export default function SingleMemberPage(
                 },
               }}
             >
-              <Grid container size={12}>
+              <Grid container size={12} alignItems="flex-start">
                 <Grid
                   size={3}
                   container
@@ -176,8 +176,15 @@ export default function SingleMemberPage(
                   spacing={2}
                   alignContent="flex-start"
                   p={4}
-                  pt={6}
-                  sx={{ backgroundColor: "lightgray" }}
+                  pt={5}
+                  sx={{
+                    backgroundColor: "lightgray",
+                    borderTopLeftRadius: 16,
+                    borderBottomLeftRadius: 16,
+                    position: "sticky",
+                    top: 100,
+                    alignSelf: "flex-start",
+                  }}
                 >
                   {singleMemberData ? (
                     <Tooltip
@@ -273,16 +280,6 @@ export default function SingleMemberPage(
                       {singleMemberData?.full_name}
                     </Typography>
                   </Grid>
-                  <Grid container justifyContent="center" size={6}>
-                    <Typography variant="h6">
-                      {singleMemberData?.gender}
-                    </Typography>
-                  </Grid>
-                  <Grid container justifyContent="center" size={6}>
-                    <Typography variant="h6">
-                      {singleMemberData?.birth_date}
-                    </Typography>
-                  </Grid>
                   {props.userRole === "main_admin" ? null : (
                     <Grid
                       mt={3}
@@ -333,7 +330,7 @@ export default function SingleMemberPage(
                       )}
                     </Grid>
                   )}
-                  <Grid container size={12} mt={10}>
+                  <Grid container size={12} mt={5}>
                     <Button
                       variant={
                         section === "personal_info" ? "contained" : "text"
@@ -343,7 +340,6 @@ export default function SingleMemberPage(
                         backgroundColor:
                           section === "personal_info" ? "#e81c24" : "white",
                         color: section === "personal_info" ? "white" : "black",
-                        p: 1,
                         textTransform: "none",
                         fontWeight: "bold",
                         fontSize: 12,
@@ -358,91 +354,74 @@ export default function SingleMemberPage(
                   {["main_admin", "free_club"].includes(
                     props.userRole,
                   ) ? null : (
-                    <Grid container justifyContent="center" size={12} mt={2}>
-                      <Button
-                        variant={
-                          section === "payments_management"
-                            ? "contained"
-                            : "text"
-                        }
-                        fullWidth
-                        disabled={!singleMemberData?.quotes_legible}
-                        sx={{
-                          backgroundColor:
-                            section === "payments_management"
-                              ? "#e81c24"
-                              : "white",
-                          color:
-                            section === "payments_management"
-                              ? "white"
-                              : "black",
-                          p: 1,
-                          textTransform: "none",
-                          fontWeight: "bold",
-                          fontSize: 12,
-                        }}
-                        onClick={() => {
-                          changeSection("payments_management");
-                        }}
-                      >
-                        Gestão de Pagamentos
-                      </Button>
-                    </Grid>
-                  )}
-                  <Grid container justifyContent="center" size={12} mt={2}>
                     <Button
                       variant={
-                        section === "registration_history"
-                          ? "contained"
-                          : "text"
+                        section === "payments_management" ? "contained" : "text"
                       }
                       fullWidth
-                      disabled
+                      disabled={!singleMemberData?.quotes_legible}
                       sx={{
                         backgroundColor:
-                          section === "registration_history"
+                          section === "payments_management"
                             ? "#e81c24"
                             : "white",
                         color:
-                          section === "registration_history"
-                            ? "white"
-                            : "black",
-                        p: 1,
+                          section === "payments_management" ? "white" : "black",
                         textTransform: "none",
                         fontWeight: "bold",
                         fontSize: 12,
                       }}
                       onClick={() => {
-                        changeSection("registration_history");
+                        changeSection("payments_management");
                       }}
                     >
-                      Histórico de Inscrições
+                      Gestão de Pagamentos
                     </Button>
-                  </Grid>
-                  <Grid container justifyContent="center" size={12} mt={2}>
-                    <Button
-                      variant={
-                        section === "results_history" ? "contained" : "text"
-                      }
-                      fullWidth
-                      disabled
-                      sx={{
-                        backgroundColor:
-                          section === "results_history" ? "#e81c24" : "white",
-                        color:
-                          section === "results_history" ? "white" : "black",
-                        p: 1,
-                        textTransform: "none",
-                        fontWeight: "bold",
-                        fontSize: 12,
-                      }}
-                      onClick={() => {
-                        changeSection("results_history");
-                      }}
-                    >
-                      Histórico de Resultados
-                    </Button>
-                  </Grid>
+                  )}
+                  <Button
+                    variant={
+                      section === "registration_history" ? "contained" : "text"
+                    }
+                    fullWidth
+                    disabled
+                    sx={{
+                      backgroundColor:
+                        section === "registration_history"
+                          ? "#e81c24"
+                          : "white",
+                      color:
+                        section === "registration_history" ? "white" : "black",
+                      textTransform: "none",
+                      fontWeight: "bold",
+                      fontSize: 12,
+                    }}
+                    onClick={() => {
+                      changeSection("registration_history");
+                    }}
+                  >
+                    Histórico de Inscrições
+                  </Button>
+                  <Button
+                    variant={
+                      section === "results_history" ? "contained" : "text"
+                    }
+                    fullWidth
+                    disabled
+                    sx={{
+                      backgroundColor:
+                        section === "results_history" ? "#e81c24" : "white",
+                      color: section === "results_history" ? "white" : "black",
+                      p: 1,
+                      textTransform: "none",
+                      fontWeight: "bold",
+                      fontSize: 12,
+                    }}
+                    onClick={() => {
+                      changeSection("results_history");
+                    }}
+                  >
+                    Histórico de Resultados
+                  </Button>
                 </Grid>
                 <Grid size={9} sx={{ p: 4 }}>
                   {section === "personal_info" ? (
