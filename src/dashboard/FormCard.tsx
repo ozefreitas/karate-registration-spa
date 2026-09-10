@@ -34,7 +34,7 @@ export default function FormCard(
             borderBottom: "1px solid lightgrey",
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
-              fontSize: 18,
+              fontSize: 16,
             },
           }}
         ></CardHeader>

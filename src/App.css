@@ -10,6 +10,14 @@ html {
   zoom: 1;
 }
 
+@media (max-width: 599.95px) {
+  #root {
+    padding-left: 52px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+  }
+}
+
 .notistack-MuiContent {
   font-size: 0.5rem;
 }

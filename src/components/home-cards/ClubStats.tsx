@@ -38,8 +38,25 @@ export default function ClubStats() {
         style={{ visibility: isVisible ? "visible" : "hidden" }}
       >
         {isVisible && (
-          <Paper elevation={1} sx={{ pl: 2, pr: 2 }}>
+          <Paper elevation={1} sx={{ pl: 2, pr: 2, borderRadius: 2 }}>
             <p>{`${payload[0].payload.username} : ${payload[0].value}`}</p>
+            {/* <p>Anything you want can be displayed here.</p> */}
+          </Paper>
+        )}
+      </div>
+    );
+  };
+
+  const BarChartCustomTooltip = ({ active, payload }: any) => {
+    const isVisible = active && payload && payload.length;
+    return (
+      <div
+        className="custom-tooltip"
+        style={{ visibility: isVisible ? "visible" : "hidden" }}
+      >
+        {isVisible && (
+          <Paper elevation={1} sx={{ pl: 2, pr: 2, borderRadius: 2 }}>
+            <p>{`Inscritos : ${payload[0].value}`}</p>
             {/* <p>Anything you want can be displayed here.</p> */}
           </Paper>
         )}
@@ -72,14 +89,14 @@ export default function ClubStats() {
                     color={"#fff"}
                     bgcolor={"#1976d2"}
                     sx={{
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       borderRadius: 1.5,
                     }}
                   >
-                    <Person sx={{ fontSize: 28 }} />
+                    <Person sx={{ fontSize: 18 }} />
                   </Grid>
-                  <Typography variant="h5" fontWeight={"bold"}>
+                  <Typography variant="h6" fontWeight={"bold"}>
                     {item === "student"
                       ? "Alunos por Clube"
                       : item === "athlete"
@@ -102,7 +119,7 @@ export default function ClubStats() {
                 </Grid>
               ) : totals[item] >= 1 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart width={500} height={500}>
+                  <PieChart width={300} height={300}>
                     <Tooltip content={CustomTooltip} />
                     {/* <Legend layout="vertical" align="right" verticalAlign="middle" /> */}
                     <Pie
@@ -158,14 +175,14 @@ export default function ClubStats() {
                   color={"#fff"}
                   bgcolor={"#004d1f"}
                   sx={{
-                    width: 50,
-                    height: 50,
+                    width: 40,
+                    height: 40,
                     borderRadius: 1.5,
                   }}
                 >
-                  <HowToReg sx={{ fontSize: 28 }} />
+                  <HowToReg sx={{ fontSize: 18 }} />
                 </Grid>
-                <Typography variant="h5" fontWeight={"bold"}>
+                <Typography variant="h6" fontWeight={"bold"}>
                   Inscrições por Evento
                 </Typography>
               </Grid>
@@ -188,6 +205,7 @@ export default function ClubStats() {
             ) : (
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={registrationsPerEventData}>
+                  <Tooltip content={BarChartCustomTooltip} />
                   <CartesianGrid strokeDasharray="1 1" />
                   <XAxis
                     height={60}
@@ -206,7 +224,7 @@ export default function ClubStats() {
                       dy: 210,
                     }}
                   />
-                  <Tooltip />
+                  {/* <Tooltip /> */}
                   <Bar dataKey="number_registrations" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>

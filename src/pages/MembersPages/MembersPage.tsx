@@ -352,21 +352,21 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 ? "space-between"
                 : "flex-end"
             }
-            alignItems={"center"}
+            alignItems={{ xs: "flex-end", sm: "center" }}
           >
             {props.userRole === "main_admin" ||
             props.userRole === "subed_club" ? (
-              <>
+              <Grid size={3}>
                 <Grid
                   sx={{
-                    display: { xs: "none", md: "flex" },
+                    display: { xs: "none", sm: "flex" },
                   }}
                 >
                   <AddButton label="Adicionar" to="new_member/"></AddButton>
                 </Grid>
                 <Grid
                   sx={{
-                    display: { xs: "flex", md: "none" },
+                    display: { xs: "flex", sm: "none" },
                   }}
                 >
                   <Tooltip placement="top" title="Adicionar">
@@ -378,7 +378,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                         bgcolor: "#2e7d32",
                         "&:hover": { bgcolor: "#2e7d32" },
                       }}
-                      size="large"
+                      // size="large"
                       color="success"
                       aria-label="delete"
                     >
@@ -386,19 +386,30 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                     </IconButton>
                   </Tooltip>
                 </Grid>
-              </>
+              </Grid>
             ) : null}
-            <Grid container spacing={2} alignItems={"center"}>
+            <Grid
+              size={9}
+              container
+              spacing={2}
+              alignItems={"center"}
+              justifyContent={"flex-end"}
+            >
               <TextField
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Primeiro nome/apelido..."
+                placeholder="Primeiro nome/apelido/Nº SKIP..."
                 variant="outlined"
                 size="small"
                 sx={{
-                  // bgcolor: "white",
                   "& .MuiOutlinedInput-root": {
-                    height: 42,
+                    height: 32,
+                    borderRadius: 3,
+                    boxShadow: { md: "6px 6px 10px rgba(0,0,0,0.2)" },
+                  },
+                  "& .MuiInputBase-input::placeholder": {
+                    fontSize: "0.7rem",
+                    // opacity: 1,
                   },
                 }}
                 slotProps={{
@@ -419,69 +430,81 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                   },
                 }}
               />
-              <MemberOrdering
-                isLoading={isMembersDataLoading}
-                control={orderControl}
-                reset={orderReset}
-                errors={orderErrors}
-                changedCount={orderChangedCount}
-                orderFields={orderFields}
-                setOrderFields={setOrderFields}
-              ></MemberOrdering>
-              <MemberFiltering
-                isLoading={isMembersDataLoading}
-                control={filtersControl}
-                setValue={filtersSetValue}
-                reset={filtersReset}
-                changedCount={filtersChangedCount}
-                setSelectedUsers={setSelectedUsers}
-                setPage={setPage}
-              ></MemberFiltering>
-              <Grid pl={2} container spacing={1} borderRadius={3}>
-                <Tooltip placement="top" title={"Vista de Tabela"}>
-                  <span>
-                    <IconButton
-                      size="large"
-                      onClick={() => setCurrentView("table")}
-                      sx={{
-                        borderRadius: 3,
-                        border: 1,
-                        bgcolor:
-                          currentView === "table" ? "#1976d2;" : undefined,
-                        "&:hover": { bgcolor: "#1976d2" },
-                      }}
-                      color="info"
-                    >
-                      <TableRows
+              <Grid container spacing={2} justifyContent={"flex-end"}>
+                <Grid container spacing={1}>
+                  <MemberOrdering
+                    isLoading={isMembersDataLoading}
+                    control={orderControl}
+                    reset={orderReset}
+                    errors={orderErrors}
+                    changedCount={orderChangedCount}
+                    orderFields={orderFields}
+                    setOrderFields={setOrderFields}
+                  ></MemberOrdering>
+                  <MemberFiltering
+                    isLoading={isMembersDataLoading}
+                    control={filtersControl}
+                    setValue={filtersSetValue}
+                    reset={filtersReset}
+                    changedCount={filtersChangedCount}
+                    setSelectedUsers={setSelectedUsers}
+                    setPage={setPage}
+                  ></MemberFiltering>
+                </Grid>
+                <Grid
+                  alignItems={"center"}
+                  container
+                  spacing={1}
+                  borderRadius={3}
+                >
+                  <Tooltip placement="top" title={"Vista de Tabela"}>
+                    <span>
+                      <Button
                         sx={{
-                          color: currentView === "table" ? "white" : undefined,
+                          px: 0,
+                          bgcolor:
+                            currentView === "table" ? "#1976d2;" : undefined,
+                          "&:hover": { bgcolor: "#1976d2" },
+                          borderColor:
+                            currentView === "table" ? undefined : "#1976d2",
                         }}
-                      ></TableRows>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip placement="top" title={"Vista de Cartas"}>
-                  <span>
-                    <IconButton
-                      size="large"
-                      sx={{
-                        borderRadius: 3,
-                        border: 1,
-                        bgcolor:
-                          currentView === "card" ? "#1976d2;" : undefined,
-                        "&:hover": { bgcolor: "#1976d2" },
-                      }}
-                      onClick={() => setCurrentView("card")}
-                      color="info"
-                    >
-                      <CreditCard
+                        color="info"
+                        variant="outlined"
+                        onClick={() => setCurrentView("table")}
+                      >
+                        <TableRows
+                          sx={{
+                            color:
+                              currentView === "table" ? "white" : undefined,
+                          }}
+                        ></TableRows>
+                      </Button>
+                    </span>
+                  </Tooltip>
+                  <Tooltip placement="top" title={"Vista de Cartas"}>
+                    <span>
+                      <Button
                         sx={{
-                          color: currentView === "card" ? "white" : undefined,
+                          px: 0,
+                          bgcolor:
+                            currentView === "card" ? "#1976d2;" : undefined,
+                          "&:hover": { bgcolor: "#1976d2" },
+                          borderColor:
+                            currentView === "card" ? undefined : "#1976d2",
                         }}
-                      ></CreditCard>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+                        color="info"
+                        variant="outlined"
+                        onClick={() => setCurrentView("card")}
+                      >
+                        <CreditCard
+                          sx={{
+                            color: currentView === "card" ? "white" : undefined,
+                          }}
+                        ></CreditCard>
+                      </Button>
+                    </span>
+                  </Tooltip>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -490,7 +513,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         !isMembersDataLoading &&
         membersData !== undefined &&
         membersData?.count !== 0 ? (
-          <Typography variant="h6" sx={{ color: "gray", m: 3 }}>
+          <Typography variant="subtitle1" sx={{ color: "gray", m: 3, mb: 2 }}>
             {membersData?.count} Membro(s).
           </Typography>
         ) : null}
@@ -516,7 +539,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             <AllUseTable
               type="Atletas"
               loading={isMembersDataLoading}
-              data={memberRows}
+              data={memberRows ?? []}
               count={membersData?.count ?? 0}
               columnsHeaders={columnMaping}
               actions
@@ -540,13 +563,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         ) : (
           <Grid container spacing={3} m={2}>
             {memberRows?.length === 0 ? (
-              <Grid
-                sx={{ mt: 1, mb: 3 }}
-                container
-                justifyContent="center"
-                size={12}
-              >
-                <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
+              <Grid my={3} container justifyContent="center" size={12}>
+                <Typography variant="h6" sx={{ color: "gray" }}>
                   Não foram encontrados registos.
                 </Typography>
               </Grid>
@@ -559,9 +577,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                         navigate(`/members/${person.id}/`);
                       }}
                       sx={{
-                        p: 2,
-                        height: "100%",
-                        width: "100%",
+                        p: 1,
                         transition: "0.3s",
                         border: "4px",
                         borderColor: "transparent",
@@ -611,7 +627,13 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                         },
                       }}
                     >
-                      <CardContent sx={{ width: "100%" }}>
+                      <CardContent
+                        sx={{
+                          "&:last-child": {
+                            paddingBottom: 1,
+                          },
+                        }}
+                      >
                         <Grid
                           container
                           direction={"column"}
@@ -620,28 +642,22 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                         >
                           <Grid container justifyContent={"center"}>
                             <Avatar
-                              {...stringAvatar(person.full_name, 128)}
+                              {...stringAvatar(person.full_name, 100)}
                             ></Avatar>
                           </Grid>
                           <Grid
                             container
                             justifyContent={"center"}
                             size={12}
-                            pt={2}
                             alignItems={"center"}
                             textAlign={"center"}
                           >
-                            <Typography variant="h4">
+                            <Typography variant="h5">
                               {person.full_name}
                             </Typography>
                           </Grid>
                           {props.userRole === "main_admin" ? null : (
-                            <Grid
-                              pb={2}
-                              size={12}
-                              container
-                              justifyContent={"center"}
-                            >
+                            <Grid size={12} container justifyContent={"center"}>
                               {person.verified}
                             </Grid>
                           )}
@@ -649,14 +665,13 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                             {props.userRole === "main_admin" ? null : (
                               <Chip
                                 variant="outlined"
+                                size="small"
                                 label={`${person.age} anos`}
                               ></Chip>
                             )}
                             <Chip
-                              sx={{
-                                mt: props.userRole === "main_admin" ? 2 : 0,
-                              }}
                               variant="outlined"
+                              size="small"
                               label={
                                 person.gender === "F" ? "Feminino" : "Masculino"
                               }

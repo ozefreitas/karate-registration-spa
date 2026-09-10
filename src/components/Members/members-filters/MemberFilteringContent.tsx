@@ -73,15 +73,46 @@ const MemberFilteringContent = (
   return (
     <>
       <List sx={{ p: 1, mt: 2 }}>
-        <Grid container size={12}>
-          <Typography variant="h6" pl={2} mb={3}>
-            Filtragem
-          </Typography>
-        </Grid>
-        {["subed_club", "superuser", "single_admin"].includes(user?.role!) ? (
-          <Grid px={3} py={2} alignItems={"center"} container spacing={2}>
-            <Typography>Tipo</Typography>
-            {MemberTypes.map((item: any, index: any) => (
+        <Typography variant="h6" pl={2} mb={3}>
+          Filtragem
+        </Typography>
+        <Grid container px={3} spacing={3}>
+          {["subed_club", "superuser", "single_admin"].includes(user?.role!) ? (
+            <Grid alignItems={"center"} container spacing={1}>
+              <Typography variant="subtitle1" mr={2}>
+                Tipo
+              </Typography>
+              {MemberTypes.map((item: any, index: any) => (
+                <Controller
+                  key={index}
+                  name={`is${
+                    item.value.charAt(0).toUpperCase() + item.value.slice(1)
+                  }`}
+                  control={props.control}
+                  render={({ field }) => (
+                    <Chip
+                      variant={field.value ? "filled" : "outlined"}
+                      color={field.value ? "success" : "default"}
+                      clickable
+                      size="small"
+                      onClick={() => {
+                        props.setPage(1);
+                        field.onChange(!field.value);
+                      }}
+                      label={item.label}
+                    ></Chip>
+                  )}
+                ></Controller>
+              ))}
+            </Grid>
+          ) : null}
+          <Grid alignItems={"center"} container spacing={1}>
+            <Typography variant="subtitle1" mr={2}>
+              Género
+            </Typography>
+            {GenderOptions.filter(
+              (item: any) => item.label !== "Ambos" && item.label !== "Misto",
+            ).map((item: any, index: any) => (
               <Controller
                 key={index}
                 name={`is${
@@ -104,168 +135,150 @@ const MemberFilteringContent = (
               ></Controller>
             ))}
           </Grid>
-        ) : null}
-        <Grid px={3} py={2} alignItems={"center"} container spacing={2}>
-          <Typography>Género</Typography>
-          {GenderOptions.filter(
-            (item: any) => item.label !== "Ambos" && item.label !== "Misto",
-          ).map((item: any, index: any) => (
-            <Controller
-              key={index}
-              name={`is${
-                item.value.charAt(0).toUpperCase() + item.value.slice(1)
-              }`}
-              control={props.control}
-              render={({ field }) => (
-                <Chip
-                  variant={field.value ? "filled" : "outlined"}
-                  color={field.value ? "success" : "default"}
-                  clickable
-                  size="small"
-                  onClick={() => {
-                    props.setPage(1);
-                    field.onChange(!field.value);
-                  }}
-                  label={item.label}
-                ></Chip>
-              )}
-            ></Controller>
-          ))}
-        </Grid>
 
-        {["main_admin", "superuser"].includes(user?.role!) ? (
-          <Grid size={12} container alignItems={"center"} px={3} py={1} gap={1}>
-            <Typography>Clube</Typography>
-            {!isAvailableUserLoading &&
-              Object.keys(props.control._defaultValues)
-                .filter((fieldName) => availableUsers?.includes(fieldName))
-                .map((fieldName) => (
-                  <Controller
-                    key={fieldName}
-                    name={fieldName}
-                    control={props.control}
-                    render={({ field }) => (
-                      <Chip
-                        variant={field.value ? "filled" : "outlined"}
-                        color={field.value ? "success" : "default"}
-                        clickable
-                        size="small"
-                        onClick={() => {
-                          props.setPage(1);
-                          field.onChange(!field.value);
-                        }}
-                        label={fieldName}
-                      ></Chip>
-                    )}
-                  />
-                ))}
-          </Grid>
-        ) : (
-          <>
-            <Grid p={3} py={1} container>
-              <Controller
-                name="isValidated"
-                control={props.control}
-                render={({ field }) => (
-                  <FormControl
-                    sx={{ width: "100%" }}
-                    component="fieldset"
-                    variant="standard"
-                  >
-                    <Stack>
-                      <FormControlLabel
-                        labelPlacement="start"
-                        control={
-                          <Switch
-                            sx={{ ml: 2 }}
-                            {...field}
-                            checked={field.value}
-                            onChange={(e) => {
-                              props.setPage(1);
-                              field.onChange(e.target.checked);
-                            }}
-                            name="quotesLegible"
-                          />
-                        }
-                        label="Apenas Verificados"
-                        sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                      />
-                    </Stack>
-                  </FormControl>
-                )}
-              />
+          {["main_admin", "superuser"].includes(user?.role!) ? (
+            <Grid size={12} container alignItems={"center"} spacing={1}>
+              <Typography variant="subtitle1" mr={2}>Clube</Typography>
+              {!isAvailableUserLoading &&
+                Object.keys(props.control._defaultValues)
+                  .filter((fieldName) => availableUsers?.includes(fieldName))
+                  .map((fieldName) => (
+                    <Controller
+                      key={fieldName}
+                      name={fieldName}
+                      control={props.control}
+                      render={({ field }) => (
+                        <Chip
+                          variant={field.value ? "filled" : "outlined"}
+                          color={field.value ? "success" : "default"}
+                          clickable
+                          size="small"
+                          onClick={() => {
+                            props.setPage(1);
+                            field.onChange(!field.value);
+                          }}
+                          label={fieldName}
+                        ></Chip>
+                      )}
+                    />
+                  ))}
             </Grid>
-            <Grid p={3} py={1} container>
-              <Controller
-                name="quotesLegible"
-                control={props.control}
-                render={({ field }) => (
-                  <FormControl
-                    sx={{ width: "100%" }}
-                    component="fieldset"
-                    variant="standard"
-                  >
-                    <Stack>
-                      <FormControlLabel
-                        labelPlacement="start"
-                        control={
-                          <Switch
-                            sx={{ ml: 2 }}
-                            {...field}
-                            checked={field.value}
-                            onChange={(e) => {
-                              props.setPage(1);
-                              field.onChange(e.target.checked);
-                            }}
-                            name="quotesLegible"
-                          />
-                        }
-                        label="Paga Quotas"
-                        sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                      />
-                    </Stack>
-                  </FormControl>
-                )}
-              />
-            </Grid>
-            <Grid p={3} py={1} container>
-              <Controller
-                name="quotesOverdue"
-                control={props.control}
-                render={({ field }) => (
-                  <FormControl
-                    sx={{ width: "100%" }}
-                    component="fieldset"
-                    variant="standard"
-                  >
-                    <Stack>
-                      <FormControlLabel
-                        labelPlacement="start"
-                        control={
-                          <Switch
-                            sx={{ ml: 2 }}
-                            {...field}
-                            checked={field.value}
-                            onChange={(e) => {
-                              props.setPage(1);
-                              if (e.target.checked) {
-                                props.setValue("quotesLegible", true);
-                              }
-                              field.onChange(e.target.checked);
-                            }}
-                            name="quotesOverdue"
-                          />
-                        }
-                        label="Quotas por pagar (mês corrente)"
-                        sx={{ justifyContent: "space-between", marginLeft: 0 }}
-                      />
-                    </Stack>
-                  </FormControl>
-                )}
-              />
-            </Grid>
-          </>
-        )}
+          ) : (
+            <>
+              <Grid p={3} py={1} container>
+                <Controller
+                  name="isValidated"
+                  control={props.control}
+                  render={({ field }) => (
+                    <FormControl
+                      sx={{ width: "100%" }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <Stack>
+                        <FormControlLabel
+                          labelPlacement="start"
+                          control={
+                            <Switch
+                              sx={{ ml: 2 }}
+                              {...field}
+                              checked={field.value}
+                              onChange={(e) => {
+                                props.setPage(1);
+                                field.onChange(e.target.checked);
+                              }}
+                              name="quotesLegible"
+                            />
+                          }
+                          label="Apenas Verificados"
+                          sx={{
+                            justifyContent: "space-between",
+                            marginLeft: 0,
+                          }}
+                        />
+                      </Stack>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              <Grid p={3} py={1} container>
+                <Controller
+                  name="quotesLegible"
+                  control={props.control}
+                  render={({ field }) => (
+                    <FormControl
+                      sx={{ width: "100%" }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <Stack>
+                        <FormControlLabel
+                          labelPlacement="start"
+                          control={
+                            <Switch
+                              sx={{ ml: 2 }}
+                              {...field}
+                              checked={field.value}
+                              onChange={(e) => {
+                                props.setPage(1);
+                                field.onChange(e.target.checked);
+                              }}
+                              name="quotesLegible"
+                            />
+                          }
+                          label="Paga Quotas"
+                          sx={{
+                            justifyContent: "space-between",
+                            marginLeft: 0,
+                          }}
+                        />
+                      </Stack>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              <Grid p={3} py={1} container>
+                <Controller
+                  name="quotesOverdue"
+                  control={props.control}
+                  render={({ field }) => (
+                    <FormControl
+                      sx={{ width: "100%" }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <Stack>
+                        <FormControlLabel
+                          labelPlacement="start"
+                          control={
+                            <Switch
+                              sx={{ ml: 2 }}
+                              {...field}
+                              checked={field.value}
+                              onChange={(e) => {
+                                props.setPage(1);
+                                if (e.target.checked) {
+                                  props.setValue("quotesLegible", true);
+                                }
+                                field.onChange(e.target.checked);
+                              }}
+                              name="quotesOverdue"
+                            />
+                          }
+                          label="Quotas por pagar (mês corrente)"
+                          sx={{
+                            justifyContent: "space-between",
+                            marginLeft: 0,
+                          }}
+                        />
+                      </Stack>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+            </>
+          )}
+        </Grid>
       </List>
       <Grid size={12} mt={5} mx={10} container>
         <Button

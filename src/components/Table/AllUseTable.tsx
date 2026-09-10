@@ -393,15 +393,15 @@ export default function AllUseTable(
   }>(({ theme, selection }) => ({
     textAlign: "center",
     [`&.${tableCellClasses.head}`]: {
-      fontSize: 15,
+      fontSize: 14,
       paddingTop: selection ? 0 : 10,
       paddingBottom: selection ? 0 : 10,
       color: theme.palette.common.black,
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 13,
-      paddingTop: 10,
-      paddingBottom: 10,
+      fontSize: 12,
+      paddingTop: 5,
+      paddingBottom: 5,
     },
   }));
 
@@ -539,10 +539,39 @@ export default function AllUseTable(
           </TableContainer>
         </Grid>
       ) : props.data?.length === 0 ? (
-        <Grid my={5} container justifyContent="center" size={12}>
-          <Typography variant="subtitle1" color="textDisabled">
-            Não foram encontrados registos.
-          </Typography>
+        <Grid container m={2}>
+          <TableContainer component={Paper}>
+            <Table size="small" aria-label="simple table">
+              <TableHead>
+                <StyledTableRow header>
+                  {props.selection ? <StyledTableCell selection /> : null}
+                  {props.columnsHeaders.map((header: any, index: number) => (
+                    <StyledTableCell key={index}>
+                      {header.label}
+                    </StyledTableCell>
+                  ))}
+                  {props.actions ? (
+                    <StyledTableCell>Ações</StyledTableCell>
+                  ) : null}
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                <StyledTableRow header>
+                  <StyledTableCell
+                    colSpan={
+                      props.columnsHeaders.length +
+                      (props.selection ? 1 : 0) +
+                      (props.actions ? 1 : 0)
+                    }
+                  >
+                    <Typography p={1} variant="subtitle1" color="textDisabled">
+                      Não existem registos
+                    </Typography>
+                  </StyledTableCell>
+                </StyledTableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
       ) : (
         <Grid container m={2}>

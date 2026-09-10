@@ -1123,50 +1123,46 @@ export default function MainSettingsPage() {
           todos os Clubes será pedido o mesmo valor. <p></p>
           Ao serem criadas as quotas, cada Clube é automaticamente notificado.
         </Grid>
-      ) : (
-        <Grid container direction={"column"} size={12}>
-          {isMemberValidationRequestsLoading ? null : (
-            <>
-              <FormCard title="Verificação de Membros">
-                <Grid
-                  container
-                  size={12}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                >
-                  <AllUseTable
-                    count={requestsVerifyRows?.length!}
-                    data={requestsVerifyRows}
-                    actions={false}
-                    selection={false}
-                    type="Atletas"
-                    userRole="main_admin"
-                    columnsHeaders={getColumnMapping("ola")}
-                    overideInternalPage
-                  ></AllUseTable>
-                </Grid>
-              </FormCard>
-              <FormCard title="Pedidos de Propostas a Exame">
-                <Grid
-                  container
-                  size={12}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                >
-                  <AllUseTable
-                    count={requestsExamsRows?.length!}
-                    data={requestsExamsRows}
-                    actions={false}
-                    selection={false}
-                    type="Atletas"
-                    userRole="main_admin"
-                    columnsHeaders={getColumnMapping("exams")}
-                    overideInternalPage
-                  ></AllUseTable>
-                </Grid>
-              </FormCard>
-            </>
-          )}
+      ) : isMemberValidationRequestsLoading ? null : (
+        <Grid container spacing={2}>
+          <FormCard title="Verificação de Membros">
+            <Grid
+              container
+              size={12}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <AllUseTable
+                count={requestsVerifyRows?.length!}
+                data={requestsVerifyRows}
+                actions={false}
+                selection={false}
+                type="Atletas"
+                userRole="main_admin"
+                columnsHeaders={getColumnMapping("ola")}
+                overideInternalPage
+              ></AllUseTable>
+            </Grid>
+          </FormCard>
+          <FormCard title="Pedidos de Propostas a Exame">
+            <Grid
+              container
+              size={12}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <AllUseTable
+                count={requestsExamsRows?.length!}
+                data={requestsExamsRows}
+                actions={false}
+                selection={false}
+                type="Atletas"
+                userRole="main_admin"
+                columnsHeaders={getColumnMapping("exams")}
+                overideInternalPage
+              ></AllUseTable>
+            </Grid>
+          </FormCard>
         </Grid>
       )}
       <DeleteClubModal

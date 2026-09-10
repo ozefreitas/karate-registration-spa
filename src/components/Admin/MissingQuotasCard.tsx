@@ -91,14 +91,14 @@ export default function MissingQuotasCard({
               color={"#fff"}
               bgcolor={"#d32f2f"}
               sx={{
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 borderRadius: 1.5,
               }}
             >
-              <WarningAmberIcon sx={{ fontSize: 28 }} />
+              <WarningAmberIcon sx={{ fontSize: 18 }} />
             </Grid>
-            <Typography variant="h5" fontWeight={"bold"}>
+            <Typography variant="h6" fontWeight={"bold"}>
               Quotas em Falta em {year}
             </Typography>
           </Grid>

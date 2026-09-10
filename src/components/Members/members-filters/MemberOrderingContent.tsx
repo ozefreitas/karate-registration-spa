@@ -38,13 +38,21 @@ export default function MemberOrderingContent(
   return (
     <>
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
-        <Typography variant="h6" pl={2} mb={3}>
+        <Typography variant="h6" pl={2}>
           Ordenação
         </Typography>
-        <Grid container alignContent="center" alignItems="center">
+        <Grid
+          container
+          alignItems="center"
+          justifyContent={"space-between"}
+          size={12}
+          mx={{ xs: 3, sm: 5, md: 3 }}
+          rowSpacing={3}
+          mt={5}
+        >
           {props.orderFields.map((item: any, index: number) => (
             <React.Fragment key={item.key}>
-              <Grid sx={{ p: 2 }} size={10}>
+              <Grid size={9}>
                 <Controller
                   name={item.key}
                   control={props.control}
@@ -55,6 +63,16 @@ export default function MemberOrderingContent(
                       label={item.label}
                       fullWidth
                       select
+                      size="small"
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          // height: 38,
+                          borderRadius: 3,
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: "0.7rem",
+                        },
+                      }}
                       slotProps={{ input: { style: { fontSize: 13 } } }}
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
@@ -74,21 +92,33 @@ export default function MemberOrderingContent(
                 />
               </Grid>
 
-              <Grid size={1}>
+              <Grid
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+                size={1}
+              >
                 <IconButton
+                  size="small"
                   disabled={index === 0}
                   onClick={() => moveUp(index)}
                 >
-                  <ArrowUpward />
+                  <ArrowUpward fontSize="small" />
                 </IconButton>
               </Grid>
 
-              <Grid size={1}>
+              <Grid
+                size={1}
+                container
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
                 <IconButton
+                  size="small"
                   disabled={index === props.orderFields.length - 1}
                   onClick={() => moveDown(index)}
                 >
-                  <ArrowDownward />
+                  <ArrowDownward fontSize="small" />
                 </IconButton>
               </Grid>
             </React.Fragment>

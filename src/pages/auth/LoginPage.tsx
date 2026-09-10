@@ -8,6 +8,7 @@ import {
   CardContent,
   Typography,
   FormLabel,
+  CardActions,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
@@ -76,16 +77,24 @@ export default function LoginPage() {
   }
 
   return (
-    <Grid container sx={{ m: 30, mt: 0, mb: 0 }}>
-      <Card sx={{ width: "100%" }}>
-        <CardContent sx={{ display: "flex", p: 0 }}>
-          <Grid container size={12} justifyContent="center" sx={{ p: 3 }}>
-            <Typography sx={{ fontWeight: "bold", mt: 3 }} variant="h4">
+    <Grid container size={12} justifyContent={"center"} sx={{ mt: 5, mb: 0 }}>
+      <Card sx={{ width: { xs: "94%", sm: "65%", md: "45%" } }}>
+        <CardContent
+          sx={{
+            display: "flex",
+            py: 0,
+            "&:last-child": {
+              paddingBottom: 1,
+            },
+          }}
+        >
+          <Grid container size={12} justifyContent="center" sx={{ p: 1 }}>
+            <Typography sx={{ fontWeight: "bold", mt: 2 }} variant="h5Half">
               Login
             </Typography>
-            <Grid sx={{ m: 2, mt: 5 }} size={12}>
+            <Grid sx={{ m: 2, mt: 3 }} size={12}>
               <FormLabel>
-                <Typography variant="h6" sx={{ p: 1 }}>
+                <Typography variant="subtitle2" sx={{ p: 1, pl: 0 }}>
                   Username
                 </Typography>
               </FormLabel>
@@ -94,6 +103,11 @@ export default function LoginPage() {
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        height: 40,
+                      },
+                    }}
                     color="warning"
                     variant={"outlined"}
                     fullWidth
@@ -107,9 +121,9 @@ export default function LoginPage() {
                 )}
               />
             </Grid>
-            <Grid sx={{ m: 2 }} size={12}>
+            <Grid sx={{ m: 2, mt: 0 }} size={12}>
               <FormLabel>
-                <Typography variant="h6" sx={{ p: 1 }}>
+                <Typography variant="subtitle2" sx={{ p: 1, pl: 0 }}>
                   Password
                 </Typography>
               </FormLabel>
@@ -118,6 +132,11 @@ export default function LoginPage() {
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        height: 40,
+                      },
+                    }}
                     color="warning"
                     variant={"outlined"}
                     type={showPassword ? "text" : "password"}
@@ -151,8 +170,9 @@ export default function LoginPage() {
                 )}
               />
             </Grid>
-            <Grid size={12} sx={{ ml: 2, mt: 1 }}>
+            <Grid size={12} sx={{ ml: 2 }}>
               <Typography
+                variant="caption"
                 onClick={handleModalOpen}
                 sx={{
                   color: "red",
@@ -165,25 +185,27 @@ export default function LoginPage() {
                 Esqueceu-se da password?
               </Typography>
             </Grid>
-            <Grid size={12} container justifyContent="flex-end" sx={{ p: 3 }}>
-              <Button
-                id="login_button"
-                variant="contained"
-                size={"large"}
-                color={"success"}
-                type={"submit"}
-                disabled={loginUser.isPending}
-                loading={loginUser.isPending}
-                loadingPosition="start"
-                onClick={() => {
-                  handleSubmit(onSubmit)();
-                }}
-              >
-                LogIn
-              </Button>
-            </Grid>
           </Grid>
         </CardContent>
+        <CardActions sx={{ mb: 1, mr: 1 }}>
+          <Grid size={12} container justifyContent="flex-end">
+            <Button
+              id="login_button"
+              variant="contained"
+              size={"large"}
+              color={"success"}
+              type={"submit"}
+              disabled={loginUser.isPending}
+              loading={loginUser.isPending}
+              loadingPosition="start"
+              onClick={() => {
+                handleSubmit(onSubmit)();
+              }}
+            >
+              LogIn
+            </Button>
+          </Grid>
+        </CardActions>
       </Card>
       <ConfirmPasswordResetModal
         handleClose={handleModalClose}

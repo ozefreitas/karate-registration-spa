@@ -265,15 +265,15 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                           color="#fff"
                           bgcolor="#004d1f"
                           sx={{
-                            width: 50,
-                            height: 50,
+                            width: 40,
+                            height: 40,
                             borderRadius: 1.5,
                           }}
                         >
-                          <HowToReg sx={{ fontSize: 28 }} />
+                          <HowToReg sx={{ fontSize: 18 }} />
                         </Grid>
 
-                        <Typography variant="h5" fontWeight="bold">
+                        <Typography variant="h6" fontWeight="bold">
                           Inscrições por Escalão
                         </Typography>
                       </Grid>

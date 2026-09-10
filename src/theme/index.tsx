@@ -12,6 +12,10 @@ const theme = createTheme(
         fontSize: "2.3rem",
         lineHeight: 1.4,
       },
+      h5Half: {
+        fontSize: "1.6rem",
+        lineHeight: 1.2,
+      },
       fontFamily:
         '"Inter", "Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
     },

@@ -132,43 +132,63 @@ export default function Header(props: Readonly<{ me: any }>) {
           sx={{
             borderRadius: 4,
             width: "99%",
-            // margin: "auto",
             backgroundColor: "#5a5a5a",
           }}
           position="static"
         >
-          <Toolbar>
-            <a href="/">
-              <Grid
-                sx={{
-                  transition: "transform 0.3s ease-in-out",
-                  "&:hover": {
-                    transform: "scale(1.1)",
-                  },
-                }}
-              >
+          <Toolbar
+            sx={{
+              width: { xs: "100%", sm: "auto" },
+              flexWrap: { xs: "wrap", sm: "nowrap" },
+              gap: { xs: 1, sm: 2 },
+              p: { xs: 2, sm: 3 },
+              justifyContent: { xs: "center", sm: "space-between" },
+            }}
+          >
+            <Grid
+              sx={{
+                transition: "transform 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.1)",
+                },
+                flexShrink: 1,
+              }}
+            >
+              <a href="/">
                 <img
                   style={{
-                    width: "250px",
-                    margin: "10px",
-                    marginTop: 20,
+                    width: "clamp(150px, 18vw, 250px)",
+                    margin: "10px 20px 10px 0",
+                    marginTop: 10,
                     marginLeft: 0,
                     marginRight: 20,
-                    marginBottom: 20,
+                    marginBottom: 10,
                   }}
                   src={fighttecLogo}
                   alt=""
                 />
-              </Grid>
-            </a>
-            <img src={skipLogo} style={{ width: 80 }} alt="" />
-            <Typography
-              pl={1}
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1 }}
-            ></Typography>
-            <Stack alignItems="center" direction="row" spacing={2}>
+              </a>
+              <img
+                src={skipLogo}
+                style={{ width: "clamp(50px, 6vw, 80px)", flexShrink: 1 }}
+                alt=""
+              />
+            </Grid>
+            <Stack
+              alignItems="center"
+              direction="row"
+              rowGap={2}
+              spacing={{ xs: 1, sm: 2 }}
+              sx={{
+                flexWrap: "wrap",
+                justifyContent: { xs: "center", sm: "flex-end" },
+                minWidth: 0,
+                width: { xs: "100%", sm: "auto" },
+                px: { xs: 1, sm: 0 },
+                pb: { xs: 1, sm: 0 },
+                boxSizing: "border-box",
+              }}
+            >
               {currentSeason === "" ? null : (
                 <Chip
                   sx={{ p: 1 }}
@@ -214,7 +234,7 @@ export default function Header(props: Readonly<{ me: any }>) {
                   </span>
                 </Tooltip>
               )}
-              <Grid container>
+              <Grid container spacing={1}>
                 {location.pathname.startsWith("/profile/list") ? null : (
                   <IconButton
                     onClick={(event) => {
@@ -223,7 +243,6 @@ export default function Header(props: Readonly<{ me: any }>) {
                       }
                     }}
                     size="small"
-                    sx={{ ml: 2 }}
                     aria-controls={
                       openNotifications ? "notification-menu" : undefined
                     }
@@ -287,13 +306,12 @@ export default function Header(props: Readonly<{ me: any }>) {
                       }
                     }}
                     size="small"
-                    sx={{ ml: 2 }}
                     aria-controls={open ? "account-menu" : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? "true" : undefined}
                   >
-                    <Grid container gap={3}>
-                      <Tooltip title="Conta" placement="top">
+                    <Grid container>
+                      <Tooltip title="A sua Conta" placement="top">
                         <span>
                           <Avatar
                             {...stringAvatar(
@@ -307,7 +325,11 @@ export default function Header(props: Readonly<{ me: any }>) {
                     </Grid>
                   </IconButton>
                 ) : (
-                  <Grid container spacing={2}>
+                  <Grid
+                    container
+                    spacing={1}
+                    sx={{ justifyContent: "flex-end", flexWrap: "wrap" }}
+                  >
                     <Button
                       variant="contained"
                       color="error"
@@ -577,19 +599,23 @@ export default function Header(props: Readonly<{ me: any }>) {
           {breadcrumbs.length === 0 ? (
             ""
           ) : (
-            <Link to={"/"}>
-              <Home color="error"></Home>
+            <Link to={"/"} style={{ display: "flex", alignItems: "center" }}>
+              <Home
+                color="error"
+                fontSize="small"
+                sx={{ m: 0, display: "block" }}
+              ></Home>
             </Link>
           )}
           {breadcrumbs.map((b, index) =>
             index === breadcrumbs.length - 1 ? (
-              <Typography key={index}>
+              <Typography key={index} variant="caption">
                 {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
               </Typography>
             ) : (
               <Box key={index}>
                 <Link to={b.link}>
-                  <Typography color="red">
+                  <Typography color="red" variant="caption">
                     {b.title.charAt(0).toUpperCase() + b.title.slice(1)}
                   </Typography>
                 </Link>

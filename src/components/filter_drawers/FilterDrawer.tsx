@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, Drawer, Grid, IconButton, Tooltip } from "@mui/material";
+import { Box, Button, Drawer, IconButton, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import { SwapVert } from "@mui/icons-material";
@@ -17,7 +17,6 @@ export interface FilterDrawerProps {
   changedCount?: number;
   isLoading?: boolean;
   icon?: React.ReactNode;
-  width?: number;
   mobileAriaLabel?: string;
 }
 
@@ -27,7 +26,6 @@ export default function FilterDrawer({
   changedCount = 0,
   isLoading = false,
   icon = <SwapVert />,
-  width = 100,
   mobileAriaLabel,
 }: Readonly<FilterDrawerProps>) {
   const [open, setOpen] = React.useState(false);
@@ -38,19 +36,32 @@ export default function FilterDrawer({
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        justifyContent="flex-end"
-        alignItems="center"
-        sx={{ display: { xs: "none", md: "flex" } }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        {/* Mobile: icon-only button */}
+        <Tooltip
+          title={label}
+          placement="top"
+          sx={{ display: { xs: "inline-flex", md: "none" } }}
+        >
+          <Button
+            disabled={isLoading}
+            color="primary"
+            aria-label={mobileAriaLabel ?? label}
+            variant="outlined"
+            onClick={toggleDrawer(true)}
+            sx={{ display: { xs: "inline-flex", md: "none" } }}
+          >
+            {icon}
+          </Button>
+        </Tooltip>
+
+        {/* Desktop: icon + label button */}
         <Button
           endIcon={icon}
-          size="large"
           variant="outlined"
           disabled={isLoading}
           onClick={toggleDrawer(true)}
+          sx={{ display: { xs: "none", md: "inline-flex" } }}
         >
           {label}
           <FiltersBadge
@@ -59,65 +70,25 @@ export default function FilterDrawer({
             overlap="circular"
           />
         </Button>
-        <Drawer
-          anchor="right"
-          sx={{
-            scrollbarWidth: "none",
-            "& .MuiDrawer-paper": {
-              marginTop: "25px",
-              marginBottom: "25px",
-              marginRight: "25px",
-              height: "calc(100% - 50px)",
-            },
-          }}
-          open={open}
-          onClose={toggleDrawer(false)}
-        >
-          <Box sx={{ width }} role="presentation">
-            {children}
-          </Box>
-        </Drawer>
-      </Grid>
+      </Box>
 
-      <Grid
-        container
-        spacing={2}
-        justifyContent="flex-end"
-        alignItems="center"
-        sx={{ display: { sm: "flex", md: "none" } }}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={toggleDrawer(false)}
+        sx={{
+          scrollbarWidth: "none",
+          "& .MuiDrawer-paper": {
+            marginTop: { xs: "10px", md: "25px" },
+            marginBottom: { xs: "10px", md: "25px" },
+            marginRight: { xs: "10px", md: "25px" },
+            height: { xs: "calc(100% - 20px)", md: "calc(100% - 50px)" },
+            width: { xs: "97vw", md: "35vw" },
+          },
+        }}
       >
-        <Tooltip title={label} placement="top">
-          <IconButton
-            sx={{ border: 1, borderRadius: 3 }}
-            size="large"
-            color="primary"
-            disabled={isLoading}
-            aria-label={mobileAriaLabel ?? label}
-            onClick={toggleDrawer(true)}
-          >
-            {icon}
-          </IconButton>
-        </Tooltip>
-        <Drawer
-          anchor="right"
-          sx={{
-            scrollbarWidth: "none",
-            "& .MuiDrawer-paper": {
-              marginTop: "25px",
-              marginBottom: "25px",
-              marginRight: "25px",
-              height: "calc(100% - 50px)",
-              width: "25vw",
-            },
-          }}
-          open={open}
-          onClose={toggleDrawer(false)}
-        >
-          <Box role="presentation">
-            {children}
-          </Box>
-        </Drawer>
-      </Grid>
+        <Box role="presentation">{children}</Box>
+      </Drawer>
     </>
   );
 }

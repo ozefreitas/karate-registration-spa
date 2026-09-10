@@ -87,14 +87,14 @@ export default function MemberRequestsCard({
               color={"#fff"}
               bgcolor={"#d38c2f"}
               sx={{
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 borderRadius: 1.5,
               }}
             >
-              <PersonSearch sx={{ fontSize: 28 }} />
+              <PersonSearch sx={{ fontSize: 18 }} />
             </Grid>
-            <Typography variant="h5" fontWeight={"bold"}>
+            <Typography variant="h6" fontWeight={"bold"}>
               Pedidos de Membros
             </Typography>
           </Grid>
@@ -163,7 +163,9 @@ export default function MemberRequestsCard({
         </CardContent>
       )}
       {/* Footer */}
-      <CardActions sx={{ p: 2, pt: 0 }}>
+      <CardActions
+        sx={{ p: 2, pt: 0, display: "flex", justifyContent: "flex-end" }}
+      >
         <Button
           variant="contained"
           startIcon={<PersonSearch />}

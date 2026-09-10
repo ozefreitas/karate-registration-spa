@@ -50,13 +50,13 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
       {props.userRole === "technician" ||
       props.userRole === "superuser" ? null : (
         <Grid container size={12}>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <MembersHomeComponent
               userRole={props.userRole}
             ></MembersHomeComponent>
             <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <NextEventHomeComponent
               userRole={props.userRole}
             ></NextEventHomeComponent>

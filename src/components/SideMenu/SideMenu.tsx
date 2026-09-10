@@ -142,9 +142,9 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
           sx={{
             scollbarWidth: "none",
             "& .MuiDrawer-paper": {
-              marginTop: "10px",
-              marginBottom: "10px",
-              marginLeft: "10px",
+              marginTop: { xs: "5px", sm: "10px" },
+              marginBottom: { xs: "5px", sm: "10px" },
+              marginLeft: { xs: "5px", sm: "10px" },
               height: "calc(100% - 20px)",
               "&::-webkit-scrollbar": {
                 width: 0,
@@ -166,7 +166,7 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
               left: 0,
               right: 0,
               height: 48,
-              mb: -5,
+              mb: -6,
               pointerEvents: "none",
               display: "flex",
               alignItems: "flex-start",
@@ -179,7 +179,6 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
             }}
           >
             <KeyboardArrowUp
-              fontSize="small"
               sx={{
                 mt: 2.5,
                 color: "text.secondary",
@@ -247,7 +246,8 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
                             borderRadius: "10px",
                           },
                           minHeight: 48,
-                          px: 2.5,
+                          px: { xs: 1, sm: 2.5 },
+                          py: 0,
                         },
                         isMenuOpen
                           ? { justifyContent: "initial" }
@@ -285,7 +285,7 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
                       selected={location.pathname === options.to}
                       onClick={() => navigate(options.to)}
                       sx={[
-                        { minHeight: 48, px: 2.5, m: 0.5 },
+                        { minHeight: 48, px: { xs: 1, sm: 2.5 }, m: 0.5 },
                         isMenuOpen
                           ? { justifyContent: "initial" }
                           : { justifyContent: "center" },
@@ -337,7 +337,6 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
             }}
           >
             <KeyboardArrowDown
-              fontSize="small"
               sx={{
                 mb: 2,
                 color: "text.secondary",
