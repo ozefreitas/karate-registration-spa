@@ -15,6 +15,7 @@ import {
   TextField,
   CircularProgress,
   InputAdornment,
+  Divider,
 } from "@mui/material";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddButton from "../../components/Buttons/AddButton";
@@ -347,6 +348,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
             container
             ml={1}
             mr={2}
+            pb={1}
+            borderBottom={"1px solid lightgray"}
             justifyContent={
               props.userRole === "main_admin" || props.userRole === "subed_club"
                 ? "space-between"
@@ -513,7 +516,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         !isMembersDataLoading &&
         membersData !== undefined &&
         membersData?.count !== 0 ? (
-          <Typography variant="subtitle1" sx={{ color: "gray", m: 3, mb: 2 }}>
+          <Typography variant="subtitle1" m={3} mb={2} sx={{ color: "gray" }}>
             {membersData?.count} Membro(s).
           </Typography>
         ) : null}
@@ -577,7 +580,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                         navigate(`/members/${person.id}/`);
                       }}
                       sx={{
-                        p: 1,
+                        // p: 1,
                         transition: "0.3s",
                         border: "4px",
                         borderColor: "transparent",
@@ -630,7 +633,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                       <CardContent
                         sx={{
                           "&:last-child": {
-                            paddingBottom: 1,
+                            px: 0,
                           },
                         }}
                       >
@@ -638,13 +641,14 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                           container
                           direction={"column"}
                           size={12}
-                          spacing={2}
+                          spacing={1}
                         >
                           <Grid container justifyContent={"center"}>
                             <Avatar
                               {...stringAvatar(person.full_name, 100)}
                             ></Avatar>
                           </Grid>
+                          <Divider></Divider>
                           <Grid
                             container
                             justifyContent={"center"}

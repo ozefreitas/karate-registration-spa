@@ -72,10 +72,10 @@ export default function LastCompQualiHomeComponent(
               <CircularProgress />
             </Grid>
           ) : lastCompQualiData?.length === 0 ? (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemText primary={"Classificações não disponíveis."} />
-              </ListItemButton>
+            <ListItem sx={{ mt: 1, ml: 2 }}>
+              <Typography color="textDisabled" variant="body2">
+                Classificações não disponíveis
+              </Typography>
             </ListItem>
           ) : (
             lastCompQualiData?.map((bracket, index: any) => (

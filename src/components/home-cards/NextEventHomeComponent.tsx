@@ -13,6 +13,7 @@ import {
   CircularProgress,
   Typography,
   Chip,
+  CardContent,
 } from "@mui/material";
 import { SportsMma } from "@mui/icons-material";
 import InfoButton from "../Buttons/InfoButton";
@@ -57,20 +58,20 @@ export default function NextEventHomeComponent(
             </Grid>
           }
         ></CardHeader>
-        {isNextCompLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-            <CircularProgress />
-          </Box>
-        ) : nextCompError ? (
-          <ListItem sx={{ m: 0 }}>
-            <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-              <ListItemText
-                primary={"Ocorreu um erro a procurar o próximo Evento."}
-              />
-            </ListItemButton>
-          </ListItem>
-        ) : nextCompData ? (
-          <List>
+        <CardContent sx={{ pt: 0, pb: 0 }}>
+          {isNextCompLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+              <CircularProgress />
+            </Box>
+          ) : nextCompError ? (
+            <ListItem sx={{ m: 0 }}>
+              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
+                <ListItemText
+                  primary={"Ocorreu um erro a procurar o próximo Evento."}
+                />
+              </ListItemButton>
+            </ListItem>
+          ) : nextCompData ? (
             <ListItem sx={{ m: 0, pb: 0 }}>
               <Tooltip title={"Consultar"}>
                 <span style={{ width: "100%" }}>
@@ -155,14 +156,14 @@ export default function NextEventHomeComponent(
                 </span>
               </Tooltip>
             </ListItem>
-          </List>
-        ) : (
-          <ListItem sx={{ m: 0 }}>
-            <ListItemButton disabled sx={{ mt: 2 }}>
-              <ListItemText primary={"Não há Eventos disponíveis."} />
-            </ListItemButton>
-          </ListItem>
-        )}
+          ) : (
+            <ListItem sx={{ mt: 1, ml: 2 }}>
+              <Typography color="textDisabled" variant="body2">
+                Não há Eventos disponíveis
+              </Typography>
+            </ListItem>
+          )}
+        </CardContent>
         <CardActions
           sx={{
             justifyContent:

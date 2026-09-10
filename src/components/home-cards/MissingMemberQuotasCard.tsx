@@ -31,7 +31,8 @@ function StatRow({
       container
       alignItems={"center"}
       justifyContent={"space-between"}
-      p={2}
+      px={2}
+      py={1}
     >
       <Grid container alignItems={"center"} spacing={3}>
         <Grid

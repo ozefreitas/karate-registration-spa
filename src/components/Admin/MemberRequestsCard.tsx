@@ -31,12 +31,13 @@ function StatRow({
       container
       alignItems={"center"}
       justifyContent={"space-between"}
-      p={2}
+      px={2}
+      py={1}
     >
       <Grid container alignItems={"center"} spacing={3}>
         <Grid
-          width={45}
-          height={45}
+          width={40}
+          height={40}
           borderRadius={2}
           bgcolor={"#fdf6ea"}
           container
@@ -45,7 +46,7 @@ function StatRow({
         >
           {icon}
         </Grid>
-        <Typography variant="h6" sx={{ color: "#555", fontWeight: 500 }}>
+        <Typography variant="body1" sx={{ color: "#555", fontWeight: 500 }}>
           {label}
         </Typography>
       </Grid>
@@ -112,6 +113,7 @@ export default function MemberRequestsCard({
       ) : (
         <CardContent
           sx={{
+            pt: 0,
             "&:last-child": {
               paddingBottom: 0,
             },
@@ -122,9 +124,9 @@ export default function MemberRequestsCard({
               <CircularProgress />
             </Box>
           ) : (
-            <Grid px={3} pb={2}>
+            <Grid px={3}>
               <StatRow
-                icon={<DoneAll sx={{ fontSize: 22 }} color="warning" />}
+                icon={<DoneAll sx={{ fontSize: 20 }} color="warning" />}
                 label="Pedidos de Verificação"
                 value={
                   memberValidationRequestsData?.results.filter(
@@ -136,7 +138,7 @@ export default function MemberRequestsCard({
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
               <StatRow
-                icon={<Upgrade sx={{ fontSize: 22 }} color="warning" />}
+                icon={<Upgrade sx={{ fontSize: 20 }} color="warning" />}
                 label="Propostas de exame"
                 value={
                   memberValidationRequestsData?.results.filter(
@@ -148,7 +150,7 @@ export default function MemberRequestsCard({
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
               <StatRow
-                icon={<FrontHand sx={{ fontSize: 22 }} color="warning" />}
+                icon={<FrontHand sx={{ fontSize: 20 }} color="warning" />}
                 label="Pedidos Gerais"
                 value={
                   memberValidationRequestsData?.results.filter(
