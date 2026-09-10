@@ -178,7 +178,9 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             container
             pr={2}
             pl={1}
+            pb={1}
             mb={3}
+            borderBottom={"1px solid lightgray"}
             justifyContent={
               [
                 "superuser",
@@ -209,13 +211,18 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                   <TextField
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Nome do Evento..."
+                    placeholder="Nome do Evento/Descrição/Localização..."
                     variant="outlined"
                     size="small"
                     sx={{
-                      // bgcolor: "white",
                       "& .MuiOutlinedInput-root": {
-                        height: 42,
+                        height: 32,
+                        borderRadius: 3,
+                        boxShadow: { md: "6px 6px 10px rgba(0,0,0,0.2)" },
+                      },
+                      "& .MuiInputBase-input::placeholder": {
+                        fontSize: "0.7rem",
+                        // opacity: 1,
                       },
                     }}
                     slotProps={{
@@ -342,7 +349,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         ) : eventsData?.count !== 0 && currentView === "list" ? (
           <Grid size={12}>
-            <Typography variant="h6" sx={{ color: "gray", ml: 3, mb: 1 }}>
+            <Typography variant="subtitle1" ml={3} sx={{ color: "gray" }}>
               {eventsData?.count} Evento(s).
             </Typography>
             {eventsData?.results.map((comp, index: number) => (

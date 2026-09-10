@@ -34,12 +34,13 @@ function StatRow({
       container
       alignItems={"center"}
       justifyContent={"space-between"}
-      p={2}
+      px={2}
+      py={1}
     >
       <Grid container alignItems={"center"} spacing={3}>
         <Grid
-          width={45}
-          height={45}
+          width={40}
+          height={40}
           borderRadius={2}
           bgcolor={"#fdecea"}
           container
@@ -48,7 +49,7 @@ function StatRow({
         >
           {icon}
         </Grid>
-        <Typography variant="h6" sx={{ color: "#555", fontWeight: 500 }}>
+        <Typography variant="body1" sx={{ color: "#555", fontWeight: 500 }}>
           {label}
         </Typography>
       </Grid>
@@ -117,6 +118,7 @@ export default function MissingQuotasCard({
       ) : (
         <CardContent
           sx={{
+            pt: 0,
             "&:last-child": {
               paddingBottom: 0,
             },
@@ -127,15 +129,15 @@ export default function MissingQuotasCard({
               <CircularProgress />
             </Box>
           ) : (
-            <Grid px={2} pb={2}>
+            <Grid px={2}>
               <StatRow
-                icon={<Groups sx={{ fontSize: 22 }} color="error" />}
+                icon={<Groups sx={{ fontSize: 20 }} color="error" />}
                 label="Número Total de Clubes"
                 value={subscriptionsData?.length!}
               />
               <Divider sx={{ borderColor: "#f5f5f5" }} />
               <StatRow
-                icon={<Payments sx={{ fontSize: 22 }} color="error" />}
+                icon={<Payments sx={{ fontSize: 20 }} color="error" />}
                 label="Pagamentos por efetuar"
                 value={
                   subscriptionsData?.filter((item: any) => item.paid === false)
