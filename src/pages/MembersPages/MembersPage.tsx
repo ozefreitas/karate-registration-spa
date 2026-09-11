@@ -47,14 +47,6 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   const paramPage = searchParams.get("page") ?? "1";
   const paramPageSize = searchParams.get("page_size") ?? "10";
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [query]);
-
   const changePage = (number: string) => {
     setSearchParams((prev) => {
       prev.set("page", number);
@@ -137,6 +129,15 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
   };
 
   const columnMaping = getColumnMaping();
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setPage(1);
+      setDebouncedQuery(query);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
 
   const {
     control: filtersControl,
