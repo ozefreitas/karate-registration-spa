@@ -14,8 +14,8 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-import EventsFilters from "../../components/filter_drawers/EventsFilters";
-import EventsOrdering from "../../components/filter_drawers/EventsOrdering";
+import EventOrdering from "../../components/events-filters/EventOrdering";
+import EventFiltering from "../../components/events-filters/EventFiltering";
 import AddButton from "../../components/Buttons/AddButton";
 import stringAvatar from "../../dashboard/utils/avatarColor";
 import {
@@ -242,26 +242,24 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                       },
                     }}
                   />
-                  <EventsOrdering
+                  <EventOrdering
                     isLoading={isEventsDataLoading}
                     control={orderControl}
                     reset={orderReset}
-                    errors={orderErrors}
                     changedCount={orderChangedCount}
                     orderFields={orderFields}
                     setOrderFields={setOrderFields}
-                  ></EventsOrdering>
+                  ></EventOrdering>
                 </>
               ) : null}
               {props.userRole === "technician" ? null : (
-                <EventsFilters
+                <EventFiltering
                   isLoading={isEventsDataLoading}
                   control={filtersControl}
                   reset={filtersReset}
-                  errors={filtersErrors}
                   changedCount={filtersChangedCount}
                   setPage={setPage}
-                ></EventsFilters>
+                ></EventFiltering>
               )}
               {["technician", undefined].includes(props.userRole) ? null : (
                 <Grid pl={2} container spacing={1} borderRadius={3}>

@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { GenerateToken } from '../models/GenerateToken';
-import type { RegisterUser } from '../models/RegisterUser';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -50,25 +49,6 @@ export class SignUpService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/sign_up/get_token_username/',
-            errors: {
-                400: `No response body`,
-            },
-        });
-    }
-    /**
-     * Register a new user with username, email and password.
-     * @param requestBody
-     * @returns any No response body
-     * @throws ApiError
-     */
-    public static signUpRegisterUserCreate(
-        requestBody: RegisterUser,
-    ): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/sign_up/register_user/',
-            body: requestBody,
-            mediaType: 'application/json',
             errors: {
                 400: `No response body`,
             },

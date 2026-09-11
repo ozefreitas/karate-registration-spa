@@ -3,7 +3,7 @@ import {
   fetchTokenUsername,
   fetchToken,
 } from "../../api";
-import { MeService, RequestAcountService } from "../../openapi";
+import { MeService } from "../../openapi";
 
 export const useFetchMeData = () => {
   return useQuery({
@@ -34,14 +34,5 @@ export const useFetchToken = (username: string) => {
     refetchOnMount: false,
     retry: false,
     enabled: !!username,
-  });
-};
-
-export const useFetchRequestingAccounts = () => {
-  return useQuery({
-    queryKey: ["request-acount"],
-    queryFn: () => RequestAcountService.requestAcountList(),
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
   });
 };
