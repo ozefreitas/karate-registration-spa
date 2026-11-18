@@ -22,7 +22,6 @@ import {
 } from "@mui/material";
 import {
   Delete,
-  Add,
   ContentCopy,
   Close,
   Check,
@@ -31,9 +30,7 @@ import {
   PictureAsPdf,
 } from "@mui/icons-material";
 import { useEffect, useState, useMemo } from "react";
-import { authHooks, clubsHooks, adminHooks, membersHooks } from "../../hooks";
-import DeleteClubModal from "../../components/Admin/DeleteClubModal";
-import AddClubModal from "../../components/Admin/AddClubModal";
+import { adminHooks, membersHooks } from "../../hooks";
 import { useSnackbar } from "notistack";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { useSearchParams } from "react-router-dom";
@@ -47,14 +44,9 @@ export default function MainSettingsPage() {
   const { enqueueSnackbar } = useSnackbar();
   const [clickedUsername, setClickedUsername] = useState<string>("");
   console.log(setClickedUsername);
-  const [selectedUserId, setSelectedUserId] = useState<string>("");
-  const [selectedRequestId, setSelectedRequestId] = useState<string>("");
   const [selectedPasswordRequestId, setSelectedPasswordRequestId] =
     useState<string>("");
-  const [createdToken, setCreatedToken] = useState<string>("");
   const [createdPasswordURL, setCreatedPasswordURL] = useState<string>("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [isAddClubModalOpen, setIsAddClubModalOpen] = useState<boolean>(false);
   const [isActionValidationModalOpen, setIsActionValidationModalOpen] =
     useState<boolean>(false);
   const [currentValidationId, setCurrentValidationId] = useState<string>("");
@@ -120,8 +112,6 @@ export default function MainSettingsPage() {
 
   const open = Boolean(anchorPosition);
 
-  const { data: availableClubsData } = clubsHooks.useFetchAvailableClubs();
-
   const { refetch } = adminHooks.useFetchClubUsersData(clickedUsername);
 
   const { data: requestingPasswordsData } =
@@ -129,23 +119,18 @@ export default function MainSettingsPage() {
 
   const generatePasswordResetURL = adminHooks.useCreatePasswordRecoveryURL();
 
-  const { data: requestAccountData } = authHooks.useFetchRequestingAccounts();
-
-  const createSignUpToken = authHooks.useCreateSignUpToken();
-  const rejectAcount = authHooks.useRemoveRequestAcount();
-
-  const acountDetails = useMemo(() => {
-    return requestAccountData?.results
-      .filter((acount: any) => acount.id === selectedRequestId)
-      .map((acount: any) => ({
-        id: acount.id,
-        id_number: acount.id_number,
-        first_name: acount.first_name,
-        last_name: acount.last_name,
-        email: acount.email,
-        username: acount.username,
-      }))[0];
-  }, [requestAccountData, selectedRequestId]);
+  // const acountDetails = useMemo(() => {
+  //   return requestAccountData?.results
+  //     .filter((acount: any) => acount.id === selectedRequestId)
+  //     .map((acount: any) => ({
+  //       id: acount.id,
+  //       id_number: acount.id_number,
+  //       first_name: acount.first_name,
+  //       last_name: acount.last_name,
+  //       email: acount.email,
+  //       username: acount.username,
+  //     }))[0];
+  // }, [requestAccountData, selectedRequestId]);
 
   const passwordRequestedDetails = useMemo(() => {
     return requestingPasswordsData?.data
@@ -163,29 +148,21 @@ export default function MainSettingsPage() {
     }
   }, [clickedUsername]);
 
-  const { data: isTokenAvailable } = authHooks.useFetchToken(
-    acountDetails?.username,
-  );
+  // const { data: isTokenAvailable } = authHooks.useFetchToken(
+  //   acountDetails?.username,
+  // );
 
-  useEffect(() => {
-    if (isTokenAvailable?.data.error === undefined) {
-      setCreatedToken(isTokenAvailable?.data.token);
-    } else {
-      setCreatedToken("");
-    }
-  }, [isTokenAvailable]);
+  // useEffect(() => {
+  //   if (isTokenAvailable?.data.error === undefined) {
+  //     setCreatedToken(isTokenAvailable?.data.token);
+  //   } else {
+  //     setCreatedToken("");
+  //   }
+  // }, [isTokenAvailable]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     event.preventDefault();
     setSearchParams({ section: newValue });
-  };
-
-  const handleClubChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUserId(event.target.value);
-  };
-
-  const handleAcountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedRequestId(event.target.value);
   };
 
   const handlePasswordRequestAcountChange = (
@@ -194,30 +171,14 @@ export default function MainSettingsPage() {
     setSelectedPasswordRequestId(event.target.value);
   };
 
-  const handleDeleteModalOpen = () => {
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleAddClubModalOpen = () => {
-    setIsAddClubModalOpen(true);
-  };
-
-  const handleAddClubModalClose = () => {
-    setIsAddClubModalOpen(false);
-  };
-
-  const handleDeleteModalClose = () => {
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleTokenCreation = () => {
-    const data = { username: acountDetails?.username, alive_time: 3 };
-    createSignUpToken.mutate(data, {
-      onSuccess: (data: any) => {
-        setCreatedToken(data.data.token);
-      },
-    });
-  };
+  // const handleTokenCreation = () => {
+  //   const data = { username: acountDetails?.username, alive_time: 3 };
+  //   createSignUpToken.mutate(data, {
+  //     onSuccess: (data: any) => {
+  //       setCreatedToken(data.data.token);
+  //     },
+  //   });
+  // };
 
   const handlePasswordURLCreation = () => {
     generatePasswordResetURL.mutate(
@@ -230,13 +191,13 @@ export default function MainSettingsPage() {
     );
   };
 
-  const handleAcountRejection = () => {
-    rejectAcount.mutate(acountDetails?.id, {
-      onSuccess: () => {
-        setSelectedRequestId("");
-      },
-    });
-  };
+  // const handleAcountRejection = () => {
+  //   rejectAcount.mutate(acountDetails?.id, {
+  //     onSuccess: () => {
+  //       setSelectedRequestId("");
+  //     },
+  //   });
+  // };
 
   function copyToClipboard(text: string) {
     navigator.clipboard
@@ -590,7 +551,7 @@ export default function MainSettingsPage() {
       {/* Sections */}
       {section === "accounts_manager" ? (
         <Grid container spacing={2}>
-          <FormCard title="Adicionar/Remover Clubes">
+          {/* <FormCard title="Adicionar/Remover Clubes">
             <Grid
               container
               justifyContent="space-between"
@@ -908,7 +869,7 @@ export default function MainSettingsPage() {
                 )}
               </Grid>
             </Grid>
-          </FormCard>
+          </FormCard> */}
 
           <FormCard title="Pedidos de Recuperação de Password">
             <Grid size={12}>
@@ -1165,16 +1126,7 @@ export default function MainSettingsPage() {
           </FormCard>
         </Grid>
       )}
-      <DeleteClubModal
-        handleModalClose={handleDeleteModalClose}
-        isModalOpen={isDeleteModalOpen}
-        id={selectedUserId}
-        setSelectedUserId={setSelectedUserId}
-      ></DeleteClubModal>
-      <AddClubModal
-        handleClose={handleAddClubModalClose}
-        isOpen={isAddClubModalOpen}
-      ></AddClubModal>
+
       <ActionValidationModal
         handleClose={handleActionValidationModalClose}
         isOpen={isActionValidationModalOpen}

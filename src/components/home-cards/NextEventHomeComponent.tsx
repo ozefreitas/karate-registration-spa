@@ -3,7 +3,6 @@ import {
   Card,
   CardHeader,
   CardActions,
-  List,
   ListItem,
   ListItemText,
   ListItemButton,
@@ -171,11 +170,7 @@ export default function NextEventHomeComponent(
           }}
         >
           {props.userRole === "main_admin" ? (
-            <AddButton
-              label="Adicionar"
-              to="events/new_event/"
-              size="medium"
-            ></AddButton>
+            <AddButton label="Adicionar" to="events/new_event/"></AddButton>
           ) : null}
           <InfoButton label="Ver Todas" to="events/"></InfoButton>
         </CardActions>

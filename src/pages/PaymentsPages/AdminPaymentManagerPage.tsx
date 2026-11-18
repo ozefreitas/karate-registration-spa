@@ -99,7 +99,6 @@ export default function AdminPaymentManagerPage(
     // error: subscriptionConfigError,
   } = clubsHooks.useFetchClubSubscriptionConfig();
 
-  const createYearSubscription = clubsHooks.useCreateAllClubsSubscription();
   const patchClubSubscriptionsAmount =
     clubsHooks.usePatchClubSubscriptionAmountbyYear();
   const patchSubscriptionConfigAmount =
@@ -122,13 +121,6 @@ export default function AdminPaymentManagerPage(
     } else if (currentAction === "due_date") {
       const formData = { year: data.search, due_date: data.overdueDate };
       patchSubscriptionDueDate.mutate(formData, {
-        onSuccess: () => {
-          handleClose();
-        },
-      });
-    } else if (currentAction === "create") {
-      const formData = { year: data.year };
-      createYearSubscription.mutate(formData, {
         onSuccess: () => {
           handleClose();
         },

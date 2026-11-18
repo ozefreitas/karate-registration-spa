@@ -10,7 +10,6 @@ import AdminHomePage from "./pages/HomePage/AdminHomePage";
 import ClassificationsPage from "./pages/ClassificationsPage/ClassificationsPage";
 import RulesPage from "./pages/RulesPage/RulesPage";
 import HelpPage from "./pages/HelpPage/HelpPage";
-import RequestAccountPage from "./pages/auth/RequestAccountPage";
 import LoginPage from "./pages/auth/LoginPage";
 import NewMemberPage from "./pages/MembersPages/NewMemberPage";
 import SingleMemberPage from "./pages/MembersPages/SingleMemberPage";
@@ -108,10 +107,6 @@ function App() {
                   }
                 />
                 <Route path="signup/:token/" element={<SignupWrapper />} />
-                <Route
-                  path="request_account/"
-                  element={<RequestAccountPage />}
-                />
                 <Route path="login/" element={<LoginPage />} />
                 <Route
                   path="members/"

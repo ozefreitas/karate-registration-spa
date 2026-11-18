@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, Drawer, IconButton, Tooltip } from "@mui/material";
+import { Box, Button, Drawer, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import { SwapVert } from "@mui/icons-material";

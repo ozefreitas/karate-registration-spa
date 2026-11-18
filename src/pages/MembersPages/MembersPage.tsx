@@ -32,6 +32,7 @@ import {
   CreditCard,
   Add,
   Search,
+  Refresh,
 } from "@mui/icons-material";
 import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -527,15 +528,11 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               <ListItemText primary="Ocorreu um erro ao encontrar os Membros disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
             </ListItem>
             <Button
-              onClick={() => {
-                filtersReset();
-                orderReset();
-                changePage("1");
-                setPage(1);
-                refetchMembersData();
-              }}
+              startIcon={<Refresh />}
+              disabled={isMembersDataLoading}
+              onClick={() => refetchMembersData()}
             >
-              Refrescar
+              Tentar novamente
             </Button>
           </Grid>
         ) : currentView === "table" ? (
@@ -642,7 +639,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                           container
                           direction={"column"}
                           size={12}
-                          spacing={1}
+                          spacing={2}
                         >
                           <Grid container justifyContent={"center"}>
                             <Avatar

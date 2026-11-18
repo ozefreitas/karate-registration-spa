@@ -1,15 +1,22 @@
+import axios from "axios";
 import { OpenAPI } from "./core/OpenAPI";
+import {
+  apiBaseUrl,
+  restoreAccessToken,
+  retryWithRefreshedAccessToken,
+} from "../api/authToken";
 
-OpenAPI.BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+OpenAPI.BASE = apiBaseUrl;
+OpenAPI.WITH_CREDENTIALS = true;
+OpenAPI.CREDENTIALS = "same-origin";
+OpenAPI.TOKEN = async () => (await restoreAccessToken()) ?? "";
 
-OpenAPI.HEADERS = async () => {
-  const token = localStorage.getItem("token");
+if (typeof window !== "undefined") {
+  window.localStorage.removeItem("token");
+}
 
-  const headers: Record<string, string> = {};
-
-  if (token) {
-    headers["Authorization"] = `Token ${token}`;
-  }
-
-  return headers;
-};
+axios.interceptors.response.use(
+  (response) => response,
+  (error) =>
+    retryWithRefreshedAccessToken(error, (request) => axios.request(request)),
+);

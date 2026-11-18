@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { LogoutService } from "../../openapi";
 import { useNavigate } from "react-router-dom";
+import { clearAccessToken } from "../../api/authToken";
 import { callNotiStack } from "../../utils/utils";
 
 export const useLogOutUser = () => {
@@ -13,6 +14,7 @@ export const useLogOutUser = () => {
     onSettled: () => {
       callNotiStack(enqueueSnackbar, "Saiu da sua conta!", "success");
 
+      clearAccessToken();
       localStorage.removeItem("token");
       localStorage.removeItem("dismissedAnnouncementIds");
       localStorage.removeItem("membersView");

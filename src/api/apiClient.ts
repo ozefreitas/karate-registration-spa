@@ -1,19 +1,25 @@
 import axios from "axios";
-
-const baseURL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+import {
+  apiBaseUrl,
+  restoreAccessToken,
+  retryWithRefreshedAccessToken,
+} from "./authToken";
 
 // Public client (token optional)
-export const apiClient = axios.create({ baseURL });
+export const apiClient = axios.create({
+  baseURL: apiBaseUrl,
+  withCredentials: true,
+});
 
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-
-  // Do NOT attach token for login or signup requests EVER
+apiClient.interceptors.request.use(async (config) => {
   const isAuthFreeEndpoint =
-    config.url?.includes("/login/") || config.url?.includes("/register/");
+    config.url?.includes("/login/") ||
+    config.url?.includes("/register/") ||
+    config.url?.includes("/auth/token/");
 
-  if (token && !isAuthFreeEndpoint) {
-    config.headers.Authorization = `Token ${token}`;
+  if (!isAuthFreeEndpoint) {
+    const token = await restoreAccessToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;
@@ -22,24 +28,31 @@ apiClient.interceptors.request.use((config) => {
 // if authentication credential are not valid, remove the current token (if available) and redirect to the login page
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
+  (error) =>
+    retryWithRefreshedAccessToken(error, (request) =>
+      apiClient.request(request),
+    ),
 );
 
-
 // Auth client (token required)
-export const authClient = axios.create({ baseURL });
+export const authClient = axios.create({
+  baseURL: apiBaseUrl,
+  withCredentials: true,
+});
 
-authClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+authClient.interceptors.request.use(async (config) => {
+  const token = await restoreAccessToken();
   if (!token) {
     throw new Error("Authentication required");
   }
-  config.headers.Authorization = `Token ${token}`;
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
+
+authClient.interceptors.response.use(
+  (response) => response,
+  (error) =>
+    retryWithRefreshedAccessToken(error, (request) =>
+      authClient.request(request),
+    ),
+);

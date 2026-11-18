@@ -8,7 +8,7 @@ export const useSignUpWithToken = () => {
 
   //   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: SignUpService.signUpRegisterUserCreate,
+    mutationFn: SignUpService.signUpGenerateTokenCreate,
     onSuccess: () => {
       callNotiStack(
         enqueueSnackbar,
