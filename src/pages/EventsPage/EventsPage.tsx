@@ -59,7 +59,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
-      season: "2025/2026",
+      season: "2026/2027",
       has_registrations: false,
       has_categories: false,
       is_open: false,
