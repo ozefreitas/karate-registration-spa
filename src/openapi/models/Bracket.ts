@@ -9,6 +9,8 @@ export type Bracket = {
     category: CompactCategory;
     readonly is_team: string;
     readonly has_only_scoring_rounds: string;
+    readonly athlete_count: string;
+    readonly team_count: string;
     name: string;
     draw_type?: DrawTypeEnum | null;
     readonly created_at: string;

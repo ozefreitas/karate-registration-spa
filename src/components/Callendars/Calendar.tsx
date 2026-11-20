@@ -21,6 +21,16 @@ import MonthYearPicker from "./MonthYearPicker";
 import ListDayEventsModal from "../EventsModals/ListDayEventsModal";
 
 const WEEKDAYS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
+const navigationButtonSx = {
+  bgcolor: "background.paper",
+  color: "text.primary",
+  border: "1px solid",
+  borderColor: "divider",
+  "&:hover": {
+    bgcolor: "action.hover",
+    borderColor: "text.secondary",
+  },
+};
 
 function getEventKey(year: number, month: number, day: number) {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -173,7 +183,17 @@ export default function Calendar(
   );
 
   return (
-    <Grid size={12} p={2} pb={0} sx={{ fontFamily: "inherit" }}>
+    <Grid
+      size={12}
+      p={2}
+      pb={0}
+      sx={{
+        fontFamily: "inherit",
+        bgcolor: "background.default",
+        color: "text.primary",
+        minHeight: "100%",
+      }}
+    >
       {/* Header */}
       <Grid
         container
@@ -184,7 +204,8 @@ export default function Calendar(
       >
         <IconButton
           onClick={handlePrev}
-          sx={{ bgcolor: "#ffffff", "&:hover": { bgcolor: "#e0e0e0" } }}
+          aria-label="Mês anterior"
+          sx={navigationButtonSx}
         >
           <ChevronLeft />
         </IconButton>
@@ -199,7 +220,10 @@ export default function Calendar(
               textAlign: "center",
               cursor: "pointer",
               userSelect: "none",
-              "&:hover": { color: "#d32f2f", transform: "translateY(-3px)" },
+              "&:hover": {
+                color: "error.main",
+                transform: "translateY(-3px)",
+              },
               transition: "0.15s ease",
             }}
           >
@@ -208,7 +232,8 @@ export default function Calendar(
         </Tooltip>
         <IconButton
           onClick={handleNext}
-          sx={{ bgcolor: "#ffffff", "&:hover": { bgcolor: "#e0e0e0" } }}
+          aria-label="Próximo mês"
+          sx={navigationButtonSx}
         >
           <ChevronRight />
         </IconButton>
@@ -219,6 +244,10 @@ export default function Calendar(
             }}
             color="info"
             variant="contained"
+            sx={{
+              boxShadow: "none",
+              "&:hover": { boxShadow: "none" },
+            }}
             disabled={
               today.getMonth() + 1 === month && today.getFullYear() === year
             }
@@ -237,6 +266,16 @@ export default function Calendar(
             <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
           </ListItem>
           <Button
+            variant="outlined"
+            color="info"
+            sx={{
+              borderColor: "divider",
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "action.hover",
+                borderColor: "info.main",
+              },
+            }}
             onClick={() => {
               props.resetFilters();
               refetch();
@@ -247,22 +286,33 @@ export default function Calendar(
         </Grid>
       ) : (
         <>
-          <Card elevation={2} sx={{ p: 3 }}>
+          <Card
+            elevation={2}
+            sx={{
+              p: 3,
+              bgcolor: "background.paper",
+              color: "text.primary",
+            }}
+          >
             <Grid container>
               {WEEKDAYS.map((day) => (
                 <Grid
                   justifyContent={"center"}
-                  bgcolor={"lightgrey"}
                   container
                   key={day}
                   borderRadius={3}
-                  sx={{ flex: 1 }}
+                  sx={{
+                    flex: 1,
+                    bgcolor: "action.hover",
+                    border: "1px solid",
+                    borderColor: "divider",
+                  }}
                   mx={0.5}
                   mb={5}
                 >
                   <Box
                     sx={{
-                      color: "black",
+                      color: "text.secondary",
                       textAlign: "center",
                       py: 2,
                       fontWeight: 700,
@@ -280,7 +330,10 @@ export default function Calendar(
               <Grid
                 container
                 key={rowIdx}
-                sx={{ borderTop: rowIdx === 0 ? "none" : "1px solid #e0e0e0" }}
+                sx={{
+                  borderTop: rowIdx === 0 ? "none" : "1px solid",
+                  borderColor: "divider",
+                }}
               >
                 {cells
                   .slice(rowIdx * 7, rowIdx * 7 + 7)
@@ -320,15 +373,19 @@ export default function Calendar(
                           minHeight: 125,
                           transition: "0.15s ease",
                           "&:hover": {
-                            bgcolor: day === null ? null : "#fdecea",
+                            bgcolor:
+                              day === null ? undefined : "action.hover",
                             transform: day === null ? null : "scale(1.2)",
                             borderLeft: day === null ? null : "transparent",
                             cursor: day === null ? null : "pointer",
                             zIndex: 99,
                             borderRadius: day === null ? null : 4,
                           },
-                          borderLeft: colIdx > 0 ? "1px solid #e0e0e0" : "none",
-                          bgcolor: todayCell ? "#fffde7" : "transparent",
+                          borderLeft: colIdx > 0 ? "1px solid" : "none",
+                          borderColor: "divider",
+                          bgcolor: todayCell
+                            ? "action.selected"
+                            : "transparent",
                           p: 1,
                           display: "flex",
                           flexDirection: "column",
@@ -351,7 +408,13 @@ export default function Calendar(
                                   alignItems: "center",
                                   justifyContent: "center",
                                   fontWeight: todayCell ? 800 : 400,
-                                  fontSize: todayCell ? "1.2rem" : "0.86rem",
+                                  fontSize: todayCell ? "1rem" : "0.86rem",
+                                  bgcolor: todayCell
+                                    ? "error.main"
+                                    : "transparent",
+                                  color: todayCell
+                                    ? "error.contrastText"
+                                    : "text.primary",
                                 }}
                               >
                                 {day}
@@ -436,8 +499,10 @@ export default function Calendar(
                                         handleListModalOpen();
                                       }}
                                       sx={{
-                                        bgcolor: "grey.300",
-                                        color: "#fff",
+                                        bgcolor: "action.hover",
+                                        color: "text.secondary",
+                                        border: "1px solid",
+                                        borderColor: "divider",
                                         fontWeight: 700,
                                         fontSize: "0.7rem",
                                         height: 22,
@@ -445,7 +510,9 @@ export default function Calendar(
                                         letterSpacing: isHovered ? 0 : "0.05em",
                                         transition: "all 0.2s ease",
                                         "& .MuiChip-label": { px: 1 },
-                                        "&:hover": { opacity: 0.95 },
+                                        "&:hover": {
+                                          bgcolor: "action.selected",
+                                        },
                                       }}
                                     />
                                   )}
@@ -459,7 +526,10 @@ export default function Calendar(
                                 label="Clique para ad. Evento"
                                 size="small"
                                 sx={{
-                                  color: "#fff",
+                                  bgcolor: "action.hover",
+                                  color: "text.secondary",
+                                  border: "1px solid",
+                                  borderColor: "divider",
                                   fontWeight: 600,
                                   fontSize: "0.7rem",
                                   height: 22,
@@ -488,7 +558,10 @@ export default function Calendar(
             py={2}
             px={1}
             borderRadius={2}
-            bgcolor={"#ffffff"}
+            bgcolor={"background.paper"}
+            color={"text.primary"}
+            border="1px solid"
+            borderColor="divider"
           >
             {Object.entries(EncounterOptions).map(([_, { color, label }]) => (
               <Box

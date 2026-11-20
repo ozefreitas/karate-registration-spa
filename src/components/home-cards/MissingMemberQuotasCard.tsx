@@ -46,7 +46,7 @@ function StatRow({
         >
           {icon}
         </Grid>
-        <Typography sx={{ color: "#555", fontWeight: 500 }}>
+        <Typography color="text.secondary" sx={{ fontWeight: 500 }}>
           {label}
         </Typography>
       </Grid>
@@ -76,10 +76,11 @@ export default function MissingMemberQuotasCard({
     <Card
       sx={{
         overflow: "hidden",
-        m: 2,
+        width: "100%",
       }}
     >
       <CardHeader
+        sx={{ p: 2 }}
         title={
           <Grid container alignItems={"center"} gap={2}>
             <Grid
@@ -105,9 +106,11 @@ export default function MissingMemberQuotasCard({
 
       {/* Stats */}
       {userRole === undefined ? (
-        <Typography color="textDisabled" p={5} pt={2}>
-          Sem sessão iniciada. Faça Login.
-        </Typography>
+        <Grid container size={12} justifyContent={"center"} my={1}>
+          <Typography variant="body2" color="textDisabled">
+            Sem sessão iniciada. Faça Login
+          </Typography>
+        </Grid>
       ) : memberPaymentStatusError &&
         memberPaymentStatusError?.message === "Forbidden" ? (
         <Typography color="textDisabled" p={5} pt={2}>
@@ -147,7 +150,9 @@ export default function MissingMemberQuotasCard({
         sx={{ p: 2, pt: 0, display: "flex", justifyContent: "flex-end" }}
       >
         <Button
+          size="small"
           variant="contained"
+          sx={{ border: 0 }}
           startIcon={<WarningAmber />}
           onClick={onResolve}
           disableElevation

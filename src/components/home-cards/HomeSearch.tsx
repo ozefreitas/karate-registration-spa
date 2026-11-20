@@ -8,12 +8,13 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  IconButton,
   InputAdornment,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Clear, Search } from "@mui/icons-material";
 import { useState } from "react";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -46,8 +47,8 @@ export default function HomeSearch({
       />
       <Card
         sx={{
-          m: 2,
-          mb: 0,
+          width: "100%",
+          mx: { xs: 1, sm: 2 },
           zIndex: (theme) => (open ? theme.zIndex.modal + 1 : "auto"),
           position: "relative",
         }}
@@ -134,6 +135,17 @@ export default function HomeSearch({
                       <>
                         {loading ? <CircularProgress size={16} /> : null}
                         {params.InputProps.endAdornment}
+                        {query === "" ? null : (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setQuery("")}
+                              edge="end"
+                              aria-label="toggle password visibility"
+                            >
+                              <Clear color="error"></Clear>
+                            </IconButton>
+                          </InputAdornment>
+                        )}
                       </>
                     ),
                   },

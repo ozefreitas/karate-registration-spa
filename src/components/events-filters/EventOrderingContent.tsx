@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Box,
   List,
   Button,
   Grid,
@@ -37,15 +36,23 @@ export default function EventOrderingContent(
   };
 
   return (
-    <Box sx={{ width: 400 }} role="presentation">
+    <>
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
-        <Typography variant="h6" pl={2} mb={3}>
+        <Typography variant="h6" pl={2}>
           Ordenação
         </Typography>
-        <Grid container alignContent="center" alignItems="center">
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          size={12}
+          mx={{ xs: 3, sm: 5, md: 3 }}
+          rowSpacing={3}
+          mt={5}
+        >
           {props.orderFields.map((item: any, index: any) => (
             <React.Fragment key={item.key}>
-              <Grid sx={{ p: 2 }} size={10}>
+              <Grid size={9}>
                 <Controller
                   name={item.key}
                   control={props.control}
@@ -56,6 +63,15 @@ export default function EventOrderingContent(
                       label={item.label}
                       fullWidth
                       select
+                      size="small"
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: 3,
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: "0.7rem",
+                        },
+                      }}
                       slotProps={{
                         input: {
                           style: {
@@ -81,21 +97,33 @@ export default function EventOrderingContent(
                 />
               </Grid>
 
-              <Grid size={1}>
+              <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                size={1}
+              >
                 <IconButton
+                  size="small"
                   disabled={index === 0}
                   onClick={() => moveUp(index)}
                 >
-                  <ArrowUpward />
+                  <ArrowUpward fontSize="small" />
                 </IconButton>
               </Grid>
 
-              <Grid size={1}>
+              <Grid
+                size={1}
+                container
+                justifyContent="center"
+                alignItems="center"
+              >
                 <IconButton
-                  disabled={index === 2}
+                  size="small"
+                  disabled={index === props.orderFields.length - 1}
                   onClick={() => moveDown(index)}
                 >
-                  <ArrowDownward />
+                  <ArrowDownward fontSize="small" />
                 </IconButton>
               </Grid>
             </React.Fragment>
@@ -108,10 +136,11 @@ export default function EventOrderingContent(
           sx={{ width: "100%" }}
           onClick={() => props.reset()}
           variant="contained"
+          disabled={props.changedCount === 0}
         >
           Limpar
         </Button>
       </Grid>
-    </Box>
+    </>
   );
 }

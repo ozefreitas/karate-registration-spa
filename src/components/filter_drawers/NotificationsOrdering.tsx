@@ -1,189 +1,146 @@
-import * as React from "react";
+import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import {
   Box,
-  List,
   Button,
-  Drawer,
   Grid,
-  TextField,
-  MenuItem,
   IconButton,
+  List,
+  MenuItem,
+  TextField,
   Typography,
-  Tooltip,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
+import type { Dispatch, SetStateAction } from "react";
 import { notificationOrderingOptions } from "../../dashboard/filters";
-import { styled } from "@mui/material/styles";
-import Badge, { badgeClasses } from "@mui/material/Badge";
-import { ArrowUpward, ArrowDownward, SwapVert } from "@mui/icons-material";
+import FilterDrawer from "./FilterDrawer";
 
-const FiltersBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -20px;
-    right: -55px;
-  }
-`;
+type OrderField = {
+  key: string;
+  label: string;
+  options: string[];
+};
 
 export default function NotificationsOrdering(
   props: Readonly<{
     isLoading: boolean;
     control: any;
-    errors: any;
-    reset: any;
+    reset: () => void;
     changedCount: number;
-    orderFields: any;
-    setOrderFields: any;
+    orderFields: OrderField[];
+    setOrderFields: Dispatch<SetStateAction<OrderField[]>>;
   }>,
 ) {
-  const [open, setOpen] = React.useState(false);
+  const moveField = (index: number, direction: -1 | 1) => {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= props.orderFields.length) return;
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
+    const updatedFields = [...props.orderFields];
+    [updatedFields[index], updatedFields[targetIndex]] = [
+      updatedFields[targetIndex],
+      updatedFields[index],
+    ];
+    props.setOrderFields(updatedFields);
   };
 
-  const moveUp = (index: any) => {
-    if (index === 0) return; // already at top
-    const updated = [...props.orderFields];
-    [updated[index - 1], updated[index]] = [updated[index], updated[index - 1]];
-    props.setOrderFields(updated);
-  };
-
-  const moveDown = (index: any) => {
-    if (index === props.orderFields.length - 1) return; // already at bottom
-    const updated = [...props.orderFields];
-    [updated[index + 1], updated[index]] = [updated[index], updated[index + 1]];
-    props.setOrderFields(updated);
-  };
-
-  const DrawerList = (
-    <Box sx={{ width: 400 }} role="presentation">
+  return (
+    <FilterDrawer
+      label="Ordem"
+      changedCount={props.changedCount}
+      isLoading={props.isLoading}
+    >
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
-        <Typography variant="h6" pl={2} mb={3}>
+        <Typography variant="h6" pl={2}>
           Ordenação
         </Typography>
-        <Grid container alignContent="center" alignItems="center">
-          {props.orderFields.map((item: any, index: any) => (
-            <React.Fragment key={item.key}>
-              <Grid sx={{ p: 2 }} size={10}>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent={"space-between"}
+          size={12}
+          mx={{ xs: 3, sm: 5, md: 3 }}
+          rowSpacing={3}
+          mt={5}
+        >
+          {props.orderFields.map((item, index) => (
+            <Grid
+              key={item.key}
+              container
+              size={12}
+              spacing={0.5}
+              alignItems="center"
+              wrap="nowrap"
+            >
+              <Grid size={8}>
                 <Controller
                   name={item.key}
                   control={props.control}
                   render={({ field }) => (
                     <TextField
+                      {...field}
                       color="warning"
                       variant="outlined"
                       label={item.label}
                       fullWidth
                       select
-                      slotProps={{
-                        input: {
-                          style: {
-                            fontSize: 13,
-                          },
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          // height: 38,
+                          borderRadius: 3,
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: "0.7rem",
                         },
                       }}
-                      {...field}
-                      onChange={(e) => field.onChange(e.target.value)}
+                      size="small"
+                      onChange={(event) => field.onChange(event.target.value)}
                     >
-                      <MenuItem sx={{ color: "lightgrey" }} value="">
-                        -- Selecionar --
-                      </MenuItem>
+                      <MenuItem value="">-- Selecionar --</MenuItem>
                       {notificationOrderingOptions
-                        .filter((opt) => item.options.includes(opt.value))
-                        .map((opt) => (
-                          <MenuItem key={opt.value} value={opt.value}>
-                            {opt.label}
+                        .filter((option) => item.options.includes(option.value))
+                        .map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
                           </MenuItem>
                         ))}
                     </TextField>
                   )}
                 />
               </Grid>
-
-              <Grid size={1}>
+              <Grid size={2} container justifyContent="center">
                 <IconButton
+                  size="small"
+                  aria-label={`Mover ${item.label} para cima`}
                   disabled={index === 0}
-                  onClick={() => moveUp(index)}
+                  onClick={() => moveField(index, -1)}
                 >
-                  <ArrowUpward />
+                  <ArrowUpward fontSize="small" />
                 </IconButton>
               </Grid>
-
-              <Grid size={1}>
+              <Grid size={2} container justifyContent="center">
                 <IconButton
-                  disabled={index === 3}
-                  onClick={() => moveDown(index)}
+                  size="small"
+                  aria-label={`Mover ${item.label} para baixo`}
+                  disabled={index === props.orderFields.length - 1}
+                  onClick={() => moveField(index, 1)}
                 >
-                  <ArrowDownward />
+                  <ArrowDownward fontSize="small" />
                 </IconButton>
               </Grid>
-            </React.Fragment>
+            </Grid>
           ))}
         </Grid>
       </List>
       <Grid size={12} mt={5} mx={10} container>
         <Button
-          disabled={props.changedCount === 0}
           color="error"
           sx={{ width: "100%" }}
           onClick={() => props.reset()}
           variant="contained"
+          disabled={props.changedCount === 0}
         >
           Limpar
         </Button>
       </Grid>
-    </Box>
-  );
-
-  return (
-    <>
-      <Grid
-        container
-        spacing={2}
-        justifyContent={"flex-end"}
-        alignItems={"center"}
-        sx={{
-          display: { xs: "none", md: "flex" }, // hide on xs, show on sm+
-        }}
-      >
-        <Button
-          endIcon={<SwapVert sx={{ ml: 1 }}></SwapVert>}
-          size="large"
-          variant="outlined"
-          disabled={props.isLoading}
-          onClick={toggleDrawer(true)}
-        >
-          Ordem
-          <FiltersBadge
-            badgeContent={props.changedCount}
-            color="primary"
-            overlap="circular"
-          />
-        </Button>
-        <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-          {DrawerList}
-        </Drawer>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        justifyContent={"flex-end"}
-        alignItems={"center"}
-        sx={{
-          display: { sm: "flex", md: "none" },
-        }}
-      >
-        <Tooltip title="Ordem" placement="top">
-          <IconButton
-            sx={{ border: 1, borderRadius: 3 }}
-            size="large"
-            color="primary"
-            aria-label="delete"
-          >
-            <SwapVert></SwapVert>
-          </IconButton>
-        </Tooltip>
-      </Grid>
-    </>
+    </FilterDrawer>
   );
 }

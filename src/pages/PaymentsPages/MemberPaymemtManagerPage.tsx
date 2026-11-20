@@ -16,6 +16,7 @@ import { clubsHooks, monthlyPaymentsHooks } from "../../hooks";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import AllUseTable from "../../components/Table/AllUseTable";
+import BooleanStatusChip from "../../components/BooleanStatusChip";
 import FormCard from "../../dashboard/FormCard";
 import {
   Add,
@@ -87,29 +88,7 @@ export default function MemberPaymemtManagerPage(
     return plansData?.map((plan) => ({
       id: plan.id,
       amount: `${plan.amount}€`,
-      is_default: plan.is_default ? (
-        <Chip
-          variant="outlined"
-          label="Sim"
-          color="success"
-          sx={{
-            bgcolor: "#d9ffe7",
-            color: "#004d1f",
-            p: 1,
-          }}
-        ></Chip>
-      ) : (
-        <Chip
-          variant="outlined"
-          label="Não"
-          color="error"
-          sx={{
-            bgcolor: "#ff8fa3",
-            color: "#800f2f",
-            p: 1,
-          }}
-        ></Chip>
-      ),
+      is_default: <BooleanStatusChip enabled={plan.is_default!} />,
       name: plan.name,
     }));
   }, [plansData]);
@@ -314,13 +293,20 @@ export default function MemberPaymemtManagerPage(
             </Grid>
           )
         ) : (
-          <Typography sx={{ color: "gray", my: 2 }}>
+          <Typography color="textDisabled" my={2}>
             Não foram encontrados registos para as validações selecionadas.
           </Typography>
         )}
       </FormAccordion>
       <FormCard title="Gestão de Pagamentos">
-        <Grid container p={2} size={12} alignItems={"center"} spacing={4}>
+        <Grid
+          container
+          p={2}
+          mb={2}
+          size={12}
+          alignItems={"center"}
+          spacing={4}
+        >
           <Grid size={6}>
             <Controller
               name="billing_day"
@@ -346,15 +332,16 @@ export default function MemberPaymemtManagerPage(
             />
           </Grid>
           <Grid size={6}>
-            <FormHelperText>
+            <FormHelperText sx={{ color: "text.secondary", fontSize: 13 }}>
               Selecione um dia do mês entre 1 e 28 para criar as quotas mensais.
               Caso altere o dia, e as quotas do presente mês já tiverem sido
               criadas, apenas serão criadas novas no mês seguinte.
             </FormHelperText>
           </Grid>
         </Grid>
-        <Grid container size={12} justifyContent={"flex-end"} p={2} pt={0}>
+        <Grid container size={12} justifyContent={"flex-end"} pb={1}>
           <Button
+            sx={{ border: 0 }}
             variant="contained"
             endIcon={<Save></Save>}
             disabled={watch("billing_day") === ""}
@@ -399,8 +386,9 @@ export default function MemberPaymemtManagerPage(
               overideInternalPage
             ></AllUseTable>
           )}
-          <Grid p={2} pt={0} container justifyContent={"flex-end"}>
+          <Grid pb={1} mt={3} container justifyContent={"flex-end"}>
             <Button
+              sx={{ border: 0 }}
               variant="contained"
               color={"success"}
               type={"submit"}

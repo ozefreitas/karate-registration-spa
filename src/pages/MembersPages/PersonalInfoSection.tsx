@@ -373,6 +373,7 @@ export default function PersonalInfoSection(
                 <span>
                   <Button
                     variant="outlined"
+                    size="small"
                     disabled={props.memberData?.member_types.length === 2}
                     onClick={() => handleDuplicateModalOpen()}
                     startIcon={<ContentCopy />}
@@ -389,6 +390,7 @@ export default function PersonalInfoSection(
             <Button
               id="update_button"
               variant="contained"
+              sx={{ border: 0 }}
               color="success"
               size="small"
               onClick={() => {
@@ -402,6 +404,7 @@ export default function PersonalInfoSection(
             <Button
               id="escape_button"
               variant="contained"
+              size="small"
               color="inherit"
               onClick={() => {
                 reset();
@@ -414,6 +417,7 @@ export default function PersonalInfoSection(
           </>
         ) : (
           <Button
+            sx={{ border: 0 }}
             variant="contained"
             size="small"
             color="warning"
@@ -438,6 +442,7 @@ export default function PersonalInfoSection(
         )}
         {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
           <Button
+            sx={{ border: 0 }}
             variant="contained"
             color="error"
             size="small"
@@ -457,7 +462,7 @@ export default function PersonalInfoSection(
         verified={props.memberData?.is_validated}
       >
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Primeiro Nome"
               control={control}
@@ -468,7 +473,7 @@ export default function PersonalInfoSection(
               isValidated={isValidated}
             />
           </Grid>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Último Nome"
               control={control}
@@ -481,7 +486,7 @@ export default function PersonalInfoSection(
           </Grid>
         </FieldRow>
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Data de Nascimento"
               control={control}
@@ -492,7 +497,7 @@ export default function PersonalInfoSection(
               isValidated={isValidated}
             />
           </Grid>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Idade (real)"
               control={control}
@@ -505,7 +510,7 @@ export default function PersonalInfoSection(
           </Grid>
         </FieldRow>
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label={`Número ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`}
               control={control}
@@ -516,7 +521,7 @@ export default function PersonalInfoSection(
               isValidated={isValidated}
             />
           </Grid>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Graduação"
               control={control}
@@ -533,7 +538,7 @@ export default function PersonalInfoSection(
           </Grid>
         </FieldRow>
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Género"
               control={control}
@@ -545,7 +550,7 @@ export default function PersonalInfoSection(
             />
           </Grid>
           {["main_admin"].includes(userRole!) ? (
-            <Grid container size={6}>
+            <Grid container size={{ xs: 12, md: 6 }}>
               <FieldBox
                 label="Clube"
                 control={control}
@@ -558,7 +563,7 @@ export default function PersonalInfoSection(
             </Grid>
           ) : null}
           {["subed_club", "single_admin"].includes(userRole!) ? (
-            <Grid container size={6}>
+            <Grid container size={{ xs: 12, md: 6 }}>
               <FieldBox
                 label="Peso"
                 control={control}
@@ -573,7 +578,7 @@ export default function PersonalInfoSection(
         </FieldRow>
         {["subed_club", "single_admin"].includes(userRole!) ? (
           <FieldRow>
-            <Grid container size={6}>
+            <Grid container size={{ xs: 12, md: 6 }}>
               <FieldBox
                 label="Paga Quotas"
                 control={control}
@@ -586,7 +591,7 @@ export default function PersonalInfoSection(
             </Grid>
             {props.memberData?.member_types?.includes("athlete") ||
             props.memberData?.member_types?.includes("student") ? (
-              <Grid container size={6}>
+              <Grid container size={{ xs: 12, md: 6 }}>
                 <FieldBox
                   label="É Competidor"
                   control={control}
@@ -601,7 +606,7 @@ export default function PersonalInfoSection(
           </FieldRow>
         ) : null}
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Data de Inscrição"
               control={control}
@@ -623,7 +628,7 @@ export default function PersonalInfoSection(
         verified={false}
       >
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Morada"
               control={control}
@@ -634,7 +639,7 @@ export default function PersonalInfoSection(
               isValidated={isValidated}
             />
           </Grid>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="NIF"
               control={control}
@@ -647,7 +652,7 @@ export default function PersonalInfoSection(
           </Grid>
         </FieldRow>
         <FieldRow>
-          <Grid container size={6}>
+          <Grid container size={{ xs: 12, md: 6 }}>
             <FieldBox
               label="Número C.C./B.I."
               control={control}

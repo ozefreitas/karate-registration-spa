@@ -11,13 +11,13 @@ export default function AdminHomePage(props: Readonly<{ userRole: string }>) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <Grid container size={12}>
-      <Grid size={6}>
+    <Grid container size={12} spacing={2} mx={{ xs: 1, sm: 2 }}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <NextEventHomeComponent
           userRole={props.userRole}
         ></NextEventHomeComponent>
       </Grid>
-      <Grid size={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <LastCompQualiHomeComponent
           userRole={props.userRole}
         ></LastCompQualiHomeComponent>

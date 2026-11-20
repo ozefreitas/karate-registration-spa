@@ -33,8 +33,9 @@ export default function NextEventHomeComponent(
 
   return (
     <Grid size={12}>
-      <Card sx={{ m: 2 }}>
+      <Card>
         <CardHeader
+          sx={{ p: 2 }}
           title={
             <Grid container alignItems={"center"} gap={2}>
               <Grid
@@ -156,11 +157,11 @@ export default function NextEventHomeComponent(
               </Tooltip>
             </ListItem>
           ) : (
-            <ListItem sx={{ mt: 1, ml: 2 }}>
-              <Typography color="textDisabled" variant="body2">
+            <Grid container size={12} justifyContent={"center"} my={1}>
+              <Typography variant="body2" color="textDisabled">
                 Não há Eventos disponíveis
               </Typography>
-            </ListItem>
+            </Grid>
           )}
         </CardContent>
         <CardActions
@@ -170,9 +171,19 @@ export default function NextEventHomeComponent(
           }}
         >
           {props.userRole === "main_admin" ? (
-            <AddButton label="Adicionar" to="events/new_event/"></AddButton>
+            <AddButton
+              label="Adicionar"
+              to="events/new_event/"
+              size="small"
+              borderless
+            ></AddButton>
           ) : null}
-          <InfoButton label="Ver Todas" to="events/"></InfoButton>
+          <InfoButton
+            label="Ver Todos"
+            to="events/"
+            size="small"
+            borderless
+          ></InfoButton>
         </CardActions>
       </Card>
     </Grid>

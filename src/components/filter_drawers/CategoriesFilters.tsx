@@ -1,9 +1,6 @@
-import * as React from "react";
 import {
-  Box,
   List,
   Button,
-  Drawer,
   Grid,
   FormControl,
   Stack,
@@ -14,17 +11,9 @@ import {
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { Tune } from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
-import Badge, { badgeClasses } from "@mui/material/Badge";
 import { GenderOptions } from "../../config";
 import { categoryFilteringAgeOptions } from "../../dashboard/filters";
-
-const FiltersBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -20px;
-    right: -55px;
-  }
-`;
+import FilterDrawer from "./FilterDrawer";
 
 export default function CategoriesFilters(
   props: Readonly<{
@@ -37,14 +26,8 @@ export default function CategoriesFilters(
     changedCount: number;
   }>
 ) {
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  const DrawerList = (
-    <Box sx={{ width: 400 }} role="presentation">
+  const drawerContent = (
+    <>
       <List sx={{ p: 1, mt: 2 }}>
         <Typography variant="h6" pl={2} mb={3}>
           Filtragem
@@ -274,33 +257,17 @@ export default function CategoriesFilters(
           Limpar
         </Button>
       </Grid>
-    </Box>
+    </>
   );
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent={"flex-end"}
-      alignItems={"center"}
+    <FilterDrawer
+      label="Filtros"
+      changedCount={props.changedCount}
+      isLoading={props.isLoading}
+      icon={<Tune />}
     >
-      <Button
-        endIcon={<Tune sx={{ ml: 1 }}></Tune>}
-        size="large"
-        variant="outlined"
-        disabled={props.isLoading}
-        onClick={toggleDrawer(true)}
-      >
-        Filtros
-        <FiltersBadge
-          badgeContent={props.changedCount}
-          color="primary"
-          overlap="circular"
-        />
-      </Button>
-      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
-    </Grid>
+      {drawerContent}
+    </FilterDrawer>
   );
 }

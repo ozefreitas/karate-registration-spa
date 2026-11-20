@@ -13,8 +13,8 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <>
-      <Card sx={{ m: 2 }}>
+    <Grid size={12} container spacing={2}>
+      <Card sx={{ mx: { xs: 1, sm: 2 } }}>
         <CardHeader
           title={`Bem-vindo à plataforma de registos da ${
             import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
@@ -49,14 +49,19 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
         ) && <HomeSearch query={searchQuery} setQuery={setSearchQuery} />}
       {props.userRole === "technician" ||
       props.userRole === "superuser" ? null : (
-        <Grid container size={12}>
-          <Grid size={{ xs: 12, md: 6 }}>
+        <Grid container size={12} mx={{ xs: 1, sm: 2 }} spacing={2}>
+          <Grid size={{ xs: 12, md: 6 }} container spacing={2}>
             <MembersHomeComponent
               userRole={props.userRole}
             ></MembersHomeComponent>
             <TeamsHomeComponent userRole={props.userRole}></TeamsHomeComponent>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            container
+            spacing={2}
+            alignContent={"flex-start"}
+          >
             <NextEventHomeComponent
               userRole={props.userRole}
             ></NextEventHomeComponent>
@@ -72,6 +77,6 @@ export default function HomePage(props: Readonly<{ userRole: string }>) {
           </Grid>
         </Grid>
       )}
-    </>
+    </Grid>
   );
 }

@@ -24,14 +24,20 @@ export default function FormCard(
         elevation={1}
         sx={{
           // backgroundColor: "transparent",
-          border: "2px solid white",
+          border: "2px solid",
+          borderColor: (theme) =>
+            theme.palette.mode === "light" ? "white" : theme.palette.divider,
         }}
       >
         <CardHeader
           title={props.title}
           subheader={props.subheader}
           sx={{
-            borderBottom: "1px solid lightgrey",
+            borderBottom: "1px solid",
+            borderColor: (theme) =>
+              theme.palette.mode === "light"
+                ? "white"
+                : theme.palette.divider,
             "& .MuiCardHeader-title": {
               fontWeight: "bold",
               fontSize: 16,
@@ -52,7 +58,11 @@ export default function FormCard(
             sx={{
               display: "flex",
               justifyContent: "flex-end",
-              borderTop: "1px solid lightgrey",
+              borderTop: "1px solid",
+              borderColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? "white"
+                  : theme.palette.divider,
             }}
           >
             <Stack

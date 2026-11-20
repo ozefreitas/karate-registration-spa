@@ -88,7 +88,18 @@ export default function LoginPage() {
             },
           }}
         >
-          <Grid container size={12} justifyContent="center" sx={{ p: 1 }}>
+          <Grid
+            container
+            size={12}
+            justifyContent="center"
+            sx={{
+              p: 1,
+              "& .MuiFormHelperText-root": {
+                fontSize: "0.7rem",
+                lineHeight: 1.2,
+              },
+            }}
+          >
             <Typography sx={{ fontWeight: "bold", mt: 2 }} variant="h5Half">
               Login
             </Typography>
@@ -187,22 +198,37 @@ export default function LoginPage() {
             </Grid>
           </Grid>
         </CardContent>
-        <CardActions sx={{ mb: 1, mr: 1 }}>
-          <Grid size={12} container justifyContent="flex-end">
+        <CardActions sx={{ px: { xs: 2, sm: 3 }, pb: 2, pt: 1 }}>
+          <Grid size={12} container>
             <Button
               id="login_button"
               variant="contained"
-              size={"large"}
-              color={"success"}
-              type={"submit"}
+              color="error"
+              type="submit"
               disabled={loginUser.isPending}
               loading={loginUser.isPending}
               loadingPosition="start"
+              fullWidth
+              size="large"
+              sx={{
+                minHeight: 46,
+                border: 0,
+                borderRadius: 2,
+                boxShadow: "none",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                textTransform: "none",
+                "&:hover": {
+                  boxShadow: 2,
+                  transform: "none",
+                  bgcolor: "error.dark",
+                },
+              }}
               onClick={() => {
                 handleSubmit(onSubmit)();
               }}
             >
-              LogIn
+              Iniciar sessão
             </Button>
           </Grid>
         </CardActions>

@@ -32,8 +32,10 @@ import {
   Refresh,
   Home,
   OpenInNew,
+  DarkMode,
+  LightMode,
 } from "@mui/icons-material";
-import { useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import {
   breadcrumbsConvertion,
   getNotificationTypeIcon,
@@ -44,10 +46,14 @@ import { useAuth } from "../../access/GlobalAuthProvider";
 import { adminHooks, notificationsHooks, authHooks } from "../../hooks";
 import { formatTimeDifference } from "../../utils/utils";
 import { ColoredIconBox } from "../icon-utils/boxes";
+import { useThemeMode } from "../../theme/useThemeMode";
 
 export default function Header(props: Readonly<{ me: any }>) {
   const navigate = useNavigate();
+  const routeLocation = useLocation();
+  const { mode, toggleColorMode } = useThemeMode();
   const [currentSeason, setCurrentSeason] = useState<string>("");
+  const isLoginPage = routeLocation.pathname.replace(/\/+$/, "") === "/login";
 
   const { user, isAuthenticated } = useAuth();
 
@@ -132,7 +138,8 @@ export default function Header(props: Readonly<{ me: any }>) {
           sx={{
             borderRadius: 4,
             width: "99%",
-            backgroundColor: "#5a5a5a",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#242424" : "#5a5a5a",
           }}
           position="static"
         >
@@ -141,7 +148,7 @@ export default function Header(props: Readonly<{ me: any }>) {
               width: { xs: "100%", sm: "auto" },
               flexWrap: { xs: "wrap", sm: "nowrap" },
               gap: { xs: 1, sm: 2 },
-              p: { xs: 2, sm: 3 },
+              p: { xs: 1, sm: 2 },
               justifyContent: { xs: "center", sm: "space-between" },
             }}
           >
@@ -189,6 +196,21 @@ export default function Header(props: Readonly<{ me: any }>) {
                 boxSizing: "border-box",
               }}
             >
+              <Tooltip
+                title={
+                  mode === "dark" ? "Ativar modo claro" : "Ativar modo escuro"
+                }
+              >
+                <IconButton
+                  onClick={toggleColorMode}
+                  color="inherit"
+                  aria-label={
+                    mode === "dark" ? "Ativar modo claro" : "Ativar modo escuro"
+                  }
+                >
+                  {mode === "dark" ? <LightMode /> : <DarkMode />}
+                </IconButton>
+              </Tooltip>
               {currentSeason === "" ? null : (
                 <Chip
                   sx={{ p: 1 }}
@@ -218,6 +240,7 @@ export default function Header(props: Readonly<{ me: any }>) {
                       disableRipple
                       disableFocusRipple
                       disableElevation
+                      sx={{ border: 0 }}
                       // size="large"
                     >
                       {props.me?.role === "main_admin" ||
@@ -256,19 +279,19 @@ export default function Header(props: Readonly<{ me: any }>) {
                             color="error"
                             badgeContent={notificationData?.total}
                             max={9}
+                            sx={{
+                              "& .MuiBadge-badge": {
+                                minWidth: 16,
+                                height: 16,
+                                padding: "0 3px",
+                                fontSize: "0.65rem",
+                              },
+                            }}
                           >
                             <Avatar
                               sx={{
-                                height:
-                                  notificationData?.total === 0 ||
-                                  notificationData === null
-                                    ? null
-                                    : 42,
-                                width:
-                                  notificationData?.total === 0 ||
-                                  notificationData === null
-                                    ? null
-                                    : 42,
+                                height: 32,
+                                width: 32,
                                 bgcolor: notificationError
                                   ? "red"
                                   : notificationData?.total === 0 ||
@@ -282,13 +305,13 @@ export default function Header(props: Readonly<{ me: any }>) {
                                   height:
                                     notificationData?.total === 0 ||
                                     notificationData === null
-                                      ? 18
-                                      : 20,
+                                      ? 14
+                                      : 16,
                                   width:
                                     notificationData?.total === 0 ||
                                     notificationData === null
-                                      ? 18
-                                      : 20,
+                                      ? 14
+                                      : 16,
                                 }}
                               />
                             </Avatar>
@@ -298,7 +321,7 @@ export default function Header(props: Readonly<{ me: any }>) {
                     ) : null}
                   </IconButton>
                 )}
-                {isAuthenticated ? (
+                {isAuthenticated && !isLoginPage ? (
                   <IconButton
                     onClick={(event) => {
                       if (isAuthenticated) {
@@ -314,17 +337,13 @@ export default function Header(props: Readonly<{ me: any }>) {
                       <Tooltip title="A sua Conta" placement="top">
                         <span>
                           <Avatar
-                            {...stringAvatar(
-                              user?.username!,
-                              undefined,
-                              "allow",
-                            )}
+                            {...stringAvatar(user?.username!, 32, "allow")}
                           ></Avatar>
                         </span>
                       </Tooltip>
                     </Grid>
                   </IconButton>
-                ) : (
+                ) : !isLoginPage ? (
                   <Grid
                     container
                     spacing={1}
@@ -333,21 +352,24 @@ export default function Header(props: Readonly<{ me: any }>) {
                     <Button
                       variant="contained"
                       color="error"
+                      size="large"
                       onClick={() => navigate("/login/")}
+                      sx={{
+                        border: 0,
+                        borderRadius: 2,
+                        boxShadow: "none",
+                        fontWeight: 700,
+                        textTransform: "none",
+                        "&:hover": {
+                          boxShadow: 2,
+                          bgcolor: "error.dark",
+                        },
+                      }}
                     >
-                      Login
+                      Iniciar sessão
                     </Button>
-                    {props.me?.data.role === "single_admin" ? null : (
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => navigate("/request_account/")}
-                      >
-                        Pedir Conta
-                      </Button>
-                    )}
                   </Grid>
-                )}
+                ) : null}
               </Grid>
             </Stack>
           </Toolbar>
@@ -418,7 +440,11 @@ export default function Header(props: Readonly<{ me: any }>) {
           paper: {
             elevation: 0,
             sx: {
-              overflow: "visible",
+              width: { xs: "calc(100vw - 32px)", sm: 420 },
+              maxWidth: "calc(100vw - 16px)",
+              maxHeight: "calc(100vh - 96px)",
+              overflowX: "hidden",
+              overflowY: "auto",
               filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
               mt: 1.5,
               "& .MuiAvatar-root": {
@@ -455,6 +481,7 @@ export default function Header(props: Readonly<{ me: any }>) {
             display: "flex",
             gap: 1,
             justifyContent: "space-between",
+            flexWrap: "wrap",
           }}
         >
           Notificações Recentes
@@ -477,11 +504,7 @@ export default function Header(props: Readonly<{ me: any }>) {
         ) : notificationError ? (
           axios.isAxiosError(notificationError) &&
           notificationError.response?.status === 401 ? (
-            <ListItem disablePadding sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0, pl: 5 }}>
-                <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
-              </ListItemButton>
-            </ListItem>
+            <Typography>Sem sessão iniciada. Faça Login</Typography>
           ) : axios.isAxiosError(notificationError) &&
             notificationError.response?.status === 403 ? (
             <MenuItem divider>
@@ -503,13 +526,20 @@ export default function Header(props: Readonly<{ me: any }>) {
             </MenuItem>
           )
         ) : notificationData?.total === 0 ? (
-          <MenuItem divider>
-            <ListItemButton disabled sx={{ m: 0, p: 3 }}>
-              <ListItemText primary={"De momento não tem notificações."} />
-            </ListItemButton>
+          <MenuItem disabled divider>
+            <Typography color="textDisabled" p={1} variant="subtitle1">
+              De momento não tem notificações
+            </Typography>
           </MenuItem>
         ) : (
-          <List sx={{ display: "flex", flexDirection: "column", p: 0 }}>
+          <List
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              p: 0,
+              width: "100%",
+            }}
+          >
             {notificationData?.response.map((noti, index: number) => (
               <MenuItem
                 divider={
@@ -519,7 +549,10 @@ export default function Header(props: Readonly<{ me: any }>) {
                 onClick={(e) => e.stopPropagation()}
                 key={index}
               >
-                <ListItem disablePadding sx={{ width: 700, mb: 0 }}>
+                <ListItem
+                  disablePadding
+                  sx={{ width: "100%", minWidth: 0, mb: 0 }}
+                >
                   <ListItemIcon sx={{ px: 1 }}>
                     <ColoredIconBox
                       bgColor={"red"}
@@ -574,11 +607,7 @@ export default function Header(props: Readonly<{ me: any }>) {
           <OpenInNew fontSize="small"></OpenInNew>
           {notificationData?.total! > 5 ? (
             <Typography color="textDisabled">
-              (+ {notificationData?.total! - 5}{" "}
-              {notificationData?.total! - 5 === 1
-                ? "notificação"
-                : "notificações"}
-              )
+              (+ {notificationData?.total! - 5})
             </Typography>
           ) : null}
         </MenuItem>
@@ -593,7 +622,7 @@ export default function Header(props: Readonly<{ me: any }>) {
             position: "sticky",
             top: 0,
             zIndex: (theme) => theme.zIndex.appBar - 1,
-            backgroundColor: "#f3f3f3",
+            backgroundColor: "background.default",
           }}
         >
           {breadcrumbs.length === 0 ? (

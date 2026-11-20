@@ -72,13 +72,21 @@ const MemberFilteringContent = (
   }, [watchedValues, availableUsersData]);
   return (
     <>
-      <List sx={{ p: 1, mt: 2 }}>
-        <Typography variant="h6" pl={2} mb={3}>
+      <List sx={{ p: 1, pr: 2, mt: 2 }}>
+        <Typography variant="h6" pl={2}>
           Filtragem
         </Typography>
-        <Grid container px={3} spacing={3}>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent={"space-between"}
+          size={12}
+          mx={3}
+          rowSpacing={2}
+          mt={5}
+        >
           {["subed_club", "superuser", "single_admin"].includes(user?.role!) ? (
-            <Grid alignItems={"center"} container spacing={1}>
+            <Grid alignItems={"center"} container spacing={1} size={12}>
               <Typography variant="subtitle1" mr={2}>
                 Tipo
               </Typography>
@@ -106,7 +114,7 @@ const MemberFilteringContent = (
               ))}
             </Grid>
           ) : null}
-          <Grid alignItems={"center"} container spacing={1}>
+          <Grid alignItems={"center"} container spacing={1} py={1}>
             <Typography variant="subtitle1" mr={2}>
               Género
             </Typography>
@@ -138,7 +146,9 @@ const MemberFilteringContent = (
 
           {["main_admin", "superuser"].includes(user?.role!) ? (
             <Grid size={12} container alignItems={"center"} spacing={1}>
-              <Typography variant="subtitle1" mr={2}>Clube</Typography>
+              <Typography variant="subtitle1" mr={2}>
+                Clube
+              </Typography>
               {!isAvailableUserLoading &&
                 Object.keys(props.control._defaultValues)
                   .filter((fieldName) => availableUsers?.includes(fieldName))
@@ -165,7 +175,7 @@ const MemberFilteringContent = (
             </Grid>
           ) : (
             <>
-              <Grid p={3} py={1} container>
+              <Grid container size={12} justifyContent={"space-between"}>
                 <Controller
                   name="isValidated"
                   control={props.control}
@@ -201,7 +211,7 @@ const MemberFilteringContent = (
                   )}
                 />
               </Grid>
-              <Grid p={3} py={1} container>
+              <Grid container size={12} justifyContent={"space-between"}>
                 <Controller
                   name="quotesLegible"
                   control={props.control}
@@ -237,7 +247,7 @@ const MemberFilteringContent = (
                   )}
                 />
               </Grid>
-              <Grid p={3} py={1} container>
+              <Grid container size={12} justifyContent={"space-between"}>
                 <Controller
                   name="quotesOverdue"
                   control={props.control}

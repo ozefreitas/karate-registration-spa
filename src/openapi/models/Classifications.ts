@@ -2,11 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Bracket } from './Bracket';
+import type { CompactBracket } from './CompactBracket';
 import type { CompactPerson } from './CompactPerson';
 import type { PlaceEnum } from './PlaceEnum';
 export type Classifications = {
-    bracket: Bracket;
+    bracket: CompactBracket;
     readonly event: string;
     person: CompactPerson;
     place: PlaceEnum;

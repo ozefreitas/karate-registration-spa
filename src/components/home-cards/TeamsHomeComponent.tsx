@@ -32,8 +32,9 @@ export default function TeamsHomeComponent(
 
   return (
     <Grid size={12}>
-      <Card sx={{ m: 2 }}>
+      <Card>
         <CardHeader
+          sx={{ p: 2 }}
           title={
             <Grid container alignItems={"center"} gap={2}>
               <Grid
@@ -62,11 +63,11 @@ export default function TeamsHomeComponent(
         ></CardHeader>
         <List>
           {props.userRole === undefined ? (
-            <ListItem sx={{ m: 0 }}>
-              <ListItemButton disabled sx={{ m: 0, pb: 0 }}>
-                <ListItemText primary={"Sem sessão iniciada. Faça Login."} />
-              </ListItemButton>
-            </ListItem>
+            <Grid container size={12} justifyContent={"center"} my={1}>
+              <Typography variant="body2" color="textDisabled">
+                Sem sessão iniciada. Faça Login
+              </Typography>
+            </Grid>
           ) : isLastFiveTeamsLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <CircularProgress />
@@ -177,8 +178,14 @@ export default function TeamsHomeComponent(
             justifyContent: "flex-end",
           }}
         >
-          {props.userRole === "free_club" ? null : (
-            <InfoButton label="Ver Todos" to="teams/"></InfoButton>
+          {props.userRole === "free_club" ||
+          props.userRole === undefined ? null : (
+            <InfoButton
+              label="Ver Todos"
+              to="teams/"
+              size="small"
+              borderless
+            ></InfoButton>
           )}
         </CardActions>
       </Card>

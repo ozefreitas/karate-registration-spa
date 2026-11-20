@@ -184,8 +184,8 @@ export default function MainSettingsPage() {
     generatePasswordResetURL.mutate(
       { username: passwordRequestedDetails.id },
       {
-        onSuccess: (data: any) => {
-          setCreatedPasswordURL(`${baseURL}${data.data.url}`);
+        onSuccess: (data) => {
+          setCreatedPasswordURL(`${baseURL}${data.url}`);
         },
       },
     );
@@ -522,11 +522,12 @@ export default function MainSettingsPage() {
       <Paper
         elevation={0}
         sx={{
-          border: "1px solid #eeeeee",
+          border: "1px solid",
+          borderColor: "divider",
           borderRadius: 3,
           m: 4,
           pt: 1,
-          bgcolor: "#fff",
+          bgcolor: "background.paper",
         }}
       >
         <Tabs
@@ -1016,14 +1017,14 @@ export default function MainSettingsPage() {
                           <FormLabel sx={{ mb: 2 }}>
                             Copie este link e envie para o email fornecido pelo
                             pedinte desta conta. Apenas a pessoa com acesso a
-                            este link será capaz de repor a sua prórpia
+                            este link será capaz de repor a sua própria
                             palavra-passe.
                           </FormLabel>
                           <Grid size={10} sx={{ p: 2, pb: 0 }}>
                             <TextField
                               color="warning"
                               variant={"outlined"}
-                              label="Link de Criação de Conta"
+                              label="Link para reposição de palavra-passe"
                               maxRows={8}
                               fullWidth
                               value={createdPasswordURL}
@@ -1093,16 +1094,22 @@ export default function MainSettingsPage() {
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <AllUseTable
-                count={requestsVerifyRows?.length!}
-                data={requestsVerifyRows}
-                actions={false}
-                selection={false}
-                type="Atletas"
-                userRole="main_admin"
-                columnsHeaders={getColumnMapping("ola")}
-                overideInternalPage
-              ></AllUseTable>
+              {requestsVerifyRows?.length === 0 ? (
+                <Typography color="textDisabled" py={2}>
+                  Não existem pedidos de verificação de membros.
+                </Typography>
+              ) : (
+                <AllUseTable
+                  count={requestsVerifyRows?.length!}
+                  data={requestsVerifyRows}
+                  actions={false}
+                  selection={false}
+                  type="Atletas"
+                  userRole="main_admin"
+                  columnsHeaders={getColumnMapping("ola")}
+                  overideInternalPage
+                ></AllUseTable>
+              )}
             </Grid>
           </FormCard>
           <FormCard title="Pedidos de Propostas a Exame">
@@ -1112,16 +1119,22 @@ export default function MainSettingsPage() {
               justifyContent={"center"}
               alignItems={"center"}
             >
-              <AllUseTable
-                count={requestsExamsRows?.length!}
-                data={requestsExamsRows}
-                actions={false}
-                selection={false}
-                type="Atletas"
-                userRole="main_admin"
-                columnsHeaders={getColumnMapping("exams")}
-                overideInternalPage
-              ></AllUseTable>
+              {requestsExamsRows?.length === 0 ? (
+                <Typography color="textDisabled" py={2}>
+                  Não existem pedidos de propostas a exame.
+                </Typography>
+              ) : (
+                <AllUseTable
+                  count={requestsExamsRows?.length!}
+                  data={requestsExamsRows}
+                  actions={false}
+                  selection={false}
+                  type="Atletas"
+                  userRole="main_admin"
+                  columnsHeaders={getColumnMapping("exams")}
+                  overideInternalPage
+                ></AllUseTable>
+              )}
             </Grid>
           </FormCard>
         </Grid>

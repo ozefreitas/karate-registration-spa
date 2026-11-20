@@ -2,8 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type AuthLogin = {
-    username: string;
-    password: string;
+export type PasswordRecoveryURL = {
+    url: string;
 };
-

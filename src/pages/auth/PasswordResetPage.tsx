@@ -43,15 +43,15 @@ export default function PasswordResetPage() {
 
   const confirmPassword = adminHooks.useConfirmPassword();
 
-  const onSubmit = async (data: { password: string; password2: string }) => {
+  const onSubmit = (data: { password: string; password2: string }) => {
     if (token !== undefined && uidb !== undefined) {
-      await confirmPassword.mutateAsync(
+      confirmPassword.mutate(
         { uidb, token, data },
         {
           onSuccess: () => {
             navigate("/login/");
           },
-        }
+        },
       );
     }
   };
@@ -171,6 +171,7 @@ export default function PasswordResetPage() {
                 size={"large"}
                 color={"success"}
                 type={"submit"}
+                disabled={confirmPassword.isPending}
                 onClick={() => {
                   handleSubmit(onSubmit)();
                 }}

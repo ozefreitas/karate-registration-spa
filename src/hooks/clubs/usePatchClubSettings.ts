@@ -39,7 +39,6 @@ export const usePatchClubSubscriptionConfigData = () => {
         data,
       ),
     onSuccess: () => {
-      callNotiStack(enqueueSnackbar, "Montante atualizado!", "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscription-config"] });
     },
     onError: () => {

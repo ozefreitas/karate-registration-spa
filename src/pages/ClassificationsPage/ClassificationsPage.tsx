@@ -1,28 +1,31 @@
 import {
-  Typography,
-  Grid,
+  Box,
+  Button,
   Card,
-  IconButton,
-  Tooltip,
   CardContent,
   Chip,
-  CircularProgress,
-  ListItem,
-  ListItemText,
-  Button,
+  Grid,
   Pagination,
+  Skeleton,
+  Stack,
+  Typography,
 } from "@mui/material";
-import { eventsHooks } from "../../hooks";
-import PageInfoCard from "../../components/info-cards/PageInfoCard";
+import {
+  CalendarMonth,
+  EmojiEvents,
+  East,
+  Refresh,
+  Today,
+} from "@mui/icons-material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { East } from "@mui/icons-material";
+import { eventsHooks } from "../../hooks";
+import PageInfoCard from "../../components/info-cards/PageInfoCard";
 
 export default function ClassificationsPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
-  console.log(setPageSize);
+  const pageSize = 10;
 
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -57,99 +60,191 @@ export default function ClassificationsPage() {
         title="Classificações"
       ></PageInfoCard>
 
-      <Grid sx={{ m: 2, mt: 4 }}>
+      <Box sx={{ mx: { xs: 2, sm: 4 }, mt: { xs: 2, sm: 4 } }}>
         {isEventsLoading ? (
-          <Grid mt={3} container justifyContent={"center"} size={12}>
-            <CircularProgress />
+          <Grid container spacing={2}>
+            {[0, 1, 2].map((item) => (
+              <Grid key={item} size={12}>
+                <Card
+                  variant="outlined"
+                  sx={{ borderColor: "divider", borderRadius: 3 }}
+                >
+                  <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Skeleton width="45%" height={32} />
+                    <Skeleton width="65%" />
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         ) : eventsError ? (
-          <Grid my={3} container justifyContent="center" size={12}>
-            <ListItem sx={{ textAlign: "center" }}>
-              <ListItemText primary="Ocorreu um erro ao encontrar os Eventos disponíveis, tente mais tarde ou contacte um administrador."></ListItemText>
-            </ListItem>
-            <Button onClick={() => refetch()}>Refrescar</Button>
-          </Grid>
+          <Card
+            variant="outlined"
+            sx={{ borderColor: "divider", borderRadius: 3 }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                alignItems: { xs: "stretch", sm: "center" },
+                justifyContent: "space-between",
+                gap: 2,
+                p: { xs: 2, sm: 3 },
+              }}
+            >
+              <Box>
+                <Typography variant="h6" fontWeight={700}>
+                  Não foi possível carregar as classificações
+                </Typography>
+                <Typography color="text.secondary">
+                  Tente novamente dentro de momentos.
+                </Typography>
+              </Box>
+              <Button
+                startIcon={<Refresh />}
+                variant="outlined"
+                onClick={() => refetch()}
+                sx={{ alignSelf: { xs: "flex-start", sm: "center" } }}
+              >
+                Tentar novamente
+              </Button>
+            </CardContent>
+          </Card>
         ) : eventsData?.count === 0 ? (
-          <Grid m={2} container justifyContent="center" size={12}>
-            <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
-              Não foram encontrados registos.
-            </Typography>
-          </Grid>
-        ) : (
-          <Grid container direction={"column"} spacing={3} m={2}>
-            {eventsData?.results.map((event, index: number) => (
-              <Card key={index} sx={{ width: "100%" }}>
-                <CardContent sx={{ pt: 3, px: 5, display: "flex" }}>
-                  <Grid
-                    container
-                    size={12}
-                    alignItems={"center"}
-                    columnSpacing={3}
+          <Card
+            variant="outlined"
+            sx={{ borderColor: "divider", borderRadius: 3 }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                gap: 1,
+                py: { xs: 4, sm: 6 },
+              }}
+            >
+              <EmojiEvents sx={{ fontSize: 42, color: "text.disabled" }} />
+              <Typography variant="h6" fontWeight={700}>
+                Ainda não há classificações
+              </Typography>
+              <Typography color="text.secondary">
+                Os eventos com resultados publicados aparecerão aqui.
+              </Typography>
+            </CardContent>
+          </Card>
+        ) : eventsData ? (
+          <>
+            <Grid container spacing={{ xs: 1.5, sm: 2 }}>
+              {eventsData.results.map((event) => (
+                <Grid size={12} key={event.id}>
+                  <Card
+                    variant="outlined"
+                    sx={{
+                      borderRadius: 3,
+                      borderColor: "divider",
+                      bgcolor: "background.paper",
+                      transition:
+                        "border-color 160ms ease, box-shadow 160ms ease",
+                    }}
                   >
-                    <Grid container alignItems={"center"} size={10}>
-                      <Typography variant="h5">{event.name}</Typography>
-                      <Chip
-                        color="info"
-                        variant="outlined"
-                        label={event.season}
-                      ></Chip>
-                      <Chip
-                        color="info"
-                        variant="outlined"
-                        label={event.event_date}
-                      ></Chip>
-                    </Grid>
-                    <Grid
-                      size={2}
-                      container
-                      justifyContent={"flex-end"}
-                      alignItems={"center"}
+                    <CardContent
+                      sx={{
+                        p: { xs: 1.5, sm: 2.5 },
+                        "&:last-child": { pb: { xs: 1.5, sm: 2.5 } },
+                      }}
                     >
-                      <Tooltip placement="top" title="Ver Classificações">
-                        <span>
-                          <IconButton
-                            sx={{
-                              transition: "0.3s",
-                              borderRadius: 4,
-                              p: 1.5,
-                              px: 2,
-                              border: 2,
-                              borderColor: "red",
-                              "&:hover": {
-                                transform: "translateY(-3px)",
-                                boxShadow: 6,
-                                borderColor: "red",
-                                bgcolor: "red",
-                              },
-                            }}
+                      <Grid
+                        container
+                        spacing={{ xs: 1.5, md: 2 }}
+                        alignItems="center"
+                      >
+                        <Grid size={{ xs: 12, md: 10 }}>
+                          <Stack
+                            direction="row"
+                            spacing={{ xs: 1.5, sm: 2 }}
+                            alignItems="center"
+                            sx={{ minWidth: 0 }}
+                          >
+                            <Box sx={{ minWidth: 0 }}>
+                              <Typography
+                                variant="h6"
+                                fontWeight={700}
+                                sx={{ overflowWrap: "anywhere" }}
+                              >
+                                {event.name}
+                              </Typography>
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                useFlexGap
+                                flexWrap="wrap"
+                                sx={{ mt: 1 }}
+                              >
+                                <Chip
+                                  size="small"
+                                  variant="outlined"
+                                  icon={<CalendarMonth fontSize="small" />}
+                                  label={event.season}
+                                  sx={{
+                                    borderColor: "divider",
+                                    "& .MuiChip-label": { fontWeight: 600 },
+                                  }}
+                                />
+                                <Chip
+                                  size="small"
+                                  variant="outlined"
+                                  icon={<Today fontSize="small" />}
+                                  label={event.event_date}
+                                  sx={{
+                                    borderColor: "divider",
+                                    "& .MuiChip-label": { fontWeight: 600 },
+                                  }}
+                                />
+                              </Stack>
+                            </Box>
+                          </Stack>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 2 }}>
+                          <Button
+                            fullWidth
+                            variant="contained"
+                            endIcon={<East />}
                             onClick={() =>
                               navigate(`/classifications/${event.id}/`)
                             }
+                            sx={{
+                              border: 0,
+                              minHeight: 40,
+                              textTransform: "none",
+                              fontWeight: 700,
+                              boxShadow: "none",
+                            }}
                           >
-                            <East sx={{ color: "black" }}></East>
-                          </IconButton>
-                        </span>
-                      </Tooltip>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            ))}
-            {eventsData?.count === 0 ||
-            isEventsLoading ||
-            eventsError ? null : (
-              <Grid size={12} mt={3} container justifyContent={"center"}>
+                            Ver classificações
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+
+            {eventsData.count > pageSize ? (
+              <Grid container justifyContent="center" sx={{ mt: 3 }}>
                 <Pagination
-                  count={Math.ceil(eventsData?.count! / 10)}
+                  count={Math.ceil(eventsData.count / pageSize)}
                   page={page}
                   onChange={handleChange}
                   color="primary"
                 />
               </Grid>
-            )}
-          </Grid>
-        )}
-      </Grid>
+            ) : null}
+          </>
+        ) : null}
+      </Box>
     </>
   );
 }

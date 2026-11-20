@@ -8,7 +8,7 @@ import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 export class LogoutService {
     /**
-     * Revokes the JWT refresh token or deletes a legacy auth token.
+     * Revokes the current JWT refresh token.
      * @returns LogoutResponse
      * @throws ApiError
      */

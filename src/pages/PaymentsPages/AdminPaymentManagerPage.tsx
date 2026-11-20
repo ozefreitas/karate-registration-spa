@@ -13,8 +13,6 @@ import {
   CardContent,
   Typography,
   Tooltip,
-  Menu,
-  Button,
 } from "@mui/material";
 import { clubsHooks } from "../../hooks";
 import { useEffect, useMemo, useState } from "react";
@@ -22,49 +20,33 @@ import AllUseTable from "../../components/Table/AllUseTable";
 import { formatDateTime } from "../../utils/utils";
 import { Close, Check, Edit, Add } from "@mui/icons-material";
 import PatchClubSubscriptionModal from "../../components/Admin/PatchClubSubscriptionModal";
+import CreateClubSubscriptionsModal from "../../components/Admin/CreateClubSubscriptionsModal";
+import UpdateClubSubscriptionAmountModal from "../../components/Admin/UpdateClubSubscriptionAmountModal";
+import UpdateClubSubscriptionDueDateModal from "../../components/Admin/UpdateClubSubscriptionDueDateModal";
 import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 
 export default function AdminPaymentManagerPage(
   props: Readonly<{ userRole: string }>,
 ) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isAmountModalOpen, setIsAmountModalOpen] = useState(false);
+  const [isDueDateModalOpen, setIsDueDateModalOpen] = useState(false);
   const [currentId, setCurrentId] = useState<string>("");
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [currentState, setCurrentState] = useState<boolean>(false);
-  const [currentAction, setCurrentAction] = useState<string>("");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (
-    event: React.MouseEvent<HTMLElement>,
-    action: string,
-  ) => {
-    setCurrentAction(action);
-    setAnchorEl(event.currentTarget);
-  };
   const [searchParams] = useSearchParams();
   const year = searchParams.get("year");
-
-  const handleClose = async () => {
-    setAnchorEl(null);
-  };
 
   const {
     control,
     watch,
-    handleSubmit,
     setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
       search: "",
-      overdueDate: undefined,
-      amount: "",
-      year: "",
     },
   });
 
@@ -72,7 +54,7 @@ export default function AdminPaymentManagerPage(
     if (year) {
       setValue("search", year);
     }
-  }, []);
+  }, [setValue, year]);
 
   const { data } = clubsHooks.useFetchAvailableYears();
 
@@ -99,35 +81,6 @@ export default function AdminPaymentManagerPage(
     // error: subscriptionConfigError,
   } = clubsHooks.useFetchClubSubscriptionConfig();
 
-  const patchClubSubscriptionsAmount =
-    clubsHooks.usePatchClubSubscriptionAmountbyYear();
-  const patchSubscriptionConfigAmount =
-    clubsHooks.usePatchClubSubscriptionConfigData();
-  const patchSubscriptionDueDate =
-    clubsHooks.usePatchClubSubscriptionDueDatebyYear();
-
-  const onSubmit = (data: any) => {
-    if (currentAction === "amount") {
-      const formData = { year: data.search, amount: data.amount };
-      patchClubSubscriptionsAmount.mutate(formData, {
-        onSuccess: () => {
-          handleClose();
-        },
-      });
-      patchSubscriptionConfigAmount.mutate({
-        configId: String(subscriptionConfigData?.id),
-        data: { amount: data.amount },
-      });
-    } else if (currentAction === "due_date") {
-      const formData = { year: data.search, due_date: data.overdueDate };
-      patchSubscriptionDueDate.mutate(formData, {
-        onSuccess: () => {
-          handleClose();
-        },
-      });
-    }
-  };
-
   // Memoize `rows` to compute only when `members` changes
   const subscriptionRows = useMemo(() => {
     return subscriptionsData?.map((subscription) => ({
@@ -137,6 +90,7 @@ export default function AdminPaymentManagerPage(
         <Chip
           color="success"
           label="Pago"
+          size="small"
           icon={<Check />}
           clickable
           sx={{
@@ -155,6 +109,7 @@ export default function AdminPaymentManagerPage(
         <Chip
           color="error"
           label="Em Falta"
+          size="small"
           icon={<Close />}
           clickable
           sx={{
@@ -189,12 +144,17 @@ export default function AdminPaymentManagerPage(
   };
 
   const columnMaping = getColumnMaping();
+  const selectedYear = watch("search");
+  const hasSelectedYear = selectedYear !== "";
 
   return (
     <>
-      <Grid container m={4} spacing={2} size={12}>
-        <Grid size={3}>
-          <Card elevation={3} sx={{ height: "100%" }}>
+      <Grid container m={{ xs: 2, sm: 3, md: 4 }} spacing={2} size={12}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Card
+            variant="outlined"
+            sx={{ height: "100%", borderColor: "divider", borderRadius: 3 }}
+          >
             <CardHeader
               sx={{ pt: 2.5 }}
               title={
@@ -206,7 +166,7 @@ export default function AdminPaymentManagerPage(
                   <Typography variant="h5">Ano</Typography>
                   <Tooltip arrow title="Criar Quotas">
                     <span>
-                      <IconButton onClick={(e) => handleClick(e, "create")}>
+                      <IconButton onClick={() => setIsCreateModalOpen(true)}>
                         <Add color="success"></Add>
                       </IconButton>
                     </span>
@@ -257,8 +217,11 @@ export default function AdminPaymentManagerPage(
             </CardContent>
           </Card>
         </Grid>
-        <Grid size={2.5}>
-          <Card elevation={3} sx={{ height: "100%" }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Card
+            variant="outlined"
+            sx={{ height: "100%", borderColor: "divider", borderRadius: 3 }}
+          >
             <CardHeader
               title={
                 <Typography variant="h5" pt={0.5}>
@@ -274,27 +237,24 @@ export default function AdminPaymentManagerPage(
                 maxHeight: "100%",
               }}
             >
-              {isSubscriptionsLoading ? (
+              {!hasSelectedYear ? null : isSubscriptionsLoading ? (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                   <CircularProgress />
                 </Box>
               ) : (
-                <Typography
-                  color={watch("search") === "" ? "textDisabled" : "info"}
-                  variant="h3"
-                >
-                  {watch("search") === ""
-                    ? 0
-                    : subscriptionsData?.filter(
-                        (item: any) => item.paid === false,
-                      ).length}
+                <Typography color="info" variant="h3">
+                  {subscriptionsData?.filter((item: any) => item.paid === false)
+                    .length ?? 0}
                 </Typography>
               )}
             </CardContent>
           </Card>
         </Grid>
-        <Grid size={4}>
-          <Card elevation={3} sx={{ height: "100%" }}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Card
+            variant="outlined"
+            sx={{ height: "100%", borderColor: "divider", borderRadius: 3 }}
+          >
             <CardHeader
               title={
                 <Grid
@@ -306,12 +266,68 @@ export default function AdminPaymentManagerPage(
                   <Tooltip arrow title="Editar Data">
                     <span>
                       <IconButton
-                        disabled={watch("search") === ""}
-                        onClick={(e) => handleClick(e, "due_date")}
+                        disabled={!hasSelectedYear}
+                        onClick={() => setIsDueDateModalOpen(true)}
+                      >
+                        <Edit
+                          color={hasSelectedYear ? "warning" : "disabled"}
+                        ></Edit>
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                </Grid>
+              }
+            ></CardHeader>
+            <CardContent
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                pr: 5,
+                maxHeight: "100%",
+              }}
+            >
+              {!hasSelectedYear ? null : isSubscriptionsLoading ? (
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Typography color="info" variant="h3">
+                  {subscriptionsData?.[0]?.due_date
+                    ? formatDateTime(subscriptionsData[0].due_date, "day")
+                    : null}
+                </Typography>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Card
+            variant="outlined"
+            sx={{ height: "100%", borderColor: "divider", borderRadius: 3 }}
+          >
+            <CardHeader
+              title={
+                <Grid
+                  container
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                >
+                  <Typography variant="h5">Montante</Typography>
+                  <Tooltip arrow title="Editar Montante">
+                    <span>
+                      <IconButton
+                        disabled={
+                          !hasSelectedYear ||
+                          subscriptionConfigData?.id === undefined
+                        }
+                        onClick={() => setIsAmountModalOpen(true)}
                       >
                         <Edit
                           color={
-                            watch("search") === "" ? "disabled" : "warning"
+                            hasSelectedYear &&
+                            subscriptionConfigData?.id !== undefined
+                              ? "warning"
+                              : "disabled"
                           }
                         ></Edit>
                       </IconButton>
@@ -328,57 +344,7 @@ export default function AdminPaymentManagerPage(
                 maxHeight: "100%",
               }}
             >
-              {isSubscriptionsLoading ? (
-                <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <CircularProgress />
-                </Box>
-              ) : (
-                <Typography
-                  color={watch("search") === "" ? "textDisabled" : "info"}
-                  variant="h3"
-                >
-                  {watch("search") === ""
-                    ? 0
-                    : subscriptionsData === undefined
-                      ? null
-                      : formatDateTime(subscriptionsData[0].due_date, "day")}
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={2.5}>
-          <Card elevation={3} sx={{ height: "100%" }}>
-            <CardHeader
-              title={
-                <Grid
-                  container
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                >
-                  <Typography variant="h5">Montante</Typography>
-                  <Tooltip arrow title="Editar Montante">
-                    <span>
-                      <IconButton
-                        // disabled={watch("search") === ""}
-                        onClick={(e) => handleClick(e, "amount")}
-                      >
-                        <Edit color={"warning"}></Edit>
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                </Grid>
-              }
-            ></CardHeader>
-            <CardContent
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                pr: 5,
-                maxHeight: "100%",
-              }}
-            >
-              {isSubscriptionsLoading ? (
+              {!hasSelectedYear ? null : isSubscriptionsLoading ? (
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
                   <CircularProgress />
                 </Box>
@@ -391,14 +357,14 @@ export default function AdminPaymentManagerPage(
           </Card>
         </Grid>
       </Grid>
-      <Grid size={12} m={2} mt={7}>
-        {watch("search") === "" ? (
-          <ListItem>
-            <ListItemText
-              sx={{ textAlign: "center", mt: 3, color: "grey" }}
-              primary="Comece por selecionar o ano para o qual quer ver o estado do pagamento de quotas."
-            ></ListItemText>
-          </ListItem>
+      <Grid size={12} mx={{ xs: 2, sm: 2, md: 2 }} mt={{ xs: 3, sm: 5 }}>
+        {!hasSelectedYear ? (
+          <Grid container mx={3} size={12} justifyContent="center">
+            <Typography variant="body2" color="textDisabled" textAlign="center">
+              Comece por selecionar o ano para o qual quer ver o estado do
+              pagamento de quotas.
+            </Typography>
+          </Grid>
         ) : isSubscriptionsLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
@@ -416,7 +382,7 @@ export default function AdminPaymentManagerPage(
             data={subscriptionRows}
             count={subscriptionRows?.length!}
             columnsHeaders={columnMaping}
-            actions
+            actions={false}
             editable
             notWatchable
             selection={false}
@@ -432,178 +398,23 @@ export default function AdminPaymentManagerPage(
         username={currentUsername}
         currentState={currentState}
       ></PatchClubSubscriptionModal>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        slotProps={{
-          paper: {
-            elevation: 1,
-            sx: {
-              width: 330,
-              overflow: "visible",
-              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-              mt: 18,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: "center", vertical: "top" }}
-        anchorOrigin={{ horizontal: "center", vertical: "top" }}
-      >
-        <MenuItem
-          disableRipple
-          disableTouchRipple
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Typography variant="h6" p={1}>
-            {currentAction === "amount"
-              ? "Alterar montante a pagar"
-              : currentAction === "due_date"
-                ? "Alterar data limite"
-                : "Criar Quotas"}
-          </Typography>
-        </MenuItem>
-        <MenuItem
-          disableTouchRipple
-          disableRipple
-          onClick={(e) => e.stopPropagation()}
-          sx={{ p: 2 }}
-        >
-          <Grid
-            container
-            size={12}
-            alignItems={"center"}
-            justifyContent={"center"}
-            spacing={1}
-          >
-            {currentAction === "create" ? (
-              <Grid size={10}>
-                <Controller
-                  name="year"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      color="warning"
-                      variant={"outlined"}
-                      label="Ano"
-                      type="number"
-                      slotProps={{
-                        htmlInput: {
-                          inputMode: "numeric",
-                          pattern: "[0-9]*",
-                        },
-                      }}
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                    ></TextField>
-                  )}
-                />
-              </Grid>
-            ) : (
-              <Grid size={10}>
-                <Controller
-                  name="search"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      color="warning"
-                      variant={"outlined"}
-                      label="Ano"
-                      type="number"
-                      disabled
-                      slotProps={{
-                        htmlInput: {
-                          inputMode: "numeric",
-                          pattern: "[0-9]*",
-                        },
-                        input: {
-                          readOnly: true,
-                        },
-                      }}
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                    ></TextField>
-                  )}
-                />
-              </Grid>
-            )}
-            {currentAction === "amount" ? (
-              <Grid size={10} pt={1}>
-                <Controller
-                  name="amount"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      color="warning"
-                      placeholder="XX.XX"
-                      variant={"outlined"}
-                      label="Montante"
-                      type="number"
-                      required
-                      slotProps={{
-                        htmlInput: {
-                          inputMode: "numeric",
-                          pattern: "[0-9]*",
-                        },
-                      }}
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                      }}
-                      error={!!errors.amount}
-                      helperText={errors.amount?.message}
-                    ></TextField>
-                  )}
-                />
-              </Grid>
-            ) : currentAction === "due_date" ? (
-              <Grid size={10} pt={1}>
-                <Controller
-                  name="overdueDate"
-                  control={control}
-                  render={({ field }) => (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        {...field}
-                        format="YYYY-MM-DD"
-                        label="Nova Data *"
-                        onChange={(date) => {
-                          field.onChange(date ? date.format("YYYY-MM-DD") : "");
-                        }}
-                        value={field.value ? dayjs(field.value) : null}
-                        slots={{ textField: TextField }}
-                        enableAccessibleFieldDOMStructure={false}
-                        slotProps={{
-                          textField: {
-                            fullWidth: true,
-                            error: !!errors?.overdueDate,
-                            helperText: errors?.overdueDate?.message || "",
-                          },
-                        }}
-                      />
-                    </LocalizationProvider>
-                  )}
-                />
-              </Grid>
-            ) : null}
-            <Grid container justifyContent={"center"} size={12} mt={3}>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => handleSubmit(onSubmit)()}
-              >
-                OK
-              </Button>
-            </Grid>
-          </Grid>
-        </MenuItem>
-      </Menu>
+      <CreateClubSubscriptionsModal
+        isOpen={isCreateModalOpen}
+        handleClose={() => setIsCreateModalOpen(false)}
+        availableYears={data?.years ?? []}
+      />
+      <UpdateClubSubscriptionAmountModal
+        isOpen={isAmountModalOpen}
+        handleClose={() => setIsAmountModalOpen(false)}
+        year={selectedYear}
+        configId={subscriptionConfigData?.id}
+        currentAmount={subscriptionConfigData?.amount}
+      />
+      <UpdateClubSubscriptionDueDateModal
+        isOpen={isDueDateModalOpen}
+        handleClose={() => setIsDueDateModalOpen(false)}
+        year={selectedYear}
+      />
     </>
   );
 }

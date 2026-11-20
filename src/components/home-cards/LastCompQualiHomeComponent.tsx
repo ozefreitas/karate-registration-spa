@@ -33,8 +33,9 @@ export default function LastCompQualiHomeComponent(
 
   return (
     <Grid size={12}>
-      <Card sx={{ m: 2 }}>
+      <Card>
         <CardHeader
+          sx={{ p: 2 }}
           title={
             <Grid container alignItems={"center"} gap={2} size={12}>
               <Grid
@@ -72,11 +73,11 @@ export default function LastCompQualiHomeComponent(
               <CircularProgress />
             </Grid>
           ) : lastCompQualiData?.length === 0 ? (
-            <ListItem sx={{ mt: 1, ml: 2 }}>
-              <Typography color="textDisabled" variant="body2">
+            <Grid container size={12} justifyContent={"center"} my={1}>
+              <Typography variant="body2" color="textDisabled">
                 Classificações não disponíveis
               </Typography>
-            </ListItem>
+            </Grid>
           ) : (
             lastCompQualiData?.map((bracket, index: any) => (
               <Accordion
@@ -144,7 +145,12 @@ export default function LastCompQualiHomeComponent(
         </CardContent>
         <CardActions sx={{ justifyContent: "flex-end" }}>
           {props.userRole === "free_club" ? null : (
-            <InfoButton label="Ver Todas" to="classifications/"></InfoButton>
+            <InfoButton
+              label="Ver Todas"
+              to="classifications/"
+              size="small"
+              borderless
+            ></InfoButton>
           )}
         </CardActions>
       </Card>

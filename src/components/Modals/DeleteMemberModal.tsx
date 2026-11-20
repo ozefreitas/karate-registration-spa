@@ -1,15 +1,4 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Button,
-  Stack,
-} from "@mui/material";
-import * as React from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
+import { Typography } from "@mui/material";
 import {
   eventsHooks,
   membersHooks,
@@ -18,15 +7,7 @@ import {
   monthlyPaymentsHooks,
 } from "../../hooks";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function DeleteMemberModal(
   props: Readonly<{
@@ -71,12 +52,52 @@ export default function DeleteMemberModal(
   const [searchParams, _] = useSearchParams();
 
   const paramEvent = searchParams.get("event") || undefined;
+  const title =
+    props.from === "Atletas"
+      ? "Membro(s)"
+      : props.from === "Categorias"
+        ? "Escalão(ões)"
+        : props.from === "EventCategories"
+          ? "Escalão(ões) de Evento"
+          : props.from === "Individuais" || props.from === "Modalidades"
+            ? "Inscrição(ões)"
+            : props.from === "Treinadores"
+              ? "Treinador(es)?"
+              : props.from === "Equipas"
+                ? "Equipa(s)?"
+                : props.from === "Pagamentos"
+                  ? "Pagamento?"
+                  : "Plano de Pagamento?";
+  const confirmationMessage =
+    props.from === "Atletas"
+      ? props.id === undefined
+        ? "Tem a certeza que pretende apagar todos os seus Membros? Esta ação irá eliminar também todas as inscrições de todos os Membros em todas as provas"
+        : "Tem a certeza que pretende apagar este(s) Membro(s)? Esta ação irá eliminar também todas as inscrições deste(s) Membro(s) em todas as provas."
+      : props.from === "Categorias"
+        ? props.id === undefined
+          ? "Tem a certeza que pretende apagar todos os Escalões?"
+          : "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
+        : props.from === "EventCategories"
+          ? props.id === undefined
+            ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
+            : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
+          : props.from === "Individuais" || props.from === "Modalidades"
+            ? props.id === undefined
+              ? "Tem a certeza que pretende apagar todas as Inscrições?"
+              : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
+            : props.from === "Treinadores"
+              ? props.id === undefined
+                ? "Tem a certeza que pretende apagar as Inscrições de todos os Treinadores?"
+                : "Tem a certeza que pretende apagar a Inscrição deste(s) Treinador(es)?"
+              : props.from === "Equipas"
+                ? props.id === undefined
+                  ? "Tem a certeza que pretende apagar todas as Equipas?"
+                  : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
+                : props.from === "Pagamentos"
+                  ? "Tem a certeza que pretende apagar este Pagamento?"
+                  : "Tem a certeza que pretende apagar este Plano de Pagamento?";
 
-  const handleDelete = (
-    event: React.MouseEvent<HTMLElement>,
-    id: string | Array<string> | undefined,
-  ) => {
-    event.stopPropagation();
+  const handleDelete = (id: string | Array<string> | undefined) => {
     if (id !== undefined && typeof id === "string") {
       if (props.from === "Atletas") {
         removeMember.mutate(id, {
@@ -177,93 +198,19 @@ export default function DeleteMemberModal(
   };
 
   return (
-    <Dialog
-      open={props.isModalOpen}
-      onClose={props.handleModalClose}
-      slots={{
-        transition: Transition,
-      }}
+    <InfoBaseModal
+      isModalOpen={props.isModalOpen}
+      handleModalClose={props.handleModalClose}
+      title={`Apagar ${title}`}
+      subheader="Esta ação não pode ser anulada."
+      chipName="Confirmação"
+      size="sm"
+      confirmColor="error"
+      onSubmit={() => handleDelete(props.id)}
     >
-      <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">
-          Apagar{" "}
-          {props.from === "Atletas"
-            ? "Membro(s)"
-            : props.from === "Categorias"
-              ? "Escalão(ões)"
-              : props.from === "EventCategories"
-                ? "Escalão(ões) de Evento"
-                : props.from === "Individuais" || props.from === "Modalidades"
-                  ? "Inscrição(ões)"
-                  : props.from === "Treinadores"
-                    ? "Treinador(es)?"
-                    : props.from === "Equipas"
-                      ? "Equipa(s)?"
-                      : props.from === "Pagamentos"
-                        ? "Pagamento?"
-                        : "Plano de Pagamento?"}
-        </Typography>
-      </DialogTitle>
-      <DialogContent
-        sx={{
-          borderBottom: "1px solid lightgrey",
-          borderTop: "1px solid lightgrey",
-        }}
-      >
-        <p></p>
-        {props.from === "Atletas"
-          ? props.id === undefined
-            ? "Tem a certeza que pretende apagar todos os seus Membros? Esta ação irá eliminar também todas as inscrições de todos os Membros em todas as provas"
-            : "Tem a certeza que pretende apagar este(s) Membro(s)? Esta ação irá eliminar também todas as inscrições deste(s) Membro(s) em todas as provas."
-          : props.from === "Categorias"
-            ? props.id === undefined
-              ? "Tem a certeza que pretende apagar todos os Escalões?"
-              : "Tem a certeza que pretende apagar este(s) Escalão(ões)?"
-            : props.from === "EventCategories"
-              ? props.id === undefined
-                ? "Tem a certeza que pretende apagar todos os Escalões deste Evento?"
-                : "Tem a certeza que pretende remover este(s) Escalão(ões) deste Evento?"
-              : props.from === "Individuais" || props.from === "Modalidades"
-                ? props.id === undefined
-                  ? "Tem a certeza que pretende apagar todas as Inscrições?"
-                  : "Tem a certeza que pretende apagar esta(s) Inscrição(ões)?"
-                : props.from === "Treinadores"
-                  ? props.id === undefined
-                    ? "Tem a certeza que pretende apagar as Inscrições de todos os Treinadores?"
-                    : "Tem a certeza que pretende apagar a Inscrição deste(s) Treinador(es)?"
-                  : props.from === "Equipas"
-                    ? props.id === undefined
-                      ? "Tem a certeza que pretende apagar todas as Equipas?"
-                      : "Tem a certeza que pretende apagar esta(s) Equipa(s)?"
-                    : props.from === "Pagamentos"
-                      ? "Tem a certeza que pretende apagar este Pagamento?"
-                      : "Tem a certeza que pretende apagar este Plano de Pagamento?"}
-      </DialogContent>
-      <DialogActions>
-        <Stack
-          direction={{
-            xs: "row-reverse",
-            sm: "row",
-          }}
-          sx={{
-            p: 2,
-            gap: 3,
-            flexShrink: 0,
-            alignSelf: { xs: "flex-end", sm: "center" },
-          }}
-        >
-          <Button
-            size="small"
-            onClick={(e) => handleDelete(e, props.id)}
-            variant="contained"
-          >
-            Confirmar
-          </Button>
-          <Button size="small" onClick={props.handleModalClose}>
-            Cancelar
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      <Typography variant="body2" color="inherit">
+        {confirmationMessage}
+      </Typography>
+    </InfoBaseModal>
   );
 }

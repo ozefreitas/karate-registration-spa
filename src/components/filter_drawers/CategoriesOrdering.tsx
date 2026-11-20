@@ -1,9 +1,7 @@
 import * as React from "react";
 import {
-  Box,
   List,
   Button,
-  Drawer,
   Grid,
   TextField,
   MenuItem,
@@ -12,17 +10,8 @@ import {
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import { categoryOrderingOptions } from "../../dashboard/filters";
-import { SwapVert } from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
-import Badge, { badgeClasses } from "@mui/material/Badge";
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
-
-const FiltersBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -20px;
-    right: -55px;
-  }
-`;
+import FilterDrawer from "./FilterDrawer";
 
 export default function CategoriesOrdering(
   props: Readonly<{
@@ -35,12 +24,6 @@ export default function CategoriesOrdering(
     setOrderFields: any;
   }>,
 ) {
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
   const moveUp = (index: any) => {
     if (index === 0) return; // already at top
     const updated = [...props.orderFields];
@@ -55,16 +38,24 @@ export default function CategoriesOrdering(
     props.setOrderFields(updated);
   };
 
-  const DrawerList = (
-    <Box sx={{ width: 400 }} role="presentation">
+  const drawerContent = (
+    <>
       <List sx={{ p: 1, pr: 2, mt: 2 }}>
         <Typography variant="h6" pl={2} mb={3}>
           Ordenação
         </Typography>
-        <Grid container alignContent="center" alignItems="center">
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          size={12}
+          mx={{ xs: 3, sm: 5, md: 3 }}
+          rowSpacing={3}
+          mt={5}
+        >
           {props.orderFields.map((item: any, index: any) => (
             <React.Fragment key={item.key}>
-              <Grid sx={{ p: 2 }} size={10}>
+              <Grid size={9}>
                 <Controller
                   name={item.key}
                   control={props.control}
@@ -75,13 +66,16 @@ export default function CategoriesOrdering(
                       label={item.label}
                       fullWidth
                       select
-                      slotProps={{
-                        input: {
-                          style: {
-                            fontSize: 13,
-                          },
+                      size="small"
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderRadius: 3,
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: "0.7rem",
                         },
                       }}
+                      slotProps={{ input: { style: { fontSize: 13 } } }}
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     >
@@ -100,21 +94,33 @@ export default function CategoriesOrdering(
                 />
               </Grid>
 
-              <Grid size={1}>
+              <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                size={1}
+              >
                 <IconButton
+                  size="small"
                   disabled={index === 0}
                   onClick={() => moveUp(index)}
                 >
-                  <ArrowUpward />
+                  <ArrowUpward fontSize="small" />
                 </IconButton>
               </Grid>
 
-              <Grid size={1}>
+              <Grid
+                size={1}
+                container
+                justifyContent="center"
+                alignItems="center"
+              >
                 <IconButton
-                  disabled={index === 2}
+                  size="small"
+                  disabled={index === props.orderFields.length - 1}
                   onClick={() => moveDown(index)}
                 >
-                  <ArrowDownward />
+                  <ArrowDownward fontSize="small" />
                 </IconButton>
               </Grid>
             </React.Fragment>
@@ -127,37 +133,21 @@ export default function CategoriesOrdering(
           sx={{ width: "100%" }}
           onClick={() => props.reset()}
           variant="contained"
+          disabled={props.changedCount === 0}
         >
           Limpar
         </Button>
       </Grid>
-    </Box>
+    </>
   );
 
   return (
-    <Grid
-      container
-      spacing={2}
-      justifyContent={"flex-end"}
-      alignItems={"center"}
+    <FilterDrawer
+      label="Ordem"
+      changedCount={props.changedCount}
+      isLoading={props.isLoading}
     >
-      <Button
-        endIcon={<SwapVert sx={{ ml: 1 }}></SwapVert>}
-        size="large"
-        variant="outlined"
-        disabled={props.isLoading}
-        onClick={toggleDrawer(true)}
-      >
-        Ordem
-        <FiltersBadge
-          badgeContent={props.changedCount}
-          color="primary"
-          overlap="circular"
-        />
-      </Button>
-      <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
-    </Grid>
+      {drawerContent}
+    </FilterDrawer>
   );
 }

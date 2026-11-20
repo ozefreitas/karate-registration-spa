@@ -46,7 +46,11 @@ function StatRow({
         >
           {icon}
         </Grid>
-        <Typography variant="body1" sx={{ color: "#555", fontWeight: 500 }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ fontWeight: 500 }}
+        >
           {label}
         </Typography>
       </Grid>
@@ -75,10 +79,10 @@ export default function MemberRequestsCard({
     <Card
       sx={{
         overflow: "hidden",
-        m: 2,
       }}
     >
       <CardHeader
+        sx={{ p: 2 }}
         title={
           <Grid container alignItems={"center"} gap={2}>
             <Grid
@@ -169,7 +173,9 @@ export default function MemberRequestsCard({
         sx={{ p: 2, pt: 0, display: "flex", justifyContent: "flex-end" }}
       >
         <Button
+          size="small"
           variant="contained"
+          sx={{ border: 0 }}
           startIcon={<PersonSearch />}
           onClick={onResolve}
           disableElevation

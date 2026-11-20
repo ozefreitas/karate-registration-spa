@@ -4,8 +4,20 @@ import { ptPT as corePtPT } from "@mui/material/locale";
 import "@fontsource/poppins/400.css";
 import "@fontsource/poppins/700.css";
 
-const theme = createTheme(
+const createAppTheme = (mode: "light" | "dark") =>
+  createTheme(
   {
+    palette: {
+      mode,
+      ...(mode === "dark"
+        ? {
+            background: {
+              default: "#121212",
+              paper: "#1e1e1e",
+            },
+          }
+        : {}),
+    },
     typography: {
       fontSize: 12,
       h4Half: {
@@ -21,12 +33,16 @@ const theme = createTheme(
     },
     components: {
       MuiCssBaseline: {
-        styleOverrides: {
+        styleOverrides: (theme) => ({
+          html: {
+            colorScheme: mode,
+            backgroundColor: theme.palette.background.default,
+          },
           body: {
             fontFamily:
               '"Inter", "Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
           },
-        },
+        }),
       },
       MuiPaper: { styleOverrides: { root: { borderRadius: 16 } } },
       MuiInputLabel: {
@@ -162,4 +178,4 @@ const theme = createTheme(
   corePtPT,
 );
 
-export default theme;
+export default createAppTheme;

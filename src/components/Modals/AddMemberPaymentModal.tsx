@@ -1,39 +1,22 @@
 import {
-  Dialog,
-  DialogContent,
-  Slide,
-  Typography,
-  Button,
-  DialogActions,
-  DialogTitle,
-  Stack,
-  Grid,
-  TextField,
-  MenuItem,
   FormControl,
-  FormLabel,
   FormControlLabel,
+  FormLabel,
+  Grid,
+  MenuItem,
   Switch,
+  TextField,
+  Typography,
 } from "@mui/material";
-import React from "react";
-import { TransitionProps } from "notistack";
-import { monthlyPaymentsHooks } from "../../hooks";
 import { Controller, useForm } from "react-hook-form";
 import { MonthOptions, YearOptions } from "../../config";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { monthlyPaymentsHooks } from "../../hooks";
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function AddMemberPaymentModal(
   props: Readonly<{
     isOpen: boolean;
-    handleClose: any;
+    handleClose: () => void;
     personId: string;
     currentQuotesConfig: any;
   }>,
@@ -57,13 +40,15 @@ export default function AddMemberPaymentModal(
     },
   });
 
-  const {
-    data: monthlyPaymentPlansData,
-    // isLoading: isMonthlyPaymentPlansLoadng,
-  } = monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
-
+  const { data: monthlyPaymentPlansData } =
+    monthlyPaymentsHooks.useFetchMonthlyPaymentPlansData();
   const createMonthlyMemberSubscription =
     monthlyPaymentsHooks.useCreateMonthlyMemberSubscription();
+
+  const closeAndReset = () => {
+    reset();
+    props.handleClose();
+  };
 
   const onSubmit = (data: any) => {
     const payload = {
@@ -77,158 +62,139 @@ export default function AddMemberPaymentModal(
     if (data.custom) {
       payload.plan = undefined;
     }
+
     createMonthlyMemberSubscription.mutate(payload, {
-      onSuccess: () => {
-        props.handleClose();
-      },
+      onSuccess: closeAndReset,
     });
   };
 
+  const isDefault = watch("is_default");
+  const isCustom = watch("custom");
+
   return (
-    <Dialog
-      open={props.isOpen}
-      onClose={props.handleClose}
-      slots={{
-        transition: Transition,
-      }}
+    <InfoBaseModal
+      isModalOpen={props.isOpen}
+      handleModalClose={closeAndReset}
+      title="Criar quota mensal"
+      subheader="Selecione o período e defina o montante desta quota."
+      chipName="Quota de membro"
+      size="sm"
+      onSubmit={handleSubmit(onSubmit)}
+      disableConfirm={createMonthlyMemberSubscription.isPending}
     >
-      <DialogTitle sx={{ p: 3 }}>
-        <Typography variant="h5">Criar quota</Typography>
-      </DialogTitle>
-      <DialogContent
-        sx={{
-          borderBottom: "1px solid lightgrey",
-          borderTop: "1px solid lightgrey",
-        }}
-      >
-        <p>Insira o mês para o qual quer criar a quota.</p>
-        <Grid sx={{ p: 2 }} size={6}>
-          <Controller
-            name="month"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Mês"
-                select
-                fullWidth
-                required
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.month}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {MonthOptions.map((opt) => (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
+      <Grid container direction="column" spacing={2} sx={{ py: 1 }}>
+        <Typography color="text.secondary">
+          Insira o mês e o ano para os quais pretende criar a quota.
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Controller
+              name="month"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  color="warning"
+                  variant="outlined"
+                  label="Mês"
+                  select
+                  fullWidth
+                  required
+                  error={!!errors.month}
+                  onChange={(event) => field.onChange(event.target.value)}
+                >
+                  <MenuItem value="">-- Selecionar --</MenuItem>
+                  {MonthOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Controller
+              name="year"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  color="warning"
+                  variant="outlined"
+                  label="Ano"
+                  select
+                  fullWidth
+                  required
+                  error={!!errors.year}
+                  onChange={(event) => field.onChange(event.target.value)}
+                >
+                  <MenuItem value="">-- Selecionar --</MenuItem>
+                  {YearOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          </Grid>
         </Grid>
-        <Grid sx={{ p: 2 }} size={6}>
-          <Controller
-            name="year"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                color="warning"
-                variant={"outlined"}
-                label="Ano"
-                select
-                fullWidth
-                required
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
-                error={!!errors.month}
-              >
-                <MenuItem sx={{ color: "lightgrey" }} value="">
-                  -- Selecionar --
-                </MenuItem>
-                {YearOptions.map((opt) => (
-                  <MenuItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
-          />
-        </Grid>
-        <Grid mt={2} ml={1} size={6}>
+
+        <Grid size={12}>
           <Controller
             name="is_default"
             control={control}
-            disabled={watch("custom")}
             render={({ field }) => (
-              <FormControl
-                sx={{ pb: 2, justifyContent: "center" }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormLabel sx={{ ml: 2, mb: 1 }}>
-                  Selecione este campo caso deseje que seja utilizado o montante
-                  que definiu como padrão.
+              <FormControl fullWidth component="fieldset" variant="standard">
+                <FormLabel sx={{ mb: 1 }}>
+                  Utilize o montante definido como padrão para as quotas.
                 </FormLabel>
                 <FormControlLabel
-                  sx={{ mr: 2, justifyContent: "flex-end" }}
                   labelPlacement="start"
-                  label={
-                    <Typography sx={{ fontSize: 16, pr: 2 }}>
-                      Usar padrão:
-                    </Typography>
-                  }
+                  label="Usar montante padrão"
                   control={
                     <Switch
                       {...field}
                       checked={field.value}
                       color="warning"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                      }}
+                      disabled={isCustom}
+                      onChange={(event) =>
+                        field.onChange(event.target.checked)
+                      }
                     />
                   }
-                ></FormControlLabel>
+                  sx={{ justifyContent: "space-between", mx: 0 }}
+                />
               </FormControl>
             )}
           />
         </Grid>
-        <Grid p={2} pt={0} size={6}>
+
+        <Grid size={12}>
           <Controller
             name="plan"
             control={control}
             render={({ field }) => (
               <TextField
+                {...field}
                 color="warning"
-                variant={"outlined"}
+                variant="outlined"
                 label="Plano"
                 fullWidth
                 select
-                disabled={watch("is_default") || watch("custom")}
-                required
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
+                disabled={isDefault || isCustom}
+                required={!isDefault && !isCustom}
                 error={!!errors.plan}
+                onChange={(event) => field.onChange(event.target.value)}
               >
                 {monthlyPaymentPlansData?.length === 0 ? (
                   <MenuItem disabled>Sem opções disponíveis.</MenuItem>
                 ) : (
-                  <MenuItem sx={{ color: "lightgrey" }} value="">
-                    -- Selecionar --
-                  </MenuItem>
+                  <MenuItem value="">-- Selecionar --</MenuItem>
                 )}
-                {monthlyPaymentPlansData?.map((item: any, index: any) => (
-                  <MenuItem key={index} value={item.id}>
+                {monthlyPaymentPlansData?.map((item: any) => (
+                  <MenuItem key={item.id} value={item.id}>
                     {item.name} ({item.amount}€)
                   </MenuItem>
                 ))}
@@ -236,106 +202,65 @@ export default function AddMemberPaymentModal(
             )}
           />
         </Grid>
-        <Grid mt={2} ml={1} size={6}>
+
+        <Grid size={12}>
           <Controller
             name="custom"
-            disabled={watch("is_default")}
             control={control}
             render={({ field }) => (
-              <FormControl
-                sx={{ pb: 2, justifyContent: "center" }}
-                component="fieldset"
-                variant="standard"
-              >
-                <FormLabel sx={{ ml: 2, mb: 1 }}>
-                  Insira um montante personalizado apenas para este Membro. Este
-                  não será guardado como um plano.
+              <FormControl fullWidth component="fieldset" variant="standard">
+                <FormLabel sx={{ mb: 1 }}>
+                  Defina um montante exclusivo para este membro; não será
+                  guardado como um plano.
                 </FormLabel>
                 <FormControlLabel
-                  sx={{ mr: 2, justifyContent: "flex-end" }}
                   labelPlacement="start"
-                  label={
-                    <Typography sx={{ fontSize: 16, pr: 2 }}>
-                      Montante Personalizado:
-                    </Typography>
-                  }
+                  label="Montante personalizado"
                   control={
                     <Switch
                       {...field}
-                      disabled={watch("is_default")}
                       checked={field.value}
                       color="warning"
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e.target.checked);
-                      }}
+                      disabled={isDefault}
+                      onChange={(event) =>
+                        field.onChange(event.target.checked)
+                      }
                     />
                   }
-                ></FormControlLabel>
+                  sx={{ justifyContent: "space-between", mx: 0 }}
+                />
               </FormControl>
             )}
           />
         </Grid>
-        <Grid pl={2}>
+
+        <Grid size={12}>
           <Controller
             name="customAmount"
-            disabled={!watch("custom") || watch("is_default")}
             control={control}
             render={({ field }) => (
               <TextField
+                {...field}
                 color="warning"
-                variant={"outlined"}
-                label="Novo Montante"
+                variant="outlined"
+                label="Novo montante"
                 type="number"
-                disabled={!watch("custom")}
+                fullWidth
+                disabled={!isCustom || isDefault}
                 slotProps={{
                   htmlInput: {
                     inputMode: "numeric",
                     pattern: "[0-9]*",
                   },
                 }}
-                {...field}
-                onChange={(e) => {
-                  field.onChange(e);
-                }}
                 error={!!errors.customAmount}
                 helperText={errors.customAmount?.message}
-              ></TextField>
+                onChange={(event) => field.onChange(event.target.value)}
+              />
             )}
           />
         </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Stack
-          direction={{
-            xs: "row-reverse",
-            sm: "row",
-          }}
-          sx={{
-            p: 2,
-            gap: 3,
-            flexShrink: 0,
-            alignSelf: { xs: "flex-end", sm: "center" },
-          }}
-        >
-          <Button
-            size="small"
-            onClick={() => handleSubmit(onSubmit)()}
-            variant="contained"
-          >
-            Confirmar
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              reset();
-              props.handleClose();
-            }}
-          >
-            Cancelar
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      </Grid>
+    </InfoBaseModal>
   );
 }

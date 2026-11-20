@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   apiBaseUrl,
+  isAuthFreeEndpoint,
   restoreAccessToken,
   retryWithRefreshedAccessToken,
 } from "./authToken";
@@ -12,12 +13,7 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(async (config) => {
-  const isAuthFreeEndpoint =
-    config.url?.includes("/login/") ||
-    config.url?.includes("/register/") ||
-    config.url?.includes("/auth/token/");
-
-  if (!isAuthFreeEndpoint) {
+  if (!isAuthFreeEndpoint(config.url)) {
     const token = await restoreAccessToken();
     if (token) config.headers.Authorization = `Bearer ${token}`;
   }

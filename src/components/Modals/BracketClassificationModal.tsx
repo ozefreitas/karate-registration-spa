@@ -8,7 +8,6 @@ import {
   Chip,
   CircularProgress,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
@@ -87,16 +86,16 @@ const BracketClassificationModal = (props: {
         >
           <Grid>
             <Chip label="Pódio"></Chip>
-            <Typography fontWeight={"bold"} m={2} ml={1} variant="h4">
-              {bracketClassificationData?.results[0].event}
-            </Typography>
             <Typography fontWeight={"bold"} m={2} ml={1} variant="h5">
               {props.bracketName}
             </Typography>
           </Grid>
           <IconButton
             onClick={props.handleModalClose}
-            sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
+            sx={{
+              bgcolor: "background.default",
+              "&:hover": { bgcolor: "#e0e0e0" },
+            }}
           >
             <Close />
           </IconButton>
@@ -106,6 +105,12 @@ const BracketClassificationModal = (props: {
         {isBracketClassificationLoading ? (
           <Grid mt={3} container justifyContent={"center"} size={12}>
             <CircularProgress />
+          </Grid>
+        ) : bracketClassificationData?.count === 0 ? (
+          <Grid my={2} container justifyContent={"center"} size={12}>
+            <Typography variant="body2" color="textDisabled">
+              Nenhum resultado encontrado.
+            </Typography>
           </Grid>
         ) : (
           <Grid container size={12} spacing={3} alignItems={"end"} pt={3}>
@@ -169,6 +174,7 @@ const BracketClassificationModal = (props: {
               alignItems={"center"}
             >
               <Button
+                sx={{ border: 0 }}
                 size="small"
                 variant="contained"
                 startIcon={<Download></Download>}
@@ -179,19 +185,6 @@ const BracketClassificationModal = (props: {
           </Grid>
         )}
       </DialogContent>
-      <DialogActions>
-        <Grid
-          container
-          size={12}
-          alignItems={"center"}
-          justifyContent={"flex-end"}
-          m={1}
-        >
-          <Button sx={{ p: 1 }} size="small" onClick={props.handleModalClose}>
-            Voltar
-          </Button>
-        </Grid>
-      </DialogActions>
     </Dialog>
   );
 };

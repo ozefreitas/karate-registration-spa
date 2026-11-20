@@ -10,7 +10,10 @@ import {
 } from "@mui/material";
 import { notificationsHooks } from "../../hooks";
 import { useState } from "react";
-import { getNotificationTypeIcon } from "../../dashboard/config";
+import {
+  getNotificationTypeIcon,
+  NotificationTypeOptions,
+} from "../../dashboard/config";
 import { formatDateTime, formatTimeDifference } from "../../utils/utils";
 import { Delete, KeyboardArrowRight } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +22,12 @@ import NotificationsFilters from "../../components/filter_drawers/NotificationsF
 import NotificationsOrdering from "../../components/filter_drawers/NotificationsOrdering";
 import { useForm } from "react-hook-form";
 import { ColoredIconBox } from "../../components/icon-utils/boxes";
+
+const notificationFilterDefaults: Record<string, boolean | undefined> =
+  Object.fromEntries([
+    ...NotificationTypeOptions.map((option) => [option.value, false]),
+    ["canRemove", undefined],
+  ]);
 
 const NotificationsPage = (props: { me: any }) => {
   const [page, setPage] = useState<number>(1);
@@ -68,20 +77,17 @@ const NotificationsPage = (props: { me: any }) => {
   const {
     control: filtersControl,
     watch: filtersWatch,
-    setValue: filtersSetValue,
     reset: filtersReset,
-    formState: { errors: filtersErrors, dirtyFields: filtersDirtyFields },
-  } = useForm({
-    defaultValues: {
-      canRemove: undefined,
-    },
+    formState: { dirtyFields: filtersDirtyFields },
+  } = useForm<Record<string, boolean | undefined>>({
+    defaultValues: notificationFilterDefaults,
   });
 
   const {
     control: orderControl,
     watch: orderWatch,
     reset: orderReset,
-    formState: { errors: orderErrors, dirtyFields: orderDirtyFields },
+    formState: { dirtyFields: orderDirtyFields },
   } = useForm({
     defaultValues: {
       notification: "",
@@ -142,34 +148,46 @@ const NotificationsPage = (props: { me: any }) => {
         }
         title="Notificações"
       ></PageInfoCard>
-      <Grid size={12} container m={2} spacing={2}>
+      <Grid
+        size={12}
+        container
+        spacing={2}
+        sx={{ width: "100%", mx: 0, px: { xs: 2, sm: 3 } }}
+      >
         <Grid
-          m={1}
-          container
-          justifyContent={"space-between"}
-          alignItems={"center"}
           size={12}
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          rowGap={1}
+          columnGap={2}
         >
           {isNotificationsLoading ? (
             <Grid
-              height={100}
               container
               justifyContent={"center"}
               alignItems={"center"}
+              sx={{ minHeight: 40 }}
             >
               <CircularProgress />
             </Grid>
           ) : notificationsData?.count === 0 ? null : (
-            <Typography variant="h6" sx={{ color: "gray", ml: 1 }}>
+            <Typography color="text.secondary">
               {notificationsData?.count} Notificação(ões).
             </Typography>
           )}
-          <Grid container spacing={2}>
+          <Grid
+            container
+            spacing={1}
+            alignItems="center"
+            justifyContent={{ xs: "space-between", sm: "flex-end" }}
+            mx={{ md: 1 }}
+            sx={{ width: { xs: "100%", sm: "auto" }, ml: { sm: "auto" } }}
+          >
             <NotificationsOrdering
               isLoading={isNotificationsLoading}
               control={orderControl}
               reset={orderReset}
-              errors={orderErrors}
               changedCount={orderChangedCount}
               orderFields={orderFields}
               setOrderFields={setOrderFields}
@@ -177,9 +195,7 @@ const NotificationsPage = (props: { me: any }) => {
             <NotificationsFilters
               isLoading={isNotificationsLoading}
               control={filtersControl}
-              setValue={filtersSetValue}
               reset={filtersReset}
-              errors={filtersErrors}
               changedCount={filtersChangedCount}
               setSelectedTypes={setSelectedTypes}
               userRole={props.me.role}
@@ -196,8 +212,8 @@ const NotificationsPage = (props: { me: any }) => {
             <CircularProgress />
           </Grid>
         ) : notificationsData?.count === 0 ? (
-          <Grid mt={1} mb={3} container justifyContent="center" size={12}>
-            <Typography variant="h6" sx={{ color: "gray", mt: 2 }}>
+          <Grid my={2} container justifyContent="center" size={12}>
+            <Typography color="textDisabled">
               Não foram encontrados registos.
             </Typography>
           </Grid>
@@ -221,7 +237,7 @@ const NotificationsPage = (props: { me: any }) => {
                 <CardContent
                   sx={{
                     py: 2,
-                    pl: 4,
+                    pl: { xs: 2, md: 4 },
                     pr: 0,
                     display: "flex",
                     "&:last-child": {
@@ -245,7 +261,7 @@ const NotificationsPage = (props: { me: any }) => {
                       {formatTimeDifference(item.created_at)})
                     </Typography>
                   </Grid>
-                  <Grid borderRadius={5}>
+                  <Grid container alignContent={"space-around"}>
                     <Tooltip title="Remover Notificação" placement="top-start">
                       <span>
                         <IconButton

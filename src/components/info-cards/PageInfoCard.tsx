@@ -1,105 +1,185 @@
-import { Grid, Typography, Box, Popover } from "@mui/material";
-import { useEffect, useRef, useState, ReactNode } from "react";
 import { InfoOutline } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { useEffect, useId, useRef, useState } from "react";
+import type { ReactElement, ReactNode } from "react";
 
-const PageInfoCard = (props: {
+type PageInfoCardProps = Readonly<{
   title: string;
-  description: string | ReactNode;
-}) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [isStuck, setIsStuck] = useState(false);
-  const cardRef = useRef<HTMLDivElement | null>(null);
+  description: ReactNode;
+  icon?: ReactNode;
+  chipLabel?: string;
+  chipIcon?: ReactElement;
+  chipColor?:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning";
+}>;
+
+const PageInfoCard = ({
+  title,
+  description,
+  icon,
+  chipLabel,
+  chipIcon,
+  chipColor = "default",
+}: PageInfoCardProps) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const collapsedHeight = isSmallScreen ? 72 : 96;
+  const descriptionId = useId();
+  const descriptionRef = useRef<HTMLDivElement | null>(null);
+  const [canExpand, setCanExpand] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    const updateStickyState = () => {
-      if (cardRef.current) {
-        setIsStuck(cardRef.current.getBoundingClientRect().top <= 32);
-      }
+    const element = descriptionRef.current;
+    if (!element) {
+      setCanExpand(false);
+      return;
+    }
+
+    const updateOverflow = () => {
+      setCanExpand(element.scrollHeight > collapsedHeight + 1);
     };
 
-    updateStickyState();
-    window.addEventListener("scroll", updateStickyState, { passive: true });
-    return () => window.removeEventListener("scroll", updateStickyState);
-  }, []);
+    updateOverflow();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(updateOverflow);
+    observer?.observe(element);
+    window.addEventListener("resize", updateOverflow);
 
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", updateOverflow);
+    };
+  }, [collapsedHeight, description]);
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
   return (
-    <Grid
-      ref={cardRef}
-      container
+    <Card
+      variant="outlined"
       sx={{
-        p: 2,
-        ml: "-67px",
-        width: "calc(100% + 90px)",
-        pl: "calc(16px + 67px)",
-        pt: 4,
-        mb: 4,
-        position: "sticky",
-        top: 32,
-        zIndex: (theme) => theme.zIndex.appBar - 2,
-        backgroundColor: "#f3f3f3",
-        boxShadow: isStuck ? "0 3px 6px -6px rgba(0, 0, 0, 0.4)" : "none",
-        transition: `box-shadow 500ms ease`,
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: -20,
-          height: 20,
-          pointerEvents: "none",
-          opacity: isStuck ? 1 : 0,
-          transition: `opacity 500ms ease`,
-          background: (theme) =>
-            `linear-gradient(to bottom, ${theme.palette.background.paper}, transparent)`,
-        },
+        mx: { xs: 2, sm: 3, md: 4 },
+        mt: { xs: 2, sm: 3 },
+        mb: 3,
+        borderColor: "divider",
+        borderRadius: 3,
+        bgcolor: "background.paper",
       }}
-      gap={3}
-      alignItems={"center"}
     >
-      <Typography variant="h5Half">{props.title}</Typography>
-      {props.description ? (
-        <>
-          <Box
-            sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-            aria-owns={open ? "mouse-over-popover" : undefined}
-            aria-haspopup="true"
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
+      <CardContent
+        sx={{
+          p: { xs: 2, sm: 3 },
+          "&:last-child": { pb: { xs: 2, sm: 3 } },
+        }}
+      >
+        <Stack
+          direction={{ xs: "column", sm: "row" }}
+          alignItems={{ xs: "flex-start", sm: "center" }}
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={{ xs: 1.5, sm: 2 }}
+            sx={{ minWidth: 0, width: { xs: "100%", sm: "auto" }, flex: 1 }}
           >
-            <InfoOutline />
-          </Box>
-          <Popover
-            id="mouse-over-popover"
-            sx={{ pointerEvents: "none", ml: 3, maxWidth: "90%" }}
-            open={open}
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "center",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "center",
-              horizontal: "left",
-            }}
-            onClose={handlePopoverClose}
-            disableRestoreFocus
-          >
-            <Typography variant="body1" sx={{ p: 2 }}>
-              {props.description}
-            </Typography>
-          </Popover>
-        </>
-      ) : null}
-    </Grid>
+            <Box
+              sx={{
+                width: { xs: 44, sm: 52 },
+                height: { xs: 44, sm: 52 },
+                flexShrink: 0,
+                display: "grid",
+                placeItems: "center",
+                borderRadius: 2,
+                color: "error.main",
+                bgcolor: "action.hover",
+              }}
+            >
+              {icon ?? <InfoOutline />}
+            </Box>
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Typography
+                variant="h5"
+                fontWeight={700}
+                sx={{ overflowWrap: "anywhere" }}
+              >
+                {title}
+              </Typography>
+              {description ? (
+                <>
+                  <Box
+                    id={descriptionId}
+                    sx={{
+                      mt: 0.5,
+                      maxHeight: isExpanded ? "none" : collapsedHeight,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Box
+                      ref={descriptionRef}
+                      sx={{
+                        color: "text.secondary",
+                        typography: "body2",
+                        "& p": { m: 0, mb: 1 },
+                        "& p:last-child": { mb: 0 },
+                        "& p:empty": { display: "none" },
+                      }}
+                    >
+                      {description}
+                    </Box>
+                  </Box>
+                  {canExpand ? (
+                    <Button
+                      size="small"
+                      color="error"
+                      aria-expanded={isExpanded}
+                      aria-controls={descriptionId}
+                      onClick={() => setIsExpanded((expanded) => !expanded)}
+                      sx={{
+                        mt: 0.5,
+                        py: 0,
+                        px: 1,
+                        minWidth: 0,
+                        fontWeight: 700,
+                        textTransform: "none",
+                      }}
+                    >
+                      {isExpanded ? "Ver menos" : "Ver mais"}
+                    </Button>
+                  ) : null}
+                </>
+              ) : null}
+            </Box>
+          </Stack>
+          {chipLabel ? (
+            <Chip
+              icon={chipIcon}
+              label={chipLabel}
+              color={chipColor}
+              variant="outlined"
+              sx={{ alignSelf: { xs: "flex-start", sm: "center" } }}
+            />
+          ) : null}
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 

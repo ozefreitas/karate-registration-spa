@@ -116,7 +116,7 @@ export default function EditPaymentPlanModal(
               )}
             />
           </Grid>
-          <Grid px={1} mt={1} size={12}>
+          <Grid mt={1} size={12}>
             <Controller
               name="is_default"
               control={control}
@@ -130,7 +130,7 @@ export default function EditPaymentPlanModal(
                     sx={{ mr: 2, justifyContent: "flex-end" }}
                     labelPlacement="start"
                     label={
-                      <Typography sx={{ fontSize: 16, pr: 2 }}>
+                      <Typography sx={{ fontSize: 14, pr: 2 }}>
                         Tornar padrão:
                       </Typography>
                     }
@@ -154,7 +154,7 @@ export default function EditPaymentPlanModal(
               )}
             />
           </Grid>
-          <FormHelperText sx={{ px: 2 }}>
+          <FormHelperText sx={{ px: 2, fontSize: 12 }}>
             Apenas poderá ter um Plano como padrão em simultâneo. Fazer este
             Plano como padrão irá remover esse estatuto do anterior.
           </FormHelperText>

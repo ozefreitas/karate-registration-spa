@@ -1,4 +1,4 @@
-import { styled, Theme, CSSObject } from "@mui/material/styles";
+import { alpha, styled, Theme, CSSObject } from "@mui/material/styles";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -175,22 +175,38 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
               opacity: showTopScrollHint ? 1 : 0,
               transition: "opacity 0.25s ease",
               background: (theme) =>
-                `linear-gradient(to top, transparent, ${theme.palette.background.paper} 85%)`,
+                `linear-gradient(to top, transparent, ${alpha(theme.palette.background.paper, 0.45)} 85%)`,
             }}
           >
-            <KeyboardArrowUp
-              sx={{
-                mt: 2.5,
-                color: "text.secondary",
-                animation: showTopScrollHint
-                  ? "bounceUp 1.4s infinite"
-                  : "none",
-                "@keyframes bounceUp": {
-                  "0%, 100%": { transform: "translateY(0)" },
-                  "50%": { transform: "translateY(-3px)" },
-                },
-              }}
-            />
+            <Box
+              sx={(theme) => ({
+                mt: 1.5,
+                width: 36,
+                height: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                bgcolor: alpha(theme.palette.background.paper, 0.16),
+                backdropFilter: "blur(5px)",
+                WebkitBackdropFilter: "blur(5px)",
+                boxShadow:
+                  "0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.16)",
+              })}
+            >
+              <KeyboardArrowUp
+                sx={{
+                  color: "text.secondary",
+                  animation: showTopScrollHint
+                    ? "bounceUp 1.4s infinite"
+                    : "none",
+                  "@keyframes bounceUp": {
+                    "0%, 100%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(-3px)" },
+                  },
+                }}
+              />
+            </Box>
           </Box>
 
           <List
@@ -333,20 +349,38 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
               opacity: showScrollHint ? 1 : 0,
               transition: "opacity 0.25s ease",
               background: (theme) =>
-                `linear-gradient(to bottom, transparent, ${theme.palette.background.paper} 85%)`,
+                `linear-gradient(to bottom, transparent, ${alpha(theme.palette.background.paper, 0.45)} 85%)`,
             }}
           >
-            <KeyboardArrowDown
-              sx={{
-                mb: 2,
-                color: "text.secondary",
-                animation: showScrollHint ? "bounceDown 1.4s infinite" : "none",
-                "@keyframes bounceDown": {
-                  "0%, 100%": { transform: "translateY(0)" },
-                  "50%": { transform: "translateY(3px)" },
-                },
-              }}
-            />
+            <Box
+              sx={(theme) => ({
+                mb: 1,
+                width: 36,
+                height: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                bgcolor: alpha(theme.palette.background.paper, 0.16),
+                backdropFilter: "blur(5px)",
+                WebkitBackdropFilter: "blur(5px)",
+                boxShadow:
+                  "0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.16)",
+              })}
+            >
+              <KeyboardArrowDown
+                sx={{
+                  color: "text.secondary",
+                  animation: showScrollHint
+                    ? "bounceDown 1.4s infinite"
+                    : "none",
+                  "@keyframes bounceDown": {
+                    "0%, 100%": { transform: "translateY(0)" },
+                    "50%": { transform: "translateY(3px)" },
+                  },
+                }}
+              />
+            </Box>
           </Box>
         </Drawer>
       </CssBaseline>

@@ -3,6 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Password } from '../models/Password';
+import type { PasswordRecoveryURL } from '../models/PasswordRecoveryURL';
+import type { PasswordResetConfirmResponse } from '../models/PasswordResetConfirmResponse';
 import type { RequestPasswordReset } from '../models/RequestPasswordReset';
 import type { RequestPasswordResetResponse } from '../models/RequestPasswordResetResponse';
 import type { Username } from '../models/Username';
@@ -15,20 +17,20 @@ export class PasswordRecoveryService {
      * @param token
      * @param uidb64
      * @param requestBody
-     * @returns any No response body
+     * @returns PasswordResetConfirmResponse
      * @throws ApiError
      */
     public static passwordRecoveryConfirmCreate(
-        token: string,
         uidb64: string,
+        token: string,
         requestBody: Password,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<PasswordResetConfirmResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/password_recovery/confirm/{uidb64}/{token}/',
             path: {
-                'token': token,
                 'uidb64': uidb64,
+                'token': token,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -40,12 +42,12 @@ export class PasswordRecoveryService {
     /**
      * Generate a unique url for password recovery by providing the id of the account.
      * @param requestBody
-     * @returns any No response body
+     * @returns PasswordRecoveryURL
      * @throws ApiError
      */
     public static passwordRecoveryGenerateUrlCreate(
         requestBody: Username,
-    ): CancelablePromise<any> {
+    ): CancelablePromise<PasswordRecoveryURL> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/password_recovery/generate_url/',

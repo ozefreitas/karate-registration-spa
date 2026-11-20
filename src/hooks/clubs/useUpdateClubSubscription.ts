@@ -1,7 +1,48 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { ClubSubscriptionService } from "../../openapi";
+import { ApiError } from "../../openapi/core/ApiError";
 import { callNotiStack } from "../../utils/utils";
+
+const getSubscriptionErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof ApiError && typeof error.body?.error === "string") {
+    return error.body.error;
+  }
+
+  return fallback;
+};
+
+export const useCreateClubSubscriptionsForAllUsers = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ClubSubscriptionService.clubSubscriptionCreateAllUsersCreate,
+    onSuccess: () => {
+      callNotiStack(
+        enqueueSnackbar,
+        "Quotas e notificações criadas para os clubes.",
+        "success",
+        5000,
+      );
+      queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["subscriptions-available-years"],
+      });
+    },
+    onError: (error: unknown) => {
+      callNotiStack(
+        enqueueSnackbar,
+        getSubscriptionErrorMessage(
+          error,
+          "Não foi possível criar as quotas. Tente novamente.",
+        ),
+        "error",
+        3000,
+      );
+    },
+  });
+};
 
 export const usePatchClubSubscriptionData = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -17,7 +58,7 @@ export const usePatchClubSubscriptionData = () => {
     onError: () => {
       callNotiStack(
         enqueueSnackbar,
-        "Não foi possível remover este Clube. Tente novamente.",
+        "Não foi possível atualizar o estado do pagamento. Tente novamente.",
         "error",
         3000,
       );
@@ -35,7 +76,7 @@ export const usePatchClubSubscriptionAmountConfig = () => {
         data,
       ),
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
     onError: () => {
@@ -57,11 +98,19 @@ export const usePatchClubSubscriptionAmountbyYear = () => {
     mutationFn:
       ClubSubscriptionService.clubSubscriptionUpdateAllUsersAmountPartialUpdate,
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
-    onError: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 3000);
+    onError: (error: unknown) => {
+      callNotiStack(
+        enqueueSnackbar,
+        getSubscriptionErrorMessage(
+          error,
+          "Não foi possível atualizar o montante das quotas. Tente novamente.",
+        ),
+        "error",
+        3000,
+      );
     },
   });
 };
@@ -74,11 +123,19 @@ export const usePatchClubSubscriptionDueDatebyYear = () => {
     mutationFn:
       ClubSubscriptionService.clubSubscriptionUpdateAllUsersDueDatePartialUpdate,
     onSuccess: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.data.message, "success", 5000);
+      callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["club-subscriptions"] });
     },
-    onError: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 3000);
+    onError: (error: unknown) => {
+      callNotiStack(
+        enqueueSnackbar,
+        getSubscriptionErrorMessage(
+          error,
+          "Não foi possível atualizar as datas limite. Tente novamente.",
+        ),
+        "error",
+        3000,
+      );
     },
   });
 };

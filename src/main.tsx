@@ -2,8 +2,7 @@ import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme/index.tsx";
+import { ThemeModeProvider } from "./theme/ThemeModeProvider";
 import "@fontsource/poppins/400.css"; // normal
 import "@fontsource/poppins/700.css";
 import "@fontsource/inter/300.css";
@@ -18,7 +17,7 @@ import "@fontsource/inter/600-italic.css";
 import "@fontsource/inter/700-italic.css";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { GlobalAuthProvider } from "./access/GlobalAuthProvider.tsx";
+import { GlobalAuthProvider, useAuth } from "./access/GlobalAuthProvider.tsx";
 import "./openapi/config";
 
 document.title = import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
@@ -28,28 +27,31 @@ document.title = import.meta.env.VITE_DISPLAY_BUTTON_SIGLA
 const queryClient = new QueryClient();
 
 const Root = () => {
+  const { isAuthLoading } = useAuth();
+
   useEffect(() => {
+    if (isAuthLoading) return;
+
     const splash = document.getElementById("splash-screen");
 
     if (splash) {
-      // Trigger fade-out after React is ready
       splash.classList.add("fade-out");
 
-      // Remove after transition ends
-      setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         splash.remove();
         document.body.classList.remove("splash-active");
-      }, 500); // same as CSS transition duration
+      }, 500);
+
+      return () => window.clearTimeout(timeoutId);
     }
-  }, []);
+  }, [isAuthLoading]);
 
   return <App />;
 };
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <ThemeModeProvider>
       <SnackbarProvider>
         <QueryClientProvider client={queryClient}>
           <GlobalAuthProvider>
@@ -57,6 +59,6 @@ createRoot(document.getElementById("root")!).render(
           </GlobalAuthProvider>
         </QueryClientProvider>
       </SnackbarProvider>
-    </ThemeProvider>
+    </ThemeModeProvider>
   </StrictMode>,
 );

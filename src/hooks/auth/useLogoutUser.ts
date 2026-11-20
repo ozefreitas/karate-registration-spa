@@ -1,26 +1,23 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { LogoutService } from "../../openapi";
-import { useNavigate } from "react-router-dom";
 import { clearAccessToken } from "../../api/authToken";
 import { callNotiStack } from "../../utils/utils";
 
 export const useLogOutUser = () => {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: LogoutService.logoutCreate,
-    onSettled: () => {
+    onSuccess: () => {
       callNotiStack(enqueueSnackbar, "Saiu da sua conta!", "success");
-
       clearAccessToken();
-      localStorage.removeItem("token");
       localStorage.removeItem("dismissedAnnouncementIds");
       localStorage.removeItem("membersView");
       localStorage.removeItem("eventsView");
-      globalThis.location.reload();
-      navigate("/");
+      queryClient.clear();
+      globalThis.location.replace("/login/");
     },
     onError: () => {
       callNotiStack(

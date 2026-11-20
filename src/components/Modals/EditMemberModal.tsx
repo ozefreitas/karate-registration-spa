@@ -1,37 +1,14 @@
-import {
-  Dialog,
-  DialogContent,
-  IconButton,
-  Typography,
-  AppBar,
-  Toolbar,
-  Button,
-  Grid,
-  TextField,
-  MenuItem,
-  CircularProgress,
-} from "@mui/material";
-import * as React from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
-import { Close } from "@mui/icons-material";
+import { CircularProgress, Grid, MenuItem, TextField } from "@mui/material";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { membersHooks } from "../../hooks";
 import { GraduationsOptions, GenderOptions } from "../../config";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { membersHooks } from "../../hooks";
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 export default function EditMemberModal(
   props: Readonly<{
     isModalOpen: boolean;
-    handleModalClose: any;
+    handleModalClose: () => void;
     id: string;
   }>,
 ) {
@@ -56,16 +33,14 @@ export default function EditMemberModal(
     },
   });
 
-  React.useEffect(() => {
-    // update the form with that member info
-    const formData = {
-      firstName: singleMemberData?.first_name,
-      lastName: singleMemberData?.last_name,
+  useEffect(() => {
+    memberReset({
+      firstName: singleMemberData?.first_name ?? "",
+      lastName: singleMemberData?.last_name ?? "",
       graduation: singleMemberData?.graduation ?? "",
       gender: singleMemberData?.gender ?? "",
-      birthDate: singleMemberData?.birth_date,
-    };
-    memberReset(formData);
+      birthDate: singleMemberData?.birth_date ?? "",
+    });
   }, [singleMemberData, memberReset]);
 
   const updateMemberData = membersHooks.useUpdateMemberData();
@@ -79,126 +54,89 @@ export default function EditMemberModal(
       id_number: data?.id_number,
       birth_date: data?.birthDate ?? null,
     };
-    updateMemberData.mutate({ memberId: props.id, data: formData });
+
+    updateMemberData.mutate(
+      { memberId: props.id, data: formData },
+      { onSuccess: props.handleModalClose },
+    );
   };
 
   return (
-    <Dialog
-      keepMounted
-      open={props.isModalOpen}
-      onClose={props.handleModalClose}
-      maxWidth="md"
-      fullWidth
-      slots={{
-        transition: Transition,
-      }}
+    <InfoBaseModal
+      isModalOpen={props.isModalOpen}
+      handleModalClose={props.handleModalClose}
+      chipName="Dados do atleta"
+      title="Editar Atleta"
+      subheader="Atualize os dados principais deste membro."
+      size="sm"
+      onSubmit={memberHandleSubmit(onSubmit)}
+      disableConfirm={isSingleMemberLoading || updateMemberData.isPending}
     >
-      <AppBar
-        sx={{
-          position: "relative",
-          width: "99%",
-          margin: "auto",
-          marginTop: "8px",
-          backgroundColor: "#e81c24",
-        }}
-      >
-        <Toolbar style={{ paddingRight: 0 }}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            onClick={props.handleModalClose}
-            aria-label="close"
-          >
-            <Close />
-          </IconButton>
-          <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-            Editar Atleta
-          </Typography>
-          <Button
-            sx={{ bgcolor: "#2e7d32", mr: 2 }}
-            autoFocus
-            color="inherit"
-            size="large"
-            onClick={() => {
-              memberHandleSubmit(onSubmit)();
-              props.handleModalClose();
-            }}
-            // disabled={membersNotInEventData?.length === 0}
-          >
-            Guardar
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <DialogContent>
+      <Grid container spacing={2} sx={{ py: 2 }}>
         {isSingleMemberLoading ? (
-          <Grid container justifyContent="center" size={12}>
+          <Grid
+            size={12}
+            container
+            justifyContent="center"
+            alignItems="center"
+            sx={{ minHeight: 180 }}
+          >
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"center"}>
-            <Grid sx={{ m: 2 }} size={8}>
+          <>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="firstName"
                 control={memberControl}
                 render={({ field }) => (
                   <TextField
+                    {...field}
                     color="warning"
-                    variant={"outlined"}
+                    variant="outlined"
                     label="Primeiro Nome"
                     fullWidth
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
                     error={!!memberErrors.firstName}
                     helperText={memberErrors.firstName?.message}
                   />
                 )}
               />
             </Grid>
-            <Grid sx={{ m: 2 }} size={8}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="lastName"
                 control={memberControl}
                 render={({ field }) => (
                   <TextField
+                    {...field}
                     color="warning"
-                    variant={"outlined"}
+                    variant="outlined"
                     label="Último Nome"
                     fullWidth
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
                     error={!!memberErrors.lastName}
                     helperText={memberErrors.lastName?.message}
                   />
                 )}
               />
             </Grid>
-            <Grid sx={{ m: 2 }} size={8}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="graduation"
                 control={memberControl}
                 render={({ field }) => (
                   <TextField
+                    {...field}
                     color="warning"
-                    variant={"outlined"}
+                    variant="outlined"
                     label="Graduação"
                     select
                     fullWidth
-                    multiline
                     required
-                    maxRows={8}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
                     error={!!memberErrors.graduation}
                     helperText={memberErrors.graduation?.message}
                   >
-                    {GraduationsOptions.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
+                    {GraduationsOptions.map((item) => (
+                      <MenuItem key={item.value} value={item.value}>
                         {item.label}
                       </MenuItem>
                     ))}
@@ -206,31 +144,26 @@ export default function EditMemberModal(
                 )}
               />
             </Grid>
-            <Grid sx={{ m: 2 }} size={8}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Controller
                 name="gender"
                 control={memberControl}
                 render={({ field }) => (
                   <TextField
+                    {...field}
                     color="warning"
-                    variant={"outlined"}
+                    variant="outlined"
                     label="Género"
                     select
                     fullWidth
-                    multiline
                     required
-                    maxRows={8}
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!memberErrors.graduation}
-                    helperText={memberErrors.graduation?.message}
+                    error={!!memberErrors.gender}
+                    helperText={memberErrors.gender?.message}
                   >
                     {GenderOptions.filter((item) =>
                       ["Masculino", "Feminino"].includes(item.label),
-                    ).map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
+                    ).map((item) => (
+                      <MenuItem key={item.value} value={item.value}>
                         {item.label}
                       </MenuItem>
                     ))}
@@ -238,10 +171,9 @@ export default function EditMemberModal(
                 )}
               />
             </Grid>
-          </Grid>
+          </>
         )}
-      </DialogContent>
-      {/* <DialogActions></DialogActions> */}
-    </Dialog>
+      </Grid>
+    </InfoBaseModal>
   );
 }

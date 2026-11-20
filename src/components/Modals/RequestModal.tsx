@@ -1,32 +1,19 @@
+import { CloudUpload, Delete, InsertDriveFile } from "@mui/icons-material";
 import {
-  Dialog,
-  DialogContent,
-  Slide,
+  Box,
   Button,
-  DialogActions,
-  DialogTitle,
+  Grid,
+  IconButton,
   Stack,
   TextField,
-  Grid,
-  styled,
   Typography,
-  IconButton,
+  styled,
 } from "@mui/material";
-import React, { useState } from "react";
-import { TransitionProps } from "notistack";
+import { useState } from "react";
 import { membersHooks } from "../../hooks";
-import { CloudUpload, Delete, InsertDriveFile } from "@mui/icons-material";
 import { RequestTypeEnum } from "../../openapi";
 import { ColoredIconBox } from "../icon-utils/boxes";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<unknown>;
-  },
-  ref: React.Ref<unknown>,
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import InfoBaseModal from "../base-modals/InfoBaseModal";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -43,185 +30,157 @@ const VisuallyHiddenInput = styled("input")({
 export default function RequestModal(
   props: Readonly<{
     isOpen: boolean;
-    handleClose: any;
+    handleClose: () => void;
     id: string;
     requestType: RequestTypeEnum;
   }>,
 ) {
-  const [requestText, setRequestText] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<any>(undefined);
+  const [requestText, setRequestText] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File>();
   const createMemberValidationRequest =
     membersHooks.useCreateMemberValidationRequest();
 
   const onSubmit = () => {
-    const formData = new FormData();
-    formData.append("person", props.id);
-    formData.append("message", requestText);
-    formData.append("request_type", props.requestType);
-
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-    }
-
     createMemberValidationRequest.mutate({
       person: props.id,
       message: requestText,
       request_type: props.requestType,
-      file: selectedFile,
+      file: selectedFile?.name,
     });
     props.handleClose();
   };
 
+  const title =
+    props.requestType === "exams"
+      ? "Pedido de Proposta de Exame"
+      : props.requestType === "verify"
+        ? "Pedido de Validação de Membro"
+        : "Pedido Geral";
+
+  const subheader =
+    props.requestType === "exams"
+      ? "Envie a proposta assinada e uma mensagem ao administrador."
+      : props.requestType === "verify"
+        ? "Peça ao administrador para validar os dados deste membro."
+        : "Escreva uma mensagem para enviar ao administrador.";
+
   return (
-    <Dialog
-      open={props.isOpen}
-      onClose={props.handleClose}
-      slots={{
-        transition: Transition,
-      }}
+    <InfoBaseModal
+      isModalOpen={props.isOpen}
+      size="sm"
+      handleModalClose={props.handleClose}
+      title={title}
+      subheader={subheader}
+      onSubmit={onSubmit}
+      disableConfirm={createMemberValidationRequest.isPending}
     >
-      <DialogTitle variant="h5" sx={{ p: 3 }}>
-        {props.requestType === "exams"
-          ? "Pedido de Proposta de Exame"
-          : props.requestType === "verify"
-            ? "Pedido de Validação de Membro"
-            : "Pedido Geral"}
-      </DialogTitle>
-      <DialogContent
-        sx={{
-          borderBottom: "1px solid lightgrey",
-          borderTop: "1px solid lightgrey",
-        }}
-      >
+      <Stack spacing={2} sx={{ py: 1 }}>
         {props.requestType === "verify" ? (
           <>
-            <p>
-              Esta ação irá fazer um pedido ao seu administrador de forma a
-              validar este Membro, tornando-se parte integrante da lista oficial
-              de Membros.
-            </p>
-            <p>
-              Tenha a certeza de que os campos introduzidos estão corretos, uma
-              vez que campos sensíveis não poderão ser alterados novamente após
-              a validação ser confirmada.
-            </p>
-            <p>
-              Introduza uma mensagem para informar o administrador de informação
-              que ache pertinente.
-            </p>
+            <Typography color="text.secondary">
+              A validação torna este membro parte integrante da lista oficial.
+              Confirme que os dados estão corretos, pois alguns campos sensíveis
+              não poderão ser alterados após a validação.
+            </Typography>
+            <Typography color="text.secondary">
+              Use a mensagem para partilhar qualquer informação relevante com o
+              administrador.
+            </Typography>
           </>
         ) : props.requestType === "exams" ? (
           <>
-            <p>
-              Esta ação irá fazer um pedido ao seu administrador de forma a
-              propor este Membro a exame de graduação.
-            </p>
-            <p>
-              Terá de anexar o ficheiro de Proposta de Exame assinado pelos
-              responsáveis do Clube.
-            </p>
-            {selectedFile === undefined ? (
-              <Button
-                sx={{ mb: 1 }}
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                startIcon={<CloudUpload />}
+            <Typography color="text.secondary">
+              Anexe o ficheiro da proposta de exame assinado pelos responsáveis
+              do clube.
+            </Typography>
+            {selectedFile ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 1,
+                  p: 1.5,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 2,
+                  bgcolor: "action.hover",
+                }}
               >
-                Escolher Ficheiro
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={1.5}
+                  sx={{ minWidth: 0 }}
+                >
+                  <ColoredIconBox
+                    bgColor="red"
+                    color="#fff"
+                    border="1px solid red"
+                    icon={<InsertDriveFile />}
+                  />
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography
+                      fontWeight={600}
+                      sx={{ overflowWrap: "anywhere" }}
+                    >
+                      {selectedFile.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Tamanho: {selectedFile.size} bytes
+                    </Typography>
+                  </Box>
+                </Stack>
+                <IconButton
+                  aria-label="Remover ficheiro"
+                  onClick={() => setSelectedFile(undefined)}
+                >
+                  <Delete color="error" />
+                </IconButton>
+              </Box>
+            ) : (
+              <Button
+                component="label"
+                variant="outlined"
+                startIcon={<CloudUpload />}
+                sx={{ alignSelf: "flex-start" }}
+              >
+                Escolher ficheiro
                 <VisuallyHiddenInput
                   type="file"
-                  onChange={(event: any) => {
-                    setSelectedFile(event.target.files[0]);
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (file) {
+                      setSelectedFile(file);
+                    }
                   }}
                 />
               </Button>
-            ) : (
-              <Grid
-                size={12}
-                mb={1}
-                width={"100%"}
-                container
-                borderRadius={2}
-                p={2}
-                justifyContent={"space-between"}
-                alignItems={"center"}
-                border={"1px solid #FF8FA3A1"}
-                sx={{ color: "#800f2f" }}
-              >
-                <Grid container spacing={2}>
-                  <ColoredIconBox
-                    bgColor={"red"}
-                    color={"#fff"}
-                    border={"1px solid red"}
-                    icon={<InsertDriveFile></InsertDriveFile>}
-                  />
-                  <Grid>
-                    <Typography sx={{ color: "black" }}>
-                      {selectedFile.name}
-                    </Typography>
-                    <Typography variant="body2">
-                      Tamanho: {selectedFile.size}
-                    </Typography>
-                  </Grid>
-                </Grid>
-
-                <IconButton onClick={() => setSelectedFile(undefined)}>
-                  <Delete color="error" />
-                </IconButton>
-              </Grid>
             )}
-            <p>
-              Introduza uma mensagem para informar o seu administrador de outras
-              informações que ache relevante para complementar à proposta de
-              exame.
-            </p>
+            <Typography color="text.secondary">
+              Pode acrescentar uma mensagem com informação complementar à
+              proposta.
+            </Typography>
           </>
         ) : (
-          <p>Escreva uma memnsagem</p>
+          <Typography color="text.secondary">
+            Escreva a mensagem que pretende enviar ao administrador.
+          </Typography>
         )}
         <Grid container>
           <TextField
             color="warning"
-            variant={"outlined"}
+            variant="outlined"
             label="Mensagem"
             fullWidth
             multiline
             maxRows={4}
+            rows={2}
             value={requestText}
-            onChange={(e) => {
-              setRequestText(e.target.value);
-            }}
+            onChange={(event) => setRequestText(event.target.value)}
           />
         </Grid>
-      </DialogContent>
-      <DialogActions>
-        <Stack
-          direction={{
-            xs: "row-reverse",
-            sm: "row",
-          }}
-          sx={{
-            p: 2,
-            gap: 3,
-            flexShrink: 0,
-            alignSelf: { xs: "flex-end", sm: "center" },
-          }}
-        >
-          <Button size="small" onClick={() => onSubmit()} variant="contained">
-            Confirmar
-          </Button>
-          <Button
-            size="small"
-            onClick={() => {
-              props.handleClose();
-            }}
-          >
-            Cancelar
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Dialog>
+      </Stack>
+    </InfoBaseModal>
   );
 }

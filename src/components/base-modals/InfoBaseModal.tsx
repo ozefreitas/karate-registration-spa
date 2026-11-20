@@ -9,6 +9,7 @@ import {
   Chip,
   Grid,
   IconButton,
+  type ButtonProps,
 } from "@mui/material";
 import * as React from "react";
 import Slide from "@mui/material/Slide";
@@ -35,6 +36,7 @@ export default function InfoBaseModal(
     onSubmit: any;
     size?: "sm" | "md" | "lg" | "xl";
     disableConfirm?: boolean;
+    confirmColor?: ButtonProps["color"];
   }>,
 ) {
   return (
@@ -42,6 +44,12 @@ export default function InfoBaseModal(
       fullWidth
       maxWidth={props.size ?? "md"}
       open={props.isModalOpen}
+      sx={{
+        "& .MuiDialog-paper": {
+          bgcolor: "background.paper",
+          color: "text.primary",
+        },
+      }}
       onClose={() => {
         props.handleModalClose();
       }}
@@ -49,7 +57,13 @@ export default function InfoBaseModal(
         transition: Transition,
       }}
     >
-      <DialogTitle sx={{ borderTop: "4px solid red", width: "100%" }}>
+      <DialogTitle
+        sx={{
+          borderTop: "4px solid",
+          borderColor: "error.main",
+          width: "100%",
+        }}
+      >
         <Grid
           container
           justifyContent={"space-between"}
@@ -61,6 +75,7 @@ export default function InfoBaseModal(
             direction={"column"}
             alignItems={"flex-start"}
             spacing={1}
+            wrap="nowrap"
           >
             {props.chipName && <Chip label={props.chipName}></Chip>}
             <Typography fontWeight={"bold"} ml={1} variant="h5">
@@ -72,13 +87,16 @@ export default function InfoBaseModal(
           </Grid>
           <IconButton
             onClick={props.handleModalClose}
-            sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
+            sx={{
+              bgcolor: "background.default",
+              "&:hover": { bgcolor: "action.hover" },
+            }}
           >
             <Close />
           </IconButton>
         </Grid>
       </DialogTitle>
-      <DialogContent>{props.children}</DialogContent>
+      <DialogContent sx={{ mx: 1 }}>{props.children}</DialogContent>
       <DialogActions>
         <Stack
           direction={{
@@ -94,17 +112,34 @@ export default function InfoBaseModal(
           }}
         >
           <Button
+            variant="text"
             onClick={() => {
               props.handleModalClose();
+            }}
+            sx={{
+              border: 0,
+              color: "text.secondary",
+              "&:hover": {
+                bgcolor: "action.hover",
+                boxShadow: "none",
+                transform: "none",
+              },
             }}
           >
             Voltar
           </Button>
           <Button
-            color="info"
+            color={props.confirmColor ?? "info"}
             variant="contained"
             disabled={props.disableConfirm}
             onClick={() => props.onSubmit()}
+            sx={{
+              border: 0,
+              "&:hover": {
+                boxShadow: "none",
+                transform: "none",
+              },
+            }}
           >
             Confirmar
           </Button>

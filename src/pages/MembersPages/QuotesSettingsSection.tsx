@@ -19,6 +19,7 @@ import { monthlyPaymentsHooks } from "../../hooks";
 import { useParams } from "react-router-dom";
 import { formatDateTime } from "../../utils/utils";
 import AllUseTable from "../../components/Table/AllUseTable";
+import BooleanStatusChip from "../../components/BooleanStatusChip";
 import { getMonthFromValue } from "../../config";
 import QuotesOrdering from "../../components/filter_drawers/QuotesOrdering";
 import PatchMemberSubscriptionModal from "../../components/Modals/PatchMemberSubscriptionModal";
@@ -147,11 +148,11 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
         <Chip
           color="success"
           label="Pago"
+          size="small"
           icon={<Check />}
           sx={{
             bgcolor: "#d9ffe7",
             color: "#004d1f",
-            p: 1,
             "&:hover": {
               color: "white",
             },
@@ -171,12 +172,12 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
         <Chip
           color="error"
           label="Em Falta"
+          size="small"
           icon={<Close />}
           clickable
           sx={{
             bgcolor: "#ff8fa3",
             color: "#800f2f",
-            p: 1,
             "&:hover": {
               color: "white",
             },
@@ -198,26 +199,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
         ) : (
           formatDateTime(subscription.paid_at, "both")
         ),
-      insideLimit: subscription.inside_limit ? (
-        <Chip
-          color="success"
-          variant="outlined"
-          sx={{ cursor: "default", bgcolor: "#d9ffe7", color: "#004d1f", p: 1 }}
-          label="Sim"
-        ></Chip>
-      ) : (
-        <Chip
-          color="error"
-          variant="outlined"
-          sx={{
-            bgcolor: "#ff8fa3",
-            color: "#800f2f",
-            p: 1,
-            cursor: "default",
-          }}
-          label="Não"
-        ></Chip>
-      ),
+      insideLimit: <BooleanStatusChip enabled={subscription.inside_limit} />,
     }));
   }, [data]);
 
@@ -240,8 +222,8 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           </Box>
         </Grid>
       ) : data?.length === 0 ? null : (
-        <Grid container justifyContent={"flex-end"} p={2} spacing={4}>
-          <Grid size={6}>
+        <Grid container justifyContent={"flex-end"} p={2} spacing={3}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={4}
               sx={{
@@ -284,6 +266,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                         {preDefined}€
                       </Typography>
                       <Button
+                        sx={{ border: 0 }}
                         variant="contained"
                         size="small"
                         color="warning"
@@ -299,7 +282,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
             </Card>
           </Grid>
 
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={4}
               sx={{
@@ -341,7 +324,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={4}
               sx={{
@@ -394,7 +377,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Card
               elevation={4}
               sx={{
@@ -442,7 +425,7 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           </Grid>
         </Grid>
       )}
-      <Grid mt={10}>
+      <Grid mt={7}>
         {error ? null : (
           <Grid
             size={12}
@@ -455,8 +438,8 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           >
             <Grid>
               <Button
+                sx={{ border: 0 }}
                 variant="contained"
-                size="large"
                 color="success"
                 onClick={handleAddModalOpen}
                 startIcon={<Add />}

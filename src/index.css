@@ -2,21 +2,11 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(42, 42, 42, 0.87);
-  background-color: #f3f3f3;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --theme-background-color: black;
-  /* --theme-background-color: rgb(192, 192, 192); */
-  --theme-navBar-color: rgba(0, 0, 0, 0.8);
-  /* --theme-navBar-color: rgba(192, 192, 192, 0.8); */
-  --theme-text-color: white;
-  --theme-icons-color: white;
   --aka-color: #bf0303;
   --aka-contrast-color: white;
   --shiro-color: white;
@@ -72,17 +62,4 @@ a:hover {
 
 h1 {
   line-height: 1.1;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }

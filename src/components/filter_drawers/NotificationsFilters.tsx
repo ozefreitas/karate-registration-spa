@@ -1,238 +1,151 @@
-import * as React from "react";
+import { Tune } from "@mui/icons-material";
 import {
   Box,
-  List,
   Button,
-  Drawer,
-  Grid,
-  FormControl,
-  Stack,
-  FormControlLabel,
-  Switch,
   Chip,
-  IconButton,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  List,
+  Stack,
+  Switch,
   Typography,
-  Tooltip,
 } from "@mui/material";
-import { Controller, useWatch } from "react-hook-form";
-import { Tune } from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
-import Badge, { badgeClasses } from "@mui/material/Badge";
+import { useEffect } from "react";
+import { Controller, UseFormReset, useWatch } from "react-hook-form";
 import { NotificationTypeOptions } from "../../dashboard/config";
+import FilterDrawer from "./FilterDrawer";
 
-const FiltersBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -20px;
-    right: -55px;
-  }
-`;
+const notificationFilterDefaults = Object.fromEntries([
+  ...NotificationTypeOptions.map((option) => [option.value, false]),
+  ["canRemove", undefined],
+]);
 
 export default function NotificationsFilters(
   props: Readonly<{
     isLoading: boolean;
     control: any;
-    setValue: any;
-    errors: any;
-    reset: any;
+    reset: UseFormReset<Record<string, boolean | undefined>>;
     changedCount: number;
-    setSelectedTypes: any;
+    setSelectedTypes: (types: string) => void;
     userRole: string;
   }>,
 ) {
-  const [open, setOpen] = React.useState(false);
+  const isAdmin = ["single_admin", "main_admin", "superuser"].includes(
+    props.userRole,
+  );
+  const availableTypes = NotificationTypeOptions.filter(
+    (option) =>
+      isAdmin ||
+      !["request", "reset", "member_request", "exam_prop"].includes(
+        option.value,
+      ),
+  );
+  const watchedValues = useWatch({ control: props.control });
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
+  useEffect(() => {
+    props.reset(notificationFilterDefaults);
+  }, [props.reset]);
 
-  const getNotificationTypeValues = (): string[] => {
-    if (["single_admin", "main_adin", "superuser"].includes(props.userRole)) {
-      return NotificationTypeOptions.map((option) => option.value);
-    } else {
-      return NotificationTypeOptions.filter(
-        (item: { value: string; label: string; icon: any }) =>
-          !["request", "reset", "member_request", "exam_prop"].includes(
-            item.value,
-          ),
-      ).map((option) => option.value);
-    }
-  };
-
-  const notificationTypeValues = getNotificationTypeValues();
-
-  React.useEffect(() => {
-    const defaultValues: any = {};
-    NotificationTypeOptions.forEach((noti: any) => {
-      defaultValues[`${noti.value}`] = false;
-    });
-
-    props.reset(defaultValues);
-  }, [NotificationTypeOptions]);
-
-  const watchedValues = useWatch({
-    control: props.control,
-  });
-
-  React.useEffect(() => {
-    const usersFiltering = NotificationTypeOptions.filter(
-      (item: any) => watchedValues?.[item.value],
+  useEffect(() => {
+    const selectedTypes = NotificationTypeOptions.filter(
+      (option) => watchedValues?.[option.value],
     )
-      .map((item: any) => item.value)
+      .map((option) => option.value)
       .join(",");
+    props.setSelectedTypes(selectedTypes);
+  }, [props.setSelectedTypes, watchedValues]);
 
-    props.setSelectedTypes(usersFiltering);
-  }, [watchedValues, NotificationTypeOptions]);
-
-  const DrawerList = (
-    <Box sx={{ width: 400 }} role="presentation">
-      <List sx={{ p: 1, mt: 2 }}>
-        <Grid container size={12}>
-          <Typography variant="h6" pl={2} mb={3}>
-            Filtragem
-          </Typography>
-        </Grid>
+  return (
+    <FilterDrawer
+      label="Filtros"
+      changedCount={props.changedCount}
+      isLoading={props.isLoading}
+      icon={<Tune />}
+    >
+      <List sx={{ p: 1, pr: 2, mt: 2 }}>
+        <Typography variant="h6" pl={2}>
+          Filtragem
+        </Typography>
         <Grid
-          size={12}
           container
-          alignItems={"center"}
-          px={3}
-          py={2}
-          spacing={1}
+          alignItems="center"
+          justifyContent={"space-between"}
+          size={12}
+          mx={3}
+          rowSpacing={2}
+          mt={3}
         >
-          <Typography  mr={2}>
-            Tipo
-          </Typography>
-          {Object.keys(props.control._defaultValues)
-            .filter(
-              (fieldName) =>
-                notificationTypeValues?.includes(fieldName) &&
-                fieldName !== "none",
-            )
-            .map((fieldName) => (
+          <Typography variant="subtitle1">Tipo</Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            {availableTypes
+              .filter((option) => option.value !== "none")
+              .map((option) => (
+                <Controller
+                  key={option.value}
+                  name={option.value}
+                  control={props.control}
+                  render={({ field }) => (
+                    <Chip
+                      variant={field.value ? "filled" : "outlined"}
+                      color={field.value ? "success" : "default"}
+                      clickable
+                      size="small"
+                      onClick={() => field.onChange(!field.value)}
+                      label={option.label}
+                    />
+                  )}
+                />
+              ))}
+          </Box>
+
+          <FormControl fullWidth component="fieldset" variant="standard">
+            <Stack>
               <Controller
-                key={fieldName}
-                name={fieldName}
+                name="canRemove"
                 control={props.control}
                 render={({ field }) => (
-                  <Chip
-                    variant={field.value ? "filled" : "outlined"}
-                    color={field.value ? "success" : "default"}
-                    clickable
-                    size="small"
-                    onClick={() => field.onChange(!field.value)}
-                    label={
-                      NotificationTypeOptions.find(
-                        (item) => item.value === fieldName,
-                      )?.label
-                    }
-                  />
-                )}
-              />
-            ))}
-        </Grid>
-        <Grid p={3} py={2} container>
-          <Controller
-            name="canRemove"
-            control={props.control}
-            render={({ field }) => (
-              <FormControl
-                sx={{ width: "100%" }}
-                component="fieldset"
-                variant="standard"
-                error={!!props.errors.canRemove}
-              >
-                <Stack>
                   <FormControlLabel
                     labelPlacement="start"
                     control={
                       <Switch
-                        sx={{ ml: 2 }}
                         {...field}
-                        checked={field.value}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            field.onChange(e.target.checked);
-                          } else {
-                            field.onChange(undefined);
-                          }
-                        }}
+                        checked={Boolean(field.value)}
+                        onChange={(event) =>
+                          field.onChange(
+                            event.target.checked ? true : undefined,
+                          )
+                        }
                         name="canRemove"
                       />
                     }
-                    label="Pode Remover"
-                    sx={{ justifyContent: "space-between", marginLeft: 0 }}
+                    label="Pode remover"
+                    sx={{
+                      justifyContent: "space-between",
+                      mx: 0,
+                      py: 1,
+                      borderTop: 1,
+                      borderColor: "divider",
+                    }}
                   />
-                </Stack>
-              </FormControl>
-            )}
-          />
+                )}
+              />
+            </Stack>
+          </FormControl>
         </Grid>
       </List>
-      <Grid size={12} mt={5} mx={10} container>
+
+      <Grid size={12} mt={3} mx={10} container>
         <Button
-          disabled={props.changedCount === 0}
           color="error"
+          disabled={props.changedCount === 0}
           sx={{ width: "100%" }}
-          onClick={() => {
-            props.reset();
-          }}
+          onClick={() => props.reset()}
           variant="contained"
         >
           Limpar
         </Button>
       </Grid>
-    </Box>
-  );
-
-  return (
-    <>
-      <Grid
-        container
-        spacing={2}
-        justifyContent={"flex-end"}
-        alignItems={"center"}
-        sx={{
-          display: { xs: "none", md: "flex" },
-        }}
-      >
-        <Button
-          endIcon={<Tune sx={{ ml: 1 }}></Tune>}
-          size="large"
-          variant="outlined"
-          disabled={props.isLoading}
-          onClick={toggleDrawer(true)}
-        >
-          Filtros
-          <FiltersBadge
-            badgeContent={props.changedCount}
-            color="primary"
-            overlap="circular"
-          />
-        </Button>
-        <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-          {DrawerList}
-        </Drawer>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        justifyContent={"flex-end"}
-        alignItems={"center"}
-        sx={{
-          display: { sm: "flex", md: "none" },
-        }}
-      >
-        <Tooltip title="Filtros" placement="top">
-          <IconButton
-            sx={{ border: 1, borderRadius: 3 }}
-            size="large"
-            color="primary"
-            aria-label="delete"
-          >
-            <Tune></Tune>
-          </IconButton>
-        </Tooltip>
-      </Grid>
-    </>
+    </FilterDrawer>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { styled, useTheme } from "@mui/material/styles";
+import { alpha, styled, useTheme } from "@mui/material/styles";
 import {
   Grid,
   Table,
@@ -78,42 +78,65 @@ function TablePaginationActions(props: Readonly<TablePaginationActionsProps>) {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "flex-end", pr: 3 }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "flex-end",
+        pr: { xs: 0.5, sm: 3 },
+        gap: { xs: 0, sm: 0.25 },
+      }}
+    >
       <IconButton
+        size="small"
+        sx={{ p: { xs: 0.25, sm: 0.5 } }}
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === "rtl" ? <LastPage /> : <FirstPage />}
+        {theme.direction === "rtl" ? (
+          <LastPage fontSize="small" />
+        ) : (
+          <FirstPage fontSize="small" />
+        )}
       </IconButton>
       <IconButton
+        size="small"
+        sx={{ p: { xs: 0.25, sm: 0.5 } }}
         onClick={handleBackButtonClick}
         disabled={page === 0}
         aria-label="previous page"
       >
         {theme.direction === "rtl" ? (
-          <KeyboardArrowRight />
+          <KeyboardArrowRight fontSize="small" />
         ) : (
-          <KeyboardArrowLeft />
+          <KeyboardArrowLeft fontSize="small" />
         )}
       </IconButton>
       <IconButton
+        size="small"
+        sx={{ p: { xs: 0.25, sm: 0.5 } }}
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
         {theme.direction === "rtl" ? (
-          <KeyboardArrowLeft />
+          <KeyboardArrowLeft fontSize="small" />
         ) : (
-          <KeyboardArrowRight />
+          <KeyboardArrowRight fontSize="small" />
         )}
       </IconButton>
       <IconButton
+        size="small"
+        sx={{ p: { xs: 0.25, sm: 0.5 } }}
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === "rtl" ? <FirstPage /> : <LastPage />}
+        {theme.direction === "rtl" ? (
+          <FirstPage fontSize="small" />
+        ) : (
+          <LastPage fontSize="small" />
+        )}
       </IconButton>
     </Box>
   );
@@ -392,26 +415,61 @@ export default function AllUseTable(
     selection?: boolean;
   }>(({ theme, selection }) => ({
     textAlign: "center",
+    paddingLeft: 8,
+    paddingRight: 8,
     [`&.${tableCellClasses.head}`]: {
       fontSize: 14,
       paddingTop: selection ? 0 : 10,
       paddingBottom: selection ? 0 : 10,
-      color: theme.palette.common.black,
+      color: theme.palette.text.primary,
+      fontWeight: 700,
     },
     [`&.${tableCellClasses.body}`]: {
       fontSize: 12,
       paddingTop: 5,
       paddingBottom: 5,
     },
+    [theme.breakpoints.down("sm")]: {
+      [`&.${tableCellClasses.head}`]: {
+        fontSize: 11,
+        padding: selection ? 0 : "6px",
+        whiteSpace: "nowrap",
+      },
+      [`&.${tableCellClasses.body}`]: {
+        fontSize: 10.5,
+        padding: "4px 6px",
+      },
+    },
+    [theme.breakpoints.between("sm", "md")]: {
+      [`&.${tableCellClasses.head}`]: {
+        fontSize: 12,
+        paddingTop: selection ? 0 : 8,
+        paddingBottom: selection ? 0 : 8,
+      },
+      [`&.${tableCellClasses.body}`]: {
+        fontSize: 11,
+        paddingTop: 4,
+        paddingBottom: 4,
+      },
+    },
   }));
 
   const StyledTableRow = styled(TableRow)<{
     header?: boolean;
     warning?: boolean;
-  }>(({ header, warning }) => ({
+  }>(({ theme, header, warning }) => ({
     [`&.${tableRowClasses.head}`]: {
-      backgroundColor: "lightgrey",
-      border: "4px solid lightgrey",
+      backgroundColor: alpha(
+        theme.palette.error.main,
+        theme.palette.mode === "dark" ? 0.2 : 0.07,
+      ),
+      "& > .MuiTableCell-root": {
+        borderBottom: `2px solid ${alpha(
+          theme.palette.error.main,
+          theme.palette.mode === "dark" ? 0.42 : 0.2,
+        )}`,
+        color: theme.palette.text.primary,
+      },
     },
     textAlign: "center",
     cursor: header ? "default" : "pointer",
@@ -496,9 +554,20 @@ export default function AllUseTable(
   return (
     <>
       {props.loading ? (
-        <Grid container m={2}>
-          <TableContainer component={Paper}>
-            <Table size="small" aria-label="loading table">
+        <Grid
+          container
+          m={{ xs: 0.5, sm: 2 }}
+          sx={{ width: "auto", minWidth: 0 }}
+        >
+          <TableContainer
+            component={Paper}
+            sx={{ width: "100%", maxWidth: "100%", overflowX: "auto" }}
+          >
+            <Table
+              size="small"
+              aria-label="loading table"
+              sx={{ minWidth: { xs: 600, sm: "100%" } }}
+            >
               <TableHead>
                 <StyledTableRow header>
                   {props.selection ? <StyledTableCell selection /> : null}
@@ -539,9 +608,20 @@ export default function AllUseTable(
           </TableContainer>
         </Grid>
       ) : props.data?.length === 0 ? (
-        <Grid container m={2}>
-          <TableContainer component={Paper}>
-            <Table size="small" aria-label="simple table">
+        <Grid
+          container
+          m={{ xs: 0.5, sm: 2 }}
+          sx={{ width: "auto", minWidth: 0 }}
+        >
+          <TableContainer
+            component={Paper}
+            sx={{ width: "100%", maxWidth: "100%", overflowX: "auto" }}
+          >
+            <Table
+              size="small"
+              aria-label="simple table"
+              sx={{ minWidth: { xs: 600, sm: "100%" } }}
+            >
               <TableHead>
                 <StyledTableRow header>
                   {props.selection ? <StyledTableCell selection /> : null}
@@ -574,15 +654,27 @@ export default function AllUseTable(
           </TableContainer>
         </Grid>
       ) : (
-        <Grid container m={2}>
-          <TableContainer component={Paper}>
-            <Table size="small" aria-label="simple table">
+        <Grid
+          container
+          m={{ xs: 0.5, sm: 2 }}
+          sx={{ width: "auto", minWidth: 0 }}
+        >
+          <TableContainer
+            component={Paper}
+            sx={{ width: "100%", maxWidth: "100%", overflowX: "auto" }}
+          >
+            <Table
+              size="small"
+              aria-label="simple table"
+              sx={{ minWidth: { xs: 600, sm: "100%" } }}
+            >
               <TableHead>
                 <StyledTableRow header>
                   {props.selection ? (
                     <StyledTableCell selection>
                       <label>
                         <Checkbox
+                          size="small"
                           color="primary"
                           indeterminate={
                             selected.length > 0 &&
@@ -631,6 +723,7 @@ export default function AllUseTable(
                       {props.selection ? (
                         <StyledTableCell selection>
                           <Checkbox
+                            size="small"
                             color="primary"
                             checked={isItemSelected}
                             slotProps={{
@@ -651,7 +744,7 @@ export default function AllUseTable(
                               xs: "row",
                             }}
                             sx={{
-                              gap: 2,
+                              gap: { xs: 0.5, sm: 1, md: 2 },
                               justifyContent: "center",
                             }}
                           >
@@ -659,6 +752,8 @@ export default function AllUseTable(
                               <Tooltip arrow title="Consultar">
                                 <span>
                                   <IconButton
+                                    size="small"
+                                    sx={{ p: { xs: 0.5, sm: 1 } }}
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (props.type === "Equipas") {
@@ -679,7 +774,10 @@ export default function AllUseTable(
                                       }
                                     }}
                                   >
-                                    <Visibility color="primary"></Visibility>
+                                    <Visibility
+                                      color="primary"
+                                      fontSize="small"
+                                    ></Visibility>
                                   </IconButton>
                                 </span>
                               </Tooltip>
@@ -691,6 +789,8 @@ export default function AllUseTable(
                               <Tooltip arrow title="Editar">
                                 <span>
                                   <IconButton
+                                    size="small"
+                                    sx={{ p: { xs: 0.5, sm: 1 } }}
                                     disabled={
                                       row.can_update_sensitive !== undefined
                                         ? props.disallowEdit &&
@@ -715,6 +815,7 @@ export default function AllUseTable(
                                     }}
                                   >
                                     <Edit
+                                      fontSize="small"
                                       color={
                                         row.can_update_sensitive === undefined
                                           ? "warning"
@@ -736,6 +837,8 @@ export default function AllUseTable(
                               <Tooltip arrow title="Remover">
                                 <span>
                                   <IconButton
+                                    size="small"
+                                    sx={{ p: { xs: 0.5, sm: 1 } }}
                                     disabled={
                                       row.can_update_sensitive !== undefined
                                         ? props.disallowEdit &&
@@ -756,6 +859,7 @@ export default function AllUseTable(
                                     }}
                                   >
                                     <Delete
+                                      fontSize="small"
                                       color={
                                         row.can_update_sensitive === undefined
                                           ? "error"
@@ -799,12 +903,15 @@ export default function AllUseTable(
                       <Tooltip arrow title="Remover Selecionados">
                         <span>
                           <IconButton
+                            size="small"
+                            sx={{ p: { xs: 0.5, sm: 1 } }}
                             disabled={selected.length === 0}
                             onClick={() => {
                               handleSelectionDelete();
                             }}
                           >
                             <Delete
+                              fontSize="small"
                               color={
                                 selected.length === 0 ? "disabled" : "error"
                               }
@@ -817,6 +924,23 @@ export default function AllUseTable(
                     <StyledTableCell></StyledTableCell>
                   )}
                   <TablePagination
+                    sx={{
+                      "& .MuiTablePagination-toolbar": {
+                        minHeight: { xs: 40, sm: 52 },
+                        px: { xs: 0.5, sm: 2 },
+                        py: { xs: 0.5, sm: 0 },
+                        flexWrap: { xs: "wrap", sm: "nowrap" },
+                        justifyContent: { xs: "center", sm: "flex-end" },
+                        rowGap: { xs: 0.5, sm: 0 },
+                      },
+                      "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
+                        {
+                          fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                        },
+                      "& .MuiTablePagination-select": {
+                        fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                      },
+                    }}
                     rowsPerPageOptions={paginationObjToAdd}
                     count={props.count}
                     rowsPerPage={

@@ -4,5 +4,6 @@
 /* eslint-disable */
 export type Password = {
     password: string;
+    password2: string;
 };
 

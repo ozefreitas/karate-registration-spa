@@ -28,6 +28,15 @@ export const clearAccessToken = () => {
   authInitialized = true;
 };
 
+export const isAuthFreeEndpoint = (url?: string) =>
+  [
+    "/auth/token/",
+    "/password_recovery/request/",
+    "/password_recovery/confirm/",
+    "/sign_up/get_token_username/",
+    "/sign_up/register_user/",
+  ].some((endpoint) => url?.includes(endpoint));
+
 export const refreshAccessToken = (): Promise<string | undefined> => {
   if (refreshRequest !== undefined) return refreshRequest;
 
@@ -64,9 +73,7 @@ export const retryWithRefreshedAccessToken = async (
   if (
     axiosError.response?.status !== 401 ||
     !request ||
-    request.url?.includes("/auth/token/") ||
-    request.url?.includes("/login/") ||
-    request.url?.includes("/register/")
+    isAuthFreeEndpoint(request.url)
   ) {
     throw error;
   }

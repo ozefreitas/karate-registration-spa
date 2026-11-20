@@ -10,12 +10,11 @@ export const useLogInUser = () => {
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (variables: any) => {
+    mutationFn: (variables: { username: string; password: string }) => {
       clearAccessToken();
-      localStorage.removeItem("token");
       return AuthService.authTokenCreate(variables);
     },
-    onSuccess: (data: any) => {
+    onSuccess: (data) => {
       setAccessToken(data.access);
       callNotiStack(enqueueSnackbar, "Login com sucesso!", "success");
       queryClient.invalidateQueries({ queryKey: ["me"] });

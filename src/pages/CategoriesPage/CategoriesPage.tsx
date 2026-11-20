@@ -5,6 +5,8 @@ import {
   ListItem,
   ListItemText,
   Chip,
+  Tooltip,
+  IconButton,
   Button,
 } from "@mui/material";
 import { categoriesHooks } from "../../hooks";
@@ -15,11 +17,54 @@ import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import CategoriesFilters from "../../components/filter_drawers/CategoriesFilters";
 import { useForm } from "react-hook-form";
 import CategoriesOrdering from "../../components/filter_drawers/CategoriesOrdering";
-import { Check, Close } from "@mui/icons-material";
+import { Check, Close, Add } from "@mui/icons-material";
+import { alpha } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
+
+function CategoryStatusChip({ enabled }: Readonly<{ enabled: boolean }>) {
+  return (
+    <Chip
+      size="small"
+      variant="outlined"
+      icon={enabled ? <Check /> : <Close />}
+      label={enabled ? "Sim" : "Não"}
+      sx={(theme) => {
+        const statusColor = enabled
+          ? theme.palette.success
+          : theme.palette.error;
+
+        return {
+          height: 26,
+          borderRadius: 999,
+          color:
+            theme.palette.mode === "dark"
+              ? statusColor.light
+              : statusColor.dark,
+          borderColor: alpha(statusColor.main, 0.4),
+          bgcolor: alpha(
+            statusColor.main,
+            theme.palette.mode === "dark" ? 0.18 : 0.08,
+          ),
+          "& .MuiChip-icon": {
+            color: "inherit",
+            fontSize: 15,
+            ml: 0.75,
+          },
+          "& .MuiChip-label": {
+            px: 0.75,
+            fontSize: "0.68rem",
+            fontWeight: 700,
+          },
+        };
+      }}
+    />
+  );
+}
 
 export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
   const [page, setPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
+  const navigate = useNavigate();
 
   const {
     control: filtersControl,
@@ -150,134 +195,14 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
       id: category.id,
       name: category.name,
       gender: category.gender,
-      has_age:
-        category.has_age === "Sim" ? (
-          <Chip
-            icon={<Check />}
-            label=""
-            color="success"
-            sx={{
-              bgcolor: "#d9ffe7",
-              color: "#004d1f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ) : (
-          <Chip
-            icon={<Close />}
-            label=""
-            color="error"
-            sx={{
-              bgcolor: "#ff8fa3",
-              color: "#800f2f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ),
-      has_grad:
-        category.has_grad === "Sim" ? (
-          <Chip
-            icon={<Check />}
-            label=""
-            color="success"
-            sx={{
-              bgcolor: "#d9ffe7",
-              color: "#004d1f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ) : (
-          <Chip
-            icon={<Close />}
-            label=""
-            color="error"
-            sx={{
-              bgcolor: "#ff8fa3",
-              color: "#800f2f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ),
-      has_weight:
-        category.has_weight === "Sim" ? (
-          <Chip
-            icon={<Check />}
-            label=""
-            color="success"
-            sx={{
-              bgcolor: "#d9ffe7",
-              color: "#004d1f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ) : (
-          <Chip
-            icon={<Close />}
-            label=""
-            color="error"
-            sx={{
-              bgcolor: "#ff8fa3",
-              color: "#800f2f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ),
-      max_athletes:
-        category.max_athletes === null ? (
-          <Chip
-            icon={<Close />}
-            label=""
-            color="error"
-            sx={{
-              bgcolor: "#ff8fa3",
-              color: "#800f2f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ) : (
-          <Chip
-            icon={<Check />}
-            label=""
-            color="success"
-            sx={{
-              bgcolor: "#d9ffe7",
-              color: "#004d1f",
-              "& .MuiChip-label": {
-                display: "none",
-              },
-              pl: 0.5,
-              pr: 2,
-            }}
-          />
-        ),
+      has_age: <CategoryStatusChip enabled={category.has_age === "Sim"} />,
+      has_grad: <CategoryStatusChip enabled={category.has_grad === "Sim"} />,
+      has_weight: (
+        <CategoryStatusChip enabled={category.has_weight === "Sim"} />
+      ),
+      max_athletes: (
+        <CategoryStatusChip enabled={category.max_athletes !== null} />
+      ),
     }));
   }, [categoriesData]);
 
@@ -295,24 +220,59 @@ export default function CategoriesPage(props: Readonly<{ userRole: string }>) {
         }
         title="Escalões"
       ></PageInfoCard>
-      <Grid size={12} m={2}>
+      <Grid size={12} m={{ xs: 1, sm: 2 }}>
         {categoriesError ? null : (
           <Grid
+            sx={{ borderBottom: 1, borderColor: "divider" }}
             size={12}
             container
+            spacing={1}
             ml={1}
             mr={2}
+            mb={2}
+            pb={1}
             justifyContent={
               props.userRole === "main_admin" ? "space-between" : "flex-end"
             }
             alignItems={"center"}
           >
             {props.userRole === "main_admin" ? (
-              <Grid>
-                <AddButton label="Adicionar" to="new_category/"></AddButton>
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <Grid
+                  sx={{
+                    display: { xs: "none", sm: "flex" },
+                  }}
+                >
+                  <AddButton
+                    borderless
+                    label="Adicionar"
+                    to="new_category/"
+                  ></AddButton>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: { xs: "flex", sm: "none" },
+                  }}
+                >
+                  <Tooltip placement="top" title="Adicionar">
+                    <IconButton
+                      onClick={() => navigate("new_category/")}
+                      sx={{
+                        border: 1,
+                        borderRadius: 3,
+                        bgcolor: "#2e7d32",
+                        "&:hover": { bgcolor: "#2e7d32" },
+                      }}
+                      color="success"
+                      aria-label="Adicionar membro"
+                    >
+                      <Add sx={{ color: "white" }}></Add>
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
               </Grid>
             ) : null}
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <CategoriesOrdering
                 isLoading={isCategoriesLoading}
                 control={orderControl}

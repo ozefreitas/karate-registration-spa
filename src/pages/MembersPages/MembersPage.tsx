@@ -33,6 +33,7 @@ import {
   Add,
   Search,
   Refresh,
+  Clear,
 } from "@mui/icons-material";
 import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -305,6 +306,8 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     }));
   }, [membersData]);
 
+  const canAddMembers = ["main_admin", "subed_club"].includes(props.userRole);
+
   return (
     <>
       <PageInfoCard
@@ -343,31 +346,28 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         }
         title="Membros"
       ></PageInfoCard>
-      <Grid size={12} m={2}>
+      <Grid size={12} m={{ xs: 1, sm: 2, md: 4 }}>
         {membersError ? null : (
           <Grid
             size={12}
             container
-            ml={1}
-            mr={2}
+            spacing={{ xs: 1, sm: 1.5 }}
             pb={1}
-            borderBottom={"1px solid lightgray"}
-            justifyContent={
-              props.userRole === "main_admin" || props.userRole === "subed_club"
-                ? "space-between"
-                : "flex-end"
-            }
-            alignItems={{ xs: "flex-end", sm: "center" }}
+            sx={{ borderBottom: 1, borderColor: "divider" }}
+            alignItems="center"
           >
-            {props.userRole === "main_admin" ||
-            props.userRole === "subed_club" ? (
-              <Grid size={3}>
+            {canAddMembers ? (
+              <Grid size={{ xs: 12, sm: 3 }}>
                 <Grid
                   sx={{
                     display: { xs: "none", sm: "flex" },
                   }}
                 >
-                  <AddButton label="Adicionar" to="new_member/"></AddButton>
+                  <AddButton
+                    borderless
+                    label="Adicionar"
+                    to="new_member/"
+                  ></AddButton>
                 </Grid>
                 <Grid
                   sx={{
@@ -376,16 +376,15 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                 >
                   <Tooltip placement="top" title="Adicionar">
                     <IconButton
+                      onClick={() => navigate("new_member/")}
                       sx={{
                         border: 1,
                         borderRadius: 3,
-                        ml: 1,
                         bgcolor: "#2e7d32",
                         "&:hover": { bgcolor: "#2e7d32" },
                       }}
-                      // size="large"
                       color="success"
-                      aria-label="delete"
+                      aria-label="Adicionar membro"
                     >
                       <Add sx={{ color: "white" }}></Add>
                     </IconButton>
@@ -394,49 +393,61 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
               </Grid>
             ) : null}
             <Grid
-              size={9}
+              size={{ xs: 12, sm: canAddMembers ? 9 : 12 }}
               container
-              spacing={2}
-              alignItems={"center"}
-              justifyContent={"flex-end"}
+              spacing={1}
+              alignItems="center"
+              justifyContent="flex-end"
             >
-              <TextField
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Primeiro nome/apelido/Nº SKIP..."
-                variant="outlined"
-                size="small"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: 32,
-                    borderRadius: 3,
-                    boxShadow: { md: "6px 6px 10px rgba(0,0,0,0.2)" },
-                  },
-                  "& .MuiInputBase-input::placeholder": {
-                    fontSize: "0.7rem",
-                    // opacity: 1,
-                  },
-                }}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search fontSize="small" />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <>
-                        {isMembersDataLoading ? (
-                          <CircularProgress size={16} />
-                        ) : null}
-                        {/* {params.InputProps.endAdornment} */}
-                      </>
-                    ),
-                  },
-                }}
-              />
-              <Grid container spacing={2} justifyContent={"flex-end"}>
-                <Grid container spacing={1}>
+              <Grid size={{ xs: 12, md: 4 }} sx={{ minWidth: 0 }}>
+                <TextField
+                  fullWidth
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Primeiro nome/apelido/Nº SKIP..."
+                  variant="outlined"
+                  size="small"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: 36,
+                      borderRadius: 3,
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      fontSize: "0.7rem",
+                    },
+                  }}
+                  slotProps={{
+                    input: {
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search fontSize="small" />
+                        </InputAdornment>
+                      ),
+                      endAdornment: isMembersDataLoading ? (
+                        <CircularProgress size={16} />
+                      ) : query === "" ? null : (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={() => setQuery("")}
+                            edge="end"
+                            aria-label="remove person query"
+                          >
+                            <Clear color="error"></Clear>
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid
+                size={{ xs: 12, md: 8 }}
+                container
+                spacing={1}
+                alignItems="center"
+                justifyContent={{ xs: "space-between", md: "flex-end" }}
+              >
+                <Grid container spacing={1} alignItems="center">
                   <MemberOrdering
                     isLoading={isMembersDataLoading}
                     control={orderControl}
@@ -456,56 +467,70 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                     setPage={setPage}
                   ></MemberFiltering>
                 </Grid>
-                <Grid
-                  alignItems={"center"}
-                  container
-                  spacing={1}
-                  borderRadius={3}
-                >
+                <Grid alignItems="center" container spacing={1}>
                   <Tooltip placement="top" title={"Vista de Tabela"}>
                     <span>
                       <Button
+                        aria-label="Vista de tabela"
+                        aria-pressed={currentView === "table"}
                         sx={{
-                          px: 0,
+                          width: 38,
+                          minWidth: 38,
+                          height: 36,
+                          p: 0,
+                          color:
+                            currentView === "table"
+                              ? "common.white"
+                              : "primary.main",
                           bgcolor:
-                            currentView === "table" ? "#1976d2;" : undefined,
-                          "&:hover": { bgcolor: "#1976d2" },
-                          borderColor:
-                            currentView === "table" ? undefined : "#1976d2",
+                            currentView === "table"
+                              ? "primary.main"
+                              : "transparent",
+                          borderColor: "primary.main",
+                          "&:hover": {
+                            bgcolor:
+                              currentView === "table"
+                                ? "primary.dark"
+                                : "action.hover",
+                          },
                         }}
-                        color="info"
                         variant="outlined"
                         onClick={() => setCurrentView("table")}
                       >
-                        <TableRows
-                          sx={{
-                            color:
-                              currentView === "table" ? "white" : undefined,
-                          }}
-                        ></TableRows>
+                        <TableRows fontSize="small" />
                       </Button>
                     </span>
                   </Tooltip>
                   <Tooltip placement="top" title={"Vista de Cartas"}>
                     <span>
                       <Button
+                        aria-label="Vista de cartas"
+                        aria-pressed={currentView === "card"}
                         sx={{
-                          px: 0,
+                          width: 38,
+                          minWidth: 38,
+                          height: 36,
+                          p: 0,
+                          color:
+                            currentView === "card"
+                              ? "common.white"
+                              : "primary.main",
                           bgcolor:
-                            currentView === "card" ? "#1976d2;" : undefined,
-                          "&:hover": { bgcolor: "#1976d2" },
-                          borderColor:
-                            currentView === "card" ? undefined : "#1976d2",
+                            currentView === "card"
+                              ? "primary.main"
+                              : "transparent",
+                          borderColor: "primary.main",
+                          "&:hover": {
+                            bgcolor:
+                              currentView === "card"
+                                ? "primary.dark"
+                                : "action.hover",
+                          },
                         }}
-                        color="info"
                         variant="outlined"
                         onClick={() => setCurrentView("card")}
                       >
-                        <CreditCard
-                          sx={{
-                            color: currentView === "card" ? "white" : undefined,
-                          }}
-                        ></CreditCard>
+                        <CreditCard fontSize="small" />
                       </Button>
                     </span>
                   </Tooltip>
@@ -564,74 +589,54 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         ) : (
           <Grid container spacing={3} m={2}>
             {memberRows?.length === 0 ? (
-              <Grid my={3} container justifyContent="center" size={12}>
-                <Typography variant="h6" sx={{ color: "gray" }}>
+              <Grid my={2} container justifyContent="center" size={12}>
+                <Typography color="textDisabled">
                   Não foram encontrados registos.
                 </Typography>
               </Grid>
             ) : (
-              memberRows?.map((person: any, index: any) => (
-                <Grid key={index} size={{ xl: 3, lg: 4, md: 6, xs: 12 }}>
+              memberRows?.map((person: any) => (
+                <Grid
+                  key={person.id}
+                  size={{ xl: 3, lg: 4, md: 6, xs: 12 }}
+                  sx={{ display: "flex" }}
+                >
                   <Tooltip title="Consultar" placement="top">
                     <Card
                       onClick={() => {
                         navigate(`/members/${person.id}/`);
                       }}
                       sx={{
-                        // p: 1,
-                        transition: "0.3s",
-                        border: "4px",
-                        borderColor: "transparent",
-                        "&:hover": {
-                          transform: "translateY(-3px)",
-                          boxShadow:
-                            person.past_month_payment_status === "unpaid"
-                              ? undefined
-                              : 6,
-                          borderColor:
-                            person.past_month_payment_status === "unpaid"
-                              ? undefined
-                              : "red",
-                          cursor: "pointer",
-                        },
+                        width: "100%",
+                        height: "100%",
+                        cursor: "pointer",
+                        border: "1px solid",
+                        borderColor:
+                          person.past_month_payment_status === "unpaid"
+                            ? "warning.main"
+                            : "divider",
                         backgroundColor:
                           person.past_month_payment_status === "unpaid"
-                            ? "rgba(255, 165, 0, 0.10)"
-                            : undefined,
-                        borderTop:
-                          person.past_month_payment_status === "unpaid"
-                            ? "4px solid rgba(255, 165, 0, 0.7)"
-                            : undefined,
-                        borderBottom:
-                          person.past_month_payment_status === "unpaid"
-                            ? "4px solid rgba(255, 165, 0, 0.7)"
-                            : undefined,
-
-                        animation:
-                          person.past_month_payment_status === "unpaid"
-                            ? "rowWarningPulse 1.5s ease-in-out infinite"
-                            : "none",
-
-                        "@keyframes rowWarningPulse": {
-                          "0%": {
-                            backgroundColor: "rgba(255, 165, 0, 0.08)",
-                            borderTopColor: "rgba(255, 165, 0, 0.45)",
-                          },
-                          "50%": {
-                            backgroundColor: "rgba(255, 165, 0, 0.18)",
-                            borderTopColor: "rgba(255, 165, 0, 0.95)",
-                          },
-                          "100%": {
-                            backgroundColor: "rgba(255, 165, 0, 0.08)",
-                            borderTopColor: "rgba(255, 165, 0, 0.45)",
-                          },
+                            ? "rgba(255, 165, 0, 0.08)"
+                            : "background.paper",
+                        transition:
+                          "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+                        "&:hover": {
+                          transform: "translateY(-3px)",
+                          boxShadow: 4,
+                          borderColor:
+                            person.past_month_payment_status === "unpaid"
+                              ? "warning.dark"
+                              : "primary.main",
+                          cursor: "pointer",
                         },
                       }}
                     >
                       <CardContent
                         sx={{
+                          p: 2.5,
                           "&:last-child": {
-                            px: 0,
+                            pb: 2.5,
                           },
                         }}
                       >
@@ -639,48 +644,85 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                           container
                           direction={"column"}
                           size={12}
-                          spacing={2}
+                          spacing={2.5}
                         >
-                          <Grid container justifyContent={"center"}>
-                            <Avatar
-                              {...stringAvatar(person.full_name, 100)}
-                            ></Avatar>
-                          </Grid>
-                          <Divider></Divider>
                           <Grid
                             container
-                            justifyContent={"center"}
-                            size={12}
                             alignItems={"center"}
-                            textAlign={"center"}
+                            spacing={2}
+                            wrap="nowrap"
                           >
-                            <Typography variant="h5">
-                              {person.full_name}
-                            </Typography>
-                          </Grid>
-                          {props.userRole === "main_admin" ? null : (
-                            <Grid size={12} container justifyContent={"center"}>
-                              {person.verified}
+                            <Avatar {...stringAvatar(person.full_name, 56)} />
+                            <Grid size={9} sx={{ minWidth: 0 }}>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight={700}
+                                sx={{ overflowWrap: "anywhere" }}
+                              >
+                                {person.full_name}
+                              </Typography>
+                              {["main_admin", "superuser"].includes(
+                                props.userRole,
+                              ) && person.username ? (
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                  sx={{ overflowWrap: "anywhere" }}
+                                >
+                                  {person.username}
+                                </Typography>
+                              ) : null}
                             </Grid>
-                          )}
-                          <Grid container justifyContent={"center"} size={12}>
+                            {props.userRole === "main_admin" ? null : (
+                              <Grid
+                                container
+                                justifyContent="center"
+                                alignItems="center"
+                                sx={{ flexShrink: 0 }}
+                              >
+                                {person.verified}
+                              </Grid>
+                            )}
+                          </Grid>
+                          <Divider />
+                          <Grid
+                            container
+                            alignItems="center"
+                            spacing={1}
+                            sx={{ minHeight: 32 }}
+                          >
                             {props.userRole === "main_admin" ? null : (
                               <Chip
                                 variant="outlined"
                                 size="small"
                                 label={`${person.age} anos`}
-                              ></Chip>
+                              />
                             )}
                             <Chip
                               variant="outlined"
                               size="small"
                               label={
-                                person.gender === "F" ? "Feminino" : "Masculino"
+                                person.gender === "M" ? "Masculino" : "Feminino"
                               }
-                            ></Chip>
+                            />
+                            {person.past_month_payment_status === "unpaid" ? (
+                              <Chip
+                                color="warning"
+                                size="small"
+                                label="Quotas em falta"
+                              />
+                            ) : null}
                           </Grid>
                           {props.userRole === "main_admin" ? null : (
-                            <Grid container justifyContent={"center"} size={12}>
+                            <Grid container alignItems="center" size={12}>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                component="div"
+                                sx={{ mb: 0.5 }}
+                              >
+                                Tipo de membro
+                              </Typography>
                               {person.member_type}
                             </Grid>
                           )}

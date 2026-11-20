@@ -6,8 +6,8 @@ import { SwapVert } from "@mui/icons-material";
 
 const FiltersBadge = styled(Badge)`
   & .${badgeClasses.badge} {
-    top: -20px;
-    right: -55px;
+    top: -18px;
+    right: -35px;
   }
 `;
 

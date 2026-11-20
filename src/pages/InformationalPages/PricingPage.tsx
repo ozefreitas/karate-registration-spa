@@ -37,19 +37,29 @@ const PricingPage = () => {
         }
         title="Planos de Subscrição"
       ></PageInfoCard>
-      <Grid size={12}>
-        <Grid size={12} container justifyContent={"center"}>
+      <Box
+        sx={{
+          width: "100%",
+          minWidth: 0,
+          px: { xs: 2, sm: 3, md: 4 },
+          pb: 2,
+        }}
+      >
+        <Grid container justifyContent={"center"} sx={{ width: "100%" }}>
           <Box
-            width={220}
-            height={60}
-            bgcolor={"lightgray"}
-            borderRadius={12}
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"space-evenly"}
+            sx={{
+              width: "min(100%, 320px)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 1,
+              p: 1,
+              bgcolor: "background.paper",
+              borderRadius: 12,
+            }}
           >
             <Button
-              sx={{ borderRadius: 10 }}
+              sx={{ borderRadius: 10, flex: 1, minWidth: 0 }}
               variant="contained"
               color={selected === "mensal" ? "primary" : "inherit"}
               onClick={() => {
@@ -60,7 +70,7 @@ const PricingPage = () => {
               Mensal
             </Button>
             <Button
-              sx={{ borderRadius: 10 }}
+              sx={{ borderRadius: 10, flex: 1, minWidth: 0 }}
               variant="contained"
               color={selected === "anual" ? "primary" : "inherit"}
               onClick={() => {
@@ -72,7 +82,11 @@ const PricingPage = () => {
             </Button>
           </Box>
         </Grid>
-        <Grid height={800} size={12} container spacing={1} m={1} mt={4}>
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          sx={{ width: "100%", mx: 0, mt: { xs: 2, sm: 4 } }}
+        >
           <Grid size={{ xs: 12, sm: 6, lg: 4 }}>
             <Card
               sx={{
@@ -89,12 +103,17 @@ const PricingPage = () => {
               }}
             >
               <Grid
-                height={200}
                 container
-                pt={2}
+                sx={{
+                  minHeight: { xs: 210, sm: 200 },
+                  px: 2,
+                  py: 2,
+                  boxSizing: "border-box",
+                }}
                 direction={"column"}
-                justifyContent={"space-around"}
+                justifyContent={"center"}
                 alignItems={"center"}
+                gap={1}
               >
                 <Typography variant="h6" color="#cd7f32">
                   Base
@@ -103,29 +122,35 @@ const PricingPage = () => {
                   Ganhe Controlo e Clareza
                 </Typography>
                 {hasDiscount ? (
-                  <Grid container gap={2} alignItems={"center"}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justifyContent="center"
+                    alignItems={"center"}
+                    sx={{ maxWidth: "100%" }}
+                  >
                     <Typography
                       variant="h6"
-                      pt={3}
+                      pt={1}
                       sx={{ textDecoration: "line-through" }}
                     >
                       360€
                     </Typography>
-                    <Typography color="success" pt={3} variant="h3">
+                    <Typography color="success" pt={1} variant="h4">
                       320€
                     </Typography>
-                    <Typography color="success" pt={3} variant="h5">
+                    <Typography color="success" pt={1} variant="h6">
                       (-11%)
                     </Typography>
                   </Grid>
                 ) : (
-                  <Typography pt={3} variant="h3">
+                  <Typography pt={1} variant="h3">
                     €30
                   </Typography>
                 )}
               </Grid>
               <Grid>
-                <List sx={{ p: 5, pt: 3 }}>
+                <List sx={{ p: { xs: 2, sm: 3, md: 4 }, pt: 2 }}>
                   <ListItem disablePadding>
                     <ListItemIcon sx={{ minWidth: 40 }}>
                       <Check color="success"></Check>
@@ -211,12 +236,18 @@ const PricingPage = () => {
               }}
             >
               <Grid
-                height={200}
                 container
-                pt={2}
+                sx={{
+                  minHeight: { xs: 210, sm: 200 },
+                  px: 2,
+                  py: 2,
+                  boxSizing: "border-box",
+                }}
                 direction={"column"}
-                justifyContent={"space-around"}
+                justifyContent={"center"}
                 alignItems={"center"}
+                textAlign={"center"}
+                gap={1}
               >
                 <Typography variant="h6" color="silver">
                   Pro
@@ -225,29 +256,35 @@ const PricingPage = () => {
                   Domine a gestão do seu Clube
                 </Typography>
                 {hasDiscount ? (
-                  <Grid container gap={2} alignItems={"center"}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justifyContent="center"
+                    alignItems={"center"}
+                    sx={{ maxWidth: "100%" }}
+                  >
                     <Typography
                       variant="h6"
-                      pt={3}
+                      pt={1}
                       sx={{ textDecoration: "line-through" }}
                     >
                       600€
                     </Typography>
-                    <Typography color="success" pt={3} variant="h3">
+                    <Typography color="success" pt={1} variant="h4">
                       500€
                     </Typography>
-                    <Typography color="success" pt={3} variant="h5">
+                    <Typography color="success" pt={1} variant="h6">
                       (-15%)
                     </Typography>
                   </Grid>
                 ) : (
-                  <Typography pt={3} variant="h3">
+                  <Typography pt={1} variant="h3">
                     €50
                   </Typography>
                 )}
               </Grid>
               <Grid>
-                <List sx={{ p: 5, pt: 3 }}>
+                <List sx={{ p: { xs: 2, sm: 3, md: 4 }, pt: 2 }}>
                   <ListItem disablePadding>
                     <ListItemIcon sx={{ minWidth: 40 }}>
                       <Check color="success"></Check>
@@ -334,12 +371,17 @@ const PricingPage = () => {
               }}
             >
               <Grid
-                height={200}
                 container
-                pt={2}
+                sx={{
+                  minHeight: { xs: 210, sm: 200 },
+                  px: 2,
+                  py: 2,
+                  boxSizing: "border-box",
+                }}
                 direction={"column"}
-                justifyContent={"space-around"}
+                justifyContent={"center"}
                 alignItems={"center"}
+                gap={1}
               >
                 <Typography variant="h6" color="gold">
                   Elite
@@ -348,29 +390,35 @@ const PricingPage = () => {
                   Tenha tudo nas suas mãos
                 </Typography>
                 {hasDiscount ? (
-                  <Grid container gap={2} alignItems={"center"}>
+                  <Grid
+                    container
+                    spacing={1}
+                    justifyContent="center"
+                    alignItems={"center"}
+                    sx={{ maxWidth: "100%" }}
+                  >
                     <Typography
                       variant="h6"
-                      pt={3}
+                      pt={1}
                       sx={{ textDecoration: "line-through" }}
                     >
                       1200€
                     </Typography>
-                    <Typography color="success" pt={3} variant="h3">
+                    <Typography color="success" pt={1} variant="h4">
                       1000€
                     </Typography>
-                    <Typography color="success" pt={3} variant="h5">
+                    <Typography color="success" pt={1} variant="h6">
                       (-18%)
                     </Typography>
                   </Grid>
                 ) : (
-                  <Typography pt={3} variant="h3">
+                  <Typography pt={1} variant="h3">
                     €100
                   </Typography>
                 )}
               </Grid>
-              <Grid height={"70%"}>
-                <List sx={{ p: 5, pt: 3 }}>
+              <Grid>
+                <List sx={{ p: { xs: 2, sm: 3, md: 4 }, pt: 2 }}>
                   <ListItem disablePadding>
                     <ListItemIcon sx={{ minWidth: 40 }}>
                       <Check color="success"></Check>
@@ -445,19 +493,36 @@ const PricingPage = () => {
             </Card>
           </Grid>
         </Grid>
-        <Grid m={1} mt={2} size={{ xs: 12 }} height={200}>
-          <Card sx={{ width: "100%", display: "flex", p: 3, pl: 1, pr: 1 }}>
-            <Grid
-              width={"20%"}
-              container
-              direction={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
+        <Box sx={{ mt: 2, width: "100%", minWidth: 0 }}>
+          <Card
+            sx={{
+              width: "100%",
+              minWidth: 0,
+              display: "grid",
+              gridTemplateColumns: {
+                xs: "minmax(0, 1fr)",
+                sm: "minmax(0, 3fr) minmax(0, 9fr)",
+                md: "minmax(0, 2fr) minmax(0, 10fr)",
+              },
+              gap: 1,
+              p: 2,
+            }}
+          >
+            <Box
+              sx={{
+                display: "grid",
+                placeItems: "center",
+                py: { xs: 1, sm: 0 },
+              }}
             >
               <Typography variant="h6">Free</Typography>
-            </Grid>
-            <Grid container>
-              <Grid size={4} p={1} container alignItems={"center"}>
+            </Box>
+            <Grid container spacing={1} sx={{ width: "100%", minWidth: 0 }}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Check color="success"></Check>
@@ -465,7 +530,11 @@ const PricingPage = () => {
                   <ListItemText>Inscrição em Eventos</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Close color="error"></Close>
@@ -473,7 +542,11 @@ const PricingPage = () => {
                   <ListItemText>Listagem de Membros</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Close color="error"></Close>
@@ -481,7 +554,11 @@ const PricingPage = () => {
                   <ListItemText>Informação detalhada de Membro</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Close color="error"></Close>
@@ -489,7 +566,11 @@ const PricingPage = () => {
                   <ListItemText>Registo de novos Membros</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Close color="error"></Close>
@@ -497,7 +578,11 @@ const PricingPage = () => {
                   <ListItemText>Notificações e Alertas</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Close color="error"></Close>
@@ -505,7 +590,11 @@ const PricingPage = () => {
                   <ListItemText>Pedidos ao Administrador</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Warning color="warning"></Warning>
@@ -513,7 +602,11 @@ const PricingPage = () => {
                   <ListItemText>Suporte Padrão</ListItemText>
                 </ListItem>
               </Grid>
-              <Grid size={4} p={1} container alignItems={"center"}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4 }}
+                container
+                alignItems={"center"}
+              >
                 <ListItem disablePadding sx={{ m: 0 }}>
                   <ListItemIcon sx={{ minWidth: 40 }}>
                     <Close color="error"></Close>
@@ -523,12 +616,17 @@ const PricingPage = () => {
               </Grid>
             </Grid>
           </Card>
-        </Grid>
-        <Grid size={12} mt={5} container gap={2} justifyContent={"center"}>
+        </Box>
+        <Grid
+          container
+          gap={2}
+          justifyContent={"center"}
+          sx={{ width: "100%", mt: 5 }}
+        >
           <Link to={"/contacts/"}>Contactos</Link>.
           <Link to={"/feedback/"}>Feedback</Link>
         </Grid>
-      </Grid>
+      </Box>
     </>
   );
 };

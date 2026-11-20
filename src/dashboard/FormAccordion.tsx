@@ -21,7 +21,16 @@ export default function FormAccordion(
 ) {
   return (
     <Grid mx={4} size={12}>
-      <Accordion square expanded={props.expanded} onChange={props.onChange}>
+      <Accordion
+        square
+        expanded={props.expanded}
+        onChange={props.onChange}
+        sx={{
+          border: "2px solid",
+          borderColor: (theme) =>
+            theme.palette.mode === "light" ? "white" : theme.palette.divider,
+        }}
+      >
         <Tooltip
           placement="bottom-start"
           title={props.expanded ? "" : props.tooltipMessage}
@@ -31,7 +40,7 @@ export default function FormAccordion(
               <Typography
                 sx={{
                   width: "30%",
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: "bold",
                   flexShrink: 0,
                 }}
@@ -44,7 +53,7 @@ export default function FormAccordion(
                 sx={{
                   width: "70%",
                   pr: 5,
-                  fontSize: 18,
+                  fontSize: 14,
                   textAlign: "right",
                 }}
               >

@@ -28,6 +28,8 @@ import {
   East,
   Groups,
   Search,
+  Add,
+  Clear,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useEffect, useState } from "react";
@@ -67,7 +69,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     control: filtersControl,
     watch: filtersWatch,
     reset: filtersReset,
-    formState: { errors: filtersErrors },
+    // formState: { errors: filtersErrors },
     formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
@@ -88,7 +90,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
     control: orderControl,
     watch: orderWatch,
     reset: orderReset,
-    formState: { errors: orderErrors },
+    // formState: { errors: orderErrors },
     formState: { dirtyFields: orderDirtyFields },
   } = useForm({
     defaultValues: {
@@ -168,47 +170,71 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
       </>
     );
 
+  const canAddEvents = [
+    "main_admin",
+    "superuser",
+    "single_admin",
+    "subed_club",
+  ].includes(props.userRole);
+  const canManageEvents = props.userRole !== "technician";
+  const canSwitchEventView =
+    props.userRole !== "technician" && props.userRole !== undefined;
+  const canViewCalendar = canSwitchEventView && props.userRole !== "free_club";
+  const showEventSearch = canManageEvents && currentView === "list";
+
   return (
     <>
       <PageInfoCard description={infoCard} title="Eventos"></PageInfoCard>
-      <Grid container size={12} m={2} mt={0}>
-        {eventsError ? null : (
+      <Grid container size={12} m={{ xs: 1, sm: 2, md: 4 }} mt={0}>
+        {eventsError || props.userRole === "technician" ? null : (
           <Grid
             size={12}
             container
-            pr={2}
-            pl={1}
+            spacing={{ xs: 1, sm: 1.5 }}
             pb={1}
             mb={3}
-            borderBottom={"1px solid lightgray"}
-            justifyContent={
-              [
-                "superuser",
-                "main_admin",
-                "single_admin",
-                "subed_club",
-              ].includes(props.userRole)
-                ? "space-between"
-                : "flex-end"
-            }
-            alignItems={"center"}
+            sx={{ borderBottom: 1, borderColor: "divider" }}
+            alignItems="center"
           >
-            {["main_admin", "superuser", "single_admin", "subed_club"].includes(
-              props.userRole,
-            ) ? (
-              <AddButton label="Adicionar" to="new_event/"></AddButton>
+            {canAddEvents ? (
+              <Grid size={{ xs: 12, sm: 3 }}>
+                <Grid sx={{ display: { xs: "none", sm: "flex" } }}>
+                  <AddButton
+                    borderless
+                    label="Adicionar"
+                    to="new_event/"
+                  ></AddButton>
+                </Grid>
+                <Grid sx={{ display: { xs: "flex", sm: "none" } }}>
+                  <Tooltip placement="top" title="Adicionar">
+                    <IconButton
+                      onClick={() => navigate("new_event/")}
+                      sx={{
+                        border: 1,
+                        borderRadius: 3,
+                        bgcolor: "#2e7d32",
+                        "&:hover": { bgcolor: "#2e7d32" },
+                      }}
+                      color="success"
+                      aria-label="Adicionar evento"
+                    >
+                      <Add sx={{ color: "white" }} />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
             ) : null}
             <Grid
+              size={{ xs: 12, sm: canAddEvents ? 9 : 12 }}
               container
-              spacing={2}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              pl={1}
+              spacing={1}
+              alignItems="center"
+              justifyContent="flex-end"
             >
-              {props.userRole === "technician" ? null : currentView ===
-                "list" ? (
-                <>
+              {showEventSearch ? (
+                <Grid size={{ xs: 12, md: 4 }} sx={{ minWidth: 0 }}>
                   <TextField
+                    fullWidth
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Nome do Evento/Descrição/Localização..."
@@ -216,13 +242,11 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                     size="small"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        height: 32,
+                        height: 36,
                         borderRadius: 3,
-                        boxShadow: { md: "6px 6px 10px rgba(0,0,0,0.2)" },
                       },
                       "& .MuiInputBase-input::placeholder": {
                         fontSize: "0.7rem",
-                        // opacity: 1,
                       },
                     }}
                     slotProps={{
@@ -232,90 +256,126 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                             <Search fontSize="small" />
                           </InputAdornment>
                         ),
-                        endAdornment: (
-                          <>
-                            {isEventsDataLoading ? (
-                              <CircularProgress size={16} />
-                            ) : null}
-                          </>
+                        endAdornment: isEventsDataLoading ? (
+                          <CircularProgress size={16} />
+                        ) : query === "" ? null : (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setQuery("")}
+                              edge="end"
+                              aria-label="remove event query"
+                            >
+                              <Clear color="error"></Clear>
+                            </IconButton>
+                          </InputAdornment>
                         ),
                       },
                     }}
                   />
-                  <EventOrdering
-                    isLoading={isEventsDataLoading}
-                    control={orderControl}
-                    reset={orderReset}
-                    changedCount={orderChangedCount}
-                    orderFields={orderFields}
-                    setOrderFields={setOrderFields}
-                  ></EventOrdering>
-                </>
+                </Grid>
               ) : null}
-              {props.userRole === "technician" ? null : (
-                <EventFiltering
-                  isLoading={isEventsDataLoading}
-                  control={filtersControl}
-                  reset={filtersReset}
-                  changedCount={filtersChangedCount}
-                  setPage={setPage}
-                ></EventFiltering>
-              )}
-              {["technician", undefined].includes(props.userRole) ? null : (
-                <Grid pl={2} container spacing={1} borderRadius={3}>
-                  <Tooltip placement="top" title={"Vista de Lista"}>
-                    <span>
-                      <IconButton
-                        size="large"
-                        onClick={() => setCurrentView("list")}
-                        sx={{
-                          borderRadius: 3,
-                          border: 1,
-                          bgcolor:
-                            currentView === "list" ? "#1976d2;" : undefined,
-                          "&:hover": { bgcolor: "#1976d2" },
-                        }}
-                        color="info"
-                      >
-                        <Subject
-                          sx={{
-                            color: currentView === "list" ? "white" : undefined,
-                          }}
-                        ></Subject>
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                  {[undefined, "free_club"].includes(props.userRole) ? null : (
-                    <Tooltip placement="top" title={"Vista de Calendário"}>
+              <Grid
+                size={{
+                  xs: 12,
+                  md: showEventSearch ? 8 : 12,
+                }}
+                container
+                spacing={1}
+                alignItems="center"
+                justifyContent={{ xs: "space-between", md: "flex-end" }}
+              >
+                {canManageEvents ? (
+                  <Grid container spacing={1} alignItems="center">
+                    <EventOrdering
+                      isLoading={isEventsDataLoading}
+                      control={orderControl}
+                      reset={orderReset}
+                      changedCount={orderChangedCount}
+                      orderFields={orderFields}
+                      setOrderFields={setOrderFields}
+                    ></EventOrdering>
+                    <EventFiltering
+                      isLoading={isEventsDataLoading}
+                      control={filtersControl}
+                      reset={filtersReset}
+                      changedCount={filtersChangedCount}
+                      setPage={setPage}
+                    ></EventFiltering>
+                  </Grid>
+                ) : null}
+                {canSwitchEventView ? (
+                  <Grid container spacing={1} alignItems="center">
+                    <Tooltip placement="top" title="Vista de Lista">
                       <span>
-                        <IconButton
-                          size="large"
+                        <Button
+                          aria-label="Vista de lista"
+                          aria-pressed={currentView === "list"}
                           sx={{
-                            borderRadius: 3,
-                            border: 1,
+                            width: 38,
+                            minWidth: 38,
+                            height: 36,
+                            p: 0,
+                            color:
+                              currentView === "list"
+                                ? "common.white"
+                                : "primary.main",
                             bgcolor:
-                              currentView === "calendar"
-                                ? "#1976d2;"
-                                : undefined,
-                            "&:hover": { bgcolor: "#1976d2" },
+                              currentView === "list"
+                                ? "primary.main"
+                                : "transparent",
+                            borderColor: "primary.main",
+                            "&:hover": {
+                              bgcolor:
+                                currentView === "list"
+                                  ? "primary.dark"
+                                  : "action.hover",
+                            },
                           }}
-                          onClick={() => setCurrentView("calendar")}
-                          color="info"
+                          variant="outlined"
+                          onClick={() => setCurrentView("list")}
                         >
-                          <CalendarMonth
-                            sx={{
-                              color:
-                                currentView === "calendar"
-                                  ? "white"
-                                  : undefined,
-                            }}
-                          ></CalendarMonth>
-                        </IconButton>
+                          <Subject fontSize="small" />
+                        </Button>
                       </span>
                     </Tooltip>
-                  )}
-                </Grid>
-              )}
+                    {canViewCalendar ? (
+                      <Tooltip placement="top" title="Vista de Calendário">
+                        <span>
+                          <Button
+                            aria-label="Vista de calendário"
+                            aria-pressed={currentView === "calendar"}
+                            sx={{
+                              width: 38,
+                              minWidth: 38,
+                              height: 36,
+                              p: 0,
+                              color:
+                                currentView === "calendar"
+                                  ? "common.white"
+                                  : "primary.main",
+                              bgcolor:
+                                currentView === "calendar"
+                                  ? "primary.main"
+                                  : "transparent",
+                              borderColor: "primary.main",
+                              "&:hover": {
+                                bgcolor:
+                                  currentView === "calendar"
+                                    ? "primary.dark"
+                                    : "action.hover",
+                              },
+                            }}
+                            variant="outlined"
+                            onClick={() => setCurrentView("calendar")}
+                          >
+                            <CalendarMonth fontSize="small" />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    ) : null}
+                  </Grid>
+                ) : null}
+              </Grid>
             </Grid>
           </Grid>
         )}
@@ -340,60 +400,106 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             </Button>
           </Grid>
         ) : eventsData?.count === 0 && currentView === "list" ? (
-          <Grid mt={5} container justifyContent="center" size={12}>
-            <Typography variant="h6" sx={{ color: "gray" }}>
+          <Grid mt={2} container justifyContent="center" size={12}>
+            <Typography color="textDisabled">
               Não foram encontrados Eventos.
             </Typography>
           </Grid>
         ) : eventsData?.count !== 0 && currentView === "list" ? (
           <Grid size={12}>
-            <Typography variant="subtitle1" ml={3} sx={{ color: "gray" }}>
+            <Typography
+              variant="subtitle1"
+              ml={{ xs: 1, sm: 3 }}
+              mb={1}
+              sx={{ color: "text.secondary" }}
+            >
               {eventsData?.count} Evento(s).
             </Typography>
             {eventsData?.results.map((comp, index: number) => (
-              <Grid size={12} key={index} p={2}>
-                <Card elevation={3}>
+              <Grid size={12} key={index} px={{ xs: 0.5, sm: 1, md: 2 }} py={1}>
+                <Card elevation={3} sx={{ overflow: "hidden" }}>
                   <CardContent
                     sx={{
                       p: 0,
-                      pl: 1,
                       "&:last-child": {
                         paddingBottom: 0,
                       },
                     }}
                   >
-                    <Grid container alignItems="center" size={12}>
-                      <Grid size={4} px={2}>
+                    <Grid
+                      container
+                      alignItems="stretch"
+                      size={12}
+                      spacing={{ xs: 0, sm: 1 }}
+                    >
+                      <Grid
+                        size={{ xs: 12, sm: 4, md: 3 }}
+                        p={{ xs: 1, sm: 2 }}
+                      >
                         <Card
                           sx={{
                             height: "100%",
-                            backgroundColor: "lightgray",
+                            minHeight: { xs: 112, sm: 160, md: 190 },
+                            bgcolor: "action.hover",
                             display: "flex",
+                            alignItems: "center",
                             justifyContent: "center",
-                            p: 4,
+                            p: { xs: 1.5, sm: 2, md: 3 },
+                            boxShadow: "none",
                           }}
                         >
                           <Avatar
                             {...stringAvatar(comp.encounter_type!, 128)}
+                            sx={{
+                              ...stringAvatar(comp.encounter_type!, 128).sx,
+                              width: { xs: 72, sm: 96, md: 128 },
+                              height: { xs: 72, sm: 96, md: 128 },
+                              fontSize: { xs: 28, sm: 36, md: 48 },
+                            }}
                           ></Avatar>
                         </Card>
                       </Grid>
-                      <Grid container size={8} p={2}>
-                        <Grid my={2} size={12}>
-                          <Typography pl={3} fontWeight={"bold"} variant="h5">
+                      <Grid
+                        container
+                        size={{ xs: 12, sm: 8, md: 9 }}
+                        p={2}
+                        alignContent="center"
+                      >
+                        <Grid my={{ xs: 1, sm: 1.5 }} size={12}>
+                          <Typography
+                            pl={{ xs: 0, sm: 1 }}
+                            fontWeight="bold"
+                            textAlign={{ xs: "center", sm: "left" }}
+                            sx={{
+                              fontSize: {
+                                xs: "1rem",
+                                sm: "1.15rem",
+                                md: "1.35rem",
+                              },
+                              overflowWrap: "anywhere",
+                            }}
+                          >
                             {comp.name}
                           </Typography>
                         </Grid>
-                        <Grid pl={2} size={10.5}>
-                          <Grid container columnSpacing={5} size={12}>
-                            <Grid size={{ xs: 12, xl: 6 }}>
+                        <Grid
+                          px={{ xs: 0.5, sm: 1 }}
+                          size={{ xs: 12, md: 10.5 }}
+                          sx={{ minWidth: 0 }}
+                        >
+                          <Grid
+                            container
+                            columnSpacing={{ xs: 0, md: 2 }}
+                            size={12}
+                          >
+                            <Grid size={{ xs: 12, md: 6 }}>
                               <CompInfoToolTip
                                 title="Dia do Evento"
                                 text={comp.event_date}
                                 icon={<Today />}
                               ></CompInfoToolTip>
                             </Grid>
-                            <Grid size={{ xs: 12, xl: 6 }}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                               {comp.has_registrations ? (
                                 <CompInfoToolTip
                                   title="Número de Inscritos"
@@ -403,8 +509,12 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               ) : null}
                             </Grid>
                           </Grid>
-                          <Grid container columnSpacing={5} size={12}>
-                            <Grid size={{ xs: 12, xl: 6 }}>
+                          <Grid
+                            container
+                            columnSpacing={{ xs: 0, md: 2 }}
+                            size={12}
+                          >
+                            <Grid size={{ xs: 12, md: 6 }}>
                               <CompInfoToolTip
                                 title="Estado"
                                 text={
@@ -419,7 +529,7 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                 icon={<AccessTime />}
                               ></CompInfoToolTip>
                             </Grid>
-                            <Grid size={{ xs: 12, xl: 6 }}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                               {comp.has_any_team ? (
                                 <CompInfoToolTip
                                   title="Equipas"
@@ -429,17 +539,20 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                               ) : null}
                             </Grid>
                           </Grid>
-                          <CompInfoToolTip
-                            title="Localização"
-                            text={comp.location}
-                            icon={<LocationPin />}
-                          ></CompInfoToolTip>
+                          <Grid size={12}>
+                            <CompInfoToolTip
+                              title="Localização"
+                              text={comp.location}
+                              icon={<LocationPin />}
+                            ></CompInfoToolTip>
+                          </Grid>
                         </Grid>
                         <Grid
                           container
-                          justifyContent="flex-end"
-                          alignContent="flex-end"
-                          size={1.5}
+                          justifyContent={{ xs: "center", md: "flex-end" }}
+                          alignContent="center"
+                          size={{ xs: 12, md: 1.5 }}
+                          pt={{ xs: 1, md: 0 }}
                         >
                           <Tooltip placement="top" title="Ir para">
                             <span>
@@ -447,16 +560,15 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
                                 sx={{
                                   transition: "0.3s",
                                   borderRadius: 4,
-                                  p: 1.5,
-                                  px: 2,
-                                  border: 3,
-                                  borderColor: "lightgray",
-                                  bgcolor: "#f35757",
+                                  p: { xs: 1, md: 1.5 },
+                                  border: 2,
+                                  borderColor: "divider",
+                                  bgcolor: "error.main",
                                   "&:hover": {
                                     transform: "translateY(-3px)",
                                     boxShadow: 6,
-                                    borderColor: "red",
-                                    bgcolor: "red",
+                                    borderColor: "error.dark",
+                                    bgcolor: "error.dark",
                                   },
                                 }}
                                 onClick={() => navigate(`/events/${comp.id}/`)}

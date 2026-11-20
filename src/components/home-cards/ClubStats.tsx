@@ -77,8 +77,8 @@ export default function ClubStats() {
   return (
     <>
       {["student", "athlete", "coach"].map((item: string, index: any) => (
-        <Grid key={index} size={{ sm: 12, md: 6, lg: 4 }}>
-          <Card sx={{ m: 2 }}>
+        <Grid key={index} size={{ xs: 12, sm: 12, md: 6, lg: 4 }}>
+          <Card>
             <CardHeader
               title={
                 <Grid container alignItems={"center"} gap={2}>
@@ -164,7 +164,7 @@ export default function ClubStats() {
         </Grid>
       ))}
       <Grid size={12} width={"100%"}>
-        <Card sx={{ m: 2 }}>
+        <Card>
           <CardHeader
             title={
               <Grid container alignItems={"center"} gap={2}>
