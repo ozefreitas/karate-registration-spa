@@ -178,9 +178,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
           inscrever os seus Atletas, Equipas e Treinadores."
         title={isSingleEventLoading ? "" : `Evento - ${singleEventData?.name}`}
       ></PageInfoCard>
-      <Grid container spacing={3} mx={4}>
+      <Grid container spacing={3} mx={4} mt={4}>
         <Grid container size={12}>
-          <Grid size={props.userRole === undefined ? 12 : 6}>
+          <Grid size={props.userRole === undefined ? 12 : { xs: 12, md: 6 }}>
             <Card elevation={4}>
               <CardHeader
                 title="Informação Geral"
@@ -296,7 +296,11 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
             </Card>
           </Grid>
           {props.userRole === undefined ? null : (
-            <Grid size={6} container alignContent={"space-between"}>
+            <Grid
+              size={{ xs: 12, md: 6 }}
+              container
+              alignContent={"space-between"}
+            >
               <Grid size={12}>
                 <Card>
                   <CardHeader
@@ -307,23 +311,22 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       },
                     }}
                   ></CardHeader>
-                  <CardContent sx={{ ml: 2 }}>
-                    <ListItemText
-                      primary={"Não existem ficheiros para este Evento."}
-                      sx={{ color: "GrayText" }}
-                    />
+                  <CardContent sx={{ ml: 2, pt: 0 }}>
+                    <Typography variant="body2" color="textDisabled">
+                      Não existem ficheiros para este Evento.
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>
               {props.userRole === "technician" ? null : (
                 <Grid size={12}>
-                  <Card sx={{ mt: 2, mb: 2 }}>
+                  <Card>
                     <CardHeader
                       title="Notas Importantes"
                       subheader={
                         props.userRole === "main_admin" ? (
                           <Button
-                            sx={{ m: 2, ml: 0 }}
+                            sx={{ border: 0, mt: 1 }}
                             variant="contained"
                             size="small"
                             color={isDescriptionEdit ? "inherit" : "warning"}
@@ -357,12 +360,9 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           }}
                         />
                       ) : singleEventData?.description === "" ? (
-                        <ListItemText
-                          primary={
-                            "Não existem informações adicionais para este Evento."
-                          }
-                          sx={{ color: "GrayText" }}
-                        />
+                        <Typography variant="body2" color="textDisabled">
+                          Não existem informações adicionais para este Evento.
+                        </Typography>
                       ) : (
                         <Typography paddingLeft={1}>
                           {singleEventData?.description}
@@ -589,7 +589,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       meData?.id === singleEventData?.created_by ? (
                         <>
                           <Button
-                            sx={{ m: 1 }}
+                            sx={{ border: 0 }}
                             variant="contained"
                             size="medium"
                             color="error"
@@ -613,6 +613,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <AddButton
                           label="Adicionar/Consultar Inscrições"
                           to="individuals/"
+                          borderless
                         ></AddButton>
                       ) : null}
                       {["main_admin", "superuser", "technician"].includes(
@@ -621,6 +622,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <AddButton
                           label="Adicionar/Consultar Treinadores"
                           to="coaches/"
+                          borderless
                           disabled={
                             singleEventData.event_date < getFullDate() ||
                             !singleEventData?.has_registrations
@@ -633,6 +635,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <AddButton
                           label="Adicionar/Consultar Equipas"
                           to="teams/"
+                          borderless
                           disabled={
                             isSingleEventLoading ||
                             singleEventData.event_date < getFullDate() ||
@@ -644,6 +647,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <InfoButton
                           label="Consultar Inscrições"
                           to="individuals/"
+                          borderless
                         ></InfoButton>
                       ) : null}
                       {singleEventData?.has_registrations &&
@@ -651,6 +655,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                         <InfoButton
                           label="Inscrições completas"
                           to="all_registry/"
+                          borderless
                         ></InfoButton>
                       ) : null}
                       {singleEventData?.has_categories &&
@@ -675,6 +680,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       >
                         <span>
                           <Button
+                            sx={{ border: 0 }}
                             disabled={
                               singleEventData?.event_date >= getFullDate()
                             }
@@ -692,7 +698,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       {["main_admin", "superuser"].includes(props.userRole) &&
                       singleEventData?.has_registrations ? (
                         <Button
-                          sx={{ m: 1 }}
+                          sx={{ border: 0 }}
                           variant="contained"
                           color="success"
                           onClick={handleDownloadRegistrationsFile}
@@ -711,6 +717,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           disabled={singleEventData?.event_date < getFullDate()}
                           variant="contained"
                           startIcon={<DeveloperBoard />}
+                          sx={{ border: 0 }}
                         >
                           Ecrã de resultados e Monitorização
                         </Button>

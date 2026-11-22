@@ -5,9 +5,8 @@ import {
   CircularProgress,
   Typography,
   Button,
-  Chip,
 } from "@mui/material";
-import { Add, Check, Close } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { disciplinesHooks, eventsHooks } from "../../hooks";
 import AllUseTable from "../../components/Table/AllUseTable";
 import AddEventCategoriesModal from "../../components/Categories/AddEventCategoriesModal";
@@ -15,6 +14,7 @@ import { Link, useParams } from "react-router-dom";
 import PageInfoCard from "../../components/info-cards/PageInfoCard";
 import { getFullDate } from "../../utils/utils";
 import NotFoundPage from "../ErrorPages/NotFoundPage";
+import BooleanStatusChip from "../../components/BooleanStatusChip";
 
 export default function EventCategoriesPage(
   props: Readonly<{ userRole: string }>,
@@ -55,134 +55,14 @@ export default function EventCategoriesPage(
         name: category.name,
         gender: category.gender,
         sort_age: category.min_age,
-        has_age:
-          category.has_age === "Sim" ? (
-            <Chip
-              icon={<Check />}
-              label=""
-              color="success"
-              sx={{
-                bgcolor: "#d9ffe7",
-                color: "#004d1f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ) : (
-            <Chip
-              icon={<Close />}
-              label=""
-              color="error"
-              sx={{
-                bgcolor: "#ff8fa3",
-                color: "#800f2f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ),
-        has_grad:
-          category.has_grad === "Sim" ? (
-            <Chip
-              icon={<Check />}
-              label=""
-              color="success"
-              sx={{
-                bgcolor: "#d9ffe7",
-                color: "#004d1f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ) : (
-            <Chip
-              icon={<Close />}
-              label=""
-              color="error"
-              sx={{
-                bgcolor: "#ff8fa3",
-                color: "#800f2f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ),
-        has_weight:
-          category.has_weight === "Sim" ? (
-            <Chip
-              icon={<Check />}
-              label=""
-              color="success"
-              sx={{
-                bgcolor: "#d9ffe7",
-                color: "#004d1f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ) : (
-            <Chip
-              icon={<Close />}
-              label=""
-              color="error"
-              sx={{
-                bgcolor: "#ff8fa3",
-                color: "#800f2f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ),
-        max_athletes:
-          category.max_athletes === null ? (
-            <Chip
-              icon={<Close />}
-              label=""
-              color="error"
-              sx={{
-                bgcolor: "#ff8fa3",
-                color: "#800f2f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ) : (
-            <Chip
-              icon={<Check />}
-              label=""
-              color="success"
-              sx={{
-                bgcolor: "#d9ffe7",
-                color: "#004d1f",
-                "& .MuiChip-label": {
-                  display: "none",
-                },
-                pl: 0.5,
-                pr: 2,
-              }}
-            />
-          ),
+        has_age: <BooleanStatusChip enabled={category.has_age === "Sim"} />,
+        has_grad: <BooleanStatusChip enabled={category.has_grad === "Sim"} />,
+        has_weight: (
+          <BooleanStatusChip enabled={category.has_weight === "Sim"} />
+        ),
+        max_athletes: (
+          <BooleanStatusChip enabled={category.max_athletes !== null} />
+        ),
       })),
     );
   }, [disciplinesData]);
@@ -223,7 +103,7 @@ export default function EventCategoriesPage(
         }
         title="Escalões de Evento"
       ></PageInfoCard>
-      <Grid size={12} sx={{ m: 2 }}>
+      <Grid size={12} m={{ xs: 2, sm: 3, md: 4 }}>
         {isDisciplinesDataLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <CircularProgress />
@@ -232,7 +112,7 @@ export default function EventCategoriesPage(
           categoriesRows === undefined ? null : (
           disciplinesData.results.map((discipline, index: any) => (
             <span key={index}>
-              <Typography ml={3} mt={5} mb={3} variant="h5" fontWeight={"bold"}>
+              <Typography mt={5} mb={3} variant="h5" fontWeight={"bold"}>
                 {discipline.name}
               </Typography>
               <AllUseTable
@@ -256,11 +136,11 @@ export default function EventCategoriesPage(
               ></AllUseTable>
               {["main_admin", "superuser"].includes(props.userRole) &&
               !discipline.is_coach ? (
-                <Grid container size={12}>
+                <Grid container size={12} mt={2}>
                   <Button
-                    sx={{ m: 2 }}
+                    sx={{ border: 0 }}
                     variant="contained"
-                    size="large"
+                    size="small"
                     color="success"
                     onClick={() => {
                       setCurrentDiscipline({

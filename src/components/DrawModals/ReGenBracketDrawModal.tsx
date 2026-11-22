@@ -123,10 +123,10 @@ export default function ReGenBracketDrawModal(
   const disciplineIndividualsRegistrationsRows = useMemo(() => {
     return singleDisciplinesData?.individuals
       .filter((person) => {
-        if (props.bracketInfo.category.gender === "Misto") {
+        if (props.bracketInfo?.category?.gender === "Misto") {
           return person;
         } else {
-          return person.person.gender === props.bracketInfo.category.gender;
+          return person.person.gender === props.bracketInfo?.category.gender;
         }
       })
       .map((person) => ({

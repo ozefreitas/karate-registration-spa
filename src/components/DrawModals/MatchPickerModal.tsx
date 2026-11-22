@@ -12,7 +12,9 @@ import {
   Tab,
   Tabs,
   Typography,
+  useTheme,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { TransitionProps } from "@mui/material/transitions";
 import React, { useEffect, useRef, useState } from "react";
 import SectionHeader from "../Header/SectionHeader";
@@ -57,6 +59,7 @@ export default function MatchPickerModal(
   }>,
 ) {
   const [tab, setTab] = useState(0);
+  const theme = useTheme();
 
   useEffect(() => {
     if (!props.matchesData && props.scoringEntriesData) {
@@ -117,11 +120,12 @@ export default function MatchPickerModal(
           justifyContent={"space-between"}
           p={2}
           sx={{
-            borderBottom: "1px solid #eeeeee",
+            borderBottom: "1px solid",
+            borderColor: "divider",
           }}
         >
           <Grid>
-            <Typography variant="h6" fontWeight={700} sx={{ color: "#1a1a1a" }}>
+            <Typography variant="h6" fontWeight={700} color="text.primary">
               Selecionar Partida de {props.bracketData?.name}
             </Typography>
             <Typography variant="body2">
@@ -132,7 +136,7 @@ export default function MatchPickerModal(
           <IconButton
             size="small"
             onClick={props.handleModalClose}
-            sx={{ color: "#9e9e9e" }}
+            sx={{ color: "text.secondary" }}
           >
             <Close fontSize="small" />
           </IconButton>
@@ -149,10 +153,10 @@ export default function MatchPickerModal(
             width: 5,
           },
           "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1",
+            background: theme.palette.action.hover,
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#888",
+            background: theme.palette.text.disabled,
             borderRadius: 10,
           },
         }}
@@ -162,12 +166,13 @@ export default function MatchPickerModal(
             mx: 3,
             mt: 1,
             mb: 7,
-            "& .MuiTab-root": { color: "#e81c24" },
-            "& .Mui-selected": { color: "#e81c24" },
-            "& .MuiTabs-indicator": { backgroundColor: "#e81c24" },
-            "& .MuiTab-fullWidth	": { color: "#e81c24" },
-            color: "#e81c24",
-            borderBottom: "1px solid lightgrey",
+            "& .MuiTab-root": { color: "error.main" },
+            "& .Mui-selected": { color: "error.main" },
+            "& .MuiTabs-indicator": { backgroundColor: "error.main" },
+            "& .MuiTab-fullWidth	": { color: "error.main" },
+            color: "error.main",
+            borderBottom: "1px solid",
+            borderColor: "divider",
           }}
           variant="fullWidth"
           value={tab}
@@ -213,8 +218,7 @@ export default function MatchPickerModal(
               display: "flex",
               alignItems: "center",
               px: 5,
-              background:
-                "linear-gradient(to right, rgba(255,255,255,0.9) 45%, transparent 100%)",
+              background: `linear-gradient(to right, ${alpha(theme.palette.background.paper, 0.9)} 45%, transparent 100%)`,
             }}
           >
             {canScrollLeft && (
@@ -231,7 +235,7 @@ export default function MatchPickerModal(
                   borderRadius: "50%",
                   bgcolor: "error.main",
                   boxShadow: 3,
-                  color: "white",
+                  color: "error.contrastText",
                   transition: "0.2s",
                   "&:hover": {
                     bgcolor: "error.dark",
@@ -242,7 +246,7 @@ export default function MatchPickerModal(
               >
                 <ArrowBackIos
                   fontSize="small"
-                  sx={{ color: "text.secondary", ml: 0.8 }}
+                  sx={{ color: "error.contrastText", ml: 0.8 }}
                 />
               </Box>
             )}
@@ -252,7 +256,7 @@ export default function MatchPickerModal(
             onClick={() =>
               gridRef.current?.scrollBy({ left: 300, behavior: "smooth" })
             }
-            sx={{
+            sx={(theme) => ({
               position: "absolute",
               right: 0,
               top: 95,
@@ -262,9 +266,8 @@ export default function MatchPickerModal(
               display: "flex",
               alignItems: "center",
               px: 10,
-              background:
-                "linear-gradient(to left, rgba(255,255,255,0.9) 45%, transparent 100%)",
-            }}
+              background: `linear-gradient(to left, ${alpha(theme.palette.background.paper, 0.9)} 45%, transparent 100%)`,
+            })}
           >
             {canScrollRight && (
               <Box
@@ -280,7 +283,7 @@ export default function MatchPickerModal(
                   borderRadius: "50%",
                   bgcolor: "error.main",
                   boxShadow: 3,
-                  color: "white",
+                  color: "error.contrastText",
                   transition: "0.2s",
                   "&:hover": {
                     bgcolor: "error.dark",
@@ -291,7 +294,7 @@ export default function MatchPickerModal(
               >
                 <ArrowForwardIos
                   fontSize="small"
-                  sx={{ color: "text.secondary" }}
+                  sx={{ color: "error.contrastText" }}
                 />
               </Box>
             )}
@@ -337,8 +340,6 @@ export default function MatchPickerModal(
                           justifyContent={"space-between"}
                           alignItems={"center"}
                           borderRadius={4}
-                          bgcolor={"#d7ecfc"}
-                          border={"1px solid #9dd3fc"}
                           onClick={() => {
                             if (!matchFinished && hasBothContenders) {
                               if (String(match.id) === selectedMatchId) {
@@ -348,8 +349,17 @@ export default function MatchPickerModal(
                               }
                             }
                           }}
-                          sx={{
+                          sx={(theme) => ({
                             transition: "0.3s",
+                            bgcolor:
+                              selectedMatchId === String(match.id)
+                                ? alpha(theme.palette.info.main, 0.2)
+                                : alpha(theme.palette.info.main, 0.08),
+                            border: "1px solid",
+                            borderColor:
+                              selectedMatchId === String(match.id)
+                                ? "info.main"
+                                : alpha(theme.palette.info.main, 0.35),
                             opacity:
                               matchFinished || !hasBothContenders ? "0.4" : 1,
                             "&:hover": {
@@ -365,10 +375,10 @@ export default function MatchPickerModal(
                                 matchFinished || !hasBothContenders ? 0 : 6,
                               borderColor:
                                 matchFinished || !hasBothContenders
-                                  ? "#9dd3fc"
-                                  : "#88cafc",
+                                  ? alpha(theme.palette.info.main, 0.35)
+                                  : "info.main",
                             },
-                          }}
+                          })}
                         >
                           {roundNumber === 0 && (
                             <Grid
@@ -379,7 +389,9 @@ export default function MatchPickerModal(
                               <Box
                                 sx={{
                                   width: "fit-content",
-                                  border: "1px solid red",
+                                  border: "1px solid",
+                                  borderColor: "error.main",
+                                  color: "error.main",
                                   fontSize: 14,
                                   px: 1,
                                   py: 0.5,
@@ -467,8 +479,6 @@ export default function MatchPickerModal(
                     justifyContent={"space-between"}
                     alignItems={"center"}
                     borderRadius={4}
-                    bgcolor={"#d7ecfc"}
-                    border={"1px solid #9dd3fc"}
                     onClick={() => {
                       if (entry.person || entry.team) {
                         if (String(entry.id) === selectedEntryId) {
@@ -478,8 +488,17 @@ export default function MatchPickerModal(
                         }
                       }
                     }}
-                    sx={{
+                    sx={(theme) => ({
                       transition: "0.3s",
+                      bgcolor:
+                        selectedEntryId === String(entry.id)
+                          ? alpha(theme.palette.info.main, 0.2)
+                          : alpha(theme.palette.info.main, 0.08),
+                      border: "1px solid",
+                      borderColor:
+                        selectedEntryId === String(entry.id)
+                          ? "info.main"
+                          : alpha(theme.palette.info.main, 0.35),
                       opacity: props.bracketData?.is_team
                         ? !entry.team
                           ? "0.4"
@@ -511,13 +530,13 @@ export default function MatchPickerModal(
                             : 6,
                         borderColor: props.bracketData?.is_team
                           ? !entry.team
-                            ? "9dd3fc"
-                            : "#88cafc"
+                            ? alpha(theme.palette.info.main, 0.35)
+                            : "info.main"
                           : !entry.person
-                            ? "9dd3fc"
-                            : "#88cafc",
+                            ? alpha(theme.palette.info.main, 0.35)
+                            : "info.main",
                       },
-                    }}
+                    })}
                   >
                     <Grid size={10} container>
                       {props.bracketData?.is_team ? (

@@ -5,3 +5,4 @@
 export type PasswordResetConfirmResponse = {
     success: boolean;
 };
+

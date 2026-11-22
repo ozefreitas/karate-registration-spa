@@ -20,6 +20,7 @@ export type Match = {
     readonly contender_2_dorsal: string;
     readonly team_contender_1_dorsals: string;
     readonly team_contender_2_dorsals: string;
+    readonly group_number: string;
     contender_1_present?: boolean;
     contender_2_present?: boolean;
     round_number: number;
@@ -32,5 +33,6 @@ export type Match = {
     bracket: number;
     loser_goes_to?: number | null;
     feeds_into_scoring?: number | null;
+    group?: number | null;
 };
 

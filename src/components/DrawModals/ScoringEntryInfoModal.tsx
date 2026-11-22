@@ -132,6 +132,12 @@ export default function ScoringEntryInfoModal(
       fullWidth
       maxWidth="md"
       open={props.isModalOpen}
+      sx={{
+        "& .MuiDialog-paper": {
+          bgcolor: "background.paper",
+          color: "text.primary",
+        },
+      }}
       onClose={() => {
         props.handleModalClose();
         reset();
@@ -140,7 +146,13 @@ export default function ScoringEntryInfoModal(
         transition: Transition,
       }}
     >
-      <DialogTitle sx={{ borderTop: "red", width: "100%" }}>
+      <DialogTitle
+        sx={{
+          borderTop: "4px solid",
+          borderColor: "error.main",
+          width: "100%",
+        }}
+      >
         <Grid
           container
           justifyContent={"space-between"}
@@ -155,7 +167,10 @@ export default function ScoringEntryInfoModal(
           </Grid>
           <IconButton
             onClick={props.handleModalClose}
-            sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
+            sx={{
+              bgcolor: "action.hover",
+              "&:hover": { bgcolor: "action.selected" },
+            }}
           >
             <Close />
           </IconButton>
@@ -199,8 +214,9 @@ export default function ScoringEntryInfoModal(
             p={2.5}
             mt={3}
             borderRadius={3}
-            bgcolor={"#fffff5"}
-            border={"1px solid #ffcdd2"}
+            bgcolor="action.hover"
+            border="1px solid"
+            borderColor="divider"
             spacing={3}
           >
             {["score_1", "score_2", "score_3", "score_4", "score_5"].map(
@@ -224,9 +240,15 @@ export default function ScoringEntryInfoModal(
                             style: {
                               fontSize: 18,
                               marginRight: 10,
-                              color:
-                                field.value === "N/A" ? "lightgray" : "inherit",
                             },
+                          },
+                        }}
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            color:
+                              field.value === "N/A"
+                                ? "text.disabled"
+                                : "text.primary",
                           },
                         }}
                         required={props.edit}

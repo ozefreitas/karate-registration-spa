@@ -654,11 +654,7 @@ export default function AllUseTable(
           </TableContainer>
         </Grid>
       ) : (
-        <Grid
-          container
-          m={{ xs: 0.5, sm: 2 }}
-          sx={{ width: "auto", minWidth: 0 }}
-        >
+        <Grid container sx={{ width: "auto", minWidth: 0 }}>
           <TableContainer
             component={Paper}
             sx={{ width: "100%", maxWidth: "100%", overflowX: "auto" }}

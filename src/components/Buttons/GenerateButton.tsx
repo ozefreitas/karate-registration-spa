@@ -8,7 +8,7 @@ export default function GenerateButton(
   const navigate = useNavigate();
   return (
     <Button
-      sx={{ m: 1 }}
+      sx={{ border: 0}}
       variant="contained"
       size="medium"
       disabled={props.disabled}

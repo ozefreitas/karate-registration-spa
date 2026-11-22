@@ -22,5 +22,6 @@ export type CreateMatch = {
     team_contender_1?: string | null;
     team_contender_2?: string | null;
     team_winner?: string | null;
+    group?: number | null;
 };
 

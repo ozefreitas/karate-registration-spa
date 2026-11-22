@@ -137,7 +137,7 @@ export default function MergeBracketModal(
                     ) : (
                       <MenuItem
                         key="placeholder"
-                        sx={{ color: "lightgrey" }}
+                        sx={{ color: "text.disabled" }}
                         value=""
                       >
                         -- Selecionar --

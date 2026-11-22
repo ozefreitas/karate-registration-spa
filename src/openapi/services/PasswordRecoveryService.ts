@@ -21,16 +21,16 @@ export class PasswordRecoveryService {
      * @throws ApiError
      */
     public static passwordRecoveryConfirmCreate(
-        uidb64: string,
         token: string,
+        uidb64: string,
         requestBody: Password,
     ): CancelablePromise<PasswordResetConfirmResponse> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/password_recovery/confirm/{uidb64}/{token}/',
             path: {
-                'uidb64': uidb64,
                 'token': token,
+                'uidb64': uidb64,
             },
             body: requestBody,
             mediaType: 'application/json',

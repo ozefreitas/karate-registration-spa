@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type AccessToken = {
+export type JWTAccess = {
     readonly access: string;
 };
+

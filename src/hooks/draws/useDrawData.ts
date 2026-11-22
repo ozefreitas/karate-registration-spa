@@ -48,13 +48,14 @@ export const useTeamsPerBracketData = (bracketId: number) => {
 export const useEventScoringEntriesData = (
   bracketId: string,
   eventId: string,
+  isNotLiga: boolean
 ) => {
   return useQuery({
     queryKey: ["event-scoring-entries", bracketId, eventId],
     queryFn: () => ScoringEntryService.scoringEntryList(bracketId, eventId),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    enabled: !!bracketId,
+    enabled: !!bracketId && isNotLiga,
   });
 };
 

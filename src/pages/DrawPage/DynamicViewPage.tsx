@@ -4,13 +4,12 @@ import {
   Box,
   Button,
   Card,
+  CardContent,
   Chip,
   CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
-  ListItem,
-  ListItemText,
   MenuItem,
   Tab,
   Tabs,
@@ -50,6 +49,8 @@ import { callNotiStack } from "../../utils/utils";
 import { useSnackbar } from "notistack";
 import MergeBracketModal from "../../components/DrawModals/MergeBracketModal";
 import ReGenBracketDrawModal from "../../components/DrawModals/ReGenBracketDrawModal";
+import GroupsListing from "./GroupsListing";
+import MatchCard from "../../components/DynamicView/MatchCard";
 
 export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const [tab, setTab] = useState(0);
@@ -167,12 +168,21 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
     error: matchesError,
     refetch: matchesRefetch,
   } = drawsHooks.useEventMatchesData(watch("bracket"), eventId!);
+
+  const isLiga =
+    bracketsData?.find((item) => watch("bracket") === String(item.id))
+      ?.draw_type === "Liga";
+
   const {
     data: scoringEntriesData,
     isLoading: isScoringEntriesLoading,
     error: scoringEntriesError,
     refetch: scoringEntriesRefetch,
-  } = drawsHooks.useEventScoringEntriesData(watch("bracket"), eventId!);
+  } = drawsHooks.useEventScoringEntriesData(
+    watch("bracket"),
+    eventId!,
+    !isLiga,
+  );
 
   const rounds = [...new Set(matchesData?.map((m) => m.round_number))].sort(
     (a, b) => b - a,
@@ -250,11 +260,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
   const handleReGenModalClose = () => {
     setIsReGenModalOpen(false);
   };
-
-  // console.log(watch("bracket"));
-  // console.log(
-  //   bracketsData?.find((item) => watch("bracket") === String(item.id)),
-  // );
 
   return (
     <>
@@ -366,6 +371,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             {["superuser", "main_admin"].includes(props.userRole) ? (
               <>
                 <Button
+                  sx={{ border: 0 }}
                   startIcon={<SettingsBackupRestore> </SettingsBackupRestore>}
                   variant="contained"
                   color="warning"
@@ -377,6 +383,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   Regenerar Escalão
                 </Button>
                 <Button
+                  sx={{ border: 0 }}
                   startIcon={<Merge> </Merge>}
                   variant="contained"
                   color="secondary"
@@ -390,6 +397,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               </>
             ) : null}
             <Button
+              sx={{ border: 0 }}
               startIcon={<FileDownload> </FileDownload>}
               variant="contained"
               color="success"
@@ -399,6 +407,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               Exportar Escalão
             </Button>
             <Button
+              sx={{ border: 0 }}
               startIcon={<ViewAgenda> </ViewAgenda>}
               variant="contained"
               color="info"
@@ -410,6 +419,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               Ver inscritos
             </Button>
             <Button
+              sx={{ border: 0 }}
               startIcon={<SportsScore> </SportsScore>}
               variant="contained"
               disabled={watch("bracket") === ""}
@@ -425,15 +435,81 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
           </Grid>
         )}
       </FormCard>
-      {isMatchesLoading || isScoringEntriesLoading ? (
+
+      {watch("bracket") === "" ? (
+        <Card
+          variant="outlined"
+          sx={{ borderColor: "divider", borderRadius: 3, m: 4 }}
+        >
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              py: 4,
+            }}
+          >
+            <Typography color="textDisabled">
+              Comece por selecionar um Escalão no campo de cima.
+            </Typography>
+          </CardContent>
+        </Card>
+      ) : isLiga ? (
+        isMatchesLoading ? (
+          <Grid mt={5} container size={12} justifyContent={"center"}>
+            <CircularProgress />
+          </Grid>
+        ) : matchesError ? (
+          <Grid
+            my={3}
+            container
+            justifyContent="center"
+            direction="column"
+            size={12}
+          >
+            <Typography variant="body2" color="textDisabled">
+              Ocorreu um erro ao encontrar as Partidas disponíveis para o
+              Escalão selecionado, tente mais tarde ou contacte um
+              administrador.
+            </Typography>
+            <Button onClick={() => matchesRefetch()}>Refrescar</Button>
+          </Grid>
+        ) : (
+          <GroupsListing
+            matches={matchesData?.map((match) => ({
+              ...match,
+              group: match.group ?? null,
+              group_number:
+                match.group_number == null ? null : Number(match.group_number),
+              contender_1: match.contender_1 ?? null,
+              contender_2: match.contender_2 ?? null,
+              contender_1_dorsal: match.contender_1_dorsal ?? null,
+              contender_2_dorsal: match.contender_2_dorsal ?? null,
+            }))}
+            canEdit={
+              !["subed_club", "free_club", undefined].includes(props.userRole)
+            }
+            onOpenMatch={handleModalOpen}
+            userRole={props.userRole}
+          />
+        )
+      ) : isMatchesLoading || isScoringEntriesLoading ? (
         <Grid mt={5} container size={12} justifyContent={"center"}>
           <CircularProgress />
         </Grid>
       ) : matchesError || scoringEntriesError ? (
-        <Grid my={3} container justifyContent="center" size={12}>
-          <ListItem sx={{ textAlign: "center" }}>
-            <ListItemText primary="Ocorreu um erro ao encontrar as Partidas disponíveis para o Escalão selecionado, tente mais tarde ou contacte um administrador."></ListItemText>
-          </ListItem>
+        <Grid
+          my={3}
+          container
+          justifyContent="center"
+          direction="column"
+          size={12}
+        >
+          <Typography variant="body2" color="textDisabled">
+            Ocorreu um erro ao encontrar as Partidas disponíveis para o Escalão
+            selecionado, tente mais tarde ou contacte um administrador.
+          </Typography>
           <Button onClick={() => matchesRefetch()}>Refrescar</Button>
         </Grid>
       ) : rounds.length === 0 && !has_finals ? null : (
@@ -466,20 +542,12 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             />
           </Tabs>
           <Card sx={{ m: 6 }}>
-            {watch("bracket") === "" ? (
-              <Grid my={3} container justifyContent="center" size={12}>
-                <Typography color="textDisabled">
-                  Comece por selecionar um Escalão no campo de cima.
-                </Typography>
-              </Grid>
-            ) : rounds.length !== 0 &&
-              tab === 0 &&
-              matchesData?.length !== 0 ? (
+            {rounds.length !== 0 && tab === 0 && matchesData?.length !== 0 ? (
               <Grid
                 ref={gridRef}
                 overflow={"auto"}
                 onScroll={handleScroll}
-                m={6}
+                m={2}
                 px={6}
                 py={3}
                 sx={{
@@ -603,26 +671,21 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   container
                   alignItems={"center"}
                   size={12}
-                  spacing={15}
+                  spacing={5}
                   width={"fit-content"}
                   wrap="nowrap"
                 >
                   {rounds.map((roundNumber, index: number) => (
                     <Fragment key={index}>
-                      <Grid size={5} container pb={5} sx={{ minWidth: 550 }}>
+                      <Grid container pb={5} sx={{ minWidth: 350 }}>
                         <Grid
                           size={12}
-                          sx={{ minWidth: 300 }}
+                          sx={{ minWidth: 200 }}
                           container
-                          spacing={8}
+                          spacing={5}
                           direction={"column"}
                         >
-                          <Grid
-                            px={2}
-                            size={12}
-                            container
-                            alignItems={"center"}
-                          >
+                          <Grid px={2} container alignItems={"center"}>
                             <SectionHeader
                               title={
                                 RoundsOptions.find(
@@ -637,13 +700,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                               (item) => item.round_number === roundNumber,
                             )
                             .map((match, index: number) => {
-                              const is2Winner = isKata
-                                ? match.winner?.id === match.contender_2?.id &&
-                                  match.kataresult?.flags_contender_2! >
-                                    match.kataresult?.flags_contender_1!
-                                : match.winner?.id === match.contender_2?.id &&
-                                  match.kumiteresult?.points_contender_2! >
-                                    match.kumiteresult?.points_contender_1!;
                               const is2WinnerTeam = isKata
                                 ? match.team_winner?.id ===
                                     match.team_contender_2?.id &&
@@ -653,26 +709,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                     match.team_contender_2?.id &&
                                   match.kumiteresult?.points_contender_2! >
                                     match.kumiteresult?.points_contender_1!;
-                              const isOngoing = match.ongoing;
-                              const matchFinished = isKata
-                                ? (!match.ongoing &&
-                                    match.kataresult?.flags_contender_2 !=
-                                      null &&
-                                    match.kataresult?.flags_contender_1 !=
-                                      null &&
-                                    match.winner !== null) ||
-                                  (!match.ongoing &&
-                                    match.kataresult === null &&
-                                    match.winner !== null)
-                                : (!match.ongoing &&
-                                    match.kumiteresult?.points_contender_2 !=
-                                      null &&
-                                    match.kumiteresult?.points_contender_1 !=
-                                      null &&
-                                    match.winner !== null) ||
-                                  (!match.ongoing &&
-                                    match.kumiteresult === null &&
-                                    match.winner !== null);
                               const teamMatchFinished = isKata
                                 ? (!match.ongoing &&
                                     match.kataresult?.flags_contender_2 !=
@@ -692,7 +728,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                   (!match.ongoing &&
                                     match.kumiteresult === null &&
                                     match.team_winner !== null);
-                              const isFirstRound = roundNumber === rounds[0];
                               return (
                                 <Grid
                                   container
@@ -710,7 +745,7 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                         sx={{
                                           width: "fit-content",
                                           border: "1px solid #1976d2",
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           px: 1,
                                           py: 0.5,
                                           borderRadius: 3,
@@ -722,271 +757,206 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                                       </Box>
                                     </Grid>
                                   )}
-                                  {isOngoing && (
-                                    <Box
-                                      sx={{
-                                        mt: 1,
-                                        width: "fit-content",
-                                        bgcolor: "#f59e0b",
-                                        color: "white",
-                                        fontSize: 12,
-                                        fontWeight: 700,
-                                        px: 1,
-                                        py: 0.5,
-                                        borderRadius: 1,
-                                        letterSpacing: 1,
-                                      }}
-                                    >
-                                      LIVE
-                                    </Box>
-                                  )}
-                                  <Grid size={12} spacing={1} container>
-                                    <Grid
-                                      size={10}
-                                      container
-                                      direction={"column"}
-                                      spacing={2}
-                                    >
-                                      {bracketsData?.find(
-                                        (item) =>
-                                          watch("bracket") === String(item.id),
-                                      )?.is_team ? (
-                                        <>
-                                          <SingleTeamContenderCard
-                                            contenderNumber={1}
-                                            isMatchFinished={teamMatchFinished}
-                                            isWinner={!is2WinnerTeam}
-                                            matchNumber={match.match_number}
-                                            ongoing={match.ongoing ?? false}
-                                            points={
-                                              isKata
-                                                ? match.kataresult === null ||
-                                                  (match.kataresult
-                                                    ?.flags_contender_1 === 0 &&
-                                                    match.kataresult
-                                                      ?.flags_contender_2 === 0)
-                                                  ? 99
-                                                  : match.kataresult
-                                                      ?.flags_contender_1
-                                                : match.kumiteresult === null ||
-                                                    (match.kumiteresult
-                                                      ?.points_contender_1 ===
-                                                      0 &&
-                                                      match.kumiteresult
-                                                        ?.points_contender_2 ===
-                                                        0)
-                                                  ? 99
-                                                  : match.kumiteresult
-                                                      ?.points_contender_1!
-                                            }
-                                            roundNumber={0}
-                                            teamData={match.team_contender_1}
-                                            dorsalData={
-                                              match.team_contender_1_dorsals
-                                            }
-                                          ></SingleTeamContenderCard>
-                                          <SingleTeamContenderCard
-                                            contenderNumber={2}
-                                            isMatchFinished={teamMatchFinished}
-                                            isWinner={is2WinnerTeam}
-                                            matchNumber={match.match_number}
-                                            ongoing={match.ongoing ?? false}
-                                            points={
-                                              isKata
-                                                ? match.kataresult === null ||
-                                                  (match.kataresult
-                                                    ?.flags_contender_1 === 0 &&
-                                                    match.kataresult
-                                                      ?.flags_contender_2 === 0)
-                                                  ? 99
-                                                  : match.kataresult
-                                                      ?.flags_contender_2
-                                                : match.kumiteresult === null ||
-                                                    (match.kumiteresult
-                                                      ?.points_contender_1 ===
-                                                      0 &&
-                                                      match.kumiteresult
-                                                        ?.points_contender_2 ===
-                                                        0)
-                                                  ? 99
-                                                  : match.kumiteresult
-                                                      ?.points_contender_2!
-                                            }
-                                            roundNumber={0}
-                                            teamData={match.team_contender_2}
-                                            dorsalData={
-                                              match.team_contender_2_dorsals
-                                            }
-                                          ></SingleTeamContenderCard>
-                                        </>
-                                      ) : (
-                                        <>
-                                          <SingleContenderCard
-                                            roundNumber={roundNumber}
-                                            matchNumber={match.match_number}
-                                            contenderNumber={1}
-                                            isWinner={!is2Winner}
-                                            points={
-                                              isKata
-                                                ? match.kataresult === null ||
-                                                  (match.kataresult
-                                                    ?.flags_contender_1 === 0 &&
-                                                    match.kataresult
-                                                      ?.flags_contender_2 === 0)
-                                                  ? 99
-                                                  : match.kataresult
-                                                      ?.flags_contender_1
-                                                : match.kumiteresult === null ||
-                                                    (match.kumiteresult
-                                                      ?.points_contender_1 ===
-                                                      0 &&
-                                                      match.kumiteresult
-                                                        ?.points_contender_2 ===
-                                                        0)
-                                                  ? 99
-                                                  : match.kumiteresult
-                                                      ?.points_contender_1!
-                                            }
-                                            contenderInfo={match.contender_1}
-                                            isMatchFinished={matchFinished}
-                                            ongoing={isOngoing!}
-                                            isFirstRound={isFirstRound}
-                                            dorsal={match.contender_1_dorsal}
-                                          ></SingleContenderCard>
-                                          <SingleContenderCard
-                                            roundNumber={roundNumber}
-                                            matchNumber={match.match_number}
-                                            contenderNumber={2}
-                                            isWinner={is2Winner}
-                                            points={
-                                              isKata
-                                                ? match.kataresult === null ||
-                                                  (match.kataresult
-                                                    ?.flags_contender_1 === 0 &&
-                                                    match.kataresult
-                                                      ?.flags_contender_2 === 0)
-                                                  ? 99
-                                                  : match.kataresult
-                                                      ?.flags_contender_2
-                                                : match.kumiteresult === null ||
-                                                    (match.kumiteresult
-                                                      ?.points_contender_1 ===
-                                                      0 &&
-                                                      match.kumiteresult
-                                                        ?.points_contender_2 ===
-                                                        0)
-                                                  ? 99
-                                                  : match.kumiteresult
-                                                      ?.points_contender_2!
-                                            }
-                                            contenderInfo={match.contender_2}
-                                            isMatchFinished={matchFinished}
-                                            ongoing={isOngoing!}
-                                            isFirstRound={isFirstRound}
-                                            dorsal={match.contender_2_dorsal}
-                                          ></SingleContenderCard>
-                                        </>
-                                      )}
-                                    </Grid>
-                                    <Grid
-                                      size={2}
-                                      px={2}
-                                      borderRadius={4}
-                                      bgcolor={"#fdecea"}
-                                      container
-                                      alignItems={"center"}
-                                      border={"0.2px solid red"}
-                                      justifyContent={"center"}
-                                      alignContent={"space-evenly"}
-                                      minWidth={50}
-                                    >
-                                      {[
-                                        "subed_club",
-                                        "free_club",
-                                        undefined,
-                                      ].includes(props.userRole) ? null : (
-                                        <>
-                                          <Tooltip
-                                            title="Fazer Alterações"
-                                            placement="top"
+                                  <Grid
+                                    size={12}
+                                    container
+                                    direction={"column"}
+                                    spacing={2}
+                                  >
+                                    {bracketsData?.find(
+                                      (item) =>
+                                        watch("bracket") === String(item.id),
+                                    )?.is_team ? (
+                                      <>
+                                        <SingleTeamContenderCard
+                                          contenderNumber={1}
+                                          isMatchFinished={teamMatchFinished}
+                                          isWinner={!is2WinnerTeam}
+                                          matchNumber={match.match_number}
+                                          ongoing={match.ongoing ?? false}
+                                          points={
+                                            isKata
+                                              ? match.kataresult === null ||
+                                                (match.kataresult
+                                                  ?.flags_contender_1 === 0 &&
+                                                  match.kataresult
+                                                    ?.flags_contender_2 === 0)
+                                                ? 99
+                                                : match.kataresult
+                                                    ?.flags_contender_1
+                                              : match.kumiteresult === null ||
+                                                  (match.kumiteresult
+                                                    ?.points_contender_1 ===
+                                                    0 &&
+                                                    match.kumiteresult
+                                                      ?.points_contender_2 ===
+                                                      0)
+                                                ? 99
+                                                : match.kumiteresult
+                                                    ?.points_contender_1!
+                                          }
+                                          roundNumber={0}
+                                          teamData={match.team_contender_1}
+                                          dorsalData={
+                                            match.team_contender_1_dorsals
+                                          }
+                                        ></SingleTeamContenderCard>
+                                        <SingleTeamContenderCard
+                                          contenderNumber={2}
+                                          isMatchFinished={teamMatchFinished}
+                                          isWinner={is2WinnerTeam}
+                                          matchNumber={match.match_number}
+                                          ongoing={match.ongoing ?? false}
+                                          points={
+                                            isKata
+                                              ? match.kataresult === null ||
+                                                (match.kataresult
+                                                  ?.flags_contender_1 === 0 &&
+                                                  match.kataresult
+                                                    ?.flags_contender_2 === 0)
+                                                ? 99
+                                                : match.kataresult
+                                                    ?.flags_contender_2
+                                              : match.kumiteresult === null ||
+                                                  (match.kumiteresult
+                                                    ?.points_contender_1 ===
+                                                    0 &&
+                                                    match.kumiteresult
+                                                      ?.points_contender_2 ===
+                                                      0)
+                                                ? 99
+                                                : match.kumiteresult
+                                                    ?.points_contender_2!
+                                          }
+                                          roundNumber={0}
+                                          teamData={match.team_contender_2}
+                                          dorsalData={
+                                            match.team_contender_2_dorsals
+                                          }
+                                        ></SingleTeamContenderCard>
+                                      </>
+                                    ) : (
+                                      <MatchCard
+                                        match={match}
+                                        isKata={isKata}
+                                        isFirstRound={roundNumber === rounds[0]}
+                                        actions={
+                                          <Grid
+                                            container
+                                            direction={"column"}
+                                            p={1}
                                           >
-                                            <span>
-                                              <IconButton
-                                                size="small"
-                                                onClick={() => {
-                                                  handleModalOpen(
-                                                    match.id,
-                                                    true,
-                                                  );
-                                                }}
-                                              >
-                                                <Settings />
-                                              </IconButton>
-                                            </span>
-                                          </Tooltip>
-                                          <Tooltip
-                                            title={
-                                              match.ongoing
-                                                ? "Remover de Direto"
-                                                : "Pôr em Direto"
-                                            }
-                                            placement="right"
-                                          >
-                                            <span>
-                                              <IconButton
-                                                size="small"
-                                                color={
-                                                  match.ongoing
-                                                    ? "error"
-                                                    : "success"
-                                                }
-                                                disabled={
-                                                  (!match.ongoing &&
-                                                    match.kataresult === null &&
-                                                    match.winner !== null) ||
-                                                  (!match.ongoing &&
-                                                    match.kumiteresult ===
-                                                      null &&
-                                                    match.winner !== null)
-                                                }
-                                                onClick={() => {
-                                                  if (match.ongoing) {
-                                                    patchOngoingMatch.mutate({
-                                                      matchId: Number(match.id),
-                                                      data: { ongoing: false },
-                                                    });
-                                                  } else {
-                                                    patchOngoingMatch.mutate({
-                                                      matchId: Number(match.id),
-                                                      data: { ongoing: true },
-                                                    });
+                                            {[
+                                              "subed_club",
+                                              "free_club",
+                                              undefined,
+                                            ].includes(
+                                              props.userRole,
+                                            ) ? null : (
+                                              <>
+                                                <Tooltip
+                                                  title="Fazer Alterações"
+                                                  placement="top"
+                                                >
+                                                  <span>
+                                                    <IconButton
+                                                      size="small"
+                                                      color="warning"
+                                                      onClick={() => {
+                                                        handleModalOpen(
+                                                          match.id,
+                                                          true,
+                                                        );
+                                                      }}
+                                                    >
+                                                      <Settings />
+                                                    </IconButton>
+                                                  </span>
+                                                </Tooltip>
+                                                <Tooltip
+                                                  title={
+                                                    match.ongoing
+                                                      ? "Remover de Direto"
+                                                      : "Pôr em Direto"
                                                   }
-                                                }}
-                                              >
-                                                <LiveTv />
-                                              </IconButton>
-                                            </span>
-                                          </Tooltip>
-                                        </>
-                                      )}
+                                                  placement="right"
+                                                >
+                                                  <span>
+                                                    <IconButton
+                                                      size="small"
+                                                      color={
+                                                        match.ongoing
+                                                          ? "error"
+                                                          : "success"
+                                                      }
+                                                      disabled={
+                                                        (!match.ongoing &&
+                                                          match.kataresult ===
+                                                            null &&
+                                                          match.winner !==
+                                                            null) ||
+                                                        (!match.ongoing &&
+                                                          match.kumiteresult ===
+                                                            null &&
+                                                          match.winner !== null)
+                                                      }
+                                                      onClick={() => {
+                                                        if (match.ongoing) {
+                                                          patchOngoingMatch.mutate(
+                                                            {
+                                                              matchId: Number(
+                                                                match.id,
+                                                              ),
+                                                              data: {
+                                                                ongoing: false,
+                                                              },
+                                                            },
+                                                          );
+                                                        } else {
+                                                          patchOngoingMatch.mutate(
+                                                            {
+                                                              matchId: Number(
+                                                                match.id,
+                                                              ),
+                                                              data: {
+                                                                ongoing: true,
+                                                              },
+                                                            },
+                                                          );
+                                                        }
+                                                      }}
+                                                    >
+                                                      <LiveTv />
+                                                    </IconButton>
+                                                  </span>
+                                                </Tooltip>
+                                              </>
+                                            )}
 
-                                      <Tooltip title="Consultar">
-                                        <span>
-                                          <IconButton
-                                            size="small"
-                                            // disabled={
-                                            //   match.kataresult === null ||
-                                            //   match.winner === null
-                                            // }
-                                            onClick={() => {
-                                              handleModalOpen(match.id, false);
-                                            }}
-                                          >
-                                            <Visibility />
-                                          </IconButton>
-                                        </span>
-                                      </Tooltip>
-                                    </Grid>
+                                            <Tooltip title="Consultar">
+                                              <span>
+                                                <IconButton
+                                                  size="small"
+                                                  color="info"
+                                                  // disabled={
+                                                  //   match.kataresult === null ||
+                                                  //   match.winner === null
+                                                  // }
+                                                  onClick={() => {
+                                                    handleModalOpen(
+                                                      match.id,
+                                                      false,
+                                                    );
+                                                  }}
+                                                >
+                                                  <Visibility />
+                                                </IconButton>
+                                              </span>
+                                            </Tooltip>
+                                          </Grid>
+                                        }
+                                      />
+                                    )}
                                   </Grid>
                                 </Grid>
                               );
@@ -1000,11 +970,21 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                       <CircularProgress />
                     </Grid>
                   ) : scoringEntriesError ? (
-                    <Grid my={3} container justifyContent="center" size={12}>
-                      <ListItem sx={{ textAlign: "center" }}>
-                        <ListItemText primary="Ocorreu um erro ao encontrar as Partidas disponíveis para o Escalão selecionado, tente mais tarde ou contacte um administrador."></ListItemText>
-                      </ListItem>
-                      <Button onClick={scoringEntriesRefetch}>Refrescar</Button>
+                    <Grid
+                      my={3}
+                      container
+                      justifyContent="center"
+                      direction="column"
+                      size={12}
+                    >
+                      <Typography variant="body2" color="textDisabled">
+                        Ocorreu um erro ao encontrar as Partidas disponíveis
+                        para o Escalão selecionado, tente mais tarde ou contacte
+                        um administrador.
+                      </Typography>
+                      <Button onClick={() => matchesRefetch()}>
+                        Refrescar
+                      </Button>
                     </Grid>
                   ) : scoringEntriesData !== undefined &&
                     scoringEntriesData.length > 0 ? (

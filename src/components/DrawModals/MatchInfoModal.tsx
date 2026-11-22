@@ -328,6 +328,12 @@ export default function MatchInfoModal(
       fullWidth
       maxWidth={props.team ? "lg" : "md"}
       open={props.isModalOpen}
+      sx={{
+        "& .MuiDialog-paper": {
+          bgcolor: "background.paper",
+          color: "text.primary",
+        },
+      }}
       onClose={() => {
         props.handleModalClose();
         if (props.matchData.winner === null) {
@@ -338,7 +344,13 @@ export default function MatchInfoModal(
         transition: Transition,
       }}
     >
-      <DialogTitle sx={{ borderTop: "red", width: "100%" }}>
+      <DialogTitle
+        sx={{
+          borderTop: "4px solid",
+          borderColor: "error.main",
+          width: "100%",
+        }}
+      >
         <Grid
           container
           justifyContent={"space-between"}
@@ -360,7 +372,10 @@ export default function MatchInfoModal(
           </Grid>
           <IconButton
             onClick={props.handleModalClose}
-            sx={{ bgcolor: "#f0f0f0", "&:hover": { bgcolor: "#e0e0e0" } }}
+            sx={{
+              bgcolor: "action.hover",
+              "&:hover": { bgcolor: "action.selected" },
+            }}
           >
             <Close />
           </IconButton>
@@ -428,17 +443,22 @@ export default function MatchInfoModal(
               p={2.5}
               mt={3}
               borderRadius={3}
-              bgcolor={"#fffff5"}
-              border={"1px solid #ffcdd2"}
+              bgcolor="action.hover"
+              border="1px solid"
+              borderColor="divider"
               gap={3}
             >
-              <Typography variant="h6" sx={{ color: "#555", lineHeight: 1.7 }}>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ lineHeight: 1.7 }}
+              >
                 Vencedor:
               </Typography>
               <Typography
                 variant="h5"
                 fontWeight={"bold"}
-                sx={{ color: "#555" }}
+                color="text.primary"
               >
                 {props.matchData?.winner.full_name}
               </Typography>
@@ -452,11 +472,16 @@ export default function MatchInfoModal(
               p={2.5}
               mt={3}
               borderRadius={3}
-              bgcolor={"#fffff5"}
-              border={"1px solid #ffcdd2"}
+              bgcolor="action.hover"
+              border="1px solid"
+              borderColor="divider"
               gap={3}
             >
-              <Typography variant="h6" sx={{ color: "#555", lineHeight: 1.7 }}>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{ lineHeight: 1.7 }}
+              >
                 Vencedor:
               </Typography>
               <Grid container spacing={2}>

@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TokenObtainPair = {
+export type JWTLogin = {
     username: string;
     password: string;
 };

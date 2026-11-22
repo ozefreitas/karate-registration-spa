@@ -90,6 +90,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
           >
             <Button
               size="medium"
+              sx={{ border: 0 }}
               startIcon={<FileDownload></FileDownload>}
               variant="contained"
               disabled
@@ -112,6 +113,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
             <Button
               color="primary"
               variant="contained"
+              sx={{ border: 0 }}
               disabled={bracketsData?.length === 0}
               startIcon={<DynamicForm></DynamicForm>}
               onClick={() => navigate("dynamic_view/")}
@@ -123,6 +125,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
                 <Button
                   color="secondary"
                   variant="contained"
+                  sx={{ border: 0 }}
                   startIcon={<Casino></Casino>}
                   onClick={() => navigate("generate/")}
                 >
@@ -138,6 +141,7 @@ export default function RulesPage(props: Readonly<{ userRole: string }>) {
                 <AddButton
                   label="Gerar novo documento"
                   size="medium"
+                  borderless
                   disabled={bracketsData?.length === 0}
                   action={handleDownloadPdf}
                 ></AddButton>

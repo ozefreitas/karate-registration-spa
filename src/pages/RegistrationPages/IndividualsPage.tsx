@@ -286,7 +286,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                         height={60}
                         p={2}
                         gap={2}
-                        bgcolor={"lightgray"}
+                        bgcolor={"action.hover"}
                         borderRadius={12}
                         display={"flex"}
                         alignItems={"center"}
@@ -448,22 +448,23 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
               );
 
               return (
-                <span key={index}>
+                <Grid m={2} key={index}>
                   <Grid
                     size={12}
-                    pr={2}
                     mt={3}
                     container
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <Typography p={3} variant="h5" fontWeight="bold">
+                    <Typography my={2} variant="h5" fontWeight="bold">
                       {discipline.name}
                     </Typography>
 
                     <Grid container spacing={2}>
                       {singleEventData?.has_categories && (
                         <Button
+                          sx={{ border: 0 }}
+                          size="small"
                           startIcon={<Visibility />}
                           variant="contained"
                           onClick={() =>
@@ -513,7 +514,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                       userRole={props.userRole}
                     />
                   )}
-                </span>
+                </Grid>
               );
             })}
           </>
@@ -523,7 +524,7 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         <Grid container spacing={2} justifyContent="flex-end" m={4}>
           <Button
             variant="contained"
-            size="large"
+            sx={{ border: 0 }}
             color="success"
             onClick={() => setIsModalOpen(true)}
             startIcon={<Add />}

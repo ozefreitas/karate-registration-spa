@@ -1,4 +1,5 @@
-import { Typography, Paper, Grid, Chip } from "@mui/material";
+import { Typography, Paper, Grid, Chip, Box } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import {
   Person,
   SportsMartialArts,
@@ -8,7 +9,6 @@ import {
   PersonOff,
 } from "@mui/icons-material";
 import { KataOptions } from "../../config";
-import { ColoredIconBox } from "../icon-utils/boxes";
 
 interface MatchDetailCardProps {
   isKata: boolean;
@@ -41,28 +41,59 @@ function InfoRow({
         gap: 2,
         p: 2,
         borderRadius: 3,
-        border: "1px solid #eeeeee",
-        bgcolor: "#fff",
+        border: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
       }}
     >
       {reverse ? (
         <>
           {value}
-          <ColoredIconBox
-            bgColor={color === "Aka" ? "red" : "transparent"}
-            color={color === "Aka" ? "#fff" : "black"}
-            border={color === "Aka" ? "1px solid red" : "1px solid black"}
-            icon={icon}
-          />
+          <Box
+            sx={(theme) => ({
+              width: 40,
+              height: 40,
+              borderRadius: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              bgcolor:
+                color === "Aka"
+                  ? "error.main"
+                  : alpha(theme.palette.text.primary, 0.06),
+              color:
+                color === "Aka" ? "error.contrastText" : "text.primary",
+              border: "1px solid",
+              borderColor: color === "Aka" ? "error.main" : "divider",
+            })}
+          >
+            {icon}
+          </Box>
         </>
       ) : (
         <>
-          <ColoredIconBox
-            bgColor={color === "Aka" ? "red" : "transparent"}
-            color={color === "Aka" ? "#fff" : "black"}
-            border={color === "Aka" ? "1px solid red" : "1px solid black"}
-            icon={icon}
-          />
+          <Box
+            sx={(theme) => ({
+              width: 40,
+              height: 40,
+              borderRadius: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              bgcolor:
+                color === "Aka"
+                  ? "error.main"
+                  : alpha(theme.palette.text.primary, 0.06),
+              color:
+                color === "Aka" ? "error.contrastText" : "text.primary",
+              border: "1px solid",
+              borderColor: color === "Aka" ? "error.main" : "divider",
+            })}
+          >
+            {icon}
+          </Box>
           {value}
         </>
       )}

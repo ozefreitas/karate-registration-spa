@@ -1028,6 +1028,7 @@ export default function NewMemberPage() {
         >
           <Button
             variant="contained"
+            sx={{ border: 0 }}
             color={"success"}
             type={"submit"}
             loading={loading}
@@ -1039,6 +1040,7 @@ export default function NewMemberPage() {
           <Button
             id="add_another_button"
             variant="contained"
+            sx={{ border: 0 }}
             color={"success"}
             type={"submit"}
             loading={loading}

@@ -1,4 +1,5 @@
 import { Grid, Tooltip, Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { useRef, useState, useEffect } from "react";
 
 function useIsOverflowing() {
@@ -44,15 +45,25 @@ function StatRow({
           width={30}
           height={30}
           borderRadius={2}
-          bgcolor={"#fdecea"}
           container
           alignItems={"center"}
           justifyContent={"center"}
           flexShrink={0}
+          sx={(theme) => ({
+            color: "error.main",
+            bgcolor: alpha(
+              theme.palette.error.main,
+              theme.palette.mode === "dark" ? 0.18 : 0.08,
+            ),
+            "& svg": { color: "inherit" },
+          })}
         >
           {icon}
         </Grid>
-        <Typography variant="body1" sx={{ color: "#555", fontWeight: 500 }}>
+        <Typography
+          variant="body1"
+          sx={{ color: "text.secondary", fontWeight: 500 }}
+        >
           {label}
         </Typography>
       </Grid>

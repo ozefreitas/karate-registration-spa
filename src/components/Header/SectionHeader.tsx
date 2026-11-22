@@ -37,7 +37,6 @@ export default function SectionHeader(
           {props.icon ?? <PeopleAlt sx={{ fontSize: 18 }} />}
         </Box>
         <Typography
-          variant="h6"
           fontWeight={700}
           sx={{ color: "#1a1a1a", letterSpacing: 0.5 }}
         >

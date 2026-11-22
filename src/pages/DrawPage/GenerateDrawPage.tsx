@@ -579,9 +579,8 @@ export default function GenerateDrawPage() {
           justifyContent={"flex-end"}
         >
           <Button
-            sx={{ m: 1 }}
             variant="contained"
-            size="large"
+            sx={{ border: 0 }}
             color="success"
             disabled={watch("discipline") === "" || watch("format") === ""}
             onClick={() => handleOk()}
@@ -592,7 +591,7 @@ export default function GenerateDrawPage() {
       </FormCard>
       <FormCard title="Resumo">
         <Grid
-          borderRadius={5}
+          borderRadius={3}
           bgcolor={"#bad7ff63"}
           spacing={5}
           p={2}
@@ -692,9 +691,8 @@ export default function GenerateDrawPage() {
         </Grid>
         <Grid container size={12} justifyContent={"center"}>
           <Button
-            sx={{ m: 1 }}
+            sx={{ border: 0 }}
             variant="contained"
-            size="large"
             disabled={selections.length === 0}
             color="secondary"
             loading={loading}
