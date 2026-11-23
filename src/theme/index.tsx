@@ -144,7 +144,6 @@ const createAppTheme = (mode: "light" | "dark") =>
           root: {
             fontSize: "0.6rem",
             borderRadius: 12,
-            border: "1px solid #eeeeee",
             boxShadow: "6px 6px 10px rgba(0,0,0,0.2)", // add your desired box shadow
             cursor: "pointer",
             transition: "0.3s",

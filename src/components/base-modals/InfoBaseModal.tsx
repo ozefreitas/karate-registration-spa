@@ -117,7 +117,6 @@ export default function InfoBaseModal(
               props.handleModalClose();
             }}
             sx={{
-              border: 0,
               color: "text.secondary",
               "&:hover": {
                 bgcolor: "action.hover",
@@ -134,7 +133,6 @@ export default function InfoBaseModal(
             disabled={props.disableConfirm}
             onClick={() => props.onSubmit()}
             sx={{
-              border: 0,
               "&:hover": {
                 boxShadow: "none",
                 transform: "none",

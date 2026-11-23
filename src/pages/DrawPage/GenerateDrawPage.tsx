@@ -580,7 +580,6 @@ export default function GenerateDrawPage() {
         >
           <Button
             variant="contained"
-            sx={{ border: 0 }}
             color="success"
             disabled={watch("discipline") === "" || watch("format") === ""}
             onClick={() => handleOk()}
@@ -691,7 +690,6 @@ export default function GenerateDrawPage() {
         </Grid>
         <Grid container size={12} justifyContent={"center"}>
           <Button
-            sx={{ border: 0 }}
             variant="contained"
             disabled={selections.length === 0}
             color="secondary"

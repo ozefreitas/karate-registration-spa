@@ -175,7 +175,6 @@ export default function MemberRequestsCard({
         <Button
           size="small"
           variant="contained"
-          sx={{ border: 0 }}
           startIcon={<PersonSearch />}
           onClick={onResolve}
           disableElevation

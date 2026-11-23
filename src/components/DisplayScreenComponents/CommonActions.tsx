@@ -76,7 +76,6 @@ export default function CommonActions(
           Partida Anterior
         </Button>
         <Button
-          sx={{ m: 1 }}
           variant="contained"
           size="large"
           color="error"

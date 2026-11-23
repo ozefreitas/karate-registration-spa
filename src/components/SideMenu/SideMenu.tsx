@@ -238,7 +238,7 @@ export default function SideMenu(props: Readonly<{ me: any }>) {
                               animation: "pulseRed 1.5s infinite",
                             }),
                           ...(options.name === "settings" &&
-                            memberValidationRequestData !== undefined && {
+                            memberValidationRequestData?.count !== 0 && {
                               animation: "pulseRed 1.5s infinite",
                             }),
                           "@keyframes pulseRed": {

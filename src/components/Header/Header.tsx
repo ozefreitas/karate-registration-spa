@@ -240,8 +240,6 @@ export default function Header(props: Readonly<{ me: any }>) {
                       disableRipple
                       disableFocusRipple
                       disableElevation
-                      sx={{ border: 0 }}
-                      // size="large"
                     >
                       {props.me?.role === "main_admin" ||
                       props.me?.role === "single_admin"
@@ -355,7 +353,6 @@ export default function Header(props: Readonly<{ me: any }>) {
                       size="large"
                       onClick={() => navigate("/login/")}
                       sx={{
-                        border: 0,
                         borderRadius: 2,
                         boxShadow: "none",
                         fontWeight: 700,

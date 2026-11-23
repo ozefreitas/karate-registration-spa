@@ -341,7 +341,6 @@ export default function MemberPaymemtManagerPage(
         </Grid>
         <Grid container size={12} justifyContent={"flex-end"} pb={1}>
           <Button
-            sx={{ border: 0 }}
             variant="contained"
             endIcon={<Save></Save>}
             disabled={watch("billing_day") === ""}
@@ -388,7 +387,6 @@ export default function MemberPaymemtManagerPage(
           )}
           <Grid pb={1} mt={3} container justifyContent={"flex-end"}>
             <Button
-              sx={{ border: 0 }}
               variant="contained"
               color={"success"}
               type={"submit"}

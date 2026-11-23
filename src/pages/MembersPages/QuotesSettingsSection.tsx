@@ -266,7 +266,6 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
                         {preDefined}€
                       </Typography>
                       <Button
-                        sx={{ border: 0 }}
                         variant="contained"
                         size="small"
                         color="warning"
@@ -438,7 +437,6 @@ const QuotesSettingsSection = (props: { quotesConfig: any }) => {
           >
             <Grid>
               <Button
-                sx={{ border: 0 }}
                 variant="contained"
                 color="success"
                 onClick={handleAddModalOpen}

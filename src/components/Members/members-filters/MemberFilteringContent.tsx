@@ -19,6 +19,7 @@ const MemberFilteringContent = (
   props: Readonly<{
     control: any;
     reset: any;
+    resetField: any;
     changedCount: number;
     setPage: any;
     setSelectedUsers: any;
@@ -43,22 +44,19 @@ const MemberFilteringContent = (
     setAvailableUsers(newUsers);
   }, [availableUsersData]);
 
-  useEffect(() => {
-    if (!availableUsersData?.data) return;
-
-    const defaultValues: any = {};
-    availableUsersData?.data.forEach((user: any) => {
-      defaultValues[`${user.username}`] = false;
-    });
-
-    props.reset(defaultValues);
-  }, [availableUsersData]);
-
   const watchedValues = useWatch({
     control: props.control,
   });
 
-  console.log(watchedValues);
+  useEffect(() => {
+    availableUsers.forEach((username) => {
+      if (
+        !Object.prototype.hasOwnProperty.call(watchedValues ?? {}, username)
+      ) {
+        props.resetField(username, { defaultValue: false });
+      }
+    });
+  }, [availableUsers, watchedValues, props.resetField]);
 
   useEffect(() => {
     if (!availableUsersData?.data) return;
@@ -150,28 +148,26 @@ const MemberFilteringContent = (
                 Clube
               </Typography>
               {!isAvailableUserLoading &&
-                Object.keys(props.control._defaultValues)
-                  .filter((fieldName) => availableUsers?.includes(fieldName))
-                  .map((fieldName) => (
-                    <Controller
-                      key={fieldName}
-                      name={fieldName}
-                      control={props.control}
-                      render={({ field }) => (
-                        <Chip
-                          variant={field.value ? "filled" : "outlined"}
-                          color={field.value ? "success" : "default"}
-                          clickable
-                          size="small"
-                          onClick={() => {
-                            props.setPage(1);
-                            field.onChange(!field.value);
-                          }}
-                          label={fieldName}
-                        ></Chip>
-                      )}
-                    />
-                  ))}
+                availableUsers.map((fieldName) => (
+                  <Controller
+                    key={fieldName}
+                    name={fieldName}
+                    control={props.control}
+                    render={({ field }) => (
+                      <Chip
+                        variant={field.value ? "filled" : "outlined"}
+                        color={field.value ? "success" : "default"}
+                        clickable
+                        size="small"
+                        onClick={() => {
+                          props.setPage(1);
+                          field.onChange(!field.value);
+                        }}
+                        label={fieldName}
+                      ></Chip>
+                    )}
+                  />
+                ))}
             </Grid>
           ) : (
             <>

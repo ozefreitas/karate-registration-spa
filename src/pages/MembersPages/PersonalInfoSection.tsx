@@ -390,7 +390,6 @@ export default function PersonalInfoSection(
             <Button
               id="update_button"
               variant="contained"
-              sx={{ border: 0 }}
               color="success"
               size="small"
               onClick={() => {
@@ -417,7 +416,6 @@ export default function PersonalInfoSection(
           </>
         ) : (
           <Button
-            sx={{ border: 0 }}
             variant="contained"
             size="small"
             color="warning"
@@ -442,7 +440,6 @@ export default function PersonalInfoSection(
         )}
         {["main_admin", "superuser", "subed_club"].includes(userRole!) ? (
           <Button
-            sx={{ border: 0 }}
             variant="contained"
             color="error"
             size="small"

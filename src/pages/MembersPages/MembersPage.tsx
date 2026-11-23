@@ -34,6 +34,7 @@ import {
   Search,
   Refresh,
   Clear,
+  PersonOff,
 } from "@mui/icons-material";
 import RequestModal from "../../components/Modals/RequestModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -146,6 +147,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
     watch: filtersWatch,
     setValue: filtersSetValue,
     reset: filtersReset,
+    resetField: filtersResetField,
     formState: { dirtyFields: filtersDirtyFields },
   } = useForm({
     defaultValues: {
@@ -462,6 +464,7 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
                     control={filtersControl}
                     setValue={filtersSetValue}
                     reset={filtersReset}
+                    resetField={filtersResetField}
                     changedCount={filtersChangedCount}
                     setSelectedUsers={setSelectedUsers}
                     setPage={setPage}
@@ -589,11 +592,26 @@ export default function MembersPage(props: Readonly<{ userRole: string }>) {
         ) : (
           <Grid container spacing={3} m={2}>
             {memberRows?.length === 0 ? (
-              <Grid my={2} container justifyContent="center" size={12}>
-                <Typography color="textDisabled">
-                  Não foram encontrados registos.
-                </Typography>
-              </Grid>
+              <Card
+                variant="outlined"
+                sx={{ borderColor: "divider", width: "100%", mt: 2 }}
+              >
+                <CardContent
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    gap: 1,
+                    py: 3,
+                  }}
+                >
+                  <PersonOff color="disabled" />
+                  <Typography variant="body2" color="textDisabled">
+                    Não foram encontrados Membros.
+                  </Typography>
+                </CardContent>
+              </Card>
             ) : (
               memberRows?.map((person: any) => (
                 <Grid

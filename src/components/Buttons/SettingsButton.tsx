@@ -14,7 +14,6 @@ export default function SettingsButton(
   const navigate = useNavigate();
   return (
     <Button
-      sx={{ border: 0 }}
       variant="contained"
       size={props.size}
       disabled={props.disabled}

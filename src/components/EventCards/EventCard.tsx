@@ -326,7 +326,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       subheader={
                         props.userRole === "main_admin" ? (
                           <Button
-                            sx={{ border: 0, mt: 1 }}
+                            sx={{ mt: 1 }}
                             variant="contained"
                             size="small"
                             color={isDescriptionEdit ? "inherit" : "warning"}
@@ -589,7 +589,6 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       meData?.id === singleEventData?.created_by ? (
                         <>
                           <Button
-                            sx={{ border: 0 }}
                             variant="contained"
                             size="medium"
                             color="error"
@@ -680,7 +679,6 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       >
                         <span>
                           <Button
-                            sx={{ border: 0 }}
                             disabled={
                               singleEventData?.event_date >= getFullDate()
                             }
@@ -698,7 +696,6 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                       {["main_admin", "superuser"].includes(props.userRole) &&
                       singleEventData?.has_registrations ? (
                         <Button
-                          sx={{ border: 0 }}
                           variant="contained"
                           color="success"
                           onClick={handleDownloadRegistrationsFile}
@@ -717,7 +714,6 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                           disabled={singleEventData?.event_date < getFullDate()}
                           variant="contained"
                           startIcon={<DeveloperBoard />}
-                          sx={{ border: 0 }}
                         >
                           Ecrã de resultados e Monitorização
                         </Button>

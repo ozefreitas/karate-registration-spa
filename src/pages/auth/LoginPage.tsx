@@ -212,7 +212,6 @@ export default function LoginPage() {
               size="large"
               sx={{
                 minHeight: 46,
-                border: 0,
                 borderRadius: 2,
                 boxShadow: "none",
                 fontSize: "0.85rem",

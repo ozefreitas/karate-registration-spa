@@ -371,7 +371,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
             {["superuser", "main_admin"].includes(props.userRole) ? (
               <>
                 <Button
-                  sx={{ border: 0 }}
                   startIcon={<SettingsBackupRestore> </SettingsBackupRestore>}
                   variant="contained"
                   color="warning"
@@ -383,7 +382,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
                   Regenerar Escalão
                 </Button>
                 <Button
-                  sx={{ border: 0 }}
                   startIcon={<Merge> </Merge>}
                   variant="contained"
                   color="secondary"
@@ -397,7 +395,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               </>
             ) : null}
             <Button
-              sx={{ border: 0 }}
               startIcon={<FileDownload> </FileDownload>}
               variant="contained"
               color="success"
@@ -407,7 +404,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               Exportar Escalão
             </Button>
             <Button
-              sx={{ border: 0 }}
               startIcon={<ViewAgenda> </ViewAgenda>}
               variant="contained"
               color="info"
@@ -419,7 +415,6 @@ export default function DynamicViewPage(props: Readonly<{ userRole: string }>) {
               Ver inscritos
             </Button>
             <Button
-              sx={{ border: 0 }}
               startIcon={<SportsScore> </SportsScore>}
               variant="contained"
               disabled={watch("bracket") === ""}

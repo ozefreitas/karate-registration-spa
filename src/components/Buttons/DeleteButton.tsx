@@ -12,7 +12,6 @@ export default function DeleteButton(
 ) {
   return (
     <Button
-      sx={{ border: 0 }}
       disabled={props.disabled}
       variant="contained"
       size={props.size}

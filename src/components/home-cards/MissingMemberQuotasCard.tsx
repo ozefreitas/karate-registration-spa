@@ -152,7 +152,6 @@ export default function MissingMemberQuotasCard({
         <Button
           size="small"
           variant="contained"
-          sx={{ border: 0 }}
           startIcon={<WarningAmber />}
           onClick={onResolve}
           disableElevation

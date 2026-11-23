@@ -7,6 +7,7 @@ export default function MemberFiltering(
     isLoading: boolean;
     control: any;
     reset: any;
+    resetField: any;
     changedCount: number;
     setValue: any;
     setPage: any;
@@ -23,6 +24,7 @@ export default function MemberFiltering(
       <MemberFilteringContent
         control={props.control}
         reset={props.reset}
+        resetField={props.resetField}
         changedCount={props.changedCount}
         setValue={props.setValue}
         setPage={props.setPage}

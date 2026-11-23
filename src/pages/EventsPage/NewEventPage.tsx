@@ -1324,7 +1324,6 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
               </List>
             )}
             <Button
-              sx={{ border: 0 }}
               variant="contained"
               size="large"
               color="success"
@@ -1379,7 +1378,7 @@ export default function NewEventPage(props: Readonly<{ userRole: string }>) {
             id="add_event_button"
             variant="contained"
             color={"success"}
-            sx={{ border: 0 }}
+
             type={"submit"}
             loading={loading}
             loadingPosition="start"

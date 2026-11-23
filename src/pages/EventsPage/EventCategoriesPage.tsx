@@ -138,7 +138,6 @@ export default function EventCategoriesPage(
               !discipline.is_coach ? (
                 <Grid container size={12} mt={2}>
                   <Button
-                    sx={{ border: 0 }}
                     variant="contained"
                     size="small"
                     color="success"

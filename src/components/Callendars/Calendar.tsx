@@ -185,8 +185,6 @@ export default function Calendar(
   return (
     <Grid
       size={12}
-      p={2}
-      pb={0}
       sx={{
         fontFamily: "inherit",
         bgcolor: "background.default",
@@ -373,8 +371,7 @@ export default function Calendar(
                           minHeight: 125,
                           transition: "0.15s ease",
                           "&:hover": {
-                            bgcolor:
-                              day === null ? undefined : "action.hover",
+                            bgcolor: day === null ? undefined : "action.hover",
                             transform: day === null ? null : "scale(1.2)",
                             borderLeft: day === null ? null : "transparent",
                             cursor: day === null ? null : "pointer",

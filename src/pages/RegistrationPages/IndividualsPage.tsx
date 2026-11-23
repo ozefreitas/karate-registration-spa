@@ -463,7 +463,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
                     <Grid container spacing={2}>
                       {singleEventData?.has_categories && (
                         <Button
-                          sx={{ border: 0 }}
                           size="small"
                           startIcon={<Visibility />}
                           variant="contained"
@@ -524,7 +523,6 @@ export default function IndividualsPage(props: Readonly<{ userRole: string }>) {
         <Grid container spacing={2} justifyContent="flex-end" m={4}>
           <Button
             variant="contained"
-            sx={{ border: 0 }}
             color="success"
             onClick={() => setIsModalOpen(true)}
             startIcon={<Add />}

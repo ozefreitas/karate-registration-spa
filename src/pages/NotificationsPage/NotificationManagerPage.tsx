@@ -16,12 +16,15 @@ import {
   FormHelperText,
   Tooltip,
   ListItemText,
+  Card,
+  CardContent,
+  Typography,
 } from "@mui/material";
 import { notificationsHooks, adminHooks, eventsHooks } from "../../hooks";
 import FormCard from "../../dashboard/FormCard";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Add } from "@mui/icons-material";
+import { Add, EmojiEvents, NotificationsOff } from "@mui/icons-material";
 import NotificationActionModal from "./NotificationActionModal";
 import {
   getNotificationTypeIcon,
@@ -34,7 +37,7 @@ import { Notifications } from "../../openapi";
 export default function NotificationManagerPage(
   props: Readonly<{ userRole: string }>,
 ) {
-  const [selectedUserId, setSelectedUserId] = useState<string>("0");
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
   const { data: clubUserData } = adminHooks.useFetchClubUsersData(
     undefined,
     props.userRole,
@@ -61,11 +64,12 @@ export default function NotificationManagerPage(
     handleSubmit,
     watch,
     reset,
+    setError,
     formState: { errors },
   } = useForm({
     defaultValues: {
       notification: "",
-      club_user: "0",
+      club_user: "",
       noti_all: false,
       type: "none",
       payment_object: "none",
@@ -75,6 +79,27 @@ export default function NotificationManagerPage(
   });
 
   const onSubmit = async (data: any) => {
+    const shouldRefetch = [
+      "registrations_closing",
+      "registrations_close",
+      "open_registrations",
+      "draw_available",
+      "draw_patched",
+      "classifications_available",
+      "rate_event",
+    ].includes(formType);
+    if (data.notification === "") {
+      setError("notification", { message: "Este campo é obrigatório" });
+      return;
+    }
+    if (!data.noti_all && data.club_user === "") {
+      setError("club_user", { message: "Este campo é obrigatório" });
+      return;
+    }
+    if (shouldRefetch && data.target_event === "") {
+      setError("target_event", { message: "Este campo é obrigatório" });
+      return;
+    }
     if (data.noti_all) {
       createAllClubsNotification.mutateAsync(data, {
         onSuccess: () => {
@@ -171,29 +196,61 @@ export default function NotificationManagerPage(
               ))}
             </TextField>
             <List sx={{ mt: 1 }}>
-              {selectedUserId === "0" ? (
-                <ListItem sx={{ pb: 0, mb: 0, color: "grey" }}>
-                  Comece por selecionar um Clube.
-                </ListItem>
+              {selectedUserId === "" ? (
+                <Card
+                  variant="outlined"
+                  sx={{ borderColor: "divider", borderRadius: 3 }}
+                >
+                  <CardContent
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      gap: 1,
+                      py: 3,
+                    }}
+                  >
+                    <Typography variant="body2" color="textDisabled">
+                      Selecione um Clube.
+                    </Typography>
+                  </CardContent>
+                </Card>
               ) : isNotificationDataLoading ? (
                 <Grid container justifyContent="center" mt={1} size={12}>
                   <CircularProgress />
                 </Grid>
               ) : notificationData?.results.length === 0 ? (
-                <ListItem sx={{ pb: 0, mb: 0, color: "grey" }}>
-                  Este Clube não tem notificações em seu nome.
-                </ListItem>
+                <Card
+                  variant="outlined"
+                  sx={{ borderColor: "divider", borderRadius: 3 }}
+                >
+                  <CardContent
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      gap: 1,
+                      py: 3,
+                    }}
+                  >
+                    <NotificationsOff color="disabled"></NotificationsOff>
+                    <Typography variant="body2" color="textDisabled">
+                      Este Clube não tem notificações em seu nome.
+                    </Typography>
+                  </CardContent>
+                </Card>
               ) : (
                 <Grid
                   borderRadius={5}
                   bgcolor={"#bad7ff63"}
-                  py={2}
-                  px={1}
+                  p={1}
                   width={"100%"}
                 >
                   {notificationData?.results.map(
                     (notification: Notifications, index: any) => (
-                      <ListItem sx={{ m: 0 }} key={index}>
+                      <ListItem sx={{ m: 0, p: 0.5 }} key={index}>
                         <Tooltip title="Eliminar">
                           <span style={{ width: "100%" }}>
                             <ListItemButton
@@ -208,14 +265,6 @@ export default function NotificationManagerPage(
                               <ListItemText
                                 primary={notification.notification}
                               ></ListItemText>
-                              {/* <Typography
-                              sx={{
-                                m: 0,
-                                pb: 0,
-                              }}
-                            >
-
-                            </Typography> */}
                             </ListItemButton>
                           </span>
                         </Tooltip>
@@ -228,141 +277,114 @@ export default function NotificationManagerPage(
           </Grid>
         </FormCard>
         <FormCard title="Criar Notificação">
-          <Grid sx={{ p: 2 }} size={6}>
-            <Controller
-              name="club_user"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Clube para Notificar"
-                  type="text"
-                  fullWidth
-                  disabled={watch("noti_all")}
-                  select
-                  required
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.club_user}
-                  helperText={errors.club_user?.message}
-                >
-                  {clubUserData ? (
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
-                    </MenuItem>
-                  ) : (
-                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
-                  )}
-                  {clubUserData?.data.map((item: any, index: string) => (
-                    <MenuItem key={index} value={item.id}>
-                      {item.username}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 3 }} container justifyContent={"flex-end"} size={6}>
-            <Controller
-              name="noti_all"
-              control={control}
-              render={({ field }) => (
-                <FormControl component="fieldset" variant="standard">
-                  <Stack spacing={1}>
-                    <FormControlLabel
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          sx={{ ml: 2 }}
-                          {...field}
-                          checked={field.value}
-                          onChange={(e) => {
-                            field.onChange(e.target.checked);
-                          }}
-                          name="noti_all"
-                        />
-                      }
-                      label="Notificar todos os Clubes associados"
-                      sx={{ justifyContent: "left", marginLeft: 0 }}
-                    />
-                    {!!errors.noti_all && (
-                      <FormHelperText error sx={{ marginLeft: "14px" }}>
-                        {errors.noti_all?.message}
-                      </FormHelperText>
-                    )}
-                  </Stack>
-                </FormControl>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 2 }} size={12}>
-            <Controller
-              name="notification"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Conteúdo"
-                  type="text"
-                  fullWidth
-                  multiline
-                  required
-                  maxRows={8}
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.notification}
-                  helperText={errors.notification?.message}
-                ></TextField>
-              )}
-            />
-          </Grid>
-          <Grid sx={{ p: 2 }} size={6}>
-            <Controller
-              name="type"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  color="warning"
-                  variant={"outlined"}
-                  label="Tipo de Notificação"
-                  type="text"
-                  fullWidth
-                  select
-                  required
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                  }}
-                  error={!!errors.type}
-                  helperText={errors.type?.message}
-                >
-                  {NotificationTypeOptions.filter(
-                    (item) => !["reset", "member_request"].includes(item.value),
-                  ).map((item: any, index: any) => (
-                    <MenuItem key={index} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
-          </Grid>
-          {["payment_available", "payment_overdue"].includes(watch("type")) ? (
-            <Grid sx={{ p: 2 }} size={6}>
+          <Grid m={2} container size={12} spacing={3} alignItems={"center"}>
+            <Grid size={6}>
               <Controller
-                name="payment_object"
+                name="club_user"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     color="warning"
                     variant={"outlined"}
-                    label="Tipo de Pagamento"
+                    label="Clube para Notificar"
+                    type="text"
+                    fullWidth
+                    disabled={watch("noti_all")}
+                    select
+                    required
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.club_user}
+                    helperText={errors.club_user?.message}
+                  >
+                    {clubUserData ? (
+                      <MenuItem sx={{ color: "lightgrey" }} value="">
+                        -- Selecionar --
+                      </MenuItem>
+                    ) : (
+                      <MenuItem disabled>Sem opções disponíveis.</MenuItem>
+                    )}
+                    {clubUserData?.data
+                      .sort((a: any, b: any) =>
+                        a.username.localeCompare(b.username),
+                      )
+                      .map((item: any) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.username}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid container justifyContent={"flex-end"} size={6}>
+              <Controller
+                name="noti_all"
+                control={control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <Stack spacing={1}>
+                      <FormControlLabel
+                        labelPlacement="start"
+                        control={
+                          <Switch
+                            sx={{ ml: 2 }}
+                            {...field}
+                            checked={field.value}
+                            onChange={(e) => {
+                              field.onChange(e.target.checked);
+                            }}
+                            name="noti_all"
+                          />
+                        }
+                        label="Notificar todos os Clubes associados"
+                        sx={{ justifyContent: "left", marginLeft: 0 }}
+                      />
+                      {!!errors.noti_all && (
+                        <FormHelperText error sx={{ marginLeft: "14px" }}>
+                          {errors.noti_all?.message}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+            <Grid size={12}>
+              <Controller
+                name="notification"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Conteúdo"
+                    type="text"
+                    fullWidth
+                    multiline
+                    required
+                    maxRows={8}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
+                    error={!!errors.notification}
+                    helperText={errors.notification?.message}
+                  ></TextField>
+                )}
+              />
+            </Grid>
+            <Grid size={6}>
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    color="warning"
+                    variant={"outlined"}
+                    label="Tipo de Notificação"
                     type="text"
                     fullWidth
                     select
@@ -371,13 +393,13 @@ export default function NotificationManagerPage(
                     onChange={(e) => {
                       field.onChange(e);
                     }}
-                    error={!!errors.payment_object}
-                    helperText={errors.payment_object?.message}
+                    error={!!errors.type}
+                    helperText={errors.type?.message}
                   >
-                    <MenuItem sx={{ color: "lightgrey" }} value="none">
-                      -- Selecionar --
-                    </MenuItem>
-                    {PaymentTypes.map((item: any, index: any) => (
+                    {NotificationTypeOptions.filter(
+                      (item) =>
+                        !["reset", "member_request"].includes(item.value),
+                    ).map((item: any, index: any) => (
                       <MenuItem key={index} value={item.value}>
                         {item.label}
                       </MenuItem>
@@ -386,69 +408,103 @@ export default function NotificationManagerPage(
                 )}
               />
             </Grid>
-          ) : [
-              "registrations_closing",
-              "registrations_close",
-              "open_registrations",
-              "classifications_available",
-              "draw_available",
-              "draw_patched",
-              "rate_event",
-              "member_updated",
-            ].includes(watch("type")) ? (
-            <Grid sx={{ p: 2 }} size={6}>
-              <Controller
-                name="target_event"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    color="warning"
-                    variant={"outlined"}
-                    label="Evento Alvo"
-                    type="text"
-                    fullWidth
-                    select
-                    required
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
-                    error={!!errors.payment_object}
-                    helperText={errors.payment_object?.message}
-                  >
-                    {isEventsLoading ? (
-                      <Grid container justifyContent="center" mt={1} size={12}>
-                        <CircularProgress />
-                      </Grid>
-                    ) : (
-                      <>
-                        {eventsData?.count === 0 ? (
-                          <MenuItem disabled>Sem opções disponíveis.</MenuItem>
-                        ) : (
-                          <MenuItem sx={{ color: "lightgrey" }} value="">
-                            -- Selecionar --
-                          </MenuItem>
-                        )}
-                        {eventsData?.results.map((item: any, index: any) => (
-                          <MenuItem key={index} value={item.id}>
-                            {item.name} {item.season}
-                          </MenuItem>
-                        ))}
-                      </>
-                    )}
-                  </TextField>
-                )}
-              />
-            </Grid>
-          ) : null}
-          <CardActions
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Grid sx={{ p: 2 }} container size={6}>
+            {["payment_available", "payment_overdue"].includes(
+              watch("type"),
+            ) ? (
+              <Grid size={6}>
+                <Controller
+                  name="payment_object"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant={"outlined"}
+                      label="Tipo de Pagamento"
+                      type="text"
+                      fullWidth
+                      select
+                      required
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                      error={!!errors.payment_object}
+                      helperText={errors.payment_object?.message}
+                    >
+                      <MenuItem sx={{ color: "lightgrey" }} value="none">
+                        -- Selecionar --
+                      </MenuItem>
+                      {PaymentTypes.map((item: any, index: any) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+            ) : [
+                "registrations_closing",
+                "registrations_close",
+                "open_registrations",
+                "classifications_available",
+                "draw_available",
+                "draw_patched",
+                "rate_event",
+                "member_updated",
+              ].includes(watch("type")) ? (
+              <Grid size={6}>
+                <Controller
+                  name="target_event"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      color="warning"
+                      variant="outlined"
+                      label="Evento Alvo"
+                      fullWidth
+                      select
+                      required
+                      {...field}
+                      error={!!errors.target_event}
+                      helperText={errors.target_event?.message}
+                    >
+                      {isEventsLoading
+                        ? [
+                            <MenuItem
+                              key="loading"
+                              disabled
+                              sx={{ justifyContent: "center" }}
+                            >
+                              <CircularProgress size={20} />
+                            </MenuItem>,
+                          ]
+                        : [
+                            eventsData?.count === 0 ? (
+                              <MenuItem key="empty" disabled>
+                                Sem opções disponíveis.
+                              </MenuItem>
+                            ) : (
+                              <MenuItem
+                                key="none"
+                                sx={{ color: "lightgrey" }}
+                                value=""
+                              >
+                                -- Selecionar --
+                              </MenuItem>
+                            ),
+                            ...(eventsData?.results ?? []).map((item: any) => (
+                              <MenuItem key={item.id} value={item.id}>
+                                {item.name} {item.season}
+                              </MenuItem>
+                            )),
+                          ]}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+            ) : null}
+            <Grid container size={6}>
               <Controller
                 name="can_remove"
                 control={control}
@@ -480,11 +536,18 @@ export default function NotificationManagerPage(
                 )}
               />
             </Grid>
+          </Grid>
+          <CardActions
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
             <Button
-              sx={{ m: 1 }}
               variant="contained"
-              size="large"
               color="success"
+              size="small"
               onClick={() => handleSubmit(onSubmit)()}
               startIcon={<Add />}
             >

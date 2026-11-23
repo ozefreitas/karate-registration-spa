@@ -30,6 +30,7 @@ import {
   Search,
   Add,
   Clear,
+  SportsMma,
 } from "@mui/icons-material";
 import CompInfoToolTip from "../../dashboard/CompInfoToolTip";
 import { ReactNode, useEffect, useState } from "react";
@@ -400,11 +401,26 @@ export default function EventsPage(props: Readonly<{ userRole: string }>) {
             </Button>
           </Grid>
         ) : eventsData?.count === 0 && currentView === "list" ? (
-          <Grid mt={2} container justifyContent="center" size={12}>
-            <Typography color="textDisabled">
-              Não foram encontrados Eventos.
-            </Typography>
-          </Grid>
+          <Card
+            variant="outlined"
+            sx={{ borderColor: "divider", width: "100%", mt: 2 }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                gap: 1,
+                py: 3,
+              }}
+            >
+              <SportsMma color="disabled" />
+              <Typography variant="body2" color="textDisabled">
+                Não foram encontrados Eventos.
+              </Typography>
+            </CardContent>
+          </Card>
         ) : eventsData?.count !== 0 && currentView === "list" ? (
           <Grid size={12}>
             <Typography

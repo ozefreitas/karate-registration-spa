@@ -215,7 +215,6 @@ export default function ClassificationsPage() {
                               navigate(`/classifications/${event.id}/`)
                             }
                             sx={{
-                              border: 0,
                               minHeight: 40,
                               textTransform: "none",
                               fontWeight: 700,

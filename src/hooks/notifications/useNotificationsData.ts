@@ -40,5 +40,6 @@ export const useFetchNotificationsData = (
       ),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: userId !== "",
   });
 };

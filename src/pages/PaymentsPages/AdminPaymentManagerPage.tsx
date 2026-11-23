@@ -233,7 +233,6 @@ export default function AdminPaymentManagerPage(
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                pr: 5,
                 maxHeight: "100%",
               }}
             >
@@ -242,7 +241,7 @@ export default function AdminPaymentManagerPage(
                   <CircularProgress />
                 </Box>
               ) : (
-                <Typography color="info" variant="h3">
+                <Typography color="info" variant="h4">
                   {subscriptionsData?.filter((item: any) => item.paid === false)
                     .length ?? 0}
                 </Typography>
@@ -282,7 +281,6 @@ export default function AdminPaymentManagerPage(
               sx={{
                 display: "flex",
                 justifyContent: "flex-end",
-                pr: 5,
                 maxHeight: "100%",
               }}
             >
@@ -291,7 +289,7 @@ export default function AdminPaymentManagerPage(
                   <CircularProgress />
                 </Box>
               ) : (
-                <Typography color="info" variant="h3">
+                <Typography color="info" variant="h4">
                   {subscriptionsData?.[0]?.due_date
                     ? formatDateTime(subscriptionsData[0].due_date, "day")
                     : null}
@@ -349,7 +347,7 @@ export default function AdminPaymentManagerPage(
                   <CircularProgress />
                 </Box>
               ) : (
-                <Typography color={"info"} variant="h3">
+                <Typography color={"info"} variant="h4">
                   {subscriptionConfigData?.amount}
                 </Typography>
               )}

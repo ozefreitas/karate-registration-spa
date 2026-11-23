@@ -174,7 +174,6 @@ const BracketClassificationModal = (props: {
               alignItems={"center"}
             >
               <Button
-                sx={{ border: 0 }}
                 size="small"
                 variant="contained"
                 startIcon={<Download></Download>}
