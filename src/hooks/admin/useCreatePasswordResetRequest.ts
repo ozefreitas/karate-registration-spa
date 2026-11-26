@@ -1,7 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { PasswordRecoveryService } from "../../openapi";
+import { ApiError, PasswordRecoveryService } from "../../openapi";
 import { callNotiStack } from "../../utils/utils";
+
+const getPasswordRecoveryErrorMessage = (error: unknown) => {
+  if (
+    error instanceof ApiError &&
+    typeof error.body === "object" &&
+    error.body !== null
+  ) {
+    if ("error" in error.body && typeof error.body.error === "string") {
+      return error.body.error;
+    }
+    if ("message" in error.body && typeof error.body.message === "string") {
+      return error.body.message;
+    }
+  }
+
+  return "Ocorreu um erro. Tente novamente.";
+};
 
 export const useCreatePasswordResetRequest = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -13,8 +30,13 @@ export const useCreatePasswordResetRequest = () => {
       callNotiStack(enqueueSnackbar, data.message, "success", 5000);
       queryClient.invalidateQueries({ queryKey: ["password-requests"] });
     },
-    onError: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
+    onError: (error) => {
+      callNotiStack(
+        enqueueSnackbar,
+        getPasswordRecoveryErrorMessage(error),
+        "error",
+        5000,
+      );
     },
   });
 };
@@ -59,7 +81,7 @@ export const useConfirmPassword = () => {
       token: string;
       data: any;
     }) =>
-      PasswordRecoveryService.passwordRecoveryConfirmCreate(uidb, token, data),
+      PasswordRecoveryService.passwordRecoveryConfirmCreate(token, uidb, data),
     onSuccess: () => {
       callNotiStack(
         enqueueSnackbar,
@@ -69,8 +91,13 @@ export const useConfirmPassword = () => {
       );
       queryClient.invalidateQueries({ queryKey: ["password-requests"] });
     },
-    onError: (data: any) => {
-      callNotiStack(enqueueSnackbar, data.response.data.error, "error", 5000);
+    onError: (error) => {
+      callNotiStack(
+        enqueueSnackbar,
+        getPasswordRecoveryErrorMessage(error),
+        "error",
+        5000,
+      );
     },
   });
 };

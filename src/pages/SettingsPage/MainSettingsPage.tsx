@@ -223,7 +223,7 @@ export default function MainSettingsPage() {
       { username: passwordRequestedDetails.id },
       {
         onSuccess: (data: any) => {
-          setCreatedPasswordURL(`${baseURL}${data.data.url}`);
+          setCreatedPasswordURL(`${baseURL}${data.url}`);
         },
       },
     );
