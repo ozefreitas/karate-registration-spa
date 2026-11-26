@@ -147,15 +147,14 @@ export default function MainSettingsPage() {
       }))[0];
   }, [requestAccountData, selectedRequestId]);
 
-  const passwordRequestedDetails = useMemo(() => {
-    return requestingPasswordsData?.data
-      ?.filter((acount: any) => acount.id === selectedPasswordRequestId)
-      ?.map((acount: any) => ({
-        id: acount.club_user.id,
-        email: acount.club_user.email,
-        username: acount.club_user.username,
-      }))[0];
-  }, [requestingPasswordsData, selectedPasswordRequestId]);
+  const passwordRequestedDetails = useMemo(
+    () =>
+      requestingPasswordsData?.find(
+        (acount: any) =>
+          Number(acount.id) === Number(selectedPasswordRequestId),
+      )?.club_user,
+    [requestingPasswordsData, selectedPasswordRequestId],
+  );
 
   useEffect(() => {
     if (clickedUsername !== "") {
