@@ -920,28 +920,33 @@ export default function MainSettingsPage() {
               <Grid size={12} p={2}>
                 <TextField
                   color="warning"
-                  variant={"outlined"}
+                  variant="outlined"
                   label="Conta a Inspecionar"
                   select
                   fullWidth
-                  multiline
                   maxRows={8}
-                  value={selectedPasswordRequestId}
+                  value={selectedPasswordRequestId ?? ""}
                   onChange={handlePasswordRequestAcountChange}
                 >
-                  {requestingPasswordsData?.length === 0 ? (
-                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
-                  ) : (
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
+                  {!requestingPasswordsData?.length ? (
+                    <MenuItem disabled value="">
+                      Sem opções disponíveis.
                     </MenuItem>
-                  )}
-                  {requestingPasswordsData?.data?.map(
-                    (item: any, index: string) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.club_user.username}
-                      </MenuItem>
-                    ),
+                  ) : (
+                    [
+                      <MenuItem
+                        key="placeholder"
+                        sx={{ color: "lightgrey" }}
+                        value=""
+                      >
+                        -- Selecionar --
+                      </MenuItem>,
+                      ...requestingPasswordsData.map((item: any) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.club_user.username}
+                        </MenuItem>
+                      )),
+                    ]
                   )}
                 </TextField>
 
