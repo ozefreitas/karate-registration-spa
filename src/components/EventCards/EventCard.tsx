@@ -279,7 +279,7 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     </Stack>
                   </>
                 )}
-                {props.userRole === undefined ? (
+                {props.userRole === undefined && (
                   <Grid
                     container
                     size={12}
@@ -287,11 +287,12 @@ export default function EventCard(props: Readonly<{ userRole: string }>) {
                     alignItems={"center"}
                   >
                     <GenerateButton
+                      disabled={!singleEventData?.has_draw}
                       label="Consultar Sorteios"
                       to="draw/dynamic_view/"
                     ></GenerateButton>
                   </Grid>
-                ) : null}
+                )}
               </CardContent>
             </Card>
           </Grid>

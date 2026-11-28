@@ -34,34 +34,51 @@ function StatRow({
       container
       alignItems={"center"}
       justifyContent={"space-between"}
-      px={2}
+      columnGap={1}
+      px={{ xs: 0.5, sm: 1 }}
       py={1}
+      sx={{ width: "100%", minWidth: 0, flexWrap: "nowrap" }}
     >
-      <Grid container alignItems={"center"} spacing={3}>
+      <Grid
+        container
+        alignItems={"center"}
+        spacing={{ xs: 1, sm: 2 }}
+        sx={{ minWidth: 0, flex: 1, flexWrap: "nowrap" }}
+      >
         <Grid
-          width={40}
-          height={40}
           borderRadius={2}
           bgcolor={"#fdecea"}
           container
           alignItems={"center"}
           justifyContent={"center"}
+          sx={{
+            width: { xs: 36, sm: 40 },
+            height: { xs: 36, sm: 40 },
+            flexShrink: 0,
+          }}
         >
           {icon}
         </Grid>
         <Typography
-          variant="body1"
           color="text.secondary"
-          sx={{ fontWeight: 500 }}
+          sx={{
+            fontWeight: 500,
+            minWidth: 0,
+            fontSize: { xs: "0.875rem", sm: "1rem" },
+          }}
         >
           {label}
         </Typography>
       </Grid>
       <Typography
-        variant="h4"
         fontWeight={700}
         color={value === 0 ? "textDisabled" : "error"}
-        sx={{ minWidth: 32, textAlign: "right" }}
+        sx={{
+          minWidth: 28,
+          flexShrink: 0,
+          textAlign: "right",
+          fontSize: { xs: "1.5rem", sm: "2.125rem" },
+        }}
       >
         {value}
       </Typography>
@@ -83,12 +100,22 @@ export default function MissingQuotasCard({
     <Card
       sx={{
         overflow: "hidden",
+        width: "100%",
+        minWidth: 0,
       }}
     >
       <CardHeader
-        sx={{ p: 2 }}
+        sx={{
+          p: { xs: 1.5, sm: 2 },
+          "& .MuiCardHeader-content": { minWidth: 0 },
+        }}
         title={
-          <Grid container alignItems={"center"} gap={2}>
+          <Grid
+            container
+            alignItems={"center"}
+            gap={{ xs: 1, sm: 2 }}
+            sx={{ minWidth: 0, flexWrap: "nowrap" }}
+          >
             <Grid
               container
               justifyContent={"center"}
@@ -96,14 +123,23 @@ export default function MissingQuotasCard({
               color={"#fff"}
               bgcolor={"#d32f2f"}
               sx={{
-                width: 40,
-                height: 40,
+                width: { xs: 36, sm: 40 },
+                height: { xs: 36, sm: 40 },
                 borderRadius: 1.5,
+                flexShrink: 0,
               }}
             >
               <WarningAmberIcon sx={{ fontSize: 18 }} />
             </Grid>
-            <Typography variant="h6" fontWeight={"bold"}>
+            <Typography
+              variant="h6"
+              fontWeight={"bold"}
+              sx={{
+                minWidth: 0,
+                fontSize: { xs: "1.05rem", sm: "1.25rem" },
+                lineHeight: 1.25,
+              }}
+            >
               Quotas em Falta em {year}
             </Typography>
           </Grid>
@@ -115,7 +151,11 @@ export default function MissingQuotasCard({
       axios.isAxiosError(subscriptionsError) &&
       subscriptionsError.response?.status === 403 ? (
         <CardContent
-          sx={{ display: "flex", justifyContent: "flex-end", pr: 5 }}
+          sx={{
+            px: { xs: 2, sm: 3 },
+            textAlign: { xs: "left", sm: "right" },
+            overflowWrap: "anywhere",
+          }}
         >
           Comece uma subscrição para ter acesso a esta funcionalidade.
         </CardContent>
@@ -133,7 +173,7 @@ export default function MissingQuotasCard({
               <CircularProgress />
             </Box>
           ) : (
-            <Grid px={2}>
+            <Grid px={{ xs: 0, sm: 1 }}>
               <StatRow
                 icon={<Groups sx={{ fontSize: 20 }} color="error" />}
                 label="Número Total de Clubes"
@@ -154,9 +194,15 @@ export default function MissingQuotasCard({
       )}
       {/* Footer */}
       <CardActions
-        sx={{ p: 2, pt: 0, display: "flex", justifyContent: "flex-end" }}
+        sx={{
+          p: { xs: 1.5, sm: 2 },
+          pt: 0,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
       >
         <Button
+          sx={{ width: { xs: "100%", sm: "auto" } }}
           size="small"
           variant="contained"
           startIcon={<WarningAmberIcon />}

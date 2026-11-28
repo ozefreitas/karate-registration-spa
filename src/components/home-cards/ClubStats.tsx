@@ -19,11 +19,15 @@ import {
   CircularProgress,
   Typography,
   CardContent,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { adminHooks, eventsHooks } from "../../hooks";
 import { HowToReg, Person } from "@mui/icons-material";
 
 export default function ClubStats() {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: clubMembersData, isLoading: isClubMembersLoading } =
     adminHooks.useFetchClubMembersData();
 
@@ -77,11 +81,24 @@ export default function ClubStats() {
   return (
     <>
       {["student", "athlete", "coach"].map((item: string, index: any) => (
-        <Grid key={index} size={{ xs: 12, sm: 12, md: 6, lg: 4 }}>
-          <Card>
+        <Grid
+          key={index}
+          size={{ xs: 12, sm: 12, md: 6, lg: 4 }}
+          sx={{ minWidth: 0 }}
+        >
+          <Card sx={{ width: "100%", minWidth: 0 }}>
             <CardHeader
+              sx={{
+                p: { xs: 1.5, sm: 2 },
+                "& .MuiCardHeader-content": { minWidth: 0 },
+              }}
               title={
-                <Grid container alignItems={"center"} gap={2}>
+                <Grid
+                  container
+                  alignItems={"center"}
+                  gap={{ xs: 1, sm: 2 }}
+                  sx={{ minWidth: 0, flexWrap: "nowrap" }}
+                >
                   <Grid
                     container
                     justifyContent={"center"}
@@ -89,14 +106,23 @@ export default function ClubStats() {
                     color={"#fff"}
                     bgcolor={"#1976d2"}
                     sx={{
-                      width: 40,
-                      height: 40,
+                      width: { xs: 36, sm: 40 },
+                      height: { xs: 36, sm: 40 },
                       borderRadius: 1.5,
+                      flexShrink: 0,
                     }}
                   >
                     <Person sx={{ fontSize: 18 }} />
                   </Grid>
-                  <Typography variant="h6" fontWeight={"bold"}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={"bold"}
+                    sx={{
+                      minWidth: 0,
+                      fontSize: { xs: "1.05rem", sm: "1.25rem" },
+                      lineHeight: 1.25,
+                    }}
+                  >
                     {item === "student"
                       ? "Alunos por Clube"
                       : item === "athlete"
@@ -106,7 +132,7 @@ export default function ClubStats() {
                 </Grid>
               }
             ></CardHeader>
-            <Grid sx={{ height: 320 }}>
+            <Grid sx={{ height: { xs: 280, sm: 320 }, minWidth: 0 }}>
               {isClubMembersLoading ? (
                 <Grid
                   size={12}
@@ -119,7 +145,7 @@ export default function ClubStats() {
                 </Grid>
               ) : totals[item] >= 1 ? (
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart width={300} height={300}>
+                  <PieChart>
                     <Tooltip content={CustomTooltip} />
                     {/* <Legend layout="vertical" align="right" verticalAlign="middle" /> */}
                     <Pie
@@ -127,7 +153,7 @@ export default function ClubStats() {
                       data={clubMembersData}
                       cx="50%"
                       cy="50%"
-                      outerRadius={120}
+                      outerRadius="72%"
                       // fill="#8884d8"
                       label
                     >
@@ -163,11 +189,20 @@ export default function ClubStats() {
           </Card>
         </Grid>
       ))}
-      <Grid size={12} width={"100%"}>
-        <Card>
+      <Grid size={12} width={"100%"} sx={{ minWidth: 0 }}>
+        <Card sx={{ width: "100%", minWidth: 0 }}>
           <CardHeader
+            sx={{
+              p: { xs: 1.5, sm: 2 },
+              "& .MuiCardHeader-content": { minWidth: 0 },
+            }}
             title={
-              <Grid container alignItems={"center"} gap={2}>
+              <Grid
+                container
+                alignItems={"center"}
+                gap={{ xs: 1, sm: 2 }}
+                sx={{ minWidth: 0, flexWrap: "nowrap" }}
+              >
                 <Grid
                   container
                   justifyContent={"center"}
@@ -175,20 +210,35 @@ export default function ClubStats() {
                   color={"#fff"}
                   bgcolor={"#004d1f"}
                   sx={{
-                    width: 40,
-                    height: 40,
+                    width: { xs: 36, sm: 40 },
+                    height: { xs: 36, sm: 40 },
                     borderRadius: 1.5,
+                    flexShrink: 0,
                   }}
                 >
                   <HowToReg sx={{ fontSize: 18 }} />
                 </Grid>
-                <Typography variant="h6" fontWeight={"bold"}>
+                <Typography
+                  variant="h6"
+                  fontWeight={"bold"}
+                  sx={{
+                    minWidth: 0,
+                    fontSize: { xs: "1.05rem", sm: "1.25rem" },
+                    lineHeight: 1.25,
+                  }}
+                >
                   Inscrições por Evento
                 </Typography>
               </Grid>
             }
           ></CardHeader>
-          <CardContent sx={{ width: "100%" }}>
+          <CardContent
+            sx={{
+              width: "100%",
+              minWidth: 0,
+              px: { xs: 1.5, sm: 2 },
+            }}
+          >
             {registrationsPerEventData?.length === 0 ? (
               <Grid
                 size={12}
@@ -197,21 +247,33 @@ export default function ClubStats() {
                 container
                 justifyContent={"center"}
                 alignItems={"center"}
+                sx={{ px: 1, textAlign: "center" }}
               >
                 <Typography color="textDisabled">
                   Ainda não há Eventos com inscritos
                 </Typography>
               </Grid>
             ) : (
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={registrationsPerEventData}>
+              <ResponsiveContainer
+                width="100%"
+                height={isSmallScreen ? 340 : 400}
+              >
+                <BarChart
+                  data={registrationsPerEventData}
+                  margin={{ bottom: isSmallScreen ? 16 : 0 }}
+                >
                   <Tooltip content={BarChartCustomTooltip} />
                   <CartesianGrid strokeDasharray="1 1" />
                   <XAxis
-                    height={60}
+                    height={isSmallScreen ? 90 : 60}
+                    angle={isSmallScreen ? -35 : 0}
+                    textAnchor={isSmallScreen ? "end" : "middle"}
+                    tick={{ fontSize: isSmallScreen ? 11 : 12 }}
+                    interval="preserveStartEnd"
                     label={{
                       position: "insideBottom",
                       value: "Evento",
+                      dy: isSmallScreen ? 28 : 0,
                     }}
                     dataKey="name"
                   />
@@ -221,7 +283,7 @@ export default function ClubStats() {
                       position: "insideTopLeft",
                       value: "Nº Inscrições",
                       angle: -90,
-                      dy: 210,
+                      dy: isSmallScreen ? 170 : 210,
                     }}
                   />
                   {/* <Tooltip /> */}

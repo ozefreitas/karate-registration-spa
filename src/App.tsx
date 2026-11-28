@@ -45,6 +45,7 @@ import PaymentManagerPage from "./pages/PaymentsPages/PaymentManagerPage";
 import EventCategoriesPage from "./pages/EventsPage/EventCategoriesPage";
 import NotificationsPage from "./pages/NotificationsPage/NotificationsPage";
 import PricingPage from "./pages/InformationalPages/PricingPage";
+import FeedbackPage from "./pages/InformationalPages/FeedbackPage";
 import ScrollToTop from "./utils/scrollToTop";
 import { ErrorBoundary } from "react-error-boundary";
 import SingleTeamPage from "./pages/TeamsPage/SingleTeamPage";
@@ -597,7 +598,7 @@ function App() {
                   element={
                     isAuthLoading ? null : (
                       <ProtectedRoute
-                        element={<WIPPage />}
+                        element={<FeedbackPage />}
                         allowedRoles={["free_club", "subed_club", "main_admin"]}
                         allowUnauthenticated
                       />

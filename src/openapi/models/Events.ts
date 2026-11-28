@@ -14,6 +14,7 @@ export type Events = {
     readonly has_any_team: string;
     readonly has_any_indiv: string;
     readonly has_coach: string;
+    readonly has_draw: string;
     name: string;
     location: string;
     season: SeasonEnum;

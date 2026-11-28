@@ -219,42 +219,6 @@ export default function Header(props: Readonly<{ me: any }>) {
                   label={`Época: ${currentSeason}`}
                 ></Chip>
               )}
-              {props.me?.role === undefined ? null : (
-                <Tooltip
-                  title={"Consultar planos"}
-                  disableHoverListener={["superuser", "main_admin"].includes(
-                    props.me?.role,
-                  )}
-                >
-                  <span>
-                    <Button
-                      onClick={() => {
-                        if (
-                          !["superuser", "main_admin"].includes(props.me?.role)
-                        ) {
-                          navigate("/pricing/");
-                        }
-                      }}
-                      color="warning"
-                      variant="contained"
-                      disableRipple
-                      disableFocusRipple
-                      disableElevation
-                    >
-                      {props.me?.role === "main_admin" ||
-                      props.me?.role === "single_admin"
-                        ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
-                        : props.me?.role === "superuser"
-                          ? "SUPER ADMIN"
-                          : props.me?.role === "free_club"
-                            ? "CLUBE - GRÁTIS"
-                            : props.me?.role === "subed_club"
-                              ? `CLUBE - PREMIUM - ${props.me.tier}`
-                              : "TÉCNICO"}
-                    </Button>
-                  </span>
-                </Tooltip>
-              )}
               <Grid container spacing={1}>
                 {location.pathname.startsWith("/profile/list") ? null : (
                   <IconButton
@@ -409,10 +373,40 @@ export default function Header(props: Readonly<{ me: any }>) {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem divider sx={{ p: 2 }}>
-          Bem-vindo&nbsp;
-          <Typography style={{ fontWeight: 1000 }}>{user?.username}</Typography>
+        <MenuItem
+          divider
+          disabled={["superuser", "main_admin"].includes(props.me?.role)}
+          sx={{ p: 2 }}
+          onClick={() => {
+            if (!["superuser", "main_admin"].includes(props.me?.role)) {
+              navigate("/pricing/");
+            }
+          }}
+        >
+          <Grid container direction={"column"}>
+            <Grid container>
+              <Typography>Bem-vindo&nbsp;</Typography>
+              <Typography style={{ fontWeight: 1000 }}>
+                {user?.username}
+              </Typography>
+            </Grid>
+            <Grid mt={2} mb={1}>
+              <Typography>
+                {props.me?.role === "main_admin" ||
+                props.me?.role === "single_admin"
+                  ? `ADMIN - ${import.meta.env.VITE_DISPLAY_BUTTON_SIGLA}`
+                  : props.me?.role === "superuser"
+                    ? "SUPER ADMIN"
+                    : props.me?.role === "free_club"
+                      ? "CLUBE - GRÁTIS"
+                      : props.me?.role === "subed_club"
+                        ? `CLUBE - PREMIUM - ${props.me.tier}`
+                        : "TÉCNICO"}
+              </Typography>
+            </Grid>
+          </Grid>
         </MenuItem>
+
         <MenuItem
           selected={location.pathname.startsWith("/profile")}
           sx={{ p: 2 }}

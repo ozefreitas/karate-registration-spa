@@ -253,12 +253,6 @@ export default function SingleMemberPage(
                 <Grid container size={12} alignItems="flex-start">
                   <Grid
                     size={{ xs: 12, md: 4, lg: 3 }}
-                    container
-                    justifyContent="center"
-                    spacing={{ xs: 1, md: 2 }}
-                    alignContent="flex-start"
-                    p={{ xs: 2, sm: 3, md: 4 }}
-                    pt={{ xs: 3, md: 5 }}
                     sx={{
                       background: (theme) => {
                         const colorAlpha =
@@ -277,230 +271,243 @@ export default function SingleMemberPage(
                       borderRight: { xs: 0, md: "1px solid" },
                       borderBottom: { xs: "1px solid", md: 0 },
                       borderColor: "divider",
-                      position: { xs: "relative", md: "sticky" },
-                      top: { md: 100 },
-                      alignSelf: "flex-start",
+                      alignSelf: "stretch",
                     }}
                   >
-                    {singleMemberData ? (
-                      <Tooltip
-                        placement="top"
-                        disableHoverListener={props.userRole === "main_admin"}
-                        title={
-                          singleMemberData?.profile_image || previewUrl
-                            ? "Alterar Foto"
-                            : "Adicionar Foto"
-                        }
-                      >
-                        <Avatar
-                          src={
-                            previewUrl ||
-                            singleMemberData?.profile_image ||
-                            undefined
-                          }
-                          {...avatarData}
-                          sx={{
-                            ...avatarData.sx,
-                            ...responsiveAvatarSx,
-                          }}
-                          onMouseEnter={() => {
-                            if (props.userRole !== "main_admin") {
-                              setIsHovered(true);
-                            }
-                          }}
-                          onMouseLeave={() => {
-                            if (props.userRole !== "main_admin") {
-                              setIsHovered(false);
-                            }
-                          }}
-                          onClick={() => {
-                            if (props.userRole !== "main_admin") {
-                              handleAvatarClick();
-                            }
-                          }}
-                        >
-                          {isHovered ? (
-                            <PhotoCamera sx={{ color: "white" }} />
-                          ) : (
-                            !previewUrl &&
-                            !singleMemberData?.profile_image &&
-                            avatarData.children
-                          )}
-                        </Avatar>
-                      </Tooltip>
-                    ) : (
-                      <Avatar sx={{ ...responsiveAvatarSx, mb: 2 }} />
-                    )}
-                    {previewUrl !== null && props.userRole !== "main_admin" ? (
-                      <Grid
-                        container
-                        justifyContent={"center"}
-                        spacing={1}
-                        mt={1}
-                      >
-                        <Chip
-                          color="success"
-                          sx={{ p: 1 }}
-                          onClick={() => {
-                            onSubmit();
-                          }}
-                          clickable
-                          icon={<Check />}
-                          size="small"
-                          label="Confirmar"
-                        ></Chip>
-                        <Chip
-                          color="error"
-                          sx={{ p: 1 }}
-                          onDelete={() => {
-                            setSelectedFile(undefined);
-                          }}
-                          onClick={() => {
-                            setSelectedFile(undefined);
-                          }}
-                          clickable
-                          deleteIcon={<Cancel />}
-                          size="small"
-                          label="Cancelar"
-                        ></Chip>
-                      </Grid>
-                    ) : null}
                     <Grid
                       container
                       justifyContent="center"
-                      size={12}
-                      m={{ xs: 1, md: 2 }}
-                      mb={1}
-                      mt={{ xs: 2, md: 5 }}
+                      spacing={{ xs: 1, md: 2 }}
+                      alignContent="flex-start"
+                      p={{ xs: 2, sm: 3, md: 4 }}
+                      pt={{ xs: 3, md: 5 }}
+                      sx={{
+                        position: { xs: "relative", md: "sticky" },
+                        top: { md: 100 },
+                        alignSelf: "flex-start",
+                      }}
                     >
-                      <Typography
-                        sx={{ fontWeight: "bold", textAlign: "center" }}
-                        variant="h5"
-                      >
-                        {singleMemberData?.full_name}
-                      </Typography>
-                    </Grid>
-                    {props.userRole === "main_admin" ? null : (
+                      {singleMemberData ? (
+                        <Tooltip
+                          placement="top"
+                          disableHoverListener={props.userRole === "main_admin"}
+                          title={
+                            singleMemberData?.profile_image || previewUrl
+                              ? "Alterar Foto"
+                              : "Adicionar Foto"
+                          }
+                        >
+                          <Avatar
+                            src={
+                              previewUrl ||
+                              singleMemberData?.profile_image ||
+                              undefined
+                            }
+                            {...avatarData}
+                            sx={{
+                              ...avatarData.sx,
+                              ...responsiveAvatarSx,
+                            }}
+                            onMouseEnter={() => {
+                              if (props.userRole !== "main_admin") {
+                                setIsHovered(true);
+                              }
+                            }}
+                            onMouseLeave={() => {
+                              if (props.userRole !== "main_admin") {
+                                setIsHovered(false);
+                              }
+                            }}
+                            onClick={() => {
+                              if (props.userRole !== "main_admin") {
+                                handleAvatarClick();
+                              }
+                            }}
+                          >
+                            {isHovered ? (
+                              <PhotoCamera sx={{ color: "white" }} />
+                            ) : (
+                              !previewUrl &&
+                              !singleMemberData?.profile_image &&
+                              avatarData.children
+                            )}
+                          </Avatar>
+                        </Tooltip>
+                      ) : (
+                        <Avatar sx={{ ...responsiveAvatarSx, mb: 2 }} />
+                      )}
+                      {previewUrl !== null &&
+                      props.userRole !== "main_admin" ? (
+                        <Grid
+                          container
+                          justifyContent={"center"}
+                          spacing={1}
+                          mt={1}
+                        >
+                          <Chip
+                            color="success"
+                            sx={{ p: 1 }}
+                            onClick={() => {
+                              onSubmit();
+                            }}
+                            clickable
+                            icon={<Check />}
+                            size="small"
+                            label="Confirmar"
+                          ></Chip>
+                          <Chip
+                            color="error"
+                            sx={{ p: 1 }}
+                            onDelete={() => {
+                              setSelectedFile(undefined);
+                            }}
+                            onClick={() => {
+                              setSelectedFile(undefined);
+                            }}
+                            clickable
+                            deleteIcon={<Cancel />}
+                            size="small"
+                            label="Cancelar"
+                          ></Chip>
+                        </Grid>
+                      ) : null}
                       <Grid
-                        mt={3}
                         container
-                        spacing={1}
-                        justifyContent={"center"}
+                        justifyContent="center"
+                        size={12}
+                        m={{ xs: 1, md: 2 }}
+                        mb={1}
+                        mt={{ xs: 2, md: 5 }}
                       >
-                        {singleMemberData?.member_types.map(
-                          (type: any, index: any) => (
-                            <Chip
-                              variant="outlined"
-                              color={
-                                type.member_type === "coach"
-                                  ? "secondary"
-                                  : type.member_type === "student"
-                                    ? "info"
-                                    : "warning"
-                              }
-                              deleteIcon={<Cancel />}
-                              onClick={() => {
-                                if (
-                                  singleMemberData?.member_types.length === 1
-                                ) {
-                                  callNotiStack(
-                                    enqueueSnackbar,
-                                    "Não pode remover todos os tipos de praticante de um Membro!",
-                                    "error",
-                                    3000,
-                                  );
-                                } else removeMembership.mutate(type.id);
-                              }}
-                              onDelete={() => {
-                                if (
-                                  singleMemberData?.member_types.length === 1
-                                ) {
-                                  callNotiStack(
-                                    enqueueSnackbar,
-                                    "Não pode remover todos os tipos de praticante de um Membro!",
-                                    "error",
-                                    3000,
-                                  );
-                                } else removeMembership.mutate(type.id);
-                              }}
-                              key={index}
-                              label={
-                                MemberTypes.find(
-                                  (item) => item.value === type.member_type,
-                                )?.label
-                              }
-                            ></Chip>
-                          ),
-                        )}
+                        <Typography
+                          sx={{ fontWeight: "bold", textAlign: "center" }}
+                          variant="h5"
+                        >
+                          {singleMemberData?.full_name}
+                        </Typography>
                       </Grid>
-                    )}
-                    <Grid container size={12} mt={{ xs: 2, md: 5 }}>
+                      {props.userRole === "main_admin" ? null : (
+                        <Grid
+                          mt={3}
+                          container
+                          spacing={1}
+                          justifyContent={"center"}
+                        >
+                          {singleMemberData?.member_types.map(
+                            (type: any, index: any) => (
+                              <Chip
+                                variant="outlined"
+                                color={
+                                  type.member_type === "coach"
+                                    ? "secondary"
+                                    : type.member_type === "student"
+                                      ? "info"
+                                      : "warning"
+                                }
+                                deleteIcon={<Cancel />}
+                                onClick={() => {
+                                  if (
+                                    singleMemberData?.member_types.length === 1
+                                  ) {
+                                    callNotiStack(
+                                      enqueueSnackbar,
+                                      "Não pode remover todos os tipos de praticante de um Membro!",
+                                      "error",
+                                      3000,
+                                    );
+                                  } else removeMembership.mutate(type.id);
+                                }}
+                                onDelete={() => {
+                                  if (
+                                    singleMemberData?.member_types.length === 1
+                                  ) {
+                                    callNotiStack(
+                                      enqueueSnackbar,
+                                      "Não pode remover todos os tipos de praticante de um Membro!",
+                                      "error",
+                                      3000,
+                                    );
+                                  } else removeMembership.mutate(type.id);
+                                }}
+                                key={index}
+                                label={
+                                  MemberTypes.find(
+                                    (item) => item.value === type.member_type,
+                                  )?.label
+                                }
+                              ></Chip>
+                            ),
+                          )}
+                        </Grid>
+                      )}
+                      <Grid container size={12} mt={{ xs: 2, md: 5 }}>
+                        <Button
+                          variant={
+                            section === "personal_info" ? "contained" : "text"
+                          }
+                          fullWidth
+                          sx={getSectionButtonSx(section === "personal_info")}
+                          onClick={() => {
+                            changeSection("personal_info");
+                          }}
+                        >
+                          Informações Pessoais
+                        </Button>
+                      </Grid>
+                      {["main_admin", "free_club"].includes(
+                        props.userRole,
+                      ) ? null : (
+                        <Button
+                          variant={
+                            section === "payments_management"
+                              ? "contained"
+                              : "text"
+                          }
+                          fullWidth
+                          disabled={!singleMemberData?.quotes_legible}
+                          sx={getSectionButtonSx(
+                            section === "payments_management",
+                          )}
+                          onClick={() => {
+                            changeSection("payments_management");
+                          }}
+                        >
+                          Gestão de Pagamentos
+                        </Button>
+                      )}
                       <Button
                         variant={
-                          section === "personal_info" ? "contained" : "text"
-                        }
-                        fullWidth
-                        sx={getSectionButtonSx(section === "personal_info")}
-                        onClick={() => {
-                          changeSection("personal_info");
-                        }}
-                      >
-                        Informações Pessoais
-                      </Button>
-                    </Grid>
-                    {["main_admin", "free_club"].includes(
-                      props.userRole,
-                    ) ? null : (
-                      <Button
-                        variant={
-                          section === "payments_management"
+                          section === "registration_history"
                             ? "contained"
                             : "text"
                         }
                         fullWidth
-                        disabled={!singleMemberData?.quotes_legible}
+                        disabled
                         sx={getSectionButtonSx(
-                          section === "payments_management",
+                          section === "registration_history",
                         )}
                         onClick={() => {
-                          changeSection("payments_management");
+                          changeSection("registration_history");
                         }}
                       >
-                        Gestão de Pagamentos
+                        Histórico de Inscrições
                       </Button>
-                    )}
-                    <Button
-                      variant={
-                        section === "registration_history"
-                          ? "contained"
-                          : "text"
-                      }
-                      fullWidth
-                      disabled
-                      sx={getSectionButtonSx(
-                        section === "registration_history",
-                      )}
-                      onClick={() => {
-                        changeSection("registration_history");
-                      }}
-                    >
-                      Histórico de Inscrições
-                    </Button>
-                    <Button
-                      variant={
-                        section === "results_history" ? "contained" : "text"
-                      }
-                      fullWidth
-                      disabled
-                      sx={{
-                        ...getSectionButtonSx(section === "results_history"),
-                      }}
-                      onClick={() => {
-                        changeSection("results_history");
-                      }}
-                    >
-                      Histórico de Resultados
-                    </Button>
+                      <Button
+                        variant={
+                          section === "results_history" ? "contained" : "text"
+                        }
+                        fullWidth
+                        disabled
+                        sx={{
+                          ...getSectionButtonSx(section === "results_history"),
+                        }}
+                        onClick={() => {
+                          changeSection("results_history");
+                        }}
+                      >
+                        Histórico de Resultados
+                      </Button>
+                    </Grid>
                   </Grid>
                   <Grid
                     size={{ xs: 12, md: 8, lg: 9 }}

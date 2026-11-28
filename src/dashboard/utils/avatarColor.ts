@@ -2,7 +2,6 @@ export function stringToColor(string: string) {
   let hash = 0;
   let i;
 
-
   for (i = 0; i < string?.length; i += 1) {
     hash = string.charCodeAt(i) + ((hash << 5) - hash);
   }
@@ -22,24 +21,27 @@ export default function stringAvatar(
   size?: number,
   userRole?: string,
 ) {
+  const isStatic = userRole === undefined || userRole === "main_admin";
+
   return {
     sx: {
       bgcolor: stringToColor(name),
       width: size,
       height: size,
-      fontSize: size ? size / 3 : undefined,
-      cursor:
-        userRole === undefined || userRole === "main_admin"
-          ? "default"
-          : "pointer",
+      fontSize: size ? Math.round(size / 3) : undefined,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      lineHeight: 1,
+      padding: 0,
+      letterSpacing: 0,
+      textIndent: 0,
+      cursor: isStatic ? "default" : "pointer",
       transition: "0.2s",
       "&:hover": {
-        filter:
-          userRole === undefined || userRole === "main_admin"
-            ? "none"
-            : "brightness(0.35)",
+        filter: isStatic ? "none" : "brightness(0.35)",
       },
     },
-    children: `${name?.replace(/\s+/g, "").slice(0, 3).toUpperCase()}`,
+    children: name?.replace(/\s+/g, "").slice(0, 3).toUpperCase(),
   };
 }

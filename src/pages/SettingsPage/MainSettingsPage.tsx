@@ -132,15 +132,14 @@ export default function MainSettingsPage() {
   //     }))[0];
   // }, [requestAccountData, selectedRequestId]);
 
-  const passwordRequestedDetails = useMemo(() => {
-    return requestingPasswordsData?.data
-      ?.filter((acount: any) => acount.id === selectedPasswordRequestId)
-      ?.map((acount: any) => ({
-        id: acount.club_user.id,
-        email: acount.club_user.email,
-        username: acount.club_user.username,
-      }))[0];
-  }, [requestingPasswordsData, selectedPasswordRequestId]);
+  const passwordRequestedDetails = useMemo(
+    () =>
+      requestingPasswordsData?.find(
+        (acount: any) =>
+          Number(acount.id) === Number(selectedPasswordRequestId),
+      )?.club_user,
+    [requestingPasswordsData, selectedPasswordRequestId],
+  );
 
   useEffect(() => {
     if (clickedUsername !== "") {
@@ -877,139 +876,127 @@ export default function MainSettingsPage() {
               <Grid size={12} p={2}>
                 <TextField
                   color="warning"
-                  variant={"outlined"}
+                  variant="outlined"
                   label="Conta a Inspecionar"
                   select
                   fullWidth
-                  multiline
                   maxRows={8}
-                  value={selectedPasswordRequestId}
+                  value={selectedPasswordRequestId ?? ""}
                   onChange={handlePasswordRequestAcountChange}
                 >
-                  {requestingPasswordsData?.length === 0 ? (
-                    <MenuItem disabled>Sem opções disponíveis.</MenuItem>
-                  ) : (
-                    <MenuItem sx={{ color: "lightgrey" }} value="">
-                      -- Selecionar --
+                  {!requestingPasswordsData?.length ? (
+                    <MenuItem disabled value="">
+                      Sem opções disponíveis.
                     </MenuItem>
-                  )}
-                  {requestingPasswordsData?.data?.map(
-                    (item: any, index: string) => (
-                      <MenuItem key={index} value={item.id}>
-                        {item.club_user.username}
-                      </MenuItem>
-                    ),
+                  ) : (
+                    [
+                      <MenuItem
+                        key="placeholder"
+                        sx={{ color: "lightgrey" }}
+                        value=""
+                      >
+                        -- Selecionar --
+                      </MenuItem>,
+                      ...requestingPasswordsData.map((item: any) => (
+                        <MenuItem key={item.id} value={item.id}>
+                          {item.club_user.username}
+                        </MenuItem>
+                      )),
+                    ]
                   )}
                 </TextField>
 
                 {passwordRequestedDetails === undefined ? null : (
-                  <Card sx={{ m: 2 }}>
-                    <CardContent>
-                      <FormControl
-                        sx={{ pb: 2, justifyContent: "center" }}
-                        component="fieldset"
-                        variant="standard"
-                      >
-                        <FormControlLabel
-                          sx={{ mr: 2 }}
-                          labelPlacement="start"
-                          label={
-                            <Typography
-                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                            >
-                              Username:
-                            </Typography>
-                          }
-                          control={
-                            <TextField
-                              sx={{ width: "200px" }}
-                              color="warning"
-                              variant="standard"
-                              label=""
-                              value={passwordRequestedDetails.username}
-                              slotProps={{
-                                input: {
-                                  readOnly: true,
-                                  disableUnderline: true,
-                                  style: { fontSize: 18, marginRight: 10 },
+                  <Grid mt={2}>
+                    <FormControl
+                      sx={{ pb: 2, justifyContent: "center" }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <FormControlLabel
+                        sx={{ mr: 2 }}
+                        labelPlacement="start"
+                        label={<Typography variant="h6" mr={2}>Username:</Typography>}
+                        control={
+                          <TextField
+                            sx={{ width: "200px" }}
+                            color="warning"
+                            variant="standard"
+                            label=""
+                            value={passwordRequestedDetails?.username}
+                            slotProps={{
+                              input: {
+                                readOnly: true,
+                                disableUnderline: true,
+                                style: { fontSize: 18, marginRight: 10 },
+                              },
+                            }}
+                          />
+                        }
+                      ></FormControlLabel>
+                    </FormControl>
+                    <FormControl
+                      sx={{ pb: 2, justifyContent: "center" }}
+                      component="fieldset"
+                      variant="standard"
+                    >
+                      <FormControlLabel
+                        sx={{ mr: 2 }}
+                        labelPlacement="start"
+                        label={
+                          <Typography
+                            sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
+                          >
+                            Email:
+                          </Typography>
+                        }
+                        control={
+                          <TextField
+                            sx={{ width: "300px" }}
+                            color={
+                              passwordRequestedDetails.email === ""
+                                ? "error"
+                                : "warning"
+                            }
+                            variant="standard"
+                            label=""
+                            value={
+                              passwordRequestedDetails.email === ""
+                                ? "N/A"
+                                : passwordRequestedDetails.email
+                            }
+                            slotProps={{
+                              input: {
+                                readOnly: true,
+                                disableUnderline: true,
+                                style: {
+                                  fontSize: 18,
+                                  marginRight: 10,
+                                  color:
+                                    passwordRequestedDetails.email === ""
+                                      ? "red"
+                                      : undefined,
                                 },
-                              }}
-                            />
-                          }
-                        ></FormControlLabel>
-                      </FormControl>
-                      <FormControl
-                        sx={{ pb: 2, justifyContent: "center" }}
-                        component="fieldset"
-                        variant="standard"
-                      >
-                        <FormControlLabel
-                          sx={{ mr: 2 }}
-                          labelPlacement="start"
-                          label={
-                            <Typography
-                              sx={{ fontWeight: "bold", fontSize: 18, pr: 2 }}
-                            >
-                              Email:
-                            </Typography>
-                          }
-                          control={
-                            <TextField
-                              sx={{ width: "300px" }}
-                              color="warning"
-                              variant="standard"
-                              label=""
-                              value={
-                                passwordRequestedDetails.email === ""
-                                  ? "N/A"
-                                  : passwordRequestedDetails.email
-                              }
-                              slotProps={{
-                                input: {
-                                  readOnly: true,
-                                  disableUnderline: true,
-                                  style: {
-                                    fontSize: 18,
-                                    marginRight: 10,
-                                    color:
-                                      passwordRequestedDetails.email === ""
-                                        ? "red"
-                                        : undefined,
-                                  },
-                                },
-                              }}
-                            />
-                          }
-                        ></FormControlLabel>
-                      </FormControl>
-                    </CardContent>
+                              },
+                            }}
+                          />
+                        }
+                      ></FormControlLabel>
+                    </FormControl>
                     <CardActions
                       sx={{
                         justifyContent: "flex-end",
                         alignContent: "center",
                       }}
                     >
-                      <Stack
-                        direction={{
-                          xs: "row-reverse",
-                          sm: "row",
-                        }}
-                        sx={{
-                          p: 2,
-                          gap: 4,
-                          flexShrink: 0,
-                          alignSelf: { xs: "flex-end", sm: "center" },
-                        }}
+                      <Button
+                        size="small"
+                        onClick={() => handlePasswordURLCreation()}
+                        variant="contained"
+                        disabled={createdPasswordURL !== ""}
                       >
-                        <Button
-                          size="small"
-                          onClick={() => handlePasswordURLCreation()}
-                          variant="contained"
-                          disabled={createdPasswordURL !== ""}
-                        >
-                          Criar Link
-                        </Button>
-                      </Stack>
+                        Criar Link
+                      </Button>
                     </CardActions>
                     {createdPasswordURL === "" ? null : (
                       <CardContent>
@@ -1036,7 +1023,7 @@ export default function MainSettingsPage() {
                                 },
                               }}
                             />
-                            <FormHelperText sx={{ p: 1, pt: 0 }}>
+                            <FormHelperText sx={{ p: 1, pt: 0, fontSize: 12 }}>
                               Atenção: Este token é de uso único e irá ser
                               desativado quando a conta for reposta a
                               palavra-passe por parte do utilizador ou passados
@@ -1071,7 +1058,7 @@ export default function MainSettingsPage() {
                         </Grid>
                       </CardContent>
                     )}
-                  </Card>
+                  </Grid>
                 )}
               </Grid>
             </Grid>
